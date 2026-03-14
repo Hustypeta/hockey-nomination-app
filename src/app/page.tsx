@@ -53,6 +53,7 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const posterRef = useRef<HTMLDivElement>(null);
+  const playerListRef = useRef<HTMLDivElement>(null);
 
   const selectedPlayers = lineupToPlayers(lineup, players);
   const usedIds = new Set(selectedPlayers.map((p) => p.id));
@@ -79,6 +80,13 @@ export default function Home() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  // Při výběru slotu scroll na seznam hráčů (hlavně na mobilu)
+  useEffect(() => {
+    if (selectedSlot && playerListRef.current) {
+      playerListRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [selectedSlot]);
 
   const assignPlayerToSlot = useCallback(
     (player: Player) => {
@@ -210,8 +218,8 @@ export default function Home() {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Line builder */}
-          <section>
+          {/* Line builder – na mobilu při vybraném slotu pod seznamem */}
+          <section className={selectedSlot ? "lg:order-1 order-2" : "order-1"}>
             <h2 className="font-display text-2xl text-white mb-4">
               Sestav lajny
             </h2>
@@ -229,8 +237,11 @@ export default function Home() {
             />
           </section>
 
-          {/* Player list */}
-          <section>
+          {/* Player list – na mobilu při vybraném slotu nahoře */}
+          <section
+            ref={playerListRef}
+            className={selectedSlot ? "lg:order-2 order-1" : "order-2"}
+          >
             <h2 className="font-display text-2xl text-white mb-4">
               Vyber hráče
             </h2>

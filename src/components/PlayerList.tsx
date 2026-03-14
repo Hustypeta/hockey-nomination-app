@@ -47,6 +47,22 @@ export function PlayerList({
       : null
     : null;
 
+  if (players.length === 0) {
+    return (
+      <div className="rounded-lg border-2 border-amber-500/30 bg-amber-500/10 p-6 text-center">
+        <p className="text-amber-400 font-medium">
+          Žádní hráči nejsou načteni
+        </p>
+        <p className="text-white/70 text-sm mt-2">
+          Databáze je prázdná. Na Railway spusťte:{" "}
+          <code className="bg-black/30 px-2 py-1 rounded text-amber-300">
+            railway run npm run db:seed
+          </code>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {selectedSlot && relevantPos && (
