@@ -63,18 +63,19 @@ export function PlayerList({
     );
   }
 
+  // Bez vybraného slotu nezobrazuj seznam
+  if (!selectedSlot || !relevantPos) {
+    return (
+      <p className="text-white/50 text-sm py-8 text-center">
+        Klikni na prázdný slot v sestavě
+      </p>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {selectedSlot && relevantPos && (
-        <p className="text-amber-400/90 text-sm">
-          {relevantPos === "G" && "Vyber brankáře"}
-          {relevantPos === "F" && "Vyber útočníka – centrum může na křídlo a naopak"}
-          {relevantPos === "D" && "Vyber obránce – LB/RB jsou jen doporučení"}
-        </p>
-      )}
+    <div className="space-y-4">
       {(["G", "D", "F"] as const).map((pos) => {
-        // Když je vybraný slot, zobraz jen odpovídající skupinu
-        if (relevantPos && pos !== relevantPos) return null;
+        if (pos !== relevantPos) return null;
         return (
         <div key={pos}>
           <h3 className="font-display text-lg text-[#c41e3a] mb-2 flex items-center gap-2">
@@ -83,7 +84,7 @@ export function PlayerList({
               ({counts[pos]}/{POSITION_LIMITS[pos]})
             </span>
           </h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 max-h-[60vh] overflow-y-auto pr-2">
             {grouped[pos].map((player) => {
               const isDisabled = disabled(player);
               const isSelected = selected(player);
