@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #0c0e12;
+  --foreground: #f8fafc;
+  --accent-red: #c41e3a;
+  --accent-blue: #003f87;
+  --accent-white: #ffffff;
+  --surface: #151922;
+  --surface-hover: #1e2430;
+  --border: #2a3142;
+  --ice: #e8f4f8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent-red: var(--accent-red);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-white: var(--accent-white);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-ice: var(--ice);
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Oswald', sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Hockey rink ice gradient */
+.rink-ice {
+  background: linear-gradient(
+    180deg,
+    #d4e8ed 0%,
+    #b8dce8 25%,
+    #9ed0e3 50%,
+    #b8dce8 75%,
+    #d4e8ed 100%
+  );
+  border: 3px solid var(--accent-red);
+  box-shadow: 
+    inset 0 0 60px rgba(0, 63, 135, 0.15),
+    0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Jersey number style */
+.jersey-number {
+  font-family: var(--font-display);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Premium card glow */
+.card-glow {
+  box-shadow: 
+    0 0 0 1px rgba(196, 30, 58, 0.2),
+    0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.card-glow:hover {
+  box-shadow: 
+    0 0 0 1px rgba(196, 30, 58, 0.4),
+    0 4px 30px rgba(196, 30, 58, 0.15);
+}
