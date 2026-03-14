@@ -2,6 +2,9 @@
   "name": "hockey-nomination-app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && prisma db push && next build",
