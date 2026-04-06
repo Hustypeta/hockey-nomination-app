@@ -59,7 +59,7 @@ export function NominationView({
   return (
     <div className="min-h-screen bg-[#0c0e12]">
       <header className="border-b border-[#2a3142] bg-[#151922]/80 backdrop-blur">
-        <div className="max-w-2xl mx-auto px-4 py-6">
+        <div className="max-w-5xl mx-auto px-4 py-6">
           <h1 className="font-display text-4xl text-white tracking-wider">
             MS 2026
           </h1>
@@ -69,7 +69,7 @@ export function NominationView({
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex gap-2 justify-center mb-4">
           <button
             onClick={() => setExportMode("poster")}

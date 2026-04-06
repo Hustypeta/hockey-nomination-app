@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { leagueForClub } from "../src/lib/clubLeague";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL is not set");
@@ -14,7 +15,13 @@ const prisma = new PrismaClient({ adapter });
 const jsonPath = join(__dirname, "..", "czech-players-2025-26.json");
 const allPlayers = JSON.parse(
   readFileSync(jsonPath, "utf-8")
-) as Array<{ name: string; position: string; role: string; club: string }>;
+) as Array<{
+  name: string;
+  position: string;
+  role: string;
+  club: string;
+  league?: string;
+}>;
 
 // Vyřazení: důchodce (Krejčí), hráči z 2. ligy (Czechia2)
 const EXCLUDED_NAMES = new Set(["David Krejčí"]);
@@ -58,6 +65,7 @@ const samplePlayers = allPlayers
     position: p.position as "G" | "D" | "F",
     role: p.role || (p.position === "G" ? "G" : null),
     club: p.club,
+    league: p.league?.trim() || leagueForClub(p.club),
   }));
 
 async function main() {

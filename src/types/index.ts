@@ -7,6 +7,7 @@ export interface Player {
   position: Position;
   role?: string | null; // RW, LW, C, RB, LB
   club: string;
+  league: string;
 }
 
 export const ROLE_LABELS: Record<Role, string> = {

@@ -114,6 +114,9 @@ export function PlayerList({
                     ) : null}
                     {player.role && " · "}
                     {player.club}
+                    {player.league ? (
+                      <span className="text-white/45"> · {player.league}</span>
+                    ) : null}
                   </div>
                 </button>
               );

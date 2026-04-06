@@ -54,6 +54,28 @@ body {
     0 0 30px rgba(0, 0, 0, 0.3);
 }
 
+/* Sestavovač nominace + export plakátu – výraznější „led“ */
+.nomination-rink {
+  background: linear-gradient(
+    165deg,
+    #e8f4f8 0%,
+    #cde9f2 22%,
+    #b3ddf0 45%,
+    #cae6f3 68%,
+    #e2f2f8 100%
+  );
+  border: 3px solid rgba(196, 30, 58, 0.9);
+  box-shadow:
+    inset 0 0 100px rgba(0, 63, 135, 0.14),
+    0 12px 48px rgba(0, 0, 0, 0.4);
+}
+
+.nomination-poster-box {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 28px 90px rgba(0, 0, 0, 0.55);
+}
+
 /* Jersey number style */
 .jersey-number {
   font-family: var(--font-display);

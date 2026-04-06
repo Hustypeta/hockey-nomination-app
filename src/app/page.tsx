@@ -191,7 +191,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#0c0e12]">
       {/* Header */}
       <header className="border-b border-[#2a3142] bg-[#151922]/80 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 py-6">
           <h1 className="font-display text-4xl md:text-5xl text-white tracking-wider">
             MS 2026
           </h1>
@@ -216,8 +216,8 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-10">
           {/* Line builder – na mobilu při vybraném slotu pod seznamem */}
           <section className={selectedSlot ? "lg:order-1 order-2" : "order-1"}>
             <h2 className="font-display text-2xl text-white mb-4">
@@ -275,7 +275,7 @@ export default function Home() {
       </main>
 
       {/* Hidden poster for export */}
-      <div className="fixed -left-[9999px] top-0" aria-hidden="true">
+      <div className="fixed -left-[9999px] top-0 w-[920px]" aria-hidden="true">
         <NominationPoster
           ref={posterRef}
           players={selectedPlayers}

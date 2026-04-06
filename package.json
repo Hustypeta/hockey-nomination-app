@@ -13,6 +13,9 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
+    "inject:league": "npx ts-node --project scripts/tsconfig.json scripts/inject-league-json.ts",
+    "sort:candidates": "npx ts-node --project scripts/tsconfig.json scripts/sort-ms-candidates.ts",
+    "stats:extraliga": "node scripts/extraliga-coverage.mjs",
     "postinstall": "prisma generate"
   },
   "prisma": {

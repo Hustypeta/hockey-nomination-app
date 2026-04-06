@@ -14,12 +14,12 @@ const OTHER_LEAGUES = [
   { name: "Radko Gudas", position: "D", role: "RB", club: "Anaheim Ducks" },
   { name: "David Pastrňák", position: "F", role: "RW", club: "Boston Bruins" },
   { name: "Pavel Zacha", position: "F", role: "C", club: "Boston Bruins" },
-  { name: "Matěj Blümel", position: "F", role: "RW", club: "Boston Bruins" },
+  { name: "Matěj Blümel", position: "F", role: "RW", club: "Providence Bruins" },
   { name: "Jiří Kulich", position: "F", role: "C", club: "Buffalo Sabres" },
   { name: "Adam Klapka", position: "F", role: "RW", club: "Calgary Flames" },
   { name: "Martin Nečas", position: "F", role: "C", club: "Colorado Avalanche" },
   { name: "Radek Faksa", position: "F", role: "C", club: "Dallas Stars" },
-  { name: "David Tomášek", position: "F", role: "C", club: "Edmonton Oilers" },
+  { name: "David Tomášek", position: "F", role: "C", club: "Färjestad BK" },
   { name: "Mikuláš Hovorka", position: "D", role: "RB", club: "Florida Panthers" },
   { name: "Tomáš Nosek", position: "F", role: "LW", club: "Florida Panthers" },
   { name: "David Špaček", position: "D", role: "RB", club: "Minnesota Wild" },
@@ -37,8 +37,8 @@ const OTHER_LEAGUES = [
   { name: "Lukáš Dostál", position: "G", role: "G", club: "Anaheim Ducks" },
   { name: "Vítek Vaněček", position: "G", role: "G", club: "Utah Mammoth" },
   { name: "Petr Mrázek", position: "G", role: "G", club: "Anaheim Ducks" },
-  { name: "Jiří Patera", position: "G", role: "G", club: "Vancouver Canucks" },
-  { name: "Jakub Škarek", position: "G", role: "G", club: "San Jose Sharks" },
+  { name: "Jiří Patera", position: "G", role: "G", club: "Abbotsford Canucks" },
+  { name: "Jakub Škarek", position: "G", role: "G", club: "San Jose Barracuda" },
   { name: "Jan Jeník", position: "F", role: "RW", club: "Belleville Senators" },
   { name: "Tomáš Hamara", position: "D", role: "LB", club: "Belleville Senators" },
   { name: "Andrej Šustr", position: "D", role: "RB", club: "Bridgeport Islanders" },
@@ -63,7 +63,7 @@ const OTHER_LEAGUES = [
   { name: "Tomáš Suchánek", position: "G", role: "G", club: "San Diego Gulls" },
   { name: "Michal Kempný", position: "D", role: "LB", club: "Brynäs IF" },
   { name: "Radim Zohorna", position: "F", role: "C", club: "Färjestad BK" },
-  { name: "Ronald Knot", position: "D", role: "RB", club: "Färjestad BK" },
+  { name: "Ronald Knot", position: "D", role: "RB", club: "HC Sparta Praha" },
   { name: "Lukáš Rousek", position: "F", role: "C", club: "HV71" },
   { name: "Jakub Vrána", position: "F", role: "LW", club: "Linköping HC" },
   { name: "Robin Hanzl", position: "F", role: "C", club: "Malmö Redhawks" },
@@ -168,6 +168,7 @@ function main() {
   const outPath = path.join(__dirname, '..', 'czech-players-2025-26.json');
   fs.writeFileSync(outPath, JSON.stringify(all, null, 2), 'utf8');
   console.log(`Written ${all.length} Czech players to ${outPath}`);
+  console.log('Tip: doplnit pole league: npm run inject:league');
 }
 
 main();

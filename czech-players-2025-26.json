@@ -21,7 +21,7 @@
     "name": "Matěj Blümel",
     "position": "F",
     "role": "RW",
-    "club": "Boston Bruins"
+    "club": "Providence Bruins"
   },
   {
     "name": "Jiří Kulich",
@@ -51,7 +51,7 @@
     "name": "David Tomášek",
     "position": "F",
     "role": "C",
-    "club": "Edmonton Oilers"
+    "club": "Färjestad BK"
   },
   {
     "name": "Mikuláš Hovorka",
@@ -159,13 +159,13 @@
     "name": "Jiří Patera",
     "position": "G",
     "role": "G",
-    "club": "Vancouver Canucks"
+    "club": "Abbotsford Canucks"
   },
   {
     "name": "Jakub Škarek",
     "position": "G",
     "role": "G",
-    "club": "San Jose Sharks"
+    "club": "San Jose Barracuda"
   },
   {
     "name": "Jan Jeník",
@@ -315,7 +315,7 @@
     "name": "Ronald Knot",
     "position": "D",
     "role": "RB",
-    "club": "Färjestad BK"
+    "club": "HC Sparta Praha"
   },
   {
     "name": "Lukáš Rousek",
@@ -1716,7 +1716,7 @@
     "club": "Mountfield HK"
   },
   {
-    "name": "Petr Hasek",
+    "name": "Petr Hašek",
     "position": "F",
     "role": "C",
     "club": "Mountfield HK"

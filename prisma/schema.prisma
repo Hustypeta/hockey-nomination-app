@@ -16,6 +16,7 @@ model Player {
   position  String   // G, D, F (skupina pro limity)
   role      String?  // RW, LW, C, RB, LB (detailní pozice)
   club      String
+  league    String   // NHL, AHL, Extraliga, SHL, Liiga, NL, DEL…
   createdAt DateTime @default(now())
 
   @@map("players")

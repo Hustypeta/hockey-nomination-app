@@ -127,12 +127,12 @@ const PLAYERS = [
   { name: "Radko Gudas", position: "D", role: "RB", club: "Anaheim Ducks" },
   { name: "David Pastrňák", position: "F", role: "RW", club: "Boston Bruins" },
   { name: "Pavel Zacha", position: "F", role: "C", club: "Boston Bruins" },
-  { name: "Matěj Blümel", position: "F", role: "RW", club: "Boston Bruins" },
+  { name: "Matěj Blümel", position: "F", role: "RW", club: "Providence Bruins" },
   { name: "Jiří Kulich", position: "F", role: "C", club: "Buffalo Sabres" },
   { name: "Adam Klapka", position: "F", role: "RW", club: "Calgary Flames" },
   { name: "Martin Nečas", position: "F", role: "C", club: "Colorado Avalanche" },
   { name: "Radek Faksa", position: "F", role: "C", club: "Dallas Stars" },
-  { name: "David Tomášek", position: "F", role: "C", club: "Edmonton Oilers" },
+  { name: "David Tomášek", position: "F", role: "C", club: "Färjestad BK" },
   { name: "Mikuláš Hovorka", position: "D", role: "RB", club: "Florida Panthers" },
   { name: "Tomáš Nosek", position: "F", role: "LW", club: "Florida Panthers" },
   { name: "David Špaček", position: "D", role: "RB", club: "Minnesota Wild" },
@@ -150,8 +150,8 @@ const PLAYERS = [
   { name: "Lukáš Dostál", position: "G", role: "G", club: "Anaheim Ducks" },
   { name: "Vítek Vaněček", position: "G", role: "G", club: "Utah Mammoth" },
   { name: "Petr Mrázek", position: "G", role: "G", club: "Anaheim Ducks" },
-  { name: "Jiří Patera", position: "G", role: "G", club: "Vancouver Canucks" },
-  { name: "Jakub Škarek", position: "G", role: "G", club: "San Jose Sharks" },
+  { name: "Jiří Patera", position: "G", role: "G", club: "Abbotsford Canucks" },
+  { name: "Jakub Škarek", position: "G", role: "G", club: "San Jose Barracuda" },
 ];
 
 const EXCLUDED = ['David Krejčí', 'Jan Kern', 'Ondřej Roman', 'Vashek Blanár'];

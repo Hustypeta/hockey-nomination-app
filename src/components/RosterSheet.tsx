@@ -34,7 +34,12 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                     <tr key={p.id} className="border-b border-gray-200">
                       <td className="py-1">{i + 1}.</td>
                       <td className="py-1 font-medium">{p.name}</td>
-                      <td className="py-1 text-gray-600">{p.club}</td>
+                      <td className="py-1 text-gray-600">
+                        {p.club}
+                        {p.league ? (
+                          <span className="text-gray-400"> ({p.league})</span>
+                        ) : null}
+                      </td>
                       {captainId === p.id && <td className="py-1 text-amber-600 font-bold">C</td>}
                     </tr>
                   ) : null;
@@ -67,7 +72,12 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                     <td className="py-1">{l}. lajna</td>
                     <td className="py-1">{pos}</td>
                     <td className="py-1 font-medium">{p.name}</td>
-                    <td className="py-1 text-gray-600">{p.club}</td>
+                    <td className="py-1 text-gray-600">
+                      {p.club}
+                      {p.league ? (
+                        <span className="text-gray-400"> ({p.league})</span>
+                      ) : null}
+                    </td>
                     {captainId === p.id && <td className="py-1 text-amber-600 font-bold">C</td>}
                   </tr>
                 ))}
@@ -78,7 +88,12 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                       <td className="py-1">Náhradník</td>
                       <td className="py-1">–</td>
                       <td className="py-1 font-medium">{p.name}</td>
-                      <td className="py-1 text-gray-600">{p.club}</td>
+                      <td className="py-1 text-gray-600">
+                        {p.club}
+                        {p.league ? (
+                          <span className="text-gray-400"> ({p.league})</span>
+                        ) : null}
+                      </td>
                       {captainId === p.id && <td className="py-1 text-amber-600 font-bold">C</td>}
                     </tr>
                   ) : null;
@@ -107,7 +122,12 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                     <td className="py-1">{l}. pár</td>
                     <td className="py-1">{pos}</td>
                     <td className="py-1 font-medium">{p.name}</td>
-                    <td className="py-1 text-gray-600">{p.club}</td>
+                    <td className="py-1 text-gray-600">
+                      {p.club}
+                      {p.league ? (
+                        <span className="text-gray-400"> ({p.league})</span>
+                      ) : null}
+                    </td>
                     {captainId === p.id && <td className="py-1 text-amber-600 font-bold">C</td>}
                   </tr>
                 ))}
@@ -120,7 +140,12 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
           {players.map((p, i) => (
             <div key={p.id} className="flex justify-between gap-4 py-1 border-b border-gray-200">
               <span>{i + 1}. {p.name}</span>
-              <span className="text-gray-600">{p.club}</span>
+              <span className="text-gray-600">
+                {p.club}
+                {p.league ? (
+                  <span className="text-gray-400"> ({p.league})</span>
+                ) : null}
+              </span>
               {captainId === p.id && <span className="text-amber-600 font-bold">C</span>}
             </div>
           ))}
