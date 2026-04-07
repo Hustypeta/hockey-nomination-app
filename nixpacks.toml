@@ -1,3 +1,7 @@
 # Node.js 20+ for Prisma 6, Next.js 16
 [phases.setup]
 nixPkgs = ["nodejs_20", "npm-9_x", "openssl"]
+
+# Doporučená náhrada za deprecated npm `production` (varování v logu při startu)
+[variables]
+NPM_CONFIG_PRODUCTION = "false"
