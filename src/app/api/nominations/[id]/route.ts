@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { playerFromDb } from "@/lib/playerDto";
 
 export async function GET(
   _request: NextRequest,
@@ -22,7 +23,8 @@ export async function GET(
 
     const orderedPlayers = nomination.selectedPlayerIds
       .map((pid) => players.find((p) => p.id === pid))
-      .filter(Boolean);
+      .filter((p): p is NonNullable<typeof p> => p != null)
+      .map(playerFromDb);
 
     return NextResponse.json({
       id: nomination.id,
