@@ -18,7 +18,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
     return (
       <div
         ref={ref}
-        className="nomination-poster-box relative w-[min(92vw,920px)] overflow-hidden rounded-2xl border-[6px] border-[#c41e3a] bg-[#07090d] shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
+        className="nomination-poster-box relative w-[430px] max-w-[100vw] overflow-hidden rounded-[1.75rem] border-[5px] border-[#c41e3a] bg-[#07090d] shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
       >
         {/* Jemný praporový akcent */}
         <div
@@ -29,23 +29,23 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
           }}
         />
 
-        <div className="relative px-8 pb-10 pt-10 md:px-12 md:pb-12 md:pt-12">
-          <header className="mb-8 text-center">
-            <p className="font-display text-sm tracking-[0.35em] text-[#c41e3a] md:text-base">
+        <div className="relative px-4 pb-6 pt-6 sm:px-5">
+          <header className="mb-4 text-center">
+            <p className="font-display text-[10px] tracking-[0.28em] text-[#c41e3a]">
               ČESKÁ HOCKEYOVÁ REPREZENTACE
             </p>
-            <h1 className="mt-2 font-display text-5xl tracking-[0.12em] text-white md:text-6xl">
+            <h1 className="mt-1 font-display text-4xl tracking-[0.1em] text-white">
               MS 2026
             </h1>
-            <p className="mt-2 font-display text-3xl text-[#c41e3a] md:text-4xl">MÁ NOMINACE</p>
-            <div className="mx-auto mt-4 h-1.5 w-28 rounded-full bg-[#003f87]" />
+            <p className="mt-1 font-display text-2xl text-[#c41e3a]">MÁ NOMINACE</p>
+            <div className="mx-auto mt-2 h-1 w-20 rounded-full bg-[#003f87]" />
           </header>
 
-          <div className="nomination-rink rounded-2xl p-6 md:p-8">
+          <div className="nomination-rink rounded-xl p-3 sm:p-4">
             {lineup ? (
-              <div className="space-y-8">
+              <div className="space-y-4">
                 <PosterSection title="Brankáři">
-                  <div className="flex flex-wrap justify-center gap-4 md:gap-5">
+                  <div className="flex flex-wrap justify-center gap-2">
                     {lineup.goalies.map((gid, i) => {
                       const p = gid ? getPlayer(gid) : null;
                       if (!p) return null;
@@ -54,7 +54,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                           key={p.id}
                           player={p}
                           variant={i % 2 === 0 ? "white" : "red"}
-                          size="lg"
+                          size="sm"
                           isCaptain={captainId === p.id}
                         />
                       );
@@ -63,7 +63,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                 </PosterSection>
 
                 <PosterSection title="Obránci">
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {lineup.defensePairs.map((pair, i) => {
                       const lb = pair.lb ? getPlayer(pair.lb) : null;
                       const rb = pair.rb ? getPlayer(pair.rb) : null;
@@ -73,23 +73,23 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                           key={i}
                           className="flex flex-wrap items-center justify-center gap-3 md:gap-5"
                         >
-                          <span className="w-10 text-right font-display text-lg text-[#003f87]/80">
+                          <span className="w-6 text-right font-display text-sm text-[#003f87]/80">
                             {i + 1}.
                           </span>
                           {lb && (
                             <NationalJersey
                               player={lb}
                               variant="white"
-                              size="lg"
+                              size="sm"
                               isCaptain={captainId === lb.id}
                             />
                           )}
-                          <span className="font-display text-xl text-[#003f87]/50">–</span>
+                          <span className="font-display text-sm text-[#003f87]/50">–</span>
                           {rb && (
                             <NationalJersey
                               player={rb}
                               variant="red"
-                              size="lg"
+                              size="sm"
                               isCaptain={captainId === rb.id}
                             />
                           )}
@@ -99,14 +99,14 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                   </div>
                 </PosterSection>
 
-                <div className="flex justify-center py-2">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#003f87]/60 bg-[#003f87]/15 font-display text-sm tracking-widest text-[#003f87]">
+                <div className="flex justify-center py-1">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#003f87]/60 bg-[#003f87]/15 font-display text-xs tracking-widest text-[#003f87]">
                     ČR
                   </div>
                 </div>
 
                 <PosterSection title="Útočníci">
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     {lineup.forwardLines.map((line, i) => {
                       const lw = line.lw ? getPlayer(line.lw) : null;
                       const c = line.c ? getPlayer(line.c) : null;
@@ -117,14 +117,14 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                           key={i}
                           className="flex flex-wrap items-end justify-center gap-3 md:gap-5"
                         >
-                          <span className="mb-3 w-8 text-right font-display text-lg text-white/50">
+                          <span className="mb-2 w-5 text-right font-display text-xs text-white/50">
                             {i + 1}.
                           </span>
                           {lw && (
                             <NationalJersey
                               player={lw}
                               variant="white"
-                              size="lg"
+                              size="sm"
                               isCaptain={captainId === lw.id}
                             />
                           )}
@@ -132,7 +132,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                             <NationalJersey
                               player={c}
                               variant="red"
-                              size="lg"
+                              size="sm"
                               isCaptain={captainId === c.id}
                             />
                           )}
@@ -140,7 +140,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                             <NationalJersey
                               player={rw}
                               variant="white"
-                              size="lg"
+                              size="sm"
                               isCaptain={captainId === rw.id}
                             />
                           )}
@@ -148,11 +148,11 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                       );
                     })}
                     {lineup.extraForwards.length > 0 && (
-                      <div className="border-t border-[#003f87]/25 pt-4">
-                        <p className="mb-3 text-center font-display text-sm tracking-wide text-[#003f87]/80">
+                      <div className="border-t border-[#003f87]/25 pt-2">
+                        <p className="mb-2 text-center font-display text-xs tracking-wide text-[#003f87]/80">
                           Náhradní útočníci
                         </p>
-                        <div className="flex flex-wrap justify-center gap-4">
+                        <div className="flex flex-wrap justify-center gap-2">
                           {lineup.extraForwards.map((id, j) => {
                             const p = getPlayer(id);
                             return p ? (
@@ -160,7 +160,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                                 key={p.id}
                                 player={p}
                                 variant={j % 2 === 0 ? "red" : "white"}
-                                size="lg"
+                                size="sm"
                                 isCaptain={captainId === p.id}
                               />
                             ) : null;
@@ -172,7 +172,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                 </PosterSection>
               </div>
             ) : (
-              <div className="flex flex-wrap justify-center gap-3">
+              <div className="flex flex-wrap justify-center gap-2">
                 {players
                   .filter((p) => p.position === "G")
                   .map((p, i) => (
@@ -180,7 +180,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                       key={p.id}
                       player={p}
                       variant={i % 2 === 0 ? "white" : "red"}
-                      size="lg"
+                      size="sm"
                       isCaptain={captainId === p.id}
                     />
                   ))}
@@ -191,7 +191,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                       key={p.id}
                       player={p}
                       variant={i % 2 === 0 ? "white" : "red"}
-                      size="lg"
+                      size="sm"
                       isCaptain={captainId === p.id}
                     />
                   ))}
@@ -202,7 +202,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                       key={p.id}
                       player={p}
                       variant={i % 2 === 0 ? "white" : "red"}
-                      size="lg"
+                      size="sm"
                       isCaptain={captainId === p.id}
                     />
                   ))}
@@ -210,8 +210,8 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
             )}
           </div>
 
-          <footer className="mt-10 text-center">
-            <p className="text-base text-white/55 md:text-lg">
+          <footer className="mt-4 text-center">
+            <p className="text-xs text-white/55 sm:text-sm">
               Sestavil jsem na{" "}
               <span className="font-display text-[#c41e3a]">hockey-nomination.cz</span>
             </p>
@@ -231,7 +231,7 @@ function PosterSection({
 }) {
   return (
     <section>
-      <h2 className="mb-4 text-center font-display text-xl tracking-[0.2em] text-[#c41e3a] md:text-2xl">
+      <h2 className="mb-2 text-center font-display text-sm tracking-[0.15em] text-[#c41e3a]">
         {title}
       </h2>
       {children}

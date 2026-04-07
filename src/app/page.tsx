@@ -154,14 +154,14 @@ export default function Home() {
   );
 
   const handleSave = useCallback(
-    async (email: string): Promise<string | null> => {
+    async (email: string | null): Promise<string | null> => {
       setSaving(true);
       try {
         const res = await fetch("/api/nominations", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            email,
+            email: email || undefined,
             selectedPlayerIds: selectedPlayers.map((p) => p.id),
             captainId,
             lineupStructure: lineup,
@@ -269,13 +269,13 @@ export default function Home() {
               }
             `}
           >
-            Uložit a Sdílet
+            Uložit / plakát
           </button>
         </section>
       </main>
 
       {/* Hidden poster for export */}
-      <div className="fixed -left-[9999px] top-0 w-[920px]" aria-hidden="true">
+      <div className="fixed -left-[9999px] top-0 w-[430px]" aria-hidden="true">
         <NominationPoster
           ref={posterRef}
           players={selectedPlayers}

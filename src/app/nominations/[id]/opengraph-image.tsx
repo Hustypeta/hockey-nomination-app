@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { prisma } from "@/lib/prisma";
+import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
 
 export const alt = "MS 2026 – Má nominace";
 export const size = { width: 1200, height: 630 };
@@ -37,9 +38,7 @@ export default async function Image({
     );
   }
 
-  const players = await prisma.player.findMany({
-    where: { id: { in: nomination.selectedPlayerIds } },
-  });
+  const players = await resolvePlayersByIds(nomination.selectedPlayerIds);
 
   const captain = players.find((p) => p.id === nomination.captainId);
   const captainName = captain?.name?.split(" ").pop() || "";

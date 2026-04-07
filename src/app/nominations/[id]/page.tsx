@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { playerFromDb } from "@/lib/playerDto";
+import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
 import { NominationView } from "./NominationView";
 
 type Props = {
@@ -14,13 +14,7 @@ async function getNomination(id: string) {
   });
   if (!nomination) return null;
 
-  const players = await prisma.player.findMany({
-    where: { id: { in: nomination.selectedPlayerIds } },
-  });
-  const orderedPlayers = nomination.selectedPlayerIds
-    .map((pid) => players.find((p) => p.id === pid))
-    .filter((p): p is NonNullable<typeof p> => p != null)
-    .map(playerFromDb);
+  const orderedPlayers = await resolvePlayersByIds(nomination.selectedPlayerIds);
 
   const lineupStructure = nomination.lineupStructure as import("@/types").LineupStructure | null;
 

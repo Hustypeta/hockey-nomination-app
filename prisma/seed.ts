@@ -1,9 +1,7 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { readFileSync } from "fs";
-import { join } from "path";
-import { leagueForClub } from "../src/lib/clubLeague";
+import { loadMs2026Candidates } from "../src/lib/ms2026Candidates";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL is not set");
@@ -11,72 +9,24 @@ if (!connectionString) throw new Error("DATABASE_URL is not set");
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-// Načtení hráčů z JSON (Extraliga, NHL, AHL, SHL, Liiga, NL dle Elite Prospects)
-const jsonPath = join(__dirname, "..", "czech-players-2025-26.json");
-const allPlayers = JSON.parse(
-  readFileSync(jsonPath, "utf-8")
-) as Array<{
-  name: string;
-  position: string;
-  role: string;
-  club: string;
-  league?: string;
-}>;
-
-// Vyřazení: důchodce (Krejčí), hráči z 2. ligy (Czechia2)
-const EXCLUDED_NAMES = new Set(["David Krejčí"]);
-
-// Kluby 2. ligy 2025-26 (Czechia2) – hráče z těchto týmů vyřadit
-const EXCLUDED_CLUBS = new Set([
-  "AZ Havířov",
-  "Draci Šumperk",
-  "HC Bobři Valašské Meziříčí",
-  "HC ISMM Kopřivnice",
-  "HC LERAM Orli Znojmo",
-  "HC Slezan Opava",
-  "HC Spartak Uherský Brod",
-  "HHK Velké Meziříčí",
-  "HK Kroměříž",
-  "HK Nový Jičín",
-  "LHK Jestřábi Prostějov",
-  "SHKM Baník Hodonín",
-  "SKLH Žďár nad Sázavou",
-  "Technika Hockey Brno",
-  "BK Havlíčkův Brod",
-  "HC Benátky nad Jizerou",
-  "HC Děčín",
-  "HC Kobra Praha",
-  "HC Milevsko 1934",
-  "HC Příbram",
-  "HC Stadion Cheb",
-  "HC Stadion Vrchlabí",
-  "HC Wikov Hronov",
-  "HK Kralupy nad Vltavou",
-  "HC Slovan Ústí nad Labem",
-  "IHC Králové Písek",
-  "Mostečtí lvi",
-  "SK Kadaň",
-]);
-
-const samplePlayers = allPlayers
-  .filter((p) => !EXCLUDED_NAMES.has(p.name) && !EXCLUDED_CLUBS.has(p.club))
-  .map((p) => ({
-    name: p.name,
-    position: p.position as "G" | "D" | "F",
-    role: p.role || (p.position === "G" ? "G" : null),
-    club: p.club,
-    league: p.league?.trim() || leagueForClub(p.club),
-  }));
-
 async function main() {
-  console.log("Seeding database...");
+  console.log("Seeding database (MS 2026 kandidáti)...");
+
+  const rows = loadMs2026Candidates().map((p) => ({
+    id: p.id,
+    name: p.name,
+    position: p.position,
+    role: p.role,
+    club: p.club,
+    league: p.league,
+  }));
 
   await prisma.player.deleteMany({});
   await prisma.player.createMany({
-    data: samplePlayers,
+    data: rows,
   });
 
-  console.log(`Seeded ${samplePlayers.length} players`);
+  console.log(`Seeded ${rows.length} players from czech-ms-2026-candidates-80.json`);
 }
 
 main()

@@ -117,7 +117,11 @@ export function NominationView({
             disabled={downloading}
             className="px-6 py-3 rounded-xl bg-[#c41e3a] text-white font-display text-lg hover:bg-[#a01830] disabled:opacity-50 transition-all card-glow"
           >
-            {downloading ? "Generuji..." : "Stáhnout plakát"}
+            {downloading
+              ? "Generuji..."
+              : exportMode === "poster"
+                ? "Stáhnout plakát"
+                : "Stáhnout soupisku"}
           </button>
           <button
             onClick={handleCopyLink}

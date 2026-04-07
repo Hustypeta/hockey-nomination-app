@@ -32,13 +32,13 @@ model User {
 
 model Nomination {
   id                String   @id @default(cuid())
-  userId            String
-  selectedPlayerIds String[] // Array of player IDs (pro zpětnou kompatibilitu)
+  userId            String? // volitelné – nominace bez účtu
+  selectedPlayerIds String[]
   captainId         String?
-  lineupStructure   Json?    // Struktura lajn a náhradníků (fantasy style)
+  lineupStructure   Json?
   createdAt         DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("nominations")
 }

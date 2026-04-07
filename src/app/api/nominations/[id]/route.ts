@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { playerFromDb } from "@/lib/playerDto";
+import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
 
 export async function GET(
   _request: NextRequest,
@@ -17,14 +17,7 @@ export async function GET(
       return NextResponse.json({ error: "Nominace nenalezena" }, { status: 404 });
     }
 
-    const players = await prisma.player.findMany({
-      where: { id: { in: nomination.selectedPlayerIds } },
-    });
-
-    const orderedPlayers = nomination.selectedPlayerIds
-      .map((pid) => players.find((p) => p.id === pid))
-      .filter((p): p is NonNullable<typeof p> => p != null)
-      .map(playerFromDb);
+    const orderedPlayers = await resolvePlayersByIds(nomination.selectedPlayerIds);
 
     return NextResponse.json({
       id: nomination.id,

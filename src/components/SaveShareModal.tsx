@@ -7,7 +7,7 @@ interface SaveShareModalProps {
   isOpen: boolean;
   onClose: () => void;
   posterRef: React.RefObject<HTMLDivElement | null>;
-  onSave: (email: string) => Promise<string | null>;
+  onSave: (email: string | null) => Promise<string | null>;
   isSaving: boolean;
 }
 
@@ -43,12 +43,11 @@ export function SaveShareModal({
     }
   };
 
-  const handleSaveAndShare = async () => {
-    if (!email.trim()) return;
-    const id = await onSave(email.trim());
+  const handleSaveNomination = async () => {
+    const trimmed = email.trim();
+    const id = await onSave(trimmed ? trimmed : null);
     if (!id) return;
     setSavedId(id);
-    await handleDownload();
   };
 
   const handleCopyLink = async () => {
@@ -76,33 +75,44 @@ export function SaveShareModal({
       <div className="bg-[#151922] border-2 border-[#c41e3a] rounded-2xl p-6 max-w-md w-full card-glow">
         {!savedId ? (
           <>
-            <h2 className="font-display text-2xl text-white mb-4">
-              Uložit a Sdílet
+            <h2 className="font-display text-2xl text-white mb-2">
+              Uložit a sdílet
             </h2>
             <p className="text-white/80 text-sm mb-4">
-              Zadejte email pro uložení nominace. Po uložení se stáhne plakát a
-              dostanete odkaz ke sdílení.
+              <strong className="text-white">Email je volitelný.</strong> Použijeme ho jen
+              k přiřazení nominace k účtu (stejný email = historie v budoucnu). Nominace jde
+              uložit i bez něj – dostaneš odkaz ke sdílení.
             </p>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="vas@email.cz"
+              placeholder="E-mail (volitelné)"
               className="w-full px-4 py-3 rounded-lg bg-[#0c0e12] border-2 border-[#2a3142] text-white placeholder-white/40 focus:border-[#c41e3a] focus:outline-none mb-4"
             />
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3">
               <button
-                onClick={handleSaveAndShare}
-                disabled={isSaving || !email.trim()}
-                className="flex-1 py-3 rounded-lg bg-[#c41e3a] text-white font-display text-lg hover:bg-[#a01830] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                type="button"
+                onClick={handleSaveNomination}
+                disabled={isSaving}
+                className="w-full py-3 rounded-lg bg-[#c41e3a] text-white font-display text-lg hover:bg-[#a01830] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {isSaving || downloading ? "..." : "Uložit a Stáhnout"}
+                {isSaving ? "Ukládám…" : "Uložit nominaci"}
               </button>
               <button
-                onClick={handleClose}
-                className="px-4 py-3 rounded-lg border-2 border-[#2a3142] text-white hover:border-white/50 transition-colors"
+                type="button"
+                onClick={handleDownload}
+                disabled={downloading}
+                className="w-full py-3 rounded-lg border-2 border-[#003f87] text-white font-display text-lg hover:bg-[#003f87]/20 disabled:opacity-50 transition-colors"
               >
-                Zrušit
+                {downloading ? "Generuji obrázek…" : "Stáhnout plakát (PNG)"}
+              </button>
+              <button
+                type="button"
+                onClick={handleClose}
+                className="py-2 rounded-lg border border-[#2a3142] text-white/80 hover:border-white/40 text-sm transition-colors"
+              >
+                Zavřít
               </button>
             </div>
           </>
@@ -112,8 +122,7 @@ export function SaveShareModal({
               Nominace uložena
             </h2>
             <p className="text-white/80 text-sm mb-4">
-              Plakát se stáhl. Sdílej odkaz – na Facebooku, Twitteru nebo
-              WhatsAppu se zobrazí hezký náhled.
+              Zkopíruj odkaz a pošli ho dál. Plakát si stáhneš tlačítkem níže, až budeš chtít.
             </p>
             <div className="flex gap-2 mb-4">
               <input
@@ -123,27 +132,39 @@ export function SaveShareModal({
                 className="flex-1 px-3 py-2 rounded-lg bg-[#0c0e12] border border-[#2a3142] text-white text-sm truncate"
               />
               <button
+                type="button"
                 onClick={handleCopyLink}
                 className="px-4 py-2 rounded-lg bg-[#003f87] text-white hover:bg-[#004a9e] transition-colors whitespace-nowrap"
               >
                 {copied ? "Zkopírováno!" : "Kopírovat"}
               </button>
             </div>
-            <div className="flex gap-3">
-              <a
-                href={shareUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 py-3 rounded-lg bg-[#c41e3a] text-white font-display text-lg hover:bg-[#a01830] text-center transition-colors"
-              >
-                Otevřít nominaci
-              </a>
+            <div className="flex flex-col gap-3">
               <button
-                onClick={handleClose}
-                className="px-4 py-3 rounded-lg border-2 border-[#2a3142] text-white hover:border-white/50 transition-colors"
+                type="button"
+                onClick={handleDownload}
+                disabled={downloading}
+                className="w-full py-3 rounded-lg bg-[#c41e3a] text-white font-display text-lg hover:bg-[#a01830] disabled:opacity-50 transition-colors"
               >
-                Hotovo
+                {downloading ? "Generuji…" : "Stáhnout plakát (PNG)"}
               </button>
+              <div className="flex gap-3">
+                <a
+                  href={shareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-3 rounded-lg border-2 border-[#2a3142] text-white font-display text-center hover:border-[#c41e3a] transition-colors"
+                >
+                  Otevřít nominaci
+                </a>
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="px-4 py-3 rounded-lg border-2 border-[#2a3142] text-white hover:border-white/50 transition-colors"
+                >
+                  Hotovo
+                </button>
+              </div>
             </div>
           </>
         )}
