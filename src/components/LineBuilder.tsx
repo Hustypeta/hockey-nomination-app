@@ -2,7 +2,7 @@
 
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
-import { NationalJersey, type JerseyVariant } from "@/components/NationalJersey";
+import { NationalJersey } from "@/components/NationalJersey";
 
 interface LineBuilderProps {
   lineup: LineupStructure;
@@ -69,7 +69,6 @@ export function LineBuilder({
     type,
     lineIndex,
     role,
-    variant,
     onClear,
   }: {
     playerId: string | null;
@@ -77,7 +76,6 @@ export function LineBuilder({
     type: string;
     lineIndex?: number;
     role?: string;
-    variant: JerseyVariant;
     onClear?: () => void;
   }) => {
     const player = getPlayer(playerId);
@@ -109,7 +107,6 @@ export function LineBuilder({
           <>
             <NationalJersey
               player={player}
-              variant={variant}
               size="md"
               isCaptain={captainId === player.id}
               isSelected={selected}
@@ -134,7 +131,6 @@ export function LineBuilder({
           </>
         ) : (
           <NationalJersey
-            variant={variant}
             size="md"
             placeholderLabel={label}
             isSelected={selected}
@@ -166,7 +162,6 @@ export function LineBuilder({
                 label={`G${i + 1}`}
                 type="goalie"
                 lineIndex={i}
-                variant={i % 2 === 0 ? "white" : "red"}
                 onClear={gid ? () => { setGoalie(i, null); onSelectSlot(null); } : undefined}
               />
             </div>
@@ -195,7 +190,6 @@ export function LineBuilder({
                 type="defense"
                 lineIndex={i}
                 role="lb"
-                variant="white"
                 onClear={pair.lb ? () => { setDefensePair(i, "lb", null); onSelectSlot(null); } : undefined}
               />
               <span className="text-white/30">–</span>
@@ -205,7 +199,6 @@ export function LineBuilder({
                 type="defense"
                 lineIndex={i}
                 role="rb"
-                variant="red"
                 onClear={pair.rb ? () => { setDefensePair(i, "rb", null); onSelectSlot(null); } : undefined}
               />
             </div>
@@ -222,75 +215,162 @@ export function LineBuilder({
         </div>
       </div>
 
-      {/* Útočníci */}
+      {/* Útočníci – 1.|2. vedle sebe, pod tím 3.+4. vlevo a náhradníci vpravo */}
       <section>
         <h3 className="mb-3 flex items-center gap-2 font-display text-lg tracking-wide text-[#c41e3a]">
           <span className="inline-block h-2 w-2 rounded-full bg-[#003f87]" />
           Útočníci
         </h3>
-        <div className="mx-auto max-w-4xl space-y-4">
-          {lineup.forwardLines.map((line, i) => (
-            <div
-              key={i}
-              className="flex flex-wrap items-end justify-center gap-2 sm:gap-3 md:gap-4"
-            >
-              <span className="mb-2 w-12 shrink-0 text-right text-sm text-white/50 md:w-16">
-                {i + 1}.
-              </span>
-              <Slot
-                playerId={line.lw}
-                label="LW"
-                type="forward"
-                lineIndex={i}
-                role="lw"
-                variant="white"
-                onClear={line.lw ? () => { setForwardLine(i, "lw", null); onSelectSlot(null); } : undefined}
-              />
-              <Slot
-                playerId={line.c}
-                label="C"
-                type="forward"
-                lineIndex={i}
-                role="c"
-                variant="red"
-                onClear={line.c ? () => { setForwardLine(i, "c", null); onSelectSlot(null); } : undefined}
-              />
-              <Slot
-                playerId={line.rw}
-                label="RW"
-                type="forward"
-                lineIndex={i}
-                role="rw"
-                variant="white"
-                onClear={line.rw ? () => { setForwardLine(i, "rw", null); onSelectSlot(null); } : undefined}
-              />
-            </div>
-          ))}
-        </div>
 
-        <div className="mt-6 border-t border-white/10 pt-4">
-          <p className="mb-3 text-center text-sm text-white/50">Náhradní útočníci</p>
-          <div className="flex flex-wrap justify-center gap-3">
+        <div className="mx-auto max-w-4xl space-y-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {[0, 1].map((i) => {
-              const pid = lineup.extraForwards[i] ?? null;
+              const line = lineup.forwardLines[i];
               return (
-                <Slot
-                  key={i}
-                  playerId={pid}
-                  label={`N${i + 1}`}
-                  type="extraForward"
-                  lineIndex={i}
-                  variant={i === 0 ? "red" : "white"}
-                  onClear={pid ? () => { removeExtraForwardByIndex(i); onSelectSlot(null); } : undefined}
-                />
+                <div key={i} className="flex min-w-0 flex-col items-center gap-2">
+                  <span className="font-display text-xs text-white/55">{i + 1}. lajna</span>
+                  <div className="flex flex-wrap items-end justify-center gap-1.5 sm:gap-2">
+                    <Slot
+                      playerId={line.lw}
+                      label="LW"
+                      type="forward"
+                      lineIndex={i}
+                      role="lw"
+                      onClear={
+                        line.lw
+                          ? () => {
+                              setForwardLine(i, "lw", null);
+                              onSelectSlot(null);
+                            }
+                          : undefined
+                      }
+                    />
+                    <Slot
+                      playerId={line.c}
+                      label="C"
+                      type="forward"
+                      lineIndex={i}
+                      role="c"
+                      onClear={
+                        line.c
+                          ? () => {
+                              setForwardLine(i, "c", null);
+                              onSelectSlot(null);
+                            }
+                          : undefined
+                      }
+                    />
+                    <Slot
+                      playerId={line.rw}
+                      label="RW"
+                      type="forward"
+                      lineIndex={i}
+                      role="rw"
+                      onClear={
+                        line.rw
+                          ? () => {
+                              setForwardLine(i, "rw", null);
+                              onSelectSlot(null);
+                            }
+                          : undefined
+                      }
+                    />
+                  </div>
+                </div>
               );
             })}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 border-t border-white/10 pt-4 sm:gap-4">
+            <div className="flex min-w-0 flex-col items-center gap-3">
+              {[2, 3].map((i) => {
+                const line = lineup.forwardLines[i];
+                return (
+                  <div key={i} className="flex w-full flex-col items-center gap-2">
+                    <span className="font-display text-xs text-white/55">{i + 1}. lajna</span>
+                    <div className="flex flex-wrap items-end justify-center gap-1.5 sm:gap-2">
+                      <Slot
+                        playerId={line.lw}
+                        label="LW"
+                        type="forward"
+                        lineIndex={i}
+                        role="lw"
+                        onClear={
+                          line.lw
+                            ? () => {
+                                setForwardLine(i, "lw", null);
+                                onSelectSlot(null);
+                              }
+                            : undefined
+                        }
+                      />
+                      <Slot
+                        playerId={line.c}
+                        label="C"
+                        type="forward"
+                        lineIndex={i}
+                        role="c"
+                        onClear={
+                          line.c
+                            ? () => {
+                                setForwardLine(i, "c", null);
+                                onSelectSlot(null);
+                              }
+                            : undefined
+                        }
+                      />
+                      <Slot
+                        playerId={line.rw}
+                        label="RW"
+                        type="forward"
+                        lineIndex={i}
+                        role="rw"
+                        onClear={
+                          line.rw
+                            ? () => {
+                                setForwardLine(i, "rw", null);
+                                onSelectSlot(null);
+                              }
+                            : undefined
+                        }
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex min-w-0 flex-col items-center gap-2 border-l border-white/10 pl-3 sm:pl-4">
+              <span className="font-display text-xs tracking-wide text-[#c41e3a]">Náhradníci</span>
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+                {[0, 1].map((i) => {
+                  const pid = lineup.extraForwards[i] ?? null;
+                  return (
+                    <Slot
+                      key={i}
+                      playerId={pid}
+                      label={`N${i + 1}`}
+                      type="extraForward"
+                      lineIndex={i}
+                      onClear={
+                        pid
+                          ? () => {
+                              removeExtraForwardByIndex(i);
+                              onSelectSlot(null);
+                            }
+                          : undefined
+                      }
+                    />
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <p className="mt-6 text-center text-xs text-white/40">
-        Klik na dres = výběr slotu a výběr hráče ze seznamu · tlačítko C? / Kapitán · × = odebrat
+        Klik na kartu = výběr slotu · C? / Kapitán · × = odebrat
       </p>
     </div>
   );

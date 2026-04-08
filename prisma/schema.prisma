@@ -13,26 +13,70 @@ datasource db {
 model Player {
   id        String   @id @default(cuid())
   name      String
-  position  String   // G, D, F (skupina pro limity)
-  role      String?  // RW, LW, C, RB, LB (detailní pozice)
+  position  String // G, D, F (skupina pro limity)
+  role      String? // RW, LW, C, RB, LB (detailní pozice)
   club      String
-  league    String?  // NHL, AHL, …; NULL u starých řádků → dopočet v API z klubu
+  league    String? // NHL, AHL, …; NULL u starých řádků → dopočet v API z klubu
   createdAt DateTime @default(now())
 
   @@map("players")
 }
 
 model User {
-  id         String       @id @default(cuid())
-  email      String       @unique
-  nominations Nomination[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  nominations   Nomination[]
 
   @@map("users")
 }
 
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
 model Nomination {
   id                String   @id @default(cuid())
-  userId            String? // volitelné – nominace bez účtu
+  userId            String?
   selectedPlayerIds String[]
   captainId         String?
   lineupStructure   Json?

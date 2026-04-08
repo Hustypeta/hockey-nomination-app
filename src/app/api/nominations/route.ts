@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Pro uložení nominace se musíš přihlásit přes Google." },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
-    const { email, selectedPlayerIds, captainId, lineupStructure } = body;
+    const { selectedPlayerIds, captainId, lineupStructure } = body;
 
     if (!selectedPlayerIds || !Array.isArray(selectedPlayerIds)) {
       return NextResponse.json(
@@ -40,23 +50,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const emailTrim = typeof email === "string" ? email.trim() : "";
-    let userId: string | null = null;
-    if (emailTrim) {
-      let user = await prisma.user.findUnique({
-        where: { email: emailTrim },
-      });
-      if (!user) {
-        user = await prisma.user.create({
-          data: { email: emailTrim },
-        });
-      }
-      userId = user.id;
-    }
-
     const nomination = await prisma.nomination.create({
       data: {
-        userId,
+        userId: session.user.id,
         selectedPlayerIds,
         captainId: captainId || null,
         lineupStructure: lineupStructure ?? undefined,

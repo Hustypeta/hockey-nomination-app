@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
 import { NominationView } from "./NominationView";
@@ -56,6 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function NominationPage({ params }: Props) {
   const { id } = await params;
   const data = await getNomination(id);
+  const session = await getServerSession(authOptions);
 
   if (!data) notFound();
 
@@ -65,6 +68,7 @@ export default async function NominationPage({ params }: Props) {
       captainId={data.captainId}
       lineupStructure={data.lineupStructure}
       nominationId={id}
+      allowDownload={!!session}
     />
   );
 }
