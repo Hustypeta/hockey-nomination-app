@@ -169,43 +169,6 @@ export function LineBuilder({
         </div>
       </section>
 
-      {/* Obránci */}
-      <section className="mb-8">
-        <h3 className="mb-3 flex items-center gap-2 font-display text-lg tracking-wide text-[#c41e3a]">
-          <span className="inline-block h-2 w-2 rounded-full bg-[#003f87]" />
-          Obránci
-        </h3>
-        <div className="mx-auto max-w-3xl space-y-3">
-          {lineup.defensePairs.map((pair, i) => (
-            <div
-              key={i}
-              className="flex flex-wrap items-center justify-center gap-2 sm:gap-4"
-            >
-              <span className="w-14 shrink-0 text-right text-sm text-white/50">
-                {i + 1}. pár
-              </span>
-              <Slot
-                playerId={pair.lb}
-                label="LB"
-                type="defense"
-                lineIndex={i}
-                role="lb"
-                onClear={pair.lb ? () => { setDefensePair(i, "lb", null); onSelectSlot(null); } : undefined}
-              />
-              <span className="text-white/30">–</span>
-              <Slot
-                playerId={pair.rb}
-                label="RB"
-                type="defense"
-                lineIndex={i}
-                role="rb"
-                onClear={pair.rb ? () => { setDefensePair(i, "rb", null); onSelectSlot(null); } : undefined}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Střed hřiště */}
       <div className="mb-6 flex justify-center">
         <div className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#003f87]/50 bg-[#003f87]/10 shadow-[inset_0_0_20px_rgba(0,63,135,0.2)]">
@@ -215,20 +178,27 @@ export function LineBuilder({
         </div>
       </div>
 
-      {/* Útočníci – 1.|2. vedle sebe, pod tím 3.+4. vlevo a náhradníci vpravo */}
+      {/* Lajny = útok + příslušný bekovský pár; 1.|2. vedle sebe, dole 3.+4. vlevo, náhradníci vpravo */}
       <section>
         <h3 className="mb-3 flex items-center gap-2 font-display text-lg tracking-wide text-[#c41e3a]">
           <span className="inline-block h-2 w-2 rounded-full bg-[#003f87]" />
-          Útočníci
+          Lajny
         </h3>
 
-        <div className="mx-auto max-w-4xl space-y-4">
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <div className="mx-auto max-w-5xl space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {[0, 1].map((i) => {
               const line = lineup.forwardLines[i];
+              const pair = lineup.defensePairs[i];
               return (
-                <div key={i} className="flex min-w-0 flex-col items-center gap-2">
+                <div
+                  key={i}
+                  className="flex min-w-0 flex-col items-center gap-2 rounded-xl border border-white/5 bg-white/[0.02] px-2 py-3"
+                >
                   <span className="font-display text-xs text-white/55">{i + 1}. lajna</span>
+                  <span className="text-[10px] uppercase tracking-wider text-[#003f87]/80">
+                    Útok
+                  </span>
                   <div className="flex flex-wrap items-end justify-center gap-1.5 sm:gap-2">
                     <Slot
                       playerId={line.lw}
@@ -276,18 +246,63 @@ export function LineBuilder({
                       }
                     />
                   </div>
+                  <span className="text-[10px] uppercase tracking-wider text-[#003f87]/80">
+                    Obránci
+                  </span>
+                  <div className="flex flex-wrap items-end justify-center gap-1.5 sm:gap-2">
+                    <Slot
+                      playerId={pair.lb}
+                      label="LB"
+                      type="defense"
+                      lineIndex={i}
+                      role="lb"
+                      onClear={
+                        pair.lb
+                          ? () => {
+                              setDefensePair(i, "lb", null);
+                              onSelectSlot(null);
+                            }
+                          : undefined
+                      }
+                    />
+                    {pair.lb && pair.rb && (
+                      <span className="mb-8 text-sm text-white/25">–</span>
+                    )}
+                    <Slot
+                      playerId={pair.rb}
+                      label="RB"
+                      type="defense"
+                      lineIndex={i}
+                      role="rb"
+                      onClear={
+                        pair.rb
+                          ? () => {
+                              setDefensePair(i, "rb", null);
+                              onSelectSlot(null);
+                            }
+                          : undefined
+                      }
+                    />
+                  </div>
                 </div>
               );
             })}
           </div>
 
-          <div className="grid grid-cols-2 gap-3 border-t border-white/10 pt-4 sm:gap-4">
-            <div className="flex min-w-0 flex-col items-center gap-3">
+          <div className="grid grid-cols-1 gap-4 border-t border-white/10 pt-4 sm:grid-cols-2">
+            <div className="flex min-w-0 flex-col items-stretch gap-4">
               {[2, 3].map((i) => {
                 const line = lineup.forwardLines[i];
+                const pair = lineup.defensePairs[i];
                 return (
-                  <div key={i} className="flex w-full flex-col items-center gap-2">
+                  <div
+                    key={i}
+                    className="flex w-full flex-col items-center gap-2 rounded-xl border border-white/5 bg-white/[0.02] px-2 py-3"
+                  >
                     <span className="font-display text-xs text-white/55">{i + 1}. lajna</span>
+                    <span className="text-[10px] uppercase tracking-wider text-[#003f87]/80">
+                      Útok
+                    </span>
                     <div className="flex flex-wrap items-end justify-center gap-1.5 sm:gap-2">
                       <Slot
                         playerId={line.lw}
@@ -335,12 +350,50 @@ export function LineBuilder({
                         }
                       />
                     </div>
+                    <span className="text-[10px] uppercase tracking-wider text-[#003f87]/80">
+                      Obránci
+                    </span>
+                    <div className="flex flex-wrap items-end justify-center gap-1.5 sm:gap-2">
+                      <Slot
+                        playerId={pair.lb}
+                        label="LB"
+                        type="defense"
+                        lineIndex={i}
+                        role="lb"
+                        onClear={
+                          pair.lb
+                            ? () => {
+                                setDefensePair(i, "lb", null);
+                                onSelectSlot(null);
+                              }
+                            : undefined
+                        }
+                      />
+                      {pair.lb && pair.rb && (
+                        <span className="mb-8 text-sm text-white/25">–</span>
+                      )}
+                      <Slot
+                        playerId={pair.rb}
+                        label="RB"
+                        type="defense"
+                        lineIndex={i}
+                        role="rb"
+                        onClear={
+                          pair.rb
+                            ? () => {
+                                setDefensePair(i, "rb", null);
+                                onSelectSlot(null);
+                              }
+                            : undefined
+                        }
+                      />
+                    </div>
                   </div>
                 );
               })}
             </div>
 
-            <div className="flex min-w-0 flex-col items-center gap-2 border-l border-white/10 pl-3 sm:pl-4">
+            <div className="flex min-w-0 flex-col items-center gap-2 border-t border-white/10 pt-4 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
               <span className="font-display text-xs tracking-wide text-[#c41e3a]">Náhradníci</span>
               <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
                 {[0, 1].map((i) => {

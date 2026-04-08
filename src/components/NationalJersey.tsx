@@ -19,24 +19,25 @@ function lastName(name: string) {
 }
 
 const sizeClasses = {
-  xs: "w-[3.2rem] min-h-[4.35rem] text-[7px]",
-  sm: "w-[4.25rem] min-h-[5.5rem] text-[10px]",
-  md: "w-[6.5rem] min-h-[7.75rem] text-xs",
-  lg: "w-[8rem] min-h-[9.5rem] text-sm",
+  xs: "w-[3.35rem] min-h-[4.85rem] text-[7px]",
+  sm: "w-[4.35rem] min-h-[6.1rem] text-[10px]",
+  md: "w-[6.5rem] min-h-[8.25rem] text-xs",
+  lg: "w-[8rem] min-h-[9.75rem] text-sm",
 };
 
+/* Výška siluety = celá postava; šířka z viewBox (auto) */
 const siloSize = {
-  xs: "h-8 w-[1.85rem]",
-  sm: "h-11 w-[2.35rem]",
-  md: "h-[3.75rem] w-[2.95rem]",
-  lg: "h-[4.25rem] w-[3.35rem]",
+  xs: "h-10 w-auto max-w-[92%]",
+  sm: "h-[3.1rem] w-auto max-w-[92%]",
+  md: "h-[4.35rem] w-auto max-w-[90%]",
+  lg: "h-[5.1rem] w-auto max-w-[88%]",
 };
 
 const crestSize = {
-  xs: "h-2.5 w-2.5",
-  sm: "h-3.5 w-3.5",
-  md: "h-4 w-4",
-  lg: "h-5 w-5",
+  xs: "h-2 w-2",
+  sm: "h-2.5 w-2.5",
+  md: "h-3 w-3",
+  lg: "h-3.5 w-3.5",
 };
 
 /** Inspirace domácím dresem ČR (Nike/repliky): bílé tělo, pruhy na rukávech, erb na hrudi, modrý lem. */
@@ -114,8 +115,8 @@ export function NationalJersey({
         )}
 
         <div
-          className={`relative z-[2] flex flex-1 flex-col items-center justify-center px-[18%] pb-1 pt-2 ${
-            empty ? "pt-3" : ""
+          className={`relative z-[2] flex flex-1 flex-col items-center justify-end px-[8%] pb-0.5 pt-1 min-h-0 ${
+            empty ? "justify-center pt-3" : ""
           }`}
         >
           {empty ? (
@@ -124,10 +125,13 @@ export function NationalJersey({
             </span>
           ) : (
             <>
-              <CzechHockeyCrest className={`${crest} mb-0.5 shrink-0 drop-shadow-sm`} />
+              <CzechHockeyCrest
+                className={`${crest} absolute left-1 top-1 z-[4] shrink-0 drop-shadow-sm`}
+                aria-hidden
+              />
               <HockeySilhouette
                 kind={player.position === "G" ? "goalie" : "skater"}
-                className={`${sil} shrink-0`}
+                className={`${sil} shrink-0 object-contain`}
               />
               <div
                 className="mt-1 max-w-full truncate text-center font-display text-[10px] font-bold leading-tight tracking-wide text-[#0c0e12] md:text-[12px] lg:text-sm"

@@ -2,7 +2,7 @@
 
 import { forwardRef, type ReactNode } from "react";
 import type { Player } from "@/types";
-import type { LineupStructure, ForwardLine } from "@/types";
+import type { LineupStructure, ForwardLine, DefensePair } from "@/types";
 import { NationalJersey } from "@/components/NationalJersey";
 
 interface NominationPosterProps {
@@ -11,34 +11,43 @@ interface NominationPosterProps {
   lineup?: LineupStructure | null;
 }
 
-function PosterForwardRow({
+/** Jedna kompletní lajna: útok (LW–C–RW) + příslušný pár beků. */
+function PosterLineBlock({
   label,
   line,
+  pair,
   captainId,
   getPlayer,
 }: {
   label: string;
   line: ForwardLine;
+  pair: DefensePair;
   captainId: string | null;
   getPlayer: (id: string) => Player | undefined;
 }) {
   const lw = line.lw ? getPlayer(line.lw) : null;
   const c = line.c ? getPlayer(line.c) : null;
   const rw = line.rw ? getPlayer(line.rw) : null;
-  if (!lw && !c && !rw) return null;
+  const lb = pair.lb ? getPlayer(pair.lb) : null;
+  const rb = pair.rb ? getPlayer(pair.rb) : null;
+  const hasAny = lw || c || rw || lb || rb;
+  if (!hasAny) return null;
+
   return (
-    <div className="flex flex-col items-center gap-0.5">
+    <div className="flex flex-col items-center gap-1">
       <span className="font-display text-[9px] tracking-wide text-white/55">{label}</span>
       <div className="flex items-end justify-center gap-0.5">
-        {lw && (
-          <NationalJersey player={lw} size="xs" isCaptain={captainId === lw.id} />
-        )}
-        {c && (
-          <NationalJersey player={c} size="xs" isCaptain={captainId === c.id} />
-        )}
-        {rw && (
-          <NationalJersey player={rw} size="xs" isCaptain={captainId === rw.id} />
-        )}
+        {lw && <NationalJersey player={lw} size="xs" isCaptain={captainId === lw.id} />}
+        {c && <NationalJersey player={c} size="xs" isCaptain={captainId === c.id} />}
+        {rw && <NationalJersey player={rw} size="xs" isCaptain={captainId === rw.id} />}
+      </div>
+      <span className="font-display text-[7px] uppercase tracking-wider text-[#003f87]/70">
+        obránci
+      </span>
+      <div className="flex items-end justify-center gap-0.5">
+        {lb && <NationalJersey player={lb} size="xs" isCaptain={captainId === lb.id} />}
+        {lb && rb && <span className="mb-3 text-[8px] text-white/35">–</span>}
+        {rb && <NationalJersey player={rb} size="xs" isCaptain={captainId === rb.id} />}
       </div>
     </div>
   );
@@ -91,75 +100,42 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                   </div>
                 </PosterSection>
 
-                <PosterSection title="Obránci">
-                  <div className="space-y-1.5">
-                    {lineup.defensePairs.map((pair, i) => {
-                      const lb = pair.lb ? getPlayer(pair.lb) : null;
-                      const rb = pair.rb ? getPlayer(pair.rb) : null;
-                      if (!lb && !rb) return null;
-                      return (
-                        <div
-                          key={i}
-                          className="flex flex-wrap items-center justify-center gap-2 md:gap-4"
-                        >
-                          <span className="w-5 text-right font-display text-xs text-[#003f87]/80">
-                            {i + 1}.
-                          </span>
-                          {lb && (
-                            <NationalJersey
-                              player={lb}
-                              size="sm"
-                              isCaptain={captainId === lb.id}
-                            />
-                          )}
-                          <span className="font-display text-xs text-[#003f87]/50">–</span>
-                          {rb && (
-                            <NationalJersey
-                              player={rb}
-                              size="sm"
-                              isCaptain={captainId === rb.id}
-                            />
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </PosterSection>
-
                 <div className="flex justify-center py-0.5">
                   <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#003f87]/60 bg-[#003f87]/15 font-display text-[10px] tracking-widest text-[#003f87]">
                     ČR
                   </div>
                 </div>
 
-                <PosterSection title="Útočníci">
-                  {/* 1. a 2. lajna vedle sebe */}
-                  <div className="grid grid-cols-2 gap-x-1 gap-y-1">
-                    <PosterForwardRow
+                <PosterSection title="Lajny (útok + bekové páry)">
+                  <div className="grid grid-cols-2 gap-x-1 gap-y-2">
+                    <PosterLineBlock
                       label="1. lajna"
                       line={lineup.forwardLines[0]}
+                      pair={lineup.defensePairs[0]}
                       captainId={captainId}
                       getPlayer={getPlayer}
                     />
-                    <PosterForwardRow
+                    <PosterLineBlock
                       label="2. lajna"
                       line={lineup.forwardLines[1]}
+                      pair={lineup.defensePairs[1]}
                       captainId={captainId}
                       getPlayer={getPlayer}
                     />
                   </div>
-                  {/* 3. + 4. lajna vlevo, náhradníci vpravo */}
                   <div className="mt-2 grid grid-cols-2 gap-x-1 border-t border-[#003f87]/20 pt-2">
-                    <div className="flex flex-col items-center gap-1.5">
-                      <PosterForwardRow
+                    <div className="flex flex-col items-center gap-2">
+                      <PosterLineBlock
                         label="3. lajna"
                         line={lineup.forwardLines[2]}
+                        pair={lineup.defensePairs[2]}
                         captainId={captainId}
                         getPlayer={getPlayer}
                       />
-                      <PosterForwardRow
+                      <PosterLineBlock
                         label="4. lajna"
                         line={lineup.forwardLines[3]}
+                        pair={lineup.defensePairs[3]}
                         captainId={captainId}
                         getPlayer={getPlayer}
                       />
