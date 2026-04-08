@@ -152,7 +152,7 @@ export function NominationBuilderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0c0e12]">
+    <div className="min-h-screen bg-[#0a0c10] bg-[radial-gradient(ellipse_120%_80%_at_50%_-20%,rgba(0,63,135,0.12),transparent_55%)]">
       <header className="border-b border-[#2a3142] bg-[#151922]/80 backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
           <div>
@@ -215,9 +215,12 @@ export function NominationBuilderPage() {
       <main className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-8">
           <section className={selectedSlot ? "lg:order-1 order-2" : "order-1"}>
-            <h2 className="font-display text-xl text-white mb-2 sm:text-2xl sm:mb-3">Sestav lajny</h2>
-            <p className="text-white/60 text-xs mb-2 sm:text-sm sm:mb-3">
-              Klikni na prázdný slot, pak vyber hráče ze seznamu. Klikni na hráče ve slotu pro odebrání.
+            <h2 className="font-display text-xl text-white mb-2 sm:text-2xl sm:mb-3 tracking-wide">
+              Sestav lajny
+            </h2>
+            <p className="mb-3 max-w-xl text-xs leading-relaxed text-white/50 sm:text-sm">
+              Vyber slot na panelu níže — seznam hráčů se zvýrazní. Prázdné místo doplníš jedním klikem; u vyplněné
+              karty najedeš myší a odečteš hráče křížkem.
             </p>
             <LineBuilder
               lineup={lineup}
