@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { NominationView } from "@/app/nominations/[id]/NominationView";
+import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { decodeSharePayload } from "@/lib/sharePayload";
 import { lineupToPlayers } from "@/lib/lineupUtils";
 import type { Player } from "@/types";
@@ -36,11 +37,7 @@ function ShareContent() {
   const payload = z ? decodeSharePayload(z) : null;
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0c0e12]">
-        <div className="font-display text-2xl text-[#c41e3a] animate-pulse">Načítám…</div>
-      </div>
-    );
+    return <AppLoadingScreen message="Načítám odkaz…" />;
   }
 
   if (!payload) {
@@ -82,13 +79,7 @@ function ShareContent() {
 
 export default function SharePage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#0c0e12]">
-          <div className="font-display text-2xl text-[#c41e3a] animate-pulse">Načítám…</div>
-        </div>
-      }
-    >
+    <Suspense fallback={<AppLoadingScreen message="Načítám…" />}>
       <ShareContent />
     </Suspense>
   );

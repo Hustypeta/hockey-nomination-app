@@ -11,6 +11,7 @@ import { lineupToPlayers, isLineupComplete } from "@/lib/lineupUtils";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { EMPTY_LINEUP, TOTAL_PLAYERS } from "@/types";
+import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 
 export function NominationBuilderPage() {
   const { data: session, status: authStatus } = useSession();
@@ -147,17 +148,13 @@ export function NominationBuilderPage() {
   }, [selectedPlayers, captainId, lineup]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0c0e12]">
-        <div className="font-display text-2xl text-[#c41e3a] animate-pulse">Načítám hráče...</div>
-      </div>
-    );
+    return <AppLoadingScreen message="Načítám hráče…" />;
   }
 
   return (
     <div className="min-h-screen bg-[#0c0e12]">
       <header className="border-b border-[#2a3142] bg-[#151922]/80 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
           <div>
             <Link
               href="/"
@@ -198,8 +195,8 @@ export function NominationBuilderPage() {
             )}
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 pb-6">
-          <div className="flex items-center gap-4 mt-0 flex-wrap">
+        <div className="max-w-7xl mx-auto px-4 pb-4">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="text-white/70 text-sm">
               {selectedPlayers.length} / {TOTAL_PLAYERS} hráčů
             </span>
@@ -215,11 +212,11 @@ export function NominationBuilderPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-10">
+      <main className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
+        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-8">
           <section className={selectedSlot ? "lg:order-1 order-2" : "order-1"}>
-            <h2 className="font-display text-2xl text-white mb-4">Sestav lajny</h2>
-            <p className="text-white/60 text-sm mb-4">
+            <h2 className="font-display text-xl text-white mb-2 sm:text-2xl sm:mb-3">Sestav lajny</h2>
+            <p className="text-white/60 text-xs mb-2 sm:text-sm sm:mb-3">
               Klikni na prázdný slot, pak vyber hráče ze seznamu. Klikni na hráče ve slotu pro odebrání.
             </p>
             <LineBuilder
@@ -237,7 +234,7 @@ export function NominationBuilderPage() {
             ref={playerListRef}
             className={selectedSlot ? "lg:order-2 order-1" : "order-2"}
           >
-            <h2 className="font-display text-2xl text-white mb-4">Vyber hráče</h2>
+            <h2 className="font-display text-xl text-white mb-2 sm:text-2xl sm:mb-3">Vyber hráče</h2>
             <PlayerList
               players={players}
               usedIds={usedIds}
@@ -249,12 +246,12 @@ export function NominationBuilderPage() {
           </section>
         </div>
 
-        <section className="flex justify-center mt-8">
+        <section className="flex justify-center mt-5 sm:mt-6">
           <button
             onClick={() => setModalOpen(true)}
             disabled={!isComplete}
             className={`
-              px-8 py-4 rounded-xl font-display text-xl transition-all
+              px-6 py-3 rounded-xl font-display text-lg transition-all sm:px-8 sm:py-4 sm:text-xl
               ${
                 isComplete
                   ? "bg-[#c41e3a] text-white hover:bg-[#a01830] card-glow hover:scale-105"

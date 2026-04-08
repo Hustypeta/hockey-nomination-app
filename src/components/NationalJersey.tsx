@@ -1,13 +1,15 @@
 "use client";
 
 import type { Player } from "@/types";
-import { HockeySilhouette } from "@/components/HockeySilhouette";
 import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
+import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 
 export interface NationalJerseyProps {
   size?: "xs" | "sm" | "md" | "lg";
   player?: Player | null;
   placeholderLabel?: string;
+  /** U prázdného slotu: tvar siluety (brankář = širší dres). */
+  jerseyShape?: "skater" | "goalie";
   isCaptain?: boolean;
   isSelected?: boolean;
   className?: string;
@@ -18,61 +20,64 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
-const sizeClasses = {
-  xs: "w-[3.35rem] min-h-[4.85rem] text-[7px]",
-  sm: "w-[4.35rem] min-h-[6.1rem] text-[10px]",
-  md: "w-[6.5rem] min-h-[8.25rem] text-xs",
-  lg: "w-[8rem] min-h-[9.75rem] text-sm",
-};
-
-/* Výška siluety = celá postava; šířka z viewBox (auto) */
-const siloSize = {
-  xs: "h-10 w-auto max-w-[92%]",
-  sm: "h-[3.1rem] w-auto max-w-[92%]",
-  md: "h-[4.35rem] w-auto max-w-[90%]",
-  lg: "h-[5.1rem] w-auto max-w-[88%]",
+const sizeWidths = {
+  xs: "w-[3.35rem]",
+  sm: "w-[4.35rem]",
+  md: "w-[6.5rem]",
+  lg: "w-[8rem]",
 };
 
 const crestSize = {
-  xs: "h-2 w-2",
-  sm: "h-2.5 w-2.5",
-  md: "h-3 w-3",
-  lg: "h-3.5 w-3.5",
+  xs: "h-2.5 w-2.5",
+  sm: "h-3 w-3",
+  md: "h-3.5 w-3.5",
+  lg: "h-4 w-4",
 };
 
-/** Inspirace domácím dresem ČR (Nike/repliky): bílé tělo, pruhy na rukávech, erb na hrudi, modrý lem. */
+const textName = {
+  xs: "text-[7px]",
+  sm: "text-[8px]",
+  md: "text-[10px]",
+  lg: "text-xs",
+};
+
+/**
+ * Celý „dres“ je jedna silueta (vyplněný obrys), ne bílá karta s postavou uvnitř.
+ */
 export function NationalJersey({
   size = "md",
   player,
   placeholderLabel,
+  jerseyShape = "skater",
   isCaptain = false,
   isSelected = false,
   className = "",
 }: NationalJerseyProps) {
   const empty = !player;
-  const sz = sizeClasses[size];
-  const sil = siloSize[size];
+  const w = sizeWidths[size];
   const crest = crestSize[size];
+  const nameCls = textName[size];
 
-  const sleeveStripes = {
-    background:
-      "repeating-linear-gradient(180deg, #c41e3a 0px, #c41e3a 3px, #ffffff 3px, #ffffff 5.5px, #003f87 5.5px, #003f87 8.5px, #ffffff 8.5px, #ffffff 10px)",
-  };
+  const kind: "skater" | "goalie" = empty
+    ? jerseyShape
+    : player.position === "G"
+      ? "goalie"
+      : "skater";
 
   return (
     <div
       className={`
-        relative flex flex-col items-stretch ${sz} ${className}
+        relative ${w} ${className}
         transition-transform duration-200
-        ${empty ? "opacity-90" : ""}
+        ${empty ? "opacity-[0.92]" : ""}
       `}
     >
       {isCaptain && !empty && (
         <span
-          className={`absolute z-20 flex items-center justify-center rounded-full bg-[#003f87] font-bold text-white shadow-md ring-2 ring-white/90 ${
+          className={`absolute z-20 flex items-center justify-center rounded-full bg-[#c41e3a] font-bold text-white shadow-md ring-2 ring-white/90 ${
             size === "xs"
-              ? "-top-0.5 -right-0.5 h-4 w-4 text-[8px] ring-1"
-              : "-top-1 -right-1 h-6 w-6 text-[11px]"
+              ? "-right-0.5 -top-0.5 h-3.5 w-3.5 text-[7px] ring-1"
+              : "-right-1 -top-1 h-5 w-5 text-[10px]"
           }`}
           aria-label="Kapitán"
         >
@@ -82,82 +87,57 @@ export function NationalJersey({
 
       <div
         className={`
-          relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border-2 border-[#003f87]
-          shadow-[0_6px_16px_rgba(0,63,135,0.22)]
+          relative overflow-visible rounded-lg
           ${isSelected ? "ring-2 ring-amber-400 ring-offset-2 ring-offset-[#0c0e12]" : ""}
-          ${empty ? "border-dashed border-white/40 bg-[#151922]/95 text-white/45" : "bg-[#f7f9fc]"}
         `}
       >
-        {!empty && (
-          <>
-            {/* Rukávy – typické červeno-bílo-modré prstence (viz repliky domácího dresu) */}
-            <div
-              className="pointer-events-none absolute bottom-[10%] left-0 top-[14%] w-[13%] rounded-l-[0.35rem] opacity-95"
-              style={sleeveStripes}
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute bottom-[10%] right-0 top-[14%] w-[13%] rounded-r-[0.35rem] opacity-95"
-              style={sleeveStripes}
-              aria-hidden
-            />
-            {/* Límec / výstřih s modrým lemem */}
-            <div
-              className="pointer-events-none absolute left-1/2 top-0 z-[1] h-3 w-[48%] -translate-x-1/2 rounded-b-md border-b-2 border-[#003f87] bg-white shadow-sm"
-              aria-hidden
-            />
-            {/* Jemný stín těla dresu */}
-            <div
-              className="pointer-events-none absolute inset-[6%] rounded-xl bg-gradient-to-b from-white via-white to-[#e8eef5]/90"
-              aria-hidden
-            />
-          </>
-        )}
+        <JerseySilhouetteShape
+          kind={kind}
+          empty={empty}
+          className="block h-auto w-full"
+        />
 
-        <div
-          className={`relative z-[2] flex flex-1 flex-col items-center justify-end px-[8%] pb-0.5 pt-1 min-h-0 ${
-            empty ? "justify-center pt-3" : ""
-          }`}
-        >
-          {empty ? (
-            <span className="font-display text-[10px] uppercase tracking-wide text-white/50">
+        {empty ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-1 pt-2">
+            <span className="text-center font-display text-[8px] font-semibold uppercase leading-tight tracking-wide text-white/65">
               {placeholderLabel ?? "—"}
             </span>
-          ) : (
-            <>
-              <CzechHockeyCrest
-                className={`${crest} absolute left-1 top-1 z-[4] shrink-0 drop-shadow-sm`}
-                aria-hidden
-              />
-              <HockeySilhouette
-                kind={player.position === "G" ? "goalie" : "skater"}
-                className={`${sil} shrink-0 object-contain`}
-              />
+          </div>
+        ) : (
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-stretch">
+            <CzechHockeyCrest
+              className={`${crest} absolute left-[10%] top-[9%] z-10 shrink-0 drop-shadow-[0_0_4px_rgba(255,255,255,0.95),0_1px_2px_rgba(0,0,0,0.5)]`}
+              aria-hidden
+            />
+            <div className="mt-auto flex flex-col items-center px-1 pb-[10%] pt-0 text-center">
               <div
-                className="mt-1 max-w-full truncate text-center font-display text-[10px] font-bold leading-tight tracking-wide text-[#0c0e12] md:text-[12px] lg:text-sm"
-                style={{ textShadow: "0 1px 0 rgba(255,255,255,0.95)" }}
+                className={`max-w-full truncate font-display font-bold leading-tight tracking-wide text-white ${nameCls}`}
+                style={{ textShadow: "0 1px 2px rgba(0,0,0,0.75)" }}
               >
                 {lastName(player.name)}
               </div>
               {player.position !== "G" && player.role && (
-                <div className="mt-0.5 rounded px-1 py-px font-display text-[8px] uppercase tracking-wider text-[#003f87] md:text-[9px] bg-[#003f87]/12">
+                <div
+                  className={`mt-0.5 rounded px-1 py-px font-display font-semibold uppercase tracking-wider text-white/95 ${
+                    size === "lg" ? "text-[9px]" : "text-[7px]"
+                  } bg-black/25`}
+                  style={{ textShadow: "0 1px 1px rgba(0,0,0,0.6)" }}
+                >
                   {player.role}
                 </div>
               )}
               {player.position === "G" && (
-                <div className="mt-0.5 font-display text-[8px] font-semibold uppercase tracking-wider text-[#c41e3a] md:text-[9px]">
+                <div
+                  className={`mt-0.5 font-display font-bold uppercase tracking-wider text-[#ffb4b4] ${
+                    size === "lg" ? "text-[9px]" : "text-[7px]"
+                  }`}
+                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}
+                >
                   G
                 </div>
               )}
-            </>
-          )}
-        </div>
-
-        {!empty && (
-          <div
-            className="pointer-events-none absolute bottom-0 left-[13%] right-[13%] h-0.5 bg-[#c41e3a]/90"
-            aria-hidden
-          />
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -3,6 +3,21 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 
+/** NextAuth vyžaduje v produkci tajný klíč (šifrování JWT / cookies). */
+function nextAuthSecret(): string | undefined {
+  return process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET ?? undefined;
+}
+
+const secret = nextAuthSecret();
+
+if (process.env.NODE_ENV === "production" && !secret) {
+  console.error(
+    "[auth] V produkci chybí NEXTAUTH_SECRET (nebo AUTH_SECRET). " +
+      "V Railway: Project → Variables → přidej NEXTAUTH_SECRET=náhodný řetězec (např. `openssl rand -base64 32`). " +
+      "NEXTAUTH_URL musí být veřejná URL tvé aplikace (https://…)."
+  );
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -17,5 +32,5 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret,
 };
