@@ -1,20 +1,39 @@
 "use client";
 
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import confetti from "canvas-confetti";
+import { toast } from "sonner";
 import { LineBuilder } from "@/components/LineBuilder";
-import { PlayerList } from "@/components/PlayerList";
 import { NominationPoster } from "@/components/NominationPoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
+import { AppLoadingScreen } from "@/components/AppLoadingScreen";
+import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
+import { SestavaHero } from "@/components/sestava/SestavaHero";
+import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
+import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { lineupToPlayers, isLineupComplete } from "@/lib/lineupUtils";
+import {
+  tryAutoAssignPlayer,
+  assignPlayerToTarget,
+  buildRandomLineup,
+} from "@/lib/lineupAssign";
+import type { Position } from "@/types";
+import { parseDroppableId } from "@/lib/dndSlotIds";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { EMPTY_LINEUP, TOTAL_PLAYERS } from "@/types";
-import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 
 export function NominationBuilderPage() {
-  const { data: session, status: authStatus } = useSession();
+  const { status: authStatus } = useSession();
   const isAuthenticated = authStatus === "authenticated";
   const [players, setPlayers] = useState<Player[]>([]);
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
@@ -27,12 +46,21 @@ export function NominationBuilderPage() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
   const posterRef = useRef<HTMLDivElement>(null);
-  const playerListRef = useRef<HTMLDivElement>(null);
+  const wasCompleteRef = useRef(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 12 },
+    })
+  );
 
   const selectedPlayers = lineupToPlayers(lineup, players);
   const usedIds = new Set(selectedPlayers.map((p) => p.id));
   const isComplete = isLineupComplete(lineup);
+  const filled = selectedPlayers.length;
+  const remaining = TOTAL_PLAYERS - filled;
 
   const counts = {
     G: lineup.goalies.filter(Boolean).length,
@@ -57,10 +85,17 @@ export function NominationBuilderPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedSlot && playerListRef.current) {
-      playerListRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (isComplete && !wasCompleteRef.current) {
+      confetti({
+        particleCount: 100,
+        spread: 65,
+        origin: { y: 0.65 },
+        colors: ["#c8102e", "#003087", "#ffffff", "#d4af37"],
+      });
+      toast.success("Plná nominace — můžeš sdílet!", { duration: 5000 });
     }
-  }, [selectedSlot]);
+    wasCompleteRef.current = isComplete;
+  }, [isComplete]);
 
   const assignPlayerToSlot = useCallback(
     (player: Player) => {
@@ -101,11 +136,12 @@ export function NominationBuilderPage() {
         setLineup(next);
         setSelectedSlot(null);
       } else if (type === "extraForward" && player.position === "F" && lineIndex !== undefined) {
-        if (lineup.extraForwards.length >= 2) return;
-        setLineup({
-          ...lineup,
-          extraForwards: [...lineup.extraForwards, player.id],
+        const slotIndex = (lineIndex === 0 ? 0 : 1) as 0 | 1;
+        const next = assignPlayerToTarget(lineup, player, {
+          type: "extraForward",
+          slotIndex,
         });
+        if (next) setLineup(next);
         setSelectedSlot(null);
       }
     },
@@ -121,11 +157,72 @@ export function NominationBuilderPage() {
         return player.position === "F";
       if (type === "defense" && (role === "lb" || role === "rb"))
         return player.position === "D";
-      if (type === "extraForward") return player.position === "F" && lineup.extraForwards.length < 2;
+      if (type === "extraForward") return player.position === "F";
       return false;
     },
     [selectedSlot, usedIds, lineup.extraForwards.length]
   );
+
+  const handleAddFromPool = useCallback(
+    (player: Player) => {
+      if (selectedSlot) {
+        if (!canAssignPlayer(player)) {
+          toast.error("Tenhle hráč nejde do vybraného slotu.");
+          return;
+        }
+        assignPlayerToSlot(player);
+        toast.success(`${player.name} je ve sestavě`);
+        return;
+      }
+      const next = tryAutoAssignPlayer(lineup, player);
+      if (!next) {
+        toast.error("Už není volné místo pro tuto pozici, nebo je hráč už v nominaci.");
+        return;
+      }
+      setLineup(next);
+      toast.success(`${player.name} přidán do nominace`);
+    },
+    [lineup, selectedSlot, canAssignPlayer, assignPlayerToSlot]
+  );
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const overId = event.over?.id?.toString();
+      const activeId = event.active.id.toString();
+      if (!overId || !activeId.startsWith("drag-player-")) return;
+      const pid = activeId.replace("drag-player-", "");
+      const player = players.find((p) => p.id === pid);
+      const target = parseDroppableId(overId);
+      if (!player || !target) return;
+      const next = assignPlayerToTarget(lineup, player, target);
+      if (!next) {
+        toast.error("Sem tohohle hráče nelze dát.");
+        return;
+      }
+      setLineup(next);
+      toast.success(`${player.name} → sestava`);
+    },
+    [lineup, players]
+  );
+
+  const handleRandom = useCallback(() => {
+    const next = buildRandomLineup(players);
+    if (!next) {
+      toast.error("V databázi není dost hráčů (potřeba 3G + 8D + 14F).");
+      return;
+    }
+    setLineup(next);
+    setCaptainId(null);
+    setSelectedSlot(null);
+    toast.success("Náhodná nominace je hotová — uprav si ji, jak chceš.");
+  }, [players]);
+
+  const handleReset = useCallback(() => {
+    setLineup(EMPTY_LINEUP);
+    setCaptainId(null);
+    setSelectedSlot(null);
+    toast.message("Sestava byla resetována.");
+  }, []);
 
   const handleSave = useCallback(async (): Promise<string | null> => {
     setSaving(true);
@@ -151,141 +248,151 @@ export function NominationBuilderPage() {
     return <AppLoadingScreen message="Načítám hráče…" />;
   }
 
+  const subtitleCounts =
+    "3 brankáři · 8 obránců · 14 útočníků · celkem max. 25 hráčů";
+
+  const forcedPoolPosition: Position | null = selectedSlot
+    ? selectedSlot.type === "goalie"
+      ? "G"
+      : selectedSlot.type === "defense"
+        ? "D"
+        : "F"
+    : null;
+
   return (
-    <div className="min-h-screen bg-[#0a0c10] bg-[radial-gradient(ellipse_120%_80%_at_50%_-20%,rgba(0,63,135,0.12),transparent_55%)]">
-      <header className="border-b border-[#2a3142] bg-[#151922]/80 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
-          <div>
-            <Link
-              href="/"
-              className="mb-2 inline-block font-display text-sm text-white/50 transition-colors hover:text-[#c41e3a]"
-            >
-              ← Úvod
-            </Link>
-            <h1 className="font-display text-4xl md:text-5xl text-white tracking-wider">MS 2026</h1>
-            <p className="text-[#c41e3a] font-display text-xl mt-1">Sestavovač nominace</p>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            {authStatus === "loading" ? (
-              <span className="text-white/50 text-sm">…</span>
-            ) : session ? (
-              <>
-                <span
-                  className="text-white/70 text-sm truncate max-w-[200px] hidden sm:inline"
-                  title={session.user?.email ?? ""}
-                >
-                  {session.user?.email}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => signOut()}
-                  className="px-4 py-2 rounded-lg border border-[#2a3142] text-white/90 text-sm hover:border-[#c41e3a] transition-colors"
-                >
-                  Odhlásit
-                </button>
-              </>
-            ) : (
-              <button
-                type="button"
-                onClick={() => signIn("google", { callbackUrl: "/sestava" })}
-                className="px-4 py-2 rounded-lg bg-[#003f87] text-white text-sm font-display hover:bg-[#004a9e] transition-colors"
-              >
-                Přihlásit přes Google
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 pb-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-white/70 text-sm">
-              {selectedPlayers.length} / {TOTAL_PLAYERS} hráčů
-            </span>
-            {!isComplete && (
-              <span className="text-amber-400 text-sm">
-                {counts.G}G · {counts.D}D · {counts.F}F
-              </span>
-            )}
-            {selectedSlot && (
-              <span className="text-amber-400 text-sm">Vyber hráče pro vybraný slot</span>
-            )}
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
-        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-8">
-          <section className={selectedSlot ? "lg:order-1 order-2" : "order-1"}>
-            <h2 className="font-display text-xl text-white mb-2 sm:text-2xl sm:mb-3 tracking-wide">
-              Sestav lajny
-            </h2>
-            <p className="mb-3 max-w-xl text-xs leading-relaxed text-white/50 sm:text-sm">
-              Vyber slot na panelu níže — seznam hráčů se zvýrazní. Prázdné místo doplníš jedním klikem; u vyplněné
-              karty najedeš myší a odečteš hráče křížkem.
-            </p>
-            <LineBuilder
-              lineup={lineup}
-              players={players}
-              captainId={captainId}
-              onLineupChange={setLineup}
-              onCaptainChange={setCaptainId}
-              selectedSlot={selectedSlot}
-              onSelectSlot={setSelectedSlot}
-            />
-          </section>
-
-          <section
-            ref={playerListRef}
-            className={selectedSlot ? "lg:order-2 order-1" : "order-2"}
-          >
-            <h2 className="font-display text-xl text-white mb-2 sm:text-2xl sm:mb-3">Vyber hráče</h2>
-            <PlayerList
-              players={players}
-              usedIds={usedIds}
-              counts={counts}
-              selectedSlot={selectedSlot}
-              onSelectPlayer={assignPlayerToSlot}
-              canAssignPlayer={canAssignPlayer}
-            />
-          </section>
-        </div>
-
-        <section className="flex justify-center mt-5 sm:mt-6">
-          <button
-            onClick={() => setModalOpen(true)}
-            disabled={!isComplete}
-            className={`
-              px-6 py-3 rounded-xl font-display text-lg transition-all sm:px-8 sm:py-4 sm:text-xl
-              ${
-                isComplete
-                  ? "bg-[#c41e3a] text-white hover:bg-[#a01830] card-glow hover:scale-105"
-                  : "bg-[#2a3142] text-white/50 cursor-not-allowed"
-              }
-            `}
-          >
-            {isAuthenticated ? "Uložit / plakát" : "Sdílet nominaci"}
-          </button>
-        </section>
-      </main>
-
-      <div className="fixed -left-[9999px] top-0 w-[430px]" aria-hidden="true">
-        <NominationPoster
-          ref={posterRef}
-          players={selectedPlayers}
-          captainId={captainId}
-          lineup={lineup}
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <div className="min-h-screen bg-[#0a0a0a] pb-36 text-white sestava-page">
+        <div
+          className="pointer-events-none fixed inset-0 opacity-[0.035]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)
+            `,
+            backgroundSize: "48px 48px",
+          }}
+          aria-hidden
         />
-      </div>
 
-      <SaveShareModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        posterRef={posterRef}
-        isAuthenticated={isAuthenticated}
-        lineupStructure={lineup}
-        captainId={captainId}
-        onSave={handleSave}
-        isSaving={saving}
-      />
-    </div>
+        <SestavaHero filled={filled} subtitleCounts={subtitleCounts} />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 lg:py-8">
+          {!isComplete && (
+            <div className="mb-6 rounded-2xl border border-[#003087]/30 bg-[#003087]/10 px-4 py-3 text-center text-sm text-white/80">
+              {remaining > 0 ? (
+                <>
+                  Ještě <span className="font-semibold text-[#d4af37]">{remaining}</span>{" "}
+                  {remaining === 1 ? "místo" : remaining < 5 ? "místa" : "míst"} do plné nominace.
+                </>
+              ) : (
+                <>Doplň poslední detaily — nominace skoro hotová.</>
+              )}
+            </div>
+          )}
+
+          <div className="grid gap-8 lg:grid-cols-5 lg:gap-10">
+            <section className="lg:col-span-3">
+              <div className="mb-4 flex items-end justify-between gap-4">
+                <div>
+                  <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
+                    Dostupní hráči
+                  </h2>
+                  <p className="mt-1 text-sm text-white/45">
+                    Klik = rychlé přidání · ikona úchopu = táhni na slot
+                  </p>
+                </div>
+                <Link
+                  href="/"
+                  className="hidden text-sm text-white/40 hover:text-[#c8102e] sm:inline"
+                >
+                  Úvodní stránka
+                </Link>
+              </div>
+              <PlayerPoolPanel
+                players={players}
+                usedIds={usedIds}
+                counts={counts}
+                onAddPlayer={handleAddFromPool}
+                onPreview={setPreviewPlayer}
+                forcedPosition={forcedPoolPosition}
+              />
+            </section>
+
+            <section className="lg:col-span-2">
+              <div className="mb-4 lg:sticky lg:top-[5.5rem] lg:self-start">
+                <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
+                  Moje sestava
+                </h2>
+                <p className="mt-1 text-sm text-white/45">
+                  {selectedSlot
+                    ? "Vybraný slot — vlevo uvidíš jen vhodné pozice, nebo přetáhni hráče sem."
+                    : "Klikni na slot pro cílený výběr, nebo přidávej hráče zleva."}
+                </p>
+                <div className="mt-4">
+                  <LineBuilder
+                    lineup={lineup}
+                    players={players}
+                    captainId={captainId}
+                    onLineupChange={setLineup}
+                    onCaptainChange={setCaptainId}
+                    selectedSlot={selectedSlot}
+                    onSelectSlot={setSelectedSlot}
+                    enableDnd
+                  />
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div className="mt-8 hidden justify-center lg:flex">
+            <button
+              type="button"
+              onClick={() => setModalOpen(true)}
+              disabled={!isComplete}
+              className={`
+                rounded-2xl px-10 py-4 font-display text-xl font-bold tracking-wide transition-all
+                ${
+                  isComplete
+                    ? "bg-gradient-to-r from-[#c8102e] to-[#9e0c24] text-white shadow-xl shadow-[#c8102e]/25 hover:scale-[1.02]"
+                    : "cursor-not-allowed bg-white/10 text-white/35"
+                }
+              `}
+            >
+              {isAuthenticated ? "Uložit / sdílet nominaci" : "Sdílet nominaci"}
+            </button>
+          </div>
+        </div>
+
+        <FloatingSestavaBar
+          onShare={() => setModalOpen(true)}
+          onRandom={handleRandom}
+          onReset={handleReset}
+          shareDisabled={!isComplete}
+          shareLabel={isAuthenticated ? "Uložit / sdílet" : "Sdílet nominaci"}
+        />
+
+        <div className="fixed -left-[9999px] top-0 w-[430px]" aria-hidden="true">
+          <NominationPoster
+            ref={posterRef}
+            players={selectedPlayers}
+            captainId={captainId}
+            lineup={lineup}
+          />
+        </div>
+
+        <SaveShareModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          posterRef={posterRef}
+          isAuthenticated={isAuthenticated}
+          lineupStructure={lineup}
+          captainId={captainId}
+          onSave={handleSave}
+          isSaving={saving}
+        />
+
+        <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
+      </div>
+    </DndContext>
   );
 }

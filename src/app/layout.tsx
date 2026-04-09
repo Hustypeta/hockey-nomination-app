@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -17,8 +18,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
-      <body className="antialiased min-h-screen bg-[#0c0e12]">
-        <AuthProvider>{children}</AuthProvider>
+      <body className="antialiased min-h-screen bg-[#0a0a0a] font-sans text-white">
+        <AuthProvider>
+          {children}
+          <Toaster
+            theme="dark"
+            position="top-center"
+            toastOptions={{
+              classNames: {
+                toast: "border border-white/10 bg-[#141414] text-white",
+              },
+            }}
+          />
+        </AuthProvider>
       </body>
     </html>
   );

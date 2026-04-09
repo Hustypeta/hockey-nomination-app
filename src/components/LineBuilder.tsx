@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { NationalJersey } from "@/components/NationalJersey";
+import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
 
 interface LineBuilderProps {
   lineup: LineupStructure;
@@ -13,9 +14,11 @@ interface LineBuilderProps {
   onCaptainChange: (playerId: string | null) => void;
   selectedSlot: { type: string; lineIndex?: number; role?: string } | null;
   onSelectSlot: (slot: { type: string; lineIndex?: number; role?: string } | null) => void;
+  /** Zóny pro přetahování hráčů z poolu (@dnd-kit). */
+  enableDnd?: boolean;
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+function SectionTitle({ children }: { children: ReactNode }) {
   return (
     <h3 className="mb-3 flex items-center gap-2.5 font-display text-[13px] uppercase tracking-[0.2em] text-white/45">
       <span className="h-px w-6 bg-gradient-to-r from-[#c41e3a] to-transparent" aria-hidden />
@@ -33,6 +36,7 @@ export function LineBuilder({
   onCaptainChange,
   onSelectSlot,
   selectedSlot,
+  enableDnd = true,
 }: LineBuilderProps) {
   const getPlayer = (id: string | null) =>
     id ? players.find((p) => p.id === id) : null;
@@ -84,6 +88,7 @@ export function LineBuilder({
     role,
     onClear,
     jerseySize = "sm",
+    dndId,
   }: {
     playerId: string | null;
     label: string;
@@ -92,11 +97,12 @@ export function LineBuilder({
     role?: string;
     onClear?: () => void;
     jerseySize?: "sm" | "md";
+    dndId?: string;
   }) => {
     const player = getPlayer(playerId);
     const selected = isSlotSelected(type, lineIndex, role);
 
-    return (
+    const inner = (
       <div
         onClick={() => onSelectSlot(selected ? null : { type, lineIndex, role })}
         className={`
@@ -159,6 +165,11 @@ export function LineBuilder({
         )}
       </div>
     );
+
+    if (enableDnd && dndId) {
+      return <DroppableSlotWrap id={dndId}>{inner}</DroppableSlotWrap>;
+    }
+    return inner;
   };
 
   const lineBlock = (i: number) => {
@@ -190,6 +201,7 @@ export function LineBuilder({
                 type="forward"
                 lineIndex={i}
                 role="lw"
+                dndId={`slot-fwd-${i}-lw`}
                 onClear={
                   line.lw
                     ? () => {
@@ -207,6 +219,7 @@ export function LineBuilder({
                 type="forward"
                 lineIndex={i}
                 role="c"
+                dndId={`slot-fwd-${i}-c`}
                 onClear={
                   line.c
                     ? () => {
@@ -224,6 +237,7 @@ export function LineBuilder({
                 type="forward"
                 lineIndex={i}
                 role="rw"
+                dndId={`slot-fwd-${i}-rw`}
                 onClear={
                   line.rw
                     ? () => {
@@ -251,6 +265,7 @@ export function LineBuilder({
                 type="defense"
                 lineIndex={i}
                 role="lb"
+                dndId={`slot-def-${i}-lb`}
                 onClear={
                   pair.lb
                     ? () => {
@@ -271,6 +286,7 @@ export function LineBuilder({
                 type="defense"
                 lineIndex={i}
                 role="rb"
+                dndId={`slot-def-${i}-rb`}
                 onClear={
                   pair.rb
                     ? () => {
@@ -303,6 +319,7 @@ export function LineBuilder({
                   type="goalie"
                   lineIndex={i}
                   jerseySize="sm"
+                  dndId={`slot-goalie-${i}`}
                   onClear={
                     gid
                       ? () => {
@@ -341,6 +358,7 @@ export function LineBuilder({
                     label={`N${i + 1}`}
                     type="extraForward"
                     lineIndex={i}
+                    dndId={`slot-xf-${i as 0 | 1}`}
                     onClear={
                       pid
                         ? () => {

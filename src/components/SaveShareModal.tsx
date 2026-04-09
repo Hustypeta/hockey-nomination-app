@@ -13,6 +13,16 @@ const POSTER_PNG_OPTS = {
   backgroundColor: "#0c0e12",
 };
 
+const DEFAULT_APP_URL = "https://hockey-nomination-app-production.up.railway.app/sestava";
+
+function shareTextWithUrl(url: string) {
+  return `Tady je moje nominace na MS 2026! Co říkáš?
+
+${url}
+
+#MS2026 #Hokej #ČR #Nominace2026`;
+}
+
 interface SaveShareModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -109,6 +119,12 @@ export function SaveShareModal({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleCopySocialText = async (url: string) => {
+    await navigator.clipboard.writeText(shareTextWithUrl(url));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const handleCopySavedLink = async () => {
     if (!savedId) return;
     const url = `${window.location.origin}/nominations/${savedId}`;
@@ -175,11 +191,18 @@ export function SaveShareModal({
             <button
               type="button"
               onClick={handleCopyGuestLink}
-              className="px-4 py-2 rounded-lg bg-[#003f87] text-white hover:bg-[#004a9e] transition-colors whitespace-nowrap text-sm"
+              className="px-4 py-2 rounded-lg bg-[#003087] text-white hover:bg-[#0040a8] transition-colors whitespace-nowrap text-sm"
             >
               {copied ? "Zkopírováno!" : "Kopírovat odkaz"}
             </button>
           </div>
+          <button
+            type="button"
+            onClick={() => handleCopySocialText(guestShareUrl || DEFAULT_APP_URL)}
+            className="mb-4 w-full rounded-lg border border-[#c8102e]/50 bg-[#c8102e]/10 py-2.5 text-sm text-white/90 hover:bg-[#c8102e]/20"
+          >
+            Kopírovat text pro X / Instagram / Facebook (+ hashtagy)
+          </button>
           <div className="flex flex-col gap-3">
             <button
               type="button"
@@ -280,6 +303,13 @@ export function SaveShareModal({
               </button>
             </div>
             <div className="flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={() => handleCopySocialText(shareUrlAfterSave || DEFAULT_APP_URL)}
+                className="w-full rounded-lg border border-[#c8102e]/50 bg-[#c8102e]/10 py-2.5 text-sm text-white/90 hover:bg-[#c8102e]/20"
+              >
+                Kopírovat text pro sítě (+ hashtagy)
+              </button>
               <button
                 type="button"
                 onClick={() => sharePosterAsImage(shareUrlAfterSave)}
