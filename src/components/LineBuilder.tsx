@@ -54,7 +54,7 @@ export function LineBuilder({
   const assistantIds = lineup.assistantIds ?? [];
   const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) : null);
 
-  const setForwardLine = (lineIndex: number, role: "lw" | "c" | "rw", playerId: string | null) => {
+  const setForwardLine = (lineIndex: number, role: "lw" | "c" | "rw" | "x", playerId: string | null) => {
     const prev = lineup.forwardLines[lineIndex][role];
     const next = { ...lineup };
     const line = { ...next.forwardLines[lineIndex], [role]: playerId };
@@ -68,11 +68,17 @@ export function LineBuilder({
   };
 
   const setDefensePair = (pairIndex: number, role: "lb" | "rb", playerId: string | null) => {
-    const prev = lineup.defensePairs[pairIndex][role];
+    if (pairIndex === 3 && role === "rb") return;
+    const prev =
+      pairIndex === 3 ? lineup.defensePairs[3].lb : lineup.defensePairs[pairIndex][role];
     const next = { ...lineup };
-    const pair = { ...next.defensePairs[pairIndex], [role]: playerId };
     next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
-    next.defensePairs[pairIndex] = pair;
+    if (pairIndex === 3) {
+      next.defensePairs[3] = { lb: playerId, rb: null };
+      if (playerId) next.extraDefensemen = [];
+    } else {
+      next.defensePairs[pairIndex] = { ...next.defensePairs[pairIndex], [role]: playerId };
+    }
     if (playerId === null && prev) {
       next.assistantIds = (next.assistantIds ?? []).filter((id) => id !== prev);
       if (captainId === prev) onCaptainChange(null);
@@ -92,7 +98,7 @@ export function LineBuilder({
     onLineupChange(next);
   };
 
-  const removeExtraForwardByIndex = (index: number) => {
+  const removeExtraForwardByIndex = (index: 0 | 1) => {
     const id = lineup.extraForwards[index];
     if (!id) return;
     const next = {
@@ -276,7 +282,11 @@ export function LineBuilder({
           </span>
         </div>
 
-        <div className="mx-auto grid w-full max-w-md grid-cols-1 gap-x-2 gap-y-4 sm:max-w-none sm:grid-cols-3 sm:gap-y-1 sm:gap-x-4">
+        <div
+          className={`mx-auto grid w-full max-w-md grid-cols-1 gap-x-2 gap-y-4 sm:max-w-none sm:gap-y-1 sm:gap-x-4 ${
+            i === 3 ? "sm:max-w-3xl sm:grid-cols-4" : "sm:grid-cols-3"
+          }`}
+        >
           <Slot
             playerId={line.lw}
             label="LW"
@@ -328,6 +338,25 @@ export function LineBuilder({
                 : undefined
             }
           />
+          {i === 3 ? (
+            <Slot
+              playerId={line.x}
+              label="X"
+              type="forward"
+              lineIndex={3}
+              role="x"
+              dndId="slot-fwd-3-x"
+              jerseySize="skater"
+              onClear={
+                line.x
+                  ? () => {
+                      setForwardLine(3, "x", null);
+                      onSelectSlot(null);
+                    }
+                  : undefined
+              }
+            />
+          ) : null}
         </div>
 
         {i < 3 ? (
@@ -373,9 +402,33 @@ export function LineBuilder({
             </div>
           </div>
         ) : (
-          <p className="border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/38">
-            U repre se často bere 7 beků — čtvrtá lajna má jen útok; sedmý bek je v náhradnících.
-          </p>
+          <div className="border-t border-white/[0.06] pt-4">
+            <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40">
+              4. obranný řádek — sedmý bek
+            </p>
+            <div className="mx-auto flex max-w-[10rem] justify-center">
+              <Slot
+                playerId={pair.lb}
+                label="7. bek"
+                type="defense"
+                lineIndex={3}
+                role="lb"
+                dndId="slot-def-3-lb"
+                jerseySize="skater"
+                onClear={
+                  pair.lb
+                    ? () => {
+                        setDefensePair(3, "lb", null);
+                        onSelectSlot(null);
+                      }
+                    : undefined
+                }
+              />
+            </div>
+            <p className="mt-3 text-center text-[10px] leading-relaxed text-white/35">
+              Nemůžeš mít současně sedmého beka tady a v boxu náhradních obránců — zvol jedno umístění.
+            </p>
+          </div>
         )}
       </article>
     );
@@ -407,51 +460,68 @@ export function LineBuilder({
         </div>
       </SectionShell>
 
-      <SectionShell title="Lajny" kicker="4 útoky · 3 obranné páry (4. lajna bez beků)">
+      <SectionShell title="Lajny" kicker="4 útoky (4. má slot X) · 3 obranné páry + 4. řádek = 7 beků">
         <div className="flex min-w-0 w-full flex-col gap-6 sm:gap-7">
           {[0, 1, 2, 3].map((i) => lineBlock(i))}
         </div>
       </SectionShell>
 
-      <SectionShell title="Náhradníci" kicker="Extra">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
+      <SectionShell title="Náhradníci" kicker="2 útočníci · 1 obránce">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-4">
           <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
             <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-              Útočníci
+              Útočník 1
             </p>
-            <div className="grid w-full grid-cols-3 gap-2 sm:gap-3">
-              {([0, 1, 2] as const).map((i) => {
-                const pid = lineup.extraForwards[i] ?? null;
-                return (
-                  <Slot
-                    key={i}
-                    playerId={pid}
-                    label={`EX${i + 1}`}
-                    type="extraForward"
-                    lineIndex={i}
-                    dndId={`slot-xf-${i}`}
-                    jerseySize="compact"
-                    onClear={
-                      pid
-                        ? () => {
-                            removeExtraForwardByIndex(i);
-                            onSelectSlot(null);
-                          }
-                        : undefined
-                    }
-                  />
-                );
-              })}
+            <div className="flex justify-center">
+              <Slot
+                playerId={lineup.extraForwards[0] ?? null}
+                label="EX1"
+                type="extraForward"
+                lineIndex={0}
+                dndId="slot-xf-0"
+                jerseySize="compact"
+                onClear={
+                  lineup.extraForwards[0]
+                    ? () => {
+                        removeExtraForwardByIndex(0);
+                        onSelectSlot(null);
+                      }
+                    : undefined
+                }
+              />
             </div>
           </div>
           <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
             <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-              Obránci
+              Útočník 2
             </p>
-            <div className="mx-auto flex max-w-[10rem] justify-center">
+            <div className="flex justify-center">
+              <Slot
+                playerId={lineup.extraForwards[1] ?? null}
+                label="EX2"
+                type="extraForward"
+                lineIndex={1}
+                dndId="slot-xf-1"
+                jerseySize="compact"
+                onClear={
+                  lineup.extraForwards[1]
+                    ? () => {
+                        removeExtraForwardByIndex(1);
+                        onSelectSlot(null);
+                      }
+                    : undefined
+                }
+              />
+            </div>
+          </div>
+          <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
+            <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+              Obránce
+            </p>
+            <div className="flex justify-center">
               <Slot
                 playerId={lineup.extraDefensemen[0] ?? null}
-                label="7. bek"
+                label="N-D"
                 type="extraDefenseman"
                 lineIndex={0}
                 dndId="slot-xd-0"
@@ -466,6 +536,9 @@ export function LineBuilder({
                 }
               />
             </div>
+            <p className="mt-2 text-center text-[9px] leading-snug text-white/30">
+              Jen pokud není sedmý bek ve 4. obranném řádku výše.
+            </p>
           </div>
         </div>
       </SectionShell>

@@ -1,62 +1,80 @@
 import type { LineupStructure } from "@/types";
 import type { Player } from "@/types";
 
+type ForwardLineLike = {
+  lw: string | null;
+  c: string | null;
+  rw: string | null;
+  x?: string | null;
+};
+
 function cloneLineup(l: LineupStructure): LineupStructure {
   return {
-    forwardLines: l.forwardLines.map((x) => ({ ...x })) as LineupStructure["forwardLines"],
+    forwardLines: l.forwardLines.map((row) => {
+      const x = row as ForwardLineLike;
+      return {
+        lw: x.lw,
+        c: x.c,
+        rw: x.rw,
+        x: x.x ?? null,
+      };
+    }) as LineupStructure["forwardLines"],
     defensePairs: l.defensePairs.map((x) => ({ ...x })) as LineupStructure["defensePairs"],
     goalies: [...l.goalies] as LineupStructure["goalies"],
-    extraForwards: [
-      l.extraForwards[0] ?? null,
-      l.extraForwards[1] ?? null,
-      l.extraForwards[2] ?? null,
-    ],
-    extraDefensemen: [...l.extraDefensemen],
+    extraForwards: [l.extraForwards[0] ?? null, l.extraForwards[1] ?? null] as LineupStructure["extraForwards"],
+    extraDefensemen: [...(l.extraDefensemen ?? [])].slice(0, 1),
     assistantIds: [...(l.assistantIds ?? [])],
   };
 }
 
 /**
- * Starší odkazy / uložené nominace měly 8 beků ve čtyřech párech.
- * Nový model: 7 beků (3× pár + 1 náhradní bek), 4. lajna bez beků, 3 náhradní útočníci.
+ * Migrace starých nominací: 3 náhradní útočníci → 2 + třetí do 4. lajny (slot x).
+ * Sedmý bek z náhradníků přesune do defensePairs[3].lb (4. řádek). U 4. páru vždy RB = null.
  */
 export function normalizeLineupStructure(lineup: LineupStructure): LineupStructure {
   const next = cloneLineup(lineup);
-  const p3 = next.defensePairs[3];
-  const mergedD = [...next.extraDefensemen, p3.rb, p3.lb].filter((id): id is string => !!id);
-  const seenD = new Set<string>();
-  const uniqD: string[] = [];
-  for (const id of mergedD) {
-    if (!seenD.has(id)) {
-      seenD.add(id);
-      uniqD.push(id);
+
+  for (let i = 0; i < 3; i++) {
+    const line = next.forwardLines[i];
+    if (line.x) {
+      const orphan = line.x;
+      const l4 = next.forwardLines[3];
+      if (!l4.x) next.forwardLines[3] = { ...l4, x: orphan };
+      else if (!l4.rw) next.forwardLines[3] = { ...l4, rw: orphan };
+      else if (!l4.c) next.forwardLines[3] = { ...l4, c: orphan };
+      else if (!l4.lw) next.forwardLines[3] = { ...l4, lw: orphan };
+      next.forwardLines[i] = { ...line, x: null };
     }
   }
-  next.defensePairs[3] = { lb: null, rb: null };
-  next.extraDefensemen = uniqD.slice(0, 1);
 
   const rawXf = next.extraForwards as unknown;
-  if (
-    Array.isArray(rawXf) &&
-    rawXf.length <= 3 &&
-    rawXf.every((x) => x === null || typeof x === "string")
-  ) {
-    next.extraForwards = [
-      (rawXf[0] as string | null | undefined) ?? null,
-      (rawXf[1] as string | null | undefined) ?? null,
-      (rawXf[2] as string | null | undefined) ?? null,
-    ];
-  } else {
-    const arr = Array.isArray(rawXf) ? rawXf : [];
-    const seenF = new Set<string>();
-    const slot: [string | null, string | null, string | null] = [null, null, null];
-    let si = 0;
-    for (const x of arr) {
-      if (typeof x !== "string" || !x || seenF.has(x)) continue;
-      seenF.add(x);
-      if (si < 3) slot[si++] = x;
+  let a: string | null = null;
+  let b: string | null = null;
+  if (Array.isArray(rawXf)) {
+    a = (rawXf[0] as string | null | undefined) ?? null;
+    b = (rawXf[1] as string | null | undefined) ?? null;
+    const c = (rawXf[2] as string | null | undefined) ?? null;
+    if (c) {
+      const l4 = next.forwardLines[3];
+      if (!l4.x) next.forwardLines[3] = { ...l4, x: c };
+      else if (!l4.rw) next.forwardLines[3] = { ...l4, rw: c };
+      else if (!l4.c) next.forwardLines[3] = { ...l4, c: c };
+      else if (!l4.lw) next.forwardLines[3] = { ...l4, lw: c };
     }
-    next.extraForwards = slot;
+  }
+  next.extraForwards = [a, b];
+
+  const p3 = next.defensePairs[3];
+  const lb = p3.lb ?? p3.rb ?? null;
+  next.defensePairs[3] = { lb, rb: null };
+
+  if (next.extraDefensemen[0]) {
+    if (!next.defensePairs[3].lb) {
+      next.defensePairs[3] = { lb: next.extraDefensemen[0], rb: null };
+      next.extraDefensemen = [];
+    } else {
+      next.extraDefensemen = [];
+    }
   }
 
   return next;
@@ -68,8 +86,9 @@ export function lineupToPlayers(lineup: LineupStructure, players: Player[]): Pla
     if (l.lw) ids.push(l.lw);
     if (l.c) ids.push(l.c);
     if (l.rw) ids.push(l.rw);
+    if (l.x) ids.push(l.x);
   });
-  lineup.defensePairs.slice(0, 3).forEach((p) => {
+  lineup.defensePairs.forEach((p) => {
     if (p.lb) ids.push(p.lb);
     if (p.rb) ids.push(p.rb);
   });
@@ -84,15 +103,21 @@ export function lineupToPlayers(lineup: LineupStructure, players: Player[]): Pla
 export function isLineupComplete(lineup: LineupStructure): boolean {
   const xf = lineup.extraForwards;
   const fCount =
-    lineup.forwardLines.reduce((s, l) => s + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0), 0) +
+    lineup.forwardLines.reduce(
+      (s, l) => s + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0) + (l.x ? 1 : 0),
+      0
+    ) +
     (xf[0] ? 1 : 0) +
-    (xf[1] ? 1 : 0) +
-    (xf[2] ? 1 : 0);
+    (xf[1] ? 1 : 0);
   const dInFirstThree = lineup.defensePairs
     .slice(0, 3)
     .reduce((s, p) => s + (p.lb ? 1 : 0) + (p.rb ? 1 : 0), 0);
-  const dCount = dInFirstThree + lineup.extraDefensemen.length;
+  const p3 = lineup.defensePairs[3];
+  const seventhInRow = p3.lb ? 1 : 0;
+  const seventhExtra = lineup.extraDefensemen[0] ? 1 : 0;
+  const dCount = dInFirstThree + seventhInRow + seventhExtra;
   const gCount = lineup.goalies.filter(Boolean).length;
-  const p3Empty = !lineup.defensePairs[3].lb && !lineup.defensePairs[3].rb;
-  return fCount === 15 && dCount === 7 && gCount === 3 && p3Empty;
+  const p3RbEmpty = !p3.rb;
+  const seventhSingle = !(p3.lb && lineup.extraDefensemen[0]);
+  return fCount === 15 && dCount === 7 && gCount === 3 && p3RbEmpty && seventhSingle;
 }

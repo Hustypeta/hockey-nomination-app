@@ -13,7 +13,7 @@ import type { LineupStructure } from "@/types";
 const POSTER_PNG_OPTS = {
   quality: 1,
   pixelRatio: 2 as const,
-  backgroundColor: "#0c0e12",
+  backgroundColor: "#05080f",
 };
 
 interface NominationViewProps {
@@ -153,6 +153,7 @@ export function NominationView({
               players={players}
               captainId={captainId}
               lineup={lineupStructure}
+              assistantIds={lineupStructure?.assistantIds ?? []}
             />
           ) : (
             <RosterSheet

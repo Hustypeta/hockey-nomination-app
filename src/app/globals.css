@@ -60,22 +60,6 @@ body {
     0 0 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Export plakátu – světlý led */
-.nomination-rink {
-  background: linear-gradient(
-    165deg,
-    #e8f4f8 0%,
-    #cde9f2 22%,
-    #b3ddf0 45%,
-    #cae6f3 68%,
-    #e2f2f8 100%
-  );
-  border: 3px solid rgba(200, 16, 46, 0.9);
-  box-shadow:
-    inset 0 0 100px rgba(0, 48, 135, 0.14),
-    0 12px 48px rgba(0, 0, 0, 0.4);
-}
-
 /* Sestavovač – prémiový tmavý panel */
 .lineup-board {
   background:
@@ -110,6 +94,19 @@ body {
     0 28px 90px rgba(0, 0, 0, 0.55);
 }
 
+/* Export plakát — stejný tmavý „ledový“ panel jako sestavovač (ne světlé rink pozadí). */
+.nomination-poster-panel {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -25%, rgba(0, 48, 135, 0.2), transparent 55%),
+    radial-gradient(ellipse 90% 55% at 100% 40%, rgba(200, 16, 46, 0.06), transparent 48%),
+    linear-gradient(165deg, #0d121f 0%, #080b12 48%, #06080f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    0 0 0 1px rgba(0, 48, 135, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
 /* Jersey number style */
 .jersey-number {
   font-family: var(--font-display);
@@ -128,10 +125,10 @@ body {
   transform: translateY(-2px) scale(1.02);
 }
 
-/* NHL-style lineup jersey slots */
+/* NHL-style lineup cards — vybraný slot (cyan jako v NHL UI) */
 .jersey-slot-selected .jersey-slot-root,
 .jersey-slot-selected.jersey-slot-root {
-  filter: drop-shadow(0 0 18px rgba(200, 16, 46, 0.45)) drop-shadow(0 0 28px rgba(0, 48, 135, 0.25));
+  filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.45)) drop-shadow(0 0 26px rgba(0, 48, 135, 0.22));
 }
 
 .jersey-slot-dnd-highlight .jersey-slot-root {

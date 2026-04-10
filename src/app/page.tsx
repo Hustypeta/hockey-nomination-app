@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LandingContent } from "@/components/LandingContent";
+import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
   title: "MS 2026 | Sestav si nominaci na hokejové mistrovství světa",
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <LandingContent />;
+  return (
+    <SiteShell>
+      <LandingContent />
+    </SiteShell>
+  );
 }

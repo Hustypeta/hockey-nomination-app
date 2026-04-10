@@ -10,7 +10,7 @@ import { sharePngDataUrl } from "@/lib/sharePosterImage";
 const POSTER_PNG_OPTS = {
   quality: 1,
   pixelRatio: 2 as const,
-  backgroundColor: "#0c0e12",
+  backgroundColor: "#05080f",
 };
 
 const ENTRY_GAME_URL = process.env.NEXT_PUBLIC_VSTOUPIT_DO_HRY_URL ?? "#";

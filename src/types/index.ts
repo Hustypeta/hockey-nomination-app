@@ -42,6 +42,8 @@ export interface ForwardLine {
   lw: string | null; // playerId
   c: string | null;
   rw: string | null;
+  /** Jen u 4. lajny — čtvrtý útočník v řádku (12 + 2 náhradní = 15 útočníků). */
+  x: string | null;
 }
 
 export interface DefensePair {
@@ -51,22 +53,22 @@ export interface DefensePair {
 
 export interface LineupStructure {
   forwardLines: [ForwardLine, ForwardLine, ForwardLine, ForwardLine]; // 1.–4. lajna
-  /** Čtvrtý pár je v datech rezervovaný (vždy prázdný); beků je 7 v prvních třech párech + náhradník. */
+  /** První tři páry po dvou; čtvrtý řádek = sedmý bek (jeden slot LB, RB zůstává prázdný). */
   defensePairs: [DefensePair, DefensePair, DefensePair, DefensePair];
   goalies: [string | null, string | null, string | null]; // 3 brankáři
-  /** Tři pevné sloty EX1–EX3 (`null` = prázdné). */
-  extraForwards: [string | null, string | null, string | null];
-  /** Nejdeš 7 beků: max. jeden náhradní obránce. */
+  /** Dva náhradní útočníci. */
+  extraForwards: [string | null, string | null];
+  /** Jeden náhradní obránce (mimo tři páry a sedmého beka ve 4. řádku — při klasické nominaci 7 beků nech prázdné). */
   extraDefensemen: string[];
   assistantIds?: string[];
 }
 
 export const EMPTY_LINEUP: LineupStructure = {
   forwardLines: [
-    { lw: null, c: null, rw: null },
-    { lw: null, c: null, rw: null },
-    { lw: null, c: null, rw: null },
-    { lw: null, c: null, rw: null },
+    { lw: null, c: null, rw: null, x: null },
+    { lw: null, c: null, rw: null, x: null },
+    { lw: null, c: null, rw: null, x: null },
+    { lw: null, c: null, rw: null, x: null },
   ],
   defensePairs: [
     { lb: null, rb: null },
@@ -75,7 +77,7 @@ export const EMPTY_LINEUP: LineupStructure = {
     { lb: null, rb: null },
   ],
   goalies: [null, null, null],
-  extraForwards: [null, null, null],
+  extraForwards: [null, null],
   extraDefensemen: [],
   assistantIds: [],
 };

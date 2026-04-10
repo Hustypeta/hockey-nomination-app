@@ -1,11 +1,12 @@
 "use client";
 
 import type { Position } from "@/types";
+import { GoalieButterflySilhouette, SkaterPortraitSilhouette } from "@/components/sestava/HockeySilhouettes";
 
 const POS_GRAD: Record<Position, string> = {
-  G: "from-sky-600 to-blue-900",
-  D: "from-[#003087] to-slate-900",
-  F: "from-[#c8102e] to-rose-950",
+  G: "from-sky-900/80 to-[#05080f]",
+  D: "from-[#0a2450] to-[#05080f]",
+  F: "from-[#3a0a14] to-[#05080f]",
 };
 
 function positionLabel(position: Position, role?: string | null) {
@@ -33,10 +34,10 @@ export function PlayerAvatar({
     size === "sm" ? "h-10 w-10" : size === "lg" ? "h-16 w-16" : "h-12 w-12";
   const szText =
     size === "sm"
-      ? "text-[11px] leading-tight"
+      ? "text-[9px] leading-tight"
       : size === "lg"
-        ? "text-lg leading-none"
-        : "text-sm leading-tight";
+        ? "text-[11px] leading-tight"
+        : "text-[10px] leading-tight";
 
   if (imageUrl) {
     return (
@@ -58,11 +59,33 @@ export function PlayerAvatar({
     );
   }
 
+  const isG = position === "G";
+
   return (
     <div
-      className={`flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-display font-bold uppercase leading-none tracking-wide text-white shadow-inner ring-1 ring-white/10 ${POS_GRAD[position]} ${szBox} ${szText}`}
+      role="img"
+      aria-label={name}
+      className={`relative shrink-0 overflow-hidden rounded-xl bg-gradient-to-b shadow-[0_4px_16px_rgba(0,0,0,0.4)] ring-1 ring-white/12 ${POS_GRAD[position]} ${szBox}`}
     >
-      <span className="max-w-[92%] text-center">{label}</span>
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.2]"
+        style={{
+          backgroundImage:
+            "linear-gradient(120deg, rgba(200,16,46,0.35) 0%, transparent 45%, transparent 55%, rgba(0,48,135,0.3) 100%)",
+        }}
+      />
+      <div className="absolute inset-0 flex items-end justify-center pb-4">
+        {isG ? (
+          <GoalieButterflySilhouette className="h-[135%] w-[135%] max-w-none -translate-y-1" />
+        ) : (
+          <SkaterPortraitSilhouette className="h-[130%] w-auto max-w-[120%] -translate-y-0.5" />
+        )}
+      </div>
+      <span
+        className={`pointer-events-none absolute inset-x-0 bottom-0.5 z-[1] flex items-center justify-center font-display font-bold uppercase tracking-wide text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] ${szText}`}
+      >
+        {label}
+      </span>
     </div>
   );
 }

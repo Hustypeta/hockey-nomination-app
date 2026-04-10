@@ -66,6 +66,10 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                     const p = getPlayer(line.rw);
                     if (p) row.push({ p, l: li + 1, pos: "RW" });
                   }
+                  if (line.x) {
+                    const p = getPlayer(line.x);
+                    if (p) row.push({ p, l: li + 1, pos: "X" });
+                  }
                   return row;
                 }).map(({ p, l, pos }) => (
                   <tr key={p.id} className="border-b border-gray-200">
@@ -107,11 +111,16 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
             <h2 className="font-bold text-[#c41e3a] mb-2">Obránci</h2>
             <table className="w-full">
               <tbody>
-                {lineup.defensePairs.slice(0, 3).flatMap((pair, pi) => {
+                {lineup.defensePairs.flatMap((pair, pi) => {
                   const row: { p: Player; l: number; pos: string }[] = [];
                   if (pair.lb) {
                     const p = getPlayer(pair.lb);
-                    if (p) row.push({ p, l: pi + 1, pos: "LB" });
+                    if (p)
+                      row.push({
+                        p,
+                        l: pi + 1,
+                        pos: pi === 3 ? "7. bek" : "LB",
+                      });
                   }
                   if (pair.rb) {
                     const p = getPlayer(pair.rb);
@@ -120,7 +129,7 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                   return row;
                 }).map(({ p, l, pos }) => (
                   <tr key={p.id} className="border-b border-gray-200">
-                    <td className="py-1">{l}. pár</td>
+                    <td className="py-1">{l === 4 ? "4. řádek" : `${l}. pár`}</td>
                     <td className="py-1">{pos}</td>
                     <td className="py-1 font-medium">{p.name}</td>
                     <td className="py-1 text-gray-600">

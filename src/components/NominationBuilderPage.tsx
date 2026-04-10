@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
@@ -16,6 +15,8 @@ import { LineBuilder } from "@/components/LineBuilder";
 import { NominationPoster } from "@/components/NominationPoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
+import { SiteBackground } from "@/components/site/SiteBackground";
+import { SiteHeader } from "@/components/site/SiteHeader";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
@@ -67,15 +68,17 @@ export function NominationBuilderPage() {
     D:
       lineup.defensePairs
         .slice(0, 3)
-        .reduce((s, p) => s + (p.lb ? 1 : 0) + (p.rb ? 1 : 0), 0) + lineup.extraDefensemen.length,
+        .reduce((s, p) => s + (p.lb ? 1 : 0) + (p.rb ? 1 : 0), 0) +
+      (lineup.defensePairs[3].lb ? 1 : 0) +
+      (lineup.defensePairs[3].rb ? 1 : 0) +
+      lineup.extraDefensemen.length,
     F:
       lineup.forwardLines.reduce(
-        (s, l) => s + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0),
+        (s, l) => s + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0) + (l.x ? 1 : 0),
         0
       ) +
       (lineup.extraForwards[0] ? 1 : 0) +
-      (lineup.extraForwards[1] ? 1 : 0) +
-      (lineup.extraForwards[2] ? 1 : 0),
+      (lineup.extraForwards[1] ? 1 : 0),
   };
 
   useEffect(() => {
@@ -116,8 +119,9 @@ export function NominationBuilderPage() {
         player.position === "F" &&
         lineIndex !== undefined &&
         role &&
-        (role === "lw" || role === "c" || role === "rw")
+        (role === "lw" || role === "c" || role === "rw" || role === "x")
       ) {
+        if (role === "x" && lineIndex !== 3) return;
         const next = { ...lineup };
         const line = { ...next.forwardLines[lineIndex], [role]: player.id };
         next.forwardLines = [...next.forwardLines] as LineupStructure["forwardLines"];
@@ -128,18 +132,23 @@ export function NominationBuilderPage() {
         type === "defense" &&
         player.position === "D" &&
         lineIndex !== undefined &&
-        lineIndex < 3 &&
         role &&
-        (role === "lb" || role === "rb")
+        ((lineIndex < 3 && (role === "lb" || role === "rb")) || (lineIndex === 3 && role === "lb"))
       ) {
         const next = { ...lineup };
-        const pair = { ...next.defensePairs[lineIndex], [role]: player.id };
-        next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
-        next.defensePairs[lineIndex] = pair;
+        if (lineIndex === 3) {
+          next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
+          next.defensePairs[3] = { lb: player.id, rb: null };
+          next.extraDefensemen = [];
+        } else {
+          const pair = { ...next.defensePairs[lineIndex], [role]: player.id };
+          next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
+          next.defensePairs[lineIndex] = pair;
+        }
         setLineup(next);
         setSelectedSlot(null);
       } else if (type === "extraForward" && player.position === "F" && lineIndex !== undefined) {
-        const slotIndex = lineIndex as 0 | 1 | 2;
+        const slotIndex = lineIndex as 0 | 1;
         const next = assignPlayerToTarget(lineup, player, {
           type: "extraForward",
           slotIndex,
@@ -163,8 +172,14 @@ export function NominationBuilderPage() {
       if (!selectedSlot || usedIds.has(player.id)) return false;
       const { type, lineIndex, role } = selectedSlot;
       if (type === "goalie") return player.position === "G";
-      if (type === "forward" && (role === "lw" || role === "c" || role === "rw"))
+      if (
+        type === "forward" &&
+        (role === "lw" || role === "c" || role === "rw" || role === "x")
+      ) {
+        if (role === "x" && lineIndex !== 3) return false;
         return player.position === "F";
+      }
+      if (type === "defense" && lineIndex === 3 && role === "lb") return player.position === "D";
       if (type === "defense" && (role === "lb" || role === "rb"))
         return player.position === "D" && lineIndex !== undefined && lineIndex < 3;
       if (type === "extraForward") return player.position === "F";
@@ -273,19 +288,12 @@ export function NominationBuilderPage() {
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="sestava-page-ambient min-h-screen pb-[13rem] text-white sm:pb-44 lg:pb-36">
-        <div
-          className="pointer-events-none fixed inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
-            `,
-            backgroundSize: "56px 56px",
-          }}
-          aria-hidden
-        />
+        <SiteBackground />
 
-        <SestavaHero filled={filled} subtitleCounts={subtitleCounts} />
+        <div className="sticky top-0 z-40">
+          <SiteHeader />
+          <SestavaHero filled={filled} subtitleCounts={subtitleCounts} />
+        </div>
 
         <div className="relative z-10 mx-auto max-w-[90rem] px-4 py-8 lg:py-10">
           {!isComplete && (
@@ -304,7 +312,7 @@ export function NominationBuilderPage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,12fr)_minmax(0,13fr)] lg:gap-10 xl:gap-12">
             <section className="min-w-0">
               <div className="rounded-2xl border border-white/[0.09] bg-[#0a0e17]/55 p-5 shadow-[0_0_0_1px_rgba(0,48,135,0.14),0_28px_80px_rgba(0,0,0,0.45)] backdrop-blur-md sm:p-6">
-                <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                  <div className="mb-6">
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#c8102e]/90">
                       Pool
@@ -316,12 +324,6 @@ export function NominationBuilderPage() {
                       Klik na kartu = rychlé doplnění · úchop = přetáhni na konkrétní slot vpravo
                     </p>
                   </div>
-                  <Link
-                    href="/"
-                    className="shrink-0 rounded-xl border border-white/10 px-3 py-2 text-xs font-medium text-white/50 transition-colors hover:border-[#c8102e]/35 hover:text-white"
-                  >
-                    Úvod
-                  </Link>
                 </div>
                 <PlayerPoolPanel
                   players={players}
@@ -335,7 +337,7 @@ export function NominationBuilderPage() {
             </section>
 
             <section className="min-w-0">
-              <div className="lg:sticky lg:top-[8.5rem] lg:max-h-[calc(100vh-9.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-1 lg:self-start">
+              <div className="lg:sticky lg:top-72 lg:max-h-[calc(100vh-19rem)] lg:overflow-y-auto lg:pb-2 lg:pl-1 lg:self-start">
                 <div className="lineup-board rounded-2xl p-5 backdrop-blur-md sm:p-6">
                   <div className="lineup-board-accent mb-5" aria-hidden />
                   <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-300/80">
@@ -393,12 +395,13 @@ export function NominationBuilderPage() {
           shareLabel={isAuthenticated ? "Uložit a sdílet" : "Složit nominaci"}
         />
 
-        <div className="fixed -left-[9999px] top-0 w-[430px]" aria-hidden="true">
+        <div className="fixed -left-[9999px] top-0 w-[440px]" aria-hidden="true">
           <NominationPoster
             ref={posterRef}
             players={selectedPlayers}
             captainId={captainId}
             lineup={lineup}
+            assistantIds={lineup.assistantIds ?? []}
           />
         </div>
 

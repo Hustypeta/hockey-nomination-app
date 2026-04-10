@@ -3,57 +3,146 @@
 import { forwardRef, type ReactNode } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure, ForwardLine, DefensePair } from "@/types";
-import { NationalJersey } from "@/components/NationalJersey";
+import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
+import { LineupJerseyCard } from "@/components/sestava/LineupJerseyCard";
 
 interface NominationPosterProps {
   players: Player[];
   captainId: string | null;
   lineup?: LineupStructure | null;
+  assistantIds?: string[];
 }
 
-/** Jedna kompletní lajna: útok (LW–C–RW) + příslušný pár beků. */
+/** Stejné vizuální karty jako ve sestavovači — na exportu bez siluet (jen gradient). */
+function PosterPlayerCard({
+  player,
+  positionLabel,
+  size,
+  captainId,
+  assistantIds,
+}: {
+  player: Player;
+  positionLabel: string;
+  size: "compact" | "skater" | "goalie";
+  captainId: string | null;
+  assistantIds: string[];
+}) {
+  return (
+    <LineupJerseyCard
+      player={player}
+      positionLabel={positionLabel}
+      size={size}
+      isCaptain={captainId === player.id}
+      isAssistant={assistantIds.includes(player.id)}
+      portraitStyle="gradient"
+      disableMotion
+    />
+  );
+}
+
+/** Jedna lajna: útok + příslušný obranný blok (u 4. lajny i sedmý bek). */
 function PosterLineBlock({
   label,
   line,
   pair,
   captainId,
+  assistantIds,
   getPlayer,
 }: {
   label: string;
   line: ForwardLine;
   pair: DefensePair;
   captainId: string | null;
+  assistantIds: string[];
   getPlayer: (id: string) => Player | undefined;
 }) {
   const lw = line.lw ? getPlayer(line.lw) : null;
   const c = line.c ? getPlayer(line.c) : null;
   const rw = line.rw ? getPlayer(line.rw) : null;
+  const xf = line.x ? getPlayer(line.x) : null;
   const lb = pair.lb ? getPlayer(pair.lb) : null;
   const rb = pair.rb ? getPlayer(pair.rb) : null;
-  const hasFwd = lw || c || rw;
+  const hasFwd = lw || c || rw || xf;
   const hasDef = lb || rb;
   const hasAny = hasFwd || hasDef;
   if (!hasAny) return null;
 
+  const isFourth = label.startsWith("4.");
+
   return (
-    <div className="flex flex-col items-center gap-1">
-      <span className="font-display text-[9px] tracking-wide text-white/55">{label}</span>
+    <div className="flex flex-col items-center gap-1.5">
+      <span className="font-display text-[8px] uppercase tracking-[0.28em] text-white/45">{label}</span>
       {hasFwd ? (
-        <div className="flex items-end justify-center gap-0.5">
-          {lw && <NationalJersey player={lw} size="xs" isCaptain={captainId === lw.id} />}
-          {c && <NationalJersey player={c} size="xs" isCaptain={captainId === c.id} />}
-          {rw && <NationalJersey player={rw} size="xs" isCaptain={captainId === rw.id} />}
+        <div
+          className={`flex flex-wrap items-end justify-center gap-1 ${isFourth ? "max-w-[19.5rem]" : "max-w-[15rem]"}`}
+        >
+          {lw && (
+            <PosterPlayerCard
+              player={lw}
+              positionLabel="LW"
+              size="compact"
+              captainId={captainId}
+              assistantIds={assistantIds}
+            />
+          )}
+          {c && (
+            <PosterPlayerCard
+              player={c}
+              positionLabel="C"
+              size="compact"
+              captainId={captainId}
+              assistantIds={assistantIds}
+            />
+          )}
+          {rw && (
+            <PosterPlayerCard
+              player={rw}
+              positionLabel="RW"
+              size="compact"
+              captainId={captainId}
+              assistantIds={assistantIds}
+            />
+          )}
+          {xf && (
+            <PosterPlayerCard
+              player={xf}
+              positionLabel="X"
+              size="compact"
+              captainId={captainId}
+              assistantIds={assistantIds}
+            />
+          )}
         </div>
       ) : null}
       {hasDef ? (
         <>
-          <span className="font-display text-[7px] uppercase tracking-wider text-[#003f87]/70">
-            obránci
+          <span className="font-display text-[7px] uppercase tracking-[0.22em] text-cyan-200/50">
+            {isFourth ? "Sedmý bek" : "Obránci"}
           </span>
-          <div className="flex items-end justify-center gap-0.5">
-            {lb && <NationalJersey player={lb} size="xs" isCaptain={captainId === lb.id} />}
-            {lb && rb && <span className="mb-3 text-[8px] text-white/35">–</span>}
-            {rb && <NationalJersey player={rb} size="xs" isCaptain={captainId === rb.id} />}
+          <div className="flex flex-wrap items-end justify-center gap-1">
+            {lb && (
+              <PosterPlayerCard
+                player={lb}
+                positionLabel={isFourth ? "7. B" : "LD"}
+                size="compact"
+                captainId={captainId}
+                assistantIds={assistantIds}
+              />
+            )}
+            {!isFourth && lb && rb ? (
+              <span className="mb-3 font-display text-[9px] text-white/25" aria-hidden>
+                –
+              </span>
+            ) : null}
+            {rb && !isFourth && (
+              <PosterPlayerCard
+                player={rb}
+                positionLabel="RD"
+                size="compact"
+                captainId={captainId}
+                assistantIds={assistantIds}
+              />
+            )}
           </div>
         </>
       ) : null}
@@ -62,65 +151,76 @@ function PosterLineBlock({
 }
 
 export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps>(
-  function NominationPoster({ players, captainId, lineup }, ref) {
+  function NominationPoster({ players, captainId, lineup, assistantIds = [] }, ref) {
     const getPlayer = (id: string) => players.find((p) => p.id === id);
+    const aids = assistantIds.length ? assistantIds : (lineup?.assistantIds ?? []);
 
     return (
       <div
         ref={ref}
-        className="nomination-poster-box relative w-[430px] max-w-[100vw] overflow-hidden rounded-[1.75rem] border-[5px] border-[#c41e3a] bg-[#07090d] shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
+        className="nomination-poster-box relative w-[440px] max-w-[100vw] overflow-hidden rounded-2xl border-2 border-[#c8102e] bg-[#05080f] shadow-[0_24px_80px_rgba(0,0,0,0.65)]"
       >
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          className="pointer-events-none absolute inset-0 opacity-100"
           style={{
-            background:
-              "linear-gradient(90deg, #fff 0%, #fff 33%, #c41e3a 33%, #c41e3a 66%, #003f87 66%, #003f87 100%)",
+            background: `
+              radial-gradient(ellipse 100% 55% at 50% -20%, rgba(0, 48, 135, 0.38), transparent 55%),
+              radial-gradient(ellipse 55% 40% at 0% 40%, rgba(200, 16, 46, 0.12), transparent 50%),
+              radial-gradient(ellipse 50% 38% at 100% 55%, rgba(0, 48, 135, 0.18), transparent 48%),
+              linear-gradient(180deg, #0a0e17 0%, #05080f 42%, #04060c 100%)
+            `,
           }}
+          aria-hidden
         />
 
-        <div className="relative px-3 pb-5 pt-5 sm:px-4">
-          <header className="mb-3 text-center">
-            <p className="font-display text-[10px] tracking-[0.28em] text-[#c41e3a]">
-              ČESKÁ HOCKEYOVÁ REPREZENTACE
-            </p>
-            <h1 className="mt-1 font-display text-4xl tracking-[0.1em] text-white">MS 2026</h1>
-            <p className="mt-1 font-display text-2xl text-[#c41e3a]">MÁ NOMINACE</p>
-            <div className="mx-auto mt-2 h-1 w-20 rounded-full bg-[#003f87]" />
+        <div className="lineup-board-accent relative mx-4 mt-3 rounded-full opacity-90" aria-hidden />
+
+        <div className="relative px-3 pb-4 pt-2 sm:px-4">
+          <header className="mb-3 flex flex-col items-center text-center">
+            <div className="mb-2 flex items-center gap-2.5">
+              <CzechHockeyCrest className="h-11 w-11 shrink-0 drop-shadow-[0_0_14px_rgba(200,16,46,0.35)]" />
+              <div className="text-left">
+                <p className="font-display text-[9px] font-bold uppercase tracking-[0.35em] text-[#c8102e]">
+                  Česká reprezentace
+                </p>
+                <h1 className="font-display text-3xl leading-none tracking-[0.12em] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.5)]">
+                  MS <span className="text-[#c8102e]">2026</span>
+                </h1>
+              </div>
+            </div>
+            <p className="font-display text-lg uppercase tracking-[0.22em] text-cyan-200/90">Lineup</p>
           </header>
 
-          <div className="nomination-rink rounded-xl p-2.5 sm:p-3">
+          <div className="nomination-poster-panel rounded-xl p-2.5 sm:p-3">
             {lineup ? (
               <div className="space-y-3">
                 <PosterSection title="Brankáři">
-                  <div className="flex flex-wrap justify-center gap-1.5">
-                    {lineup.goalies.map((gid) => {
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {lineup.goalies.map((gid, i) => {
                       const p = gid ? getPlayer(gid) : null;
                       if (!p) return null;
                       return (
-                        <NationalJersey
+                        <PosterPlayerCard
                           key={p.id}
                           player={p}
-                          size="sm"
-                          isCaptain={captainId === p.id}
+                          positionLabel={`G${i + 1}`}
+                          size="compact"
+                          captainId={captainId}
+                          assistantIds={aids}
                         />
                       );
                     })}
                   </div>
                 </PosterSection>
 
-                <div className="flex justify-center py-0.5">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#003f87]/60 bg-[#003f87]/15 font-display text-[10px] tracking-widest text-[#003f87]">
-                    ČR
-                  </div>
-                </div>
-
-                <PosterSection title="Lajny (útok + bekové páry)">
-                  <div className="grid grid-cols-2 gap-x-1 gap-y-2">
+                <PosterSection title="Lajny">
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-3">
                     <PosterLineBlock
                       label="1. lajna"
                       line={lineup.forwardLines[0]}
                       pair={lineup.defensePairs[0]}
                       captainId={captainId}
+                      assistantIds={aids}
                       getPlayer={getPlayer}
                     />
                     <PosterLineBlock
@@ -128,99 +228,88 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                       line={lineup.forwardLines[1]}
                       pair={lineup.defensePairs[1]}
                       captainId={captainId}
+                      assistantIds={aids}
                       getPlayer={getPlayer}
                     />
                   </div>
-                  <div className="mt-2 grid grid-cols-2 gap-x-1 border-t border-[#003f87]/20 pt-2">
-                    <div className="flex flex-col items-center gap-2">
-                      <PosterLineBlock
-                        label="3. lajna"
-                        line={lineup.forwardLines[2]}
-                        pair={lineup.defensePairs[2]}
-                        captainId={captainId}
-                        getPlayer={getPlayer}
-                      />
+                  <div className="mt-3 grid grid-cols-2 gap-x-2 border-t border-white/[0.08] pt-3">
+                    <PosterLineBlock
+                      label="3. lajna"
+                      line={lineup.forwardLines[2]}
+                      pair={lineup.defensePairs[2]}
+                      captainId={captainId}
+                      assistantIds={aids}
+                      getPlayer={getPlayer}
+                    />
+                    <div className="flex flex-col items-center gap-2 border-l border-white/[0.08] pl-2">
                       <PosterLineBlock
                         label="4. lajna"
                         line={lineup.forwardLines[3]}
-                        pair={{ lb: null, rb: null }}
+                        pair={lineup.defensePairs[3]}
                         captainId={captainId}
+                        assistantIds={aids}
                         getPlayer={getPlayer}
                       />
-                    </div>
-                    <div className="flex flex-col items-center justify-start gap-1 border-l border-[#003f87]/30 pl-1.5">
-                      <span className="font-display text-[9px] tracking-wide text-[#c41e3a]">
-                        Náhradníci
-                      </span>
-                      <div className="flex flex-wrap justify-center gap-0.5">
-                        {lineup.extraForwards.map((id, i) => {
-                          if (!id) return null;
-                          const p = getPlayer(id);
-                          return p ? (
-                            <NationalJersey
-                              key={`${p.id}-${i}`}
-                              player={p}
-                              size="xs"
-                              isCaptain={captainId === p.id}
-                            />
-                          ) : null;
-                        })}
-                        {lineup.extraDefensemen.map((id) => {
-                          const p = getPlayer(id);
-                          return p ? (
-                            <NationalJersey
-                              key={p.id}
-                              player={p}
-                              size="xs"
-                              isCaptain={captainId === p.id}
-                            />
-                          ) : null;
-                        })}
+                      <div className="w-full border-t border-dashed border-white/[0.1] pt-2">
+                        <p className="mb-1.5 text-center font-display text-[8px] uppercase tracking-[0.24em] text-[#c8102e]/90">
+                          Náhradníci
+                        </p>
+                        <div className="flex flex-wrap justify-center gap-1">
+                          {lineup.extraForwards.map((id, i) => {
+                            if (!id) return null;
+                            const p = getPlayer(id);
+                            return p ? (
+                              <PosterPlayerCard
+                                key={`xf-${p.id}`}
+                                player={p}
+                                positionLabel={`EX${i + 1}`}
+                                size="compact"
+                                captainId={captainId}
+                                assistantIds={aids}
+                              />
+                            ) : null;
+                          })}
+                          {lineup.extraDefensemen.map((id) => {
+                            const p = getPlayer(id);
+                            return p ? (
+                              <PosterPlayerCard
+                                key={`xd-${p.id}`}
+                                player={p}
+                                positionLabel="N-D"
+                                size="compact"
+                                captainId={captainId}
+                                assistantIds={aids}
+                              />
+                            ) : null;
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </PosterSection>
               </div>
             ) : (
-              <div className="flex flex-wrap justify-center gap-2">
-                {players
-                  .filter((p) => p.position === "G")
-                  .map((p) => (
-                    <NationalJersey
-                      key={p.id}
-                      player={p}
-                      size="sm"
-                      isCaptain={captainId === p.id}
-                    />
-                  ))}
-                {players
-                  .filter((p) => p.position === "D")
-                  .map((p) => (
-                    <NationalJersey
-                      key={p.id}
-                      player={p}
-                      size="sm"
-                      isCaptain={captainId === p.id}
-                    />
-                  ))}
-                {players
-                  .filter((p) => p.position === "F")
-                  .map((p) => (
-                    <NationalJersey
-                      key={p.id}
-                      player={p}
-                      size="sm"
-                      isCaptain={captainId === p.id}
-                    />
-                  ))}
+              <div className="flex flex-wrap justify-center gap-1.5">
+                {players.map((p) => (
+                  <PosterPlayerCard
+                    key={p.id}
+                    player={p}
+                    positionLabel={
+                      p.position === "G" ? "G" : p.position === "D" ? (p.role ?? "D") : (p.role ?? "F")
+                    }
+                    size="compact"
+                    captainId={captainId}
+                    assistantIds={aids}
+                  />
+                ))}
               </div>
             )}
           </div>
 
-          <footer className="mt-3 text-center">
-            <p className="text-[11px] text-white/55 sm:text-xs">
-              Sestavil jsem na{" "}
-              <span className="font-display text-[#c41e3a]">hockey-nomination.cz</span>
+          <footer className="mt-3 border-t border-white/[0.06] pt-3 text-center">
+            <p className="text-[10px] text-white/50">
+              Sestaveno na{" "}
+              <span className="font-display text-[#c8102e] tracking-wide">hockey-nomination.cz</span>
             </p>
           </footer>
         </div>
@@ -238,7 +327,7 @@ function PosterSection({
 }) {
   return (
     <section>
-      <h2 className="mb-1.5 text-center font-display text-xs tracking-[0.15em] text-[#c41e3a]">
+      <h2 className="mb-2 border-b border-white/[0.08] pb-1.5 text-center font-display text-[11px] uppercase tracking-[0.22em] text-white/80">
         {title}
       </h2>
       {children}

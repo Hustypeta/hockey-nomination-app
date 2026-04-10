@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { TOTAL_PLAYERS } from "@/types";
 
@@ -16,16 +15,13 @@ export function SestavaHero({
   const pct = Math.min(100, Math.round((filled / TOTAL_PLAYERS) * 100));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#05080f]/90 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl backdrop-saturate-150">
+    <div className="border-b border-white/[0.08] bg-[#05080f]/90 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex max-w-[90rem] flex-col gap-6 px-4 py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
         <div className="flex items-center gap-4">
           <div className="flex h-[3.75rem] w-[3.75rem] shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#c8102e] via-[#a30d26] to-[#003087] text-lg font-bold text-white shadow-[0_0_40px_rgba(200,16,46,0.4),0_0_0_1px_rgba(255,255,255,0.12)_inset] ring-2 ring-white/20">
             <span className="font-display tracking-tight">ČR</span>
           </div>
           <div>
-            <Link href="/" className="text-xs font-medium text-white/45 transition-colors hover:text-[#c8102e]">
-              ← Úvod
-            </Link>
             <h1 className="font-display text-3xl font-bold tracking-tight text-white md:text-4xl">MS 2026</h1>
             <p className="text-sm font-medium text-sky-200/90">Česká reprezentace</p>
           </div>
@@ -96,6 +92,6 @@ export function SestavaHero({
           </div>
         </div>
       </div>
-    </header>
+    </div>
   );
 }

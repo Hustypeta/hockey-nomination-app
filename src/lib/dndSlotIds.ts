@@ -21,20 +21,22 @@ export function parseDroppableId(id: string): DropTarget | null {
     const pairIndex = Number(m[1]);
     const role = m[2] as "lb" | "rb";
     if (pairIndex >= 0 && pairIndex <= 2) return { type: "defense", pairIndex, role };
+    if (pairIndex === 3 && role === "lb") return { type: "defense", pairIndex: 3, role: "lb" };
     return null;
   }
   if (id.startsWith("slot-fwd-")) {
     const rest = id.slice("slot-fwd-".length);
-    const m = rest.match(/^(\d+)-(lw|c|rw)$/);
+    const m = rest.match(/^(\d+)-(lw|c|rw|x)$/);
     if (!m) return null;
     const lineIndex = Number(m[1]);
-    const role = m[2] as "lw" | "c" | "rw";
-    if (lineIndex >= 0 && lineIndex <= 3) return { type: "forward", lineIndex, role };
-    return null;
+    const role = m[2] as "lw" | "c" | "rw" | "x";
+    if (lineIndex < 0 || lineIndex > 3) return null;
+    if (role === "x" && lineIndex !== 3) return null;
+    return { type: "forward", lineIndex, role };
   }
   if (id.startsWith("slot-xf-")) {
     const n = Number(id.slice("slot-xf-".length));
-    if (n === 0 || n === 1 || n === 2) return { type: "extraForward", slotIndex: n as 0 | 1 | 2 };
+    if (n === 0 || n === 1) return { type: "extraForward", slotIndex: n as 0 | 1 };
     return null;
   }
   if (id.startsWith("slot-xd-")) {
