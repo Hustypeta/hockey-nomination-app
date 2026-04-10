@@ -4,12 +4,12 @@ import { useId } from "react";
 
 const VB = "0 0 100 120";
 
-/** Hladší obrys dresu (ramena, výstřih, sukně). */
+/** Obrys dresu včetně krátkých rukávů (ramena nejsou „nahá“). */
 const PATH_SKATER =
-  "M 39 9 C 35 7.5 29 8 25 10.5 L 15.5 20.5 C 12.5 26 11.5 32 12 38 L 14.5 76 C 15.2 98 17.5 110 23.5 114.5 L 76.5 114.5 C 82.5 110 84.8 98 85.5 76 L 88 38 C 88.5 32 87.5 26 84.5 20.5 L 75 10.5 C 71 8 65 7.5 61 9 L 54.5 7.5 L 50 17.5 L 45.5 7.5 L 39 9 Z";
+  "M 39 9 C 35 7.5 29 8 25 10.5 L 15.5 20.5 L 7 24 L 3.5 36 L 4.2 45 L 8.5 51 L 14 51.5 L 14.5 76 C 15.2 98 17.5 110 23.5 114.5 L 76.5 114.5 C 82.5 110 84.8 98 85.5 76 L 86 51.5 L 91.5 51 L 95.8 45 L 96.5 36 L 93 24 L 84.5 20.5 L 75 10.5 C 71 8 65 7.5 61 9 L 54.5 7.5 L 50 17.5 L 45.5 7.5 L 39 9 Z";
 
 const PATH_GOALIE =
-  "M 34 8 C 28 6 22 8 17 12 L 7 26 C 4 34 3 42 4 50 L 7 84 C 8 104 11 112 18 116 L 82 116 C 89 112 92 104 93 84 L 96 50 C 97 42 96 34 93 26 L 83 12 C 78 8 72 6 66 8 L 59 6 L 50 17 L 41 6 L 34 8 Z";
+  "M 34 8 C 28 6 22 8 17 12 L 4 22 L 0.5 38 L 1.5 50 L 5.5 58 L 9 59 L 7 84 C 8 104 11 112 18 116 L 82 116 C 89 112 92 104 93 84 L 91 59 L 94.5 50 L 98.5 38 L 96 22 L 83 12 C 78 8 72 6 66 8 L 59 6 L 50 17 L 41 6 L 34 8 Z";
 
 type JerseySilhouetteShapeProps = {
   kind: "skater" | "goalie";
@@ -156,40 +156,40 @@ export function JerseySilhouetteShape({
           lineup ? (
             <>
               {/* Rukáv: modrý „cap“ (yoke), červené tělo, bílý náplet – jako u fan dresů ČR */}
-              <rect x="8.4" y="29" width="7.2" height="9.2" fill="#1a4d9e" rx="0.4" opacity="0.97" />
-              <rect x="8.4" y="37.5" width="7.2" height="16.8" fill="#d21231" rx="0.35" opacity="0.99" />
-              <rect x="8.4" y="53.5" width="7.2" height="3.6" fill="#ffffff" rx="0.2" opacity="0.9" />
-              <rect x="84.4" y="29" width="7.2" height="9.2" fill="#1a4d9e" rx="0.4" opacity="0.97" />
-              <rect x="84.4" y="37.5" width="7.2" height="16.8" fill="#d21231" rx="0.35" opacity="0.99" />
-              <rect x="84.4" y="53.5" width="7.2" height="3.6" fill="#ffffff" rx="0.2" opacity="0.9" />
+              <rect x="4" y="27" width="11" height="9.5" fill="#1a4d9e" rx="0.45" opacity="0.97" />
+              <rect x="4" y="35.5" width="11" height="18" fill="#d21231" rx="0.38" opacity="0.99" />
+              <rect x="4" y="52" width="11" height="3.8" fill="#ffffff" rx="0.22" opacity="0.9" />
+              <rect x="85" y="27" width="11" height="9.5" fill="#1a4d9e" rx="0.45" opacity="0.97" />
+              <rect x="85" y="35.5" width="11" height="18" fill="#d21231" rx="0.38" opacity="0.99" />
+              <rect x="85" y="52" width="11" height="3.8" fill="#ffffff" rx="0.22" opacity="0.9" />
             </>
           ) : (
             <>
-              <rect x="10" y="29" width="2.8" height="28" fill="#c8102e" rx="0.35" opacity="0.95" />
-              <rect x="13.5" y="29" width="2.8" height="28" fill="#f4f7fb" rx="0.35" opacity="0.98" />
-              <rect x="17" y="29" width="2.8" height="28" fill="#003087" rx="0.35" opacity="0.98" />
-              <rect x="80.2" y="29" width="2.8" height="28" fill="#c8102e" rx="0.35" opacity="0.95" />
-              <rect x="83.7" y="29" width="2.8" height="28" fill="#f4f7fb" rx="0.35" opacity="0.98" />
-              <rect x="87.2" y="29" width="2.8" height="28" fill="#003087" rx="0.35" opacity="0.98" />
+              <rect x="4" y="26" width="3.2" height="30" fill="#c8102e" rx="0.4" opacity="0.95" />
+              <rect x="8" y="26" width="3.2" height="30" fill="#f4f7fb" rx="0.4" opacity="0.98" />
+              <rect x="12" y="26" width="3.2" height="30" fill="#003087" rx="0.4" opacity="0.98" />
+              <rect x="84.8" y="26" width="3.2" height="30" fill="#c8102e" rx="0.4" opacity="0.95" />
+              <rect x="88.8" y="26" width="3.2" height="30" fill="#f4f7fb" rx="0.4" opacity="0.98" />
+              <rect x="92.8" y="26" width="3.2" height="30" fill="#003087" rx="0.4" opacity="0.98" />
             </>
           )
         ) : lineup ? (
           <>
-            <rect x="5.2" y="27" width="8.2" height="10" fill="#1a4d9e" rx="0.45" opacity="0.97" />
-            <rect x="5.2" y="36.2" width="8.2" height="18.3" fill="#d21231" rx="0.38" opacity="0.99" />
-            <rect x="5.2" y="53.5" width="8.2" height="4" fill="#ffffff" rx="0.22" opacity="0.9" />
-            <rect x="86.6" y="27" width="8.2" height="10" fill="#1a4d9e" rx="0.45" opacity="0.97" />
-            <rect x="86.6" y="36.2" width="8.2" height="18.3" fill="#d21231" rx="0.38" opacity="0.99" />
-            <rect x="86.6" y="53.5" width="8.2" height="4" fill="#ffffff" rx="0.22" opacity="0.9" />
+            <rect x="1" y="25" width="10.5" height="10.5" fill="#1a4d9e" rx="0.5" opacity="0.97" />
+            <rect x="1" y="34.5" width="10.5" height="19.5" fill="#d21231" rx="0.4" opacity="0.99" />
+            <rect x="1" y="52.5" width="10.5" height="4.2" fill="#ffffff" rx="0.24" opacity="0.9" />
+            <rect x="88.5" y="25" width="10.5" height="10.5" fill="#1a4d9e" rx="0.5" opacity="0.97" />
+            <rect x="88.5" y="34.5" width="10.5" height="19.5" fill="#d21231" rx="0.4" opacity="0.99" />
+            <rect x="88.5" y="52.5" width="10.5" height="4.2" fill="#ffffff" rx="0.24" opacity="0.9" />
           </>
         ) : (
           <>
-            <rect x="6" y="27" width="3.4" height="32" fill="#c8102e" rx="0.4" opacity="0.95" />
-            <rect x="10.5" y="27" width="3.4" height="32" fill="#f4f7fb" rx="0.4" opacity="0.98" />
-            <rect x="15" y="27" width="3.4" height="32" fill="#003087" rx="0.4" opacity="0.98" />
-            <rect x="81.6" y="27" width="3.4" height="32" fill="#c8102e" rx="0.4" opacity="0.95" />
-            <rect x="86.1" y="27" width="3.4" height="32" fill="#f4f7fb" rx="0.4" opacity="0.98" />
-            <rect x="90.6" y="27" width="3.4" height="32" fill="#003087" rx="0.4" opacity="0.98" />
+            <rect x="1.5" y="24" width="4" height="34" fill="#c8102e" rx="0.45" opacity="0.95" />
+            <rect x="6.5" y="24" width="4" height="34" fill="#f4f7fb" rx="0.45" opacity="0.98" />
+            <rect x="11.5" y="24" width="4" height="34" fill="#003087" rx="0.45" opacity="0.98" />
+            <rect x="84.1" y="24" width="4" height="34" fill="#c8102e" rx="0.45" opacity="0.95" />
+            <rect x="89.1" y="24" width="4" height="34" fill="#f4f7fb" rx="0.45" opacity="0.98" />
+            <rect x="94.1" y="24" width="4" height="34" fill="#003087" rx="0.45" opacity="0.98" />
           </>
         )}
         {lineup ? (
