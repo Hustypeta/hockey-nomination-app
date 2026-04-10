@@ -9,6 +9,7 @@ function cloneLineup(l: LineupStructure): LineupStructure {
     goalies: [...l.goalies] as LineupStructure["goalies"],
     extraForwards: [...l.extraForwards],
     extraDefensemen: [...l.extraDefensemen],
+    assistantIds: [...(l.assistantIds ?? [])],
   };
 }
 
@@ -57,6 +58,7 @@ function stripPlayerFromLineup(lineup: LineupStructure, playerId: string): Lineu
   })) as LineupStructure["defensePairs"];
   next.extraForwards = next.extraForwards.filter((id) => id !== playerId);
   next.extraDefensemen = next.extraDefensemen.filter((id) => id !== playerId);
+  next.assistantIds = (next.assistantIds ?? []).filter((id) => id !== playerId);
   return next;
 }
 
@@ -214,6 +216,7 @@ export function buildRandomLineup(players: Player[]): LineupStructure | null {
     goalies,
     extraForwards,
     extraDefensemen: [],
+    assistantIds: [],
   };
 }
 
@@ -241,5 +244,7 @@ export function clearPositionGroup(
     ] as LineupStructure["forwardLines"];
     next.extraForwards = [];
   }
+  const used = lineupPlayerIds(next);
+  next.assistantIds = (next.assistantIds ?? []).filter((id) => used.has(id));
   return next;
 }

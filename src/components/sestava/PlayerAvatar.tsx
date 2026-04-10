@@ -18,12 +18,31 @@ export function PlayerAvatar({
   name,
   position,
   size = "md",
+  imageUrl,
 }: {
   name: string;
   position: Position;
   size?: "sm" | "md" | "lg";
+  imageUrl?: string | null;
 }) {
-  const sz = size === "sm" ? "h-10 w-10 text-xs" : size === "lg" ? "h-16 w-16 text-lg" : "h-12 w-12 text-sm";
+  const sz =
+    size === "sm" ? "h-10 w-10 text-xs" : size === "lg" ? "h-16 w-16 text-lg" : "h-12 w-12 text-sm";
+
+  if (imageUrl) {
+    return (
+      <div
+        className={`relative shrink-0 overflow-hidden rounded-xl bg-[#0a0e17] shadow-[0_4px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/15 ${sz}`}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={imageUrl} alt="" className="h-full w-full object-cover object-top" />
+        <div
+          className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent`}
+          aria-hidden
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       className={`flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-bold text-white shadow-inner ring-1 ring-white/10 ${POS_GRAD[position]} ${sz}`}

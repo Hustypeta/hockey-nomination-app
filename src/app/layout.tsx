@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
-      <body className="antialiased min-h-screen bg-[#0a0a0a] font-sans text-white">
+      <body className="antialiased min-h-screen bg-[#05080f] font-sans text-white">
         <AuthProvider>
           {children}
           <Toaster

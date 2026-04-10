@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,15 +45,15 @@ function DraggableCard({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ type: "spring", stiffness: 420, damping: 28 }}
       className={`
-        group relative flex flex-col gap-2 rounded-2xl border p-3 transition-shadow
+        group relative flex flex-col gap-2 rounded-2xl border p-3.5 transition-[box-shadow,border-color,opacity] duration-200 ease-out
         ${
           inRoster
             ? "border-white/[0.06] bg-white/[0.02]"
             : disabled
               ? "border-white/[0.04] bg-white/[0.02] opacity-45"
-              : "border-white/[0.08] bg-gradient-to-b from-white/[0.06] to-white/[0.02] hover:border-[#c8102e]/35 hover:shadow-[0_12px_40px_rgba(200,16,46,0.12)]"
+              : "border-white/[0.1] bg-gradient-to-br from-white/[0.08] via-[#0a0e17]/80 to-[#05080f]/90 shadow-[0_4px_24px_rgba(0,0,0,0.35)] hover:border-[#003087]/45 hover:shadow-[0_16px_48px_rgba(0,48,135,0.22),0_0_0_1px_rgba(200,16,46,0.12)]"
         }
-        ${isDragging ? "z-50 opacity-90 shadow-2xl ring-2 ring-[#d4af37]/50" : ""}
+        ${isDragging ? "z-50 scale-[1.02] opacity-95 shadow-2xl ring-2 ring-[#c8102e]/40" : ""}
       `}
     >
       <div className="flex items-start gap-2">
@@ -68,7 +68,11 @@ function DraggableCard({
         </button>
         <button type="button" onClick={() => !disabled && !inRoster && onAdd()} className="min-w-0 flex-1 text-left">
           <div className="flex items-center gap-3">
-            <PlayerAvatar name={player.name} position={player.position} />
+            <PlayerAvatar
+              name={player.name}
+              position={player.position}
+              imageUrl={player.imageUrl}
+            />
             <div className="min-w-0 flex-1">
               <p className="truncate font-semibold text-white">{player.name}</p>
               <p className="truncate text-xs text-white/45">
@@ -102,7 +106,7 @@ function DraggableCard({
           {player.position}
           {player.role ? ` · ${player.role}` : ""}
         </span>
-        <span className="text-[10px] text-white/35">
+        <span className="rounded-md border border-white/[0.08] bg-black/30 px-2 py-0.5 font-mono text-[10px] tabular-nums text-white/55">
           {cur}/{lim} v nominaci
         </span>
       </div>
@@ -129,11 +133,8 @@ export function PlayerPoolPanel({
   forcedPosition = null,
 }: PlayerPoolPanelProps) {
   const [tab, setTab] = useState<Tab>("all");
-
-  useEffect(() => {
-    if (forcedPosition) setTab(forcedPosition);
-    else setTab("all");
-  }, [forcedPosition]);
+  /** Při vybraném slotu ve sestavě zrcadlíme pozici bez synchronizace přes effect. */
+  const activeTab: Tab = (forcedPosition ?? tab) as Tab;
   const [q, setQ] = useState("");
   const [league, setLeague] = useState<string>("");
 
@@ -186,7 +187,7 @@ export function PlayerPoolPanel({
           <span className="font-semibold">{POSITION_LABELS[forcedPosition]}</span>.
         </p>
       )}
-      <div className="flex flex-wrap gap-2 rounded-2xl border border-white/[0.06] bg-black/20 p-1.5">
+      <div className="flex flex-wrap gap-1.5 rounded-2xl border border-white/[0.08] bg-[#0a0e17]/80 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_0_0_1px_rgba(0,48,135,0.12)] backdrop-blur-md">
         {(
           [
             ["all", "Všichni"],
@@ -201,12 +202,12 @@ export function PlayerPoolPanel({
             disabled={!!forcedPosition}
             onClick={() => setTab(key)}
             className={`
-              flex-1 min-w-[4.5rem] rounded-xl px-3 py-2 font-display text-sm tracking-wide transition-all
+              flex-1 min-w-[4.5rem] rounded-xl px-3 py-2.5 font-display text-sm tracking-wide transition-all
               disabled:cursor-not-allowed disabled:opacity-40
               ${
-                tab === key
-                  ? "bg-gradient-to-b from-[#c8102e] to-[#8b0b20] text-white shadow-lg"
-                  : "text-white/55 hover:bg-white/[0.05] hover:text-white"
+                activeTab === key
+                  ? "bg-gradient-to-b from-[#c8102e] via-[#a30d26] to-[#003087] text-white shadow-[0_8px_28px_rgba(200,16,46,0.35)] ring-1 ring-white/20"
+                  : "text-white/55 hover:bg-white/[0.06] hover:text-white"
               }
             `}
           >
@@ -222,7 +223,7 @@ export function PlayerPoolPanel({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Hledat jméno, klub, ligu…"
-          className="w-full rounded-2xl border border-white/[0.08] bg-black/30 py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-white/30 focus:border-[#003087]/60 focus:outline-none focus:ring-2 focus:ring-[#003087]/25"
+          className="w-full rounded-2xl border border-white/[0.1] bg-[#05080f]/90 py-3.5 pl-11 pr-4 text-sm text-white shadow-inner placeholder:text-white/35 focus:border-[#003087]/55 focus:outline-none focus:ring-2 focus:ring-[#003087]/30"
         />
       </div>
 
@@ -231,7 +232,7 @@ export function PlayerPoolPanel({
         <select
           value={league}
           onChange={(e) => setLeague(e.target.value)}
-          className="rounded-xl border border-white/[0.08] bg-black/30 px-3 py-2 text-sm text-white focus:border-[#003087]/50 focus:outline-none"
+          className="rounded-xl border border-white/[0.1] bg-[#05080f]/90 px-3 py-2.5 text-sm text-white focus:border-[#003087]/50 focus:outline-none"
         >
           <option value="">Všechny ligy</option>
           {leagues.map((lg) => (

@@ -1,16 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #0c0e12;
-  --foreground: #f8fafc;
-  --accent-red: #c41e3a;
-  --accent-blue: #003f87;
+  --background: #05080f;
+  --foreground: #f1f5f9;
+  --accent-red: #c8102e;
+  --accent-blue: #003087;
   --accent-white: #ffffff;
-  --surface: #151922;
-  --surface-hover: #1e2430;
-  --border: #2a3142;
+  --surface: #0c101a;
+  --surface-elevated: #121a28;
+  --surface-hover: #1a2436;
+  --border: #2a3548;
   --ice: #e8f4f8;
+  --glow-red: rgba(200, 16, 46, 0.45);
+  --glow-blue: rgba(0, 48, 135, 0.5);
+  --font-ui: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bebas Neue", var(--font-ui);
 }
 
 @theme inline {
@@ -23,8 +28,9 @@
   --color-surface-hover: var(--surface-hover);
   --color-border: var(--border);
   --color-ice: var(--ice);
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'Oswald', sans-serif;
+  --font-display: var(--font-display);
+  --font-sans: var(--font-ui);
+  --font-body: var(--font-ui);
 }
 
 body {
@@ -49,8 +55,8 @@ body {
     #d4e8ed 100%
   );
   border: 3px solid var(--accent-red);
-  box-shadow: 
-    inset 0 0 60px rgba(0, 63, 135, 0.15),
+  box-shadow:
+    inset 0 0 60px rgba(0, 48, 135, 0.15),
     0 0 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -64,39 +70,38 @@ body {
     #cae6f3 68%,
     #e2f2f8 100%
   );
-  border: 3px solid rgba(196, 30, 58, 0.9);
+  border: 3px solid rgba(200, 16, 46, 0.9);
   box-shadow:
-    inset 0 0 100px rgba(0, 63, 135, 0.14),
+    inset 0 0 100px rgba(0, 48, 135, 0.14),
     0 12px 48px rgba(0, 0, 0, 0.4);
 }
 
-/* Sestavovač – tmavý panel ve stylu sportovních / fantasy aplikací */
+/* Sestavovač – prémiový tmavý panel */
 .lineup-board {
-  background: linear-gradient(
-    152deg,
-    rgba(24, 34, 52, 0.92) 0%,
-    rgba(14, 19, 30, 0.96) 42%,
-    rgba(10, 14, 22, 1) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(0, 48, 135, 0.22), transparent 55%),
+    radial-gradient(ellipse 90% 60% at 100% 50%, rgba(200, 16, 46, 0.08), transparent 45%),
+    linear-gradient(165deg, #0d121f 0%, #080b12 48%, #05080f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   box-shadow:
-    0 0 0 1px rgba(0, 63, 135, 0.14),
+    0 0 0 1px rgba(0, 48, 135, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 24px 64px rgba(0, 0, 0, 0.5);
+    0 28px 80px rgba(0, 0, 0, 0.55);
 }
 
 .lineup-board-accent {
-  height: 2px;
+  height: 3px;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(196, 30, 58, 0.55) 20%,
-    rgba(0, 63, 135, 0.5) 50%,
-    rgba(196, 30, 58, 0.45) 80%,
+    rgba(200, 16, 46, 0.65) 18%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(0, 48, 135, 0.65) 82%,
     transparent
   );
   border-radius: 999px;
-  opacity: 0.85;
+  opacity: 0.95;
+  box-shadow: 0 0 24px rgba(200, 16, 46, 0.2);
 }
 
 .nomination-poster-box {
@@ -108,18 +113,25 @@ body {
 /* Jersey number style */
 .jersey-number {
   font-family: var(--font-display);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Premium card glow */
-.card-glow {
-  box-shadow: 
-    0 0 0 1px rgba(196, 30, 58, 0.2),
-    0 4px 20px rgba(0, 0, 0, 0.4);
+/* Pool player card – hover */
+.pool-card-interactive {
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1),
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.card-glow:hover {
-  box-shadow: 
-    0 0 0 1px rgba(196, 30, 58, 0.4),
-    0 4px 30px rgba(196, 30, 58, 0.15);
+.pool-card-interactive:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.sestava-page-ambient {
+  background:
+    radial-gradient(ellipse 110% 75% at 50% -28%, rgba(0, 48, 135, 0.42), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 0% 35%, rgba(200, 16, 46, 0.14), transparent 52%),
+    radial-gradient(ellipse 50% 42% at 100% 55%, rgba(0, 48, 135, 0.22), transparent 48%),
+    linear-gradient(180deg, #0a0e17 0%, #05080f 45%, #04060c 100%);
 }

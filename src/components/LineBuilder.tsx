@@ -1,8 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { Player } from "@/types";
-import type { LineupStructure } from "@/types";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
+import type { Player, LineupStructure } from "@/types";
 import { NationalJersey } from "@/components/NationalJersey";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
 
@@ -20,10 +21,16 @@ interface LineBuilderProps {
 
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
-    <h3 className="mb-3 flex items-center gap-2.5 font-display text-[13px] uppercase tracking-[0.2em] text-white/45">
-      <span className="h-px w-6 bg-gradient-to-r from-[#c41e3a] to-transparent" aria-hidden />
-      {children}
-      <span className="h-px flex-1 max-w-[4rem] bg-gradient-to-l from-[#003f87]/60 to-transparent" aria-hidden />
+    <h3 className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+      <span
+        className="h-px w-12 shrink-0 bg-gradient-to-r from-[#c8102e] via-white/35 to-transparent"
+        aria-hidden
+      />
+      <span className="shrink-0 text-white/70">{children}</span>
+      <span
+        className="h-px min-w-[2rem] flex-1 bg-gradient-to-l from-[#003087]/90 via-white/18 to-transparent"
+        aria-hidden
+      />
     </h3>
   );
 }
@@ -38,39 +45,57 @@ export function LineBuilder({
   selectedSlot,
   enableDnd = true,
 }: LineBuilderProps) {
-  const getPlayer = (id: string | null) =>
-    id ? players.find((p) => p.id === id) : null;
+  const assistantIds = lineup.assistantIds ?? [];
+  const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) : null);
 
   const setForwardLine = (lineIndex: number, role: "lw" | "c" | "rw", playerId: string | null) => {
+    const prev = lineup.forwardLines[lineIndex][role];
     const next = { ...lineup };
     const line = { ...next.forwardLines[lineIndex], [role]: playerId };
     next.forwardLines = [...next.forwardLines] as LineupStructure["forwardLines"];
     next.forwardLines[lineIndex] = line;
+    if (playerId === null && prev) {
+      next.assistantIds = (next.assistantIds ?? []).filter((id) => id !== prev);
+      if (captainId === prev) onCaptainChange(null);
+    }
     onLineupChange(next);
   };
 
   const setDefensePair = (pairIndex: number, role: "lb" | "rb", playerId: string | null) => {
+    const prev = lineup.defensePairs[pairIndex][role];
     const next = { ...lineup };
     const pair = { ...next.defensePairs[pairIndex], [role]: playerId };
     next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
     next.defensePairs[pairIndex] = pair;
+    if (playerId === null && prev) {
+      next.assistantIds = (next.assistantIds ?? []).filter((id) => id !== prev);
+      if (captainId === prev) onCaptainChange(null);
+    }
     onLineupChange(next);
   };
 
   const setGoalie = (index: number, playerId: string | null) => {
+    const prev = lineup.goalies[index];
     const next = { ...lineup };
     next.goalies = [...next.goalies];
     next.goalies[index] = playerId;
+    if (playerId === null && prev) {
+      next.assistantIds = (next.assistantIds ?? []).filter((id) => id !== prev);
+      if (captainId === prev) onCaptainChange(null);
+    }
     onLineupChange(next);
   };
 
   const removeExtraForwardByIndex = (index: number) => {
     const id = lineup.extraForwards[index];
     if (!id) return;
-    onLineupChange({
+    const next = {
       ...lineup,
       extraForwards: lineup.extraForwards.filter((_, i) => i !== index),
-    });
+      assistantIds: (lineup.assistantIds ?? []).filter((a) => a !== id),
+    };
+    if (captainId === id) onCaptainChange(null);
+    onLineupChange(next);
   };
 
   const isSlotSelected = (type: string, lineIndex?: number, role?: string) =>
@@ -80,6 +105,20 @@ export function LineBuilder({
 
   const slotJerseyShape = (t: string) => (t === "goalie" ? "goalie" : "skater");
 
+  const toggleAssistant = (playerId: string) => {
+    if (captainId === playerId) return;
+    const aids = lineup.assistantIds ?? [];
+    if (aids.includes(playerId)) {
+      onLineupChange({ ...lineup, assistantIds: aids.filter((id) => id !== playerId) });
+      return;
+    }
+    if (aids.length >= 2) {
+      toast.error("Jsou už dva asistenti kapitána.");
+      return;
+    }
+    onLineupChange({ ...lineup, assistantIds: [...aids, playerId] });
+  };
+
   const Slot = ({
     playerId,
     label,
@@ -87,7 +126,7 @@ export function LineBuilder({
     lineIndex,
     role,
     onClear,
-    jerseySize = "sm",
+    jerseySize = "md",
     dndId,
   }: {
     playerId: string | null;
@@ -96,22 +135,23 @@ export function LineBuilder({
     lineIndex?: number;
     role?: string;
     onClear?: () => void;
-    jerseySize?: "sm" | "md";
+    jerseySize?: "sm" | "md" | "lg" | "xl";
     dndId?: string;
   }) => {
     const player = getPlayer(playerId);
     const selected = isSlotSelected(type, lineIndex, role);
+    const isAsst = player ? assistantIds.includes(player.id) : false;
 
     const inner = (
       <div
         onClick={() => onSelectSlot(selected ? null : { type, lineIndex, role })}
         className={`
-          group relative cursor-pointer rounded-2xl p-1.5 transition-all duration-300 ease-out
-          ${player ? "pb-6" : "pb-2"}
+          group relative cursor-pointer rounded-2xl p-2 transition-all duration-300 ease-out
+          ${player ? (jerseySize === "xl" ? "pb-16" : "pb-14") : "pb-2"}
           ${
             selected
-              ? "bg-sky-500/10 ring-2 ring-sky-400/90 shadow-[0_0_32px_rgba(56,189,248,0.2)] ring-offset-2 ring-offset-[#0c1018]"
-              : "ring-1 ring-transparent hover:bg-white/[0.04] hover:ring-white/[0.08]"
+              ? "bg-[#003087]/15 ring-2 ring-[#003087]/70 shadow-[0_0_40px_rgba(0,48,135,0.25)] ring-offset-2 ring-offset-[#080c14]"
+              : "ring-1 ring-transparent hover:bg-white/[0.03] hover:ring-white/[0.1]"
           }
         `}
       >
@@ -122,46 +162,87 @@ export function LineBuilder({
               e.stopPropagation();
               onClear();
             }}
-            className="absolute -right-0.5 -top-0.5 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-700 text-sm font-bold text-white opacity-0 shadow-lg transition-all hover:scale-105 hover:from-red-400 hover:to-red-600 group-hover:opacity-100"
+            className="absolute -right-1 -top-1 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#7a0819] text-base font-bold text-white opacity-0 shadow-lg transition-all hover:scale-105 group-hover:opacity-100"
             aria-label="Odebrat hráče"
           >
             ×
           </button>
         )}
-        {player ? (
-          <>
+        <motion.div
+          key={playerId ?? `empty-${type}-${lineIndex ?? 0}-${role ?? ""}`}
+          initial={playerId ? { scale: 0.88, opacity: 0.65 } : false}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 420, damping: 26 }}
+          className="flex origin-bottom justify-center scale-100 sm:scale-[1.04] xl:scale-[1.06]"
+        >
+          {player ? (
             <NationalJersey
               player={player}
               size={jerseySize}
               jerseyShape={slotJerseyShape(type)}
               isCaptain={captainId === player.id}
+              isAssistant={isAsst}
               isSelected={selected}
             />
+          ) : (
+            <NationalJersey
+              size={jerseySize}
+              placeholderLabel={label}
+              jerseyShape={slotJerseyShape(type)}
+              isSelected={selected}
+            />
+          )}
+        </motion.div>
+        {player && (
+          <div className="absolute bottom-1 left-1/2 z-20 flex -translate-x-1/2 gap-1">
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onCaptainChange(captainId === player.id ? null : player.id);
+                if (captainId === player.id) {
+                  onCaptainChange(null);
+                } else {
+                  onCaptainChange(player.id);
+                  const aids = lineup.assistantIds ?? [];
+                  if (aids.includes(player.id)) {
+                    onLineupChange({ ...lineup, assistantIds: aids.filter((id) => id !== player.id) });
+                  }
+                }
               }}
               className={`
-                absolute bottom-0 left-1/2 z-20 -translate-x-1/2 rounded-full border px-2 py-0.5 font-display text-[9px] font-semibold uppercase tracking-wider shadow-md transition-all
+                rounded-lg border font-semibold uppercase tracking-wider shadow-md transition-all
+                ${jerseySize === "xl" ? "px-2.5 py-1 text-[11px]" : "px-2 py-0.5 text-[10px]"}
                 ${
                   captainId === player.id
-                    ? "border-sky-300/40 bg-gradient-to-b from-[#003f87] to-[#002a5c] text-white"
-                    : "border-white/15 bg-[#0f141c]/95 text-white/65 hover:border-white/25 hover:text-white/90"
+                    ? "border-[#c8102e]/50 bg-gradient-to-b from-[#c8102e]/90 to-[#8a0b22] text-white"
+                    : "border-white/15 bg-[#0a0e17]/95 text-white/65 hover:border-white/30 hover:text-white"
                 }
               `}
             >
-              {captainId === player.id ? "Kapitán" : "C?"}
+              {captainId === player.id ? "C" : "C?"}
             </button>
-          </>
-        ) : (
-          <NationalJersey
-            size={jerseySize}
-            placeholderLabel={label}
-            jerseyShape={slotJerseyShape(type)}
-            isSelected={selected}
-          />
+            <button
+              type="button"
+              disabled={captainId === player.id}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleAssistant(player.id);
+              }}
+              className={`
+                rounded-lg border font-semibold uppercase tracking-wider shadow-md transition-all
+                ${jerseySize === "xl" ? "px-2.5 py-1 text-[11px]" : "px-2 py-0.5 text-[10px]"}
+                ${
+                  captainId === player.id
+                    ? "cursor-not-allowed border-white/5 text-white/25 opacity-40"
+                    : isAsst
+                      ? "border-[#003087]/50 bg-gradient-to-b from-[#003087]/90 to-[#001a52] text-white"
+                      : "border-white/15 bg-[#0a0e17]/95 text-white/65 hover:border-[#003087]/40 hover:text-white"
+                }
+              `}
+            >
+              {isAsst ? "A" : "A?"}
+            </button>
+          </div>
         )}
       </div>
     );
@@ -178,22 +259,22 @@ export function LineBuilder({
     return (
       <div
         key={i}
-        className="flex min-w-0 flex-col gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.025] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm sm:p-3"
+        className="flex min-w-0 max-w-full flex-col gap-5 rounded-2xl border border-white/[0.1] bg-gradient-to-b from-white/[0.07] to-[#0a0e17]/40 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur-md"
       >
-        <div className="flex items-center justify-between gap-2 border-b border-white/[0.05] pb-2">
-          <span className="font-display text-sm tracking-[0.12em] text-white/90">{i + 1}. lajna</span>
-          <span className="rounded-full bg-[#003f87]/20 px-2 py-0.5 font-display text-[9px] uppercase tracking-wider text-sky-200/80">
+        <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-3">
+          <span className="text-sm font-semibold tracking-tight text-white">{i + 1}. lajna</span>
+          <span className="rounded-full border border-[#003087]/35 bg-[#003087]/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sky-200/90">
             Line {i + 1}
           </span>
         </div>
 
         <div>
-          <p className="mb-1.5 flex justify-between px-0.5 font-display text-[9px] uppercase tracking-[0.18em] text-white/30">
+          <p className="mb-2 flex justify-between px-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
             <span>LW</span>
             <span>Center</span>
             <span>RW</span>
           </p>
-          <div className="grid w-full min-w-0 grid-cols-3 items-end gap-0">
+          <div className="grid w-full min-w-0 grid-cols-3 items-end gap-1">
             <div className="flex min-w-0 justify-start">
               <Slot
                 playerId={line.lw}
@@ -202,6 +283,7 @@ export function LineBuilder({
                 lineIndex={i}
                 role="lw"
                 dndId={`slot-fwd-${i}-lw`}
+                jerseySize="xl"
                 onClear={
                   line.lw
                     ? () => {
@@ -220,6 +302,7 @@ export function LineBuilder({
                 lineIndex={i}
                 role="c"
                 dndId={`slot-fwd-${i}-c`}
+                jerseySize="xl"
                 onClear={
                   line.c
                     ? () => {
@@ -238,6 +321,7 @@ export function LineBuilder({
                 lineIndex={i}
                 role="rw"
                 dndId={`slot-fwd-${i}-rw`}
+                jerseySize="xl"
                 onClear={
                   line.rw
                     ? () => {
@@ -252,12 +336,12 @@ export function LineBuilder({
         </div>
 
         <div>
-          <p className="mb-1.5 flex justify-between px-0.5 font-display text-[9px] uppercase tracking-[0.18em] text-white/30">
+          <p className="mb-2 flex justify-between px-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
             <span>LB</span>
             <span className="text-white/15">·</span>
             <span>RB</span>
           </p>
-          <div className="grid w-full min-w-0 grid-cols-3 items-end gap-0">
+          <div className="grid w-full min-w-0 grid-cols-3 items-end gap-1">
             <div className="flex min-w-0 justify-start">
               <Slot
                 playerId={pair.lb}
@@ -266,6 +350,7 @@ export function LineBuilder({
                 lineIndex={i}
                 role="lb"
                 dndId={`slot-def-${i}-lb`}
+                jerseySize="xl"
                 onClear={
                   pair.lb
                     ? () => {
@@ -276,7 +361,7 @@ export function LineBuilder({
                 }
               />
             </div>
-            <div className="flex min-h-[2.75rem] items-end justify-center pb-5 text-[11px] font-light text-white/20">
+            <div className="flex min-h-[3rem] items-end justify-center pb-6 text-xs font-light text-white/20">
               {pair.lb && pair.rb ? "—" : ""}
             </div>
             <div className="flex min-w-0 justify-end">
@@ -287,6 +372,7 @@ export function LineBuilder({
                 lineIndex={i}
                 role="rb"
                 dndId={`slot-def-${i}-rb`}
+                jerseySize="xl"
                 onClear={
                   pair.rb
                     ? () => {
@@ -304,13 +390,13 @@ export function LineBuilder({
   };
 
   return (
-    <div className="lineup-board relative overflow-hidden rounded-3xl p-4 sm:p-6">
-      <div className="lineup-board-accent mx-auto mb-5 w-[min(100%,20rem)]" />
+    <div className="lineup-board relative overflow-x-hidden rounded-2xl p-5 sm:p-8">
+      <div className="lineup-board-accent mx-auto mb-6 w-[min(100%,24rem)]" />
 
-      <section className="mb-8">
+      <section className="mb-10">
         <SectionTitle>Brankáři</SectionTitle>
-        <div className="flex flex-wrap items-center justify-center gap-6 sm:justify-between sm:gap-8">
-          <div className="flex justify-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-8 sm:justify-between sm:gap-10">
+          <div className="flex justify-center gap-6 sm:gap-8">
             {lineup.goalies.map((gid, i) => (
               <div key={i} className="relative">
                 <Slot
@@ -318,7 +404,7 @@ export function LineBuilder({
                   label={`G${i + 1}`}
                   type="goalie"
                   lineIndex={i}
-                  jerseySize="sm"
+                  jerseySize="lg"
                   dndId={`slot-goalie-${i}`}
                   onClear={
                     gid
@@ -333,22 +419,22 @@ export function LineBuilder({
             ))}
           </div>
           <div
-            className="hidden h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#003f87]/35 bg-gradient-to-b from-[#003f87]/25 to-[#001a35]/60 shadow-[0_0_24px_rgba(0,63,135,0.25)] sm:flex"
+            className="hidden h-16 w-16 shrink-0 flex-col items-center justify-center rounded-2xl border border-[#003087]/40 bg-gradient-to-br from-[#003087]/30 to-[#05080f] shadow-[0_0_28px_rgba(0,48,135,0.35)] sm:flex"
             aria-hidden
           >
-            <span className="font-display text-[9px] tracking-[0.25em] text-sky-100/90">ČR</span>
+            <span className="font-display text-[10px] tracking-[0.28em] text-sky-100/95">ČR</span>
           </div>
         </div>
       </section>
 
       <section>
         <SectionTitle>Lajny</SectionTitle>
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-5">
+        <div className="mx-auto grid min-w-0 max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 2xl:grid-cols-5">
           {[0, 1, 2, 3].map((i) => lineBlock(i))}
-          <div className="flex min-h-[8rem] flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/[0.1] bg-white/[0.02] px-3 py-4 sm:col-span-2 sm:min-h-0 xl:col-span-1">
-            <span className="font-display text-xs uppercase tracking-[0.2em] text-[#c41e3a]/90">Náhradníci</span>
-            <p className="text-center text-[10px] leading-snug text-white/35">Dva útočníci mimo základní sestavu</p>
-            <div className="flex justify-center gap-2">
+          <div className="flex min-h-[10rem] flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-[#c8102e]/25 bg-gradient-to-b from-[#c8102e]/[0.06] to-transparent px-4 py-6 sm:col-span-2 sm:min-h-0 2xl:col-span-1">
+            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#c8102e]/95">Náhradníci</span>
+            <p className="text-center text-[11px] leading-relaxed text-white/40">Dva útočníci mimo základní sestavu</p>
+            <div className="flex justify-center gap-3">
               {[0, 1].map((i) => {
                 const pid = lineup.extraForwards[i] ?? null;
                 return (
@@ -359,6 +445,7 @@ export function LineBuilder({
                     type="extraForward"
                     lineIndex={i}
                     dndId={`slot-xf-${i as 0 | 1}`}
+                    jerseySize="lg"
                     onClear={
                       pid
                         ? () => {
@@ -375,9 +462,9 @@ export function LineBuilder({
         </div>
       </section>
 
-      <p className="mt-6 text-center text-[11px] leading-relaxed text-white/35">
-        Klikni na slot · vyber hráče vpravo · <span className="text-white/50">C?</span> označí kapitána · najetím na kartu
-        uvidíš <span className="text-white/50">×</span>
+      <p className="mt-8 text-center text-[11px] leading-relaxed text-white/38">
+        Klikni na slot · přidej zleva nebo přetáhni ·{" "}
+        <span className="text-[#c8102e]/90">C?</span> kapitán · <span className="text-[#003087]/90">A?</span> asistent
       </p>
     </div>
   );

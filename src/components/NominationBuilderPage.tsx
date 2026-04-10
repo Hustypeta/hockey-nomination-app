@@ -261,27 +261,27 @@ export function NominationBuilderPage() {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="min-h-screen bg-[#0a0a0a] pb-36 text-white sestava-page">
+      <div className="sestava-page-ambient min-h-screen pb-[13rem] text-white sm:pb-44 lg:pb-36">
         <div
-          className="pointer-events-none fixed inset-0 opacity-[0.035]"
+          className="pointer-events-none fixed inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)
+              linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
             `,
-            backgroundSize: "48px 48px",
+            backgroundSize: "56px 56px",
           }}
           aria-hidden
         />
 
         <SestavaHero filled={filled} subtitleCounts={subtitleCounts} />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 lg:py-8">
+        <div className="relative z-10 mx-auto max-w-[90rem] px-4 py-8 lg:py-10">
           {!isComplete && (
-            <div className="mb-6 rounded-2xl border border-[#003087]/30 bg-[#003087]/10 px-4 py-3 text-center text-sm text-white/80">
+            <div className="mb-8 rounded-2xl border border-[#003087]/35 bg-gradient-to-r from-[#003087]/15 via-[#0a0e17]/80 to-[#c8102e]/10 px-5 py-4 text-center text-sm text-white/85 shadow-[0_0_40px_rgba(0,48,135,0.12)]">
               {remaining > 0 ? (
                 <>
-                  Ještě <span className="font-semibold text-[#d4af37]">{remaining}</span>{" "}
+                  Ještě <span className="font-semibold text-sky-200">{remaining}</span>{" "}
                   {remaining === 1 ? "místo" : remaining < 5 ? "místa" : "míst"} do plné nominace.
                 </>
               ) : (
@@ -290,45 +290,54 @@ export function NominationBuilderPage() {
             </div>
           )}
 
-          <div className="grid gap-8 lg:grid-cols-5 lg:gap-10">
-            <section className="lg:col-span-3">
-              <div className="mb-4 flex items-end justify-between gap-4">
-                <div>
-                  <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
-                    Dostupní hráči
-                  </h2>
-                  <p className="mt-1 text-sm text-white/45">
-                    Klik = rychlé přidání · ikona úchopu = táhni na slot
-                  </p>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,12fr)_minmax(0,13fr)] lg:gap-10 xl:gap-12">
+            <section className="min-w-0">
+              <div className="rounded-2xl border border-white/[0.09] bg-[#0a0e17]/55 p-5 shadow-[0_0_0_1px_rgba(0,48,135,0.14),0_28px_80px_rgba(0,0,0,0.45)] backdrop-blur-md sm:p-6">
+                <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#c8102e]/90">
+                      Pool
+                    </p>
+                    <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
+                      Dostupní hráči
+                    </h2>
+                    <p className="mt-2 max-w-md text-sm leading-relaxed text-white/50">
+                      Klik na kartu = rychlé doplnění · úchop = přetáhni na konkrétní slot vpravo
+                    </p>
+                  </div>
+                  <Link
+                    href="/"
+                    className="shrink-0 rounded-xl border border-white/10 px-3 py-2 text-xs font-medium text-white/50 transition-colors hover:border-[#c8102e]/35 hover:text-white"
+                  >
+                    Úvod
+                  </Link>
                 </div>
-                <Link
-                  href="/"
-                  className="hidden text-sm text-white/40 hover:text-[#c8102e] sm:inline"
-                >
-                  Úvodní stránka
-                </Link>
+                <PlayerPoolPanel
+                  players={players}
+                  usedIds={usedIds}
+                  counts={counts}
+                  onAddPlayer={handleAddFromPool}
+                  onPreview={setPreviewPlayer}
+                  forcedPosition={forcedPoolPosition}
+                />
               </div>
-              <PlayerPoolPanel
-                players={players}
-                usedIds={usedIds}
-                counts={counts}
-                onAddPlayer={handleAddFromPool}
-                onPreview={setPreviewPlayer}
-                forcedPosition={forcedPoolPosition}
-              />
             </section>
 
-            <section className="lg:col-span-2">
-              <div className="mb-4 lg:sticky lg:top-[5.5rem] lg:self-start">
-                <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
-                  Moje sestava
-                </h2>
-                <p className="mt-1 text-sm text-white/45">
-                  {selectedSlot
-                    ? "Vybraný slot — vlevo uvidíš jen vhodné pozice, nebo přetáhni hráče sem."
-                    : "Klikni na slot pro cílený výběr, nebo přidávej hráče zleva."}
-                </p>
-                <div className="mt-4">
+            <section className="min-w-0">
+              <div className="lg:sticky lg:top-[8.5rem] lg:max-h-[calc(100vh-9.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-1 lg:self-start">
+                <div className="rounded-2xl border border-white/[0.09] bg-[#080c14]/40 p-5 shadow-[0_0_0_1px_rgba(200,16,46,0.08),0_28px_80px_rgba(0,0,0,0.4)] backdrop-blur-md sm:p-6">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#003087]/90">
+                    Lineup
+                  </p>
+                  <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
+                    Moje sestava
+                  </h2>
+                  <p className="mt-2 text-sm leading-relaxed text-white/50">
+                    {selectedSlot
+                      ? "Vybraný slot — vlevo se zúží pozice, nebo přetáhni hráče přímo sem."
+                      : "Klikni na slot pro cílený výběr, nebo doplň hráče z poolu vlevo."}
+                  </p>
+                  <div className="mt-6">
                   <LineBuilder
                     lineup={lineup}
                     players={players}
@@ -339,6 +348,7 @@ export function NominationBuilderPage() {
                     onSelectSlot={setSelectedSlot}
                     enableDnd
                   />
+                  </div>
                 </div>
               </div>
             </section>
@@ -358,7 +368,7 @@ export function NominationBuilderPage() {
                 }
               `}
             >
-              {isAuthenticated ? "Uložit / sdílet nominaci" : "Sdílet nominaci"}
+              {isAuthenticated ? "Uložit a sdílet" : "Složit nominaci"}
             </button>
           </div>
         </div>
@@ -368,7 +378,7 @@ export function NominationBuilderPage() {
           onRandom={handleRandom}
           onReset={handleReset}
           shareDisabled={!isComplete}
-          shareLabel={isAuthenticated ? "Uložit / sdílet" : "Sdílet nominaci"}
+          shareLabel={isAuthenticated ? "Uložit a sdílet" : "Složit nominaci"}
         />
 
         <div className="fixed -left-[9999px] top-0 w-[430px]" aria-hidden="true">

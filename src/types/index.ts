@@ -8,6 +8,8 @@ export interface Player {
   role?: string | null; // RW, LW, C, RB, LB
   club: string;
   league: string;
+  /** Volitelná URL fotky (např. budoucí rozšíření dat). */
+  imageUrl?: string | null;
 }
 
 export const ROLE_LABELS: Record<Role, string> = {
@@ -51,6 +53,7 @@ export interface LineupStructure {
   goalies: [string | null, string | null, string | null]; // 3 brankáři
   extraForwards: string[]; // náhradníci útočníci (2)
   extraDefensemen: string[]; // náhradníci obránci (0)
+  assistantIds?: string[];
 }
 
 export const EMPTY_LINEUP: LineupStructure = {
@@ -69,4 +72,5 @@ export const EMPTY_LINEUP: LineupStructure = {
   goalies: [null, null, null],
   extraForwards: [],
   extraDefensemen: [],
+  assistantIds: [],
 };

@@ -5,11 +5,12 @@ import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
 import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 
 export interface NationalJerseyProps {
-  size?: "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   player?: Player | null;
   placeholderLabel?: string;
   jerseyShape?: "skater" | "goalie";
   isCaptain?: boolean;
+  isAssistant?: boolean;
   /** Vybraný slot řeší rodič (Slot) – tady jen kvůli API. */
   isSelected?: boolean;
   className?: string;
@@ -21,24 +22,27 @@ function lastName(name: string) {
 }
 
 const sizeWidths = {
-  xs: "w-[3.5rem]",
-  sm: "w-[5rem]",
-  md: "w-[6.75rem]",
-  lg: "w-[8.35rem]",
+  xs: "w-[4.25rem]",
+  sm: "w-[6rem]",
+  md: "w-[8rem]",
+  lg: "w-[10.75rem]",
+  xl: "w-[12.25rem]",
 };
 
 const crestSize = {
-  xs: "h-2.5 w-2.5",
-  sm: "h-3.5 w-3.5",
-  md: "h-4 w-4",
-  lg: "h-[1.05rem] w-[1.05rem]",
+  xs: "h-3 w-3",
+  sm: "h-4 w-4",
+  md: "h-[1.1rem] w-[1.1rem]",
+  lg: "h-5 w-5",
+  xl: "h-6 w-6",
 };
 
 const textName = {
-  xs: "text-[8px] tracking-wide",
-  sm: "text-[9px] tracking-wide",
-  md: "text-[11px] tracking-wide",
+  xs: "text-[9px] tracking-wide",
+  sm: "text-[10px] tracking-wide",
+  md: "text-xs tracking-wide",
   lg: "text-sm tracking-wide",
+  xl: "text-[15px] tracking-wide",
 };
 
 export function NationalJersey({
@@ -47,6 +51,7 @@ export function NationalJersey({
   placeholderLabel,
   jerseyShape = "skater",
   isCaptain = false,
+  isAssistant = false,
   isSelected: _isSelected = false,
   className = "",
 }: NationalJerseyProps) {
@@ -61,14 +66,18 @@ export function NationalJersey({
       ? "goalie"
       : "skater";
 
+  const showAssistant = isAssistant && !empty && !isCaptain;
+
   return (
     <div className={`relative ${w} ${className} transition-transform duration-300 ease-out`}>
       {isCaptain && !empty && (
         <span
-          className={`absolute z-20 flex items-center justify-center rounded-full bg-gradient-to-br from-[#c41e3a] to-[#8f1428] font-display font-bold text-white shadow-lg ring-2 ring-white/40 ${
+          className={`absolute z-20 flex items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b22] font-display font-bold text-white shadow-[0_0_20px_rgba(200,16,46,0.65)] ring-2 ring-white/60 ${
             size === "xs"
-              ? "-right-0.5 -top-0.5 h-4 w-4 text-[8px]"
-              : "-right-1 -top-1 h-[1.35rem] w-[1.35rem] text-[10px]"
+              ? "-right-0.5 -top-0.5 h-[1.1rem] w-[1.1rem] text-[8px]"
+              : size === "xl"
+                ? "-right-1 -top-1 h-8 w-8 text-sm"
+                : "-right-1 -top-1 h-6 w-6 text-[11px]"
           }`}
           aria-label="Kapitán"
         >
@@ -76,40 +85,56 @@ export function NationalJersey({
         </span>
       )}
 
+      {showAssistant && (
+        <span
+          className={`absolute z-20 flex items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a52] font-display font-bold text-white shadow-[0_0_20px_rgba(0,48,135,0.65)] ring-2 ring-sky-300/50 ${
+            size === "xs"
+              ? "-left-0.5 -top-0.5 h-[1.1rem] w-[1.1rem] text-[8px]"
+              : size === "xl"
+                ? "-left-1 -top-1 h-8 w-8 text-sm"
+                : "-left-1 -top-1 h-6 w-6 text-[11px]"
+          }`}
+          aria-label="Asistent kapitána"
+        >
+          A
+        </span>
+      )}
+
       <div
         className={`
-          relative overflow-hidden rounded-[14px] border border-white/[0.1]
-          bg-gradient-to-b from-white/[0.07] via-white/[0.02] to-transparent
-          p-[5px] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_6px_24px_rgba(0,0,0,0.35)]
+          relative overflow-hidden rounded-[14px] border border-white/[0.14]
+          bg-gradient-to-b from-white/[0.12] via-white/[0.04] to-transparent
+          p-[6px] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_rgba(0,0,0,0.5),0_0_24px_rgba(0,48,135,0.15)]
+          ring-1 ring-[#003087]/25
         `}
       >
-        <div className="overflow-hidden rounded-[10px] bg-[#06080d]/50 ring-1 ring-black/40">
+        <div className="overflow-hidden rounded-[11px] bg-[#06080d]/60 ring-1 ring-black/50">
           <JerseySilhouetteShape kind={kind} empty={empty} className="block h-auto w-full" />
         </div>
 
         {empty ? (
-          <div className="pointer-events-none absolute inset-[5px] flex items-center justify-center rounded-[10px] px-1">
-            <span className="text-center font-display text-[9px] font-semibold uppercase leading-tight tracking-[0.12em] text-white/55">
+          <div className="pointer-events-none absolute inset-[6px] flex items-center justify-center rounded-[11px] px-1">
+            <span className="text-center font-display text-[10px] font-semibold uppercase leading-tight tracking-[0.14em] text-white/50">
               {placeholderLabel ?? "—"}
             </span>
           </div>
         ) : (
-          <div className="pointer-events-none absolute inset-[5px] flex flex-col rounded-[10px]">
+          <div className="pointer-events-none absolute inset-[6px] flex flex-col rounded-[11px]">
             <CzechHockeyCrest
-              className={`${crest} absolute left-[11%] top-[10%] z-10 drop-shadow-[0_0_6px_rgba(255,255,255,0.5),0_2px_4px_rgba(0,0,0,0.5)]`}
+              className={`${crest} absolute left-[11%] top-[10%] z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.45),0_2px_4px_rgba(0,0,0,0.55)]`}
               aria-hidden
             />
-            <div className="mt-auto flex flex-col items-center px-0.5 pb-[11%] pt-0 text-center">
+            <div className="mt-auto flex flex-col items-center px-0.5 pb-[12%] pt-0 text-center">
               <div
                 className={`max-w-[98%] truncate font-display font-semibold uppercase leading-tight text-white ${nameCls}`}
-                style={{ textShadow: "0 1px 3px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.4)" }}
+                style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9), 0 0 14px rgba(0,0,0,0.45)" }}
               >
                 {lastName(player.name)}
               </div>
               {player.position !== "G" && player.role && (
                 <div
-                  className={`mt-0.5 rounded-md border border-white/10 bg-black/35 px-1 py-px font-display font-semibold uppercase tracking-wider text-white/95 backdrop-blur-[2px] ${
-                    size === "lg" ? "text-[9px]" : "text-[7px]"
+                  className={`mt-0.5 rounded-md border border-white/12 bg-black/40 px-1 py-px font-display font-semibold uppercase tracking-wider text-white/95 backdrop-blur-[2px] ${
+                    size === "xl" ? "text-[11px]" : size === "lg" ? "text-[10px]" : "text-[8px]"
                   }`}
                 >
                   {player.role}
@@ -118,9 +143,9 @@ export function NationalJersey({
               {player.position === "G" && (
                 <div
                   className={`mt-0.5 font-display font-bold uppercase tracking-[0.15em] text-sky-200/95 ${
-                    size === "lg" ? "text-[9px]" : "text-[7px]"
+                    size === "xl" ? "text-[11px]" : size === "lg" ? "text-[10px]" : "text-[8px]"
                   }`}
-                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}
+                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.85)" }}
                 >
                   G
                 </div>
