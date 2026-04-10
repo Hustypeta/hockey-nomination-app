@@ -8,46 +8,61 @@ const POS_GRAD: Record<Position, string> = {
   F: "from-[#c8102e] to-rose-950",
 };
 
-function initials(name: string) {
-  const p = name.trim().split(/\s+/);
-  if (p.length >= 2) return (p[0][0] + p[p.length - 1][0]).toUpperCase();
-  return name.slice(0, 2).toUpperCase();
+function positionLabel(position: Position, role?: string | null) {
+  const r = role?.trim();
+  if (r) return r.toUpperCase();
+  return position;
 }
 
 export function PlayerAvatar({
   name,
   position,
+  role,
   size = "md",
   imageUrl,
 }: {
   name: string;
   position: Position;
+  /** LW, C, RW, … — stejná velikost jako dřív iniciály */
+  role?: string | null;
   size?: "sm" | "md" | "lg";
   imageUrl?: string | null;
 }) {
-  const sz =
-    size === "sm" ? "h-10 w-10 text-xs" : size === "lg" ? "h-16 w-16 text-lg" : "h-12 w-12 text-sm";
+  const label = positionLabel(position, role);
+  const szBox =
+    size === "sm" ? "h-10 w-10" : size === "lg" ? "h-16 w-16" : "h-12 w-12";
+  const szText =
+    size === "sm"
+      ? "text-[11px] leading-tight"
+      : size === "lg"
+        ? "text-lg leading-none"
+        : "text-sm leading-tight";
 
   if (imageUrl) {
     return (
       <div
-        className={`relative shrink-0 overflow-hidden rounded-xl bg-[#0a0e17] shadow-[0_4px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/15 ${sz}`}
+        className={`relative shrink-0 overflow-hidden rounded-xl bg-[#0a0e17] shadow-[0_4px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/15 ${szBox}`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageUrl} alt="" className="h-full w-full object-cover object-top" />
+        <img src={imageUrl} alt={name} className="h-full w-full object-cover object-top" />
         <div
-          className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent`}
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
           aria-hidden
         />
+        <span
+          className={`pointer-events-none absolute inset-x-0 bottom-0.5 flex items-center justify-center font-display font-bold uppercase tracking-wide text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)] ${szText}`}
+        >
+          {label}
+        </span>
       </div>
     );
   }
 
   return (
     <div
-      className={`flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-bold text-white shadow-inner ring-1 ring-white/10 ${POS_GRAD[position]} ${sz}`}
+      className={`flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-display font-bold uppercase leading-none tracking-wide text-white shadow-inner ring-1 ring-white/10 ${POS_GRAD[position]} ${szBox} ${szText}`}
     >
-      {initials(name)}
+      <span className="max-w-[92%] text-center">{label}</span>
     </div>
   );
 }

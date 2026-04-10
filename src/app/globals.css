@@ -94,14 +94,14 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(200, 16, 46, 0.65) 18%,
-    rgba(255, 255, 255, 0.35) 50%,
-    rgba(0, 48, 135, 0.65) 82%,
+    rgba(0, 48, 135, 0.55) 22%,
+    rgba(200, 16, 46, 0.85) 50%,
+    rgba(0, 48, 135, 0.45) 78%,
     transparent
   );
   border-radius: 999px;
   opacity: 0.95;
-  box-shadow: 0 0 24px rgba(200, 16, 46, 0.2);
+  box-shadow: 0 0 20px rgba(200, 16, 46, 0.25);
 }
 
 .nomination-poster-box {
@@ -131,12 +131,12 @@ body {
 /* NHL-style lineup jersey slots */
 .jersey-slot-selected .jersey-slot-root,
 .jersey-slot-selected.jersey-slot-root {
-  filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.45)) drop-shadow(0 0 28px rgba(200, 16, 46, 0.2));
+  filter: drop-shadow(0 0 18px rgba(200, 16, 46, 0.45)) drop-shadow(0 0 28px rgba(0, 48, 135, 0.25));
 }
 
 .jersey-slot-dnd-highlight .jersey-slot-root {
   transform: scale(1.04);
-  filter: drop-shadow(0 0 22px rgba(56, 189, 248, 0.55)) drop-shadow(0 0 36px rgba(200, 16, 46, 0.28));
+  filter: drop-shadow(0 0 24px rgba(200, 16, 46, 0.5)) drop-shadow(0 0 36px rgba(0, 48, 135, 0.22));
 }
 
 @keyframes jersey-slot-enter {

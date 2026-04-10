@@ -1,6 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
+import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
 import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 import { jerseyNumberForPlayer, pseudoJerseyNumberFromId } from "@/lib/jerseyNumber";
 
@@ -36,6 +37,13 @@ const badgeClass: Record<LineupJerseySize, string> = {
   compact: "text-[8px] px-1 py-px",
   skater: "text-[8.5px] px-1.5 py-0.5",
   goalie: "text-[9px] px-2 py-0.5",
+};
+
+/** Erb na hrudi jako u oficiálních fan dresů (ČSLH / Nike IIHF). */
+const crestClass: Record<LineupJerseySize, string> = {
+  compact: "h-3 w-[0.65rem]",
+  skater: "h-[1.1rem] w-[0.92rem]",
+  goalie: "h-7 w-[1.35rem]",
 };
 
 export interface LineupJerseyCardProps {
@@ -94,7 +102,7 @@ export function LineupJerseyCard({
         <span
           className={`
             absolute z-30 flex items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001233]
-            font-display font-bold text-white shadow-[0_0_16px_rgba(0,48,135,0.65)] ring-2 ring-sky-400/45
+            font-display font-bold text-white shadow-[0_0_16px_rgba(0,48,135,0.65)] ring-2 ring-white/45
             ${size === "goalie" ? "-left-0.5 -top-1 h-7 w-7 text-xs" : "-left-0.5 -top-0.5 h-6 w-6 text-[11px]"}
           `}
           aria-label="Asistent kapitána"
@@ -109,13 +117,13 @@ export function LineupJerseyCard({
           shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_14px_36px_rgba(0,0,0,0.55)]
           transition-[box-shadow,transform] duration-300 ease-out
           group-hover/jersey:scale-[1.045]
-          group-hover/jersey:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_18px_44px_rgba(0,0,0,0.6),0_0_28px_rgba(0,48,135,0.35),0_0_42px_rgba(200,16,46,0.12)]
+          group-hover/jersey:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_18px_44px_rgba(0,0,0,0.6),0_0_32px_rgba(200,16,46,0.32),0_0_44px_rgba(0,48,135,0.2)]
         `}
       >
         <div
           className={`
             pointer-events-none absolute left-1/2 top-1 z-20 -translate-x-1/2
-            rounded border border-white/[0.14] bg-[#030508]/90 font-display font-bold uppercase tracking-[0.2em] text-white/90
+            rounded border border-[#003087]/35 bg-[#0a0508]/95 font-display font-bold uppercase tracking-[0.2em] text-white/90
             shadow-[0_0_12px_rgba(0,0,0,0.85)]
             ${bgCls}
             before:absolute before:inset-y-0 before:left-0 before:w-[2px] before:rounded-l before:bg-[#c8102e]
@@ -126,6 +134,15 @@ export function LineupJerseyCard({
         </div>
 
         <div className="relative overflow-visible pt-[1.1rem]">
+          {!empty ? (
+            <CzechHockeyCrest
+              className={`
+                pointer-events-none absolute left-[10%] top-[calc(1.1rem+5%)] z-[8]
+                drop-shadow-[0_1px_4px_rgba(0,0,0,0.9),0_0_8px_rgba(0,0,0,0.45)]
+                ${crestClass[size]}
+              `}
+            />
+          ) : null}
           <JerseySilhouetteShape
             kind={kind}
             empty={empty}
@@ -138,7 +155,7 @@ export function LineupJerseyCard({
               className="pointer-events-none absolute inset-0 top-[1.1rem] flex items-center justify-center px-1 pt-[8%]"
               aria-hidden
             >
-              <span className="font-display text-[clamp(1.75rem,5.5vw,2.85rem)] font-bold leading-none tracking-tight text-white/[0.11] transition-colors duration-300 group-hover/jersey:text-[#60a5fa]/25">
+              <span className="font-display text-[clamp(1.75rem,5.5vw,2.85rem)] font-bold leading-none tracking-tight text-white/[0.1] transition-colors duration-300 group-hover/jersey:text-[#c8102e]/22">
                 {positionLabel}
               </span>
             </div>
@@ -149,8 +166,8 @@ export function LineupJerseyCard({
                   className={`
                     jersey-number leading-[0.92] font-display font-bold tabular-nums tracking-tight text-white
                     drop-shadow-[0_2px_8px_rgba(0,0,0,0.95),0_0_20px_rgba(255,255,255,0.06)]
-                    transition-all duration-300 group-hover/jersey:scale-105 group-hover/jersey:text-sky-100
-                    group-hover/jersey:drop-shadow-[0_0_14px_rgba(96,165,250,0.45),0_2px_6px_rgba(0,0,0,0.9)]
+                    transition-all duration-300 group-hover/jersey:scale-105 group-hover/jersey:text-white
+                    group-hover/jersey:drop-shadow-[0_0_16px_rgba(200,16,46,0.45),0_2px_6px_rgba(0,0,0,0.9)]
                     ${numCls}
                   `}
                 >

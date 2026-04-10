@@ -71,6 +71,7 @@ function DraggableCard({
             <PlayerAvatar
               name={player.name}
               position={player.position}
+              role={player.role}
               imageUrl={player.imageUrl}
             />
             <div className="min-w-0 flex-1">

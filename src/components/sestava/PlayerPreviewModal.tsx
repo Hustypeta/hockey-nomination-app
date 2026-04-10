@@ -15,6 +15,8 @@ export function PlayerPreviewModal({
 }) {
   if (!player) return null;
 
+  const teamLine = [player.club, player.league].filter(Boolean).join(" · ");
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 p-4 sm:items-center"
@@ -27,11 +29,16 @@ export function PlayerPreviewModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <PlayerAvatar name={player.name} position={player.position} size="lg" />
-            <div>
+          <div className="flex min-w-0 flex-1 items-center gap-4">
+            <PlayerAvatar name={player.name} position={player.position} role={player.role} size="lg" />
+            <div className="min-w-0 flex-1">
               <h3 className="font-display text-2xl font-bold text-white">{player.name}</h3>
-              <p className="text-sm text-[#d4af37]/90">{POSITION_LABELS[player.position]}</p>
+              {teamLine ? (
+                <p className="mt-1 truncate text-base font-medium text-white/85" title={teamLine}>
+                  {teamLine}
+                </p>
+              ) : null}
+              <p className="mt-1 text-sm text-[#d4af37]/90">{POSITION_LABELS[player.position]}</p>
               {player.role && ROLE_LABELS[player.role as Role] && (
                 <p className="text-xs text-white/50">{ROLE_LABELS[player.role as Role]}</p>
               )}

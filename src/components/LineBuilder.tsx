@@ -17,17 +17,13 @@ interface LineBuilderProps {
   enableDnd?: boolean;
 }
 
-function CzechStripeBar({ className = "" }: { className?: string }) {
+/** Jemný akcent u nadpisu lajny – červená (repre), žádná „pruhovaná vlajka“. */
+function LineHeaderAccent({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-flex h-2.5 min-w-[2.75rem] overflow-hidden rounded-sm shadow-sm ring-1 ring-white/15 ${className}`}
+      className={`inline-block h-7 w-1 shrink-0 rounded-full bg-[#c8102e] shadow-[0_0_14px_rgba(200,16,46,0.55)] ${className}`}
       aria-hidden
-      title="Česká trikolóra"
-    >
-      <span className="w-1/3 bg-[#11457e]" />
-      <span className="w-1/3 bg-white" />
-      <span className="w-1/3 bg-[#d7141a]" />
-    </span>
+    />
   );
 }
 
@@ -37,7 +33,7 @@ function SectionShell({ title, kicker, children }: { title: string; kicker?: str
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] pb-2.5">
         <h3 className="font-display text-sm font-bold uppercase tracking-[0.2em] text-white sm:text-[15px]">{title}</h3>
         {kicker ? (
-          <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-sky-300/50">{kicker}</span>
+          <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-white/40">{kicker}</span>
         ) : null}
       </div>
       {children}
@@ -153,7 +149,7 @@ export function LineBuilder({
         onClick={() => onSelectSlot(selected ? null : { type, lineIndex, role })}
         className={`
           group/slot flex w-full min-w-0 cursor-pointer flex-col items-center gap-2 rounded-xl px-0.5 py-2 transition-colors duration-200
-          ${selected ? "bg-sky-500/[0.08]" : "hover:bg-white/[0.03]"}
+          ${selected ? "bg-[#c8102e]/[0.1] ring-1 ring-[#c8102e]/25" : "hover:bg-white/[0.03]"}
         `}
       >
         <div className="relative flex w-full min-w-0 justify-center">
@@ -221,8 +217,8 @@ export function LineBuilder({
                   captainId === player.id
                     ? "cursor-not-allowed border-white/5 text-white/25 opacity-40"
                     : isAsst
-                      ? "border-sky-500/45 bg-gradient-to-b from-[#003087]/95 to-[#001a52] text-white"
-                      : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-sky-400/35 hover:text-white"
+                      ? "border-[#003087]/55 bg-gradient-to-b from-[#003087]/95 to-[#001233] text-white"
+                      : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-[#c8102e]/35 hover:text-white"
                 }
               `}
             >
@@ -258,7 +254,7 @@ export function LineBuilder({
       >
         <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-between">
           <div className="flex items-center gap-2.5">
-            <CzechStripeBar />
+            <LineHeaderAccent />
             <span className="font-display text-lg font-bold tracking-[0.06em] text-white sm:text-xl">
               {n}. LAJNA
             </span>
@@ -442,8 +438,8 @@ export function LineBuilder({
       </SectionShell>
 
       <p className="border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/32">
-        Klikni na slot · přidej zleva nebo přetáhni · <span className="text-sky-300/75">C?</span> kapitán ·{" "}
-        <span className="text-sky-400/70">A?</span> asistent
+        Klikni na slot · přidej zleva nebo přetáhni · <span className="text-[#c8102e]/85">C?</span> kapitán ·{" "}
+        <span className="text-[#003087]/90">A?</span> asistent
       </p>
     </div>
   );
