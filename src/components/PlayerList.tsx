@@ -41,10 +41,10 @@ export function PlayerList({
     ? selectedSlot.type === "goalie"
       ? "G"
       : selectedSlot.type === "forward" || selectedSlot.type === "extraForward"
-      ? "F"
-      : selectedSlot.type === "defense"
-      ? "D"
-      : null
+        ? "F"
+        : selectedSlot.type === "defense" || selectedSlot.type === "extraDefenseman"
+          ? "D"
+          : null
     : null;
 
   if (players.length === 0) {

@@ -30,25 +30,33 @@ function PosterLineBlock({
   const rw = line.rw ? getPlayer(line.rw) : null;
   const lb = pair.lb ? getPlayer(pair.lb) : null;
   const rb = pair.rb ? getPlayer(pair.rb) : null;
-  const hasAny = lw || c || rw || lb || rb;
+  const hasFwd = lw || c || rw;
+  const hasDef = lb || rb;
+  const hasAny = hasFwd || hasDef;
   if (!hasAny) return null;
 
   return (
     <div className="flex flex-col items-center gap-1">
       <span className="font-display text-[9px] tracking-wide text-white/55">{label}</span>
-      <div className="flex items-end justify-center gap-0.5">
-        {lw && <NationalJersey player={lw} size="xs" isCaptain={captainId === lw.id} />}
-        {c && <NationalJersey player={c} size="xs" isCaptain={captainId === c.id} />}
-        {rw && <NationalJersey player={rw} size="xs" isCaptain={captainId === rw.id} />}
-      </div>
-      <span className="font-display text-[7px] uppercase tracking-wider text-[#003f87]/70">
-        obránci
-      </span>
-      <div className="flex items-end justify-center gap-0.5">
-        {lb && <NationalJersey player={lb} size="xs" isCaptain={captainId === lb.id} />}
-        {lb && rb && <span className="mb-3 text-[8px] text-white/35">–</span>}
-        {rb && <NationalJersey player={rb} size="xs" isCaptain={captainId === rb.id} />}
-      </div>
+      {hasFwd ? (
+        <div className="flex items-end justify-center gap-0.5">
+          {lw && <NationalJersey player={lw} size="xs" isCaptain={captainId === lw.id} />}
+          {c && <NationalJersey player={c} size="xs" isCaptain={captainId === c.id} />}
+          {rw && <NationalJersey player={rw} size="xs" isCaptain={captainId === rw.id} />}
+        </div>
+      ) : null}
+      {hasDef ? (
+        <>
+          <span className="font-display text-[7px] uppercase tracking-wider text-[#003f87]/70">
+            obránci
+          </span>
+          <div className="flex items-end justify-center gap-0.5">
+            {lb && <NationalJersey player={lb} size="xs" isCaptain={captainId === lb.id} />}
+            {lb && rb && <span className="mb-3 text-[8px] text-white/35">–</span>}
+            {rb && <NationalJersey player={rb} size="xs" isCaptain={captainId === rb.id} />}
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }
@@ -135,7 +143,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                       <PosterLineBlock
                         label="4. lajna"
                         line={lineup.forwardLines[3]}
-                        pair={lineup.defensePairs[3]}
+                        pair={{ lb: null, rb: null }}
                         captainId={captainId}
                         getPlayer={getPlayer}
                       />
@@ -145,7 +153,19 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                         Náhradníci
                       </span>
                       <div className="flex flex-wrap justify-center gap-0.5">
-                        {lineup.extraForwards.map((id) => {
+                        {lineup.extraForwards.map((id, i) => {
+                          if (!id) return null;
+                          const p = getPlayer(id);
+                          return p ? (
+                            <NationalJersey
+                              key={`${p.id}-${i}`}
+                              player={p}
+                              size="xs"
+                              isCaptain={captainId === p.id}
+                            />
+                          ) : null;
+                        })}
+                        {lineup.extraDefensemen.map((id) => {
                           const p = getPlayer(id);
                           return p ? (
                             <NationalJersey

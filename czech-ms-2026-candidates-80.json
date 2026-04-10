@@ -244,7 +244,8 @@
     "name": "Radim Šimek",
     "position": "D",
     "role": "LB",
-    "club": "Bílí Tygři Liberec"
+    "club": "Bílí Tygři Liberec",
+    "jerseyNumber": 51
   },
   {
     "name": "Tomáš Galvas",
@@ -770,7 +771,8 @@
     "name": "Filip Chlapík",
     "position": "F",
     "role": "LW/RW",
-    "club": "HC Sparta Praha"
+    "club": "HC Sparta Praha",
+    "jerseyNumber": 14
   },
   {
     "name": "Michael Špaček",
@@ -862,7 +864,8 @@
     "name": "Radim Zohorna",
     "position": "F",
     "role": "C",
-    "club": "Färjestad BK"
+    "club": "Färjestad BK",
+    "jerseyNumber": 67
   },
   {
     "name": "Lukáš Rousek",

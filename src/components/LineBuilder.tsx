@@ -97,7 +97,19 @@ export function LineBuilder({
     if (!id) return;
     const next = {
       ...lineup,
-      extraForwards: lineup.extraForwards.filter((_, i) => i !== index),
+      extraForwards: lineup.extraForwards.map((x, i) => (i === index ? null : x)) as LineupStructure["extraForwards"],
+      assistantIds: (lineup.assistantIds ?? []).filter((a) => a !== id),
+    };
+    if (captainId === id) onCaptainChange(null);
+    onLineupChange(next);
+  };
+
+  const removeExtraDefense = () => {
+    const id = lineup.extraDefensemen[0];
+    if (!id) return;
+    const next = {
+      ...lineup,
+      extraDefensemen: [],
       assistantIds: (lineup.assistantIds ?? []).filter((a) => a !== id),
     };
     if (captainId === id) onCaptainChange(null);
@@ -318,47 +330,53 @@ export function LineBuilder({
           />
         </div>
 
-        <div className="border-t border-white/[0.06] pt-4">
-          <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40">
-            Obranný pár
-          </p>
-          <div className="mx-auto grid w-full max-w-sm grid-cols-1 gap-x-4 gap-y-4 sm:max-w-md sm:grid-cols-2">
-            <Slot
-              playerId={pair.lb}
-              label="LD"
-              type="defense"
-              lineIndex={i}
-              role="lb"
-              dndId={`slot-def-${i}-lb`}
-              jerseySize="skater"
-              onClear={
-                pair.lb
-                  ? () => {
-                      setDefensePair(i, "lb", null);
-                      onSelectSlot(null);
-                    }
-                  : undefined
-              }
-            />
-            <Slot
-              playerId={pair.rb}
-              label="RD"
-              type="defense"
-              lineIndex={i}
-              role="rb"
-              dndId={`slot-def-${i}-rb`}
-              jerseySize="skater"
-              onClear={
-                pair.rb
-                  ? () => {
-                      setDefensePair(i, "rb", null);
-                      onSelectSlot(null);
-                    }
-                  : undefined
-              }
-            />
+        {i < 3 ? (
+          <div className="border-t border-white/[0.06] pt-4">
+            <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40">
+              Obranný pár
+            </p>
+            <div className="mx-auto grid w-full max-w-sm grid-cols-1 gap-x-4 gap-y-4 sm:max-w-md sm:grid-cols-2">
+              <Slot
+                playerId={pair.lb}
+                label="LD"
+                type="defense"
+                lineIndex={i}
+                role="lb"
+                dndId={`slot-def-${i}-lb`}
+                jerseySize="skater"
+                onClear={
+                  pair.lb
+                    ? () => {
+                        setDefensePair(i, "lb", null);
+                        onSelectSlot(null);
+                      }
+                    : undefined
+                }
+              />
+              <Slot
+                playerId={pair.rb}
+                label="RD"
+                type="defense"
+                lineIndex={i}
+                role="rb"
+                dndId={`slot-def-${i}-rb`}
+                jerseySize="skater"
+                onClear={
+                  pair.rb
+                    ? () => {
+                        setDefensePair(i, "rb", null);
+                        onSelectSlot(null);
+                      }
+                    : undefined
+                }
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/38">
+            U repre se často bere 7 beků — čtvrtá lajna má jen útok; sedmý bek je v náhradnících.
+          </p>
+        )}
       </article>
     );
   };
@@ -389,7 +407,7 @@ export function LineBuilder({
         </div>
       </SectionShell>
 
-      <SectionShell title="Lajny" kicker="4 × (LW · C · RW) + LD · RD">
+      <SectionShell title="Lajny" kicker="4 útoky · 3 obranné páry (4. lajna bez beků)">
         <div className="flex min-w-0 w-full flex-col gap-6 sm:gap-7">
           {[0, 1, 2, 3].map((i) => lineBlock(i))}
         </div>
@@ -401,8 +419,8 @@ export function LineBuilder({
             <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
               Útočníci
             </p>
-            <div className="grid w-full grid-cols-2 gap-3">
-              {[0, 1].map((i) => {
+            <div className="grid w-full grid-cols-3 gap-2 sm:gap-3">
+              {([0, 1, 2] as const).map((i) => {
                 const pid = lineup.extraForwards[i] ?? null;
                 return (
                   <Slot
@@ -411,7 +429,7 @@ export function LineBuilder({
                     label={`EX${i + 1}`}
                     type="extraForward"
                     lineIndex={i}
-                    dndId={`slot-xf-${i as 0 | 1}`}
+                    dndId={`slot-xf-${i}`}
                     jerseySize="compact"
                     onClear={
                       pid
@@ -427,12 +445,27 @@ export function LineBuilder({
             </div>
           </div>
           <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
-            <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+            <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
               Obránci
             </p>
-            <p className="text-center text-[11px] leading-relaxed text-white/38">
-              V nominaci je 8 obránců ve čtyřech párech výše — náhradní „scratch“ sloty platí pro útočníky.
-            </p>
+            <div className="mx-auto flex max-w-[10rem] justify-center">
+              <Slot
+                playerId={lineup.extraDefensemen[0] ?? null}
+                label="7. bek"
+                type="extraDefenseman"
+                lineIndex={0}
+                dndId="slot-xd-0"
+                jerseySize="compact"
+                onClear={
+                  lineup.extraDefensemen[0]
+                    ? () => {
+                        removeExtraDefense();
+                        onSelectSlot(null);
+                      }
+                    : undefined
+                }
+              />
+            </div>
           </div>
         </div>
       </SectionShell>

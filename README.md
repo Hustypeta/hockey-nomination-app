@@ -41,8 +41,8 @@ Otevři [http://localhost:3000](http://localhost:3000)
 ## Pravidla sestavy
 
 - **3 brankáři** (G)
-- **8 obránců** (D)
-- **14 útočníků** (F)
+- **7 obránců** (D)
+- **15 útočníků** (F)
 - **Celkem 25 hráčů**
 - Jeden hráč může být označen jako **Kapitán** (C)
 

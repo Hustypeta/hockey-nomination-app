@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
 import { NominationView } from "./NominationView";
 
@@ -18,13 +19,14 @@ async function getNomination(id: string) {
 
   const orderedPlayers = await resolvePlayersByIds(nomination.selectedPlayerIds);
 
-  const lineupStructure = nomination.lineupStructure as import("@/types").LineupStructure | null;
+  const rawLineup = nomination.lineupStructure as import("@/types").LineupStructure | null;
+  const lineupStructure = rawLineup ? normalizeLineupStructure(rawLineup) : null;
 
   return {
     id: nomination.id,
     captainId: nomination.captainId,
     players: orderedPlayers,
-    lineupStructure: lineupStructure ?? null,
+    lineupStructure,
     createdAt: nomination.createdAt,
   };
 }

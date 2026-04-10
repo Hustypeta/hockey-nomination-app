@@ -39,11 +39,11 @@ const crestSize = {
 };
 
 const textName = {
-  xs: "text-[9px] tracking-wide",
-  sm: "text-[10px] tracking-wide",
-  md: "text-xs tracking-wide",
-  lg: "text-sm tracking-wide",
-  xl: "text-[15px] tracking-wide",
+  xs: "text-[11px] tracking-wide",
+  sm: "text-[12px] tracking-wide",
+  md: "text-sm tracking-wide",
+  lg: "text-base tracking-wide",
+  xl: "text-[17px] tracking-wide",
 };
 
 export function NationalJersey({

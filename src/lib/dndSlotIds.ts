@@ -4,6 +4,7 @@ export function droppableIdForSlot(target: DropTarget): string {
   if (target.type === "goalie") return `slot-goalie-${target.index}`;
   if (target.type === "defense") return `slot-def-${target.pairIndex}-${target.role}`;
   if (target.type === "forward") return `slot-fwd-${target.lineIndex}-${target.role}`;
+  if (target.type === "extraDefenseman") return `slot-xd-${target.slotIndex}`;
   return `slot-xf-${target.slotIndex}`;
 }
 
@@ -19,7 +20,7 @@ export function parseDroppableId(id: string): DropTarget | null {
     if (!m) return null;
     const pairIndex = Number(m[1]);
     const role = m[2] as "lb" | "rb";
-    if (pairIndex >= 0 && pairIndex <= 3) return { type: "defense", pairIndex, role };
+    if (pairIndex >= 0 && pairIndex <= 2) return { type: "defense", pairIndex, role };
     return null;
   }
   if (id.startsWith("slot-fwd-")) {
@@ -33,7 +34,12 @@ export function parseDroppableId(id: string): DropTarget | null {
   }
   if (id.startsWith("slot-xf-")) {
     const n = Number(id.slice("slot-xf-".length));
-    if (n === 0 || n === 1) return { type: "extraForward", slotIndex: n as 0 | 1 };
+    if (n === 0 || n === 1 || n === 2) return { type: "extraForward", slotIndex: n as 0 | 1 | 2 };
+    return null;
+  }
+  if (id.startsWith("slot-xd-")) {
+    const n = Number(id.slice("slot-xd-".length));
+    if (n === 0) return { type: "extraDefenseman", slotIndex: 0 };
     return null;
   }
   return null;

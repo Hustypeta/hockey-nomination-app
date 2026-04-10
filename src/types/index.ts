@@ -25,8 +25,8 @@ export const ROLE_LABELS: Record<Role, string> = {
 
 export const POSITION_LIMITS = {
   G: 3,
-  D: 8,
-  F: 14,
+  D: 7,
+  F: 15,
 } as const;
 
 export const TOTAL_PLAYERS = 25;
@@ -51,10 +51,13 @@ export interface DefensePair {
 
 export interface LineupStructure {
   forwardLines: [ForwardLine, ForwardLine, ForwardLine, ForwardLine]; // 1.–4. lajna
-  defensePairs: [DefensePair, DefensePair, DefensePair, DefensePair]; // 1.–4. pár
+  /** Čtvrtý pár je v datech rezervovaný (vždy prázdný); beků je 7 v prvních třech párech + náhradník. */
+  defensePairs: [DefensePair, DefensePair, DefensePair, DefensePair];
   goalies: [string | null, string | null, string | null]; // 3 brankáři
-  extraForwards: string[]; // náhradníci útočníci (2)
-  extraDefensemen: string[]; // náhradníci obránci (0)
+  /** Tři pevné sloty EX1–EX3 (`null` = prázdné). */
+  extraForwards: [string | null, string | null, string | null];
+  /** Nejdeš 7 beků: max. jeden náhradní obránce. */
+  extraDefensemen: string[];
   assistantIds?: string[];
 }
 
@@ -72,7 +75,7 @@ export const EMPTY_LINEUP: LineupStructure = {
     { lb: null, rb: null },
   ],
   goalies: [null, null, null],
-  extraForwards: [],
+  extraForwards: [null, null, null],
   extraDefensemen: [],
   assistantIds: [],
 };

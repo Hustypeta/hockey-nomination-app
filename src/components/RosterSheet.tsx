@@ -81,10 +81,11 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                     {captainId === p.id && <td className="py-1 text-amber-600 font-bold">C</td>}
                   </tr>
                 ))}
-                {lineup.extraForwards.map((id) => {
+                {lineup.extraForwards.map((id, i) => {
+                  if (!id) return null;
                   const p = getPlayer(id);
                   return p ? (
-                    <tr key={p.id} className="border-b border-gray-200">
+                    <tr key={`xf-${p.id}-${i}`} className="border-b border-gray-200">
                       <td className="py-1">Náhradník</td>
                       <td className="py-1">–</td>
                       <td className="py-1 font-medium">{p.name}</td>
@@ -106,7 +107,7 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
             <h2 className="font-bold text-[#c41e3a] mb-2">Obránci</h2>
             <table className="w-full">
               <tbody>
-                {lineup.defensePairs.flatMap((pair, pi) => {
+                {lineup.defensePairs.slice(0, 3).flatMap((pair, pi) => {
                   const row: { p: Player; l: number; pos: string }[] = [];
                   if (pair.lb) {
                     const p = getPlayer(pair.lb);
@@ -131,6 +132,23 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                     {captainId === p.id && <td className="py-1 text-amber-600 font-bold">C</td>}
                   </tr>
                 ))}
+                {lineup.extraDefensemen.map((id) => {
+                  const p = getPlayer(id);
+                  return p ? (
+                    <tr key={`xd-${p.id}`} className="border-b border-gray-200">
+                      <td className="py-1">Náhradník</td>
+                      <td className="py-1">D</td>
+                      <td className="py-1 font-medium">{p.name}</td>
+                      <td className="py-1 text-gray-600">
+                        {p.club}
+                        {p.league ? (
+                          <span className="text-gray-400"> ({p.league})</span>
+                        ) : null}
+                      </td>
+                      {captainId === p.id && <td className="py-1 text-amber-600 font-bold">C</td>}
+                    </tr>
+                  ) : null;
+                })}
               </tbody>
             </table>
           </div>

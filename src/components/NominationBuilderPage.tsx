@@ -65,15 +65,17 @@ export function NominationBuilderPage() {
   const counts = {
     G: lineup.goalies.filter(Boolean).length,
     D:
-      lineup.defensePairs.reduce(
-        (s, p) => s + (p.lb ? 1 : 0) + (p.rb ? 1 : 0),
-        0
-      ) + lineup.extraDefensemen.length,
+      lineup.defensePairs
+        .slice(0, 3)
+        .reduce((s, p) => s + (p.lb ? 1 : 0) + (p.rb ? 1 : 0), 0) + lineup.extraDefensemen.length,
     F:
       lineup.forwardLines.reduce(
         (s, l) => s + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0),
         0
-      ) + lineup.extraForwards.length,
+      ) +
+      (lineup.extraForwards[0] ? 1 : 0) +
+      (lineup.extraForwards[1] ? 1 : 0) +
+      (lineup.extraForwards[2] ? 1 : 0),
   };
 
   useEffect(() => {
@@ -126,6 +128,7 @@ export function NominationBuilderPage() {
         type === "defense" &&
         player.position === "D" &&
         lineIndex !== undefined &&
+        lineIndex < 3 &&
         role &&
         (role === "lb" || role === "rb")
       ) {
@@ -136,10 +139,17 @@ export function NominationBuilderPage() {
         setLineup(next);
         setSelectedSlot(null);
       } else if (type === "extraForward" && player.position === "F" && lineIndex !== undefined) {
-        const slotIndex = (lineIndex === 0 ? 0 : 1) as 0 | 1;
+        const slotIndex = lineIndex as 0 | 1 | 2;
         const next = assignPlayerToTarget(lineup, player, {
           type: "extraForward",
           slotIndex,
+        });
+        if (next) setLineup(next);
+        setSelectedSlot(null);
+      } else if (type === "extraDefenseman" && player.position === "D" && lineIndex !== undefined) {
+        const next = assignPlayerToTarget(lineup, player, {
+          type: "extraDefenseman",
+          slotIndex: 0,
         });
         if (next) setLineup(next);
         setSelectedSlot(null);
@@ -156,11 +166,12 @@ export function NominationBuilderPage() {
       if (type === "forward" && (role === "lw" || role === "c" || role === "rw"))
         return player.position === "F";
       if (type === "defense" && (role === "lb" || role === "rb"))
-        return player.position === "D";
+        return player.position === "D" && lineIndex !== undefined && lineIndex < 3;
       if (type === "extraForward") return player.position === "F";
+      if (type === "extraDefenseman") return player.position === "D";
       return false;
     },
-    [selectedSlot, usedIds, lineup.extraForwards.length]
+    [selectedSlot, usedIds]
   );
 
   const handleAddFromPool = useCallback(
@@ -208,7 +219,7 @@ export function NominationBuilderPage() {
   const handleRandom = useCallback(() => {
     const next = buildRandomLineup(players);
     if (!next) {
-      toast.error("V databázi není dost hráčů (potřeba 3G + 8D + 14F).");
+      toast.error("V databázi není dost hráčů (potřeba 3G + 7D + 15F).");
       return;
     }
     setLineup(next);
@@ -249,12 +260,12 @@ export function NominationBuilderPage() {
   }
 
   const subtitleCounts =
-    "3 brankáři · 8 obránců · 14 útočníků · celkem max. 25 hráčů";
+    "3 brankáři · 7 obránců · 15 útočníků · celkem max. 25 hráčů";
 
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"
       ? "G"
-      : selectedSlot.type === "defense"
+      : selectedSlot.type === "defense" || selectedSlot.type === "extraDefenseman"
         ? "D"
         : "F"
     : null;

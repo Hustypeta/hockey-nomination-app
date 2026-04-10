@@ -1,4 +1,5 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import type { LineupStructure } from "@/types";
 
 export const SHARE_PAYLOAD_VERSION = 1 as const;
@@ -19,7 +20,10 @@ export function decodeSharePayload(z: string): SharePayload | null {
     if (!json) return null;
     const data = JSON.parse(json) as SharePayload;
     if (data.v !== SHARE_PAYLOAD_VERSION || !data.lineupStructure) return null;
-    return data;
+    return {
+      ...data,
+      lineupStructure: normalizeLineupStructure(data.lineupStructure),
+    } as SharePayload;
   } catch {
     return null;
   }

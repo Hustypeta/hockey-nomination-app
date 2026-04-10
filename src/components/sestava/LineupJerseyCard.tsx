@@ -28,9 +28,9 @@ const numberClass: Record<LineupJerseySize, string> = {
 };
 
 const nameClass: Record<LineupJerseySize, string> = {
-  compact: "text-[9px] sm:text-[10px]",
-  skater: "text-[10px] sm:text-[11px]",
-  goalie: "text-[11px] sm:text-xs",
+  compact: "text-[11px] sm:text-[13px]",
+  skater: "text-[12px] sm:text-[14px]",
+  goalie: "text-[13px] sm:text-[15px]",
 };
 
 const badgeClass: Record<LineupJerseySize, string> = {
