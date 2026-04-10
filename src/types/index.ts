@@ -8,6 +8,8 @@ export interface Player {
   role?: string | null; // RW, LW, C, RB, LB
   club: string;
   league: string;
+  /** Dresové číslo z reprezentace (jen pokud hráč v A-týmu nastoupil a máme ho v datech). */
+  jerseyNumber?: number | null;
   /** Volitelná URL fotky (např. budoucí rozšíření dat). */
   imageUrl?: string | null;
 }

@@ -1,172 +1,940 @@
 [
-  {"name":"Lukáš Dostál","position":"G","role":"G","club":"Anaheim Ducks"},
-  {"name":"Petr Mrázek","position":"G","role":"G","club":"Anaheim Ducks"},
-  {"name":"Jakub Dobeš","position":"G","role":"G","club":"Montréal Canadiens"},
-  {"name":"David Rittich","position":"G","role":"G","club":"New York Islanders"},
-  {"name":"Dan Vladař","position":"G","role":"G","club":"Philadelphia Flyers"},
-  {"name":"Karel Vejmelka","position":"G","role":"G","club":"Utah Mammoth"},
-  {"name":"Vítek Vaněček","position":"G","role":"G","club":"Utah Mammoth"},
-
-  {"name":"Jiří Patera","position":"G","role":"G","club":"Abbotsford Canucks"},
-  {"name":"Michal Postava","position":"G","role":"G","club":"Grand Rapids Griffins"},
-  {"name":"Šimon Zajíček","position":"G","role":"G","club":"Providence Bruins"},
-  {"name":"Jakub Škarek","position":"G","role":"G","club":"San Jose Barracuda"},
-  {"name":"Jakub Málek","position":"G","role":"G","club":"Utica Comets"},
-
-  {"name":"Petr Kváča","position":"G","role":"G","club":"Bílí Tygři Liberec"},
-  {"name":"Vojtěch Mokrý","position":"G","role":"G","club":"BK Mladá Boleslav"},
-  {"name":"Roman Will","position":"G","role":"G","club":"HC Dynamo Pardubice"},
-  {"name":"Dominik Frodl","position":"G","role":"G","club":"HC Energie Karlovy Vary"},
-  {"name":"Aleš Stezka","position":"G","role":"G","club":"HC Kometa Brno"},
-  {"name":"Jan Kavan","position":"G","role":"G","club":"HC Kometa Brno"},
-  {"name":"Marek Mazanec","position":"G","role":"G","club":"HC Oceláři Třinec"},
-  {"name":"Matěj Machovský","position":"G","role":"G","club":"HC Olomouc"},
-  {"name":"Nick Malík","position":"G","role":"G","club":"HC Plzeň"},
-  {"name":"Pavel Čajan","position":"G","role":"G","club":"HC Verva Litvínov"},
-  {"name":"Adam Brízgala","position":"G","role":"G","club":"Rytíři Kladno"},
-
-  {"name":"Marek Langhamer","position":"G","role":"G","club":"Malmö Redhawks"},
-
-  {"name":"Jan Bednář","position":"G","role":"G","club":"Ässät"},
-  {"name":"Dominik Pavlát","position":"G","role":"G","club":"Ilves"},
-  {"name":"Patrik Bartošák","position":"G","role":"G","club":"Pelicans"},
-
-  {"name":"Šimon Hrubec","position":"G","role":"G","club":"ZSC Lions"},
-
-
-
-  {"name":"Radko Gudas","position":"D","role":"RB","club":"Anaheim Ducks"},
-  {"name":"Mikuláš Hovorka","position":"D","role":"RB","club":"Florida Panthers"},
-  {"name":"David Jiříček","position":"D","role":"RB","club":"Minnesota Wild"},
-  {"name":"Filip Hronek","position":"D","role":"RB","club":"Vancouver Canucks"},
-
-  {"name":"Tomáš Hamara","position":"D","role":"LB","club":"Belleville Senators"},
-  {"name":"Stanislav Svozil","position":"D","role":"LB","club":"Cleveland Monsters"},
-  {"name":"Marek Alscher","position":"D","role":"LB","club":"Charlotte Checkers"},
-  {"name":"Dominik Badinka","position":"D","role":"RB","club":"Chicago Wolves"},
-  {"name":"David Špaček","position":"D","role":"RB","club":"Iowa Wild"},
-  {"name":"Jakub Dvořák","position":"D","role":"LB","club":"Ontario Reign"},
-
-  {"name":"Radim Šimek","position":"D","role":"LB","club":"Bílí Tygři Liberec"},
-  {"name":"Tomáš Galvas","position":"D","role":"LB","club":"Bílí Tygři Liberec"},
-  {"name":"Filip Pyrochta","position":"D","role":"LB","club":"BK Mladá Boleslav"},
-  {"name":"Jan Košťálek","position":"D","role":"RB","club":"HC Dynamo Pardubice"},
-  {"name":"Libor Hájek","position":"D","role":"LB","club":"HC Dynamo Pardubice"},
-  {"name":"David Moravec","position":"D","role":"LB","club":"HC Energie Karlovy Vary"},
-  {"name":"Matteo Kočí","position":"D","role":"LB","club":"HC Energie Karlovy Vary"},
-  {"name":"Filip Král","position":"D","role":"LB","club":"HC Kometa Brno"},
-  {"name":"Jan Ščotka","position":"D","role":"LB","club":"HC Kometa Brno"},
-  {"name":"Libor Zábranský","position":"D","role":"RB","club":"HC Kometa Brno"},
-  {"name":"Tomáš Cibulka","position":"D","role":"LB","club":"HC Motor České Budějovice"},
-  {"name":"Jakub Galvas","position":"D","role":"RB","club":"HC Oceláři Třinec"},
-  {"name":"Marian Adámek","position":"D","role":"RB","club":"HC Oceláři Třinec"},
-  {"name":"Tomáš Kundrátek","position":"D","role":"RB","club":"HC Oceláři Třinec"},
-  {"name":"Dominik Mašín","position":"D","role":"LB","club":"HC Sparta Praha"},
-  {"name":"Jakub Krejčík","position":"D","role":"LB","club":"HC Sparta Praha"},
-  {"name":"Jakub Sirota","position":"D","role":"LB","club":"HC Sparta Praha"},
-  {"name":"Ronald Knot","position":"D","role":"RB","club":"HC Sparta Praha"},
-  {"name":"Jakub Zbořil","position":"D","role":"RB","club":"HC Vítkovice"},
-  {"name":"Martin Jandus","position":"D","role":"RB","club":"Rytíři Kladno"},
-
-  {"name":"Michal Kempný","position":"D","role":"LB","club":"Brynäs IF"},
-
-  {"name":"Daniel Gazda","position":"D","role":"RB","club":"Ilves"},
-  {"name":"Radek Kučerík","position":"D","role":"LB","club":"Ilves"},
-  {"name":"Jiří Ticháček","position":"D","role":"LB","club":"Kärpät"},
-  {"name":"Michal Jordán","position":"D","role":"RB","club":"Pelicans"},
-
-  {"name":"Lukáš Klok","position":"D","role":"LB","club":"EHC Kloten"},
-  {"name":"David Sklenička","position":"D","role":"LB","club":"EV Zug"},
-  {"name":"Jan Rutta","position":"D","role":"RB","club":"Genève-Servette HC"},
-
-
-
-  {"name":"David Pastrňák","position":"F","role":"RW","club":"Boston Bruins"},
-  {"name":"Pavel Zacha","position":"F","role":"C","club":"Boston Bruins"},
-  {"name":"Jiří Kulich","position":"F","role":"C","club":"Buffalo Sabres"},
-  {"name":"Adam Klapka","position":"F","role":"RW","club":"Calgary Flames"},
-  {"name":"Martin Nečas","position":"F","role":"C","club":"Colorado Avalanche"},
-  {"name":"Radek Faksa","position":"F","role":"C","club":"Dallas Stars"},
-  {"name":"Tomáš Nosek","position":"F","role":"C/LW","club":"Florida Panthers"},
-  {"name":"Ondřej Palát","position":"F","role":"LW","club":"New York Islanders"},
-  {"name":"Jaroslav Chmelář","position":"F","role":"RW","club":"New York Rangers"},
-  {"name":"Filip Chytil","position":"F","role":"C","club":"Vancouver Canucks"},
-  {"name":"Tomáš Hertl","position":"F","role":"C","club":"Vegas Golden Knights"},
-  {"name":"David Kämpf","position":"F","role":"C","club":"Washington Capitals"},
-
-  {"name":"Jan Jeník","position":"F","role":"C","club":"Belleville Senators"},
-  {"name":"Eduard Šalé","position":"F","role":"LW/RW","club":"Coachella Valley Firebirds"},
-  {"name":"Ivan Ivan","position":"F","role":"C/LW","club":"Colorado Eagles"},
-  {"name":"Jakub Rychlovský","position":"F","role":"LW/RW","club":"Grand Rapids Griffins"},
-  {"name":"Ondřej Becher","position":"F","role":"C","club":"Grand Rapids Griffins"},
-  {"name":"Jakub Brabanec","position":"F","role":"C/LW","club":"Henderson Silver Knights"},
-  {"name":"Matyáš Šapovaliv","position":"F","role":"C/LW","club":"Henderson Silver Knights"},
-  {"name":"Matěj Blümel","position":"F","role":"LW/RW","club":"Providence Bruins"},
-  {"name":"Jan Myšák","position":"F","role":"C","club":"San Diego Gulls"},
-  {"name":"Jakub Štancl","position":"F","role":"LW","club":"Springfield Thunderbirds"},
-  {"name":"Michal Kunc","position":"F","role":"LW/RW","club":"Tucson Roadrunners"},
-  {"name":"Matyáš Melovský","position":"F","role":"C","club":"Utica Comets"},
-
-  {"name":"Jaromír Pérez","position":"F","role":"LW","club":"Bílí Tygři Liberec"},
-  {"name":"Jaromír Pytlík","position":"F","role":"RW","club":"Bílí Tygři Liberec"},
-  {"name":"Radan Lenc","position":"F","role":"LW","club":"Bílí Tygři Liberec"},
-  {"name":"Jáchym Kondelík","position":"F","role":"C","club":"HC Dynamo Pardubice"},
-  {"name":"Jakub Lauko","position":"F","role":"LW/RW","club":"HC Dynamo Pardubice"},
-  {"name":"Jiří Smejkal","position":"F","role":"LW","club":"HC Dynamo Pardubice"},
-  {"name":"Lukáš Sedlák","position":"F","role":"C","club":"HC Dynamo Pardubice"},
-  {"name":"Roman Červenka","position":"F","role":"LW","club":"HC Dynamo Pardubice"},
-  {"name":"Jan Bambula","position":"F","role":"RW","club":"HC Energie Karlovy Vary"},
-  {"name":"Jiří Černoch","position":"F","role":"C","club":"HC Energie Karlovy Vary"},
-  {"name":"Ondřej Beránek","position":"F","role":"LW/RW","club":"HC Energie Karlovy Vary"},
-  {"name":"Petr Tomek","position":"F","role":"C/LW","club":"HC Energie Karlovy Vary"},
-  {"name":"Vít Jiskra","position":"F","role":"C","club":"HC Energie Karlovy Vary"},
-  {"name":"Hynek Zohorna","position":"F","role":"RW","club":"HC Kometa Brno"},
-  {"name":"Jakub Flek","position":"F","role":"LW/RW","club":"HC Kometa Brno"},
-  {"name":"Jakub Kos","position":"F","role":"LW","club":"HC Kometa Brno"},
-  {"name":"Tomáš Zohorna","position":"F","role":"C","club":"HC Kometa Brno"},
-  {"name":"David Kaše","position":"F","role":"C","club":"HC Litvínov"},
-  {"name":"Ondřej Kaše","position":"F","role":"RW","club":"HC Litvínov"},
-  {"name":"Filip Přikryl","position":"F","role":"C/LW","club":"HC Motor České Budějovice"},
-  {"name":"Štěpán Hoch","position":"F","role":"C","club":"HC Motor České Budějovice"},
-  {"name":"Andrej Nestrašil","position":"F","role":"RW","club":"HC Oceláři Třinec"},
-  {"name":"Matěj Kubiesa","position":"F","role":"LW","club":"HC Oceláři Třinec"},
-  {"name":"Michal Kovařčík","position":"F","role":"C","club":"HC Oceláři Třinec"},
-  {"name":"Ondřej Kovařčík","position":"F","role":"LW","club":"HC Oceláři Třinec"},
-  {"name":"Oskar Flynn","position":"F","role":"LW/RW","club":"HC Oceláři Třinec"},
-  {"name":"Petr Sikora","position":"F","role":"C","club":"HC Oceláři Třinec"},
-  {"name":"Petr Fridrich","position":"F","role":"LW/RW","club":"HC Olomouc"},
-  {"name":"Adam Měchura","position":"F","role":"LW","club":"HC Plzeň"},
-  {"name":"Matyáš Filip","position":"F","role":"C","club":"HC Plzeň"},
-  {"name":"Ondřej Rohlík","position":"F","role":"RW","club":"HC Plzeň"},
-  {"name":"Filip Chlapík","position":"F","role":"LW/RW","club":"HC Sparta Praha"},
-  {"name":"Michael Špaček","position":"F","role":"C","club":"HC Sparta Praha"},
-  {"name":"Michal Řepík","position":"F","role":"RW","club":"HC Sparta Praha"},
-  {"name":"Pavel Kousal","position":"F","role":"LW/RW","club":"HC Sparta Praha"},
-  {"name":"Roman Horák","position":"F","role":"C/LW/RW","club":"HC Sparta Praha"},
-  {"name":"Tomáš Hyka","position":"F","role":"RW","club":"HC Sparta Praha"},
-  {"name":"Jindřich Abdul","position":"F","role":"LW","club":"HC Vítkovice"},
-  {"name":"Marek Kalus","position":"F","role":"LW","club":"HC Vítkovice"},
-  {"name":"Aleš Jergl","position":"F","role":"RW","club":"Mountfield HK"},
-  {"name":"Kevin Klíma","position":"F","role":"C","club":"Mountfield HK"},
-  {"name":"Lukáš Radil","position":"F","role":"RW","club":"Mountfield HK"},
-  {"name":"Radovan Pavlík","position":"F","role":"LW","club":"Mountfield HK"},
-  {"name":"Jakub Konečný","position":"F","role":"C","club":"Rytíři Kladno"},
-  {"name":"Marcel Marcel","position":"F","role":"RW","club":"Rytíři Kladno"},
-
-  {"name":"David Tomášek","position":"F","role":"C","club":"Färjestad BK"},
-  {"name":"Radim Zohorna","position":"F","role":"C","club":"Färjestad BK"},
-  {"name":"Lukáš Rousek","position":"F","role":"C","club":"HV71"},
-  {"name":"Jakub Vrána","position":"F","role":"LW","club":"Linköping HC"},
-  {"name":"Luboš Horký","position":"F","role":"LW/RW","club":"Rögle BK"},
-
-  {"name":"Petr Kodýtek","position":"F","role":"C","club":"IFK Helsinky"},
-  {"name":"Lukáš Jašek","position":"F","role":"C/RW","club":"Ilves"},
-  {"name":"Matyáš Kantner","position":"F","role":"LW/RW","club":"Kärpät"},
-
-  {"name":"Daniel Voženílek","position":"F","role":"LW/RW","club":"EV Zug"},
-  {"name":"Dominik Kubalík","position":"F","role":"LW","club":"EV Zug"},
-  {"name":"Filip Zadina","position":"F","role":"LW","club":"HC Davos"},
-  {"name":"Matěj Stránský","position":"F","role":"RW","club":"HC Davos"},
-
-  {"name":"Kristian Reichel","position":"F","role":"C","club":"Adler Mannheim"}
+  {
+    "name": "Lukáš Dostál",
+    "position": "G",
+    "role": "G",
+    "club": "Anaheim Ducks",
+    "jerseyNumber": 1
+  },
+  {
+    "name": "Petr Mrázek",
+    "position": "G",
+    "role": "G",
+    "club": "Anaheim Ducks",
+    "jerseyNumber": 34
+  },
+  {
+    "name": "Jakub Dobeš",
+    "position": "G",
+    "role": "G",
+    "club": "Montréal Canadiens",
+    "jerseyNumber": 35
+  },
+  {
+    "name": "David Rittich",
+    "position": "G",
+    "role": "G",
+    "club": "New York Islanders",
+    "jerseyNumber": 31
+  },
+  {
+    "name": "Dan Vladař",
+    "position": "G",
+    "role": "G",
+    "club": "Philadelphia Flyers",
+    "jerseyNumber": 80
+  },
+  {
+    "name": "Karel Vejmelka",
+    "position": "G",
+    "role": "G",
+    "club": "Utah Mammoth",
+    "jerseyNumber": 50
+  },
+  {
+    "name": "Vítek Vaněček",
+    "position": "G",
+    "role": "G",
+    "club": "Utah Mammoth"
+  },
+  {
+    "name": "Jiří Patera",
+    "position": "G",
+    "role": "G",
+    "club": "Abbotsford Canucks"
+  },
+  {
+    "name": "Michal Postava",
+    "position": "G",
+    "role": "G",
+    "club": "Grand Rapids Griffins"
+  },
+  {
+    "name": "Šimon Zajíček",
+    "position": "G",
+    "role": "G",
+    "club": "Providence Bruins"
+  },
+  {
+    "name": "Jakub Škarek",
+    "position": "G",
+    "role": "G",
+    "club": "San Jose Barracuda"
+  },
+  {
+    "name": "Jakub Málek",
+    "position": "G",
+    "role": "G",
+    "club": "Utica Comets"
+  },
+  {
+    "name": "Petr Kváča",
+    "position": "G",
+    "role": "G",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Vojtěch Mokrý",
+    "position": "G",
+    "role": "G",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Roman Will",
+    "position": "G",
+    "role": "G",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Dominik Frodl",
+    "position": "G",
+    "role": "G",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Aleš Stezka",
+    "position": "G",
+    "role": "G",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Jan Kavan",
+    "position": "G",
+    "role": "G",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Marek Mazanec",
+    "position": "G",
+    "role": "G",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Matěj Machovský",
+    "position": "G",
+    "role": "G",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Nick Malík",
+    "position": "G",
+    "role": "G",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Pavel Čajan",
+    "position": "G",
+    "role": "G",
+    "club": "HC Verva Litvínov"
+  },
+  {
+    "name": "Adam Brízgala",
+    "position": "G",
+    "role": "G",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Marek Langhamer",
+    "position": "G",
+    "role": "G",
+    "club": "Malmö Redhawks"
+  },
+  {
+    "name": "Jan Bednář",
+    "position": "G",
+    "role": "G",
+    "club": "Ässät",
+    "jerseyNumber": 33
+  },
+  {
+    "name": "Dominik Pavlát",
+    "position": "G",
+    "role": "G",
+    "club": "Ilves"
+  },
+  {
+    "name": "Patrik Bartošák",
+    "position": "G",
+    "role": "G",
+    "club": "Pelicans",
+    "jerseyNumber": 11
+  },
+  {
+    "name": "Šimon Hrubec",
+    "position": "G",
+    "role": "G",
+    "club": "ZSC Lions",
+    "jerseyNumber": 30
+  },
+  {
+    "name": "Radko Gudas",
+    "position": "D",
+    "role": "RB",
+    "club": "Anaheim Ducks",
+    "jerseyNumber": 3
+  },
+  {
+    "name": "Mikuláš Hovorka",
+    "position": "D",
+    "role": "RB",
+    "club": "Florida Panthers"
+  },
+  {
+    "name": "David Jiříček",
+    "position": "D",
+    "role": "RB",
+    "club": "Minnesota Wild",
+    "jerseyNumber": 9
+  },
+  {
+    "name": "Filip Hronek",
+    "position": "D",
+    "role": "RB",
+    "club": "Vancouver Canucks",
+    "jerseyNumber": 17
+  },
+  {
+    "name": "Tomáš Hamara",
+    "position": "D",
+    "role": "LB",
+    "club": "Belleville Senators"
+  },
+  {
+    "name": "Stanislav Svozil",
+    "position": "D",
+    "role": "LB",
+    "club": "Cleveland Monsters"
+  },
+  {
+    "name": "Marek Alscher",
+    "position": "D",
+    "role": "LB",
+    "club": "Charlotte Checkers"
+  },
+  {
+    "name": "Dominik Badinka",
+    "position": "D",
+    "role": "RB",
+    "club": "Chicago Wolves"
+  },
+  {
+    "name": "David Špaček",
+    "position": "D",
+    "role": "RB",
+    "club": "Iowa Wild",
+    "jerseyNumber": 7
+  },
+  {
+    "name": "Jakub Dvořák",
+    "position": "D",
+    "role": "LB",
+    "club": "Ontario Reign"
+  },
+  {
+    "name": "Radim Šimek",
+    "position": "D",
+    "role": "LB",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Tomáš Galvas",
+    "position": "D",
+    "role": "LB",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Filip Pyrochta",
+    "position": "D",
+    "role": "LB",
+    "club": "BK Mladá Boleslav",
+    "jerseyNumber": 77
+  },
+  {
+    "name": "Jan Košťálek",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Libor Hájek",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Dynamo Pardubice",
+    "jerseyNumber": 55
+  },
+  {
+    "name": "David Moravec",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Matteo Kočí",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Filip Král",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Jan Ščotka",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Kometa Brno",
+    "jerseyNumber": 24
+  },
+  {
+    "name": "Libor Zábranský",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Tomáš Cibulka",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Jakub Galvas",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Marian Adámek",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Tomáš Kundrátek",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Oceláři Třinec",
+    "jerseyNumber": 84
+  },
+  {
+    "name": "Dominik Mašín",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Jakub Krejčík",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Sparta Praha",
+    "jerseyNumber": 36
+  },
+  {
+    "name": "Jakub Sirota",
+    "position": "D",
+    "role": "LB",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Ronald Knot",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Jakub Zbořil",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Martin Jandus",
+    "position": "D",
+    "role": "RB",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Michal Kempný",
+    "position": "D",
+    "role": "LB",
+    "club": "Brynäs IF",
+    "jerseyNumber": 6
+  },
+  {
+    "name": "Daniel Gazda",
+    "position": "D",
+    "role": "RB",
+    "club": "Ilves",
+    "jerseyNumber": 20
+  },
+  {
+    "name": "Radek Kučerík",
+    "position": "D",
+    "role": "LB",
+    "club": "Ilves"
+  },
+  {
+    "name": "Jiří Ticháček",
+    "position": "D",
+    "role": "LB",
+    "club": "Kärpät",
+    "jerseyNumber": 26
+  },
+  {
+    "name": "Michal Jordán",
+    "position": "D",
+    "role": "RB",
+    "club": "Pelicans",
+    "jerseyNumber": 47
+  },
+  {
+    "name": "Lukáš Klok",
+    "position": "D",
+    "role": "LB",
+    "club": "EHC Kloten",
+    "jerseyNumber": 15
+  },
+  {
+    "name": "David Sklenička",
+    "position": "D",
+    "role": "LB",
+    "club": "EV Zug"
+  },
+  {
+    "name": "Jan Rutta",
+    "position": "D",
+    "role": "RB",
+    "club": "Genève-Servette HC",
+    "jerseyNumber": 44
+  },
+  {
+    "name": "David Pastrňák",
+    "position": "F",
+    "role": "RW",
+    "club": "Boston Bruins",
+    "jerseyNumber": 88
+  },
+  {
+    "name": "Pavel Zacha",
+    "position": "F",
+    "role": "C",
+    "club": "Boston Bruins",
+    "jerseyNumber": 14
+  },
+  {
+    "name": "Jiří Kulich",
+    "position": "F",
+    "role": "C",
+    "club": "Buffalo Sabres"
+  },
+  {
+    "name": "Adam Klapka",
+    "position": "F",
+    "role": "RW",
+    "club": "Calgary Flames",
+    "jerseyNumber": 24
+  },
+  {
+    "name": "Martin Nečas",
+    "position": "F",
+    "role": "C",
+    "club": "Colorado Avalanche",
+    "jerseyNumber": 98
+  },
+  {
+    "name": "Radek Faksa",
+    "position": "F",
+    "role": "C",
+    "club": "Dallas Stars",
+    "jerseyNumber": 12
+  },
+  {
+    "name": "Tomáš Nosek",
+    "position": "F",
+    "role": "C/LW",
+    "club": "Florida Panthers",
+    "jerseyNumber": 92
+  },
+  {
+    "name": "Ondřej Palát",
+    "position": "F",
+    "role": "LW",
+    "club": "New York Islanders",
+    "jerseyNumber": 18
+  },
+  {
+    "name": "Jaroslav Chmelář",
+    "position": "F",
+    "role": "RW",
+    "club": "New York Rangers"
+  },
+  {
+    "name": "Filip Chytil",
+    "position": "F",
+    "role": "C",
+    "club": "Vancouver Canucks",
+    "jerseyNumber": 72
+  },
+  {
+    "name": "Tomáš Hertl",
+    "position": "F",
+    "role": "C",
+    "club": "Vegas Golden Knights",
+    "jerseyNumber": 48
+  },
+  {
+    "name": "David Kämpf",
+    "position": "F",
+    "role": "C",
+    "club": "Washington Capitals",
+    "jerseyNumber": 64
+  },
+  {
+    "name": "Jan Jeník",
+    "position": "F",
+    "role": "C",
+    "club": "Belleville Senators"
+  },
+  {
+    "name": "Eduard Šalé",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "Coachella Valley Firebirds"
+  },
+  {
+    "name": "Ivan Ivan",
+    "position": "F",
+    "role": "C/LW",
+    "club": "Colorado Eagles"
+  },
+  {
+    "name": "Jakub Rychlovský",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "Grand Rapids Griffins"
+  },
+  {
+    "name": "Ondřej Becher",
+    "position": "F",
+    "role": "C",
+    "club": "Grand Rapids Griffins"
+  },
+  {
+    "name": "Jakub Brabanec",
+    "position": "F",
+    "role": "C/LW",
+    "club": "Henderson Silver Knights"
+  },
+  {
+    "name": "Matyáš Šapovaliv",
+    "position": "F",
+    "role": "C/LW",
+    "club": "Henderson Silver Knights"
+  },
+  {
+    "name": "Matěj Blümel",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "Providence Bruins"
+  },
+  {
+    "name": "Jan Myšák",
+    "position": "F",
+    "role": "C",
+    "club": "San Diego Gulls"
+  },
+  {
+    "name": "Jakub Štancl",
+    "position": "F",
+    "role": "LW",
+    "club": "Springfield Thunderbirds"
+  },
+  {
+    "name": "Michal Kunc",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "Tucson Roadrunners"
+  },
+  {
+    "name": "Matyáš Melovský",
+    "position": "F",
+    "role": "C",
+    "club": "Utica Comets"
+  },
+  {
+    "name": "Jaromír Pérez",
+    "position": "F",
+    "role": "LW",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Jaromír Pytlík",
+    "position": "F",
+    "role": "RW",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Radan Lenc",
+    "position": "F",
+    "role": "LW",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Jáchym Kondelík",
+    "position": "F",
+    "role": "C",
+    "club": "HC Dynamo Pardubice",
+    "jerseyNumber": 22
+  },
+  {
+    "name": "Jakub Lauko",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "HC Dynamo Pardubice",
+    "jerseyNumber": 94
+  },
+  {
+    "name": "Jiří Smejkal",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Lukáš Sedlák",
+    "position": "F",
+    "role": "C",
+    "club": "HC Dynamo Pardubice",
+    "jerseyNumber": 23
+  },
+  {
+    "name": "Roman Červenka",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Dynamo Pardubice",
+    "jerseyNumber": 10
+  },
+  {
+    "name": "Jan Bambula",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Jiří Černoch",
+    "position": "F",
+    "role": "C",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Ondřej Beránek",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "HC Energie Karlovy Vary",
+    "jerseyNumber": 8
+  },
+  {
+    "name": "Petr Tomek",
+    "position": "F",
+    "role": "C/LW",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Vít Jiskra",
+    "position": "F",
+    "role": "C",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Hynek Zohorna",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Jakub Flek",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "HC Kometa Brno",
+    "jerseyNumber": 19
+  },
+  {
+    "name": "Jakub Kos",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Tomáš Zohorna",
+    "position": "F",
+    "role": "C",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "David Kaše",
+    "position": "F",
+    "role": "C",
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Ondřej Kaše",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Litvínov",
+    "jerseyNumber": 73
+  },
+  {
+    "name": "Filip Přikryl",
+    "position": "F",
+    "role": "C/LW",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Štěpán Hoch",
+    "position": "F",
+    "role": "C",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Andrej Nestrašil",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Matěj Kubiesa",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Michal Kovařčík",
+    "position": "F",
+    "role": "C",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Ondřej Kovařčík",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Oskar Flynn",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Petr Sikora",
+    "position": "F",
+    "role": "C",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Petr Fridrich",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Adam Měchura",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Matyáš Filip",
+    "position": "F",
+    "role": "C",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Ondřej Rohlík",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Filip Chlapík",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Michael Špaček",
+    "position": "F",
+    "role": "C",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Michal Řepík",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Pavel Kousal",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Roman Horák",
+    "position": "F",
+    "role": "C/LW/RW",
+    "club": "HC Sparta Praha",
+    "jerseyNumber": 27
+  },
+  {
+    "name": "Tomáš Hyka",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Jindřich Abdul",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Marek Kalus",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Aleš Jergl",
+    "position": "F",
+    "role": "RW",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Kevin Klíma",
+    "position": "F",
+    "role": "C",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Lukáš Radil",
+    "position": "F",
+    "role": "RW",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Radovan Pavlík",
+    "position": "F",
+    "role": "LW",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Jakub Konečný",
+    "position": "F",
+    "role": "C",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Marcel Marcel",
+    "position": "F",
+    "role": "RW",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "David Tomášek",
+    "position": "F",
+    "role": "C",
+    "club": "Färjestad BK",
+    "jerseyNumber": 96
+  },
+  {
+    "name": "Radim Zohorna",
+    "position": "F",
+    "role": "C",
+    "club": "Färjestad BK"
+  },
+  {
+    "name": "Lukáš Rousek",
+    "position": "F",
+    "role": "C",
+    "club": "HV71"
+  },
+  {
+    "name": "Jakub Vrána",
+    "position": "F",
+    "role": "LW",
+    "club": "Linköping HC",
+    "jerseyNumber": 90
+  },
+  {
+    "name": "Luboš Horký",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "Rögle BK"
+  },
+  {
+    "name": "Petr Kodýtek",
+    "position": "F",
+    "role": "C",
+    "club": "IFK Helsinky",
+    "jerseyNumber": 86
+  },
+  {
+    "name": "Lukáš Jašek",
+    "position": "F",
+    "role": "C/RW",
+    "club": "Ilves"
+  },
+  {
+    "name": "Matyáš Kantner",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "Kärpät"
+  },
+  {
+    "name": "Daniel Voženílek",
+    "position": "F",
+    "role": "LW/RW",
+    "club": "EV Zug",
+    "jerseyNumber": 96
+  },
+  {
+    "name": "Dominik Kubalík",
+    "position": "F",
+    "role": "LW",
+    "club": "EV Zug",
+    "jerseyNumber": 81
+  },
+  {
+    "name": "Filip Zadina",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Davos",
+    "jerseyNumber": 18
+  },
+  {
+    "name": "Matěj Stránský",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Davos",
+    "jerseyNumber": 44
+  },
+  {
+    "name": "Kristian Reichel",
+    "position": "F",
+    "role": "C",
+    "club": "Adler Mannheim",
+    "jerseyNumber": 37
+  }
 ]

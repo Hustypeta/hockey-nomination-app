@@ -17,6 +17,8 @@ model Player {
   role      String? // RW, LW, C, RB, LB (detailní pozice)
   club      String
   league    String? // NHL, AHL, …; NULL u starých řádků → dopočet v API z klubu
+  /// Číslo na dresu (repre / jednorázově přidělené z JSON); NULL u starších řádků → fallback v API
+  jerseyNumber Int?
   createdAt DateTime @default(now())
 
   @@map("players")

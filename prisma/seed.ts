@@ -19,6 +19,7 @@ async function main() {
     role: p.role,
     club: p.club,
     league: p.league,
+    jerseyNumber: p.jerseyNumber ?? null,
   }));
 
   await prisma.player.deleteMany({});

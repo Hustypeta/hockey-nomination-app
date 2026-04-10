@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import type { Player, LineupStructure } from "@/types";
-import { NationalJersey } from "@/components/NationalJersey";
+import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/LineupJerseyCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
 
 interface LineBuilderProps {
@@ -17,23 +17,27 @@ interface LineBuilderProps {
   enableDnd?: boolean;
 }
 
-function PanelSection({
-  title,
-  subtitle,
-  children,
-}: {
-  title: string;
-  subtitle?: string;
-  children: ReactNode;
-}) {
+function CzechStripeBar({ className = "" }: { className?: string }) {
+  return (
+    <span
+      className={`inline-flex h-2.5 min-w-[2.75rem] overflow-hidden rounded-sm shadow-sm ring-1 ring-white/15 ${className}`}
+      aria-hidden
+      title="Česká trikolóra"
+    >
+      <span className="w-1/3 bg-[#11457e]" />
+      <span className="w-1/3 bg-white" />
+      <span className="w-1/3 bg-[#d7141a]" />
+    </span>
+  );
+}
+
+function SectionShell({ title, kicker, children }: { title: string; kicker?: string; children: ReactNode }) {
   return (
     <section className="min-w-0 w-full">
-      <div className="mb-2.5 flex items-end justify-between gap-2 border-b border-cyan-400/15 pb-2">
-        <h3 className="font-display text-[15px] font-bold uppercase tracking-[0.12em] text-white sm:text-base">
-          {title}
-        </h3>
-        {subtitle ? (
-          <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-cyan-300/55">{subtitle}</span>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] pb-2.5">
+        <h3 className="font-display text-sm font-bold uppercase tracking-[0.2em] text-white sm:text-[15px]">{title}</h3>
+        {kicker ? (
+          <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-sky-300/50">{kicker}</span>
         ) : null}
       </div>
       {children}
@@ -105,11 +109,7 @@ export function LineBuilder({
   };
 
   const isSlotSelected = (type: string, lineIndex?: number, role?: string) =>
-    selectedSlot?.type === type &&
-    selectedSlot?.lineIndex === lineIndex &&
-    selectedSlot?.role === role;
-
-  const slotJerseyShape = (t: string) => (t === "goalie" ? "goalie" : "skater");
+    selectedSlot?.type === type && selectedSlot?.lineIndex === lineIndex && selectedSlot?.role === role;
 
   const toggleAssistant = (playerId: string) => {
     if (captainId === playerId) return;
@@ -125,10 +125,6 @@ export function LineBuilder({
     onLineupChange({ ...lineup, assistantIds: [...aids, playerId] });
   };
 
-  /**
-   * NHL-style slot: label v toku dokumentu, dres v buňce s min-w-0, žádné absolute C/A
-   * (absolute rozbíjelo výšku řádků a způsobovalo překrývání).
-   */
   const Slot = ({
     playerId,
     label,
@@ -136,7 +132,7 @@ export function LineBuilder({
     lineIndex,
     role,
     onClear,
-    jerseySize = "md",
+    jerseySize = "skater" as LineupJerseySize,
     dndId,
   }: {
     playerId: string | null;
@@ -145,7 +141,7 @@ export function LineBuilder({
     lineIndex?: number;
     role?: string;
     onClear?: () => void;
-    jerseySize?: "sm" | "md" | "lg" | "xl";
+    jerseySize?: LineupJerseySize;
     dndId?: string;
   }) => {
     const player = getPlayer(playerId);
@@ -156,16 +152,10 @@ export function LineBuilder({
       <div
         onClick={() => onSelectSlot(selected ? null : { type, lineIndex, role })}
         className={`
-          flex w-full min-w-0 flex-col items-center gap-1.5 rounded-xl px-0.5 py-2 transition-all duration-200
-          ${
-            selected
-              ? "bg-cyan-500/10 shadow-[0_0_0_2px_rgba(34,211,238,0.45),0_8px_28px_rgba(0,180,255,0.12)]"
-              : "bg-transparent hover:bg-white/[0.04] hover:shadow-[0_0_20px_rgba(34,211,238,0.08)]"
-          }
+          group/slot flex w-full min-w-0 cursor-pointer flex-col items-center gap-2 rounded-xl px-0.5 py-2 transition-colors duration-200
+          ${selected ? "bg-sky-500/[0.08]" : "hover:bg-white/[0.03]"}
         `}
       >
-        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200/75">{label}</span>
-
         <div className="relative flex w-full min-w-0 justify-center">
           {player && onClear && (
             <button
@@ -174,37 +164,21 @@ export function LineBuilder({
                 e.stopPropagation();
                 onClear();
               }}
-              className="absolute -right-0.5 -top-1 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-900 text-sm font-bold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100"
+              className="absolute -right-0.5 -top-0.5 z-40 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-950 text-sm font-bold text-white opacity-0 shadow-lg transition-opacity group-hover/slot:opacity-100 group-focus-within/slot:opacity-100"
               aria-label="Odebrat hráče"
             >
               ×
             </button>
           )}
-          <div
-            className={`
-              w-full max-w-[min(100%,6.75rem)] transition-transform duration-200 ease-out
-              hover:scale-[1.04] hover:drop-shadow-[0_0_14px_rgba(34,211,238,0.35)]
-              sm:max-w-[min(100%,7.75rem)] lg:max-w-[min(100%,8.25rem)]
-            `}
-          >
-            {player ? (
-              <NationalJersey
-                player={player}
-                size={jerseySize}
-                jerseyShape={slotJerseyShape(type)}
-                isCaptain={captainId === player.id}
-                isAssistant={isAsst}
-                isSelected={selected}
-              />
-            ) : (
-              <NationalJersey
-                size={jerseySize}
-                placeholderLabel={label}
-                jerseyShape={slotJerseyShape(type)}
-                isSelected={selected}
-              />
-            )}
-          </div>
+          <LineupJerseyCard
+            key={playerId ?? `empty-${dndId ?? label}`}
+            player={player}
+            positionLabel={label}
+            size={jerseySize}
+            isCaptain={player ? captainId === player.id : false}
+            isAssistant={isAsst}
+            isSelected={selected}
+          />
         </div>
 
         {player ? (
@@ -247,8 +221,8 @@ export function LineBuilder({
                   captainId === player.id
                     ? "cursor-not-allowed border-white/5 text-white/25 opacity-40"
                     : isAsst
-                      ? "border-cyan-500/45 bg-gradient-to-b from-[#003087]/95 to-[#001a52] text-white"
-                      : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-cyan-400/35 hover:text-white"
+                      ? "border-sky-500/45 bg-gradient-to-b from-[#003087]/95 to-[#001a52] text-white"
+                      : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-sky-400/35 hover:text-white"
                 }
               `}
             >
@@ -261,13 +235,14 @@ export function LineBuilder({
       </div>
     );
 
-    const wrapped = enableDnd && dndId ? (
-      <DroppableSlotWrap id={dndId} className="min-w-0 w-full">
-        {inner}
-      </DroppableSlotWrap>
-    ) : (
-      inner
-    );
+    const wrapped =
+      enableDnd && dndId ? (
+        <DroppableSlotWrap id={dndId} className="min-w-0 w-full">
+          {inner}
+        </DroppableSlotWrap>
+      ) : (
+        inner
+      );
 
     return <div className="group min-w-0 w-full">{wrapped}</div>;
   };
@@ -275,23 +250,25 @@ export function LineBuilder({
   const lineBlock = (i: number) => {
     const line = lineup.forwardLines[i];
     const pair = lineup.defensePairs[i];
+    const n = i + 1;
     return (
       <article
         key={i}
-        className="min-w-0 w-full space-y-3 rounded-xl border border-white/[0.08] bg-gradient-to-b from-[#121a28]/90 to-[#0a0e14]/95 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-4"
+        className="min-w-0 w-full space-y-4 rounded-xl border border-white/[0.07] bg-gradient-to-b from-[#0a0f18]/95 to-[#05080d]/98 px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-4"
       >
-        <div className="flex items-center justify-between gap-2">
-          <span className="font-display text-lg font-bold tracking-wide text-white sm:text-xl">{i + 1}. lajna</span>
-          <span className="rounded border border-cyan-400/25 bg-cyan-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-cyan-200/90">
-            Line {i + 1}
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-between">
+          <div className="flex items-center gap-2.5">
+            <CzechStripeBar />
+            <span className="font-display text-lg font-bold tracking-[0.06em] text-white sm:text-xl">
+              {n}. LAJNA
+            </span>
+          </div>
+          <span className="rounded border border-white/10 bg-white/[0.04] px-2 py-0.5 font-display text-[9px] font-bold uppercase tracking-[0.18em] text-white/45">
+            Line {n}
           </span>
         </div>
 
-        {/* LW – C – RW: pevná 3× mřížka, minmax(0,1fr) */}
-        <div
-          className="grid w-full gap-x-2 gap-y-1 sm:gap-x-3"
-          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
-        >
+        <div className="mx-auto grid w-full max-w-md grid-cols-1 gap-x-2 gap-y-4 sm:max-w-none sm:grid-cols-3 sm:gap-y-1 sm:gap-x-4">
           <Slot
             playerId={line.lw}
             label="LW"
@@ -299,7 +276,7 @@ export function LineBuilder({
             lineIndex={i}
             role="lw"
             dndId={`slot-fwd-${i}-lw`}
-            jerseySize="md"
+            jerseySize="skater"
             onClear={
               line.lw
                 ? () => {
@@ -316,7 +293,7 @@ export function LineBuilder({
             lineIndex={i}
             role="c"
             dndId={`slot-fwd-${i}-c`}
-            jerseySize="md"
+            jerseySize="skater"
             onClear={
               line.c
                 ? () => {
@@ -333,7 +310,7 @@ export function LineBuilder({
             lineIndex={i}
             role="rw"
             dndId={`slot-fwd-${i}-rw`}
-            jerseySize="md"
+            jerseySize="skater"
             onClear={
               line.rw
                 ? () => {
@@ -345,22 +322,19 @@ export function LineBuilder({
           />
         </div>
 
-        <div className="border-t border-white/[0.06] pt-3">
-          <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-white/35">
+        <div className="border-t border-white/[0.06] pt-4">
+          <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40">
             Obranný pár
           </p>
-          <div
-            className="grid w-full gap-x-3 sm:gap-x-6"
-            style={{ gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)" }}
-          >
+          <div className="mx-auto grid w-full max-w-sm grid-cols-1 gap-x-4 gap-y-4 sm:max-w-md sm:grid-cols-2">
             <Slot
               playerId={pair.lb}
-              label="LB"
+              label="LD"
               type="defense"
               lineIndex={i}
               role="lb"
               dndId={`slot-def-${i}-lb`}
-              jerseySize="md"
+              jerseySize="skater"
               onClear={
                 pair.lb
                   ? () => {
@@ -372,12 +346,12 @@ export function LineBuilder({
             />
             <Slot
               playerId={pair.rb}
-              label="RB"
+              label="RD"
               type="defense"
               lineIndex={i}
               role="rb"
               dndId={`slot-def-${i}-rb`}
-              jerseySize="md"
+              jerseySize="skater"
               onClear={
                 pair.rb
                   ? () => {
@@ -394,22 +368,9 @@ export function LineBuilder({
   };
 
   return (
-    <div
-      className={`
-        min-w-0 w-full space-y-6 rounded-xl border border-cyan-500/10 bg-[#0a0e14]/95 p-3
-        shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_16px_48px_rgba(0,0,0,0.4)] sm:space-y-7 sm:p-4
-      `}
-    >
-      <div
-        className="mx-auto h-0.5 w-[min(100%,14rem)] rounded-full bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent opacity-90"
-        aria-hidden
-      />
-
-      <PanelSection title="Brankáři" subtitle="3 × G">
-        <div
-          className="grid w-full gap-2 sm:gap-3"
-          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
-        >
+    <div className="min-w-0 w-full space-y-8 sm:space-y-9">
+      <SectionShell title="Brankáři" kicker="3 × G">
+        <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {lineup.goalies.map((gid, i) => (
             <Slot
               key={i}
@@ -417,7 +378,7 @@ export function LineBuilder({
               label={`G${i + 1}`}
               type="goalie"
               lineIndex={i}
-              jerseySize="md"
+              jerseySize="goalie"
               dndId={`slot-goalie-${i}`}
               onClear={
                 gid
@@ -430,50 +391,59 @@ export function LineBuilder({
             />
           ))}
         </div>
-      </PanelSection>
+      </SectionShell>
 
-      <PanelSection title="Lajny" subtitle="4 × (LW · C · RW) + pár">
-        <div className="flex min-w-0 w-full flex-col gap-4 sm:gap-5">
+      <SectionShell title="Lajny" kicker="4 × (LW · C · RW) + LD · RD">
+        <div className="flex min-w-0 w-full flex-col gap-6 sm:gap-7">
           {[0, 1, 2, 3].map((i) => lineBlock(i))}
         </div>
-      </PanelSection>
+      </SectionShell>
 
-      <PanelSection title="Náhradníci" subtitle="Extra F">
-        <p className="mb-3 text-center text-[11px] leading-snug text-white/40">
-          Dva útočníci mimo základní sestavu
-        </p>
-        <div
-          className="mx-auto grid w-full max-w-md gap-3 sm:gap-4"
-          style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}
-        >
-          {[0, 1].map((i) => {
-            const pid = lineup.extraForwards[i] ?? null;
-            return (
-              <Slot
-                key={i}
-                playerId={pid}
-                label={`EX${i + 1}`}
-                type="extraForward"
-                lineIndex={i}
-                dndId={`slot-xf-${i as 0 | 1}`}
-                jerseySize="md"
-                onClear={
-                  pid
-                    ? () => {
-                        removeExtraForwardByIndex(i);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            );
-          })}
+      <SectionShell title="Náhradníci" kicker="Extra">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
+          <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
+            <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+              Útočníci
+            </p>
+            <div className="grid w-full grid-cols-2 gap-3">
+              {[0, 1].map((i) => {
+                const pid = lineup.extraForwards[i] ?? null;
+                return (
+                  <Slot
+                    key={i}
+                    playerId={pid}
+                    label={`EX${i + 1}`}
+                    type="extraForward"
+                    lineIndex={i}
+                    dndId={`slot-xf-${i as 0 | 1}`}
+                    jerseySize="compact"
+                    onClear={
+                      pid
+                        ? () => {
+                            removeExtraForwardByIndex(i);
+                            onSelectSlot(null);
+                          }
+                        : undefined
+                    }
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
+            <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+              Obránci
+            </p>
+            <p className="text-center text-[11px] leading-relaxed text-white/38">
+              V nominaci je 8 obránců ve čtyřech párech výše — náhradní „scratch“ sloty platí pro útočníky.
+            </p>
+          </div>
         </div>
-      </PanelSection>
+      </SectionShell>
 
-      <p className="border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/35">
-        Klikni na slot · přidej zleva nebo přetáhni · <span className="text-cyan-300/80">C?</span> kapitán ·{" "}
-        <span className="text-cyan-400/70">A?</span> asistent
+      <p className="border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/32">
+        Klikni na slot · přidej zleva nebo přetáhni · <span className="text-sky-300/75">C?</span> kapitán ·{" "}
+        <span className="text-sky-400/70">A?</span> asistent
       </p>
     </div>
   );

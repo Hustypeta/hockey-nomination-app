@@ -325,19 +325,20 @@ export function NominationBuilderPage() {
 
             <section className="min-w-0">
               <div className="lg:sticky lg:top-[8.5rem] lg:max-h-[calc(100vh-9.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-1 lg:self-start">
-                <div className="rounded-2xl border border-white/[0.09] bg-[#080c14]/40 p-5 shadow-[0_0_0_1px_rgba(200,16,46,0.08),0_28px_80px_rgba(0,0,0,0.4)] backdrop-blur-md sm:p-6">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#003087]/90">
-                    Lineup
+                <div className="lineup-board rounded-2xl p-5 backdrop-blur-md sm:p-6">
+                  <div className="lineup-board-accent mb-5" aria-hidden />
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-300/80">
+                    Lineup builder
                   </p>
                   <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
                     Moje sestava
                   </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-white/50">
+                  <p className="mt-2 text-sm leading-relaxed text-white/45">
                     {selectedSlot
                       ? "Vybraný slot — vlevo se zúží pozice, nebo přetáhni hráče přímo sem."
                       : "Klikni na slot pro cílený výběr, nebo doplň hráče z poolu vlevo."}
                   </p>
-                  <div className="mt-6">
+                  <div className="mt-7">
                   <LineBuilder
                     lineup={lineup}
                     players={players}

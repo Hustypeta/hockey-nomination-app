@@ -3,12 +3,15 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import type { Player } from "@/types";
 import { leagueForClub } from "./clubLeague";
+import { parseStoredJerseyNumber } from "./jerseyNumber";
 
 type JsonRow = {
   name: string;
   position: string;
   role: string;
   club: string;
+  /** Repre / jednorázově přidělené (viz `scripts/assign-jersey-numbers.mjs`). */
+  jerseyNumber?: number | string;
 };
 
 /** Stabilní ID napříč seedem / API / uloženými nominacemi (bez náhodného cuid). */
@@ -28,6 +31,7 @@ function rowToPlayer(p: JsonRow): Player {
   const roleNorm =
     p.role?.trim() || (pos === "G" ? "G" : null);
   const idKey = p.role?.trim() || p.position;
+  const jerseyNumber = parseStoredJerseyNumber(p.jerseyNumber);
   return {
     id: stableCandidatePlayerId(p.name, p.club, idKey),
     name: p.name.trim(),
@@ -35,6 +39,7 @@ function rowToPlayer(p: JsonRow): Player {
     role: pos === "G" ? "G" : roleNorm,
     club: p.club.trim(),
     league: leagueForClub(p.club),
+    ...(jerseyNumber != null ? { jerseyNumber } : {}),
   };
 }
 
