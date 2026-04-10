@@ -228,9 +228,12 @@ export function LandingContent() {
                     <Trophy className="h-5 w-5" aria-hidden />
                   </div>
                   <p className="text-sm leading-relaxed text-white/80">
-                    Můžeš <strong className="text-white">hrát o zajímavé ceny</strong> — vstup do soutěže{" "}
-                    <strong className="text-white">50&nbsp;Kč</strong>, výsledky se budou porovnávat s{" "}
-                    <strong className="text-white">oficiální soupiskou ČR k prvnímu zápasu</strong> na šampionátu.
+                    <strong className="text-white">50&nbsp;Kč</strong> vstup, srovnání s oficiální soupiskou a zápisem k{" "}
+                    <strong className="text-white">1. zápasu ČR</strong>.{" "}
+                    <strong className="text-white">Žebříček</strong> zveřejníme online; u{" "}
+                    <strong className="text-white">nejlepší trojky</strong> okomentuju sestavu (text nebo video).{" "}
+                    <strong className="text-white">Vítěz</strong> bere <strong className="text-white">hokejový dres</strong>
+                    , druhý a třetí menší ceny.
                   </p>
                   <Link
                     href="#pravidla-souteze"
@@ -257,10 +260,10 @@ export function LandingContent() {
                 Bez účtu můžeš sestavit a sdílet odkaz. S Google účtem si nominaci uložíš a stáhneš plakát.
               </p>
               <a
-                href="#pravidla"
+                href="#pravidla-souteze"
                 className="text-sm font-medium text-cyan-300/90 underline-offset-4 transition hover:text-cyan-200 hover:underline"
               >
-                Jak to funguje? Podívej se na pravidla
+                Pravidla soutěže
               </a>
             </div>
           </div>
@@ -328,40 +331,37 @@ export function LandingContent() {
                   </p>
                 </div>
               </li>
+              <li className="flex gap-3 rounded-xl border border-amber-500/20 bg-amber-500/[0.06] px-4 py-3">
+                <span className="font-bold text-amber-200">•</span>
+                <div>
+                  <strong className="text-white">Ceny</strong>
+                  <ul className="mt-2 list-inside list-disc space-y-1.5 text-white/75">
+                    <li>
+                      <strong className="text-white/90">Žebříček</strong> všech platných nominací{" "}
+                      <strong className="text-white">zveřejníme na webu</strong> po vyhodnocení.
+                    </li>
+                    <li>
+                      U <strong className="text-white">1.–3. místa</strong> bude k nominaci{" "}
+                      <strong className="text-white">komentář</strong> (písemně na stránce) nebo{" "}
+                      <strong className="text-white">krátké video</strong> — podle domluvy a času.
+                    </li>
+                    <li>
+                      <strong className="text-white/90">1. místo:</strong> <strong className="text-white">hokejový dres</strong>{" "}
+                      (typ / velikost / klub upřesníme s výhercem).
+                    </li>
+                    <li>
+                      <strong className="text-white/90">2. a 3. místo:</strong>{" "}
+                      <strong className="text-white">menší ceny</strong> (např. suvenýr nebo doplňky kolem hokeje — konkrétní
+                      položky doplníme před startem soutěže).
+                    </li>
+                  </ul>
+                </div>
+              </li>
             </ul>
             <p className="mt-6 text-center text-xs text-white/40">
-              Ceny a přesné termíny vyhlásíme před startem soutěže. Sestavovač můžeš používat i bez vstupu do soutěže.
+              Přesný termín uzávěrky a start plateb upřesníme před ostrým startem. Sestavovač můžeš používat i bez vstupu
+              do soutěže.
             </p>
-          </div>
-        </section>
-
-        {/* ——— PRAVIDLA NOMINACE ——— */}
-        <section id="pravidla" className="scroll-mt-24 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
-          <h2 className="text-center font-display text-2xl font-bold uppercase tracking-wide text-white sm:text-3xl">
-            Pravidla nominace
-          </h2>
-          <ul className="mt-8 space-y-4 text-sm leading-relaxed text-white/70">
-            <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
-              <span className="font-bold text-sky-300">•</span>
-              Celkem přesně <strong className="text-white">25 hráčů</strong>: 3 brankáři, 7 obránců, 15 útočníků.
-            </li>
-            <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
-              <span className="font-bold text-sky-300">•</span>
-              Čtyři útoky a <strong className="text-white">tři obranné páry</strong> (4. lajna už bek nemá); sedmý bek a
-              tři útočníci jsou v náhradnících.
-            </li>
-            <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
-              <span className="font-bold text-sky-300">•</span>
-              Zvol <strong className="text-white">kapitána</strong> a až dva asistenty přímo u dresů ve sestavě.
-            </li>
-          </ul>
-          <div className="mt-10 text-center">
-            <Link
-              href="/sestava"
-              className="inline-flex min-h-[3rem] items-center justify-center rounded-2xl border-2 border-[#c8102e] bg-transparent px-10 py-3 font-display text-lg font-bold uppercase tracking-wide text-white transition hover:bg-[#c8102e] hover:shadow-[0_8px_32px_rgba(200,16,46,0.35)]"
-            >
-              Jít sestavit nominaci
-            </Link>
           </div>
         </section>
       </main>
