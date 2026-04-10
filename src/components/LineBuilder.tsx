@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 import type { Player, LineupStructure } from "@/types";
 import { NationalJersey } from "@/components/NationalJersey";
@@ -15,23 +14,30 @@ interface LineBuilderProps {
   onCaptainChange: (playerId: string | null) => void;
   selectedSlot: { type: string; lineIndex?: number; role?: string } | null;
   onSelectSlot: (slot: { type: string; lineIndex?: number; role?: string } | null) => void;
-  /** Zóny pro přetahování hráčů z poolu (@dnd-kit). */
   enableDnd?: boolean;
 }
 
-function SectionTitle({ children }: { children: ReactNode }) {
+function PanelSection({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  children: ReactNode;
+}) {
   return (
-    <h3 className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
-      <span
-        className="h-px w-12 shrink-0 bg-gradient-to-r from-[#c8102e] via-white/35 to-transparent"
-        aria-hidden
-      />
-      <span className="shrink-0 text-white/70">{children}</span>
-      <span
-        className="h-px min-w-[2rem] flex-1 bg-gradient-to-l from-[#003087]/90 via-white/18 to-transparent"
-        aria-hidden
-      />
-    </h3>
+    <section className="min-w-0 w-full">
+      <div className="mb-2.5 flex items-end justify-between gap-2 border-b border-cyan-400/15 pb-2">
+        <h3 className="font-display text-[15px] font-bold uppercase tracking-[0.12em] text-white sm:text-base">
+          {title}
+        </h3>
+        {subtitle ? (
+          <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-cyan-300/55">{subtitle}</span>
+        ) : null}
+      </div>
+      {children}
+    </section>
   );
 }
 
@@ -119,6 +125,10 @@ export function LineBuilder({
     onLineupChange({ ...lineup, assistantIds: [...aids, playerId] });
   };
 
+  /**
+   * NHL-style slot: label v toku dokumentu, dres v buňce s min-w-0, žádné absolute C/A
+   * (absolute rozbíjelo výšku řádků a způsobovalo překrývání).
+   */
   const Slot = ({
     playerId,
     label,
@@ -146,55 +156,59 @@ export function LineBuilder({
       <div
         onClick={() => onSelectSlot(selected ? null : { type, lineIndex, role })}
         className={`
-          group relative cursor-pointer rounded-2xl p-2 transition-all duration-300 ease-out
-          ${player ? (jerseySize === "xl" ? "pb-16" : "pb-14") : "pb-2"}
+          flex w-full min-w-0 flex-col items-center gap-1.5 rounded-xl px-0.5 py-2 transition-all duration-200
           ${
             selected
-              ? "bg-[#003087]/15 ring-2 ring-[#003087]/70 shadow-[0_0_40px_rgba(0,48,135,0.25)] ring-offset-2 ring-offset-[#080c14]"
-              : "ring-1 ring-transparent hover:bg-white/[0.03] hover:ring-white/[0.1]"
+              ? "bg-cyan-500/10 shadow-[0_0_0_2px_rgba(34,211,238,0.45),0_8px_28px_rgba(0,180,255,0.12)]"
+              : "bg-transparent hover:bg-white/[0.04] hover:shadow-[0_0_20px_rgba(34,211,238,0.08)]"
           }
         `}
       >
-        {player && onClear && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClear();
-            }}
-            className="absolute -right-1 -top-1 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#7a0819] text-base font-bold text-white opacity-0 shadow-lg transition-all hover:scale-105 group-hover:opacity-100"
-            aria-label="Odebrat hráče"
-          >
-            ×
-          </button>
-        )}
-        <motion.div
-          key={playerId ?? `empty-${type}-${lineIndex ?? 0}-${role ?? ""}`}
-          initial={playerId ? { scale: 0.88, opacity: 0.65 } : false}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 420, damping: 26 }}
-          className="flex origin-bottom justify-center scale-100 sm:scale-[1.04] xl:scale-[1.06]"
-        >
-          {player ? (
-            <NationalJersey
-              player={player}
-              size={jerseySize}
-              jerseyShape={slotJerseyShape(type)}
-              isCaptain={captainId === player.id}
-              isAssistant={isAsst}
-              isSelected={selected}
-            />
-          ) : (
-            <NationalJersey
-              size={jerseySize}
-              placeholderLabel={label}
-              jerseyShape={slotJerseyShape(type)}
-              isSelected={selected}
-            />
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200/75">{label}</span>
+
+        <div className="relative flex w-full min-w-0 justify-center">
+          {player && onClear && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClear();
+              }}
+              className="absolute -right-0.5 -top-1 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-900 text-sm font-bold text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100"
+              aria-label="Odebrat hráče"
+            >
+              ×
+            </button>
           )}
-        </motion.div>
-        {player && (
-          <div className="absolute bottom-1 left-1/2 z-20 flex -translate-x-1/2 gap-1">
+          <div
+            className={`
+              w-full max-w-[min(100%,6.75rem)] transition-transform duration-200 ease-out
+              hover:scale-[1.04] hover:drop-shadow-[0_0_14px_rgba(34,211,238,0.35)]
+              sm:max-w-[min(100%,7.75rem)] lg:max-w-[min(100%,8.25rem)]
+            `}
+          >
+            {player ? (
+              <NationalJersey
+                player={player}
+                size={jerseySize}
+                jerseyShape={slotJerseyShape(type)}
+                isCaptain={captainId === player.id}
+                isAssistant={isAsst}
+                isSelected={selected}
+              />
+            ) : (
+              <NationalJersey
+                size={jerseySize}
+                placeholderLabel={label}
+                jerseyShape={slotJerseyShape(type)}
+                isSelected={selected}
+              />
+            )}
+          </div>
+        </div>
+
+        {player ? (
+          <div className="flex shrink-0 flex-wrap justify-center gap-1">
             <button
               type="button"
               onClick={(e) => {
@@ -210,12 +224,11 @@ export function LineBuilder({
                 }
               }}
               className={`
-                rounded-lg border font-semibold uppercase tracking-wider shadow-md transition-all
-                ${jerseySize === "xl" ? "px-2.5 py-1 text-[11px]" : "px-2 py-0.5 text-[10px]"}
+                rounded-md border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide
                 ${
                   captainId === player.id
-                    ? "border-[#c8102e]/50 bg-gradient-to-b from-[#c8102e]/90 to-[#8a0b22] text-white"
-                    : "border-white/15 bg-[#0a0e17]/95 text-white/65 hover:border-white/30 hover:text-white"
+                    ? "border-red-500/50 bg-gradient-to-b from-red-600/90 to-red-900/90 text-white"
+                    : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-white/30 hover:text-white"
                 }
               `}
             >
@@ -229,242 +242,238 @@ export function LineBuilder({
                 toggleAssistant(player.id);
               }}
               className={`
-                rounded-lg border font-semibold uppercase tracking-wider shadow-md transition-all
-                ${jerseySize === "xl" ? "px-2.5 py-1 text-[11px]" : "px-2 py-0.5 text-[10px]"}
+                rounded-md border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide
                 ${
                   captainId === player.id
                     ? "cursor-not-allowed border-white/5 text-white/25 opacity-40"
                     : isAsst
-                      ? "border-[#003087]/50 bg-gradient-to-b from-[#003087]/90 to-[#001a52] text-white"
-                      : "border-white/15 bg-[#0a0e17]/95 text-white/65 hover:border-[#003087]/40 hover:text-white"
+                      ? "border-cyan-500/45 bg-gradient-to-b from-[#003087]/95 to-[#001a52] text-white"
+                      : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-cyan-400/35 hover:text-white"
                 }
               `}
             >
               {isAsst ? "A" : "A?"}
             </button>
           </div>
+        ) : (
+          <div className="h-[22px] shrink-0" aria-hidden />
         )}
       </div>
     );
 
-    if (enableDnd && dndId) {
-      return <DroppableSlotWrap id={dndId}>{inner}</DroppableSlotWrap>;
-    }
-    return inner;
+    const wrapped = enableDnd && dndId ? (
+      <DroppableSlotWrap id={dndId} className="min-w-0 w-full">
+        {inner}
+      </DroppableSlotWrap>
+    ) : (
+      inner
+    );
+
+    return <div className="group min-w-0 w-full">{wrapped}</div>;
   };
 
   const lineBlock = (i: number) => {
     const line = lineup.forwardLines[i];
     const pair = lineup.defensePairs[i];
     return (
-      <div
+      <article
         key={i}
-        className="flex min-w-0 max-w-full flex-col gap-5 rounded-2xl border border-white/[0.1] bg-gradient-to-b from-white/[0.07] to-[#0a0e17]/40 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur-md"
+        className="min-w-0 w-full space-y-3 rounded-xl border border-white/[0.08] bg-gradient-to-b from-[#121a28]/90 to-[#0a0e14]/95 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-4"
       >
-        <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-3">
-          <span className="text-sm font-semibold tracking-tight text-white">{i + 1}. lajna</span>
-          <span className="rounded-full border border-[#003087]/35 bg-[#003087]/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sky-200/90">
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-display text-lg font-bold tracking-wide text-white sm:text-xl">{i + 1}. lajna</span>
+          <span className="rounded border border-cyan-400/25 bg-cyan-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-cyan-200/90">
             Line {i + 1}
           </span>
         </div>
 
-        <div>
-          <p className="mb-2 flex justify-between px-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
-            <span>LW</span>
-            <span>Center</span>
-            <span>RW</span>
-          </p>
-          <div className="grid w-full min-w-0 grid-cols-3 items-end gap-1">
-            <div className="flex min-w-0 justify-start">
-              <Slot
-                playerId={line.lw}
-                label="LW"
-                type="forward"
-                lineIndex={i}
-                role="lw"
-                dndId={`slot-fwd-${i}-lw`}
-                jerseySize="xl"
-                onClear={
-                  line.lw
-                    ? () => {
-                        setForwardLine(i, "lw", null);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-            <div className="flex min-w-0 justify-center">
-              <Slot
-                playerId={line.c}
-                label="C"
-                type="forward"
-                lineIndex={i}
-                role="c"
-                dndId={`slot-fwd-${i}-c`}
-                jerseySize="xl"
-                onClear={
-                  line.c
-                    ? () => {
-                        setForwardLine(i, "c", null);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-            <div className="flex min-w-0 justify-end">
-              <Slot
-                playerId={line.rw}
-                label="RW"
-                type="forward"
-                lineIndex={i}
-                role="rw"
-                dndId={`slot-fwd-${i}-rw`}
-                jerseySize="xl"
-                onClear={
-                  line.rw
-                    ? () => {
-                        setForwardLine(i, "rw", null);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-          </div>
+        {/* LW – C – RW: pevná 3× mřížka, minmax(0,1fr) */}
+        <div
+          className="grid w-full gap-x-2 gap-y-1 sm:gap-x-3"
+          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
+        >
+          <Slot
+            playerId={line.lw}
+            label="LW"
+            type="forward"
+            lineIndex={i}
+            role="lw"
+            dndId={`slot-fwd-${i}-lw`}
+            jerseySize="md"
+            onClear={
+              line.lw
+                ? () => {
+                    setForwardLine(i, "lw", null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />
+          <Slot
+            playerId={line.c}
+            label="C"
+            type="forward"
+            lineIndex={i}
+            role="c"
+            dndId={`slot-fwd-${i}-c`}
+            jerseySize="md"
+            onClear={
+              line.c
+                ? () => {
+                    setForwardLine(i, "c", null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />
+          <Slot
+            playerId={line.rw}
+            label="RW"
+            type="forward"
+            lineIndex={i}
+            role="rw"
+            dndId={`slot-fwd-${i}-rw`}
+            jerseySize="md"
+            onClear={
+              line.rw
+                ? () => {
+                    setForwardLine(i, "rw", null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />
         </div>
 
-        <div>
-          <p className="mb-2 flex justify-between px-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
-            <span>LB</span>
-            <span className="text-white/15">·</span>
-            <span>RB</span>
+        <div className="border-t border-white/[0.06] pt-3">
+          <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-white/35">
+            Obranný pár
           </p>
-          <div className="grid w-full min-w-0 grid-cols-3 items-end gap-1">
-            <div className="flex min-w-0 justify-start">
-              <Slot
-                playerId={pair.lb}
-                label="LB"
-                type="defense"
-                lineIndex={i}
-                role="lb"
-                dndId={`slot-def-${i}-lb`}
-                jerseySize="xl"
-                onClear={
-                  pair.lb
-                    ? () => {
-                        setDefensePair(i, "lb", null);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-            <div className="flex min-h-[3rem] items-end justify-center pb-6 text-xs font-light text-white/20">
-              {pair.lb && pair.rb ? "—" : ""}
-            </div>
-            <div className="flex min-w-0 justify-end">
-              <Slot
-                playerId={pair.rb}
-                label="RB"
-                type="defense"
-                lineIndex={i}
-                role="rb"
-                dndId={`slot-def-${i}-rb`}
-                jerseySize="xl"
-                onClear={
-                  pair.rb
-                    ? () => {
-                        setDefensePair(i, "rb", null);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
+          <div
+            className="grid w-full gap-x-3 sm:gap-x-6"
+            style={{ gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)" }}
+          >
+            <Slot
+              playerId={pair.lb}
+              label="LB"
+              type="defense"
+              lineIndex={i}
+              role="lb"
+              dndId={`slot-def-${i}-lb`}
+              jerseySize="md"
+              onClear={
+                pair.lb
+                  ? () => {
+                      setDefensePair(i, "lb", null);
+                      onSelectSlot(null);
+                    }
+                  : undefined
+              }
+            />
+            <Slot
+              playerId={pair.rb}
+              label="RB"
+              type="defense"
+              lineIndex={i}
+              role="rb"
+              dndId={`slot-def-${i}-rb`}
+              jerseySize="md"
+              onClear={
+                pair.rb
+                  ? () => {
+                      setDefensePair(i, "rb", null);
+                      onSelectSlot(null);
+                    }
+                  : undefined
+              }
+            />
           </div>
         </div>
-      </div>
+      </article>
     );
   };
 
   return (
-    <div className="lineup-board relative overflow-x-hidden rounded-2xl p-5 sm:p-8">
-      <div className="lineup-board-accent mx-auto mb-6 w-[min(100%,24rem)]" />
+    <div
+      className={`
+        min-w-0 w-full space-y-6 rounded-xl border border-cyan-500/10 bg-[#0a0e14]/95 p-3
+        shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_16px_48px_rgba(0,0,0,0.4)] sm:space-y-7 sm:p-4
+      `}
+    >
+      <div
+        className="mx-auto h-0.5 w-[min(100%,14rem)] rounded-full bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent opacity-90"
+        aria-hidden
+      />
 
-      <section className="mb-10">
-        <SectionTitle>Brankáři</SectionTitle>
-        <div className="flex flex-wrap items-center justify-center gap-8 sm:justify-between sm:gap-10">
-          <div className="flex justify-center gap-6 sm:gap-8">
-            {lineup.goalies.map((gid, i) => (
-              <div key={i} className="relative">
-                <Slot
-                  playerId={gid}
-                  label={`G${i + 1}`}
-                  type="goalie"
-                  lineIndex={i}
-                  jerseySize="lg"
-                  dndId={`slot-goalie-${i}`}
-                  onClear={
-                    gid
-                      ? () => {
-                          setGoalie(i, null);
-                          onSelectSlot(null);
-                        }
-                      : undefined
-                  }
-                />
-              </div>
-            ))}
-          </div>
-          <div
-            className="hidden h-16 w-16 shrink-0 flex-col items-center justify-center rounded-2xl border border-[#003087]/40 bg-gradient-to-br from-[#003087]/30 to-[#05080f] shadow-[0_0_28px_rgba(0,48,135,0.35)] sm:flex"
-            aria-hidden
-          >
-            <span className="font-display text-[10px] tracking-[0.28em] text-sky-100/95">ČR</span>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <SectionTitle>Lajny</SectionTitle>
-        <div className="mx-auto grid min-w-0 max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 2xl:grid-cols-5">
-          {[0, 1, 2, 3].map((i) => lineBlock(i))}
-          <div className="flex min-h-[10rem] flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-[#c8102e]/25 bg-gradient-to-b from-[#c8102e]/[0.06] to-transparent px-4 py-6 sm:col-span-2 sm:min-h-0 2xl:col-span-1">
-            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#c8102e]/95">Náhradníci</span>
-            <p className="text-center text-[11px] leading-relaxed text-white/40">Dva útočníci mimo základní sestavu</p>
-            <div className="flex justify-center gap-3">
-              {[0, 1].map((i) => {
-                const pid = lineup.extraForwards[i] ?? null;
-                return (
-                  <Slot
-                    key={i}
-                    playerId={pid}
-                    label={`N${i + 1}`}
-                    type="extraForward"
-                    lineIndex={i}
-                    dndId={`slot-xf-${i as 0 | 1}`}
-                    jerseySize="lg"
-                    onClear={
-                      pid
-                        ? () => {
-                            removeExtraForwardByIndex(i);
-                            onSelectSlot(null);
-                          }
-                        : undefined
+      <PanelSection title="Brankáři" subtitle="3 × G">
+        <div
+          className="grid w-full gap-2 sm:gap-3"
+          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
+        >
+          {lineup.goalies.map((gid, i) => (
+            <Slot
+              key={i}
+              playerId={gid}
+              label={`G${i + 1}`}
+              type="goalie"
+              lineIndex={i}
+              jerseySize="md"
+              dndId={`slot-goalie-${i}`}
+              onClear={
+                gid
+                  ? () => {
+                      setGoalie(i, null);
+                      onSelectSlot(null);
                     }
-                  />
-                );
-              })}
-            </div>
-          </div>
+                  : undefined
+              }
+            />
+          ))}
         </div>
-      </section>
+      </PanelSection>
 
-      <p className="mt-8 text-center text-[11px] leading-relaxed text-white/38">
-        Klikni na slot · přidej zleva nebo přetáhni ·{" "}
-        <span className="text-[#c8102e]/90">C?</span> kapitán · <span className="text-[#003087]/90">A?</span> asistent
+      <PanelSection title="Lajny" subtitle="4 × (LW · C · RW) + pár">
+        <div className="flex min-w-0 w-full flex-col gap-4 sm:gap-5">
+          {[0, 1, 2, 3].map((i) => lineBlock(i))}
+        </div>
+      </PanelSection>
+
+      <PanelSection title="Náhradníci" subtitle="Extra F">
+        <p className="mb-3 text-center text-[11px] leading-snug text-white/40">
+          Dva útočníci mimo základní sestavu
+        </p>
+        <div
+          className="mx-auto grid w-full max-w-md gap-3 sm:gap-4"
+          style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}
+        >
+          {[0, 1].map((i) => {
+            const pid = lineup.extraForwards[i] ?? null;
+            return (
+              <Slot
+                key={i}
+                playerId={pid}
+                label={`EX${i + 1}`}
+                type="extraForward"
+                lineIndex={i}
+                dndId={`slot-xf-${i as 0 | 1}`}
+                jerseySize="md"
+                onClear={
+                  pid
+                    ? () => {
+                        removeExtraForwardByIndex(i);
+                        onSelectSlot(null);
+                      }
+                    : undefined
+                }
+              />
+            );
+          })}
+        </div>
+      </PanelSection>
+
+      <p className="border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/35">
+        Klikni na slot · přidej zleva nebo přetáhni · <span className="text-cyan-300/80">C?</span> kapitán ·{" "}
+        <span className="text-cyan-400/70">A?</span> asistent
       </p>
     </div>
   );

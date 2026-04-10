@@ -21,12 +21,13 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
+/** w-full + max-w — ve 3 sloupcích v kartě lajny se dres zmenší, nepřekrývá sousedy */
 const sizeWidths = {
-  xs: "w-[4.25rem]",
-  sm: "w-[6rem]",
-  md: "w-[8rem]",
-  lg: "w-[10.75rem]",
-  xl: "w-[12.25rem]",
+  xs: "w-full max-w-[4.25rem]",
+  sm: "w-full max-w-[6rem]",
+  md: "w-full max-w-[8rem]",
+  lg: "w-full max-w-[10.75rem]",
+  xl: "w-full max-w-[12.25rem]",
 };
 
 const crestSize = {
@@ -69,7 +70,7 @@ export function NationalJersey({
   const showAssistant = isAssistant && !empty && !isCaptain;
 
   return (
-    <div className={`relative ${w} ${className} transition-transform duration-300 ease-out`}>
+    <div className={`relative mx-auto min-w-0 ${w} ${className} transition-transform duration-300 ease-out`}>
       {isCaptain && !empty && (
         <span
           className={`absolute z-20 flex items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b22] font-display font-bold text-white shadow-[0_0_20px_rgba(200,16,46,0.65)] ring-2 ring-white/60 ${
