@@ -42,7 +42,7 @@ export interface ForwardLine {
   lw: string | null; // playerId
   c: string | null;
   rw: string | null;
-  /** Jen u 4. lajny — čtvrtý útočník v řádku (12 + 2 náhradní = 15 útočníků). */
+  /** Jen u 4. lajny — 13. útočník v rozšířené nominaci (12 v lajnách + X + 2 náhradní = 15). V UI je pod řádkem LW–C–RW. */
   x: string | null;
 }
 

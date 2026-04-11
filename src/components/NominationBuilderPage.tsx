@@ -12,7 +12,7 @@ import {
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { LineBuilder } from "@/components/LineBuilder";
-import { NominationPoster } from "@/components/NominationPoster";
+import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SiteBackground } from "@/components/site/SiteBackground";
@@ -48,7 +48,9 @@ export function NominationBuilderPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
-  const posterRef = useRef<HTMLDivElement>(null);
+  const shareCaptureRef = useRef<HTMLDivElement>(null);
+  const [sharePosterEpoch, setSharePosterEpoch] = useState(0);
+  const [siteOrigin, setSiteOrigin] = useState("");
   const wasCompleteRef = useRef(false);
 
   const sensors = useSensors(
@@ -80,6 +82,10 @@ export function NominationBuilderPage() {
       (lineup.extraForwards[0] ? 1 : 0) +
       (lineup.extraForwards[1] ? 1 : 0),
   };
+
+  useEffect(() => {
+    setSiteOrigin(typeof window !== "undefined" ? window.location.origin : "");
+  }, []);
 
   useEffect(() => {
     fetch("/api/players")
@@ -338,30 +344,31 @@ export function NominationBuilderPage() {
 
             <section className="min-w-0">
               <div className="lg:sticky lg:top-72 lg:max-h-[calc(100vh-19rem)] lg:overflow-y-auto lg:pb-2 lg:pl-1 lg:self-start">
-                <div className="lineup-board rounded-2xl p-5 backdrop-blur-md sm:p-6">
-                  <div className="lineup-board-accent mb-5" aria-hidden />
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-300/80">
+                <div className="nhl25-moje-sestava-panel rounded-2xl p-5 sm:p-6">
+                  <div className="nhl25-moje-sestava-accent mb-5" aria-hidden />
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#003087]/80">
                     Lineup builder
                   </p>
-                  <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
+                  <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
                     Moje sestava
                   </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-white/45">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     {selectedSlot
                       ? "Vybraný slot — vlevo se zúží pozice, nebo přetáhni hráče přímo sem."
                       : "Klikni na slot pro cílený výběr, nebo doplň hráče z poolu vlevo."}
                   </p>
                   <div className="mt-7">
-                  <LineBuilder
-                    lineup={lineup}
-                    players={players}
-                    captainId={captainId}
-                    onLineupChange={setLineup}
-                    onCaptainChange={setCaptainId}
-                    selectedSlot={selectedSlot}
-                    onSelectSlot={setSelectedSlot}
-                    enableDnd
-                  />
+                    <LineBuilder
+                      lineup={lineup}
+                      players={players}
+                      captainId={captainId}
+                      onLineupChange={setLineup}
+                      onCaptainChange={setCaptainId}
+                      selectedSlot={selectedSlot}
+                      onSelectSlot={setSelectedSlot}
+                      enableDnd
+                      layoutVariant="nhl25"
+                    />
                   </div>
                 </div>
               </div>
@@ -395,20 +402,26 @@ export function NominationBuilderPage() {
           shareLabel={isAuthenticated ? "Uložit a sdílet" : "Složit nominaci"}
         />
 
-        <div className="fixed -left-[9999px] top-0 w-[440px]" aria-hidden="true">
-          <NominationPoster
-            ref={posterRef}
+        <div
+          className="pointer-events-none fixed top-0 left-[-9999px] z-[-1] w-[580px]"
+          aria-hidden
+        >
+          <Nhl25SharePoster
+            key={sharePosterEpoch}
+            ref={shareCaptureRef}
             players={selectedPlayers}
-            captainId={captainId}
             lineup={lineup}
+            captainId={captainId}
             assistantIds={lineup.assistantIds ?? []}
+            siteUrl={siteOrigin}
           />
         </div>
 
         <SaveShareModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
-          posterRef={posterRef}
+          captureRef={shareCaptureRef}
+          onBeforeCapture={() => setSharePosterEpoch((e) => e + 1)}
           isAuthenticated={isAuthenticated}
           lineupStructure={lineup}
           captainId={captainId}

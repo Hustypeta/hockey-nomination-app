@@ -2,8 +2,8 @@
 
 import type { Player } from "@/types";
 import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
+import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
-import { GoalieButterflySilhouette, SkaterPortraitSilhouette } from "@/components/sestava/HockeySilhouettes";
 
 export type LineupJerseySize = "compact" | "skater" | "goalie";
 
@@ -33,13 +33,13 @@ const badgeClass: Record<LineupJerseySize, string> = {
 const crestClass: Record<LineupJerseySize, string> = {
   compact: "h-3 w-[0.65rem]",
   skater: "h-[1rem] w-[0.85rem]",
-  goalie: "h-5 w-[1rem]",
+  goalie: "h-7 w-[1.35rem]",
 };
 
-const ovrClass: Record<LineupJerseySize, string> = {
-  compact: "text-[1.1rem] sm:text-[1.2rem]",
-  skater: "text-[1.25rem] sm:text-[1.4rem]",
-  goalie: "text-[1.45rem] sm:text-[1.6rem]",
+const numberClass: Record<LineupJerseySize, string> = {
+  compact: "text-[1.35rem] sm:text-[1.5rem]",
+  skater: "text-[1.55rem] sm:text-[1.75rem]",
+  goalie: "text-[1.85rem] sm:text-[2.05rem]",
 };
 
 export interface LineupJerseyCardProps {
@@ -50,8 +50,6 @@ export interface LineupJerseyCardProps {
   isAssistant?: boolean;
   isSelected?: boolean;
   className?: string;
-  /** Export / plakát: bez SVG siluet, jen gradient (jako NHL „player bar“). */
-  portraitStyle?: "silhouette" | "gradient";
   /** Bez animací a hoveru — pro statický PNG. */
   disableMotion?: boolean;
 }
@@ -64,7 +62,6 @@ export function LineupJerseyCard({
   isAssistant = false,
   isSelected = false,
   className = "",
-  portraitStyle = "silhouette",
   disableMotion = false,
 }: LineupJerseyCardProps) {
   const empty = !player;
@@ -76,7 +73,7 @@ export function LineupJerseyCard({
   const nmCls = nameClass[size];
   const bgCls = badgeClass[size];
   const crestSz = crestClass[size];
-  const ovrCls = ovrClass[size];
+  const numCls = numberClass[size];
 
   const motionCls = disableMotion
     ? ""
@@ -122,8 +119,7 @@ export function LineupJerseyCard({
 
       <div
         className={`
-          relative overflow-hidden rounded-[10px] border border-white/[0.12]
-          bg-[#060a12]
+          relative rounded-[10px] border border-white/[0.12] bg-[#060a12] p-[5px]
           shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_32px_rgba(0,0,0,0.55)]
           ${disableMotion ? "" : "transition-[box-shadow,transform] duration-300 ease-out"}
           ${hoverInner}
@@ -131,7 +127,7 @@ export function LineupJerseyCard({
       >
         <div
           className={`
-            absolute left-1/2 top-1.5 z-20 -translate-x-1/2
+            absolute left-1/2 top-1 z-20 -translate-x-1/2
             rounded border border-[#003087]/40 bg-[#0a0508]/95 font-display font-bold uppercase tracking-[0.18em] text-white/90
             shadow-[0_0_12px_rgba(0,0,0,0.85)]
             ${bgCls}
@@ -142,91 +138,75 @@ export function LineupJerseyCard({
           {positionLabel}
         </div>
 
-        {/* Horní „portrét“ — NHL inspirace */}
-        <div
-          className={`
-            relative aspect-[4/5] w-full overflow-hidden
-            bg-gradient-to-b from-[#1a3a62]/55 via-[#0c1524] to-[#12080c]/90
-          `}
-        >
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.14]"
-            style={{
-              backgroundImage:
-                "linear-gradient(115deg, rgba(200,16,46,0.5) 0%, transparent 42%, transparent 58%, rgba(0,48,135,0.45) 100%)",
-            }}
-            aria-hidden
+        <div className="relative overflow-hidden rounded-[8px] pt-[1.05rem]">
+          <JerseySilhouetteShape
+            kind={kind}
+            empty={empty}
+            visualPreset="lineup"
+            className="relative z-0 block h-auto w-full drop-shadow-[0_6px_16px_rgba(0,0,0,0.65)]"
           />
 
           {!empty ? (
-            <CzechHockeyCrest
-              className={`
-                pointer-events-none absolute right-1 top-8 z-[8]
-                drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]
-                ${crestSz}
-              `}
-            />
-          ) : null}
-
-          {numStr ? (
-            <div
-              className={`
-                pointer-events-none absolute left-1 top-7 z-[9] font-display font-bold tabular-nums leading-none text-white
-                drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]
-                ${ovrCls}
-              `}
-            >
-              {numStr}
-            </div>
-          ) : null}
-
-          {portraitStyle === "silhouette" ? (
-            <div className="absolute inset-x-0 bottom-0 top-9 flex items-end justify-center pb-0.5">
-              {kind === "goalie" ? (
-                <GoalieButterflySilhouette
-                  muted={empty}
-                  className={`h-[92%] w-full max-w-none px-0.5 ${empty ? "opacity-50" : ""}`}
-                />
-              ) : (
-                <SkaterPortraitSilhouette
-                  muted={empty}
-                  className={`h-[94%] w-auto max-w-[min(100%,5.5rem)] ${empty ? "opacity-45" : ""}`}
-                />
-              )}
-            </div>
+            <>
+              <CzechHockeyCrest
+                className={`
+                  pointer-events-none absolute left-[10%] top-[calc(1.05rem+6%)] z-[8]
+                  drop-shadow-[0_1px_4px_rgba(0,0,0,0.9),0_0_8px_rgba(0,0,0,0.45)]
+                  ${crestSz}
+                `}
+              />
+              <div className="pointer-events-none absolute inset-0 top-[1.05rem] flex flex-col items-center justify-center px-0.5 pt-[5%]">
+                {numStr ? (
+                  <span
+                    className={`
+                      jersey-number leading-[0.92] font-display font-bold tabular-nums tracking-tight text-white
+                      drop-shadow-[0_2px_8px_rgba(0,0,0,0.95),0_0_20px_rgba(255,255,255,0.06)]
+                      ${numCls}
+                    `}
+                  >
+                    {numStr}
+                  </span>
+                ) : null}
+                <span
+                  className={`
+                    max-w-[94%] truncate text-center font-display font-semibold uppercase leading-tight text-white/95
+                    ${numStr ? "mt-0.5" : ""}
+                    ${nmCls}
+                  `}
+                  style={{ textShadow: "0 1px 4px rgba(0,0,0,0.95)" }}
+                >
+                  {lastName(player.name)}
+                </span>
+                {player.position === "F" && player.role ? (
+                  <span
+                    className={`mt-0.5 rounded border border-white/15 bg-black/45 px-1 py-px font-display font-bold uppercase tracking-wider text-white/95 ${
+                      size === "goalie" ? "text-[8px]" : "text-[7px]"
+                    }`}
+                  >
+                    {player.role}
+                  </span>
+                ) : null}
+                {player.position === "G" ? (
+                  <span
+                    className={`mt-0.5 font-display font-bold uppercase tracking-[0.12em] text-sky-200/95 ${
+                      size === "goalie" ? "text-[9px]" : "text-[8px]"
+                    }`}
+                    style={{ textShadow: "0 1px 2px rgba(0,0,0,0.85)" }}
+                  >
+                    G
+                  </span>
+                ) : null}
+              </div>
+            </>
           ) : (
             <div
-              className="pointer-events-none absolute inset-x-2 bottom-2 top-9 rounded-lg bg-gradient-to-t from-black/55 via-[#0a1528]/25 to-transparent ring-1 ring-white/[0.06]"
-              aria-hidden
-            />
-          )}
-
-          {empty ? (
-            <div
-              className="pointer-events-none absolute inset-x-2 bottom-2 rounded-md border border-dashed border-white/20 bg-black/25 py-1 text-center"
+              className="pointer-events-none absolute inset-0 top-[1.05rem] flex items-center justify-center px-1 pt-[6%]"
               aria-hidden
             >
-              <span className="font-display text-[10px] font-bold uppercase tracking-wider text-white/25">
+              <span className="font-display text-[clamp(1.1rem,4vw,1.65rem)] font-bold leading-none tracking-tight text-white/[0.12]">
                 {positionLabel}
               </span>
             </div>
-          ) : null}
-        </div>
-
-        {/* Spodní pás se jménem */}
-        <div className="border-t border-white/[0.08] bg-gradient-to-b from-[#080c14] to-[#04060a] px-1 py-1.5">
-          {!empty ? (
-            <p
-              className={`
-                truncate text-center font-display font-bold uppercase leading-tight tracking-wide text-white/92
-                ${nmCls}
-              `}
-              style={{ textShadow: "0 1px 3px rgba(0,0,0,0.95)" }}
-            >
-              {lastName(player.name)}
-            </p>
-          ) : (
-            <p className={`text-center font-display font-semibold uppercase text-white/22 ${nmCls}`}>—</p>
           )}
         </div>
       </div>

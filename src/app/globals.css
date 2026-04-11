@@ -88,6 +88,59 @@ body {
   box-shadow: 0 0 20px rgba(200, 16, 46, 0.25);
 }
 
+/* NHL 25 — světlý panel „Moje sestava“ */
+.nhl25-moje-sestava-panel {
+  background:
+    radial-gradient(ellipse 110% 100% at 50% -25%, rgba(91, 143, 212, 0.14), transparent 52%),
+    linear-gradient(180deg, #ffffff 0%, #f4f6f9 38%, #e8ecf2 100%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 56px rgba(15, 23, 42, 0.1);
+}
+
+.nhl25-moje-sestava-accent {
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 48, 135, 0.35) 20%,
+    rgba(200, 16, 46, 0.75) 50%,
+    rgba(0, 48, 135, 0.3) 80%,
+    transparent
+  );
+  box-shadow: 0 0 16px rgba(200, 16, 46, 0.2);
+}
+
+/* NHL 25 karty — zlatý/bílý lem, jemný 3D stín */
+.nhl25-jersey-card-frame--filled {
+  background: linear-gradient(150deg, #ffffff 0%, #f1f5f9 40%, #e2e8f0 100%);
+  border: 1px solid rgba(212, 175, 55, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.95),
+    0 10px 26px rgba(15, 23, 42, 0.11),
+    0 2px 0 rgba(255, 255, 255, 0.75) inset,
+    0 -1px 0 rgba(15, 23, 42, 0.04) inset;
+}
+
+.nhl25-jersey-card-frame--empty {
+  background: linear-gradient(180deg, #fcfcfd 0%, #f1f5f9 100%);
+  border: 1px dashed rgba(148, 163, 184, 0.85);
+  box-shadow:
+    0 4px 14px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.jersey-number-nhl {
+  font-family: var(--font-display);
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.5),
+    0 3px 14px rgba(0, 0, 0, 0.55),
+    0 0 18px rgba(255, 255, 255, 0.12);
+}
+
 .nomination-poster-box {
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.07),

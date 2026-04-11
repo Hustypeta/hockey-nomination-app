@@ -13,7 +13,7 @@ interface NominationPosterProps {
   assistantIds?: string[];
 }
 
-/** Stejné vizuální karty jako ve sestavovači — na exportu bez siluet (jen gradient). */
+/** Stejné dresové karty jako ve sestavovači (domácí ČR). */
 function PosterPlayerCard({
   player,
   positionLabel,
@@ -34,7 +34,6 @@ function PosterPlayerCard({
       size={size}
       isCaptain={captainId === player.id}
       isAssistant={assistantIds.includes(player.id)}
-      portraitStyle="gradient"
       disableMotion
     />
   );
@@ -69,13 +68,13 @@ function PosterLineBlock({
 
   const isFourth = label.startsWith("4.");
 
+  const lineCore = lw || c || rw;
+
   return (
     <div className="flex flex-col items-center gap-1.5">
       <span className="font-display text-[8px] uppercase tracking-[0.28em] text-white/45">{label}</span>
-      {hasFwd ? (
-        <div
-          className={`flex flex-wrap items-end justify-center gap-1 ${isFourth ? "max-w-[19.5rem]" : "max-w-[15rem]"}`}
-        >
+      {lineCore ? (
+        <div className="flex max-w-[15rem] flex-wrap items-end justify-center gap-1">
           {lw && (
             <PosterPlayerCard
               player={lw}
@@ -103,15 +102,18 @@ function PosterLineBlock({
               assistantIds={assistantIds}
             />
           )}
-          {xf && (
-            <PosterPlayerCard
-              player={xf}
-              positionLabel="X"
-              size="compact"
-              captainId={captainId}
-              assistantIds={assistantIds}
-            />
-          )}
+        </div>
+      ) : null}
+      {isFourth && xf ? (
+        <div className="flex flex-col items-center gap-0.5">
+          <span className="font-display text-[6px] uppercase tracking-[0.26em] text-white/35">13. útok</span>
+          <PosterPlayerCard
+            player={xf}
+            positionLabel="X"
+            size="compact"
+            captainId={captainId}
+            assistantIds={assistantIds}
+          />
         </div>
       ) : null}
       {hasDef ? (

@@ -68,12 +68,14 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
                   }
                   if (line.x) {
                     const p = getPlayer(line.x);
-                    if (p) row.push({ p, l: li + 1, pos: "X" });
+                    if (p) row.push({ p, l: li + 1, pos: "X (13. útok)" });
                   }
                   return row;
                 }).map(({ p, l, pos }) => (
                   <tr key={p.id} className="border-b border-gray-200">
-                    <td className="py-1">{l}. lajna</td>
+                    <td className="py-1">
+                      {l === 4 && pos.startsWith("X") ? "4. lajna · rozšíření" : `${l}. lajna`}
+                    </td>
                     <td className="py-1">{pos}</td>
                     <td className="py-1 font-medium">{p.name}</td>
                     <td className="py-1 text-gray-600">

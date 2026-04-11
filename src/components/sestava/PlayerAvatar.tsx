@@ -1,13 +1,7 @@
 "use client";
 
 import type { Position } from "@/types";
-import { GoalieButterflySilhouette, SkaterPortraitSilhouette } from "@/components/sestava/HockeySilhouettes";
-
-const POS_GRAD: Record<Position, string> = {
-  G: "from-sky-900/80 to-[#05080f]",
-  D: "from-[#0a2450] to-[#05080f]",
-  F: "from-[#3a0a14] to-[#05080f]",
-};
+import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 
 function positionLabel(position: Position, role?: string | null) {
   const r = role?.trim();
@@ -24,7 +18,7 @@ export function PlayerAvatar({
 }: {
   name: string;
   position: Position;
-  /** LW, C, RW, … — stejná velikost jako dřív iniciály */
+  /** LW, C, RW, … */
   role?: string | null;
   size?: "sm" | "md" | "lg";
   imageUrl?: string | null;
@@ -34,10 +28,12 @@ export function PlayerAvatar({
     size === "sm" ? "h-10 w-10" : size === "lg" ? "h-16 w-16" : "h-12 w-12";
   const szText =
     size === "sm"
-      ? "text-[9px] leading-tight"
+      ? "text-[8px] leading-tight"
       : size === "lg"
-        ? "text-[11px] leading-tight"
-        : "text-[10px] leading-tight";
+        ? "text-[10px] leading-tight"
+        : "text-[9px] leading-tight";
+
+  const isG = position === "G";
 
   if (imageUrl) {
     return (
@@ -59,30 +55,25 @@ export function PlayerAvatar({
     );
   }
 
-  const isG = position === "G";
-
   return (
     <div
       role="img"
       aria-label={name}
-      className={`relative shrink-0 overflow-hidden rounded-xl bg-gradient-to-b shadow-[0_4px_16px_rgba(0,0,0,0.4)] ring-1 ring-white/12 ${POS_GRAD[position]} ${szBox}`}
+      className={`relative shrink-0 overflow-hidden rounded-xl bg-[#06080d] shadow-[0_4px_16px_rgba(0,0,0,0.45)] ring-1 ring-white/12 ${szBox}`}
     >
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.2]"
-        style={{
-          backgroundImage:
-            "linear-gradient(120deg, rgba(200,16,46,0.35) 0%, transparent 45%, transparent 55%, rgba(0,48,135,0.3) 100%)",
-        }}
-      />
-      <div className="absolute inset-0 flex items-end justify-center pb-4">
-        {isG ? (
-          <GoalieButterflySilhouette className="h-[135%] w-[135%] max-w-none -translate-y-1" />
-        ) : (
-          <SkaterPortraitSilhouette className="h-[130%] w-auto max-w-[120%] -translate-y-0.5" />
-        )}
+      <div className="absolute inset-0 flex items-end justify-center overflow-hidden pb-3">
+        <JerseySilhouetteShape
+          kind={isG ? "goalie" : "skater"}
+          visualPreset="lineup"
+          className="h-[155%] w-[155%] max-w-none shrink-0 -translate-x-0 translate-y-1"
+        />
       </div>
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t from-black/85 via-black/50 to-transparent pt-3 pb-0.5"
+        aria-hidden
+      />
       <span
-        className={`pointer-events-none absolute inset-x-0 bottom-0.5 z-[1] flex items-center justify-center font-display font-bold uppercase tracking-wide text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] ${szText}`}
+        className={`pointer-events-none absolute inset-x-0 bottom-0.5 z-[2] flex items-center justify-center font-display font-bold uppercase tracking-wide text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] ${szText}`}
       >
         {label}
       </span>

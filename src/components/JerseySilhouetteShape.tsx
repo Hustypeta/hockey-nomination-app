@@ -15,7 +15,7 @@ type JerseySilhouetteShapeProps = {
   kind: "skater" | "goalie";
   empty?: boolean;
   /** Sestavovač: domácí dres ČR (červený základ, modrý yoke, bílé lemy – fan / Nike IIHF). */
-  visualPreset?: "default" | "lineup";
+  visualPreset?: "default" | "lineup" | "nhl25";
   className?: string;
 };
 
@@ -34,6 +34,8 @@ export function JerseySilhouetteShape({
   const innerGlowId = `jig-${uid}`;
   const path = kind === "goalie" ? PATH_GOALIE : PATH_SKATER;
   const lineup = visualPreset === "lineup";
+  const nhl25 = visualPreset === "nhl25";
+  const czHome = lineup || nhl25;
 
   if (empty) {
     return (
@@ -52,7 +54,20 @@ export function JerseySilhouetteShape({
             </radialGradient>
           ) : null}
         </defs>
-        {lineup ? (
+        {nhl25 ? (
+          <>
+            <path d={path} fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.1" strokeDasharray="6 5" strokeLinejoin="round" />
+            <path
+              d={path}
+              fill="none"
+              stroke="#c8102e"
+              strokeWidth="1.35"
+              strokeDasharray="6 5"
+              strokeLinejoin="round"
+              opacity="0.38"
+            />
+          </>
+        ) : lineup ? (
           <>
             <path d={path} fill={`url(#${innerGlowId})`} stroke="none" />
             <path
@@ -91,7 +106,17 @@ export function JerseySilhouetteShape({
     <svg viewBox={VB} className={className} xmlns="http://www.w3.org/2000/svg" aria-hidden>
       <defs>
         <linearGradient id={gradId} x1="50" y1="0" x2="50" y2="120" gradientUnits="userSpaceOnUse">
-          {lineup ? (
+          {nhl25 ? (
+            <>
+              <stop offset="0%" stopColor="#5b8fd4" />
+              <stop offset="10%" stopColor="#dce6f5" />
+              <stop offset="20%" stopColor="#e81e3a" />
+              <stop offset="38%" stopColor="#f02840" />
+              <stop offset="58%" stopColor="#e01830" />
+              <stop offset="82%" stopColor="#c8102e" />
+              <stop offset="100%" stopColor="#8f0e22" />
+            </>
+          ) : lineup ? (
             <>
               {/* Modrý yoke nahoře, pak převaha červené (oficiální červený domácí dres repre) */}
               <stop offset="0%" stopColor="#1e4a8c" />
@@ -113,7 +138,7 @@ export function JerseySilhouetteShape({
           )}
         </linearGradient>
         <linearGradient id={shineId} x1="22" y1="8" x2="78" y2="52" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity={lineup ? "0.14" : "0.22"} />
+          <stop offset="0%" stopColor="#ffffff" stopOpacity={nhl25 ? "0.26" : lineup ? "0.14" : "0.22"} />
           <stop offset="45%" stopColor="#ffffff" stopOpacity="0.04" />
           <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
         </linearGradient>
@@ -128,9 +153,9 @@ export function JerseySilhouetteShape({
           <feDropShadow
             dx="0"
             dy="5"
-            stdDeviation={lineup ? "5" : "3.5"}
+            stdDeviation={nhl25 ? "3.2" : lineup ? "5" : "3.5"}
             floodColor="#000"
-            floodOpacity={lineup ? "0.62" : "0.45"}
+            floodOpacity={nhl25 ? "0.22" : lineup ? "0.62" : "0.45"}
           />
         </filter>
         <clipPath id={clipId}>
@@ -144,16 +169,16 @@ export function JerseySilhouetteShape({
           d={path}
           fill="none"
           stroke={`url(#${edgeId})`}
-          strokeWidth={lineup ? "0.75" : "0.85"}
+          strokeWidth={nhl25 ? "0.65" : lineup ? "0.75" : "0.85"}
           strokeLinejoin="round"
-          opacity={lineup ? "0.95" : "1"}
+          opacity={nhl25 ? "1" : lineup ? "0.95" : "1"}
         />
         <path d={path} fill={`url(#${shineId})`} />
       </g>
 
       <g clipPath={`url(#${clipId})`} pointerEvents="none">
         {kind === "skater" ? (
-          lineup ? (
+          czHome ? (
             <>
               {/* Rukáv: modrý „cap“ (yoke), červené tělo, bílý náplet – jako u fan dresů ČR */}
               <rect x="4" y="27" width="11" height="9.5" fill="#1a4d9e" rx="0.45" opacity="0.97" />
@@ -173,7 +198,7 @@ export function JerseySilhouetteShape({
               <rect x="92.8" y="26" width="3.2" height="30" fill="#003087" rx="0.4" opacity="0.98" />
             </>
           )
-        ) : lineup ? (
+        ) : czHome ? (
           <>
             <rect x="1" y="25" width="10.5" height="10.5" fill="#1a4d9e" rx="0.5" opacity="0.97" />
             <rect x="1" y="34.5" width="10.5" height="19.5" fill="#d21231" rx="0.4" opacity="0.99" />
@@ -192,7 +217,7 @@ export function JerseySilhouetteShape({
             <rect x="94.1" y="24" width="4" height="34" fill="#003087" rx="0.45" opacity="0.98" />
           </>
         )}
-        {lineup ? (
+        {czHome ? (
           <>
             {/* Bílý lem výstřihu (V) */}
             <path
@@ -202,7 +227,7 @@ export function JerseySilhouetteShape({
               strokeWidth="0.55"
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity="0.42"
+              opacity={nhl25 ? "0.55" : "0.42"}
             />
             {/* Hrana modrého yoke vs červené tělo */}
             <path
@@ -211,32 +236,32 @@ export function JerseySilhouetteShape({
               stroke="#ffffff"
               strokeWidth="0.55"
               strokeLinecap="round"
-              opacity="0.48"
+              opacity={nhl25 ? "0.58" : "0.48"}
             />
           </>
         ) : null}
         <path
           d="M 14 107 L 86 107"
-          stroke={lineup ? "#f5f5f5" : "#c8102e"}
-          strokeWidth={lineup ? "1.05" : "1.85"}
+          stroke={czHome ? "#f5f5f5" : "#c8102e"}
+          strokeWidth={czHome ? "1.05" : "1.85"}
           strokeLinecap="round"
-          opacity={lineup ? "0.65" : "0.92"}
+          opacity={czHome ? "0.65" : "0.92"}
         />
         <path
           d="M 14 109.5 L 86 109.5"
           stroke="#c8102e"
-          strokeWidth={lineup ? "1.25" : "0"}
+          strokeWidth={czHome ? "1.25" : "0"}
           strokeLinecap="round"
-          opacity={lineup ? "0.92" : "0"}
+          opacity={czHome ? "0.92" : "0"}
         />
         <path
           d="M 16 111 L 84 111"
           stroke="#ffffff"
           strokeWidth="0.65"
           strokeLinecap="round"
-          opacity={lineup ? "0.45" : "0.22"}
+          opacity={czHome ? (nhl25 ? "0.55" : "0.45") : "0.22"}
         />
-        {lineup ? (
+        {czHome ? (
           <path
             d="M 50 26 L 50 100"
             stroke="rgba(255,255,255,0.05)"
