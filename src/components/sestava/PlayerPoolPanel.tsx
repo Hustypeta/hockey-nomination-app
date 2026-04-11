@@ -11,6 +11,14 @@ import { PlayerAvatar } from "./PlayerAvatar";
 
 type Tab = "all" | "G" | "D" | "F";
 
+/** Velký štítek pozice u jména v poolu (LW/C/RW/LD/RD/G/D/F). */
+function poolPositionHeadline(player: Player): string {
+  if (player.position === "G") return "G";
+  const r = player.role?.trim();
+  if (r) return r.toUpperCase();
+  return player.position;
+}
+
 function DraggableCard({
   player,
   disabled,
@@ -67,18 +75,34 @@ function DraggableCard({
           <GripVertical className="h-4 w-4" />
         </button>
         <button type="button" onClick={() => !disabled && !inRoster && onAdd()} className="min-w-0 flex-1 text-left">
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3">
             <PlayerAvatar
               name={player.name}
               position={player.position}
               role={player.role}
               imageUrl={player.imageUrl}
+              size="lg"
             />
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold text-white">{player.name}</p>
-              <p className="truncate text-xs text-white/45">
-                {player.club}
-                {player.league ? <span className="text-white/30"> · {player.league}</span> : null}
+            <div className="min-w-0 flex-1 pt-0.5">
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                <span
+                  className={`
+                    shrink-0 font-display text-2xl font-bold leading-none tracking-wide sm:text-[1.65rem]
+                    ${player.position === "G" ? "text-sky-300" : ""}
+                    ${player.position === "D" ? "text-blue-200" : ""}
+                    ${player.position === "F" ? "text-red-200" : ""}
+                  `}
+                  aria-hidden
+                >
+                  {poolPositionHeadline(player)}
+                </span>
+                <span className="min-w-0 truncate text-base font-semibold leading-snug text-white sm:text-[17px]">
+                  {player.name}
+                </span>
+              </div>
+              <p className="mt-1.5 line-clamp-2 text-sm leading-snug text-white/75">
+                <span className="text-white/85">{player.club}</span>
+                {player.league ? <span className="text-white/60"> · {player.league}</span> : null}
               </p>
             </div>
           </div>
@@ -96,18 +120,7 @@ function DraggableCard({
         </button>
       </div>
       <div className="flex flex-wrap items-center gap-2 pl-7">
-        <span
-          className={`
-            rounded-md px-2 py-0.5 font-display text-[10px] font-semibold uppercase tracking-wider
-            ${player.position === "G" ? "bg-sky-500/20 text-sky-200" : ""}
-            ${player.position === "D" ? "bg-[#003087]/35 text-blue-100" : ""}
-            ${player.position === "F" ? "bg-[#c8102e]/25 text-red-100" : ""}
-          `}
-        >
-          {player.position}
-          {player.role ? ` · ${player.role}` : ""}
-        </span>
-        <span className="rounded-md border border-white/[0.08] bg-black/30 px-2 py-0.5 font-mono text-[10px] tabular-nums text-white/55">
+        <span className="rounded-lg border border-white/15 bg-black/35 px-2.5 py-1 font-mono text-xs font-medium tabular-nums text-white/80 sm:text-[13px]">
           {cur}/{lim} v nominaci
         </span>
       </div>

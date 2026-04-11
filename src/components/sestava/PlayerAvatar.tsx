@@ -3,7 +3,9 @@
 import type { Position } from "@/types";
 import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 
-function positionLabel(position: Position, role?: string | null) {
+/** Na mini-dresu vždy srozumitelně: brankář = G, jinak role (LW…) nebo D/F. */
+function avatarLabel(position: Position, role?: string | null) {
+  if (position === "G") return "G";
   const r = role?.trim();
   if (r) return r.toUpperCase();
   return position;
@@ -23,14 +25,14 @@ export function PlayerAvatar({
   size?: "sm" | "md" | "lg";
   imageUrl?: string | null;
 }) {
-  const label = positionLabel(position, role);
+  const label = avatarLabel(position, role);
   const szBox =
-    size === "sm" ? "h-10 w-10" : size === "lg" ? "h-16 w-16" : "h-12 w-12";
+    size === "sm" ? "h-10 w-10" : size === "lg" ? "h-[4.75rem] w-[4.75rem]" : "h-12 w-12";
   const szText =
     size === "sm"
       ? "text-[8px] leading-tight"
       : size === "lg"
-        ? "text-[10px] leading-tight"
+        ? "text-[12px] leading-none tracking-wide"
         : "text-[9px] leading-tight";
 
   const isG = position === "G";

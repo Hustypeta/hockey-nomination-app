@@ -6,6 +6,7 @@ import type { Player, LineupStructure } from "@/types";
 import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/LineupJerseyCard";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
+import { CzechFlagMark } from "@/components/CzechFlagMark";
 
 interface LineBuilderProps {
   lineup: LineupStructure;
@@ -488,14 +489,7 @@ export function LineBuilder({
       <div className="nhl25-lineup-root min-w-0 w-full space-y-7 sm:space-y-8">
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-white px-4 py-3 shadow-[0_4px_24px_rgba(15,23,42,0.08)]">
           <div className="flex min-w-0 items-center gap-3">
-            <div
-              className="nhl25-flag-stripe flex h-10 w-14 shrink-0 overflow-hidden rounded-md border border-slate-300/80 shadow-sm"
-              aria-hidden
-            >
-              <span className="h-full w-1/3 bg-[#ffffff]" />
-              <span className="h-full w-1/3 bg-[#c8102e]" />
-              <span className="h-full w-1/3 bg-[#003087]" />
-            </div>
+            <CzechFlagMark className="h-10 w-[3.35rem] shrink-0 rounded-md border border-slate-300/80 shadow-sm" />
             <div className="min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">Česká republika</p>
               <p className="truncate font-display text-xl font-bold tracking-[0.08em] text-slate-900 sm:text-2xl">

@@ -23,9 +23,11 @@ export function AuthorBriefTeaser() {
             Kdo za tím stojí
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-white/75">
-            Jsem fanoušek českého hokeje a tenhle sestavovač dělám jako{" "}
-            <strong className="text-white">projekt pro fanoušky</strong> — otevřeně a bez skrývání, že jde o
-            neoficiální hru. Víc o mně a o tom, proč to existuje, najdeš na stránce{" "}
+            Vždycky mě bavilo sledovat české hokejisty a v hlavě si skládat nominace na hokejové turnaje. Tímhle
+            projektem chci svoji zálibu rozšířit i mezi další hokejové nadšence, kterých je podle mého v naší
+            hokejové zemičce nespočítaně. Ne nadarmo se totiž říká: „Co Čech, to hokejový trenér.“ Pojď se přidat
+            a pomoz mi vybudovat komunitu lidí, kteří hokejem žijí stejně jako já. Víc o mně a o projektu na
+            stránce{" "}
             <Link href="/kdo-jsem" className="font-medium text-cyan-300/95 underline-offset-2 hover:underline">
               Kdo jsem
             </Link>

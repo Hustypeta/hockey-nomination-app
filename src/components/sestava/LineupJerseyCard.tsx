@@ -19,15 +19,15 @@ const widthClass: Record<LineupJerseySize, string> = {
 };
 
 const nameClass: Record<LineupJerseySize, string> = {
-  compact: "text-[9px] sm:text-[10px]",
-  skater: "text-[10px] sm:text-[11px]",
-  goalie: "text-[11px] sm:text-[12px]",
+  compact: "text-[11px] sm:text-[12px]",
+  skater: "text-[12px] sm:text-[13px]",
+  goalie: "text-[13px] sm:text-[14px]",
 };
 
 const badgeClass: Record<LineupJerseySize, string> = {
-  compact: "text-[7px] px-1 py-px",
-  skater: "text-[7.5px] px-1.5 py-0.5",
-  goalie: "text-[8px] px-1.5 py-0.5",
+  compact: "text-[9px] px-1.5 py-0.5",
+  skater: "text-[10px] px-2 py-0.5",
+  goalie: "text-[11px] px-2 py-0.5",
 };
 
 const crestClass: Record<LineupJerseySize, string> = {
@@ -37,9 +37,9 @@ const crestClass: Record<LineupJerseySize, string> = {
 };
 
 const numberClass: Record<LineupJerseySize, string> = {
-  compact: "text-[1.35rem] sm:text-[1.5rem]",
-  skater: "text-[1.55rem] sm:text-[1.75rem]",
-  goalie: "text-[1.85rem] sm:text-[2.05rem]",
+  compact: "text-[1.55rem] sm:text-[1.7rem]",
+  skater: "text-[1.75rem] sm:text-[1.95rem]",
+  goalie: "text-[2rem] sm:text-[2.2rem]",
 };
 
 export interface LineupJerseyCardProps {
@@ -138,7 +138,7 @@ export function LineupJerseyCard({
           {positionLabel}
         </div>
 
-        <div className="relative overflow-hidden rounded-[8px] pt-[1.05rem]">
+        <div className="relative overflow-hidden rounded-[8px] pt-[1.2rem]">
           <JerseySilhouetteShape
             kind={kind}
             empty={empty}
@@ -150,12 +150,12 @@ export function LineupJerseyCard({
             <>
               <CzechHockeyCrest
                 className={`
-                  pointer-events-none absolute left-[10%] top-[calc(1.05rem+6%)] z-[8]
+                  pointer-events-none absolute left-[10%] top-[calc(1.2rem+5%)] z-[8]
                   drop-shadow-[0_1px_4px_rgba(0,0,0,0.9),0_0_8px_rgba(0,0,0,0.45)]
                   ${crestSz}
                 `}
               />
-              <div className="pointer-events-none absolute inset-0 top-[1.05rem] flex flex-col items-center justify-center px-0.5 pt-[5%]">
+              <div className="pointer-events-none absolute inset-0 top-[1.2rem] flex flex-col items-center justify-center px-1 pt-[4%]">
                 {numStr ? (
                   <span
                     className={`
@@ -179,8 +179,8 @@ export function LineupJerseyCard({
                 </span>
                 {player.position === "F" && player.role ? (
                   <span
-                    className={`mt-0.5 rounded border border-white/15 bg-black/45 px-1 py-px font-display font-bold uppercase tracking-wider text-white/95 ${
-                      size === "goalie" ? "text-[8px]" : "text-[7px]"
+                    className={`mt-1 rounded border border-white/25 bg-black/55 px-1.5 py-0.5 font-display font-bold uppercase tracking-wider text-white ${
+                      size === "goalie" ? "text-[10px]" : "text-[9px]"
                     }`}
                   >
                     {player.role}
@@ -188,8 +188,8 @@ export function LineupJerseyCard({
                 ) : null}
                 {player.position === "G" ? (
                   <span
-                    className={`mt-0.5 font-display font-bold uppercase tracking-[0.12em] text-sky-200/95 ${
-                      size === "goalie" ? "text-[9px]" : "text-[8px]"
+                    className={`mt-1 font-display font-bold uppercase tracking-[0.12em] text-sky-100 ${
+                      size === "goalie" ? "text-[11px]" : "text-[10px]"
                     }`}
                     style={{ textShadow: "0 1px 2px rgba(0,0,0,0.85)" }}
                   >
@@ -200,10 +200,10 @@ export function LineupJerseyCard({
             </>
           ) : (
             <div
-              className="pointer-events-none absolute inset-0 top-[1.05rem] flex items-center justify-center px-1 pt-[6%]"
+              className="pointer-events-none absolute inset-0 top-[1.2rem] flex items-center justify-center px-1 pt-[6%]"
               aria-hidden
             >
-              <span className="font-display text-[clamp(1.1rem,4vw,1.65rem)] font-bold leading-none tracking-tight text-white/[0.12]">
+              <span className="font-display text-[clamp(1.25rem,4.5vw,1.85rem)] font-bold leading-none tracking-tight text-white/25">
                 {positionLabel}
               </span>
             </div>

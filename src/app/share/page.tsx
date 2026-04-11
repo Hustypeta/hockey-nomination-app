@@ -37,7 +37,7 @@ function ShareContent() {
   const payload = z ? decodeSharePayload(z) : null;
 
   if (loading) {
-    return <AppLoadingScreen message="Načítám odkaz…" />;
+    return <AppLoadingScreen message="Načítám odkaz…" intro={null} />;
   }
 
   if (!payload) {
@@ -79,7 +79,7 @@ function ShareContent() {
 
 export default function SharePage() {
   return (
-    <Suspense fallback={<AppLoadingScreen message="Načítám…" />}>
+    <Suspense fallback={<AppLoadingScreen message="Načítám…" intro={null} />}>
       <ShareContent />
     </Suspense>
   );

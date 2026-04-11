@@ -4,6 +4,7 @@ import { forwardRef, useMemo } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
+import { CzechFlagMark } from "@/components/CzechFlagMark";
 
 export interface Nhl25SharePosterProps {
   players: Player[];
@@ -40,14 +41,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
 
         <header className="relative px-6 pb-3 pt-5 text-center">
           <div className="mb-3 flex items-center justify-center gap-3">
-            <div
-              className="flex h-11 w-16 shrink-0 overflow-hidden rounded-md border border-slate-300/80 shadow-sm"
-              aria-hidden
-            >
-              <span className="h-full w-1/3 bg-white" />
-              <span className="h-full w-1/3 bg-[#c8102e]" />
-              <span className="h-full w-1/3 bg-[#003087]" />
-            </div>
+            <CzechFlagMark className="h-11 w-[3.65rem] shrink-0 rounded-md border border-slate-300/80 shadow-sm" />
             <h1 className="font-display text-left text-3xl font-bold leading-tight tracking-wide text-slate-900">
               Moje nominace na MS 2026 <span aria-hidden>🇨🇿</span>
             </h1>

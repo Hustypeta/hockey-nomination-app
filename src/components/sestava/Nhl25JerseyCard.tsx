@@ -19,21 +19,21 @@ const widthClass: Record<Nhl25JerseySize, string> = {
 };
 
 const numberClass: Record<Nhl25JerseySize, string> = {
-  compact: "text-[1.65rem] sm:text-[1.85rem]",
-  skater: "text-[2rem] sm:text-[2.35rem]",
-  goalie: "text-[2.35rem] sm:text-[2.65rem]",
+  compact: "text-[1.85rem] sm:text-[2rem]",
+  skater: "text-[2.15rem] sm:text-[2.45rem]",
+  goalie: "text-[2.5rem] sm:text-[2.8rem]",
 };
 
 const nameClass: Record<Nhl25JerseySize, string> = {
-  compact: "text-[9px] sm:text-[10px]",
-  skater: "text-[10px] sm:text-[11px]",
-  goalie: "text-[11px] sm:text-[12px]",
+  compact: "text-[11px] sm:text-[12px]",
+  skater: "text-[12px] sm:text-[13px]",
+  goalie: "text-[13px] sm:text-[14px]",
 };
 
 const crestClass: Record<Nhl25JerseySize, string> = {
-  compact: "h-3 w-[0.65rem]",
-  skater: "h-[1.05rem] w-[0.88rem]",
-  goalie: "h-8 w-[1.45rem]",
+  compact: "h-7 w-[1.85rem]",
+  skater: "h-9 w-[2.35rem]",
+  goalie: "h-11 w-[2.85rem]",
 };
 
 export interface Nhl25JerseyCardProps {
@@ -118,15 +118,15 @@ export function Nhl25JerseyCard({
       >
         <div
           className={`
-            absolute left-2 top-2 z-20 rounded border border-slate-300/90 bg-white px-1.5 py-0.5
-            font-display text-[9px] font-bold tracking-wide text-slate-900 shadow-sm
-            sm:text-[10px]
+            absolute left-2 top-2 z-20 rounded border border-[#11457e]/35 bg-[#11457e] px-1.5 py-0.5
+            font-display text-[11px] font-bold tracking-wide text-white shadow-sm
+            sm:text-[12px]
           `}
         >
           {positionLabel}
         </div>
 
-        <div className="relative overflow-hidden rounded-[8px] bg-gradient-to-b from-white/80 to-slate-100/90 pt-[1.35rem] shadow-inner">
+        <div className="relative overflow-hidden rounded-[8px] bg-gradient-to-b from-white via-[#fafafa] to-[#f0f2f4] pt-[1.45rem] shadow-inner">
           <JerseySilhouetteShape
             kind={kind}
             empty={empty}
@@ -138,16 +138,16 @@ export function Nhl25JerseyCard({
             <>
               <CzechHockeyCrest
                 className={`
-                  pointer-events-none absolute left-[9%] top-[calc(1.35rem+5%)] z-[8]
-                  drop-shadow-[0_1px_3px_rgba(0,0,0,0.35)]
+                  pointer-events-none absolute left-1/2 top-[calc(1.45rem+4%)] z-[8] -translate-x-1/2
+                  drop-shadow-[0_1px_4px_rgba(0,0,0,0.2)]
                   ${crestSz}
                 `}
               />
-              <div className="pointer-events-none absolute inset-0 top-[1.35rem] flex flex-col items-center justify-center px-0.5 pt-[4%]">
+              <div className="pointer-events-none absolute inset-0 top-[1.45rem] flex flex-col items-center justify-end px-1 pb-[10%] pt-[28%]">
                 {numStr ? (
                   <span
                     className={`
-                      jersey-number-nhl leading-[0.88] font-display font-bold tabular-nums tracking-tight text-white
+                      jersey-number-nhl leading-[0.88] font-display font-bold tabular-nums tracking-tight text-[#11457e]
                       ${numCls}
                     `}
                   >
@@ -156,8 +156,7 @@ export function Nhl25JerseyCard({
                 ) : null}
                 <span
                   className={`
-                    max-w-[96%] truncate text-center font-display font-bold uppercase leading-tight text-white
-                    drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]
+                    max-w-[96%] truncate text-center font-display font-bold uppercase leading-tight text-[#0f172a]
                     ${numStr ? "mt-0.5" : ""}
                     ${nmCls}
                   `}
@@ -166,8 +165,8 @@ export function Nhl25JerseyCard({
                 </span>
                 {player.position === "F" && player.role ? (
                   <span
-                    className={`mt-0.5 rounded border border-white/35 bg-black/25 px-1 py-px font-display font-bold uppercase text-white/95 ${
-                      size === "goalie" ? "text-[8px]" : "text-[7px]"
+                    className={`mt-1 rounded border border-[#11457e]/50 bg-white px-1.5 py-0.5 font-display font-bold uppercase text-[#0f172a] ${
+                      size === "goalie" ? "text-[10px]" : "text-[9px]"
                     }`}
                   >
                     {player.role}
@@ -175,10 +174,9 @@ export function Nhl25JerseyCard({
                 ) : null}
                 {player.position === "G" ? (
                   <span
-                    className={`mt-0.5 font-display font-bold uppercase tracking-[0.14em] text-sky-100 ${
-                      size === "goalie" ? "text-[9px]" : "text-[8px]"
+                    className={`mt-1 font-display font-bold uppercase tracking-[0.14em] text-[#0f172a] ${
+                      size === "goalie" ? "text-[11px]" : "text-[10px]"
                     }`}
-                    style={{ textShadow: "0 1px 3px rgba(0,0,0,0.75)" }}
                   >
                     G
                   </span>
@@ -187,10 +185,10 @@ export function Nhl25JerseyCard({
             </>
           ) : (
             <div
-              className="pointer-events-none absolute inset-0 top-[1.35rem] flex items-center justify-center px-1"
+              className="pointer-events-none absolute inset-0 top-[1.45rem] flex items-center justify-center px-1"
               aria-hidden
             >
-              <span className="select-none font-display text-[clamp(1.75rem,8vw,2.75rem)] font-black uppercase leading-none tracking-tighter text-slate-300/90">
+              <span className="select-none font-display text-[clamp(1.75rem,8vw,2.75rem)] font-black uppercase leading-none tracking-tighter text-[#11457e]/25">
                 {positionLabel.replace(/\d/g, "").trim() || positionLabel}
               </span>
             </div>

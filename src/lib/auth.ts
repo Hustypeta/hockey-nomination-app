@@ -18,14 +18,33 @@ if (process.env.NODE_ENV === "production" && !secret) {
   );
 }
 
+const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim();
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
+const googleConfigured = Boolean(googleClientId && googleClientSecret);
+
+if (process.env.NODE_ENV === "production" && !googleConfigured) {
+  console.error(
+    "[auth] Chybí Google OAuth: nastav v Railway Variables GOOGLE_CLIENT_ID a GOOGLE_CLIENT_SECRET " +
+      "(Google Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client). " +
+      "Authorized redirect URI: https://<tvá-domena>/api/auth/callback/google"
+  );
+}
+
+/** True když jsou nastavené GOOGLE_CLIENT_ID i GOOGLE_CLIENT_SECRET (např. pro skrytí tlačítka na klientovi). */
+export const googleOAuthConfigured = googleConfigured;
+
+const providers: NextAuthOptions["providers"] = googleConfigured
+  ? [
+      GoogleProvider({
+        clientId: googleClientId!,
+        clientSecret: googleClientSecret!,
+      }),
+    ]
+  : [];
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-    }),
-  ],
+  providers,
   callbacks: {
     session({ session, user }) {
       if (session.user) session.user.id = user.id;

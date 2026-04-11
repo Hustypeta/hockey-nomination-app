@@ -32,10 +32,14 @@ export function JerseySilhouetteShape({
   const filtId = `jf-${uid}`;
   const edgeId = `je-${uid}`;
   const innerGlowId = `jig-${uid}`;
+  const meshId = `jm-${uid}`;
   const path = kind === "goalie" ? PATH_GOALIE : PATH_SKATER;
   const lineup = visualPreset === "lineup";
   const nhl25 = visualPreset === "nhl25";
   const czHome = lineup || nhl25;
+  /** Oficiální modrá na vlajce / výstřihu (#11457E). */
+  const NAVY = "#11457e";
+  const RED = "#d21034";
 
   if (empty) {
     return (
@@ -56,15 +60,23 @@ export function JerseySilhouetteShape({
         </defs>
         {nhl25 ? (
           <>
-            <path d={path} fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.1" strokeDasharray="6 5" strokeLinejoin="round" />
+            <path
+              d={path}
+              fill="#fafafa"
+              stroke={NAVY}
+              strokeWidth="1.05"
+              strokeDasharray="5 4"
+              strokeLinejoin="round"
+              opacity="0.9"
+            />
             <path
               d={path}
               fill="none"
-              stroke="#c8102e"
-              strokeWidth="1.35"
-              strokeDasharray="6 5"
+              stroke={RED}
+              strokeWidth="1.2"
+              strokeDasharray="5 4"
               strokeLinejoin="round"
-              opacity="0.38"
+              opacity="0.28"
             />
           </>
         ) : lineup ? (
@@ -108,25 +120,21 @@ export function JerseySilhouetteShape({
         <linearGradient id={gradId} x1="50" y1="0" x2="50" y2="120" gradientUnits="userSpaceOnUse">
           {nhl25 ? (
             <>
-              <stop offset="0%" stopColor="#5b8fd4" />
-              <stop offset="10%" stopColor="#dce6f5" />
-              <stop offset="20%" stopColor="#e81e3a" />
-              <stop offset="38%" stopColor="#f02840" />
-              <stop offset="58%" stopColor="#e01830" />
-              <stop offset="82%" stopColor="#c8102e" />
-              <stop offset="100%" stopColor="#8f0e22" />
+              {/* Venkovní / light UI: bílé tělo dresu nároďáku */}
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="22%" stopColor="#f7f7f7" />
+              <stop offset="55%" stopColor="#efefef" />
+              <stop offset="100%" stopColor="#e4e4e4" />
             </>
           ) : lineup ? (
             <>
-              {/* Modrý yoke nahoře, pak převaha červené (oficiální červený domácí dres repre) */}
-              <stop offset="0%" stopColor="#1e4a8c" />
-              <stop offset="8%" stopColor="#173d78" />
-              <stop offset="16%" stopColor="#123060" />
-              <stop offset="22%" stopColor="#c8102e" />
-              <stop offset="35%" stopColor="#d91428" />
-              <stop offset="55%" stopColor="#e0182e" />
-              <stop offset="78%" stopColor="#c8102e" />
-              <stop offset="100%" stopColor="#7f0c18" />
+              {/* Domácí červený dres — námořník + sytá červená */}
+              <stop offset="0%" stopColor={NAVY} />
+              <stop offset="10%" stopColor="#6a0a18" />
+              <stop offset="22%" stopColor={RED} />
+              <stop offset="45%" stopColor="#e01830" />
+              <stop offset="72%" stopColor="#c8102e" />
+              <stop offset="100%" stopColor="#8a0e1c" />
             </>
           ) : (
             <>
@@ -161,10 +169,21 @@ export function JerseySilhouetteShape({
         <clipPath id={clipId}>
           <path d={path} />
         </clipPath>
+        {nhl25 ? (
+          <pattern id={meshId} width="4" height="4" patternUnits="userSpaceOnUse">
+            <path d="M0 4 L4 0 M-1 1 L1 -1 M3 5 L5 3" stroke="#1e293b" strokeWidth="0.12" opacity="0.2" />
+          </pattern>
+        ) : null}
       </defs>
 
       <g filter={`url(#${filtId})`}>
-        <path d={path} fill={`url(#${gradId})`} stroke="rgba(0,0,0,0.65)" strokeWidth="1.1" strokeLinejoin="round" />
+        <path
+          d={path}
+          fill={`url(#${gradId})`}
+          stroke={nhl25 ? "rgba(17,69,126,0.35)" : "rgba(0,0,0,0.65)"}
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        />
         <path
           d={path}
           fill="none"
@@ -177,35 +196,107 @@ export function JerseySilhouetteShape({
       </g>
 
       <g clipPath={`url(#${clipId})`} pointerEvents="none">
-        {kind === "skater" ? (
-          czHome ? (
-            <>
-              {/* Rukáv: modrý „cap“ (yoke), červené tělo, bílý náplet – jako u fan dresů ČR */}
-              <rect x="4" y="27" width="11" height="9.5" fill="#1a4d9e" rx="0.45" opacity="0.97" />
-              <rect x="4" y="35.5" width="11" height="18" fill="#d21231" rx="0.38" opacity="0.99" />
-              <rect x="4" y="52" width="11" height="3.8" fill="#ffffff" rx="0.22" opacity="0.9" />
-              <rect x="85" y="27" width="11" height="9.5" fill="#1a4d9e" rx="0.45" opacity="0.97" />
-              <rect x="85" y="35.5" width="11" height="18" fill="#d21231" rx="0.38" opacity="0.99" />
-              <rect x="85" y="52" width="11" height="3.8" fill="#ffffff" rx="0.22" opacity="0.9" />
-            </>
-          ) : (
-            <>
-              <rect x="4" y="26" width="3.2" height="30" fill="#c8102e" rx="0.4" opacity="0.95" />
-              <rect x="8" y="26" width="3.2" height="30" fill="#f4f7fb" rx="0.4" opacity="0.98" />
-              <rect x="12" y="26" width="3.2" height="30" fill="#003087" rx="0.4" opacity="0.98" />
-              <rect x="84.8" y="26" width="3.2" height="30" fill="#c8102e" rx="0.4" opacity="0.95" />
-              <rect x="88.8" y="26" width="3.2" height="30" fill="#f4f7fb" rx="0.4" opacity="0.98" />
-              <rect x="92.8" y="26" width="3.2" height="30" fill="#003087" rx="0.4" opacity="0.98" />
-            </>
-          )
-        ) : czHome ? (
+        {kind === "skater" && nhl25 ? (
           <>
-            <rect x="1" y="25" width="10.5" height="10.5" fill="#1a4d9e" rx="0.5" opacity="0.97" />
-            <rect x="1" y="34.5" width="10.5" height="19.5" fill="#d21231" rx="0.4" opacity="0.99" />
-            <rect x="1" y="52.5" width="10.5" height="4.2" fill="#ffffff" rx="0.24" opacity="0.9" />
-            <rect x="88.5" y="25" width="10.5" height="10.5" fill="#1a4d9e" rx="0.5" opacity="0.97" />
-            <rect x="88.5" y="34.5" width="10.5" height="19.5" fill="#d21231" rx="0.4" opacity="0.99" />
-            <rect x="88.5" y="52.5" width="10.5" height="4.2" fill="#ffffff" rx="0.24" opacity="0.9" />
+            <rect x="0" y="0" width="100" height="120" fill={`url(#${meshId})`} opacity="0.45" />
+            <ellipse cx="24" cy="20" rx="18" ry="13" fill={RED} opacity="0.96" />
+            <ellipse cx="76" cy="20" rx="18" ry="13" fill={RED} opacity="0.96" />
+            <path d="M 37 8.5 L 50 23.5 L 63 8.5 Z" fill={NAVY} />
+            <path
+              d="M 39.5 10 L 50 21.5 L 60.5 10"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="0.42"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.92"
+            />
+            <rect x="3.5" y="31" width="12" height="22" fill="#f1f5f9" rx="0.42" />
+            <rect x="3.5" y="22.5" width="12" height="11" fill={RED} rx="0.48" />
+            <rect x="84.5" y="31" width="12" height="22" fill="#f1f5f9" rx="0.42" />
+            <rect x="84.5" y="22.5" width="12" height="11" fill={RED} rx="0.48" />
+            <g opacity="0.16" stroke="#991b1b" strokeWidth="0.32" fill="none">
+              <path d="M 17 13 L 27 21 L 21 27 Z" />
+              <path d="M 83 13 L 73 21 L 79 27 Z" />
+            </g>
+          </>
+        ) : kind === "skater" && lineup ? (
+          <>
+            <ellipse cx="23" cy="19" rx="17" ry="12" fill="#5c0610" opacity="0.45" />
+            <ellipse cx="77" cy="19" rx="17" ry="12" fill="#5c0610" opacity="0.45" />
+            <path d="M 37 8.5 L 50 23.5 L 63 8.5 Z" fill={NAVY} />
+            <path
+              d="M 39.5 10 L 50 21.5 L 60.5 10"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="0.42"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.9"
+            />
+            <rect x="4" y="26" width="11" height="10" fill={RED} rx="0.45" opacity="0.98" />
+            <rect x="4" y="35" width="11" height="19" fill={RED} rx="0.38" opacity="0.99" />
+            <rect x="4" y="41.5" width="11" height="2.2" fill="#ffffff" opacity="0.93" />
+            <rect x="85" y="26" width="11" height="10" fill={RED} rx="0.45" opacity="0.98" />
+            <rect x="85" y="35" width="11" height="19" fill={RED} rx="0.38" opacity="0.99" />
+            <rect x="85" y="41.5" width="11" height="2.2" fill="#ffffff" opacity="0.93" />
+            <g opacity="0.14" stroke="#fecaca" strokeWidth="0.26" fill="none">
+              <path d="M 19 11 L 29 19 L 23 27 Z" />
+              <path d="M 81 11 L 71 19 L 77 27 Z" />
+            </g>
+            <path
+              d="M 13 34 Q 50 41.5 87 34"
+              fill="none"
+              stroke="rgba(255,255,255,0.28)"
+              strokeWidth="0.48"
+              strokeLinecap="round"
+            />
+          </>
+        ) : kind === "skater" ? (
+          <>
+            <rect x="4" y="26" width="3.2" height="30" fill="#c8102e" rx="0.4" opacity="0.95" />
+            <rect x="8" y="26" width="3.2" height="30" fill="#f4f7fb" rx="0.4" opacity="0.98" />
+            <rect x="12" y="26" width="3.2" height="30" fill="#003087" rx="0.4" opacity="0.98" />
+            <rect x="84.8" y="26" width="3.2" height="30" fill="#c8102e" rx="0.4" opacity="0.95" />
+            <rect x="88.8" y="26" width="3.2" height="30" fill="#f4f7fb" rx="0.4" opacity="0.98" />
+            <rect x="92.8" y="26" width="3.2" height="30" fill="#003087" rx="0.4" opacity="0.98" />
+          </>
+        ) : nhl25 ? (
+          <>
+            <rect x="0" y="0" width="100" height="120" fill={`url(#${meshId})`} opacity="0.4" />
+            <ellipse cx="22" cy="19" rx="19" ry="14" fill={RED} opacity="0.94" />
+            <ellipse cx="78" cy="19" rx="19" ry="14" fill={RED} opacity="0.94" />
+            <path d="M 35.5 7 L 50 24.5 L 64.5 7 Z" fill={NAVY} />
+            <path
+              d="M 38 8.5 L 50 22.5 L 62 8.5"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="0.38"
+              strokeLinecap="round"
+              opacity="0.9"
+            />
+            <rect x="1" y="32" width="10.5" height="22" fill="#f1f5f9" rx="0.4" />
+            <rect x="1" y="22.5" width="10.5" height="12" fill={RED} rx="0.5" />
+            <rect x="88.5" y="32" width="10.5" height="22" fill="#f1f5f9" rx="0.4" />
+            <rect x="88.5" y="22.5" width="10.5" height="12" fill={RED} rx="0.5" />
+          </>
+        ) : lineup ? (
+          <>
+            <path d="M 35.5 7 L 50 24.5 L 64.5 7 Z" fill={NAVY} />
+            <path
+              d="M 38 8.5 L 50 22.5 L 62 8.5"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="0.38"
+              strokeLinecap="round"
+              opacity="0.88"
+            />
+            <rect x="1" y="25" width="10.5" height="11" fill={RED} rx="0.5" opacity="0.98" />
+            <rect x="1" y="34.5" width="10.5" height="20" fill={RED} rx="0.4" opacity="0.99" />
+            <rect x="1" y="42" width="10.5" height="2" fill="#ffffff" opacity="0.9" />
+            <rect x="88.5" y="25" width="10.5" height="11" fill={RED} rx="0.5" opacity="0.98" />
+            <rect x="88.5" y="34.5" width="10.5" height="20" fill={RED} rx="0.4" opacity="0.99" />
+            <rect x="88.5" y="42" width="10.5" height="2" fill="#ffffff" opacity="0.9" />
           </>
         ) : (
           <>
@@ -217,39 +308,16 @@ export function JerseySilhouetteShape({
             <rect x="94.1" y="24" width="4" height="34" fill="#003087" rx="0.45" opacity="0.98" />
           </>
         )}
-        {czHome ? (
-          <>
-            {/* Bílý lem výstřihu (V) */}
-            <path
-              d="M 42.5 10.5 L 50 20 L 57.5 10.5"
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="0.55"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity={nhl25 ? "0.55" : "0.42"}
-            />
-            {/* Hrana modrého yoke vs červené tělo */}
-            <path
-              d="M 12.5 33.5 Q 50 40.5 87.5 33.5"
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="0.55"
-              strokeLinecap="round"
-              opacity={nhl25 ? "0.58" : "0.48"}
-            />
-          </>
-        ) : null}
         <path
           d="M 14 107 L 86 107"
-          stroke={czHome ? "#f5f5f5" : "#c8102e"}
+          stroke={nhl25 ? NAVY : czHome ? "#f5f5f5" : "#c8102e"}
           strokeWidth={czHome ? "1.05" : "1.85"}
           strokeLinecap="round"
-          opacity={czHome ? "0.65" : "0.92"}
+          opacity={nhl25 ? "0.5" : czHome ? "0.65" : "0.92"}
         />
         <path
           d="M 14 109.5 L 86 109.5"
-          stroke="#c8102e"
+          stroke={RED}
           strokeWidth={czHome ? "1.25" : "0"}
           strokeLinecap="round"
           opacity={czHome ? "0.92" : "0"}
@@ -259,12 +327,12 @@ export function JerseySilhouetteShape({
           stroke="#ffffff"
           strokeWidth="0.65"
           strokeLinecap="round"
-          opacity={czHome ? (nhl25 ? "0.55" : "0.45") : "0.22"}
+          opacity={czHome ? (nhl25 ? "0.65" : "0.45") : "0.22"}
         />
         {czHome ? (
           <path
             d="M 50 26 L 50 100"
-            stroke="rgba(255,255,255,0.05)"
+            stroke={nhl25 ? "rgba(17,69,126,0.04)" : "rgba(255,255,255,0.05)"}
             strokeWidth="11"
             strokeLinecap="round"
           />
