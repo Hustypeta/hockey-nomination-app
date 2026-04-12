@@ -6,7 +6,7 @@ import { BracketPickemContent } from "@/components/bracket/BracketPickemContent"
 export const metadata: Metadata = {
   title: "Bracket Pick’em — playoff MS 2026",
   description:
-    "Vyplň si tip na play-off MS v hokeji 2026: vítězové skupin, čtvrtfinále, semifinále, finále, bronz a bonusové otázky. Zdarma, ukládání v prohlížeči.",
+    "Vyplň si tip na play-off MS 2026: oficiální skupiny IIHF, čtvrtfinále, semifinále, finále, bronz a bonusové otázky. Zdarma, ukládání v prohlížeči.",
 };
 
 function BracketFallback() {

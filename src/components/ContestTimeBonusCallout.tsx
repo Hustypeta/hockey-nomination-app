@@ -1,11 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { Zap } from "lucide-react";
-import {
-  CONTEST_DEADLINE_CS,
-  formatContestBonusLabel,
-  type ContestTimeBonusPercent,
-} from "@/lib/contestTimeBonus";
+import { CONTEST_DEADLINE_CS, type ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
 export function ContestTimeBonusCallout({
   variant,
@@ -23,10 +20,15 @@ export function ContestTimeBonusCallout({
       className={
         isLanding
           ? "mx-auto mt-6 max-w-lg rounded-2xl border border-amber-500/25 bg-gradient-to-br from-amber-500/[0.12] via-[#0c1424]/80 to-[#080d16]/90 p-4 shadow-[0_0_36px_rgba(245,158,11,0.12)] sm:mt-8 sm:p-5"
-          : "rounded-xl border border-amber-500/20 bg-amber-500/[0.08] px-4 py-3 shadow-[0_0_24px_rgba(245,158,11,0.1)]"
+          : "w-full max-w-lg self-start text-left rounded-xl border border-amber-500/20 bg-amber-500/[0.08] px-4 py-3 shadow-[0_0_24px_rgba(245,158,11,0.1)]"
       }
+      {...(!isLanding
+        ? {
+            "aria-label": `Aktuální časový bonus ${bonusPercent} procent k bodům`,
+          }
+        : {})}
     >
-      <div className="flex items-start gap-3">
+      <div className={`flex items-start gap-3 ${!isLanding ? "text-left" : ""}`}>
         <div
           className={
             isLanding
@@ -36,39 +38,62 @@ export function ContestTimeBonusCallout({
         >
           <Zap className={isLanding ? "h-5 w-5" : "h-4 w-4"} aria-hidden />
         </div>
-        <div className="min-w-0 flex-1">
+        <div className={`min-w-0 flex-1 ${!isLanding ? "text-left" : ""}`}>
           <p
             className={
               isLanding
-                ? "text-[10px] font-bold uppercase tracking-[0.22em] text-amber-200/90"
-                : "text-[9px] font-bold uppercase tracking-[0.2em] text-amber-200/85"
+                ? "text-sm font-semibold tracking-wide text-amber-200/95"
+                : "text-xs font-semibold tracking-wide text-amber-200/90"
             }
           >
-            Časový bonus soutěže
+            Aktuální časový bonus
           </p>
-          <p
-            className={`mt-1 font-display font-bold tracking-tight text-white ${isLanding ? "text-xl sm:text-2xl" : "text-lg"}`}
-          >
-            {bonusPercent > 0 ? (
-              <>
-                <span className="text-amber-200">+{bonusPercent} %</span>
-                <span className="font-semibold text-white/85"> k bodům</span>
-              </>
-            ) : (
-              <span className="text-white/90">Právě bez časového bonusu</span>
-            )}
-          </p>
-          <p className={`mt-1.5 text-white/55 ${isLanding ? "text-xs leading-relaxed sm:text-sm" : "text-[11px] leading-snug sm:text-xs"}`}>
-            Platí pro nominaci uloženou k účtu. {formatContestBonusLabel(bonusPercent)} — podle data uložení (čas ČR).
-          </p>
-          <p className={`mt-2 border-t border-white/10 pt-2 text-white/45 ${isLanding ? "text-[11px] sm:text-xs" : "text-[10px] sm:text-[11px]"}`}>
-            Uzávěrka odeslání: <strong className="text-white/70">{CONTEST_DEADLINE_CS}</strong>
-            {!submissionOpen ? (
-              <span className="mt-1 block font-semibold text-rose-300/95">
-                Soutěž už nepřijímá nové nominace k vyhodnocení.
-              </span>
-            ) : null}
-          </p>
+          {isLanding ? (
+            <>
+              <p className="mt-1 font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
+                {bonusPercent > 0 ? (
+                  <>
+                    <span className="text-amber-200">+{bonusPercent} %</span>
+                    <span className="font-semibold text-white/85"> k bodům</span>
+                  </>
+                ) : (
+                  <span className="text-white/90">Právě bez časového bonusu</span>
+                )}
+              </p>
+              <p className="mt-2 text-sm">
+                <Link
+                  href="/pravidla-souteze"
+                  className="font-medium text-cyan-300/95 underline-offset-2 transition hover:text-cyan-200 hover:underline"
+                >
+                  více v pravidlech soutěže
+                </Link>
+              </p>
+              <p className="mt-2 border-t border-white/10 pt-2 text-[11px] text-white/45 sm:text-xs">
+                Uzávěrka odeslání: <strong className="text-white/70">{CONTEST_DEADLINE_CS}</strong>
+                {!submissionOpen ? (
+                  <span className="mt-1 block font-semibold text-rose-300/95">
+                    Soutěž už nepřijímá nové nominace k vyhodnocení.
+                  </span>
+                ) : null}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="mt-1.5 text-xs">
+                <Link
+                  href="/pravidla-souteze"
+                  className="font-medium text-cyan-300/95 underline-offset-2 transition hover:text-cyan-200 hover:underline"
+                >
+                  více v pravidlech soutěže
+                </Link>
+              </p>
+              {!submissionOpen ? (
+                <p className="mt-2 text-[10px] font-semibold leading-snug text-rose-300/90">
+                  Soutěž už nepřijímá nové nominace k vyhodnocení.
+                </p>
+              ) : null}
+            </>
+          )}
         </div>
       </div>
     </div>

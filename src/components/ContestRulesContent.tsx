@@ -102,11 +102,6 @@ export function ContestRulesContent() {
                   <strong className="text-white">zveřejníme na webu</strong> po vyhodnocení.
                 </li>
                 <li>
-                  U <strong className="text-white">1.–3. místa</strong> bude k nominaci{" "}
-                  <strong className="text-white">komentář</strong> (písemně na stránce) nebo{" "}
-                  <strong className="text-white">krátké video</strong> — podle domluvy a času.
-                </li>
-                <li>
                   <strong className="text-white/90">1. místo:</strong> <strong className="text-white">hokejový dres</strong>{" "}
                   (typ / velikost / klub upřesníme s výhercem).
                 </li>

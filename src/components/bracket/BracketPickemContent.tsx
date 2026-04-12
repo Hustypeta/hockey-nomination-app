@@ -8,7 +8,9 @@ import { Link2, RotateCcw, Trash2, Trophy } from "lucide-react";
 import {
   MS2026_BRACKET_TEAMS,
   MS2026_GROUP_A_TEAMS,
+  MS2026_GROUP_A_VENUE,
   MS2026_GROUP_B_TEAMS,
+  MS2026_GROUP_B_VENUE,
   MS2026_QF_LABELS,
   type BracketTeam,
 } from "@/data/ms2026BracketTeams";
@@ -16,7 +18,8 @@ import { encodeBracketPayload, decodeBracketPayload } from "@/lib/bracketPayload
 import type { BracketMatchPick, BracketPickemPayload } from "@/types/bracketPickem";
 import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
 
-const STORAGE_KEY = "ms2026-bracket-pickem-v1";
+/** v2: oficiální skupiny IIHF MS 2026 (16 týmů vč. SLO, ITA; bez KAZ/FRA). */
+const STORAGE_KEY = "ms2026-bracket-pickem-v2";
 
 const selectCls =
   "mt-1 w-full rounded-lg border border-white/15 bg-[#0a0e17] px-3 py-2.5 text-sm text-white focus:border-[#003087]/55 focus:outline-none focus:ring-1 focus:ring-[#003087]/40";
@@ -257,17 +260,17 @@ export function BracketPickemContent() {
       <div className="space-y-8">
         <Section
           title="Vítězové skupin"
-          hint="Orientační rozdělení týmů do skupin — po oficiálním losu IIHF můžeme upřesnit. Vyber vítěze každé skupiny."
+          hint={`Oficiální skupiny IIHF MS 2026. Skupina A (${MS2026_GROUP_A_VENUE}), skupina B (${MS2026_GROUP_B_VENUE}). Vyber vítěze každé skupiny.`}
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <TeamSelect
-              label="Vítěz skupiny A"
+              label={`Skupina A — ${MS2026_GROUP_A_VENUE}`}
               value={picks.groupAWinner}
               onChange={(v) => setGroupWinner("groupAWinner", v)}
               teams={MS2026_GROUP_A_TEAMS}
             />
             <TeamSelect
-              label="Vítěz skupiny B"
+              label={`Skupina B — ${MS2026_GROUP_B_VENUE}`}
               value={picks.groupBWinner}
               onChange={(v) => setGroupWinner("groupBWinner", v)}
               teams={MS2026_GROUP_B_TEAMS}

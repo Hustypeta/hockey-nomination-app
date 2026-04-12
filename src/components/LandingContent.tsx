@@ -141,8 +141,9 @@ export function LandingContent() {
             <p className="mx-auto mt-2 max-w-2xl text-center text-xs text-white/45 sm:text-sm">
               <strong className="font-semibold text-white/65">Soupiska v sestavovači je připravená</strong> — můžeš
               nominaci skládat a sdílet hned. K tomu je na webu i{" "}
-              <strong className="font-semibold text-white/65">Pick’em na play-off</strong> (ten časem doladíme podle
-              losu). Pravidla soutěže najdeš na stránce{" "}
+              <strong className="font-semibold text-white/65">Pick’em na play-off</strong> se{" "}
+              <strong className="font-semibold text-white/65">oficiálními skupinami IIHF</strong> (formulář můžeme časem
+              ještě vylepšit). Pravidla soutěže najdeš na stránce{" "}
               <Link href="/pravidla-souteze" className="text-cyan-300/90 underline-offset-2 hover:underline">
                 Pravidla soutěže
               </Link>
@@ -174,8 +175,7 @@ export function LandingContent() {
                 <p className="text-sm leading-relaxed text-white/80">
                   <strong className="text-white">Účast zdarma</strong> — srovnání s oficiální soupiskou a zápisem k{" "}
                   <strong className="text-white">1. zápasu ČR</strong>.{" "}
-                  <strong className="text-white">Žebříček</strong> zveřejníme online; u{" "}
-                  <strong className="text-white">nejlepší trojky</strong> okomentuju sestavu (text nebo video).{" "}
+                  <strong className="text-white">Žebříček</strong> zveřejníme online.{" "}
                   <strong className="text-white">Vítěz</strong> bere <strong className="text-white">hokejový dres</strong>
                   , druhý a třetí menší ceny.
                 </p>
@@ -192,10 +192,10 @@ export function LandingContent() {
                   <LayoutGrid className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-white/80">
-                  <strong className="text-white">Bracket Pick’em</strong> — tipni si play-off: skupiny, čtvrtfinále,
-                  semifinále, finále, bronz a pár bonusů.{" "}
-                  <strong className="text-white">Zdarma</strong>, bez účtu; soupiska tě sem láká, pick’em si časem
-                  ještě vyladíme podle oficiálního losu a soupisky účastníků.
+                  <strong className="text-white">Bracket Pick’em</strong> — tipni si play-off:{" "}
+                  <strong className="text-white">oficiální skupiny MS 2026 podle IIHF</strong>, čtvrtfinále, semifinále,
+                  finále, bronz a pár bonusů. <strong className="text-white">Zdarma</strong>, bez účtu; rozhraní můžeme
+                  časem ještě doladit.
                 </p>
                 <Link
                   href="/bracket"
