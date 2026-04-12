@@ -5,7 +5,7 @@ import { SiteShell } from "@/components/site/SiteShell";
 export const metadata: Metadata = {
   title: "Pravidla soutěže",
   description:
-    "Vstupné, bodování, ceny a vyhodnocení fanouškovské soutěže nominace na MS v hokeji 2026.",
+    "Pravidla nominace na MS v hokeji 2026: bezplatná účast, časový bonus, bodování, ceny a vyhodnocení.",
 };
 
 export default function PravidlaSoutezePage() {

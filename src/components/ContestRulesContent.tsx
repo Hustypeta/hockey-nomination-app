@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { CONTEST_DEADLINE_CS } from "@/lib/contestTimeBonus";
+
+const sectionClass =
+  "rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-4 sm:px-5 sm:py-5";
+const sectionAmberClass =
+  "rounded-xl border border-amber-500/20 bg-amber-500/[0.06] px-4 py-4 sm:px-5 sm:py-5";
 
 export function ContestRulesContent() {
   return (
@@ -8,117 +12,153 @@ export function ContestRulesContent() {
         <h1 className="text-center font-display text-2xl font-bold uppercase tracking-wide text-white sm:text-3xl">
           Pravidla soutěže
         </h1>
-        <p className="mx-auto mt-3 text-center text-sm text-white/50">
-          Orientační pravidla — před startem platnosti je upřesníme na stránce a v e-mailu pro účastníky.
+        <p className="mx-auto mt-2 text-center text-base font-medium text-white/80 sm:text-lg">
+          Nominace na MS v hokeji 2026
         </p>
-        <ul className="mt-8 space-y-4 text-sm leading-relaxed text-white/75">
-          <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
-            <span className="font-bold text-amber-300">•</span>
-            <span>
-              <strong className="text-white">Účast v soutěži je zdarma.</strong> Podmínkou zařazení do vyhodnocení je
-              uložení nominace k účtu nejpozději do{" "}
-              <strong className="text-white">{CONTEST_DEADLINE_CS}</strong>.
-            </span>
-          </li>
-          <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
-            <span className="font-bold text-amber-300">•</span>
-            <div>
-              <strong className="text-white">Časový bonus</strong> se při uložení nominace zapíše do výsledku a násobí
-              součet bodů za hráče (ne bonusy za kapitána a asistenty) tímto koeficientem:
-              <ul className="mt-2 list-inside list-disc space-y-1 text-white/70">
-                <li>
-                  do 30.&nbsp;4.&nbsp;2026 (včetně, čas ČR): <strong className="text-white">+40&nbsp;%</strong>
-                </li>
-                <li>
-                  do 7.&nbsp;5.&nbsp;2026 (včetně): <strong className="text-white">+25&nbsp;%</strong>
-                </li>
-                <li>
-                  do 10.&nbsp;5.&nbsp;2026 (včetně): <strong className="text-white">+10&nbsp;%</strong>
-                </li>
-                <li>
-                  od 11.&nbsp;5.&nbsp;2026: <strong className="text-white">0&nbsp;%</strong> (nominace lze uložit ještě
-                  do uzávěrky 13.&nbsp;5., ale bez časového bonusu)
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
-            <span className="font-bold text-amber-300">•</span>
-            <span>
-              Vyhodnocení jde z <strong className="text-white">oficiálních dokumentů k 1. zápasu ČR</strong> na MS
-              2026: <strong className="text-white">soupiska</strong> (25 hráčů) a{" "}
-              <strong className="text-white">zápis o utkání</strong> (rozestavení — kdo je kde: lajny, páry beků,
-              brankáři včetně náhradníků podle toho, jak to bude v zápise uvedené).
-            </span>
-          </li>
-          <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
-            <span className="font-bold text-amber-300">•</span>
-            <div>
-              <strong className="text-white">Bodování hráčů (návrh) — dvě úrovně</strong>
-              <ul className="mt-2 list-inside list-disc space-y-2 text-white/70">
-                <li>
-                  <strong className="text-white/90">5 bodů — přesná pozice:</strong> hráč je v tvé nominaci na{" "}
-                  <strong className="text-white">stejném „místě“ jako v oficiálním zápisu o utkání</strong> (např. totéž
-                  křídlo / střed / bek v tom samém páru / stejný slot brankáře či náhradníka, jak to vyjde ze zápisu).
-                </li>
-                <li>
-                  <strong className="text-white/90">2 body — jen trefené jméno:</strong> hráč je mezi{" "}
-                  <strong className="text-white">25 na soupisce</strong> k tomu zápasu, ale v tvé sestavě ho máš{" "}
-                  <strong className="text-white">na jiné pozici</strong> než v oficiálním zápisu (počítá se jen jedna z
-                  úrovní — nepřičítají se obě najednou).
-                </li>
-                <li>
-                  <strong className="text-white/90">Jiný poměr útočníků a obránců na zápise</strong> (např. 12&nbsp;F +
-                  8&nbsp;D místo modelu 13&nbsp;F + 7&nbsp;D ve hře): přesné sloty platí tam, kde to zápis jednoznačně
-                  dovolí; hráče, které nelze přiřadit ke konkrétnímu slotu (např. 8.&nbsp;bek při sedmi bekovských
-                  pozicích ve hře, nebo 13.&nbsp;útočník při dvanácti útočnících na zápise), hodnotíme jako{" "}
-                  <strong className="text-white">trefu jména v dané kategorii</strong> (útočník / obránce), ne jako přesnou
-                  pozici.
-                </li>
-                <li>
-                  <strong className="text-white/90">+10 bodů</strong> za správně zvoleného{" "}
-                  <strong className="text-white">kapitána</strong> (shoda s „C“ u týmu dle oficiálního zápisu k 1.
-                  zápasu).
-                </li>
-                <li>
-                  <strong className="text-white/90">+4 body</strong> za každého trefeného{" "}
-                  <strong className="text-white">asistenta</strong> (max. 2 ve tvé nominaci; shoda s označením v
-                  zápisu).
-                </li>
-              </ul>
-              <p className="mt-2 text-xs text-white/45">
-                Mapování tvých slotů (včetně náhradníků) na řádky v zápisu upřesníme v plných pravidlech, ať je
-                vyhodnocení jednoznačné. Při shodě skóre rozhodne dřívější platné odeslání nominace, případně los.
-              </p>
-            </div>
-          </li>
-          <li className="flex gap-3 rounded-xl border border-amber-500/20 bg-amber-500/[0.06] px-4 py-3">
-            <span className="font-bold text-amber-200">•</span>
-            <div>
-              <strong className="text-white">Ceny</strong>
-              <ul className="mt-2 list-inside list-disc space-y-1.5 text-white/75">
-                <li>
-                  <strong className="text-white/90">Žebříček</strong> všech platných nominací{" "}
-                  <strong className="text-white">zveřejníme na webu</strong> po vyhodnocení.
-                </li>
-                <li>
-                  <strong className="text-white/90">1. místo:</strong> <strong className="text-white">hokejový dres</strong>{" "}
-                  (typ / velikost / klub upřesníme s výhercem).
-                </li>
-                <li>
-                  <strong className="text-white/90">2. a 3. místo:</strong>{" "}
-                  <strong className="text-white">menší ceny</strong> (např. suvenýr nebo doplňky kolem hokeje — konkrétní
-                  položky doplníme před startem soutěže).
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-        <p className="mt-6 text-center text-xs text-white/40">
-          Časové hranice bonusu a uzávěrka platí podle kalendářního data v časovém pásmu ČR (Europe/Prague). Sestavovač
-          můžeš používat i bez účasti v soutěži.
-        </p>
-        <p className="mt-8 text-center">
+
+        <div className="mt-10 space-y-4 text-sm leading-relaxed text-white/75 sm:space-y-5">
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              1. Základní ustanovení
+            </h2>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>Účast v soutěži je bezplatná.</li>
+              <li>
+                Podmínkou pro zařazení do vyhodnocení je uložení kompletní nominace k uživatelskému účtu nejpozději do{" "}
+                <strong className="text-white">13. května 2026, 23:59 (středoevropský čas)</strong>.
+              </li>
+              <li>Sestavovač lze využívat k soukromým účelům i bez odeslání do soutěže.</li>
+            </ul>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              2. Časový bonus (koeficient včasného odeslání)
+            </h2>
+            <p className="mt-3 text-white/75">
+              Body získané za správné tipy hráčů (vyjma bonusů za kapitána a asistenty) se násobí koeficientem podle
+              data finálního uložení nominace:
+            </p>
+            <ul className="mt-3 list-inside list-disc space-y-1.5 text-white/75">
+              <li>
+                Do <strong className="text-white">30. dubna 2026</strong> (včetně): bonus{" "}
+                <strong className="text-white">+40 %</strong> ke skóre.
+              </li>
+              <li>
+                Do <strong className="text-white">7. května 2026</strong> (včetně): bonus{" "}
+                <strong className="text-white">+25 %</strong> ke skóre.
+              </li>
+              <li>
+                Do <strong className="text-white">10. května 2026</strong> (včetně): bonus{" "}
+                <strong className="text-white">+10 %</strong> ke skóre.
+              </li>
+              <li>
+                Od <strong className="text-white">11. května 2026</strong> do uzávěrky: bez časového bonusu (
+                <strong className="text-white">0 %</strong>).
+              </li>
+            </ul>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              3. Metodika vyhodnocení
+            </h2>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>
+                Základem pro vyhodnocení jsou oficiální dokumenty k prvnímu zápasu české reprezentace na MS 2026,
+                konkrétně oficiální soupiska (25 hráčů) a zápis o utkání.
+              </li>
+              <li>Rozhodující je rozestavení hráčů v zápisu o utkání (formace, obranné páry, pozice brankářů).</li>
+              <li>
+                Přesné mapování uživatelských slotů v aplikaci na řádky v oficiálním zápisu bude specifikováno v plném
+                znění pravidel před startem soutěže.
+              </li>
+            </ul>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              4. Bodování hráčů
+            </h2>
+            <ul className="mt-3 list-inside list-disc space-y-2.5 text-white/75">
+              <li>
+                <strong className="text-white">5 bodů (přesná pozice):</strong> Hráč figuruje v nominaci na shodném místě
+                jako v oficiálním zápisu o utkání (např. konkrétní útočné křídlo, střední útočník, obránce v daném páru
+                nebo konkrétní pozice brankáře).
+              </li>
+              <li>
+                <strong className="text-white">2 body (shoda jména):</strong> Hráč je uveden na oficiální soupisce pro
+                daný zápas, ale v uživatelské nominaci je zařazen na jinou pozici.
+              </li>
+            </ul>
+            <p className="mt-3 rounded-lg border border-white/[0.08] bg-black/20 px-3 py-2.5 text-xs leading-relaxed text-white/60 sm:text-sm">
+              <strong className="text-white/80">Poznámka k bodování:</strong> Body za pozici a jméno se nesčítají; za
+              jednoho hráče lze získat maximálně 5 bodů. V případě odlišného formátu soupisky (např. 8 obránců namísto 7
+              v aplikaci) bude u hráčů mimo standardní sloty hodnocena shoda jména v dané kategorii.
+            </p>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              5. Bonusy za kapitána a asistenty
+            </h2>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>
+                <strong className="text-white">+10 bodů:</strong> Správné určení kapitána týmu (shoda s označením „C“ v
+                oficiálním zápisu).
+              </li>
+              <li>
+                <strong className="text-white">+4 body:</strong> Správné určení asistenta (shoda s označením „A“ v
+                oficiálním zápisu, lze započítat maximálně dva asistenty).
+              </li>
+              <li>Na tyto bonusové body se nevztahuje násobení časovým koeficientem.</li>
+            </ul>
+          </section>
+
+          <section className={sectionAmberClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              6. Ceny a pořadí
+            </h2>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>
+                Žebříček všech platných nominací bude zveřejněn na webových stránkách po zpracování oficiálních
+                výsledků.
+              </li>
+              <li>
+                <strong className="text-white">1. místo:</strong> Hokejový dres (specifikace typu a velikosti bude
+                upřesněna s vítězem).
+              </li>
+              <li>
+                <strong className="text-white">2. a 3. místo:</strong> Věcné ceny s hokejovou tematikou.
+              </li>
+              <li>
+                U prvních tří umístění bude na stránkách zveřejněn odborný komentář k nominaci, případně krátké
+                videohodnocení.
+              </li>
+              <li>
+                V případě rovnosti bodů rozhoduje o pořadí dřívější čas odeslání platné nominace, následně los.
+              </li>
+            </ul>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              7. Závěrečné informace
+            </h2>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>
+                Tato pravidla jsou orientační. Finální znění bude upřesněno a zasláno účastníkům e-mailem před zahájením
+                platnosti soutěže.
+              </li>
+              <li>
+                Veškeré časové údaje se řídí kalendářním datem a časem platným v České republice (pásmo{" "}
+                <strong className="text-white">Europe/Prague</strong>).
+              </li>
+            </ul>
+          </section>
+        </div>
+
+        <p className="mt-10 text-center">
           <Link
             href="/sestava"
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition hover:border-cyan-300/45 hover:bg-cyan-500/15"
