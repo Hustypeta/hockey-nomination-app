@@ -109,9 +109,15 @@ export function tryAutoAssignPlayer(lineup: LineupStructure, player: Player): Li
       }
     }
     const p3 = next.defensePairs[3];
-    if (p3.lb || next.extraDefensemen[0]) return null;
-    next.defensePairs[3] = { lb: player.id, rb: null };
-    return next;
+    if (!p3.lb) {
+      next.defensePairs[3] = { lb: player.id, rb: null };
+      return next;
+    }
+    if (!next.extraDefensemen[0]) {
+      next.extraDefensemen = [player.id];
+      return next;
+    }
+    return null;
   }
 
   for (let li = 0; li < next.forwardLines.length; li++) {
@@ -171,10 +177,8 @@ export function assignPlayerToTarget(
     if (p < 0 || p > 3) return null;
     if (p === 3) {
       if (target.role !== "lb") return null;
-      if (next.extraDefensemen[0]) return null;
       next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
       next.defensePairs[3] = { lb: player.id, rb: null };
-      next.extraDefensemen = [];
       return next;
     }
     const pair = { ...next.defensePairs[p] };
@@ -202,7 +206,8 @@ export function assignPlayerToTarget(
 
   if (target.type === "extraDefenseman") {
     if (player.position !== "D") return null;
-    if (next.defensePairs[3].lb) return null;
+    if (!next.defensePairs[3].lb) return null;
+    if (next.extraDefensemen[0]) return null;
     next.extraDefensemen = [player.id];
     return next;
   }
@@ -228,7 +233,7 @@ export function buildRandomLineup(players: Player[]): LineupStructure | null {
   const gs = shuffle(players.filter((p) => p.position === "G"));
   const ds = shuffle(players.filter((p) => p.position === "D"));
   const fs = shuffle(players.filter((p) => p.position === "F"));
-  if (gs.length < 3 || ds.length < 7 || fs.length < 14) return null;
+  if (gs.length < 3 || ds.length < 8 || fs.length < 14) return null;
 
   let fi = 0;
   const forwardLines: LineupStructure["forwardLines"] = [
@@ -248,7 +253,7 @@ export function buildRandomLineup(players: Player[]): LineupStructure | null {
 
   const goalies: LineupStructure["goalies"] = [gs[0].id, gs[1].id, gs[2].id];
   const extraForwards: LineupStructure["extraForwards"] = [fs[fi].id];
-  const extraDefensemen: string[] = [];
+  const extraDefensemen: string[] = [ds[di].id];
 
   return {
     forwardLines,

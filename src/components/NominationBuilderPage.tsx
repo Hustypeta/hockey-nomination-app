@@ -15,7 +15,7 @@ import { LineBuilder } from "@/components/LineBuilder";
 import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
-import { SiteBackground } from "@/components/site/SiteBackground";
+import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { SestavaHero } from "@/components/sestava/SestavaHero";
@@ -148,7 +148,6 @@ export function NominationBuilderPage() {
         if (lineIndex === 3) {
           next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
           next.defensePairs[3] = { lb: player.id, rb: null };
-          next.extraDefensemen = [];
         } else {
           const pair = { ...next.defensePairs[lineIndex], [role]: player.id };
           next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
@@ -191,7 +190,8 @@ export function NominationBuilderPage() {
       if (type === "defense" && (role === "lb" || role === "rb"))
         return player.position === "D" && lineIndex !== undefined && lineIndex < 3;
       if (type === "extraForward") return player.position === "F";
-      if (type === "extraDefenseman") return player.position === "D";
+      if (type === "extraDefenseman")
+        return player.position === "D" && !!lineup.defensePairs[3].lb;
       return false;
     },
     [selectedSlot, usedIds]
@@ -242,7 +242,7 @@ export function NominationBuilderPage() {
   const handleRandom = useCallback(() => {
     const next = buildRandomLineup(players);
     if (!next) {
-      toast.error("V databázi není dost hráčů (potřeba 3G + 7D + 14F).");
+      toast.error("V databázi není dost hráčů (potřeba 3G + 8D + 14F).");
       return;
     }
     setLineup(next);
@@ -295,7 +295,7 @@ export function NominationBuilderPage() {
   }
 
   const subtitleCounts =
-    "3 brankáři · 7 obránců · 14 útočníků · celkem max. 24 hráčů";
+    "Základ 20+2 (bruslaři + 2 G) · 3 náhradníci · 25 hráčů celkem — soupiska MS";
 
   const bonusPercent = [0, 10, 25, 40].includes(contestStats.contestTimeBonusPercent)
     ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
@@ -312,7 +312,7 @@ export function NominationBuilderPage() {
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="sestava-page-ambient min-h-screen pb-[13rem] text-white sm:pb-44 lg:pb-36">
-        <SiteBackground />
+        <SestavaAmbientBackground />
 
         <div className="sticky top-0 z-40">
           <SiteHeader />
@@ -321,15 +321,16 @@ export function NominationBuilderPage() {
             subtitleCounts={subtitleCounts}
             contestTimeBonusPercent={bonusPercent}
             contestSubmissionOpen={contestStats.contestSubmissionOpen}
+            nominationCount={contestStats.nominationCount}
           />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[90rem] px-4 py-8 lg:py-10">
+        <div className="relative z-10 mx-auto max-w-[90rem] px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
           {!isComplete && (
-            <div className="mb-8 rounded-2xl border border-[#003087]/35 bg-gradient-to-r from-[#003087]/15 via-[#0a0e17]/80 to-[#c8102e]/10 px-5 py-4 text-center text-sm text-white/85 shadow-[0_0_40px_rgba(0,48,135,0.12)]">
+            <div className="mb-4 rounded-xl border border-[#003087]/40 bg-gradient-to-r from-[#003087]/20 via-[#0f172a]/90 to-[#c8102e]/15 px-4 py-2.5 text-center text-xs text-slate-100 shadow-[0_0_32px_rgba(0,48,135,0.15)] sm:text-sm">
               {remaining > 0 ? (
                 <>
-                  Ještě <span className="font-semibold text-sky-200">{remaining}</span>{" "}
+                  Ještě <span className="font-semibold text-[#f1c40f]">{remaining}</span>{" "}
                   {remaining === 1 ? "místo" : remaining < 5 ? "místa" : "míst"} do plné nominace.
                 </>
               ) : (
@@ -338,19 +339,19 @@ export function NominationBuilderPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,12fr)_minmax(0,13fr)] lg:gap-10 xl:gap-12">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-6 xl:gap-8">
             <section className="min-w-0">
-              <div className="rounded-2xl border border-white/[0.09] bg-[#0a0e17]/55 p-5 shadow-[0_0_0_1px_rgba(0,48,135,0.14),0_28px_80px_rgba(0,0,0,0.45)] backdrop-blur-md sm:p-6">
-                  <div className="mb-6">
+              <div className="sestava-premium-panel-dark rounded-2xl p-4 backdrop-blur-sm sm:p-5">
+                  <div className="mb-4">
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#ff5a6e] drop-shadow-[0_0_12px_rgba(200,16,46,0.35)]">
-                      Pool
+                    <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
+                      Výběr hráčů
                     </p>
-                    <h2 className="font-display text-2xl font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] md:text-3xl">
+                    <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
                       Dostupní hráči
                     </h2>
-                    <p className="mt-2 max-w-md text-sm leading-relaxed text-white/72">
-                      Klik na kartu = rychlé doplnění · úchop = přetáhni na konkrétní slot vpravo
+                    <p className="mt-1 max-w-lg text-[11px] leading-snug text-slate-400 sm:text-xs">
+                      Klik = první volné místo · přetáhni na dres vpravo
                     </p>
                   </div>
                 </div>
@@ -366,21 +367,21 @@ export function NominationBuilderPage() {
             </section>
 
             <section className="min-w-0">
-              <div className="lg:sticky lg:top-72 lg:max-h-[calc(100vh-19rem)] lg:overflow-y-auto lg:pb-2 lg:pl-1 lg:self-start">
-                <div className="nhl25-moje-sestava-panel rounded-2xl p-5 sm:p-6">
-                  <div className="nhl25-moje-sestava-accent mb-5" aria-hidden />
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#003087]/80">
-                    Lineup builder
+              <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
+                <div className="nhl25-moje-sestava-panel rounded-2xl p-4 sm:p-5 lg:p-6">
+                  <div className="nhl25-moje-sestava-accent mb-3" aria-hidden />
+                  <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
+                    Soupiska
                   </p>
-                  <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+                  <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
                     Moje sestava
                   </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  <p className="mt-1 text-[11px] leading-snug text-slate-600 sm:text-xs">
                     {selectedSlot
-                      ? "Vybraný slot — vlevo se zúží pozice, nebo přetáhni hráče přímo sem."
-                      : "Klikni na slot pro cílený výběr, nebo doplň hráče z poolu vlevo."}
+                      ? "Slot vybrán — vlevo jen daná pozice, nebo přetáhni sem."
+                      : "Klikni na dres nebo doplň zleva."}
                   </p>
-                  <div className="mt-7">
+                  <div className="mt-4">
                     <LineBuilder
                       lineup={lineup}
                       players={players}
@@ -398,17 +399,17 @@ export function NominationBuilderPage() {
             </section>
           </div>
 
-          <div className="mt-8 hidden justify-center lg:flex">
+          <div className="mt-6 hidden justify-center lg:flex">
             <button
               type="button"
               onClick={() => setModalOpen(true)}
               disabled={!isComplete}
               className={`
-                rounded-2xl px-10 py-4 font-display text-xl font-bold tracking-wide transition-all
+                rounded-2xl px-12 py-4 font-display text-xl font-bold tracking-wide transition-all
                 ${
                   isComplete
-                    ? "bg-gradient-to-r from-[#c8102e] to-[#9e0c24] text-white shadow-xl shadow-[#c8102e]/25 hover:scale-[1.02]"
-                    : "cursor-not-allowed bg-white/10 text-white/35"
+                    ? "bg-gradient-to-r from-[#c8102e] via-[#a30d26] to-[#003087] text-white shadow-[0_12px_40px_rgba(200,16,46,0.35),0_0_0_1px_rgba(241,196,15,0.25)] ring-1 ring-white/20 hover:scale-[1.02] hover:shadow-[0_16px_48px_rgba(200,16,46,0.45)]"
+                    : "cursor-not-allowed bg-white/[0.06] text-white/35 ring-1 ring-white/[0.08]"
                 }
               `}
             >

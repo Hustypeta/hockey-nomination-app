@@ -253,8 +253,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                 </div>
                 {!extraD ? (
                   <p className="mt-2 text-center text-[9px] leading-snug text-slate-500">
-                    Sedmý bek je v řádku výše — slot náhradního obránce zůstává volný, dokud ho nevyplníš ve
-                    sestavě.
+                    Na soupisce MS je i osmý bek v náhradnících — v editoru ho doplň po sedmém bekovi v obraně.
                   </p>
                 ) : null}
               </section>

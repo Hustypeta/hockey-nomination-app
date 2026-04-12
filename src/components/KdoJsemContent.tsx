@@ -15,7 +15,7 @@ export function KdoJsemContent() {
             k oficiálním materiálům reprezentace.
           </p>
           <p>
-            Sestavovač a soutěž jsou <strong className="text-white">nezávislé na ČSLH</strong> — jde o fanouškovskou
+            Editor sestavy a soutěž jsou <strong className="text-white">nezávislé na ČSLH</strong> — jde o fanouškovskou
             zábavu a srovnání tipů s reálnou nominací a zápisem z utkání.
           </p>
           <p className="text-white/55">

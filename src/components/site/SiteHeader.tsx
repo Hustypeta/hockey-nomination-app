@@ -7,7 +7,7 @@ import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
 
 const NAV = [
   { href: "/", label: "Úvod" },
-  { href: "/sestava", label: "Sestavovač" },
+  { href: "/sestava", label: "Editor sestavy" },
   { href: "/bracket", label: "Pick’em" },
   { href: "/kdo-jsem", label: "Kdo jsem" },
   { href: "/pravidla-souteze", label: "Pravidla" },
@@ -25,9 +25,16 @@ function navLinkClass(active: boolean) {
 export function SiteHeader() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
+  const onSestava = pathname.startsWith("/sestava");
 
   return (
-    <header className="border-b border-white/[0.08] bg-[#05080f]/85 backdrop-blur-xl">
+    <header
+      className={
+        onSestava
+          ? "border-b border-white/[0.12] bg-gradient-to-r from-[#060a14]/96 via-[#0c1428]/94 to-[#060a14]/96 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+          : "border-b border-white/[0.08] bg-[#05080f]/85 backdrop-blur-xl"
+      }
+    >
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4">
         <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 sm:justify-start">
           <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="MS 2026 — úvod">
@@ -63,7 +70,7 @@ export function SiteHeader() {
                 href="/sestava"
                 className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#9e0c24] px-4 py-2.5 font-display text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-[#c8102e]/30 transition hover:brightness-110"
               >
-                Do sestavovače
+                Do editoru sestavy
               </Link>
             </>
           ) : (

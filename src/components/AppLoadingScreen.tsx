@@ -13,7 +13,7 @@ type AppLoadingScreenProps = {
 };
 
 /**
- * Jednotná celostránková obrazovka při načítání dat — sladěná s hlavičkou sestavovače.
+ * Jednotná celostránková obrazovka při načítání dat — sladěná s hlavičkou editoru sestavy.
  */
 export function AppLoadingScreen({
   message = "Načítám…",

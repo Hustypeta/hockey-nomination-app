@@ -13,7 +13,7 @@ interface NominationPosterProps {
   assistantIds?: string[];
 }
 
-/** Stejné dresové karty jako ve sestavovači (domácí ČR). */
+/** Stejné dresové karty jako v editoru sestavy (domácí ČR). */
 function PosterPlayerCard({
   player,
   positionLabel,

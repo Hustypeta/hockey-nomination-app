@@ -45,10 +45,10 @@ export async function POST(request: NextRequest) {
     for (const p of players) {
       if (p.position in counts) counts[p.position as keyof typeof counts]++;
     }
-    if (counts.G !== 3 || counts.D !== 7 || counts.F !== 14) {
+    if (counts.G !== 3 || counts.D !== 8 || counts.F !== 14) {
       return NextResponse.json(
         {
-          error: `Neplatná sestava. Potřebujete: 3 brankáři, 7 obránců, 14 útočníků. Máte: ${counts.G}G, ${counts.D}D, ${counts.F}F`,
+          error: `Neplatná sestava. Potřebujete: 3 brankáři, 8 obránců, 14 útočníků (25 hráčů). Máte: ${counts.G}G, ${counts.D}D, ${counts.F}F`,
         },
         { status: 400 }
       );

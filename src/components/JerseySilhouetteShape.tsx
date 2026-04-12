@@ -14,7 +14,7 @@ const PATH_GOALIE =
 type JerseySilhouetteShapeProps = {
   kind: "skater" | "goalie";
   empty?: boolean;
-  /** Sestavovač: domácí dres ČR (červený základ, modrý yoke, bílé lemy – fan / Nike IIHF). */
+  /** Editor sestavy: domácí dres ČR (červený základ, modrý yoke, bílé lemy – fan / Nike IIHF). */
   visualPreset?: "default" | "lineup" | "nhl25";
   className?: string;
 };

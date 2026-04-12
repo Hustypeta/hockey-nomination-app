@@ -10,11 +10,14 @@ import {
   Trophy,
   BookOpen,
   LayoutGrid,
+  Flame,
 } from "lucide-react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
 import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
+import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
+import { getLandingBonusHeadline } from "@/lib/contestTimeBonus";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T18:00:00+02:00");
@@ -47,184 +50,233 @@ export function LandingContent() {
     ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
     : (0 as ContestTimeBonusPercent);
 
+  const bonusHeadline = getLandingBonusHeadline(bonusPercent);
+
   return (
     <main>
-      <section className="relative overflow-hidden border-b border-white/[0.06]">
+      {/* ——— Hero ——— */}
+      <section className="relative overflow-hidden border-b border-white/[0.08]">
         <div
-          className="pointer-events-none absolute -left-1/4 top-1/2 h-[min(80vw,520px)] w-[min(80vw,520px)] -translate-y-1/2 rounded-full bg-[#c8102e]/20 blur-[100px]"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0a1628] via-[#05080f] to-[#03050a]"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute -right-1/4 top-0 h-[min(70vw,440px)] w-[min(70vw,440px)] rounded-full bg-[#003087]/35 blur-[90px]"
+          className="pointer-events-none absolute -left-1/3 top-0 h-[min(90vw,600px)] w-[min(90vw,600px)] rounded-full bg-[#c8102e]/25 blur-[120px]"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -right-1/4 bottom-0 h-[min(80vw,520px)] w-[min(80vw,520px)] rounded-full bg-[#003087]/30 blur-[100px]"
           aria-hidden
         />
 
-        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16 lg:pt-20">
-          <p className="text-center font-display text-xs font-bold uppercase tracking-[0.35em] text-[#c8102e] sm:text-sm">
-            MS v hokeji 2026
-          </p>
+        <div className="absolute bottom-0 left-0 right-0 h-[min(70vh,560px)] opacity-[0.85] sm:h-[min(65vh,520px)]">
+          <LandingHeroVisual className="h-full w-full" />
+        </div>
 
-          <h1 className="mx-auto mt-5 max-w-5xl text-center font-display text-[clamp(1.85rem,6vw,3.75rem)] font-bold leading-[1.05] tracking-wide text-white drop-shadow-[0_4px_32px_rgba(0,0,0,0.45)]">
-            Sestav si svoji nominaci na MS v hokeji 2026
-          </h1>
+        <div className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
+          <div className="mx-auto max-w-4xl text-center lg:max-w-5xl">
+            <p className="inline-flex items-center gap-2 rounded-full border border-[#c8102e]/40 bg-[#c8102e]/15 px-4 py-2 font-display text-[11px] font-bold uppercase tracking-[0.28em] text-[#ffb4c0] shadow-[0_0_32px_rgba(200,16,46,0.25)] sm:text-xs">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#f1c40f]" aria-hidden />
+              MS v hokeji 2026 · Česká republika
+            </p>
 
-          <p className="mx-auto mt-6 max-w-3xl text-center text-base leading-relaxed text-white/75 sm:text-lg">
-            Staň se na chvíli trenérem českého národního týmu. Využij naplno výběr z více než 130 hráčů, poskládej si
-            formace podle sebe a sdílej svou sestavu pro hokejové MS ve Švýcarsku s ostatními.
-          </p>
-
-          <div className="mx-auto mt-8 flex max-w-xl flex-col items-center gap-2 sm:mt-10">
-            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/80 shadow-[0_0_24px_rgba(0,48,135,0.15)]">
-              <Users className="h-4 w-4 shrink-0 text-cyan-300/90" aria-hidden />
-              <span>
-                {nominationCount !== null ? (
-                  <>
-                    Již <strong className="tabular-nums text-white">{formatCs(nominationCount)}</strong>{" "}
-                    {nominationCount === 1
-                      ? "fanoušek sestavil"
-                      : nominationCount < 5
-                        ? "fanoušci sestavili"
-                        : "fanoušků sestavilo"}{" "}
-                    svoji nominaci
-                  </>
-                ) : (
-                  <>Přidej se k fanouškům a zapiš svou nominaci mezi prvními</>
-                )}
+            <h1 className="mx-auto mt-8 max-w-[22ch] text-balance font-display text-[clamp(2.1rem,7.5vw,4.25rem)] font-black leading-[1.02] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)] sm:mt-10">
+              Sestav si nominaci na{" "}
+              <span className="bg-gradient-to-r from-white via-white to-sky-100 bg-clip-text text-transparent">
+                MS 2026
+              </span>{" "}
+              a{" "}
+              <span className="bg-gradient-to-r from-[#f1c40f] via-[#fde047] to-[#f1c40f] bg-clip-text text-transparent">
+                vyhraj dres
               </span>
-            </div>
-            <p className="text-center text-[11px] leading-snug text-white/40">
-              Fanouškovská hra inspirovaná reálnou nominací — není oficiálním produktem ČSLH.
+            </h1>
+
+            <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg font-medium leading-relaxed text-slate-200/95 sm:text-xl">
+              Živý editor soupisky, časový bonus za brzké odeslání a soutěž o{" "}
+              <strong className="font-bold text-white">hokejový dres</strong> — zahoď nudný formulář, tohle je hra pro
+              fanoušky, kteří to myslí vážně.
             </p>
-          </div>
 
-          <ContestTimeBonusCallout
-            variant="landing"
-            bonusPercent={bonusPercent}
-            submissionOpen={contestStats.contestSubmissionOpen}
-          />
-
-          <div className="mx-auto mt-8 max-w-lg rounded-2xl border border-cyan-500/20 bg-gradient-to-b from-[#0c1424]/90 to-[#080d16]/90 p-4 shadow-[0_0_40px_rgba(34,211,238,0.08)] sm:mt-10 sm:p-5">
-            <div className="flex items-center justify-center gap-2 text-cyan-200/90">
-              <Clock className="h-4 w-4" aria-hidden />
-              <span className="text-xs font-semibold uppercase tracking-[0.2em]">Odpočet do šampionátu</span>
-            </div>
-            {cd.ended ? (
-              <p className="mt-3 text-center font-display text-xl text-white">MS je tady — sestav sestavu!</p>
-            ) : (
-              <div className="mt-4 grid grid-cols-4 gap-2 text-center sm:gap-3">
-                {[
-                  { v: cd.d, l: "dní" },
-                  { v: cd.h, l: "hod" },
-                  { v: cd.m, l: "min" },
-                  { v: cd.s, l: "sek" },
-                ].map((x) => (
-                  <div
-                    key={x.l}
-                    className="rounded-xl border border-white/10 bg-black/30 py-2.5 sm:py-3"
-                  >
-                    <div className="font-display text-2xl font-bold tabular-nums text-white sm:text-3xl">
-                      {x.v}
-                    </div>
-                    <div className="text-[10px] uppercase tracking-wider text-white/45">{x.l}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <AuthorBriefTeaser />
-
-          <div className="mx-auto mt-10 max-w-5xl sm:mt-12">
-            <h2 className="text-center font-display text-2xl font-bold uppercase tracking-wide text-white sm:text-3xl">
-              Proč to zkusit?
-            </h2>
-            <p className="mx-auto mt-2 max-w-2xl text-center text-xs text-white/45 sm:text-sm">
-              <strong className="font-semibold text-white/65">Soupiska v sestavovači je připravená</strong> — můžeš
-              nominaci skládat a sdílet hned. K tomu je na webu i{" "}
-              <strong className="font-semibold text-white/65">Pick’em na play-off</strong> se{" "}
-              <strong className="font-semibold text-white/65">oficiálními skupinami IIHF</strong> (formulář můžeme časem
-              ještě vylepšit). Pravidla soutěže najdeš na stránce{" "}
-              <Link href="/pravidla-souteze" className="text-cyan-300/90 underline-offset-2 hover:underline">
-                Pravidla soutěže
+            {/* Hlavní CTA — velké, červené, glow */}
+            <div className="mx-auto mt-10 flex max-w-xl flex-col items-stretch gap-4 sm:mt-12">
+              <Link
+                href="/sestava"
+                className="landing-cta-pulse group relative flex min-h-[4.25rem] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#e01e3c] to-[#9e0c24] px-6 py-5 text-center font-display text-xl font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(241,196,15,0.45),0_12px_56px_rgba(200,16,46,0.55),0_0_80px_rgba(200,16,46,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(241,196,15,0.6),0_16px_64px_rgba(200,16,46,0.65)] active:scale-[0.99] sm:min-h-[4.75rem] sm:text-2xl"
+              >
+                <span
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-60"
+                  aria-hidden
+                />
+                <Sparkles className="relative h-7 w-7 shrink-0 text-[#f1c40f]" aria-hidden />
+                <span className="relative">Sestavit nominaci</span>
+                <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
               </Link>
-              .
+              <p className="text-center text-sm text-slate-400">
+                Bez účtu můžeš sestavit a sdílet. S Googleem uložíš nominaci a stáhneš plakát.
+              </p>
+            </div>
+
+            {/* Sociální důkaz + časový bonus — viditelná řada */}
+            <div className="mx-auto mt-10 flex w-full max-w-3xl flex-col gap-4 sm:mt-12">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-4">
+                <div className="flex flex-1 items-center justify-center gap-3 rounded-2xl border border-white/[0.12] bg-[#0f172a]/75 px-5 py-4 shadow-[0_0_40px_rgba(0,48,135,0.2),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
+                  <Users className="h-8 w-8 shrink-0 text-sky-300" aria-hidden />
+                  <div className="text-left text-sm leading-snug text-slate-200">
+                    {nominationCount !== null ? (
+                      <>
+                        <span className="block font-display text-2xl font-bold tabular-nums text-white">
+                          {formatCs(nominationCount)}
+                        </span>
+                        <span className="text-slate-400">
+                          {nominationCount === 0
+                            ? "nominací zatím — buď první"
+                            : nominationCount === 1
+                              ? "fanoušek už poslal nominaci"
+                              : nominationCount >= 2 && nominationCount <= 4
+                                ? "fanoušci už poslali nominaci"
+                                : "fanoušků už poslalo nominaci"}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-slate-400">Načítám statistiky komunity…</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-1 items-center gap-3 rounded-2xl border border-[#f1c40f]/40 bg-gradient-to-br from-[#f1c40f]/[0.18] via-[#f1c40f]/[0.06] to-transparent px-5 py-4 shadow-[0_0_36px_rgba(241,196,15,0.2)] backdrop-blur-sm">
+                  <Flame className="h-8 w-8 shrink-0 text-[#f1c40f]" aria-hidden />
+                  <div className="min-w-0 text-left">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f1c40f]/90">
+                      Časový bonus
+                    </p>
+                    <p className="mt-1 text-sm font-bold leading-snug text-white sm:text-base">{bonusHeadline}</p>
+                  </div>
+                </div>
+              </div>
+
+              <ContestTimeBonusCallout
+                variant="landing"
+                bonusPercent={bonusPercent}
+                submissionOpen={contestStats.contestSubmissionOpen}
+              />
+            </div>
+          </div>
+
+          {/* Odpočet — národní barvy */}
+          <div className="mx-auto mt-12 max-w-2xl sm:mt-14">
+            <div className="rounded-2xl border border-[#c8102e]/25 bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 p-5 shadow-[0_0_48px_rgba(200,16,46,0.15)] sm:p-6">
+              <div className="flex items-center justify-center gap-2 text-white/90">
+                <Clock className="h-5 w-5 text-[#f1c40f]" aria-hidden />
+                <span className="font-display text-sm font-bold uppercase tracking-[0.22em]">
+                  Odpočet do šampionátu
+                </span>
+              </div>
+              {cd.ended ? (
+                <p className="mt-4 text-center font-display text-2xl font-bold text-white">MS je tady — sestav sestavu!</p>
+              ) : (
+                <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4">
+                  {[
+                    { v: cd.d, l: "dní" },
+                    { v: cd.h, l: "hod" },
+                    { v: cd.m, l: "min" },
+                    { v: cd.s, l: "sek" },
+                  ].map((x) => (
+                    <div
+                      key={x.l}
+                      className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4"
+                    >
+                      <div className="font-display text-3xl font-bold tabular-nums text-white sm:text-4xl">{x.v}</div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wider text-[#f1c40f]/80">
+                        {x.l}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <p className="mx-auto mt-8 max-w-lg text-center text-xs leading-relaxed text-slate-500">
+            Fanouškovská soutěž inspirovaná reálnou nominací — není oficiálním produktem ČSLH.
+          </p>
+
+          <div className="mt-10">
+            <AuthorBriefTeaser />
+          </div>
+
+          {/* Jak to funguje / proč */}
+          <div className="mx-auto mt-16 max-w-5xl sm:mt-20">
+            <h2 className="text-center font-display text-2xl font-bold uppercase tracking-[0.12em] text-white sm:text-3xl">
+              Proč to zkusit
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-slate-400 sm:text-base">
+              Tři důvody, proč nestát jen u televize — zkus si být trenérem na chvíli s námi.
             </p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-              <div className="rounded-2xl border border-white/[0.08] bg-[#0a0e17]/80 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#003087]/25 text-sky-200 ring-1 ring-[#003087]/35">
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+              <div className="rounded-2xl border border-[#003087]/30 bg-gradient-to-b from-[#0f172a]/95 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(0,48,135,0.15)]">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#003087]/30 text-sky-200 ring-1 ring-[#003087]/40">
                   <Users className="h-5 w-5" aria-hidden />
                 </div>
-                <p className="text-sm leading-relaxed text-white/80">
-                  <strong className="text-white">Sestavovač je funkční</strong> — výběr z{" "}
-                  <strong className="text-white">více než 130 hráčů</strong>, přehledné lajny a sdílení{" "}
-                  <strong className="text-white">odkazem i plakátem</strong>. Tohle je jádro webu a můžeš to hned
-                  použít.
+                <p className="text-sm leading-relaxed text-slate-200">
+                  <strong className="text-white">Prémiový editor</strong> — výběr z více než 130 hráčů, lajny jako na
+                  soupisce, sdílení odkazem i plakátem. Ovládání je hra samo o sobě.
                 </p>
                 <Link
                   href="/sestava"
-                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl border border-[#003087]/40 bg-[#003087]/15 px-4 py-2.5 text-sm font-semibold text-sky-100 transition hover:border-[#003087]/55 hover:bg-[#003087]/25"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-sky-300 transition hover:text-white"
                 >
-                  Otevřít sestavovač
-                  <ChevronRight className="h-4 w-4 opacity-90" aria-hidden />
+                  Do editoru
+                  <ChevronRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>
-              <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-b from-amber-500/[0.08] to-[#0a0e14]/90 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/15 text-amber-200 ring-1 ring-amber-500/30">
+              <div className="rounded-2xl border border-[#c8102e]/30 bg-gradient-to-b from-[#c8102e]/[0.12] to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(200,16,46,0.12)]">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#c8102e]/25 text-[#ffb4c0] ring-1 ring-[#c8102e]/40">
                   <Trophy className="h-5 w-5" aria-hidden />
                 </div>
-                <p className="text-sm leading-relaxed text-white/80">
-                  <strong className="text-white">Účast zdarma</strong> — srovnání s oficiální soupiskou a zápisem k{" "}
-                  <strong className="text-white">1. zápasu ČR</strong>.{" "}
-                  <strong className="text-white">Žebříček</strong> zveřejníme online.{" "}
-                  <strong className="text-white">Vítěz</strong> bere <strong className="text-white">hokejový dres</strong>
-                  , druhý a třetí menší ceny.
+                <p className="text-sm leading-relaxed text-slate-200">
+                  <strong className="text-white">Soutěž o dres</strong> — porovnání s oficiální soupiskou a zápisem k 1.
+                  zápasu ČR. <strong className="text-white">Vítěz bere dres</strong>, další místa mají ceny. Účast zdarma.
                 </p>
                 <Link
                   href="/pravidla-souteze"
-                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl border border-amber-400/35 bg-amber-500/10 px-4 py-2.5 text-sm font-semibold text-amber-100 transition hover:border-amber-300/50 hover:bg-amber-500/15"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#f1c40f] transition hover:text-white"
                 >
-                  <BookOpen className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+                  <BookOpen className="h-4 w-4 shrink-0" aria-hidden />
                   Pravidla soutěže
                 </Link>
               </div>
-              <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-b from-cyan-500/[0.07] to-[#0a0e17]/90 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:col-span-2 lg:col-span-1">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-200 ring-1 ring-cyan-500/30">
+              <div className="rounded-2xl border border-white/[0.1] bg-[#0f172a]/80 p-6 shadow-inner sm:col-span-2 lg:col-span-1">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/15">
                   <LayoutGrid className="h-5 w-5" aria-hidden />
                 </div>
-                <p className="text-sm leading-relaxed text-white/80">
-                  <strong className="text-white">Bracket Pick’em</strong> — tipni si play-off:{" "}
-                  <strong className="text-white">oficiální skupiny MS 2026 podle IIHF</strong>, čtvrtfinále, semifinále,
-                  finále, bronz a pár bonusů. <strong className="text-white">Zdarma</strong>, bez účtu; rozhraní můžeme
-                  časem ještě doladit.
+                <p className="text-sm leading-relaxed text-slate-200">
+                  <strong className="text-white">Pick’em play-off</strong> — tipni si bracket podle skupin IIHF, čtvrtfinále
+                  až finále. Zdarma, bez účtu.
                 </p>
                 <Link
                   href="/bracket"
-                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl border border-cyan-400/35 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition hover:border-cyan-300/50 hover:bg-cyan-500/15"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-slate-300 transition hover:text-white"
                 >
                   Otevřít Pick’em
-                  <ChevronRight className="h-4 w-4 opacity-90" aria-hidden />
+                  <ChevronRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>
             </div>
           </div>
 
-          <div className="mx-auto mt-10 flex flex-col items-center gap-4 sm:mt-12">
+          {/* Sekundární CTA */}
+          <div className="mx-auto mt-14 flex max-w-md flex-col items-center gap-4 sm:mt-16">
             <Link
               href="/sestava"
-              className="landing-cta-pulse relative inline-flex min-h-[3.5rem] w-full max-w-md items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#d41432] to-[#9e0c24] px-8 py-4 text-center font-display text-lg font-bold uppercase tracking-[0.06em] text-white shadow-[0_8px_40px_rgba(200,16,46,0.45),0_0_0_1px_rgba(255,255,255,0.12)_inset] transition hover:scale-[1.02] hover:shadow-[0_12px_48px_rgba(200,16,46,0.55)] sm:text-xl"
+              className="text-center text-sm font-semibold text-slate-400 underline-offset-4 transition hover:text-[#f1c40f] hover:underline"
             >
-              <Sparkles className="h-5 w-5 opacity-90" aria-hidden />
-              Otevřít sestavovač
-              <ChevronRight className="h-5 w-5 opacity-90" aria-hidden />
+              Nebo přejít rovnou do editoru sestavy →
             </Link>
-            <p className="max-w-md text-center text-sm text-white/50">
-              Bez účtu můžeš sestavit a sdílet odkaz. S Google účtem si nominaci uložíš a stáhneš plakát.
-            </p>
             <Link
               href="/pravidla-souteze"
-              className="text-sm font-medium text-cyan-300/90 underline-offset-4 transition hover:text-cyan-200 hover:underline"
+              className="text-sm font-medium text-sky-400/90 underline-offset-4 transition hover:text-sky-300 hover:underline"
             >
-              Pravidla soutěže
+              Kompletní pravidla soutěže
             </Link>
           </div>
         </div>

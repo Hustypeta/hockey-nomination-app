@@ -46,5 +46,19 @@ export function formatContestBonusLabel(percent: ContestTimeBonusPercent): strin
   return `+${percent} % k bodům`;
 }
 
+/** Krátký text pro úvodní stránku — synchronní s kalendářem bonusů v Praze. */
+export function getLandingBonusHeadline(percent: ContestTimeBonusPercent): string {
+  switch (percent) {
+    case 40:
+      return "Do 30. 4. 2026 máš +40 % k bodům";
+    case 25:
+      return "Do 7. 5. 2026 máš +25 % k bodům";
+    case 10:
+      return "Do 10. 5. 2026 máš +10 % k bodům";
+    default:
+      return "Časový bonus už neplatí — nominace do soutěže do 13. 5. 2026";
+  }
+}
+
 export const CONTEST_DEADLINE_CS =
   "13. května 2026, 23:59 (čas ČR, středoevropský)";

@@ -30,7 +30,7 @@ function cloneLineup(l: LineupStructure): LineupStructure {
 /**
  * Migrace starých nominací: druhý náhradní útočník → doplnění 4. lajny (x / RW / C / LW), jinak sloučení do jednoho slotu.
  * Dříve 3 náhradní útočníci → třetí do 4. lajny (slot x).
- * Sedmý bek z náhradníků přesune do defensePairs[3].lb (4. řádek). U 4. páru vždy RB = null.
+ * Staré nominace: bek jen v náhradnících bez sedmého v řádku → přesune do defensePairs[3].lb. U 4. páru vždy RB = null.
  */
 export function normalizeLineupStructure(lineup: LineupStructure): LineupStructure {
   const next = cloneLineup(lineup);
@@ -77,13 +77,9 @@ export function normalizeLineupStructure(lineup: LineupStructure): LineupStructu
   const lb = p3.lb ?? p3.rb ?? null;
   next.defensePairs[3] = { lb, rb: null };
 
-  if (next.extraDefensemen[0]) {
-    if (!next.defensePairs[3].lb) {
-      next.defensePairs[3] = { lb: next.extraDefensemen[0], rb: null };
-      next.extraDefensemen = [];
-    } else {
-      next.extraDefensemen = [];
-    }
+  if (next.extraDefensemen[0] && !next.defensePairs[3].lb) {
+    next.defensePairs[3] = { lb: next.extraDefensemen[0], rb: null };
+    next.extraDefensemen = [];
   }
 
   return next;
@@ -125,6 +121,5 @@ export function isLineupComplete(lineup: LineupStructure): boolean {
   const dCount = dInFirstThree + seventhInRow + seventhExtra;
   const gCount = lineup.goalies.filter(Boolean).length;
   const p3RbEmpty = !p3.rb;
-  const seventhSingle = !(p3.lb && lineup.extraDefensemen[0]);
-  return fCount === 14 && dCount === 7 && gCount === 3 && p3RbEmpty && seventhSingle;
+  return fCount === 14 && dCount === 8 && gCount === 3 && p3RbEmpty;
 }

@@ -48,14 +48,32 @@ function SectionShell({ title, kicker, children }: { title: string; kicker?: str
 function NhlSectionShell({ title, kicker, children }: { title: string; kicker?: string; children: ReactNode }) {
   return (
     <section className="min-w-0 w-full">
-      <div className="mb-3 flex flex-wrap items-end justify-between gap-2 border-b border-slate-200/90 pb-2.5">
-        <h3 className="font-display text-sm font-bold uppercase tracking-[0.2em] text-slate-900 sm:text-[15px]">{title}</h3>
+      <div className="mb-1.5 flex flex-wrap items-end justify-between gap-1.5 border-b border-slate-200/90 pb-1.5">
+        <h3 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-slate-900 sm:text-[13px]">{title}</h3>
         {kicker ? (
-          <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-500">{kicker}</span>
+          <span className="max-w-[55%] text-right text-[8px] font-semibold uppercase leading-tight tracking-[0.16em] text-slate-500 sm:max-w-none sm:text-[9px]">
+            {kicker}
+          </span>
         ) : null}
       </div>
       {children}
     </section>
+  );
+}
+
+/** Základ vs. náhradníci — shodně s modelem soupisky MS (20 bruslařů + 2 G v základu). */
+function RosterModelHint({ variant, children }: { variant: "classic" | "nhl25"; children: ReactNode }) {
+  if (variant === "nhl25") {
+    return (
+      <div className="rounded-lg border border-slate-200/80 bg-gradient-to-br from-slate-50 to-sky-50/75 px-3 py-2 text-[10px] leading-snug text-slate-600 shadow-sm sm:text-[11px]">
+        {children}
+      </div>
+    );
+  }
+  return (
+    <div className="rounded-xl border border-[#003087]/30 bg-[#003087]/[0.08] px-4 py-3 text-[11px] leading-relaxed text-white/70">
+      {children}
+    </div>
   );
 }
 
@@ -95,7 +113,9 @@ export function LineBuilder({
     next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
     if (pairIndex === 3) {
       next.defensePairs[3] = { lb: playerId, rb: null };
-      if (playerId) next.extraDefensemen = [];
+      if (playerId === null) {
+        next.extraDefensemen = [];
+      }
     } else {
       next.defensePairs[pairIndex] = { ...next.defensePairs[pairIndex], [role]: playerId };
     }
@@ -382,7 +402,7 @@ export function LineBuilder({
         {i === 3 ? (
           <div className="border-t border-white/[0.06] pt-4">
             <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.2em] text-white/40">
-              13. útočník (rozšířená nominace)
+              13. útočník (X) — součást základních 20 bruslařů
             </p>
             <div className="mx-auto flex max-w-[10rem] justify-center">
               <Slot
@@ -404,7 +424,7 @@ export function LineBuilder({
               />
             </div>
             <p className="mt-2 text-center text-[10px] leading-relaxed text-white/35">
-              Nadstavba nad klasické tři útočníky ve 4. lajně — v sestavě je 14 útočníků celkem (včetně 13. v řadě a jednoho náhradníka).
+              Čtrnáctý útočník je náhradník v sekci pod základem — tady máš třináctého v základní dvacítce bruslařů.
             </p>
           </div>
         ) : null}
@@ -476,7 +496,7 @@ export function LineBuilder({
               />
             </div>
             <p className="mt-3 text-center text-[10px] leading-relaxed text-white/35">
-              Nemůžeš mít současně sedmého beka tady a v boxu náhradních obránců — zvol jedno umístění.
+              Sedmý bek patří do základních 20 bruslařů. Osmého (náhradní na soupisce) doplň v sekci náhradníků níže.
             </p>
           </div>
         )}
@@ -486,124 +506,166 @@ export function LineBuilder({
 
   if (nhl) {
     return (
-      <div className="nhl25-lineup-root min-w-0 w-full space-y-7 sm:space-y-8">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-white px-4 py-3 shadow-[0_4px_24px_rgba(15,23,42,0.08)]">
-          <div className="flex min-w-0 items-center gap-3">
-            <CzechFlagMark className="h-10 w-[3.35rem] shrink-0 rounded-md border border-slate-300/80 shadow-sm" />
+      <div className="nhl25-lineup-root min-w-0 w-full space-y-3 sm:space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-white px-3 py-2 shadow-sm">
+          <div className="flex min-w-0 items-center gap-2">
+            <CzechFlagMark className="h-8 w-[2.65rem] shrink-0 rounded border border-slate-300/80 shadow-sm sm:h-9 sm:w-[3rem]" />
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">Česká republika</p>
-              <p className="truncate font-display text-xl font-bold tracking-[0.08em] text-slate-900 sm:text-2xl">
+              <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-500">Česká republika</p>
+              <p className="truncate font-display text-lg font-bold tracking-[0.08em] text-slate-900 sm:text-xl">
                 Český nároďák
               </p>
             </div>
           </div>
         </div>
 
-        <NhlSectionShell title="Brankáři" kicker="3 × G">
-          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
-            {lineup.goalies.map((gid, i) => (
-              <Slot
-                key={i}
-                playerId={gid}
-                label="G"
-                type="goalie"
-                lineIndex={i}
-                jerseySize="goalie"
-                dndId={`slot-goalie-${i}`}
-                onClear={
-                  gid
-                    ? () => {
-                        setGoalie(i, null);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            ))}
-          </div>
-        </NhlSectionShell>
+        <RosterModelHint variant="nhl25">
+          <strong className="text-slate-800">Základní sestava (20 + 2):</strong> dvacet bruslařů (lajny včetně 13. útočníka,
+          tři páry + sedmý bek) a dva brankáři. <strong className="text-slate-800">Náhradníci:</strong> třetí brankář, náhradní
+          útočník a osmý bek — dohromady 25 hráčů jako na soupisce MS.
+        </RosterModelHint>
 
-        <NhlSectionShell title="Útočné řady" kicker="4 × LW – C – RW">
-          <div className="flex min-w-0 flex-col gap-6">
-            {[0, 1, 2, 3].map((i) => {
-              const line = lineup.forwardLines[i];
-              return (
-                <div
-                  key={i}
-                  className="flex flex-col gap-3 rounded-xl border border-slate-200/70 bg-white/60 px-3 py-4 shadow-sm sm:flex-row sm:items-end sm:gap-5 sm:px-4"
-                >
-                  <div className="shrink-0 font-display text-lg font-bold tracking-wide text-slate-800 sm:w-24 sm:pb-1">
-                    {i + 1}. LAJNA
-                  </div>
-                  <div className="grid min-w-0 flex-1 grid-cols-3 gap-2 sm:gap-4">
-                    <Slot
-                      playerId={line.lw}
-                      label="LW"
-                      type="forward"
-                      lineIndex={i}
-                      role="lw"
-                      dndId={`slot-fwd-${i}-lw`}
-                      jerseySize="skater"
-                      onClear={
-                        line.lw
-                          ? () => {
-                              setForwardLine(i, "lw", null);
-                              onSelectSlot(null);
-                            }
-                          : undefined
-                      }
-                    />
-                    <Slot
-                      playerId={line.c}
-                      label="C"
-                      type="forward"
-                      lineIndex={i}
-                      role="c"
-                      dndId={`slot-fwd-${i}-c`}
-                      jerseySize="skater"
-                      onClear={
-                        line.c
-                          ? () => {
-                              setForwardLine(i, "c", null);
-                              onSelectSlot(null);
-                            }
-                          : undefined
-                      }
-                    />
-                    <Slot
-                      playerId={line.rw}
-                      label="RW"
-                      type="forward"
-                      lineIndex={i}
-                      role="rw"
-                      dndId={`slot-fwd-${i}-rw`}
-                      jerseySize="skater"
-                      onClear={
-                        line.rw
-                          ? () => {
-                              setForwardLine(i, "rw", null);
-                              onSelectSlot(null);
-                            }
-                          : undefined
-                      }
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </NhlSectionShell>
+        <div className="space-y-3 rounded-xl border border-slate-200/80 bg-white/40 p-3 shadow-sm sm:space-y-4 sm:p-4">
+          <p className="text-center font-display text-[9px] font-bold uppercase tracking-[0.26em] text-slate-500 sm:text-left">
+            Základ (20 + 2)
+          </p>
 
-        <NhlSectionShell title="Obranné páry" kicker="3 × (LD – RD) + 7. bek">
-          <div className="space-y-5">
+          <NhlSectionShell title="Brankáři — základ" kicker="2 × G">
+            <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+              {[0, 1].map((i) => {
+                const gid = lineup.goalies[i];
+                return (
+                  <Slot
+                    key={i}
+                    playerId={gid}
+                    label={`G${i + 1}`}
+                    type="goalie"
+                    lineIndex={i}
+                    jerseySize="goalie"
+                    dndId={`slot-goalie-${i}`}
+                    onClear={
+                      gid
+                        ? () => {
+                            setGoalie(i, null);
+                            onSelectSlot(null);
+                          }
+                        : undefined
+                    }
+                  />
+                );
+              })}
+            </div>
+          </NhlSectionShell>
+
+          <NhlSectionShell title="Útočné řady" kicker="4 × LW–C–RW + X u 4.">
+            <div className="flex min-w-0 flex-col gap-3">
+              {[0, 1, 2, 3].map((i) => {
+                const line = lineup.forwardLines[i];
+                return (
+                  <div
+                    key={i}
+                    className="flex flex-col gap-2 rounded-lg border border-slate-200/70 bg-white/60 px-2.5 py-3 shadow-sm sm:flex-row sm:items-end sm:gap-4 sm:px-3"
+                  >
+                    <div className="shrink-0 font-display text-base font-bold tracking-wide text-slate-800 sm:w-[5.25rem] sm:pb-1 sm:text-lg">
+                      {i + 1}. LAJNA
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col gap-2">
+                      <div className="grid min-w-0 grid-cols-3 gap-2 sm:gap-3">
+                        <Slot
+                          playerId={line.lw}
+                          label="LW"
+                          type="forward"
+                          lineIndex={i}
+                          role="lw"
+                          dndId={`slot-fwd-${i}-lw`}
+                          jerseySize="skater"
+                          onClear={
+                            line.lw
+                              ? () => {
+                                  setForwardLine(i, "lw", null);
+                                  onSelectSlot(null);
+                                }
+                              : undefined
+                          }
+                        />
+                        <Slot
+                          playerId={line.c}
+                          label="C"
+                          type="forward"
+                          lineIndex={i}
+                          role="c"
+                          dndId={`slot-fwd-${i}-c`}
+                          jerseySize="skater"
+                          onClear={
+                            line.c
+                              ? () => {
+                                  setForwardLine(i, "c", null);
+                                  onSelectSlot(null);
+                                }
+                              : undefined
+                          }
+                        />
+                        <Slot
+                          playerId={line.rw}
+                          label="RW"
+                          type="forward"
+                          lineIndex={i}
+                          role="rw"
+                          dndId={`slot-fwd-${i}-rw`}
+                          jerseySize="skater"
+                          onClear={
+                            line.rw
+                              ? () => {
+                                  setForwardLine(i, "rw", null);
+                                  onSelectSlot(null);
+                                }
+                              : undefined
+                          }
+                        />
+                      </div>
+                      {i === 3 ? (
+                        <div className="rounded-md border border-dashed border-slate-300/90 bg-slate-50/90 px-2 py-2">
+                          <p className="mb-1.5 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                            13. útok (X)
+                          </p>
+                          <div className="mx-auto flex max-w-[7rem] justify-center">
+                            <Slot
+                              playerId={line.x}
+                              label="X"
+                              type="forward"
+                              lineIndex={3}
+                              role="x"
+                              dndId="slot-fwd-3-x"
+                              jerseySize="compact"
+                              onClear={
+                                line.x
+                                  ? () => {
+                                      setForwardLine(3, "x", null);
+                                      onSelectSlot(null);
+                                    }
+                                  : undefined
+                              }
+                            />
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </NhlSectionShell>
+
+          <NhlSectionShell title="Obranné páry" kicker="3× pár + 7. bek">
+          <div className="space-y-3">
             {[0, 1, 2].map((i) => {
               const pair = lineup.defensePairs[i];
               return (
                 <div key={i}>
-                  <p className="mb-2 text-center font-display text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500">
+                  <p className="mb-1.5 text-center font-display text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
                     {i + 1}. pár
                   </p>
-                  <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 sm:gap-5">
+                  <div className="mx-auto grid max-w-lg grid-cols-2 gap-2.5 sm:gap-4">
                     <Slot
                       playerId={pair.lb}
                       label="LD"
@@ -642,11 +704,11 @@ export function LineBuilder({
                 </div>
               );
             })}
-            <div className="rounded-lg border border-dashed border-slate-300/90 bg-slate-50/80 px-3 py-4">
-              <p className="mb-3 text-center font-display text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500">
+            <div className="rounded-md border border-dashed border-slate-300/90 bg-slate-50/80 px-2 py-3">
+              <p className="mb-2 text-center font-display text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
                 7. bek
               </p>
-              <div className="mx-auto flex max-w-[11rem] justify-center">
+              <div className="mx-auto flex max-w-[12rem] justify-center">
                 <Slot
                   playerId={lineup.defensePairs[3].lb}
                   label="D"
@@ -665,83 +727,91 @@ export function LineBuilder({
                   }
                 />
               </div>
-              <p className="mt-3 text-center text-[10px] leading-relaxed text-slate-500">
-                Buď sedmý bek zde, nebo náhradní obránce v sekci níže — ne obojí.
+              <p className="mt-2 text-center text-[9px] leading-snug text-slate-500">
+                8. bek = náhradníci níže (po 7.).
               </p>
             </div>
           </div>
         </NhlSectionShell>
+        </div>
 
-        <NhlSectionShell title="Doplněk soupisky" kicker="13. útok · 1 F · 1 D">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-            <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
-              <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
-                13. útok
-              </p>
-              <Slot
-                playerId={lineup.forwardLines[3].x}
-                label="X"
-                type="forward"
-                lineIndex={3}
-                role="x"
-                dndId="slot-fwd-3-x"
-                jerseySize="compact"
-                onClear={
-                  lineup.forwardLines[3].x
-                    ? () => {
-                        setForwardLine(3, "x", null);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
+        <div className="space-y-2">
+          <p className="text-center font-display text-[9px] font-bold uppercase tracking-[0.26em] text-slate-500 sm:text-left">
+            Náhradníci (3)
+          </p>
+          <NhlSectionShell title="Mimo základ" kicker="G3 · F · D">
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3">
+              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
+                <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+                  3. brankář
+                </p>
+                <Slot
+                  playerId={lineup.goalies[2]}
+                  label="G3"
+                  type="goalie"
+                  lineIndex={2}
+                  jerseySize="goalie"
+                  dndId="slot-goalie-2"
+                  onClear={
+                    lineup.goalies[2]
+                      ? () => {
+                          setGoalie(2, null);
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
+                <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+                  Náhr. F
+                </p>
+                <Slot
+                  playerId={lineup.extraForwards[0] ?? null}
+                  label="F"
+                  type="extraForward"
+                  lineIndex={0}
+                  dndId="slot-xf-0"
+                  jerseySize="compact"
+                  onClear={
+                    lineup.extraForwards[0]
+                      ? () => {
+                          removeExtraForward();
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
+                <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+                  Náhr. D
+                </p>
+                <Slot
+                  playerId={lineup.extraDefensemen[0] ?? null}
+                  label="D"
+                  type="extraDefenseman"
+                  lineIndex={0}
+                  dndId="slot-xd-0"
+                  jerseySize="compact"
+                  onClear={
+                    lineup.extraDefensemen[0]
+                      ? () => {
+                          removeExtraDefense();
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
             </div>
-            <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
-              <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
-                Náhr. F
-              </p>
-              <Slot
-                playerId={lineup.extraForwards[0] ?? null}
-                label="F"
-                type="extraForward"
-                lineIndex={0}
-                dndId="slot-xf-0"
-                jerseySize="compact"
-                onClear={
-                  lineup.extraForwards[0]
-                    ? () => {
-                        removeExtraForward();
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-            <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
-              <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
-                Náhr. D
-              </p>
-              <Slot
-                playerId={lineup.extraDefensemen[0] ?? null}
-                label="D"
-                type="extraDefenseman"
-                lineIndex={0}
-                dndId="slot-xd-0"
-                jerseySize="compact"
-                onClear={
-                  lineup.extraDefensemen[0]
-                    ? () => {
-                        removeExtraDefense();
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-          </div>
-        </NhlSectionShell>
+            <p className="mt-2 text-center text-[9px] leading-snug text-slate-500 sm:text-left">
+              Náhr. D až po 7. bekovi.
+            </p>
+          </NhlSectionShell>
+        </div>
 
-        <p className="border-t border-slate-200/80 pt-4 text-center text-[10px] leading-relaxed text-slate-500">
+        <p className="border-t border-slate-200/80 pt-3 text-center text-[9px] leading-snug text-slate-500">
           Klikni na slot · přidej zleva nebo přetáhni · <span className="font-semibold text-[#c8102e]">C?</span> kapitán ·{" "}
           <span className="font-semibold text-[#003087]">A?</span> asistent
         </p>
@@ -751,89 +821,134 @@ export function LineBuilder({
 
   return (
     <div className="min-w-0 w-full space-y-8 sm:space-y-9">
-      <SectionShell title="Brankáři" kicker="3 × G">
-        <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
-          {lineup.goalies.map((gid, i) => (
-            <Slot
-              key={i}
-              playerId={gid}
-              label={`G${i + 1}`}
-              type="goalie"
-              lineIndex={i}
-              jerseySize="goalie"
-              dndId={`slot-goalie-${i}`}
-              onClear={
-                gid
-                  ? () => {
-                      setGoalie(i, null);
-                      onSelectSlot(null);
-                    }
-                  : undefined
-              }
-            />
-          ))}
-        </div>
-      </SectionShell>
+      <RosterModelHint variant="classic">
+        <strong className="text-white/90">Základní sestava (20 + 2):</strong> dvacet bruslařů (lajny včetně 13. útočníka,
+        tři páry + sedmý bek) a dva brankáři. <strong className="text-white/90">Náhradníci:</strong> třetí brankář, náhradní
+        útočník a osmý bek — dohromady 25 hráčů jako na soupisce MS.
+      </RosterModelHint>
 
-      <SectionShell title="Lajny" kicker="4× LW–C–RW · 13. útok jen u 4. lajny · 3 páry + 7. bek">
-        <div className="flex min-w-0 w-full flex-col gap-6 sm:gap-7">
-          {[0, 1, 2, 3].map((i) => lineBlock(i))}
-        </div>
-      </SectionShell>
+      <div className="space-y-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 sm:space-y-9 sm:p-5">
+        <p className="text-center font-display text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 sm:text-left">
+          Základ (20 + 2)
+        </p>
+        <SectionShell title="Brankáři — základ" kicker="2 × G">
+          <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+            {[0, 1].map((i) => {
+              const gid = lineup.goalies[i];
+              return (
+                <Slot
+                  key={i}
+                  playerId={gid}
+                  label={`G${i + 1}`}
+                  type="goalie"
+                  lineIndex={i}
+                  jerseySize="goalie"
+                  dndId={`slot-goalie-${i}`}
+                  onClear={
+                    gid
+                      ? () => {
+                          setGoalie(i, null);
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              );
+            })}
+          </div>
+        </SectionShell>
 
-      <SectionShell title="Náhradníci" kicker="1 útočník · 1 obránce">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4">
-          <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
-            <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-              Útočník
-            </p>
-            <div className="flex justify-center">
-              <Slot
-                playerId={lineup.extraForwards[0] ?? null}
-                label="EX"
-                type="extraForward"
-                lineIndex={0}
-                dndId="slot-xf-0"
-                jerseySize="compact"
-                onClear={
-                  lineup.extraForwards[0]
-                    ? () => {
-                        removeExtraForward();
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
+        <SectionShell
+          title="Lajny"
+          kicker="4× LW–C–RW · 13. útok u 4. lajny · u každé řady obrana — 20 bruslařů celkem"
+        >
+          <div className="flex min-w-0 w-full flex-col gap-6 sm:gap-7">
+            {[0, 1, 2, 3].map((i) => lineBlock(i))}
+          </div>
+        </SectionShell>
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-center font-display text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 sm:text-left">
+          Náhradníci (3)
+        </p>
+        <SectionShell title="Mimo základ 20 + 2" kicker="3. G · náhr. F · 8. bek">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-4">
+            <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
+              <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                3. brankář
+              </p>
+              <div className="flex justify-center">
+                <Slot
+                  playerId={lineup.goalies[2]}
+                  label="G3"
+                  type="goalie"
+                  lineIndex={2}
+                  jerseySize="goalie"
+                  dndId="slot-goalie-2"
+                  onClear={
+                    lineup.goalies[2]
+                      ? () => {
+                          setGoalie(2, null);
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+            </div>
+            <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
+              <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                Náhr. útočník
+              </p>
+              <div className="flex justify-center">
+                <Slot
+                  playerId={lineup.extraForwards[0] ?? null}
+                  label="EX"
+                  type="extraForward"
+                  lineIndex={0}
+                  dndId="slot-xf-0"
+                  jerseySize="compact"
+                  onClear={
+                    lineup.extraForwards[0]
+                      ? () => {
+                          removeExtraForward();
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+            </div>
+            <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
+              <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                Náhr. obránce
+              </p>
+              <div className="flex justify-center">
+                <Slot
+                  playerId={lineup.extraDefensemen[0] ?? null}
+                  label="N-D"
+                  type="extraDefenseman"
+                  lineIndex={0}
+                  dndId="slot-xd-0"
+                  jerseySize="compact"
+                  onClear={
+                    lineup.extraDefensemen[0]
+                      ? () => {
+                          removeExtraDefense();
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+              <p className="mt-2 text-center text-[9px] leading-snug text-white/30">
+                Vyplň až po sedmém bekovi ve 4. obranném řádku v základu.
+              </p>
             </div>
           </div>
-          <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
-            <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-              Obránce
-            </p>
-            <div className="flex justify-center">
-              <Slot
-                playerId={lineup.extraDefensemen[0] ?? null}
-                label="N-D"
-                type="extraDefenseman"
-                lineIndex={0}
-                dndId="slot-xd-0"
-                jerseySize="compact"
-                onClear={
-                  lineup.extraDefensemen[0]
-                    ? () => {
-                        removeExtraDefense();
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-            <p className="mt-2 text-center text-[9px] leading-snug text-white/30">
-              Jen pokud není sedmý bek ve 4. obranném řádku výše.
-            </p>
-          </div>
-        </div>
-      </SectionShell>
+        </SectionShell>
+      </div>
 
       <p className="border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/32">
         Klikni na slot · přidej zleva nebo přetáhni · <span className="text-[#c8102e]/85">C?</span> kapitán ·{" "}

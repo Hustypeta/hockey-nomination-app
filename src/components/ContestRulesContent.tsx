@@ -27,7 +27,7 @@ export function ContestRulesContent() {
                 Podmínkou pro zařazení do vyhodnocení je uložení kompletní nominace k uživatelskému účtu nejpozději do{" "}
                 <strong className="text-white">13. května 2026, 23:59 (středoevropský čas)</strong>.
               </li>
-              <li>Sestavovač lze využívat k soukromým účelům i bez odeslání do soutěže.</li>
+              <li>Editor sestavy lze využívat k soukromým účelům i bez odeslání do soutěže.</li>
             </ul>
           </section>
 
@@ -93,8 +93,8 @@ export function ContestRulesContent() {
             </ul>
             <p className="mt-3 rounded-lg border border-white/[0.08] bg-black/20 px-3 py-2.5 text-xs leading-relaxed text-white/60 sm:text-sm">
               <strong className="text-white/80">Poznámka k bodování:</strong> Body za pozici a jméno se nesčítají; za
-              jednoho hráče lze získat maximálně 5 bodů. V případě odlišného formátu soupisky (např. 8 obránců namísto 7
-              v aplikaci) bude u hráčů mimo standardní sloty hodnocena shoda jména v dané kategorii.
+              jednoho hráče lze získat maximálně 5 bodů. Pokud se tvoje rozestavení v editoru liší od oficiálního zápisu o
+              utkání, u hráčů mimo odpovídající slot se započítává především shoda jména v dané kategorii (G / D / F).
             </p>
           </section>
 
@@ -163,7 +163,7 @@ export function ContestRulesContent() {
             href="/sestava"
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition hover:border-cyan-300/45 hover:bg-cyan-500/15"
           >
-            Otevřít sestavovač
+            Otevřít editor sestavy
           </Link>
         </p>
         <p className="mt-4 text-center">

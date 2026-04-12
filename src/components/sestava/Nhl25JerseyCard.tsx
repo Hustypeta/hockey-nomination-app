@@ -13,27 +13,27 @@ function lastName(name: string) {
 }
 
 const widthClass: Record<Nhl25JerseySize, string> = {
-  compact: "max-w-[6rem] sm:max-w-[6.35rem]",
-  skater: "max-w-[7.35rem] sm:max-w-[8rem]",
-  goalie: "max-w-[9.25rem] sm:max-w-[10rem]",
+  compact: "max-w-[7.25rem] sm:max-w-[7.75rem]",
+  skater: "max-w-[8.75rem] sm:max-w-[9.75rem] lg:max-w-[10.25rem]",
+  goalie: "max-w-[10.5rem] sm:max-w-[11.5rem] lg:max-w-[12rem]",
 };
 
 const numberClass: Record<Nhl25JerseySize, string> = {
-  compact: "text-[1.85rem] sm:text-[2rem]",
-  skater: "text-[2.15rem] sm:text-[2.45rem]",
-  goalie: "text-[2.5rem] sm:text-[2.8rem]",
+  compact: "text-[2rem] sm:text-[2.15rem]",
+  skater: "text-[2.35rem] sm:text-[2.65rem] lg:text-[2.85rem]",
+  goalie: "text-[2.75rem] sm:text-[3rem] lg:text-[3.15rem]",
 };
 
 const nameClass: Record<Nhl25JerseySize, string> = {
   compact: "text-[11px] sm:text-[12px]",
-  skater: "text-[12px] sm:text-[13px]",
-  goalie: "text-[13px] sm:text-[14px]",
+  skater: "text-[12px] sm:text-[14px] lg:text-[15px]",
+  goalie: "text-[13px] sm:text-[15px] lg:text-[16px]",
 };
 
 const crestClass: Record<Nhl25JerseySize, string> = {
   compact: "h-7 w-[1.85rem]",
-  skater: "h-9 w-[2.35rem]",
-  goalie: "h-11 w-[2.85rem]",
+  skater: "h-10 w-[2.5rem] lg:h-11 lg:w-[2.75rem]",
+  goalie: "h-12 w-[3rem] lg:h-[3.25rem] lg:w-[3.2rem]",
 };
 
 export interface Nhl25JerseyCardProps {

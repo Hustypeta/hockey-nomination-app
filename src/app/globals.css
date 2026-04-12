@@ -14,6 +14,8 @@
   --ice: #e8f4f8;
   --glow-red: rgba(200, 16, 46, 0.45);
   --glow-blue: rgba(0, 48, 135, 0.5);
+  --accent-gold: #f1c40f;
+  --accent-gold-soft: rgba(241, 196, 15, 0.22);
   --font-ui: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Bebas Neue", var(--font-ui);
 }
@@ -60,7 +62,7 @@ body {
     0 0 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Sestavovač – prémiový tmavý panel */
+/* Editor sestavy – prémiový tmavý panel */
 .lineup-board {
   background:
     radial-gradient(ellipse 120% 80% at 50% -20%, rgba(0, 48, 135, 0.22), transparent 55%),
@@ -86,32 +88,6 @@ body {
   border-radius: 999px;
   opacity: 0.95;
   box-shadow: 0 0 20px rgba(200, 16, 46, 0.25);
-}
-
-/* NHL 25 — světlý panel „Moje sestava“ */
-.nhl25-moje-sestava-panel {
-  background:
-    radial-gradient(ellipse 110% 100% at 50% -25%, rgba(91, 143, 212, 0.14), transparent 52%),
-    linear-gradient(180deg, #ffffff 0%, #f4f6f9 38%, #e8ecf2 100%);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 22px 56px rgba(15, 23, 42, 0.1);
-}
-
-.nhl25-moje-sestava-accent {
-  height: 3px;
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 48, 135, 0.35) 20%,
-    rgba(200, 16, 46, 0.75) 50%,
-    rgba(0, 48, 135, 0.3) 80%,
-    transparent
-  );
-  box-shadow: 0 0 16px rgba(200, 16, 46, 0.2);
 }
 
 /* NHL 25 karty — zlatý/bílý lem, jemný 3D stín */
@@ -146,7 +122,7 @@ body {
     0 28px 90px rgba(0, 0, 0, 0.55);
 }
 
-/* Export plakát — stejný tmavý „ledový“ panel jako sestavovač (ne světlé rink pozadí). */
+/* Export plakát — stejný tmavý „ledový“ panel jako editor sestavy (ne světlé rink pozadí). */
 .nomination-poster-panel {
   background:
     radial-gradient(ellipse 120% 80% at 50% -25%, rgba(0, 48, 135, 0.2), transparent 55%),
@@ -211,12 +187,52 @@ body {
   }
 }
 
+/* Pozadí řeší SestavaAmbientBackground — zde jen minimální kontext stránky */
 .sestava-page-ambient {
+  position: relative;
+}
+
+/* Prémiový tmavý panel (pool / obal sekcí) */
+.sestava-premium-panel-dark {
   background:
-    radial-gradient(ellipse 110% 75% at 50% -28%, rgba(0, 48, 135, 0.42), transparent 58%),
-    radial-gradient(ellipse 55% 45% at 0% 35%, rgba(200, 16, 46, 0.14), transparent 52%),
-    radial-gradient(ellipse 50% 42% at 100% 55%, rgba(0, 48, 135, 0.22), transparent 48%),
-    linear-gradient(180deg, #0a0e17 0%, #05080f 45%, #04060c 100%);
+    radial-gradient(ellipse 100% 120% at 50% -30%, rgba(200, 16, 46, 0.08), transparent 55%),
+    radial-gradient(ellipse 80% 80% at 100% 100%, rgba(0, 48, 135, 0.12), transparent 45%),
+    linear-gradient(165deg, rgba(15, 23, 42, 0.92) 0%, rgba(8, 12, 22, 0.96) 50%, rgba(5, 8, 15, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(200, 16, 46, 0.12),
+    0 0 60px rgba(0, 48, 135, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Světlý panel „Moje sestava“ — sjednocení s českými akcenty */
+.nhl25-moje-sestava-panel {
+  background:
+    radial-gradient(ellipse 100% 90% at 50% -20%, rgba(200, 16, 46, 0.06), transparent 50%),
+    radial-gradient(ellipse 80% 70% at 100% 100%, rgba(0, 48, 135, 0.08), transparent 45%),
+    linear-gradient(180deg, #ffffff 0%, #f6f8fc 42%, #eef2f7 100%);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.9),
+    0 0 0 2px rgba(200, 16, 46, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 28px 64px rgba(15, 23, 42, 0.12),
+    0 0 80px rgba(0, 48, 135, 0.08);
+}
+
+.nhl25-moje-sestava-accent {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(241, 196, 15, 0.5) 18%,
+    rgba(200, 16, 46, 0.85) 42%,
+    rgba(0, 48, 135, 0.65) 58%,
+    rgba(241, 196, 15, 0.45) 82%,
+    transparent
+  );
+  box-shadow: 0 0 20px rgba(200, 16, 46, 0.25), 0 0 28px rgba(241, 196, 15, 0.15);
 }
 
 @keyframes landing-cta-glow {

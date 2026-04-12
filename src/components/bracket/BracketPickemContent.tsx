@@ -396,7 +396,7 @@ export function BracketPickemContent() {
           Pick’em je jen pro radost — <strong className="text-white">bez vstupného</strong>, bez účtu. Chceš nominovat
           hráče?{" "}
           <Link href="/sestava" className="font-semibold text-cyan-300 underline-offset-2 hover:underline">
-            Sestavovač nominace
+            Editor sestavy nominace
           </Link>
         </p>
         <button

@@ -1,4 +1,4 @@
-# MS 2026 Sestavovač nominace
+# MS 2026 Editor sestavy nominace
 
 MVP aplikace pro hokejové fanoušky – sestav si svou nominaci na Mistrovství světa 2026.
 
@@ -40,10 +40,9 @@ Otevři [http://localhost:3000](http://localhost:3000)
 
 ## Pravidla sestavy
 
-- **3 brankáři** (G)
-- **7 obránců** (D)
-- **14 útočníků** (F)
-- **Celkem 24 hráčů**
+- **Základní sestava (20 + 2):** 20 bruslařů (13 útočníků v lajnách včetně 13. útočníka u 4. lajny, 7 obránců v párech + 7. bek) a **2 brankáři** — odpovídá typické „dresovací“ nominaci na zápas.
+- **Náhradníci (3):** 3. brankář, náhradní útočník, 8. bek (náhradní obránce).
+- **3 brankáři** (G), **8 obránců** (D), **14 útočníků** (F) — **celkem 25 hráčů** (soupiska MS)
 - Jeden hráč může být označen jako **Kapitán** (C)
 
 ## Funkce

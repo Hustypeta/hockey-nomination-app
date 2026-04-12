@@ -45,21 +45,21 @@ function ShareContent() {
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#0c0e12] px-4">
         <p className="text-white font-display text-xl mb-4">Odkaz je neplatný nebo poškozený.</p>
         <Link href="/sestava" className="text-[#c41e3a] hover:underline">
-          ← Zpět na sestavovač
+          ← Zpět na editor sestavy
         </Link>
       </div>
     );
   }
 
   const ordered = lineupToPlayers(payload.lineupStructure, players);
-  if (ordered.length !== 24) {
+  if (ordered.length !== 25) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#0c0e12] px-4">
         <p className="text-white font-display text-xl mb-4 text-center">
           V odkazu chybí data hráčů nebo je sestava nekompletní.
         </p>
         <Link href="/sestava" className="text-[#c41e3a] hover:underline">
-          ← Zpět na sestavovač
+          ← Zpět na editor sestavy
         </Link>
       </div>
     );
