@@ -83,6 +83,8 @@ model Nomination {
   captainId         String?
   lineupStructure   Json?
   createdAt         DateTime @default(now())
+  /// Časový bonus v % k bodům platný v okamžiku uložení (0 / 10 / 25 / 40), časové pásmo Europe/Prague.
+  timeBonusPercent  Int      @default(0)
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 

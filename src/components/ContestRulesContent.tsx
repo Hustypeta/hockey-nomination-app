@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CONTEST_DEADLINE_CS } from "@/lib/contestTimeBonus";
 
 export function ContestRulesContent() {
   return (
@@ -14,9 +15,32 @@ export function ContestRulesContent() {
           <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
             <span className="font-bold text-amber-300">•</span>
             <span>
-              <strong className="text-white">Účast v soutěži je zdarma.</strong> Podmínkou zařazení do vyhodnocení
-              bude platné odeslání nominace v termínu uzávěrky (upřesníme před startem).
+              <strong className="text-white">Účast v soutěži je zdarma.</strong> Podmínkou zařazení do vyhodnocení je
+              uložení nominace k účtu nejpozději do{" "}
+              <strong className="text-white">{CONTEST_DEADLINE_CS}</strong>.
             </span>
+          </li>
+          <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
+            <span className="font-bold text-amber-300">•</span>
+            <div>
+              <strong className="text-white">Časový bonus</strong> se při uložení nominace zapíše do výsledku a násobí
+              součet bodů za hráče (ne bonusy za kapitána a asistenty) tímto koeficientem:
+              <ul className="mt-2 list-inside list-disc space-y-1 text-white/70">
+                <li>
+                  do 30.&nbsp;4.&nbsp;2026 (včetně, čas ČR): <strong className="text-white">+40&nbsp;%</strong>
+                </li>
+                <li>
+                  do 7.&nbsp;5.&nbsp;2026 (včetně): <strong className="text-white">+25&nbsp;%</strong>
+                </li>
+                <li>
+                  do 10.&nbsp;5.&nbsp;2026 (včetně): <strong className="text-white">+10&nbsp;%</strong>
+                </li>
+                <li>
+                  od 11.&nbsp;5.&nbsp;2026: <strong className="text-white">0&nbsp;%</strong> (nominace lze uložit ještě
+                  do uzávěrky 13.&nbsp;5., ale bez časového bonusu)
+                </li>
+              </ul>
+            </div>
           </li>
           <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
             <span className="font-bold text-amber-300">•</span>
@@ -96,7 +120,8 @@ export function ContestRulesContent() {
           </li>
         </ul>
         <p className="mt-6 text-center text-xs text-white/40">
-          Přesný termín uzávěrky upřesníme před ostrým startem. Sestavovač můžeš používat i bez účasti v soutěži.
+          Časové hranice bonusu a uzávěrka platí podle kalendářního data v časovém pásmu ČR (Europe/Prague). Sestavovač
+          můžeš používat i bez účasti v soutěži.
         </p>
         <p className="mt-8 text-center">
           <Link

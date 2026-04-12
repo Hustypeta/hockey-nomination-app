@@ -28,6 +28,7 @@ async function getNomination(id: string) {
     players: orderedPlayers,
     lineupStructure,
     createdAt: nomination.createdAt,
+    timeBonusPercent: nomination.timeBonusPercent,
   };
 }
 

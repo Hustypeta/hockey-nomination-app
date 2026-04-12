@@ -3,6 +3,10 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
+import {
+  getTimeBonusPercentForInstant,
+  isNominationSubmissionOpen,
+} from "@/lib/contestTimeBonus";
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,18 +54,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const now = new Date();
+    if (!isNominationSubmissionOpen(now)) {
+      return NextResponse.json(
+        {
+          error:
+            "Uzávěrka soutěže už proběhla (13. 5. 2026 23:59). Novou nominaci do vyhodnocení už nelze uložit.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const timeBonusPercent = getTimeBonusPercentForInstant(now);
+
     const nomination = await prisma.nomination.create({
       data: {
         userId: session.user.id,
         selectedPlayerIds,
         captainId: captainId || null,
         lineupStructure: lineupStructure ?? undefined,
+        timeBonusPercent,
       },
     });
 
     return NextResponse.json({
       id: nomination.id,
       message: "Nominace uložena",
+      createdAt: nomination.createdAt.toISOString(),
+      timeBonusPercent: nomination.timeBonusPercent,
     });
   } catch (error) {
     console.error("Failed to create nomination:", error);

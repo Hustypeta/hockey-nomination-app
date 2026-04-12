@@ -1,0 +1,59 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+export type ContestStats = {
+  nominationCount: number | null;
+  contestTimeBonusPercent: number;
+  contestSubmissionOpen: boolean;
+};
+
+const DEFAULT_STATS: ContestStats = {
+  nominationCount: null,
+  contestTimeBonusPercent: 0,
+  contestSubmissionOpen: true,
+};
+
+/**
+ * Načte /api/stats (počet nominací + aktuální časový bonus + zda jde ještě ukládat).
+ * Obnovuje se každou minutu kvůli přelomu dne v časové pásmu soutěže.
+ */
+export function useContestStats() {
+  const [stats, setStats] = useState<ContestStats>(DEFAULT_STATS);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = () => {
+      fetch("/api/stats")
+        .then((r) => r.json())
+        .then(
+          (d: {
+            nominationCount?: number | null;
+            contestTimeBonusPercent?: number;
+            contestSubmissionOpen?: boolean;
+          }) => {
+            if (cancelled) return;
+            setStats({
+              nominationCount: typeof d.nominationCount === "number" ? d.nominationCount : null,
+              contestTimeBonusPercent:
+                typeof d.contestTimeBonusPercent === "number" ? d.contestTimeBonusPercent : 0,
+              contestSubmissionOpen: d.contestSubmissionOpen !== false,
+            });
+          }
+        )
+        .catch(() => {
+          if (!cancelled) setStats(DEFAULT_STATS);
+        });
+    };
+
+    load();
+    const id = setInterval(load, 60_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  return stats;
+}

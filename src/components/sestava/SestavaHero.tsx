@@ -2,13 +2,19 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import { TOTAL_PLAYERS } from "@/types";
+import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
+import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
 export function SestavaHero({
   filled,
   subtitleCounts,
+  contestTimeBonusPercent,
+  contestSubmissionOpen,
 }: {
   filled: number;
   subtitleCounts: string;
+  contestTimeBonusPercent: ContestTimeBonusPercent;
+  contestSubmissionOpen: boolean;
 }) {
   const { data: session, status } = useSession();
 
@@ -57,6 +63,11 @@ export function SestavaHero({
                 style={{ width: `${pct}%` }}
               />
             </div>
+            <ContestTimeBonusCallout
+              variant="builder"
+              bonusPercent={contestTimeBonusPercent}
+              submissionOpen={contestSubmissionOpen}
+            />
           </div>
         </div>
 

@@ -13,6 +13,7 @@ import {
   letterboxCanvas,
   downloadDataUrl,
 } from "@/lib/captureSharePoster";
+import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
 const ENTRY_GAME_URL = process.env.NEXT_PUBLIC_VSTOUPIT_DO_HRY_URL ?? "#";
 
@@ -28,6 +29,10 @@ interface SaveShareModalProps {
   captainId: string | null;
   onSave: () => Promise<string | null>;
   isSaving: boolean;
+  /** Zda server ještě přijímá uložení nominace k soutěži. */
+  contestSubmissionOpen?: boolean;
+  /** Aktuální časový bonus (pro info u tlačítka uložit). */
+  contestTimeBonusPercent?: ContestTimeBonusPercent;
 }
 
 const SHARE_TITLE = "MS 2026 – nominace";
@@ -43,6 +48,8 @@ export function SaveShareModal({
   captainId,
   onSave,
   isSaving,
+  contestSubmissionOpen = true,
+  contestTimeBonusPercent = 0,
 }: SaveShareModalProps) {
   const [shareBusy, setShareBusy] = useState(false);
   const [shareHint, setShareHint] = useState<string | null>(null);
@@ -372,10 +379,25 @@ export function SaveShareModal({
 
           {isAuthenticated && (
             <div className="mt-6 border-t border-white/10 pt-5">
+              {!contestSubmissionOpen ? (
+                <p className="mb-3 rounded-lg border border-rose-500/35 bg-rose-950/30 px-3 py-2.5 text-center text-xs leading-relaxed text-rose-100/90">
+                  Uzávěrka soutěže už proběhla — novou nominaci do vyhodnocení nelze uložit. Odkaz a plakát pořád
+                  můžeš sdílet.
+                </p>
+              ) : contestTimeBonusPercent > 0 ? (
+                <p className="mb-3 text-center text-[11px] text-amber-100/80">
+                  Při uložení se k účtu zapíše časový bonus{" "}
+                  <strong className="text-amber-200">+{contestTimeBonusPercent} %</strong> k bodům.
+                </p>
+              ) : (
+                <p className="mb-3 text-center text-[11px] text-white/45">
+                  Časový bonus je už 0 % — nominace se do soutěže stejně započítá do uzávěrky.
+                </p>
+              )}
               <button
                 type="button"
                 onClick={handleSaveNomination}
-                disabled={isSaving || !!savedId}
+                disabled={isSaving || !!savedId || !contestSubmissionOpen}
                 className="w-full rounded-xl border border-white/12 bg-white/[0.04] py-3 font-display text-sm font-semibold text-white transition-colors hover:border-[#c8102e]/40 hover:bg-white/[0.07] disabled:cursor-not-allowed disabled:opacity-45"
               >
                 {savedId ? "Nominace uložena u účtu" : isSaving ? "Ukládám…" : "Uložit nominaci k účtu"}

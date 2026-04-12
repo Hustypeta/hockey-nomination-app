@@ -24,6 +24,7 @@ export async function GET(
       captainId: nomination.captainId,
       players: orderedPlayers,
       createdAt: nomination.createdAt,
+      timeBonusPercent: nomination.timeBonusPercent,
     });
   } catch (error) {
     console.error("Failed to fetch nomination:", error);

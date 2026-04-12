@@ -22,6 +22,8 @@ import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { lineupToPlayers, isLineupComplete } from "@/lib/lineupUtils";
+import { useContestStats } from "@/hooks/useContestStats";
+import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 import {
   tryAutoAssignPlayer,
   assignPlayerToTarget,
@@ -53,6 +55,7 @@ export function NominationBuilderPage() {
   const [sharePosterFooterIso, setSharePosterFooterIso] = useState<string | null>(null);
   const [siteOrigin, setSiteOrigin] = useState("");
   const wasCompleteRef = useRef(false);
+  const contestStats = useContestStats();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -268,8 +271,20 @@ export function NominationBuilderPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Chyba při ukládání");
+      if (!res.ok) {
+        toast.error(data.error || "Chyba při ukládání");
+        return null;
+      }
+      const bp = data.timeBonusPercent as number | undefined;
+      if (typeof bp === "number" && bp > 0) {
+        toast.success(`Nominace uložena — časový bonus +${bp} % k bodům.`);
+      } else {
+        toast.success("Nominace uložena.");
+      }
       return data.id ?? null;
+    } catch {
+      toast.error("Chyba při ukládání — zkus to znovu.");
+      return null;
     } finally {
       setSaving(false);
     }
@@ -281,6 +296,10 @@ export function NominationBuilderPage() {
 
   const subtitleCounts =
     "3 brankáři · 7 obránců · 14 útočníků · celkem max. 24 hráčů";
+
+  const bonusPercent = [0, 10, 25, 40].includes(contestStats.contestTimeBonusPercent)
+    ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
+    : (0 as ContestTimeBonusPercent);
 
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"
@@ -297,7 +316,12 @@ export function NominationBuilderPage() {
 
         <div className="sticky top-0 z-40">
           <SiteHeader />
-          <SestavaHero filled={filled} subtitleCounts={subtitleCounts} />
+          <SestavaHero
+            filled={filled}
+            subtitleCounts={subtitleCounts}
+            contestTimeBonusPercent={bonusPercent}
+            contestSubmissionOpen={contestStats.contestSubmissionOpen}
+          />
         </div>
 
         <div className="relative z-10 mx-auto max-w-[90rem] px-4 py-8 lg:py-10">
@@ -426,6 +450,8 @@ export function NominationBuilderPage() {
           captainId={captainId}
           onSave={handleSave}
           isSaving={saving}
+          contestSubmissionOpen={contestStats.contestSubmissionOpen}
+          contestTimeBonusPercent={bonusPercent}
         />
 
         <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />

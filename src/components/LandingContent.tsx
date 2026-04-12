@@ -2,30 +2,22 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Users, Clock, ChevronRight, Sparkles, Trophy, BookOpen } from "lucide-react";
+import {
+  Users,
+  Clock,
+  ChevronRight,
+  Sparkles,
+  Trophy,
+  BookOpen,
+  LayoutGrid,
+} from "lucide-react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
+import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
+import { useContestStats } from "@/hooks/useContestStats";
+import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T18:00:00+02:00");
-
-function useNominationCount() {
-  const [count, setCount] = useState<number | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/stats")
-      .then((r) => r.json())
-      .then((d: { nominationCount?: number | null }) => {
-        if (!cancelled && typeof d.nominationCount === "number") setCount(d.nominationCount);
-      })
-      .catch(() => {
-        if (!cancelled) setCount(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-  return count;
-}
 
 function useCountdown(target: Date) {
   const [now, setNow] = useState(() => Date.now());
@@ -48,8 +40,12 @@ function formatCs(n: number) {
 }
 
 export function LandingContent() {
-  const nominationCount = useNominationCount();
+  const contestStats = useContestStats();
+  const nominationCount = contestStats.nominationCount;
   const cd = useCountdown(MS_2026_KICKOFF);
+  const bonusPercent = [0, 10, 25, 40].includes(contestStats.contestTimeBonusPercent)
+    ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
+    : (0 as ContestTimeBonusPercent);
 
   return (
     <main>
@@ -101,6 +97,12 @@ export function LandingContent() {
             </p>
           </div>
 
+          <ContestTimeBonusCallout
+            variant="landing"
+            bonusPercent={bonusPercent}
+            submissionOpen={contestStats.contestSubmissionOpen}
+          />
+
           <div className="mx-auto mt-8 max-w-lg rounded-2xl border border-cyan-500/20 bg-gradient-to-b from-[#0c1424]/90 to-[#080d16]/90 p-4 shadow-[0_0_40px_rgba(34,211,238,0.08)] sm:mt-10 sm:p-5">
             <div className="flex items-center justify-center gap-2 text-cyan-200/90">
               <Clock className="h-4 w-4" aria-hidden />
@@ -137,22 +139,33 @@ export function LandingContent() {
               Proč to zkusit?
             </h2>
             <p className="mx-auto mt-2 max-w-2xl text-center text-xs text-white/45 sm:text-sm">
-              Krátce, o co jde — soutěžní pravidla jsou na samostatné stránce{" "}
+              <strong className="font-semibold text-white/65">Soupiska v sestavovači je připravená</strong> — můžeš
+              nominaci skládat a sdílet hned. K tomu je na webu i{" "}
+              <strong className="font-semibold text-white/65">Pick’em na play-off</strong> (ten časem doladíme podle
+              losu). Pravidla soutěže najdeš na stránce{" "}
               <Link href="/pravidla-souteze" className="text-cyan-300/90 underline-offset-2 hover:underline">
                 Pravidla soutěže
               </Link>
               .
             </p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-5">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
               <div className="rounded-2xl border border-white/[0.08] bg-[#0a0e17]/80 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#003087]/25 text-sky-200 ring-1 ring-[#003087]/35">
                   <Users className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-white/80">
-                  Máš k dispozici <strong className="text-white">až 138 hráčů</strong>, rozhraní je{" "}
-                  <strong className="text-white">jednoduché a přehledné</strong>, a svoji nominaci{" "}
-                  <strong className="text-white">snadno sdílíš</strong> odkazem nebo plakátem.
+                  <strong className="text-white">Sestavovač je funkční</strong> — výběr z{" "}
+                  <strong className="text-white">více než 130 hráčů</strong>, přehledné lajny a sdílení{" "}
+                  <strong className="text-white">odkazem i plakátem</strong>. Tohle je jádro webu a můžeš to hned
+                  použít.
                 </p>
+                <Link
+                  href="/sestava"
+                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl border border-[#003087]/40 bg-[#003087]/15 px-4 py-2.5 text-sm font-semibold text-sky-100 transition hover:border-[#003087]/55 hover:bg-[#003087]/25"
+                >
+                  Otevřít sestavovač
+                  <ChevronRight className="h-4 w-4 opacity-90" aria-hidden />
+                </Link>
               </div>
               <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-b from-amber-500/[0.08] to-[#0a0e14]/90 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/15 text-amber-200 ring-1 ring-amber-500/30">
@@ -172,6 +185,24 @@ export function LandingContent() {
                 >
                   <BookOpen className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
                   Pravidla soutěže
+                </Link>
+              </div>
+              <div className="rounded-2xl border border-cyan-500/25 bg-gradient-to-b from-cyan-500/[0.07] to-[#0a0e17]/90 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:col-span-2 lg:col-span-1">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-200 ring-1 ring-cyan-500/30">
+                  <LayoutGrid className="h-5 w-5" aria-hidden />
+                </div>
+                <p className="text-sm leading-relaxed text-white/80">
+                  <strong className="text-white">Bracket Pick’em</strong> — tipni si play-off: skupiny, čtvrtfinále,
+                  semifinále, finále, bronz a pár bonusů.{" "}
+                  <strong className="text-white">Zdarma</strong>, bez účtu; soupiska tě sem láká, pick’em si časem
+                  ještě vyladíme podle oficiálního losu a soupisky účastníků.
+                </p>
+                <Link
+                  href="/bracket"
+                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl border border-cyan-400/35 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition hover:border-cyan-300/50 hover:bg-cyan-500/15"
+                >
+                  Otevřít Pick’em
+                  <ChevronRight className="h-4 w-4 opacity-90" aria-hidden />
                 </Link>
               </div>
             </div>
