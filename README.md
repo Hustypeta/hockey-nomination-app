@@ -51,7 +51,7 @@ Otevři [http://localhost:3000](http://localhost:3000)
 - Vizuální hokejové hřiště s dresy
 - Seznam hráčů z databáze – kliknutím přidáš do sestavy
 - Výběr kapitána – klikni na dres
-- **Uložit a Sdílet** – uloží do DB a stáhne plakát (PNG)
+- **Uložit a Sdílet** – otevře modal; uložení do účtu a stažení/sdílení PNG plakátu jsou samostatné kroky
 
 ## Hráči (seed)
 

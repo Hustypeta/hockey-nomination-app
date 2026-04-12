@@ -6,17 +6,52 @@ import { CSS } from "@dnd-kit/utilities";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, Info, GripVertical } from "lucide-react";
 import type { Player, Position } from "@/types";
-import { POSITION_LABELS, POSITION_LIMITS } from "@/types";
+import { POSITION_LABELS, POSITION_LIMITS, ROLE_LABELS } from "@/types";
 import { PlayerAvatar } from "./PlayerAvatar";
 
 type Tab = "all" | "G" | "D" | "F";
 
-/** Velký štítek pozice u jména v poolu (LW/C/RW/LD/RD/G/D/F). */
-function poolPositionHeadline(player: Player): string {
-  if (player.position === "G") return "G";
-  const r = player.role?.trim();
-  if (r) return r.toUpperCase();
-  return player.position;
+function PoolAbbrevLegend() {
+  return (
+    <div
+      className="rounded-xl border border-white/[0.12] bg-[#05080f]/90 px-3 py-2.5 text-[11px] leading-snug text-white/80 shadow-inner sm:text-xs sm:leading-relaxed"
+      aria-label="Vysvětlivky zkratek pozic"
+    >
+      <p className="mb-1.5 font-semibold tracking-wide text-white/95">Zkratky pozic</p>
+      <ul className="grid gap-x-3 gap-y-1 sm:grid-cols-2">
+        <li>
+          <span className="font-mono font-semibold text-sky-200">G</span> — {ROLE_LABELS.G}
+        </li>
+        <li>
+          <span className="font-mono font-semibold text-blue-200">D</span> — obránce (obecně)
+        </li>
+        <li>
+          <span className="font-mono font-semibold text-blue-200">LB</span> — {ROLE_LABELS.LB}
+        </li>
+        <li>
+          <span className="font-mono font-semibold text-blue-200">RB</span> — {ROLE_LABELS.RB}
+        </li>
+        <li>
+          <span className="font-mono font-semibold text-red-200">F</span> — {POSITION_LABELS.F} (obecně)
+        </li>
+        <li>
+          <span className="font-mono font-semibold text-red-200">LW</span> — {ROLE_LABELS.LW}
+        </li>
+        <li>
+          <span className="font-mono font-semibold text-red-200">C</span> — {ROLE_LABELS.C}
+        </li>
+        <li>
+          <span className="font-mono font-semibold text-red-200">RW</span> — {ROLE_LABELS.RW}
+        </li>
+      </ul>
+      <p className="mt-2 border-t border-white/[0.08] pt-2 text-[10px] text-white/55 sm:text-[11px]">
+        U hráče s více útočnými rolemi v datech se v čtverci může objevit např.{" "}
+        <span className="font-mono text-white/70">LW/RW</span>. Kombinace{" "}
+        <span className="font-mono text-white/70">LW+C+RW</span> se zobrazí jako{" "}
+        <span className="font-mono text-white/70">F</span>.
+      </p>
+    </div>
+  );
 }
 
 function DraggableCard({
@@ -84,22 +119,7 @@ function DraggableCard({
               size="lg"
             />
             <div className="min-w-0 flex-1 pt-0.5">
-              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span
-                  className={`
-                    shrink-0 font-display text-2xl font-bold leading-none tracking-wide sm:text-[1.65rem]
-                    ${player.position === "G" ? "text-sky-300" : ""}
-                    ${player.position === "D" ? "text-blue-200" : ""}
-                    ${player.position === "F" ? "text-red-200" : ""}
-                  `}
-                  aria-hidden
-                >
-                  {poolPositionHeadline(player)}
-                </span>
-                <span className="min-w-0 truncate text-base font-semibold leading-snug text-white sm:text-[17px]">
-                  {player.name}
-                </span>
-              </div>
+              <p className="truncate text-base font-semibold leading-snug text-white sm:text-[17px]">{player.name}</p>
               <p className="mt-1.5 line-clamp-2 text-sm leading-snug text-white/75">
                 <span className="text-white/85">{player.club}</span>
                 {player.league ? <span className="text-white/60"> · {player.league}</span> : null}
@@ -241,8 +261,10 @@ export function PlayerPoolPanel({
         />
       </div>
 
+      <PoolAbbrevLegend />
+
       <div className="flex flex-wrap items-center gap-2">
-        <Filter className="h-4 w-4 text-white/35" />
+        <Filter className="h-4 w-4 text-white/45" />
         <select
           value={league}
           onChange={(e) => setLeague(e.target.value)}
@@ -257,7 +279,7 @@ export function PlayerPoolPanel({
         </select>
       </div>
 
-      <p className="text-xs text-white/40">
+      <p className="text-xs text-white/55">
         Klikni na kartu pro rychlé přidání do prvního volného místa, nebo přetáhni na konkrétní slot v sestavě.
       </p>
 

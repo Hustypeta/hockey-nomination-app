@@ -21,7 +21,7 @@ interface SaveShareModalProps {
   onClose: () => void;
   /** Skrytý DOM prvý k zachycení (NHL25 share plakát). */
   captureRef: React.RefObject<HTMLDivElement | null>;
-  /** Před exportem obrázku — např. remount plakátu kvůli aktuálnímu datu ve footeru. */
+  /** Před exportem obrázku — např. aktualizace data ve footeru (volá se uvnitř flushSync). */
   onBeforeCapture?: () => void;
   isAuthenticated: boolean;
   lineupStructure: LineupStructure;
@@ -84,6 +84,7 @@ export function SaveShareModal({
         onBeforeCapture?.();
       });
       await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+      await new Promise<void>((r) => queueMicrotask(r));
       const el = captureRef.current;
       if (!el) {
         setShareHint("Plakát se nepodařilo najít. Zkus stránku obnovit.");
@@ -395,7 +396,7 @@ export function SaveShareModal({
                 href={ENTRY_GAME_URL}
                 className="w-full rounded-xl bg-gradient-to-r from-[#c8102e] to-[#8a0b22] py-3 text-center font-display text-base font-bold text-white shadow-lg shadow-[#c8102e]/15"
               >
-                Vstoupit do hry
+                Zúčastnit se soutěže
               </a>
             </div>
           )}

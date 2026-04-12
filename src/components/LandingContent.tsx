@@ -72,9 +72,9 @@ export function LandingContent() {
             Sestav si svoji nominaci na MS v hokeji 2026
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-center text-base leading-relaxed text-white/75 sm:text-lg">
-            Staň se na chvíli trenérem národního týmu: vyber <strong className="text-white">24 hráčů</strong> z
-            kandidátů, postav lajny, jmenuj kapitána a ukaž světu svou sestavu. Jedním klikem do hry.
+          <p className="mx-auto mt-6 max-w-3xl text-center text-base leading-relaxed text-white/75 sm:text-lg">
+            Staň se na chvíli trenérem českého národního týmu. Využij naplno výběr z více než 130 hráčů, poskládej si
+            formace podle sebe a sdílej svou sestavu pro hokejové MS ve Švýcarsku s ostatními.
           </p>
 
           <div className="mx-auto mt-8 flex max-w-xl flex-col items-center gap-2 sm:mt-10">
@@ -159,7 +159,7 @@ export function LandingContent() {
                   <Trophy className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-white/80">
-                  <strong className="text-white">50&nbsp;Kč</strong> vstup, srovnání s oficiální soupiskou a zápisem k{" "}
+                  <strong className="text-white">Účast zdarma</strong> — srovnání s oficiální soupiskou a zápisem k{" "}
                   <strong className="text-white">1. zápasu ČR</strong>.{" "}
                   <strong className="text-white">Žebříček</strong> zveřejníme online; u{" "}
                   <strong className="text-white">nejlepší trojky</strong> okomentuju sestavu (text nebo video).{" "}

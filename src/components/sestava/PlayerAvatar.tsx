@@ -1,14 +1,7 @@
 "use client";
 
 import type { Position } from "@/types";
-
-/** Brankář = G, jinak role (LW…) nebo D/F. */
-function avatarLabel(position: Position, role?: string | null) {
-  if (position === "G") return "G";
-  const r = role?.trim();
-  if (r) return r.toUpperCase();
-  return position;
-}
+import { poolPositionSquareLabel } from "@/lib/poolPositionLabel";
 
 function positionAccentClass(position: Position) {
   if (position === "G") return "text-sky-300 ring-sky-500/25";
@@ -16,10 +9,21 @@ function positionAccentClass(position: Position) {
   return "text-red-200 ring-red-500/20";
 }
 
-function positionTileTextClass(size: "sm" | "md" | "lg") {
-  if (size === "sm") return "text-lg font-bold tracking-wide";
-  if (size === "md") return "text-2xl font-bold tracking-wide";
-  return "text-[1.85rem] font-bold tracking-wide sm:text-[2.15rem]";
+function positionTileTextClass(size: "sm" | "md" | "lg", label: string) {
+  const long = label.length > 4;
+  if (size === "sm") {
+    return long
+      ? "max-w-[2.35rem] break-all text-center text-[10px] font-bold leading-tight tracking-wide"
+      : "text-lg font-bold tracking-wide";
+  }
+  if (size === "md") {
+    return long
+      ? "max-w-[2.65rem] break-all text-center text-sm font-bold leading-tight tracking-wide"
+      : "text-2xl font-bold tracking-wide";
+  }
+  return long
+    ? "max-w-[3.25rem] px-0.5 text-center text-[1.05rem] font-bold leading-tight tracking-wide sm:max-w-[3.5rem] sm:text-[1.2rem]"
+    : "text-[1.85rem] font-bold tracking-wide sm:text-[2.15rem]";
 }
 
 export function PlayerAvatar({
@@ -36,15 +40,22 @@ export function PlayerAvatar({
   size?: "sm" | "md" | "lg";
   imageUrl?: string | null;
 }) {
-  const label = avatarLabel(position, role);
+  const label = poolPositionSquareLabel({ position, role });
   const szBox =
     size === "sm" ? "h-10 w-10" : size === "lg" ? "h-[4.75rem] w-[4.75rem]" : "h-12 w-12";
+  const overlayLong = label.length > 4;
   const overlayLabelClass =
     size === "sm"
-      ? "text-[8px] leading-tight"
+      ? overlayLong
+        ? "max-w-full px-0.5 text-[7px] leading-tight"
+        : "text-[8px] leading-tight"
       : size === "lg"
-        ? "text-[12px] leading-none tracking-wide"
-        : "text-[9px] leading-tight";
+        ? overlayLong
+          ? "max-w-full px-1 text-[9px] leading-tight tracking-wide"
+          : "text-[12px] leading-none tracking-wide"
+        : overlayLong
+          ? "max-w-full px-0.5 text-[8px] leading-tight"
+          : "text-[9px] leading-tight";
 
   if (imageUrl) {
     return (
@@ -78,7 +89,7 @@ export function PlayerAvatar({
       <span
         className={`
           select-none font-display uppercase leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]
-          ${positionTileTextClass(size)}
+          ${positionTileTextClass(size, label)}
         `}
       >
         {label}

@@ -14,8 +14,8 @@ export function ContestRulesContent() {
           <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
             <span className="font-bold text-amber-300">•</span>
             <span>
-              <strong className="text-white">Vstupenka do soutěže 50&nbsp;Kč</strong> (zaplacená přes platební
-              bránu). Bez úhrady se nominace do vyhodnocení nezapočítává.
+              <strong className="text-white">Účast v soutěži je zdarma.</strong> Podmínkou zařazení do vyhodnocení
+              bude platné odeslání nominace v termínu uzávěrky (upřesníme před startem).
             </span>
           </li>
           <li className="flex gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3">
@@ -44,6 +44,14 @@ export function ContestRulesContent() {
                   úrovní — nepřičítají se obě najednou).
                 </li>
                 <li>
+                  <strong className="text-white/90">Jiný poměr útočníků a obránců na zápise</strong> (např. 12&nbsp;F +
+                  8&nbsp;D místo modelu 13&nbsp;F + 7&nbsp;D ve hře): přesné sloty platí tam, kde to zápis jednoznačně
+                  dovolí; hráče, které nelze přiřadit ke konkrétnímu slotu (např. 8.&nbsp;bek při sedmi bekovských
+                  pozicích ve hře, nebo 13.&nbsp;útočník při dvanácti útočnících na zápise), hodnotíme jako{" "}
+                  <strong className="text-white">trefu jména v dané kategorii</strong> (útočník / obránce), ne jako přesnou
+                  pozici.
+                </li>
+                <li>
                   <strong className="text-white/90">+10 bodů</strong> za správně zvoleného{" "}
                   <strong className="text-white">kapitána</strong> (shoda s „C“ u týmu dle oficiálního zápisu k 1.
                   zápasu).
@@ -56,7 +64,7 @@ export function ContestRulesContent() {
               </ul>
               <p className="mt-2 text-xs text-white/45">
                 Mapování tvých slotů (včetně náhradníků) na řádky v zápisu upřesníme v plných pravidlech, ať je
-                vyhodnocení jednoznačné. Při shodě skóre rozhodne dřívější platná úhrada vstupenky, případně los.
+                vyhodnocení jednoznačné. Při shodě skóre rozhodne dřívější platné odeslání nominace, případně los.
               </p>
             </div>
           </li>
@@ -88,8 +96,7 @@ export function ContestRulesContent() {
           </li>
         </ul>
         <p className="mt-6 text-center text-xs text-white/40">
-          Přesný termín uzávěrky a start plateb upřesníme před ostrým startem. Sestavovač můžeš používat i bez vstupu do
-          soutěže.
+          Přesný termín uzávěrky upřesníme před ostrým startem. Sestavovač můžeš používat i bez účasti v soutěži.
         </p>
         <p className="mt-8 text-center">
           <Link

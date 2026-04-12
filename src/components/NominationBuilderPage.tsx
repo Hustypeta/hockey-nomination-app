@@ -49,7 +49,8 @@ export function NominationBuilderPage() {
   const [saving, setSaving] = useState(false);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
   const shareCaptureRef = useRef<HTMLDivElement>(null);
-  const [sharePosterEpoch, setSharePosterEpoch] = useState(0);
+  /** Aktualizuje datum ve footeru plakátu těsně před html-to-image capture (ref zůstane na stejném uzlu). */
+  const [sharePosterFooterIso, setSharePosterFooterIso] = useState<string | null>(null);
   const [siteOrigin, setSiteOrigin] = useState("");
   const wasCompleteRef = useRef(false);
 
@@ -238,7 +239,7 @@ export function NominationBuilderPage() {
   const handleRandom = useCallback(() => {
     const next = buildRandomLineup(players);
     if (!next) {
-      toast.error("V databázi není dost hráčů (potřeba 3G + 7D + 15F).");
+      toast.error("V databázi není dost hráčů (potřeba 3G + 7D + 14F).");
       return;
     }
     setLineup(next);
@@ -318,13 +319,13 @@ export function NominationBuilderPage() {
               <div className="rounded-2xl border border-white/[0.09] bg-[#0a0e17]/55 p-5 shadow-[0_0_0_1px_rgba(0,48,135,0.14),0_28px_80px_rgba(0,0,0,0.45)] backdrop-blur-md sm:p-6">
                   <div className="mb-6">
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#c8102e]/90">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#ff5a6e] drop-shadow-[0_0_12px_rgba(200,16,46,0.35)]">
                       Pool
                     </p>
-                    <h2 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
+                    <h2 className="font-display text-2xl font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] md:text-3xl">
                       Dostupní hráči
                     </h2>
-                    <p className="mt-2 max-w-md text-sm leading-relaxed text-white/50">
+                    <p className="mt-2 max-w-md text-sm leading-relaxed text-white/72">
                       Klik na kartu = rychlé doplnění · úchop = přetáhni na konkrétní slot vpravo
                     </p>
                   </div>
@@ -401,17 +402,17 @@ export function NominationBuilderPage() {
         />
 
         <div
-          className="pointer-events-none fixed top-0 left-[-9999px] z-[-1] w-[580px]"
+          className="pointer-events-none fixed left-0 top-0 z-[-1] w-[920px] max-w-[920px] -translate-x-full"
           aria-hidden
         >
           <Nhl25SharePoster
-            key={sharePosterEpoch}
             ref={shareCaptureRef}
-            players={selectedPlayers}
+            players={players}
             lineup={lineup}
             captainId={captainId}
             assistantIds={lineup.assistantIds ?? []}
             siteUrl={siteOrigin}
+            footerInstantIso={sharePosterFooterIso}
           />
         </div>
 
@@ -419,7 +420,7 @@ export function NominationBuilderPage() {
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           captureRef={shareCaptureRef}
-          onBeforeCapture={() => setSharePosterEpoch((e) => e + 1)}
+          onBeforeCapture={() => setSharePosterFooterIso(new Date().toISOString())}
           isAuthenticated={isAuthenticated}
           lineupStructure={lineup}
           captainId={captainId}
