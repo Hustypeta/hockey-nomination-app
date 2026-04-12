@@ -264,7 +264,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                               <PosterPlayerCard
                                 key={`xf-${p.id}`}
                                 player={p}
-                                positionLabel={`EX${i + 1}`}
+                                positionLabel="EX"
                                 size="compact"
                                 captainId={captainId}
                                 assistantIds={aids}

@@ -79,8 +79,7 @@ export function NominationBuilderPage() {
         (s, l) => s + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0) + (l.x ? 1 : 0),
         0
       ) +
-      (lineup.extraForwards[0] ? 1 : 0) +
-      (lineup.extraForwards[1] ? 1 : 0),
+      (lineup.extraForwards[0] ? 1 : 0),
   };
 
   useEffect(() => {
@@ -153,11 +152,10 @@ export function NominationBuilderPage() {
         }
         setLineup(next);
         setSelectedSlot(null);
-      } else if (type === "extraForward" && player.position === "F" && lineIndex !== undefined) {
-        const slotIndex = lineIndex as 0 | 1;
+      } else if (type === "extraForward" && player.position === "F" && lineIndex === 0) {
         const next = assignPlayerToTarget(lineup, player, {
           type: "extraForward",
-          slotIndex,
+          slotIndex: 0,
         });
         if (next) setLineup(next);
         setSelectedSlot(null);
@@ -281,7 +279,7 @@ export function NominationBuilderPage() {
   }
 
   const subtitleCounts =
-    "3 brankáři · 7 obránců · 15 útočníků · celkem max. 25 hráčů";
+    "3 brankáři · 7 obránců · 14 útočníků · celkem max. 24 hráčů";
 
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"

@@ -21,7 +21,7 @@ interface SaveShareModalProps {
   onClose: () => void;
   /** Skrytý DOM prvý k zachycení (NHL25 share plakát). */
   captureRef: React.RefObject<HTMLDivElement | null>;
-  /** Před html2canvas — např. remount plakátu kvůli aktuálnímu datu ve footeru. */
+  /** Před exportem obrázku — např. remount plakátu kvůli aktuálnímu datu ve footeru. */
   onBeforeCapture?: () => void;
   isAuthenticated: boolean;
   lineupStructure: LineupStructure;

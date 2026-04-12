@@ -12,7 +12,7 @@ function cloneLineup(l: LineupStructure): LineupStructure {
     })) as LineupStructure["forwardLines"],
     defensePairs: l.defensePairs.map((x) => ({ ...x })) as LineupStructure["defensePairs"],
     goalies: [...l.goalies] as LineupStructure["goalies"],
-    extraForwards: [l.extraForwards[0] ?? null, l.extraForwards[1] ?? null] as LineupStructure["extraForwards"],
+    extraForwards: [l.extraForwards[0] ?? null] as LineupStructure["extraForwards"],
     extraDefensemen: [...(l.extraDefensemen ?? [])].slice(0, 1),
     assistantIds: [...(l.assistantIds ?? [])],
   };
@@ -50,9 +50,7 @@ export function positionCounts(lineup: LineupStructure) {
       lineup.forwardLines.reduce(
         (n, l) => n + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0) + (l.x ? 1 : 0),
         0
-      ) +
-      (lineup.extraForwards[0] ? 1 : 0) +
-      (lineup.extraForwards[1] ? 1 : 0),
+      ) + (lineup.extraForwards[0] ? 1 : 0),
   };
 }
 
@@ -135,13 +133,8 @@ export function tryAutoAssignPlayer(lineup: LineupStructure, player: Player): Li
       return next;
     }
   }
-  let [a, b] = next.extraForwards;
-  if (!a) {
-    next.extraForwards = [player.id, b];
-    return next;
-  }
-  if (!b) {
-    next.extraForwards = [a, player.id];
+  if (!next.extraForwards[0]) {
+    next.extraForwards = [player.id];
     return next;
   }
   return null;
@@ -151,7 +144,7 @@ export type DropTarget =
   | { type: "goalie"; index: number }
   | { type: "forward"; lineIndex: number; role: "lw" | "c" | "rw" | "x" }
   | { type: "defense"; pairIndex: number; role: "lb" | "rb" }
-  | { type: "extraForward"; slotIndex: 0 | 1 }
+  | { type: "extraForward"; slotIndex: 0 }
   | { type: "extraDefenseman"; slotIndex: 0 };
 
 /** Přiřadí hráče na konkrétní slot (DnD). Odstraní ho z předchozího místa v sestavě. */
@@ -217,14 +210,8 @@ export function assignPlayerToTarget(
 
   if (target.type !== "extraForward") return null;
   if (player.position !== "F") return null;
-  const pid = player.id;
-  let [a, b] = next.extraForwards;
-  if (a === pid) a = null;
-  if (b === pid) b = null;
-  const i = target.slotIndex;
-  if (i === 0) a = pid;
-  else b = pid;
-  next.extraForwards = [a, b];
+  if (target.slotIndex !== 0) return null;
+  next.extraForwards = [player.id];
   return next;
 }
 
@@ -241,7 +228,7 @@ export function buildRandomLineup(players: Player[]): LineupStructure | null {
   const gs = shuffle(players.filter((p) => p.position === "G"));
   const ds = shuffle(players.filter((p) => p.position === "D"));
   const fs = shuffle(players.filter((p) => p.position === "F"));
-  if (gs.length < 3 || ds.length < 7 || fs.length < 15) return null;
+  if (gs.length < 3 || ds.length < 7 || fs.length < 14) return null;
 
   let fi = 0;
   const forwardLines: LineupStructure["forwardLines"] = [
@@ -260,7 +247,7 @@ export function buildRandomLineup(players: Player[]): LineupStructure | null {
   ] as LineupStructure["defensePairs"];
 
   const goalies: LineupStructure["goalies"] = [gs[0].id, gs[1].id, gs[2].id];
-  const extraForwards: LineupStructure["extraForwards"] = [fs[fi].id, fs[fi + 1].id];
+  const extraForwards: LineupStructure["extraForwards"] = [fs[fi].id];
   const extraDefensemen: string[] = [];
 
   return {
@@ -295,7 +282,7 @@ export function clearPositionGroup(
       { lw: null, c: null, rw: null, x: null },
       { lw: null, c: null, rw: null, x: null },
     ] as LineupStructure["forwardLines"];
-    next.extraForwards = [null, null];
+    next.extraForwards = [null];
   }
   const used = lineupPlayerIds(next);
   next.assistantIds = (next.assistantIds ?? []).filter((id) => used.has(id));

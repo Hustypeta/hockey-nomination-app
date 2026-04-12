@@ -1,21 +1,19 @@
-import html2canvas from "html2canvas";
+import { toCanvas } from "html-to-image";
 
+/**
+ * Export plakátu přes html-to-image (SVG → canvas v prohlížeči).
+ * html2canvas neumí barvy ve tvaru oklab(), které Tailwind v4 generuje z theme.
+ */
 export async function captureElementToCanvas(
   element: HTMLElement,
   options?: { scale?: number; backgroundColor?: string | null }
 ): Promise<HTMLCanvasElement> {
-  const scale = options?.scale ?? 3;
+  const pixelRatio = options?.scale ?? 3;
   await document.fonts.ready.catch(() => undefined);
-  return html2canvas(element, {
-    scale,
-    useCORS: true,
-    allowTaint: true,
+  return toCanvas(element, {
+    pixelRatio,
     backgroundColor: options?.backgroundColor ?? "#e8ecf2",
-    logging: false,
-    windowWidth: element.scrollWidth,
-    windowHeight: element.scrollHeight,
-    scrollX: 0,
-    scrollY: 0,
+    cacheBust: true,
   });
 }
 

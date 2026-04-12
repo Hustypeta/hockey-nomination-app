@@ -36,7 +36,8 @@ export function parseDroppableId(id: string): DropTarget | null {
   }
   if (id.startsWith("slot-xf-")) {
     const n = Number(id.slice("slot-xf-".length));
-    if (n === 0 || n === 1) return { type: "extraForward", slotIndex: n as 0 | 1 };
+    // slot-xf-1: zpětná kompatibilita starého UI (druhý náhradní útočník)
+    if (n === 0 || n === 1) return { type: "extraForward", slotIndex: 0 };
     return null;
   }
   if (id.startsWith("slot-xd-")) {

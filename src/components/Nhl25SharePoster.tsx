@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useLayoutEffect, useState } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
@@ -20,15 +20,17 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
     const aids = assistantIds.length ? assistantIds : (lineup.assistantIds ?? []);
     const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) : null);
 
-    const dateLabel = useMemo(
-      () =>
+    /** Jen na klientu — SSR vs. prohlížeč (časové pásmo) rozbíjí hydrataci (React #418). Layout effect = před malováním i před capture po remountu. */
+    const [dateLabel, setDateLabel] = useState("");
+    useLayoutEffect(() => {
+      setDateLabel(
         new Intl.DateTimeFormat("cs-CZ", {
           day: "numeric",
           month: "long",
           year: "numeric",
-        }).format(new Date()),
-      []
-    );
+        }).format(new Date())
+      );
+    }, []);
 
     const host = siteUrl.replace(/^https?:\/\//, "");
 
@@ -171,7 +173,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
             <h2 className="mb-3 border-b border-slate-200 pb-2 font-display text-xs font-bold uppercase tracking-[0.2em] text-slate-800">
               Doplněk soupisky
             </h2>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <div className="rounded-md border border-slate-200/80 bg-white/90 p-1.5">
                 <p className="mb-1 text-center text-[8px] font-semibold uppercase tracking-wider text-slate-500">
                   13. útok
@@ -208,23 +210,6 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
               </div>
               <div className="rounded-md border border-slate-200/80 bg-white/90 p-1.5">
                 <p className="mb-1 text-center text-[8px] font-semibold uppercase tracking-wider text-slate-500">
-                  Náhr. F
-                </p>
-                <Nhl25JerseyCard
-                  player={getPlayer(lineup.extraForwards[1] ?? null)}
-                  positionLabel="F"
-                  size="compact"
-                  isCaptain={
-                    lineup.extraForwards[1] ? captainId === lineup.extraForwards[1] : false
-                  }
-                  isAssistant={
-                    lineup.extraForwards[1] ? aids.includes(lineup.extraForwards[1]) : false
-                  }
-                  disableMotion
-                />
-              </div>
-              <div className="rounded-md border border-slate-200/80 bg-white/90 p-1.5">
-                <p className="mb-1 text-center text-[8px] font-semibold uppercase tracking-wider text-slate-500">
                   Náhr. D
                 </p>
                 <Nhl25JerseyCard
@@ -245,7 +230,9 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
         </div>
 
         <footer className="border-t border-slate-200/90 bg-slate-100/80 px-6 py-4 text-center">
-          <p className="text-[11px] font-medium text-slate-600">Sestaveno {dateLabel}</p>
+          <p className="text-[11px] font-medium text-slate-600">
+            {dateLabel ? `Sestaveno ${dateLabel}` : "Sestaveno"}
+          </p>
           {host ? (
             <p className="mt-1 font-display text-xs tracking-wide text-[#003087]/90">{host}</p>
           ) : null}

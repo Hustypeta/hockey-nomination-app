@@ -1,14 +1,25 @@
 "use client";
 
 import type { Position } from "@/types";
-import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 
-/** Na mini-dresu vždy srozumitelně: brankář = G, jinak role (LW…) nebo D/F. */
+/** Brankář = G, jinak role (LW…) nebo D/F. */
 function avatarLabel(position: Position, role?: string | null) {
   if (position === "G") return "G";
   const r = role?.trim();
   if (r) return r.toUpperCase();
   return position;
+}
+
+function positionAccentClass(position: Position) {
+  if (position === "G") return "text-sky-300 ring-sky-500/25";
+  if (position === "D") return "text-blue-200 ring-blue-400/20";
+  return "text-red-200 ring-red-500/20";
+}
+
+function positionTileTextClass(size: "sm" | "md" | "lg") {
+  if (size === "sm") return "text-lg font-bold tracking-wide";
+  if (size === "md") return "text-2xl font-bold tracking-wide";
+  return "text-[1.85rem] font-bold tracking-wide sm:text-[2.15rem]";
 }
 
 export function PlayerAvatar({
@@ -28,14 +39,12 @@ export function PlayerAvatar({
   const label = avatarLabel(position, role);
   const szBox =
     size === "sm" ? "h-10 w-10" : size === "lg" ? "h-[4.75rem] w-[4.75rem]" : "h-12 w-12";
-  const szText =
+  const overlayLabelClass =
     size === "sm"
       ? "text-[8px] leading-tight"
       : size === "lg"
         ? "text-[12px] leading-none tracking-wide"
         : "text-[9px] leading-tight";
-
-  const isG = position === "G";
 
   if (imageUrl) {
     return (
@@ -49,7 +58,7 @@ export function PlayerAvatar({
           aria-hidden
         />
         <span
-          className={`pointer-events-none absolute inset-x-0 bottom-0.5 flex items-center justify-center font-display font-bold uppercase tracking-wide text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)] ${szText}`}
+          className={`pointer-events-none absolute inset-x-0 bottom-0.5 flex items-center justify-center font-display font-bold uppercase tracking-wide text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)] ${overlayLabelClass}`}
         >
           {label}
         </span>
@@ -60,22 +69,17 @@ export function PlayerAvatar({
   return (
     <div
       role="img"
-      aria-label={name}
-      className={`relative shrink-0 overflow-hidden rounded-xl bg-[#06080d] shadow-[0_4px_16px_rgba(0,0,0,0.45)] ring-1 ring-white/12 ${szBox}`}
+      aria-label={`${name}, ${label}`}
+      className={`
+        flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white/[0.07] to-[#05070c]
+        shadow-[0_4px_16px_rgba(0,0,0,0.45)] ring-1 ring-inset ${positionAccentClass(position)} ${szBox}
+      `}
     >
-      <div className="absolute inset-0 flex items-end justify-center overflow-hidden pb-3">
-        <JerseySilhouetteShape
-          kind={isG ? "goalie" : "skater"}
-          visualPreset="lineup"
-          className="h-[155%] w-[155%] max-w-none shrink-0 -translate-x-0 translate-y-1"
-        />
-      </div>
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t from-black/85 via-black/50 to-transparent pt-3 pb-0.5"
-        aria-hidden
-      />
       <span
-        className={`pointer-events-none absolute inset-x-0 bottom-0.5 z-[2] flex items-center justify-center font-display font-bold uppercase tracking-wide text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] ${szText}`}
+        className={`
+          select-none font-display uppercase leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]
+          ${positionTileTextClass(size)}
+        `}
       >
         {label}
       </span>

@@ -26,10 +26,10 @@ export const ROLE_LABELS: Record<Role, string> = {
 export const POSITION_LIMITS = {
   G: 3,
   D: 7,
-  F: 15,
+  F: 14,
 } as const;
 
-export const TOTAL_PLAYERS = 25;
+export const TOTAL_PLAYERS = 24;
 
 export const POSITION_LABELS: Record<Position, string> = {
   G: "Brankáři",
@@ -42,7 +42,7 @@ export interface ForwardLine {
   lw: string | null; // playerId
   c: string | null;
   rw: string | null;
-  /** Jen u 4. lajny — 13. útočník v rozšířené nominaci (12 v lajnách + X + 2 náhradní = 15). V UI je pod řádkem LW–C–RW. */
+  /** Jen u 4. lajny — 13. útočník (12 v lajnách + X + 1 náhradní = 14 F). V UI je pod řádkem LW–C–RW. */
   x: string | null;
 }
 
@@ -56,8 +56,8 @@ export interface LineupStructure {
   /** První tři páry po dvou; čtvrtý řádek = sedmý bek (jeden slot LB, RB zůstává prázdný). */
   defensePairs: [DefensePair, DefensePair, DefensePair, DefensePair];
   goalies: [string | null, string | null, string | null]; // 3 brankáři
-  /** Dva náhradní útočníci. */
-  extraForwards: [string | null, string | null];
+  /** Jeden náhradní útočník (vedle 13. útočníka v 4. lajně). */
+  extraForwards: [string | null];
   /** Jeden náhradní obránce (mimo tři páry a sedmého beka ve 4. řádku — při klasické nominaci 7 beků nech prázdné). */
   extraDefensemen: string[];
   assistantIds?: string[];
@@ -77,7 +77,7 @@ export const EMPTY_LINEUP: LineupStructure = {
     { lb: null, rb: null },
   ],
   goalies: [null, null, null],
-  extraForwards: [null, null],
+  extraForwards: [null],
   extraDefensemen: [],
   assistantIds: [],
 };

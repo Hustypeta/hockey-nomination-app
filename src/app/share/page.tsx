@@ -52,7 +52,7 @@ function ShareContent() {
   }
 
   const ordered = lineupToPlayers(payload.lineupStructure, players);
-  if (ordered.length !== 25) {
+  if (ordered.length !== 24) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#0c0e12] px-4">
         <p className="text-white font-display text-xl mb-4 text-center">

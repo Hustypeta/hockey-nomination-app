@@ -73,7 +73,7 @@ export function LandingContent() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-center text-base leading-relaxed text-white/75 sm:text-lg">
-            Staň se na chvíli trenérem národního týmu: vyber <strong className="text-white">25 hráčů</strong> z
+            Staň se na chvíli trenérem národního týmu: vyber <strong className="text-white">24 hráčů</strong> z
             kandidátů, postav lajny, jmenuj kapitána a ukaž světu svou sestavu. Jedním klikem do hry.
           </p>
 

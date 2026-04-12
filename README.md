@@ -42,8 +42,8 @@ Otevři [http://localhost:3000](http://localhost:3000)
 
 - **3 brankáři** (G)
 - **7 obránců** (D)
-- **15 útočníků** (F)
-- **Celkem 25 hráčů**
+- **14 útočníků** (F)
+- **Celkem 24 hráčů**
 - Jeden hráč může být označen jako **Kapitán** (C)
 
 ## Funkce

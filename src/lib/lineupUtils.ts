@@ -21,14 +21,15 @@ function cloneLineup(l: LineupStructure): LineupStructure {
     }) as LineupStructure["forwardLines"],
     defensePairs: l.defensePairs.map((x) => ({ ...x })) as LineupStructure["defensePairs"],
     goalies: [...l.goalies] as LineupStructure["goalies"],
-    extraForwards: [l.extraForwards[0] ?? null, l.extraForwards[1] ?? null] as LineupStructure["extraForwards"],
+    extraForwards: [l.extraForwards[0] ?? null] as LineupStructure["extraForwards"],
     extraDefensemen: [...(l.extraDefensemen ?? [])].slice(0, 1),
     assistantIds: [...(l.assistantIds ?? [])],
   };
 }
 
 /**
- * Migrace starých nominací: 3 náhradní útočníci → 2 + třetí do 4. lajny (slot x).
+ * Migrace starých nominací: druhý náhradní útočník → doplnění 4. lajny (x / RW / C / LW), jinak sloučení do jednoho slotu.
+ * Dříve 3 náhradní útočníci → třetí do 4. lajny (slot x).
  * Sedmý bek z náhradníků přesune do defensePairs[3].lb (4. řádek). U 4. páru vždy RB = null.
  */
 export function normalizeLineupStructure(lineup: LineupStructure): LineupStructure {
@@ -62,7 +63,15 @@ export function normalizeLineupStructure(lineup: LineupStructure): LineupStructu
       else if (!l4.lw) next.forwardLines[3] = { ...l4, lw: c };
     }
   }
-  next.extraForwards = [a, b];
+  if (b) {
+    const l4 = next.forwardLines[3];
+    if (!l4.x) next.forwardLines[3] = { ...l4, x: b };
+    else if (!l4.rw) next.forwardLines[3] = { ...l4, rw: b };
+    else if (!l4.c) next.forwardLines[3] = { ...l4, c: b };
+    else if (!l4.lw) next.forwardLines[3] = { ...l4, lw: b };
+    else if (!a) a = b;
+  }
+  next.extraForwards = [a];
 
   const p3 = next.defensePairs[3];
   const lb = p3.lb ?? p3.rb ?? null;
@@ -106,9 +115,7 @@ export function isLineupComplete(lineup: LineupStructure): boolean {
     lineup.forwardLines.reduce(
       (s, l) => s + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0) + (l.x ? 1 : 0),
       0
-    ) +
-    (xf[0] ? 1 : 0) +
-    (xf[1] ? 1 : 0);
+    ) + (xf[0] ? 1 : 0);
   const dInFirstThree = lineup.defensePairs
     .slice(0, 3)
     .reduce((s, p) => s + (p.lb ? 1 : 0) + (p.rb ? 1 : 0), 0);
@@ -119,5 +126,5 @@ export function isLineupComplete(lineup: LineupStructure): boolean {
   const gCount = lineup.goalies.filter(Boolean).length;
   const p3RbEmpty = !p3.rb;
   const seventhSingle = !(p3.lb && lineup.extraDefensemen[0]);
-  return fCount === 15 && dCount === 7 && gCount === 3 && p3RbEmpty && seventhSingle;
+  return fCount === 14 && dCount === 7 && gCount === 3 && p3RbEmpty && seventhSingle;
 }

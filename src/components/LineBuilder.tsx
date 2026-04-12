@@ -118,12 +118,12 @@ export function LineBuilder({
     onLineupChange(next);
   };
 
-  const removeExtraForwardByIndex = (index: 0 | 1) => {
-    const id = lineup.extraForwards[index];
+  const removeExtraForward = () => {
+    const id = lineup.extraForwards[0];
     if (!id) return;
     const next = {
       ...lineup,
-      extraForwards: lineup.extraForwards.map((x, i) => (i === index ? null : x)) as LineupStructure["extraForwards"],
+      extraForwards: [null] as LineupStructure["extraForwards"],
       assistantIds: (lineup.assistantIds ?? []).filter((a) => a !== id),
     };
     if (captainId === id) onCaptainChange(null);
@@ -404,7 +404,7 @@ export function LineBuilder({
               />
             </div>
             <p className="mt-2 text-center text-[10px] leading-relaxed text-white/35">
-              Nadstavba nad klasické tři útočníky ve 4. lajně — reprezentační soupiska má 15 útočníků celkem.
+              Nadstavba nad klasické tři útočníky ve 4. lajně — v sestavě je 14 útočníků celkem (včetně 13. v řadě a jednoho náhradníka).
             </p>
           </div>
         ) : null}
@@ -672,8 +672,8 @@ export function LineBuilder({
           </div>
         </NhlSectionShell>
 
-        <NhlSectionShell title="Doplněk soupisky" kicker="13. útok · 2 F · 1 D">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        <NhlSectionShell title="Doplněk soupisky" kicker="13. útok · 1 F · 1 D">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
               <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                 13. útok
@@ -698,7 +698,7 @@ export function LineBuilder({
             </div>
             <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
               <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
-                Náhr. F 1
+                Náhr. F
               </p>
               <Slot
                 playerId={lineup.extraForwards[0] ?? null}
@@ -710,7 +710,7 @@ export function LineBuilder({
                 onClear={
                   lineup.extraForwards[0]
                     ? () => {
-                        removeExtraForwardByIndex(0);
+                        removeExtraForward();
                         onSelectSlot(null);
                       }
                     : undefined
@@ -718,27 +718,6 @@ export function LineBuilder({
               />
             </div>
             <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
-              <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
-                Náhr. F 2
-              </p>
-              <Slot
-                playerId={lineup.extraForwards[1] ?? null}
-                label="F"
-                type="extraForward"
-                lineIndex={1}
-                dndId="slot-xf-1"
-                jerseySize="compact"
-                onClear={
-                  lineup.extraForwards[1]
-                    ? () => {
-                        removeExtraForwardByIndex(1);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-            <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm sm:col-span-1">
               <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                 Náhr. D
               </p>
@@ -802,16 +781,16 @@ export function LineBuilder({
         </div>
       </SectionShell>
 
-      <SectionShell title="Náhradníci" kicker="2 útočníci · 1 obránce">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-4">
+      <SectionShell title="Náhradníci" kicker="1 útočník · 1 obránce">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4">
           <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
             <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-              Útočník 1
+              Útočník
             </p>
             <div className="flex justify-center">
               <Slot
                 playerId={lineup.extraForwards[0] ?? null}
-                label="EX1"
+                label="EX"
                 type="extraForward"
                 lineIndex={0}
                 dndId="slot-xf-0"
@@ -819,30 +798,7 @@ export function LineBuilder({
                 onClear={
                   lineup.extraForwards[0]
                     ? () => {
-                        removeExtraForwardByIndex(0);
-                        onSelectSlot(null);
-                      }
-                    : undefined
-                }
-              />
-            </div>
-          </div>
-          <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
-            <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-              Útočník 2
-            </p>
-            <div className="flex justify-center">
-              <Slot
-                playerId={lineup.extraForwards[1] ?? null}
-                label="EX2"
-                type="extraForward"
-                lineIndex={1}
-                dndId="slot-xf-1"
-                jerseySize="compact"
-                onClear={
-                  lineup.extraForwards[1]
-                    ? () => {
-                        removeExtraForwardByIndex(1);
+                        removeExtraForward();
                         onSelectSlot(null);
                       }
                     : undefined
