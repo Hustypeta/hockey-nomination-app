@@ -3,9 +3,11 @@ import { LandingContent } from "@/components/LandingContent";
 import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
-  title: "MS 2026 | Sestav nominaci, vyhraj dres — soutěž pro fanoušky",
+  title: {
+    absolute: "Sestav si nominaci na MS 2026 a vyhraj dres",
+  },
   description:
-    "Sestav si českou soupisku na MS 2026, využij časový bonus a zúčastni se soutěže o hokejový dres. Editor sestavy, plakát, Pick’em play-off.",
+    "Sestav si nominaci na MS 2026 a vyhraj dres — časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.",
 };
 
 export default function HomePage() {

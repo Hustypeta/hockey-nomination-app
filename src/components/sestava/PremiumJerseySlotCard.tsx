@@ -12,16 +12,70 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
+export type PremiumJerseySize = "compact" | "skater" | "goalie";
+
+const SIZE_STYLES: Record<
+  PremiumJerseySize,
+  {
+    root: string;
+    pos: string;
+    num: string;
+    name: string;
+    empty: string;
+    cap: string;
+    asst: string;
+    clear: string;
+  }
+> = {
+  compact: {
+    root: "w-[124px]",
+    pos: "left-[7%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
+    num: "font-sans text-[36px] font-black leading-[0.9] tabular-nums tracking-tight text-white sm:text-[38px]",
+    name: "mt-1 max-w-[96%] break-words text-center font-sans text-[12px] font-bold leading-tight text-[#e0e0e0] line-clamp-3 sm:text-[13px]",
+    empty: "select-none font-sans text-[30px] font-bold leading-none text-[#64748b] opacity-60 sm:text-[32px]",
+    cap: "absolute -right-0.5 -top-1 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white",
+    asst: "absolute -bottom-0.5 -left-0.5 z-30 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[8px] font-bold text-white shadow-md ring-2 ring-white/90",
+    clear:
+      "absolute right-[5%] top-[3%] z-20 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
+  },
+  skater: {
+    root: "w-[158px]",
+    pos: "left-[8%] top-[5%] z-20 flex h-7 w-7 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[10px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
+    num: "font-sans text-[52px] font-black leading-[0.9] tabular-nums tracking-tight text-white sm:text-[56px]",
+    name: "mt-1 max-w-[94%] break-words text-center font-sans text-[15px] font-bold leading-tight text-[#e0e0e0] line-clamp-3 sm:text-[16px]",
+    empty: "select-none font-sans text-[42px] font-bold leading-none text-[#64748b] opacity-60",
+    cap: "absolute -right-0.5 -top-1 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[11px] font-bold text-white shadow-md ring-2 ring-white",
+    asst: "absolute -bottom-0.5 -left-0.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white/90",
+    clear:
+      "absolute right-[6%] top-[4%] z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
+  },
+  goalie: {
+    root: "w-[178px]",
+    pos: "left-[8%] top-[5%] z-20 flex h-8 w-8 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[11px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
+    num: "font-sans text-[54px] font-black leading-[0.9] tabular-nums tracking-tight text-white sm:text-[58px]",
+    name: "mt-1 max-w-[94%] break-words text-center font-sans text-[14px] font-bold leading-tight text-[#e0e0e0] line-clamp-3 sm:text-[15px]",
+    empty: "select-none font-sans text-[40px] font-bold leading-none text-[#64748b] opacity-60 sm:text-[44px]",
+    cap: "absolute -right-0.5 -top-1 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-xs font-bold text-white shadow-md ring-2 ring-white",
+    asst: "absolute -bottom-0.5 -left-0.5 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white/90",
+    clear:
+      "absolute right-[6%] top-[4%] z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
+  },
+};
+
 export interface PremiumJerseySlotCardProps {
   player?: Player | null;
   /** Štítek pozice (LW, C, G, …). */
   positionLabel: string;
   kind?: "skater" | "goalie";
+  /** Velikost karty ve slotu (editor vs. kompaktní X / náhradníci). */
+  size?: PremiumJerseySize;
   /** Prázdný slot zobrazí `positionLabel` uprostřed. */
   emptyPlaceholder?: string;
   isSelected?: boolean;
   /** Zvýraznění cílového slotu při DnD. */
   isDragOver?: boolean;
+  isCaptain?: boolean;
+  isAssistant?: boolean;
   onClear?: () => void;
   className?: string;
   /** Vypne hover animace (např. export PNG). */
@@ -36,13 +90,18 @@ export function PremiumJerseySlotCard({
   player,
   positionLabel,
   kind = "skater",
+  size = "skater",
   emptyPlaceholder,
   isSelected = false,
   isDragOver = false,
+  isCaptain = false,
+  isAssistant = false,
   onClear,
   className = "",
   disableMotion = false,
 }: PremiumJerseySlotCardProps) {
+  const sz = SIZE_STYLES[size];
+  const showAssistant = isAssistant && !!player && !isCaptain;
   const uid = useId().replace(/:/g, "");
   const gBody = `pjb-${uid}`;
   const gGloss = `pjg-${uid}`;
@@ -71,10 +130,20 @@ export function PremiumJerseySlotCard({
   return (
     <div
       className={`
-        premium-jersey-slot-card relative mx-auto w-[158px] shrink-0
+        premium-jersey-slot-card relative mx-auto shrink-0 ${sz.root}
         ${motion} ${hoverFx} ${stateRing} ${className}
       `}
     >
+      {isCaptain && !empty && (
+        <span className={sz.cap} aria-label="Kapitán">
+          C
+        </span>
+      )}
+      {showAssistant && (
+        <span className={sz.asst} aria-label="Asistent kapitána">
+          A
+        </span>
+      )}
       <div className="relative aspect-[100/120] w-full overflow-visible">
         <svg
           viewBox={VB}
@@ -138,15 +207,7 @@ export function PremiumJerseySlotCard({
           )}
         </svg>
 
-        {/* Pozice — levý horní roh (28×28) */}
-        <div
-          className={`
-            absolute left-[8%] top-[5%] z-20 flex h-7 w-7 items-center justify-center rounded-md
-            bg-[#c8102e] font-sans text-[10px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]
-          `}
-        >
-          {positionLabel}
-        </div>
+        <div className={`absolute ${sz.pos}`}>{positionLabel}</div>
 
         {showClear ? (
           <button
@@ -155,12 +216,7 @@ export function PremiumJerseySlotCard({
               e.stopPropagation();
               onClear?.();
             }}
-            className={`
-              absolute right-[6%] top-[4%] z-20 flex h-6 w-6 items-center justify-center rounded-full
-              border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200
-              hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
-              focus-visible:outline-[#f0f0f0]
-            `}
+            className={sz.clear}
             aria-label="Odebrat hráče ze slotu"
           >
             <span className="relative block h-3 w-3" aria-hidden>
@@ -175,7 +231,7 @@ export function PremiumJerseySlotCard({
             <>
               {numStr ? (
                 <span
-                  className="font-sans text-[52px] font-black leading-[0.9] tabular-nums tracking-tight text-white sm:text-[56px]"
+                  className={sz.num}
                   style={{
                     textShadow:
                       "0 0 12px #c8102e, 0 0 2px rgba(200,16,46,0.8), 0 2px 6px rgba(0,0,0,0.85)",
@@ -185,20 +241,14 @@ export function PremiumJerseySlotCard({
                 </span>
               ) : null}
               <span
-                className={`
-                  mt-1 max-w-[94%] truncate text-center font-sans text-[15px] font-bold leading-tight text-[#e0e0e0] sm:text-[16px]
-                  ${numStr ? "" : "mt-0"}
-                `}
+                className={`${sz.name} ${numStr ? "" : "mt-0"}`}
                 style={{ letterSpacing: "-0.5px", textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}
               >
                 {lastName(player.name)}
               </span>
             </>
           ) : (
-            <span
-              className="select-none font-sans text-[42px] font-bold leading-none text-[#64748b] opacity-60"
-              aria-hidden
-            >
+            <span className={sz.empty} aria-hidden>
               {placeholder}
             </span>
           )}

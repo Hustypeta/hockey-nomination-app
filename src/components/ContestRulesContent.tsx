@@ -1,22 +1,16 @@
 import Link from "next/link";
+import { SitePageHero } from "@/components/site/SitePageHero";
 
-const sectionClass =
-  "rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-4 sm:px-5 sm:py-5";
-const sectionAmberClass =
-  "rounded-xl border border-amber-500/20 bg-amber-500/[0.06] px-4 py-4 sm:px-5 sm:py-5";
+const sectionClass = "sestava-premium-panel-dark rounded-2xl p-4 sm:p-5";
+const sectionGoldClass =
+  "sestava-premium-panel-dark rounded-2xl p-4 ring-1 ring-[#f1c40f]/28 shadow-[0_0_48px_rgba(241,196,15,0.07)] sm:p-5";
 
 export function ContestRulesContent() {
   return (
-    <main className="border-t border-white/[0.06] bg-[#080d16]/60 py-14 sm:py-16">
+    <main className="pb-16 pt-2 sm:pb-20">
+      <SitePageHero title="Pravidla soutěže" subtitle="Nominace na MS v hokeji 2026" align="center" />
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <h1 className="text-center font-display text-2xl font-bold uppercase tracking-wide text-white sm:text-3xl">
-          Pravidla soutěže
-        </h1>
-        <p className="mx-auto mt-2 text-center text-base font-medium text-white/80 sm:text-lg">
-          Nominace na MS v hokeji 2026
-        </p>
-
-        <div className="mt-10 space-y-4 text-sm leading-relaxed text-white/75 sm:space-y-5">
+        <div className="space-y-4 text-sm leading-relaxed text-white/78 sm:space-y-5">
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
               1. Základní ustanovení
@@ -91,7 +85,7 @@ export function ContestRulesContent() {
                 daný zápas, ale v uživatelské nominaci je zařazen na jinou pozici.
               </li>
             </ul>
-            <p className="mt-3 rounded-lg border border-white/[0.08] bg-black/20 px-3 py-2.5 text-xs leading-relaxed text-white/60 sm:text-sm">
+            <p className="mt-3 rounded-lg border border-white/[0.1] bg-black/30 px-3 py-2.5 text-xs leading-relaxed text-white/62 sm:text-sm">
               <strong className="text-white/80">Poznámka k bodování:</strong> Body za pozici a jméno se nesčítají; za
               jednoho hráče lze získat maximálně 5 bodů. Pokud se tvoje rozestavení v editoru liší od oficiálního zápisu o
               utkání, u hráčů mimo odpovídající slot se započítává především shoda jména v dané kategorii (G / D / F).
@@ -115,7 +109,7 @@ export function ContestRulesContent() {
             </ul>
           </section>
 
-          <section className={sectionAmberClass}>
+          <section className={sectionGoldClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
               6. Ceny a pořadí
             </h2>

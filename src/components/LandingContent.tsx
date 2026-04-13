@@ -10,14 +10,12 @@ import {
   Trophy,
   BookOpen,
   LayoutGrid,
-  Flame,
 } from "lucide-react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
 import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
-import { getLandingBonusHeadline } from "@/lib/contestTimeBonus";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T18:00:00+02:00");
@@ -50,8 +48,6 @@ export function LandingContent() {
     ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
     : (0 as ContestTimeBonusPercent);
 
-  const bonusHeadline = getLandingBonusHeadline(bonusPercent);
-
   return (
     <main>
       {/* ——— Hero ——— */}
@@ -75,12 +71,7 @@ export function LandingContent() {
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-4xl text-center lg:max-w-5xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-[#c8102e]/40 bg-[#c8102e]/15 px-4 py-2 font-display text-[11px] font-bold uppercase tracking-[0.28em] text-[#ffb4c0] shadow-[0_0_32px_rgba(200,16,46,0.25)] sm:text-xs">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#f1c40f]" aria-hidden />
-              MS v hokeji 2026 · Česká republika
-            </p>
-
-            <h1 className="mx-auto mt-8 max-w-[22ch] text-balance font-display text-[clamp(2.1rem,7.5vw,4.25rem)] font-black leading-[1.02] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)] sm:mt-10">
+            <h1 className="mx-auto max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
               Sestav si nominaci na{" "}
               <span className="bg-gradient-to-r from-white via-white to-sky-100 bg-clip-text text-transparent">
                 MS 2026
@@ -98,7 +89,7 @@ export function LandingContent() {
             </p>
 
             {/* Hlavní CTA — velké, červené, glow */}
-            <div className="mx-auto mt-10 flex max-w-xl flex-col items-stretch gap-4 sm:mt-12">
+            <div className="mx-auto mt-10 max-w-xl sm:mt-12">
               <Link
                 href="/sestava"
                 className="landing-cta-pulse group relative flex min-h-[4.25rem] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#e01e3c] to-[#9e0c24] px-6 py-5 text-center font-display text-xl font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(241,196,15,0.45),0_12px_56px_rgba(200,16,46,0.55),0_0_80px_rgba(200,16,46,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(241,196,15,0.6),0_16px_64px_rgba(200,16,46,0.65)] active:scale-[0.99] sm:min-h-[4.75rem] sm:text-2xl"
@@ -111,46 +102,31 @@ export function LandingContent() {
                 <span className="relative">Sestavit nominaci</span>
                 <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
               </Link>
-              <p className="text-center text-sm text-slate-400">
-                Bez účtu můžeš sestavit a sdílet. S Googleem uložíš nominaci a stáhneš plakát.
-              </p>
             </div>
 
-            {/* Sociální důkaz + časový bonus — viditelná řada */}
+            {/* Sociální důkaz + časový bonus (jedna karta s odkazem na pravidla) */}
             <div className="mx-auto mt-10 flex w-full max-w-3xl flex-col gap-4 sm:mt-12">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-4">
-                <div className="flex flex-1 items-center justify-center gap-3 rounded-2xl border border-white/[0.12] bg-[#0f172a]/75 px-5 py-4 shadow-[0_0_40px_rgba(0,48,135,0.2),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm">
-                  <Users className="h-8 w-8 shrink-0 text-sky-300" aria-hidden />
-                  <div className="text-left text-sm leading-snug text-slate-200">
-                    {nominationCount !== null ? (
-                      <>
-                        <span className="block font-display text-2xl font-bold tabular-nums text-white">
-                          {formatCs(nominationCount)}
-                        </span>
-                        <span className="text-slate-400">
-                          {nominationCount === 0
-                            ? "nominací zatím — buď první"
-                            : nominationCount === 1
-                              ? "fanoušek už poslal nominaci"
-                              : nominationCount >= 2 && nominationCount <= 4
-                                ? "fanoušci už poslali nominaci"
-                                : "fanoušků už poslalo nominaci"}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-slate-400">Načítám statistiky komunity…</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-1 items-center gap-3 rounded-2xl border border-[#f1c40f]/40 bg-gradient-to-br from-[#f1c40f]/[0.18] via-[#f1c40f]/[0.06] to-transparent px-5 py-4 shadow-[0_0_36px_rgba(241,196,15,0.2)] backdrop-blur-sm">
-                  <Flame className="h-8 w-8 shrink-0 text-[#f1c40f]" aria-hidden />
-                  <div className="min-w-0 text-left">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f1c40f]/90">
-                      Časový bonus
-                    </p>
-                    <p className="mt-1 text-sm font-bold leading-snug text-white sm:text-base">{bonusHeadline}</p>
-                  </div>
+              <div className="mx-auto flex w-full max-w-md items-center justify-center gap-3 rounded-2xl border border-white/[0.12] bg-[#0f172a]/75 px-5 py-4 shadow-[0_0_40px_rgba(0,48,135,0.2),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm sm:max-w-lg">
+                <Users className="h-8 w-8 shrink-0 text-sky-300" aria-hidden />
+                <div className="text-left text-sm leading-snug text-slate-200">
+                  {nominationCount !== null ? (
+                    <>
+                      <span className="block font-display text-2xl font-bold tabular-nums text-white">
+                        {formatCs(nominationCount)}
+                      </span>
+                      <span className="text-slate-400">
+                        {nominationCount === 0
+                          ? "nominací zatím — buď první"
+                          : nominationCount === 1
+                            ? "fanoušek už poslal nominaci"
+                            : nominationCount >= 2 && nominationCount <= 4
+                              ? "fanoušci už poslali nominaci"
+                              : "fanoušků už poslalo nominaci"}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-slate-400">Načítám statistiky komunity…</span>
+                  )}
                 </div>
               </div>
 

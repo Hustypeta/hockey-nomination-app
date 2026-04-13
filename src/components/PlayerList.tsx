@@ -107,7 +107,7 @@ export function PlayerList({
                     }
                   `}
                 >
-                  <div className="font-medium truncate">{player.name}</div>
+                  <div className="min-w-0 break-words text-pretty font-medium">{player.name}</div>
                   <div className="text-xs text-white/60 truncate">
                     {player.role ? (
                       <span className="text-[#c41e3a] font-medium">{player.role}</span>

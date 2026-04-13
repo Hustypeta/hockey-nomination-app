@@ -10,11 +10,15 @@ export function SiteShell({
   showFooter?: boolean;
 }) {
   return (
-    <div className="min-h-screen bg-[#05080f] text-white">
+    <div className="relative min-h-screen bg-[#05080f] text-white">
       <SiteBackground />
       <SiteHeader />
-      {children}
-      {showFooter ? <SiteFooter /> : null}
+      <div className="relative z-10">{children}</div>
+      {showFooter ? (
+        <div className="relative z-10">
+          <SiteFooter />
+        </div>
+      ) : null}
     </div>
   );
 }

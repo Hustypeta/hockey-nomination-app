@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JerseyPreviewClient } from "@/components/sestava/JerseyPreviewClient";
+import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
   title: "Náhled dresové karty",
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function JerseyPreviewPage() {
-  return <JerseyPreviewClient />;
+  return (
+    <SiteShell>
+      <JerseyPreviewClient />
+    </SiteShell>
+  );
 }

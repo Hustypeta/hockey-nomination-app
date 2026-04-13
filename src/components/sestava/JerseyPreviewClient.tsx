@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Player } from "@/types";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
+import { SitePageHero } from "@/components/site/SitePageHero";
 
 const MOCK_FILLED: Player = {
   id: "preview-1",
@@ -19,25 +20,19 @@ export function JerseyPreviewClient() {
   const [dragDemo, setDragDemo] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#05080f] px-4 py-12 text-white">
-      <div className="mx-auto max-w-4xl">
-        <header className="mb-10 text-center sm:text-left">
-          <p className="font-display text-[10px] font-bold uppercase tracking-[0.35em] text-[#c8102e]/90">
-            Náhled · MOJE SESTAVA
-          </p>
-          <h1 className="mt-2 font-display text-2xl font-bold tracking-wide text-white sm:text-3xl">
-            Prémiová karta slotu (dres)
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">
-            Nový vizuál jen pro posouzení — zatím není zapojený do editoru. Najezdi myší na kartu pro hover (scale, glow,
-            zvednutí). Prázdný slot má čárkovaný obrys a velkou značku pozice uprostřed.
-          </p>
-          <p className="mt-2 font-mono text-xs text-white/35">
-            URL: <span className="text-sky-300/90">/jersey-preview</span>
-          </p>
-        </header>
+    <div className="pb-16 pt-2 text-white">
+      <SitePageHero
+        kicker="Náhled · MOJE SESTAVA"
+        title="Prémiová karta slotu (dres)"
+        subtitle="Nový vizuál jen pro posouzení — zatím není zapojený do editoru. Najezdi myší na kartu pro hover (scale, glow, zvednutí). Prázdný slot má čárkovaný obrys a velkou značku pozice uprostřed."
+        align="center"
+      />
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
+        <p className="mb-10 text-center font-mono text-xs text-white/35">
+          URL: <span className="text-sky-300/90">/jersey-preview</span>
+        </p>
 
-        <section className="mb-14 rounded-2xl border border-white/[0.08] bg-[#0c101a] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.5)] sm:p-8">
+        <section className="sestava-premium-panel-dark mb-12 rounded-2xl p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:p-8">
           <h2 className="mb-6 font-display text-sm font-bold uppercase tracking-[0.2em] text-white/80">
             Základní srovnání
           </h2>
@@ -57,7 +52,7 @@ export function JerseyPreviewClient() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-white/[0.08] bg-[#0c101a] p-6 sm:p-8">
+        <section className="sestava-premium-panel-dark rounded-2xl p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:p-8">
           <h2 className="mb-4 font-display text-sm font-bold uppercase tracking-[0.2em] text-white/80">
             Stavy (bez myši)
           </h2>

@@ -376,11 +376,11 @@ export function NominationBuilderPage() {
                   <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
                     Moje sestava
                   </h2>
-                  <p className="mt-1 text-[11px] leading-snug text-slate-600 sm:text-xs">
-                    {selectedSlot
-                      ? "Slot vybrán — vlevo jen daná pozice, nebo přetáhni sem."
-                      : "Klikni na dres nebo doplň zleva."}
-                  </p>
+                  {selectedSlot ? (
+                    <p className="mt-1 text-[11px] leading-snug text-slate-600 sm:text-xs">
+                      Slot vybrán — vlevo jen daná pozice, nebo přetáhni sem.
+                    </p>
+                  ) : null}
                   <div className="mt-4">
                     <LineBuilder
                       lineup={lineup}

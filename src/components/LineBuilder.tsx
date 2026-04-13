@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { toast } from "sonner";
 import type { Player, LineupStructure } from "@/types";
 import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/LineupJerseyCard";
-import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
+import { PremiumJerseySlotCard, type PremiumJerseySize } from "@/components/sestava/PremiumJerseySlotCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
 import { CzechFlagMark } from "@/components/CzechFlagMark";
 
@@ -58,22 +58,6 @@ function NhlSectionShell({ title, kicker, children }: { title: string; kicker?: 
       </div>
       {children}
     </section>
-  );
-}
-
-/** Základ vs. náhradníci — shodně s modelem soupisky MS (20 bruslařů + 2 G v základu). */
-function RosterModelHint({ variant, children }: { variant: "classic" | "nhl25"; children: ReactNode }) {
-  if (variant === "nhl25") {
-    return (
-      <div className="rounded-lg border border-slate-200/80 bg-gradient-to-br from-slate-50 to-sky-50/75 px-3 py-2 text-[10px] leading-snug text-slate-600 shadow-sm sm:text-[11px]">
-        {children}
-      </div>
-    );
-  }
-  return (
-    <div className="rounded-xl border border-[#003087]/30 bg-[#003087]/[0.08] px-4 py-3 text-[11px] leading-relaxed text-white/70">
-      {children}
-    </div>
   );
 }
 
@@ -201,9 +185,12 @@ export function LineBuilder({
     const player = getPlayer(playerId);
     const selected = isSlotSelected(type, lineIndex, role);
     const isAsst = player ? assistantIds.includes(player.id) : false;
-    const Card = nhl ? Nhl25JerseyCard : LineupJerseyCard;
+    const premiumKind: "skater" | "goalie" =
+      jerseySize === "goalie" || player?.position === "G" ? "goalie" : "skater";
+    const premiumSize: PremiumJerseySize =
+      jerseySize === "goalie" ? "goalie" : jerseySize === "compact" ? "compact" : "skater";
 
-    const inner = (
+    const renderSlotBody = (isDragOver: boolean) => (
       <div
         onClick={() => onSelectSlot(selected ? null : { type, lineIndex, role })}
         className={`
@@ -211,7 +198,7 @@ export function LineBuilder({
           ${
             nhl
               ? selected
-                ? "bg-sky-100/90 ring-1 ring-cyan-500/70"
+                ? "bg-sky-50/90"
                 : "hover:bg-slate-200/60"
               : selected
                 ? "bg-[#c8102e]/[0.1] ring-1 ring-[#c8102e]/25"
@@ -220,32 +207,43 @@ export function LineBuilder({
         `}
       >
         <div className="relative flex w-full min-w-0 justify-center">
-          {player && onClear && (
+          {player && onClear && !nhl && (
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onClear();
               }}
-              className={`absolute -right-0.5 -top-0.5 z-40 flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold text-white opacity-0 shadow-lg transition-opacity group-hover/slot:opacity-100 group-focus-within/slot:opacity-100 ${
-                nhl
-                  ? "bg-gradient-to-br from-red-500 to-red-800 ring-2 ring-white"
-                  : "bg-gradient-to-br from-red-600 to-red-950"
-              }`}
+              className="absolute -right-0.5 -top-0.5 z-40 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-950 text-sm font-bold text-white opacity-0 shadow-lg transition-opacity group-hover/slot:opacity-100 group-focus-within/slot:opacity-100"
               aria-label="Odebrat hráče"
             >
               ×
             </button>
           )}
-          <Card
-            key={playerId ?? `empty-${dndId ?? label}`}
-            player={player}
-            positionLabel={label}
-            size={jerseySize}
-            isCaptain={player ? captainId === player.id : false}
-            isAssistant={isAsst}
-            isSelected={selected}
-          />
+          {nhl ? (
+            <PremiumJerseySlotCard
+              key={playerId ?? `empty-${dndId ?? label}`}
+              player={player}
+              positionLabel={label}
+              kind={premiumKind}
+              size={premiumSize}
+              isCaptain={player ? captainId === player.id : false}
+              isAssistant={isAsst}
+              isSelected={selected}
+              isDragOver={isDragOver}
+              onClear={onClear}
+            />
+          ) : (
+            <LineupJerseyCard
+              key={playerId ?? `empty-${dndId ?? label}`}
+              player={player}
+              positionLabel={label}
+              size={jerseySize}
+              isCaptain={player ? captainId === player.id : false}
+              isAssistant={isAsst}
+              isSelected={selected}
+            />
+          )}
         </div>
 
         {player ? (
@@ -314,11 +312,14 @@ export function LineBuilder({
 
     const wrapped =
       enableDnd && dndId ? (
-        <DroppableSlotWrap id={dndId} className="min-w-0 w-full" lightSurface={nhl}>
-          {inner}
-        </DroppableSlotWrap>
+        <DroppableSlotWrap
+          id={dndId}
+          className="min-w-0 w-full"
+          lightSurface={nhl}
+          renderContent={({ isOver }) => renderSlotBody(isOver)}
+        />
       ) : (
-        inner
+        renderSlotBody(false)
       );
 
     return <div className="group min-w-0 w-full">{wrapped}</div>;
@@ -518,12 +519,6 @@ export function LineBuilder({
             </div>
           </div>
         </div>
-
-        <RosterModelHint variant="nhl25">
-          <strong className="text-slate-800">Základní sestava (20 + 2):</strong> dvacet bruslařů (lajny včetně 13. útočníka,
-          tři páry + sedmý bek) a dva brankáři. <strong className="text-slate-800">Náhradníci:</strong> třetí brankář, náhradní
-          útočník a osmý bek — dohromady 25 hráčů jako na soupisce MS.
-        </RosterModelHint>
 
         <div className="space-y-3 rounded-xl border border-slate-200/80 bg-white/40 p-3 shadow-sm sm:space-y-4 sm:p-4">
           <p className="text-center font-display text-[9px] font-bold uppercase tracking-[0.26em] text-slate-500 sm:text-left">
@@ -821,12 +816,6 @@ export function LineBuilder({
 
   return (
     <div className="min-w-0 w-full space-y-8 sm:space-y-9">
-      <RosterModelHint variant="classic">
-        <strong className="text-white/90">Základní sestava (20 + 2):</strong> dvacet bruslařů (lajny včetně 13. útočníka,
-        tři páry + sedmý bek) a dva brankáři. <strong className="text-white/90">Náhradníci:</strong> třetí brankář, náhradní
-        útočník a osmý bek — dohromady 25 hráčů jako na soupisce MS.
-      </RosterModelHint>
-
       <div className="space-y-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 sm:space-y-9 sm:p-5">
         <p className="text-center font-display text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 sm:text-left">
           Základ (20 + 2)

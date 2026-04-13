@@ -1,23 +1,39 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { BracketPickemContent } from "@/components/bracket/BracketPickemContent";
+import { BracketPickemComingSoon } from "@/components/bracket/BracketPickemComingSoon";
+
+/**
+ * Plný Pick’em je zatím vypnutý — kód žije v {@link BracketPickemContent}.
+ * Obnovení: import Suspense + BracketPickemContent, v default exportu místo ComingSoon
+ * vrátit <Suspense fallback={…}><BracketPickemContent /></Suspense>.
+ */
+// import { Suspense } from "react";
+// import { BracketPickemContent } from "@/components/bracket/BracketPickemContent";
 
 export const metadata: Metadata = {
-  title: "Bracket Pick’em — playoff MS 2026",
-  description:
-    "Vyplň si tip na play-off MS 2026: oficiální skupiny IIHF, čtvrtfinále, semifinále, finále, bronz a bonusové otázky. Zdarma, ukládání v prohlížeči.",
+  title: "Pick’em — připravujeme",
+  description: "Bracket Pick’em pro MS 2026 připravujeme. Brzy doplníme tipování play-off.",
 };
 
+export default function BracketPage() {
+  return (
+    <SiteShell>
+      <BracketPickemComingSoon />
+    </SiteShell>
+  );
+}
+
+/*
 function BracketFallback() {
   return (
-    <div className="relative z-10 mx-auto max-w-3xl px-4 py-24 text-center text-sm text-white/50">
-      Načítám bracket…
+    <div className="relative z-10 mx-auto max-w-3xl px-4 py-24 text-center">
+      <p className="font-display text-sm tracking-wide text-white/55">Načítám bracket…</p>
+      <div className="nhl25-moje-sestava-accent mx-auto mt-5 h-0.5 w-32 max-w-full rounded-full opacity-70" aria-hidden />
     </div>
   );
 }
 
-export default function BracketPage() {
+export default function BracketPageFull() {
   return (
     <SiteShell>
       <Suspense fallback={<BracketFallback />}>
@@ -26,3 +42,4 @@ export default function BracketPage() {
     </SiteShell>
   );
 }
+*/

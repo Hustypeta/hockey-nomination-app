@@ -97,7 +97,7 @@ function DraggableCard({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ type: "spring", stiffness: 420, damping: 28 }}
       className={`
-        group/pool relative flex flex-col gap-3 overflow-hidden rounded-2xl border p-4 transition-[box-shadow,border-color,transform,opacity] duration-300 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]
+        group/pool relative flex flex-col gap-3 rounded-2xl border p-4 transition-[box-shadow,border-color,transform,opacity] duration-300 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]
         before:pointer-events-none before:absolute before:inset-y-3 before:left-0 before:w-[3px] before:rounded-full before:bg-[#c8102e] before:opacity-90 before:shadow-[0_0_12px_rgba(200,16,46,0.5)]
         ${
           inRoster
@@ -140,7 +140,9 @@ function DraggableCard({
               />
             </div>
             <div className="min-w-0 flex-1 pt-1">
-              <p className="truncate text-base font-bold leading-snug text-white sm:text-[17px]">{player.name}</p>
+              <p className="break-words text-pretty text-base font-bold leading-snug text-white sm:text-[17px]">
+                {player.name}
+              </p>
               <p className="mt-1.5 line-clamp-2 text-sm leading-snug text-slate-300/95">
                 <span className="text-slate-100">{player.club}</span>
                 {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}

@@ -14,6 +14,7 @@ import {
   MS2026_QF_LABELS,
   type BracketTeam,
 } from "@/data/ms2026BracketTeams";
+import { SitePageHero } from "@/components/site/SitePageHero";
 import { encodeBracketPayload, decodeBracketPayload } from "@/lib/bracketPayload";
 import type { BracketMatchPick, BracketPickemPayload } from "@/types/bracketPickem";
 import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
@@ -22,10 +23,10 @@ import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
 const STORAGE_KEY = "ms2026-bracket-pickem-v2";
 
 const selectCls =
-  "mt-1 w-full rounded-lg border border-white/15 bg-[#0a0e17] px-3 py-2.5 text-sm text-white focus:border-[#003087]/55 focus:outline-none focus:ring-1 focus:ring-[#003087]/40";
+  "mt-1 w-full rounded-lg border border-white/12 bg-[#05080f]/90 px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
 
 const inputCls =
-  "mt-1 w-full rounded-lg border border-white/15 bg-[#0a0e17] px-3 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-[#003087]/55 focus:outline-none focus:ring-1 focus:ring-[#003087]/40";
+  "mt-1 w-full rounded-lg border border-white/12 bg-[#05080f]/90 px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] placeholder:text-white/35 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
 
 function clonePicks(p: BracketPickemPayload): BracketPickemPayload {
   return JSON.parse(JSON.stringify(p)) as BracketPickemPayload;
@@ -61,9 +62,9 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-white/[0.08] bg-[#0a0e17]/75 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:p-6">
+    <section className="sestava-premium-panel-dark rounded-2xl p-5 shadow-[0_20px_56px_rgba(0,0,0,0.38)] sm:p-6">
       <h2 className="font-display text-lg font-bold tracking-wide text-white sm:text-xl">{title}</h2>
-      {hint ? <p className="mt-2 text-xs leading-relaxed text-white/50 sm:text-sm">{hint}</p> : null}
+      {hint ? <p className="mt-2 text-xs leading-relaxed text-white/55 sm:text-sm">{hint}</p> : null}
       <div className="mt-5 space-y-5">{children}</div>
     </section>
   );
@@ -117,7 +118,7 @@ function MatchPickRow({
   };
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-xl border border-white/[0.09] bg-black/35 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
       <p className="font-display text-sm font-semibold text-white">{title}</p>
       {subtitle ? <p className="mt-1 text-[11px] text-[#003087]/90">{subtitle}</p> : null}
       <div className="mt-3 grid gap-3 sm:grid-cols-3">
@@ -226,23 +227,19 @@ export function BracketPickemContent() {
   };
 
   return (
-    <main className="relative z-10 mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
-      <div className="mb-8 text-center">
-        <p className="font-display text-xs font-bold uppercase tracking-[0.28em] text-[#c8102e]/90">Zdarma</p>
-        <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Bracket Pick’em
-        </h1>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/60">
-          Playoff MS 2026 — vyplň vítěze skupin, čtvrtfinálové páry a postup až do finále a o bronz. Tipy se ukládají v
-          prohlížeči; odkazem je můžeš sdílet.
-        </p>
-      </div>
+    <main className="relative z-10 mx-auto max-w-3xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
+      <SitePageHero
+        kicker="Zdarma"
+        title="Bracket Pick’em"
+        subtitle="Playoff MS 2026 — vyplň vítěze skupin, čtvrtfinálové páry a postup až do finále a o bronz. Tipy se ukládají v prohlížeči; odkazem je můžeš sdílet."
+        align="center"
+      />
 
       <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-center">
         <button
           type="button"
           onClick={copyLink}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#002266] px-5 py-3 font-display text-sm font-bold text-white shadow-lg shadow-[#003087]/25 transition hover:brightness-110"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] via-[#002a5c] to-[#c8102e] px-5 py-3 font-display text-sm font-bold text-white shadow-[0_12px_40px_rgba(0,48,135,0.35),0_0_32px_rgba(200,16,46,0.15)] transition hover:brightness-110"
         >
           <Link2 className="h-4 w-4" aria-hidden />
           Zkopírovat odkaz s tipy
@@ -250,7 +247,7 @@ export function BracketPickemContent() {
         <button
           type="button"
           onClick={resetAll}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/85 transition hover:border-[#c8102e]/40 hover:bg-[#c8102e]/10"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.05] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07]"
         >
           <Trash2 className="h-4 w-4" aria-hidden />
           Vymazat
@@ -390,8 +387,8 @@ export function BracketPickemContent() {
         </Section>
       </div>
 
-      <div className="mt-10 flex flex-col items-center gap-3 rounded-2xl border border-amber-500/20 bg-amber-500/[0.06] p-5 text-center">
-        <Trophy className="h-8 w-8 text-amber-200/90" aria-hidden />
+      <div className="sestava-premium-panel-dark mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#f1c40f]/22 shadow-[0_0_48px_rgba(241,196,15,0.06)]">
+        <Trophy className="h-8 w-8 text-[#f1c40f]/90" aria-hidden />
         <p className="text-sm text-white/75">
           Pick’em je jen pro radost — <strong className="text-white">bez vstupného</strong>, bez účtu. Chceš nominovat
           hráče?{" "}
