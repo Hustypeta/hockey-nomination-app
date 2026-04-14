@@ -1,9 +1,8 @@
 "use client";
 
 import type { Player } from "@/types";
-import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
-import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
+import { CZ_REPLICA_JERSEY_BACK_SRC } from "@/lib/replicaJerseyAsset";
 
 export type Nhl25JerseySize = "compact" | "skater" | "goalie";
 
@@ -19,22 +18,20 @@ const widthClass: Record<Nhl25JerseySize, string> = {
 };
 
 const numberClass: Record<Nhl25JerseySize, string> = {
-  compact: "text-[2rem] sm:text-[2.15rem]",
-  skater: "text-[2.35rem] sm:text-[2.65rem] lg:text-[2.85rem]",
-  goalie: "text-[2.75rem] sm:text-[3rem] lg:text-[3.15rem]",
+  compact: "text-[1.85rem] sm:text-[2rem]",
+  skater: "text-[2.15rem] sm:text-[2.45rem] lg:text-[2.65rem]",
+  goalie: "text-[2.45rem] sm:text-[2.75rem] lg:text-[2.95rem]",
 };
 
 const nameClass: Record<Nhl25JerseySize, string> = {
-  compact: "text-[11px] sm:text-[12px]",
-  skater: "text-[12px] sm:text-[14px] lg:text-[15px]",
-  goalie: "text-[13px] sm:text-[15px] lg:text-[16px]",
+  compact: "text-[10px] sm:text-[11px]",
+  skater: "text-[11px] sm:text-[13px] lg:text-[14px]",
+  goalie: "text-[12px] sm:text-[14px] lg:text-[15px]",
 };
 
-const crestClass: Record<Nhl25JerseySize, string> = {
-  compact: "h-7 w-[1.85rem]",
-  skater: "h-10 w-[2.5rem] lg:h-11 lg:w-[2.75rem]",
-  goalie: "h-12 w-[3rem] lg:h-[3.25rem] lg:w-[3.2rem]",
-};
+const nameNumShadow = {
+  textShadow: "0 1px 2px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.75)",
+} as const;
 
 export interface Nhl25JerseyCardProps {
   player?: Player | null;
@@ -65,7 +62,6 @@ export function Nhl25JerseyCard({
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = numberClass[size];
   const nmCls = nameClass[size];
-  const crestSz = crestClass[size];
 
   const motionCls = disableMotion
     ? ""
@@ -126,73 +122,73 @@ export function Nhl25JerseyCard({
           {positionLabel}
         </div>
 
-        <div className="relative overflow-hidden rounded-[8px] bg-gradient-to-b from-white via-[#fafafa] to-[#f0f2f4] pt-[1.45rem] shadow-inner">
-          <JerseySilhouetteShape
-            kind={kind}
-            empty={empty}
-            visualPreset="nhl25"
-            className="relative z-0 block h-auto w-full drop-shadow-[0_8px_20px_rgba(15,23,42,0.18)]"
-          />
+        <div className="relative overflow-hidden rounded-[8px] bg-[#0c0c0c] shadow-inner">
+          <div className="relative aspect-[100/120] w-full">
+            {/* eslint-disable-next-line @next/next/no-img-element -- statický podklad z `public/` */}
+            <img
+              src={CZ_REPLICA_JERSEY_BACK_SRC}
+              alt=""
+              width={400}
+              height={480}
+              decoding="async"
+              data-jersey-kind={kind}
+              className={`absolute inset-0 h-full w-full object-cover object-[50%_10%] drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)] ${empty ? "opacity-[0.3] grayscale" : ""}`}
+            />
 
-          {!empty ? (
-            <>
-              <CzechHockeyCrest
-                className={`
-                  pointer-events-none absolute left-1/2 top-[calc(1.45rem+4%)] z-[8] -translate-x-1/2
-                  drop-shadow-[0_1px_4px_rgba(0,0,0,0.2)]
-                  ${crestSz}
-                `}
-              />
-              <div className="pointer-events-none absolute inset-0 top-[1.45rem] flex flex-col items-center justify-end px-1 pb-[10%] pt-[28%]">
+            {!empty ? (
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center px-1 pt-[26%] sm:pt-[27%]">
+                <span
+                  className={`
+                    max-w-[96%] text-center font-display font-bold uppercase leading-tight text-white
+                    ${nmCls}
+                  `}
+                  style={nameNumShadow}
+                >
+                  {lastName(player.name)}
+                </span>
                 {numStr ? (
                   <span
                     className={`
-                      jersey-number-nhl leading-[0.88] font-display font-bold tabular-nums tracking-tight text-[#11457e]
+                      mt-0.5 font-display font-bold tabular-nums leading-[0.88] tracking-tight text-white
                       ${numCls}
                     `}
+                    style={nameNumShadow}
                   >
                     {numStr}
                   </span>
                 ) : null}
-                <span
-                  className={`
-                    max-w-[96%] truncate text-center font-display font-bold uppercase leading-tight text-[#0f172a]
-                    ${numStr ? "mt-0.5" : ""}
-                    ${nmCls}
-                  `}
-                >
-                  {lastName(player.name)}
-                </span>
                 {player.position === "F" && player.role ? (
                   <span
-                    className={`mt-1 rounded border border-[#11457e]/50 bg-white px-1.5 py-0.5 font-display font-bold uppercase text-[#0f172a] ${
+                    className={`mt-1 rounded border border-white/35 bg-black/35 px-1.5 py-0.5 font-display font-bold uppercase text-white/95 ${
                       size === "goalie" ? "text-[10px]" : "text-[9px]"
                     }`}
+                    style={nameNumShadow}
                   >
                     {player.role}
                   </span>
                 ) : null}
                 {player.position === "G" ? (
                   <span
-                    className={`mt-1 font-display font-bold uppercase tracking-[0.14em] text-[#0f172a] ${
+                    className={`mt-1 font-display font-bold uppercase tracking-[0.14em] text-white/95 ${
                       size === "goalie" ? "text-[11px]" : "text-[10px]"
                     }`}
+                    style={nameNumShadow}
                   >
                     G
                   </span>
                 ) : null}
               </div>
-            </>
-          ) : (
-            <div
-              className="pointer-events-none absolute inset-0 top-[1.45rem] flex items-center justify-center px-1"
-              aria-hidden
-            >
-              <span className="select-none font-display text-[clamp(1.75rem,8vw,2.75rem)] font-black uppercase leading-none tracking-tighter text-[#11457e]/25">
-                {positionLabel.replace(/\d/g, "").trim() || positionLabel}
-              </span>
-            </div>
-          )}
+            ) : (
+              <div
+                className="pointer-events-none absolute inset-0 flex items-center justify-center px-1 pt-[8%]"
+                aria-hidden
+              >
+                <span className="select-none font-display text-[clamp(1.5rem,7vw,2.5rem)] font-black uppercase leading-none tracking-tighter text-white/35">
+                  {positionLabel.replace(/\d/g, "").trim() || positionLabel}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

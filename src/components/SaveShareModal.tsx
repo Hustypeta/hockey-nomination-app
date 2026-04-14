@@ -15,8 +15,6 @@ import {
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
-const ENTRY_GAME_URL = process.env.NEXT_PUBLIC_VSTOUPIT_DO_HRY_URL ?? "#";
-
 interface SaveShareModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -164,6 +162,7 @@ export function SaveShareModal({
   };
 
   const handleSaveNomination = async () => {
+    if (!isAuthenticated) return;
     const id = await onSave();
     if (id) setSavedId(id);
   };
@@ -414,12 +413,13 @@ export function SaveShareModal({
               >
                 Přihlásit se přes Google
               </button>
-              <a
-                href={ENTRY_GAME_URL}
+              <button
+                type="button"
+                onClick={() => signIn("google", { callbackUrl: window.location.href })}
                 className="w-full rounded-xl bg-gradient-to-r from-[#c8102e] to-[#8a0b22] py-3 text-center font-display text-base font-bold text-white shadow-lg shadow-[#c8102e]/15"
               >
                 Zúčastnit se soutěže
-              </a>
+              </button>
             </div>
           )}
 

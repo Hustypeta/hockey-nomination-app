@@ -90,3 +90,13 @@ model Nomination {
 
   @@map("nominations")
 }
+
+/// Jedna řádka: oficiální soupiska pro vyhodnocení soutěže (admin editor).
+model OfficialLineup {
+  id              String   @id
+  lineupStructure Json
+  captainId       String?
+  updatedAt       DateTime @updatedAt
+
+  @@map("official_lineup")
+}

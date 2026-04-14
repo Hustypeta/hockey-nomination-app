@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
   DndContext,
@@ -9,21 +8,15 @@ import {
   useSensors,
   type DragEndEvent,
 } from "@dnd-kit/core";
-import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { LineBuilder } from "@/components/LineBuilder";
-import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
-import { SaveShareModal } from "@/components/SaveShareModal";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
-import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { lineupToPlayers, isLineupComplete } from "@/lib/lineupUtils";
-import { useContestStats } from "@/hooks/useContestStats";
-import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 import {
   tryAutoAssignPlayer,
   assignPlayerToTarget,
@@ -35,9 +28,12 @@ import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { EMPTY_LINEUP, TOTAL_PLAYERS } from "@/types";
 
-export function NominationBuilderPage() {
-  const { status: authStatus } = useSession();
-  const isAuthenticated = authStatus === "authenticated";
+export function OfficialLineupAdminEditor() {
+  const [authChecked, setAuthChecked] = useState(false);
+  const [authorized, setAuthorized] = useState(false);
+  const [password, setPassword] = useState("");
+  const [loginBusy, setLoginBusy] = useState(false);
+
   const [players, setPlayers] = useState<Player[]>([]);
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
@@ -47,15 +43,10 @@ export function NominationBuilderPage() {
     role?: string;
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
-  const shareCaptureRef = useRef<HTMLDivElement>(null);
-  /** Aktualizuje datum ve footeru plakátu těsně před html-to-image capture (ref zůstane na stejném uzlu). */
-  const [sharePosterFooterIso, setSharePosterFooterIso] = useState<string | null>(null);
-  const [siteOrigin, setSiteOrigin] = useState("");
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const wasCompleteRef = useRef(false);
-  const contestStats = useContestStats();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -86,30 +77,63 @@ export function NominationBuilderPage() {
       (lineup.extraForwards[0] ? 1 : 0),
   };
 
-  useEffect(() => {
-    setSiteOrigin(typeof window !== "undefined" ? window.location.origin : "");
+  const loadOfficial = useCallback(async () => {
+    const res = await fetch("/api/admin/official-lineup", { credentials: "include" });
+    if (res.status === 401) {
+      setAuthorized(false);
+      return;
+    }
+    if (!res.ok) {
+      toast.error("Nepodařilo se načíst uloženou soupisku.");
+      setAuthorized(true);
+      return;
+    }
+    setAuthorized(true);
+    const data = await res.json();
+    if (data.lineupStructure && typeof data.lineupStructure === "object") {
+      setLineup(data.lineupStructure as LineupStructure);
+    } else {
+      setLineup(EMPTY_LINEUP);
+    }
+    setCaptainId(typeof data.captainId === "string" ? data.captainId : null);
+    setUpdatedAt(typeof data.updatedAt === "string" ? data.updatedAt : null);
   }, []);
 
   useEffect(() => {
-    fetch("/api/players")
-      .then((res) => res.json())
-      .then((data) => setPlayers(data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    let cancelled = false;
+    (async () => {
+      await fetch("/api/players")
+        .then((r) => r.json())
+        .then((data) => {
+          if (!cancelled) setPlayers(Array.isArray(data) ? data : []);
+        })
+        .catch(console.error)
+        .finally(() => {
+          if (!cancelled) setLoading(false);
+        });
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
-    if (isComplete && !wasCompleteRef.current) {
-      confetti({
-        particleCount: 100,
-        spread: 65,
-        origin: { y: 0.65 },
-        colors: ["#c8102e", "#003087", "#ffffff", "#d4af37"],
-      });
-      toast.success("Plná nominace — můžeš sdílet!", { duration: 5000 });
+    let cancelled = false;
+    (async () => {
+      await loadOfficial();
+      if (!cancelled) setAuthChecked(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [loadOfficial]);
+
+  useEffect(() => {
+    if (isComplete && !wasCompleteRef.current && authorized) {
+      toast.success("Soupiska je kompletní — můžeš uložit.", { duration: 4000 });
     }
     wasCompleteRef.current = isComplete;
-  }, [isComplete]);
+  }, [isComplete, authorized]);
 
   const assignPlayerToSlot = useCallback(
     (player: Player) => {
@@ -194,7 +218,7 @@ export function NominationBuilderPage() {
         return player.position === "D" && !!lineup.defensePairs[3].lb;
       return false;
     },
-    [selectedSlot, usedIds]
+    [selectedSlot, usedIds, lineup.defensePairs]
   );
 
   const handleAddFromPool = useCallback(
@@ -210,11 +234,11 @@ export function NominationBuilderPage() {
       }
       const next = tryAutoAssignPlayer(lineup, player);
       if (!next) {
-        toast.error("Už není volné místo pro tuto pozici, nebo je hráč už v nominaci.");
+        toast.error("Už není volné místo pro tuto pozici, nebo je hráč už ve soupisce.");
         return;
       }
       setLineup(next);
-      toast.success(`${player.name} přidán do nominace`);
+      toast.success(`${player.name} přidán`);
     },
     [lineup, selectedSlot, canAssignPlayer, assignPlayerToSlot]
   );
@@ -248,60 +272,116 @@ export function NominationBuilderPage() {
     setLineup(next);
     setCaptainId(null);
     setSelectedSlot(null);
-    toast.success("Náhodná nominace je hotová — uprav si ji, jak chceš.");
+    toast.success("Náhodná sestava — uprav podle oficiálního zápisu.");
   }, [players]);
 
   const handleReset = useCallback(() => {
     setLineup(EMPTY_LINEUP);
     setCaptainId(null);
     setSelectedSlot(null);
-    toast.message("Sestava byla resetována.");
+    toast.message("Sestava resetována.");
   }, []);
 
-  const handleSave = useCallback(async (): Promise<string | null> => {
-    if (authStatus !== "authenticated") return null;
-    setSaving(true);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginBusy(true);
     try {
-      const res = await fetch("/api/nominations", {
+      const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(typeof data.error === "string" ? data.error : "Přihlášení selhalo.");
+        return;
+      }
+      setPassword("");
+      toast.success("Přihlášeno.");
+      await loadOfficial();
+    } finally {
+      setLoginBusy(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await fetch("/api/admin/logout", { method: "POST", credentials: "include" });
+    setAuthorized(false);
+    setLineup(EMPTY_LINEUP);
+    setCaptainId(null);
+    toast.message("Odhlášeno.");
+  };
+
+  const handleSave = useCallback(async () => {
+    setSaving(true);
+    try {
+      const res = await fetch("/api/admin/official-lineup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
-          selectedPlayerIds: selectedPlayers.map((p) => p.id),
-          captainId,
           lineupStructure: lineup,
+          captainId,
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        toast.error(data.error || "Chyba při ukládání");
-        return null;
+        toast.error(typeof data.error === "string" ? data.error : "Uložení selhalo.");
+        return;
       }
-      const bp = data.timeBonusPercent as number | undefined;
-      if (typeof bp === "number" && bp > 0) {
-        toast.success(`Nominace uložena — časový bonus +${bp} % k bodům.`);
-      } else {
-        toast.success("Nominace uložena.");
-      }
-      return data.id ?? null;
-    } catch {
-      toast.error("Chyba při ukládání — zkus to znovu.");
-      return null;
+      toast.success(data.message ?? "Uloženo.");
+      await loadOfficial();
     } finally {
       setSaving(false);
     }
-  }, [authStatus, selectedPlayers, captainId, lineup]);
+  }, [lineup, captainId, loadOfficial]);
 
-  if (loading) {
-    return <AppLoadingScreen message="Načítám hráče…" />;
+  if (!authChecked || loading) {
+    return <AppLoadingScreen message="Načítám…" />;
+  }
+
+  if (!authorized) {
+    return (
+      <div className="sestava-page-ambient min-h-screen pb-24 text-white">
+        <SestavaAmbientBackground />
+        <div className="sticky top-0 z-40">
+          <SiteHeader />
+        </div>
+        <div className="relative z-10 mx-auto max-w-md px-4 py-16">
+          <div className="sestava-premium-panel-dark rounded-2xl p-6 shadow-xl">
+            <h1 className="font-display text-xl font-bold text-white">Admin — oficiální soupiska</h1>
+            <p className="mt-2 text-sm text-white/65">
+              Stejný editor jako u nominací. Po uložení se podle této sestavy vyhodnotí soutěž (
+              <code className="text-cyan-200/90">GET /api/contest/leaderboard</code>).
+            </p>
+            <form onSubmit={handleLogin} className="mt-6 space-y-3">
+              <label className="block text-xs font-medium uppercase tracking-wider text-white/50">
+                Heslo
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(ev) => setPassword(ev.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2.5 text-sm text-white outline-none ring-cyan-500/40 focus:ring-2"
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={loginBusy || !password}
+                className="w-full rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] py-3 text-sm font-bold text-white disabled:opacity-40"
+              >
+                {loginBusy ? "…" : "Přihlásit"}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const subtitleCounts =
-    "Základ 20+2 (bruslaři + 2 G) · 3 náhradníci · 25 hráčů celkem — soupiska MS";
-
-  const bonusPercent = [0, 10, 25, 40].includes(contestStats.contestTimeBonusPercent)
-    ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
-    : (0 as ContestTimeBonusPercent);
-
+    "Oficiální soupiska pro vyhodnocení · 25 hráčů · stejné sloty jako u uživatelů";
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"
       ? "G"
@@ -317,25 +397,42 @@ export function NominationBuilderPage() {
 
         <div className="sticky top-0 z-40">
           <SiteHeader />
-          <SestavaHero
-            filled={filled}
-            subtitleCounts={subtitleCounts}
-            contestTimeBonusPercent={bonusPercent}
-            contestSubmissionOpen={contestStats.contestSubmissionOpen}
-            nominationCount={contestStats.nominationCount}
-          />
+          <header className="relative border-b border-white/[0.1] bg-gradient-to-b from-[#0a1224]/95 via-[#080d18]/92 to-[#060a14]/95 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:px-4 lg:px-6">
+            <div className="mx-auto flex max-w-[90rem] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h1 className="font-display text-lg font-bold text-white sm:text-xl">
+                  Admin — oficiální soupiska
+                </h1>
+                <p className="mt-0.5 text-[11px] text-slate-400">{subtitleCounts}</p>
+                {updatedAt ? (
+                  <p className="mt-1 text-[10px] text-slate-500">
+                    Naposledy uloženo: {new Date(updatedAt).toLocaleString("cs-CZ")}
+                  </p>
+                ) : null}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-white/80 hover:bg-white/5"
+                >
+                  Odhlásit
+                </button>
+              </div>
+            </div>
+          </header>
         </div>
 
         <div className="relative z-10 mx-auto max-w-[90rem] px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
           {!isComplete && (
-            <div className="mb-4 rounded-xl border border-[#003087]/40 bg-gradient-to-r from-[#003087]/20 via-[#0f172a]/90 to-[#c8102e]/15 px-4 py-2.5 text-center text-xs text-slate-100 shadow-[0_0_32px_rgba(0,48,135,0.15)] sm:text-sm">
+            <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-center text-xs text-amber-100 sm:text-sm">
               {remaining > 0 ? (
                 <>
-                  Ještě <span className="font-semibold text-[#f1c40f]">{remaining}</span>{" "}
-                  {remaining === 1 ? "místo" : remaining < 5 ? "místa" : "míst"} do plné nominace.
+                  Ještě <span className="font-semibold">{remaining}</span>{" "}
+                  {remaining === 1 ? "místo" : remaining < 5 ? "místa" : "míst"} do kompletní soupisky.
                 </>
               ) : (
-                <>Doplň poslední detaily — nominace skoro hotová.</>
+                <>Doplň poslední detaily.</>
               )}
             </div>
           )}
@@ -343,18 +440,16 @@ export function NominationBuilderPage() {
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-6 xl:gap-8">
             <section className="min-w-0">
               <div className="sestava-premium-panel-dark rounded-2xl p-4 backdrop-blur-sm sm:p-5">
-                  <div className="mb-4">
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
-                      Výběr hráčů
-                    </p>
-                    <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
-                      Dostupní hráči
-                    </h2>
-                    <p className="mt-1 max-w-lg text-[11px] leading-snug text-slate-400 sm:text-xs">
-                      Klik = první volné místo · přetáhni na dres vpravo
-                    </p>
-                  </div>
+                <div className="mb-4">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
+                    Výběr hráčů
+                  </p>
+                  <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
+                    Dostupní hráči
+                  </h2>
+                  <p className="mt-1 max-w-lg text-[11px] leading-snug text-slate-400 sm:text-xs">
+                    Klik = první volné místo · přetáhni na dres vpravo
+                  </p>
                 </div>
                 <PlayerPoolPanel
                   players={players}
@@ -368,14 +463,14 @@ export function NominationBuilderPage() {
             </section>
 
             <section className="min-w-0">
-              <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
+              <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
                 <div className="nhl25-moje-sestava-panel rounded-2xl p-4 sm:p-5 lg:p-6">
                   <div className="nhl25-moje-sestava-accent mb-3" aria-hidden />
                   <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
-                    Soupiska
+                    Oficiální zápis
                   </p>
                   <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
-                    Moje sestava
+                    Soupiska ČR (MS 2026)
                   </h2>
                   {selectedSlot ? (
                     <p className="mt-1 text-[11px] leading-snug text-slate-600 sm:text-xs">
@@ -403,57 +498,28 @@ export function NominationBuilderPage() {
           <div className="mt-6 hidden justify-center lg:flex">
             <button
               type="button"
-              onClick={() => setModalOpen(true)}
-              disabled={!isComplete}
+              onClick={handleSave}
+              disabled={!isComplete || saving}
               className={`
                 rounded-2xl px-12 py-4 font-display text-xl font-bold tracking-wide transition-all
                 ${
-                  isComplete
-                    ? "bg-gradient-to-r from-[#c8102e] via-[#a30d26] to-[#003087] text-white shadow-[0_12px_40px_rgba(200,16,46,0.35),0_0_0_1px_rgba(241,196,15,0.25)] ring-1 ring-white/20 hover:scale-[1.02] hover:shadow-[0_16px_48px_rgba(200,16,46,0.45)]"
+                  isComplete && !saving
+                    ? "bg-gradient-to-r from-[#c8102e] via-[#a30d26] to-[#003087] text-white shadow-[0_12px_40px_rgba(200,16,46,0.35)] ring-1 ring-white/20 hover:scale-[1.02]"
                     : "cursor-not-allowed bg-white/[0.06] text-white/35 ring-1 ring-white/[0.08]"
                 }
               `}
             >
-              {isAuthenticated ? "Uložit a sdílet" : "Složit nominaci"}
+              {saving ? "Ukládám…" : "Uložit oficiální soupisku"}
             </button>
           </div>
         </div>
 
         <FloatingSestavaBar
-          onShare={() => setModalOpen(true)}
+          onShare={handleSave}
           onRandom={handleRandom}
           onReset={handleReset}
-          shareDisabled={!isComplete}
-          shareLabel={isAuthenticated ? "Uložit a sdílet" : "Složit nominaci"}
-        />
-
-        <div
-          className="pointer-events-none fixed left-0 top-0 z-[-1] w-[920px] max-w-[920px] -translate-x-full"
-          aria-hidden
-        >
-          <Nhl25SharePoster
-            ref={shareCaptureRef}
-            players={players}
-            lineup={lineup}
-            captainId={captainId}
-            assistantIds={lineup.assistantIds ?? []}
-            siteUrl={siteOrigin}
-            footerInstantIso={sharePosterFooterIso}
-          />
-        </div>
-
-        <SaveShareModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          captureRef={shareCaptureRef}
-          onBeforeCapture={() => setSharePosterFooterIso(new Date().toISOString())}
-          isAuthenticated={isAuthenticated}
-          lineupStructure={lineup}
-          captainId={captainId}
-          onSave={handleSave}
-          isSaving={saving}
-          contestSubmissionOpen={contestStats.contestSubmissionOpen}
-          contestTimeBonusPercent={bonusPercent}
+          shareDisabled={!isComplete || saving}
+          shareLabel={saving ? "Ukládám…" : "Uložit oficiální soupisku"}
         />
 
         <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
