@@ -284,8 +284,6 @@ export function PlayerPoolPanel({
         />
       </div>
 
-      <PoolAbbrevLegend />
-
       <div className="flex flex-wrap items-center gap-2">
         <Filter className="h-4 w-4 text-[#c8102e]/70" />
         <select
@@ -329,6 +327,8 @@ export function PlayerPoolPanel({
       {filtered.length === 0 && (
         <p className="py-12 text-center text-sm text-white/40">Žádní hráči nevyhovují filtru.</p>
       )}
+
+      <PoolAbbrevLegend />
     </div>
   );
 }
