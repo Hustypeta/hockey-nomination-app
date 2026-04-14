@@ -2,7 +2,7 @@
 
 import type { Player } from "@/types";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
-import { CZ_JERSEY_BACK_BLANK_SRC } from "@/lib/jerseyPhotoAsset";
+import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 
 export type Nhl25JerseySize = "compact" | "skater" | "goalie";
 
@@ -13,20 +13,20 @@ function lastName(name: string) {
 
 const widthClass: Record<Nhl25JerseySize, string> = {
   compact: "max-w-[7.25rem] sm:max-w-[7.75rem]",
-  skater: "max-w-[8.75rem] sm:max-w-[9.75rem] lg:max-w-[10.25rem]",
-  goalie: "max-w-[10.5rem] sm:max-w-[11.5rem] lg:max-w-[12rem]",
+  skater: "max-w-[9.25rem] sm:max-w-[10rem] lg:max-w-[10.5rem]",
+  goalie: "max-w-[11.25rem] sm:max-w-[12rem] lg:max-w-[12.5rem]",
 };
 
 const numberClass: Record<Nhl25JerseySize, string> = {
-  compact: "jersey-back-number-text text-[1.85rem] sm:text-[2rem]",
-  skater: "jersey-back-number-text text-[2.15rem] sm:text-[2.45rem] lg:text-[2.65rem]",
-  goalie: "jersey-back-number-text text-[2.45rem] sm:text-[2.75rem] lg:text-[2.95rem]",
+  compact: "jersey-back-number-text text-[1.55rem] sm:text-[1.7rem]",
+  skater: "jersey-back-number-text text-[1.85rem] sm:text-[2.05rem] lg:text-[2.2rem]",
+  goalie: "jersey-back-number-text text-[1.65rem] sm:text-[1.85rem] lg:text-[2rem]",
 };
 
 const nameClass: Record<Nhl25JerseySize, string> = {
-  compact: "jersey-nameplate-text jersey-nameplate-text--compact max-w-[96%] text-center text-[10px] sm:text-[11px]",
-  skater: "jersey-nameplate-text max-w-[96%] text-center text-[11px] sm:text-[13px] lg:text-[14px]",
-  goalie: "jersey-nameplate-text max-w-[96%] text-center text-[12px] sm:text-[14px] lg:text-[15px]",
+  compact: "jersey-nameplate-text jersey-nameplate-text--compact max-w-[90%] text-center text-[10px] sm:text-[11px]",
+  skater: "jersey-nameplate-text max-w-[90%] text-center text-[11px] sm:text-[12px] lg:text-[13px]",
+  goalie: "jersey-nameplate-text max-w-[88%] text-center text-[10px] sm:text-[11px] lg:text-[12px]",
 };
 
 const badgeShadow = {
@@ -35,9 +35,9 @@ const badgeShadow = {
 
 /** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` (fotopodklad zadní strany). */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
-  compact: "justify-start pt-[30%]",
-  skater: "justify-start pt-[31%]",
-  goalie: "justify-start pt-[29%]",
+  compact: "justify-start pt-[26%]",
+  skater: "justify-start pt-[27%]",
+  goalie: "justify-start pt-[25%]",
 };
 
 export interface Nhl25JerseyCardProps {
@@ -137,7 +137,7 @@ export function Nhl25JerseyCard({
               decoding="async"
               data-jersey-kind={kind}
               className={`
-                absolute inset-0 h-full w-full object-contain object-top drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]
+                ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]
                 ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
               `}
             />
