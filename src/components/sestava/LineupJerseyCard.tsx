@@ -1,6 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
+import { jerseyNameplateExtraClasses, jerseyNumberExtraClasses } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 
@@ -11,17 +12,10 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
-function lineupNameplateExtra(last: string): string {
-  const n = last.length;
-  if (n <= 8) return "max-w-[92%]";
-  if (n <= 12) return "max-w-[94%] !text-[10px] sm:!text-[11px] !leading-tight";
-  return "max-w-[96%] !text-[9px] sm:!text-[10px] !leading-tight line-clamp-2";
-}
-
 /** Jednotná šířka karty — hráči, brankáři i náhradníci. */
 const LINEUP_CARD_UNIFIED = {
   width: "max-w-[7.1rem] sm:max-w-[7.1rem]",
-  name: "jersey-nameplate-text max-w-[90%] text-center text-[11px] sm:text-[12px]",
+  name: "jersey-nameplate-text max-w-[90%] text-center text-[10.5px] sm:text-[11.5px]",
   badge: "text-[10px] px-2 py-0.5",
   number: "jersey-back-number-text text-[1.55rem] sm:text-[1.75rem]",
   overlayTop: "justify-start pt-[31%]",
@@ -178,10 +172,14 @@ export function LineupJerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${topOverlay}`}
               >
-                <span className={`text-center leading-tight ${lineupNameplateExtra(lastName(player.name))} ${nmCls}`}>
+                <span
+                  className={`text-center leading-tight ${jerseyNameplateExtraClasses(lastName(player.name))} ${nmCls}`}
+                >
                   {lastName(player.name)}
                 </span>
-                {numStr ? <span className={`mt-px ${numCls}`}>{numStr}</span> : null}
+                {numStr ? (
+                  <span className={`mt-px ${numCls}${jerseyNumberExtraClasses(lastName(player.name))}`}>{numStr}</span>
+                ) : null}
                 {player.position === "F" && player.role ? (
                   <span
                     className="mt-1 rounded border border-white/25 bg-black/55 px-1.5 py-0.5 font-display text-[9px] font-bold uppercase tracking-wider text-white"

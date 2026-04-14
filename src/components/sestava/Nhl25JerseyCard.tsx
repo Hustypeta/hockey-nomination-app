@@ -1,6 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
+import { jerseyNameplateExtraClasses, jerseyNumberExtraClasses } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 
@@ -11,18 +12,11 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
-function nhlNameplateExtra(last: string): string {
-  const n = last.length;
-  if (n <= 8) return "max-w-[90%]";
-  if (n <= 11) return "max-w-[92%] !text-[10px] sm:!text-[11px] lg:!text-[12px] !leading-tight";
-  return "max-w-[94%] !text-[9px] sm:!text-[10px] lg:!text-[11px] !leading-tight line-clamp-2";
-}
-
 /** Jednotná velikost karty — útok, obrana, G, náhradníci (export / share). */
 const NHL25_CARD_UNIFIED = {
   width: "max-w-[8rem] sm:max-w-[8.5rem] lg:max-w-[9rem]",
   number: "jersey-back-number-text text-[1.6rem] sm:text-[1.8rem] lg:text-[1.95rem]",
-  name: "jersey-nameplate-text max-w-[90%] text-center text-[11px] sm:text-[12px] lg:text-[13px]",
+  name: "jersey-nameplate-text max-w-[90%] text-center text-[10.5px] sm:text-[11.5px] lg:text-[12.5px]",
 } as const;
 
 const widthClass: Record<Nhl25JerseySize, string> = {
@@ -156,10 +150,14 @@ export function Nhl25JerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
               >
-                <span className={`text-center leading-tight ${nhlNameplateExtra(lastName(player.name))} ${nmCls}`}>
+                <span
+                  className={`text-center leading-tight ${jerseyNameplateExtraClasses(lastName(player.name))} ${nmCls}`}
+                >
                   {lastName(player.name)}
                 </span>
-                {numStr ? <span className={`mt-px ${numCls}`}>{numStr}</span> : null}
+                {numStr ? (
+                  <span className={`mt-px ${numCls}${jerseyNumberExtraClasses(lastName(player.name))}`}>{numStr}</span>
+                ) : null}
               </div>
             ) : (
               <div

@@ -4,7 +4,6 @@ import { forwardRef, useLayoutEffect, useState } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
-import { CzechFlagMark } from "@/components/CzechFlagMark";
 
 export interface Nhl25SharePosterProps {
   players: Player[];
@@ -53,18 +52,13 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
         <div className="nhl25-moje-sestava-accent mx-8 mt-5 rounded-full" aria-hidden />
 
         <header className="relative px-8 pb-2 pt-6">
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-between sm:gap-6">
-            <div className="flex min-w-0 flex-1 items-center gap-4">
-              <CzechFlagMark className="h-12 w-[4rem] shrink-0 rounded-md border border-slate-300/80 shadow-sm" />
-              <div className="min-w-0 text-left">
-                <h1 className="font-display text-[1.65rem] font-bold leading-tight tracking-wide text-slate-900 sm:text-3xl">
-                  Moje nominace na MS 2026 <span aria-hidden>🇨🇿</span>
-                </h1>
-                <p className="mt-1 font-display text-[11px] font-semibold uppercase tracking-[0.22em] text-[#003087]/85">
-                  Český nároďák · soupiska
-                </p>
-              </div>
-            </div>
+          <div className="min-w-0 text-center sm:text-left">
+            <h1 className="font-display text-[1.65rem] font-bold leading-tight tracking-wide text-slate-900 sm:text-3xl">
+              Moje nominace na MS 2026
+            </h1>
+            <p className="mt-1 font-display text-[11px] font-semibold uppercase tracking-[0.22em] text-[#003087]/85">
+              Český nároďák · soupiska
+            </p>
           </div>
         </header>
 

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
-import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
 
 const NAV = [
   { href: "/", label: "Úvod" },
@@ -32,11 +31,8 @@ export function SiteHeader() {
     <header className="relative z-20 border-b border-white/[0.12] bg-gradient-to-r from-[#060a14]/96 via-[#0c1428]/94 to-[#060a14]/96 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4">
         <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 sm:justify-start">
-          <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="MS 2026 — úvod">
-            <CzechHockeyCrest className="h-9 w-9 shrink-0 drop-shadow-[0_0_12px_rgba(200,16,46,0.35)]" />
-            <div className="font-display text-lg tracking-[0.08em] sm:text-xl">
-              MS <span className="text-[#c8102e]">2026</span>
-            </div>
+          <Link href="/" className="shrink-0 font-display text-lg tracking-[0.08em] sm:text-xl" aria-label="MS 2026 — úvod">
+            MS <span className="text-[#c8102e]">2026</span>
           </Link>
           <nav
             className="flex max-w-full flex-1 flex-wrap items-center justify-end gap-1 sm:ml-4 sm:justify-start sm:gap-1.5"

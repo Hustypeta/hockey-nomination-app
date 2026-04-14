@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Zap } from "lucide-react";
+import { CalendarClock, Zap } from "lucide-react";
 import { CONTEST_DEADLINE_CS, type ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
 export function ContestTimeBonusCallout({
@@ -45,7 +45,7 @@ export function ContestTimeBonusCallout({
     <div
       className={
         isLanding
-          ? "flex h-full min-h-0 w-full flex-1 flex-col rounded-2xl border border-amber-500/25 bg-gradient-to-br from-amber-500/[0.12] via-[#0c1424]/80 to-[#080d16]/90 p-4 shadow-[0_0_36px_rgba(245,158,11,0.12)] sm:p-5"
+          ? "group relative flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden rounded-3xl border border-amber-400/20 bg-gradient-to-br from-[#1a1408]/90 via-[#0c1018]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(251,191,36,0.08),0_24px_52px_-14px_rgba(245,158,11,0.28),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl transition duration-300 hover:border-amber-400/30 hover:shadow-[0_0_0_1px_rgba(251,191,36,0.14),0_28px_60px_-12px_rgba(245,158,11,0.35),inset_0_1px_0_rgba(255,255,255,0.08)]"
           : "w-full max-w-lg self-start text-left rounded-2xl border border-[#f1c40f]/35 bg-gradient-to-br from-[#f1c40f]/[0.14] via-[#f1c40f]/[0.06] to-transparent px-4 py-3.5 shadow-[0_0_28px_rgba(241,196,15,0.15)]"
       }
       {...(!isLanding
@@ -54,21 +54,33 @@ export function ContestTimeBonusCallout({
           }
         : {})}
     >
-      <div className={`flex items-start gap-3 ${!isLanding ? "text-left" : ""}`}>
+      {isLanding ? (
+        <>
+          <div
+            className="pointer-events-none absolute -right-1/4 -top-1/4 h-[85%] w-[55%] bg-[radial-gradient(ellipse_at_70%_0%,rgba(251,191,36,0.28),transparent_55%)]"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/25 to-transparent"
+            aria-hidden
+          />
+        </>
+      ) : null}
+      <div className={`flex items-start gap-3 ${!isLanding ? "text-left" : ""} ${isLanding ? "relative z-10 p-5 sm:p-6" : ""}`}>
         <div
           className={
             isLanding
-              ? "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-200 ring-1 ring-amber-400/30"
+              ? "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-300/35 via-amber-500/15 to-amber-900/40 text-amber-50 shadow-[0_0_0_1px_rgba(251,191,36,0.35),0_10px_36px_rgba(245,158,11,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-amber-300/30 sm:h-14 sm:w-14"
               : "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f1c40f]/20 text-[#f1c40f] ring-1 ring-[#f1c40f]/35"
           }
         >
-          <Zap className={isLanding ? "h-5 w-5" : "h-4 w-4"} aria-hidden />
+          <Zap className={isLanding ? "h-6 w-6 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] sm:h-7 sm:w-7" : "h-4 w-4"} aria-hidden />
         </div>
         <div className={`min-w-0 flex-1 ${!isLanding ? "text-left" : ""}`}>
           <p
             className={
               isLanding
-                ? "text-sm font-semibold tracking-wide text-amber-200/95"
+                ? "font-display text-[10px] font-bold uppercase tracking-[0.26em] text-amber-200/85"
                 : "text-xs font-semibold tracking-wide text-[#f1c40f]/95"
             }
           >
@@ -76,32 +88,40 @@ export function ContestTimeBonusCallout({
           </p>
           {isLanding ? (
             <>
-              <p className="mt-1 font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
+              <p className="mt-2 font-display text-[clamp(1.75rem,5vw,2.35rem)] font-bold leading-[1.05] tracking-tight">
                 {bonusPercent > 0 ? (
                   <>
-                    <span className="text-amber-200">+{bonusPercent} %</span>
-                    <span className="font-semibold text-white/85"> k bodům</span>
+                    <span className="bg-gradient-to-br from-amber-50 via-amber-200 to-amber-400/95 bg-clip-text text-transparent drop-shadow-[0_2px_20px_rgba(251,191,36,0.35)]">
+                      +{bonusPercent} %
+                    </span>
+                    <span className="text-[0.62em] font-semibold uppercase tracking-[0.12em] text-white/75"> k bodům</span>
                   </>
                 ) : (
                   <span className="text-white/90">Právě bez časového bonusu</span>
                 )}
               </p>
-              <p className="mt-2 text-sm">
+              <p className="mt-3 text-sm">
                 <Link
                   href="/pravidla-souteze"
-                  className="font-medium text-cyan-300/95 underline-offset-2 transition hover:text-cyan-200 hover:underline"
+                  className="inline-flex items-center gap-1 font-medium text-sky-300/95 underline decoration-sky-400/35 underline-offset-[5px] transition hover:text-sky-200 hover:decoration-sky-300/60"
                 >
                   více v pravidlech soutěže
                 </Link>
               </p>
-              <p className="mt-2 border-t border-white/10 pt-2 text-[11px] text-white/45 sm:text-xs">
-                Uzávěrka odeslání: <strong className="text-white/70">{CONTEST_DEADLINE_CS}</strong>
-                {!submissionOpen ? (
-                  <span className="mt-1 block font-semibold text-rose-300/95">
-                    Soutěž už nepřijímá nové nominace k vyhodnocení.
-                  </span>
-                ) : null}
-              </p>
+              <div className="mt-4 rounded-2xl border border-white/[0.07] bg-black/25 px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-4">
+                <div className="flex gap-2.5">
+                  <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-amber-200/55" aria-hidden />
+                  <p className="text-[11px] leading-relaxed text-white/50 sm:text-xs">
+                    <span className="block font-medium text-white/65">Uzávěrka odeslání</span>
+                    <span className="mt-0.5 block text-white/80">{CONTEST_DEADLINE_CS}</span>
+                    {!submissionOpen ? (
+                      <span className="mt-2 block font-semibold text-rose-300/95">
+                        Soutěž už nepřijímá nové nominace k vyhodnocení.
+                      </span>
+                    ) : null}
+                  </p>
+                </div>
+              </div>
             </>
           ) : (
             <>

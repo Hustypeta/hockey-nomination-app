@@ -12,6 +12,7 @@ import {
   BookOpen,
   LayoutGrid,
   ClipboardList,
+  MessageSquare,
 } from "lucide-react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
 import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
@@ -126,28 +127,50 @@ export function LandingContent() {
             </div>
 
             {/* Sociální důkaz + časový bonus — vedle sebe od většího breakpointu */}
-            <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-4 sm:mt-12 lg:flex-row lg:items-stretch lg:gap-5">
-              <div className="flex min-h-0 min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/[0.12] bg-[#0f172a]/75 px-5 py-4 shadow-[0_0_40px_rgba(0,48,135,0.2),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm sm:px-6">
-                <Users className="h-8 w-8 shrink-0 text-sky-300" aria-hidden />
-                <div className="text-left text-sm leading-snug text-slate-200">
-                  {nominationCount !== null ? (
-                    <>
-                      <span className="block font-display text-2xl font-bold tabular-nums text-white">
-                        {formatCs(nominationCount)}
-                      </span>
-                      <span className="text-slate-400">
-                        {nominationCount === 0
-                          ? "účastníků v soutěži zatím — buď první"
-                          : nominationCount === 1
-                            ? "účastník už odeslal nominaci do soutěže"
-                            : nominationCount >= 2 && nominationCount <= 4
-                              ? "účastníci už odeslali nominaci do soutěže"
-                              : "účastníků už v soutěži"}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-slate-400">Načítám statistiky komunity…</span>
-                  )}
+            <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-5 sm:mt-12 lg:flex-row lg:items-stretch lg:gap-6">
+              <div className="group relative flex min-h-0 min-w-0 flex-1 overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)] sm:min-h-[8.5rem]">
+                <div
+                  className="pointer-events-none absolute -left-1/4 top-0 h-[140%] w-[70%] bg-[radial-gradient(ellipse_at_30%_0%,rgba(56,189,248,0.22),transparent_58%)]"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute -bottom-8 right-0 h-36 w-36 rounded-full bg-[#003087]/35 blur-3xl"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/35 to-transparent opacity-80"
+                  aria-hidden
+                />
+                <div className="relative z-10 flex w-full items-center gap-4 px-5 py-5 sm:gap-5 sm:px-7 sm:py-6">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/25 via-sky-500/10 to-[#003087]/40 shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_8px_32px_rgba(56,189,248,0.22),inset_0_1px_0_rgba(255,255,255,0.12)] ring-1 ring-sky-300/20 sm:h-16 sm:w-16">
+                    <Users
+                      className="h-7 w-7 text-sky-100 drop-shadow-[0_0_12px_rgba(56,189,248,0.5)] sm:h-8 sm:w-8"
+                      aria-hidden
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1 text-left">
+                    <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-sky-200/70">
+                      Komunita
+                    </p>
+                    {nominationCount !== null ? (
+                      <>
+                        <p className="mt-1 font-display text-4xl font-bold leading-none tabular-nums tracking-tight text-white drop-shadow-[0_2px_24px_rgba(56,189,248,0.35)] sm:text-[2.65rem]">
+                          {formatCs(nominationCount)}
+                        </p>
+                        <p className="mt-2 text-sm leading-snug text-slate-300/95">
+                          {nominationCount === 0
+                            ? "účastníků v soutěži zatím — buď první"
+                            : nominationCount === 1
+                              ? "fanoušek už poslal nominaci do soutěže"
+                              : nominationCount >= 2 && nominationCount <= 4
+                                ? "fanoušci už poslali nominaci do soutěže"
+                                : "fanoušků už poslalo nominaci do soutěže"}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="mt-2 text-sm text-slate-400">Načítám statistiky komunity…</p>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -208,14 +231,14 @@ export function LandingContent() {
             <h2 className="text-center font-display text-2xl font-bold uppercase tracking-[0.12em] text-white sm:text-3xl">
               Proč to zkusit
             </h2>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4 xl:gap-6">
               <div className="rounded-2xl border border-[#003087]/30 bg-gradient-to-b from-[#0f172a]/95 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(0,48,135,0.15)]">
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#003087]/30 text-sky-200 ring-1 ring-[#003087]/40">
                   <Users className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
-                  <strong className="text-white">Prémiový editor</strong> — výběr z více než 130 hráčů, lajny jako na
-                  soupisce, sdílení odkazem i plakátem. Ovládání je hra samo o sobě.
+                  V editoru sestavy můžeš vybírat z více než 130 hráčů. Po sestavení nominace lze také grafiku sdílet jako
+                  obrázek či odkaz na sociální sítě nebo stáhnout do svého zařízení.
                 </p>
                 <Link
                   href="/sestava"
@@ -230,8 +253,14 @@ export function LandingContent() {
                   <Trophy className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
-                  <strong className="text-white">Soutěž o dres</strong> — porovnání s oficiální soupiskou a zápisem k 1.
-                  zápasu ČR. <strong className="text-white">Vítěz bere dres</strong>, další místa mají ceny. Účast zdarma.
+                  Svoji nominaci můžeš odeslat do soutěže o zajímavé hokejové ceny. Více v{" "}
+                  <Link
+                    href="/pravidla-souteze"
+                    className="font-semibold text-[#f1c40f] underline decoration-[#f1c40f]/35 underline-offset-[3px] transition hover:text-white hover:decoration-white/50"
+                  >
+                    pravidlech soutěže
+                  </Link>
+                  .
                 </p>
                 <Link
                   href="/pravidla-souteze"
@@ -241,19 +270,34 @@ export function LandingContent() {
                   Pravidla soutěže
                 </Link>
               </div>
-              <div className="rounded-2xl border border-white/[0.1] bg-[#0f172a]/80 p-6 shadow-inner sm:col-span-2 lg:col-span-1">
+              <div className="rounded-2xl border border-white/[0.1] bg-[#0f172a]/80 p-6 shadow-inner">
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/15">
                   <LayoutGrid className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
-                  <strong className="text-white">Pick’em play-off</strong> — tipni si bracket podle skupin IIHF, čtvrtfinále
-                  až finále. Zdarma, bez účtu.
+                  V průběhu šampionátu bude také zpřístupněna Pick’em play-off soutěž, kde si můžeš tipnout výsledek
+                  play-off pavouka, nebo kdo vyhraje kanadské bodování šampionátu.
                 </p>
                 <Link
                   href="/bracket"
                   className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-slate-300 transition hover:text-white"
                 >
                   Otevřít Pick’em
+                  <ChevronRight className="h-4 w-4" aria-hidden />
+                </Link>
+              </div>
+              <div className="rounded-2xl border border-violet-400/20 bg-gradient-to-b from-violet-950/35 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(139,92,246,0.12)]">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/20 text-violet-100 ring-1 ring-violet-400/30">
+                  <MessageSquare className="h-5 w-5" aria-hidden />
+                </div>
+                <p className="text-sm leading-relaxed text-slate-200">
+                  Připravujeme také fórum, kde bude možné přidávat nominace a rozjet nejrůznější diskuze.
+                </p>
+                <Link
+                  href="/forum"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-violet-200/95 transition hover:text-white"
+                >
+                  Fórum
                   <ChevronRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>

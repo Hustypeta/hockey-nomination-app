@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, Info, GripVertical } from "lucide-react";
 import type { Player, Position } from "@/types";
 import { POSITION_LABELS, POSITION_LIMITS, ROLE_LABELS } from "@/types";
@@ -82,27 +81,31 @@ function DraggableCard({
   const cur = counts[player.position];
 
   return (
-    <motion.div
+    <div
       ref={setNodeRef}
       style={style}
-      layout
-      initial={{ opacity: 0, scale: 0.96 }}
-      animate={{ opacity: inRoster ? 0.38 : 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 420, damping: 28 }}
       className={`
-        group/pool relative flex flex-col gap-2 rounded-xl border p-3 transition-[box-shadow,border-color,transform,opacity] duration-300 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]
+        group/pool relative flex flex-col gap-2 rounded-xl border p-3
+        transition-[opacity,box-shadow,border-color,transform] duration-200 ease-out
         before:pointer-events-none before:absolute before:inset-y-2.5 before:left-0 before:w-[3px] before:rounded-full before:bg-[#c8102e] before:opacity-90 before:shadow-[0_0_12px_rgba(200,16,46,0.5)]
         ${
           inRoster
-            ? "border-white/[0.07] bg-[#05080f]/50 opacity-[0.72]"
+            ? "border-white/[0.07] bg-[#05080f]/50"
             : disabled || slotBlocks
-              ? "border-white/[0.05] bg-[#080d14]/80 opacity-50"
+              ? "border-white/[0.05] bg-[#080d14]/80"
               : `border-white/[0.12] bg-gradient-to-br from-[#0a1428]/95 via-[#121c34]/92 to-[#0a0f1a]/95
                  shadow-[0_8px_32px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.07),0_0_0_1px_rgba(0,48,135,0.15)]
                  hover:-translate-y-0.5 hover:border-[#f1c40f]/35 hover:shadow-[0_12px_40px_rgba(200,16,46,0.2),0_0_40px_rgba(241,196,15,0.08),inset_0_1px_0_rgba(255,255,255,0.1)]`
         }
-        ${isDragging ? "z-50 scale-[1.03] opacity-[0.98] shadow-2xl ring-2 ring-[#c8102e]/55" : ""}
+        ${
+          isDragging
+            ? "z-50 scale-[1.02] opacity-[0.98] shadow-2xl ring-2 ring-[#c8102e]/55"
+            : inRoster
+              ? "opacity-[0.45]"
+              : disabled || slotBlocks
+                ? "opacity-50"
+                : "opacity-100"
+        }
       `}
     >
       <div
@@ -162,7 +165,7 @@ function DraggableCard({
           {cur}/{lim} v nominaci
         </span>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -308,27 +311,25 @@ export function PlayerPoolPanel({
         </select>
       </div>
 
-      <motion.div layout className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((player) => {
-            const inRoster = usedIds.has(player.id);
-            const disabled = !canAdd(player);
-            const slotBlocks = assignableFilter ? !assignableFilter(player) : false;
-            return (
-              <DraggableCard
-                key={player.id}
-                player={player}
-                disabled={disabled}
-                slotBlocks={slotBlocks}
-                inRoster={inRoster}
-                counts={counts}
-                onAdd={() => onAddPlayer(player)}
-                onInfo={() => onPreview(player)}
-              />
-            );
-          })}
-        </AnimatePresence>
-      </motion.div>
+      <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
+        {filtered.map((player) => {
+          const inRoster = usedIds.has(player.id);
+          const disabled = !canAdd(player);
+          const slotBlocks = assignableFilter ? !assignableFilter(player) : false;
+          return (
+            <DraggableCard
+              key={player.id}
+              player={player}
+              disabled={disabled}
+              slotBlocks={slotBlocks}
+              inRoster={inRoster}
+              counts={counts}
+              onAdd={() => onAddPlayer(player)}
+              onInfo={() => onPreview(player)}
+            />
+          );
+        })}
+      </div>
 
       {filtered.length === 0 && (
         <p className="py-12 text-center text-sm text-white/40">Žádní hráči nevyhovují filtru.</p>

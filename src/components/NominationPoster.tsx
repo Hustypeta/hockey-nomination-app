@@ -3,7 +3,6 @@
 import { forwardRef, type ReactNode } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure, ForwardLine, DefensePair } from "@/types";
-import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
 import { LineupJerseyCard } from "@/components/sestava/LineupJerseyCard";
 
 interface NominationPosterProps {
@@ -179,18 +178,13 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
 
         <div className="relative px-3 pb-4 pt-2 sm:px-4">
           <header className="mb-3 flex flex-col items-center text-center">
-            <div className="mb-2 flex items-center gap-2.5">
-              <CzechHockeyCrest className="h-11 w-11 shrink-0 drop-shadow-[0_0_14px_rgba(200,16,46,0.35)]" />
-              <div className="text-left">
-                <p className="font-display text-[9px] font-bold uppercase tracking-[0.35em] text-[#c8102e]">
-                  Česká reprezentace
-                </p>
-                <h1 className="font-display text-3xl leading-none tracking-[0.12em] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.5)]">
-                  MS <span className="text-[#c8102e]">2026</span>
-                </h1>
-              </div>
-            </div>
-            <p className="font-display text-lg uppercase tracking-[0.22em] text-cyan-200/90">Lineup</p>
+            <p className="font-display text-[9px] font-bold uppercase tracking-[0.35em] text-[#c8102e]">
+              Česká reprezentace
+            </p>
+            <h1 className="mt-1 font-display text-3xl leading-none tracking-[0.12em] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.5)]">
+              MS <span className="text-[#c8102e]">2026</span>
+            </h1>
+            <p className="mt-2 font-display text-lg uppercase tracking-[0.22em] text-cyan-200/90">Lineup</p>
           </header>
 
           <div className="nomination-poster-panel rounded-xl p-2.5 sm:p-3">

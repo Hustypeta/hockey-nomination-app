@@ -1,27 +1,13 @@
 "use client";
 
 import type { Player } from "@/types";
+import { jerseyNameplateExtraClasses, jerseyNumberExtraClasses } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 
 function lastName(name: string) {
   const parts = name.trim().split(/\s+/);
   return parts[parts.length - 1] || name;
-}
-
-/** Kratší písmo pro dlouhá příjmení — zůstane na „nášivce“. */
-function nameplateOverflowClass(last: string): string {
-  const n = last.length;
-  if (n <= 8) return "";
-  if (n <= 11) return " !text-[9px] sm:!text-[10px] !leading-tight";
-  if (n <= 14) return " !text-[8px] sm:!text-[9px] !leading-tight";
-  return " !text-[7px] sm:!text-[8px] !leading-tight break-words";
-}
-
-function numberOverflowClass(last: string): string {
-  const n = last.length;
-  if (n <= 11) return "";
-  return " !text-[26px] sm:!text-[28px]";
 }
 
 export type PremiumJerseySize = "compact" | "skater" | "goalie";
@@ -31,7 +17,7 @@ const PREMIUM_SLOT_UNIFIED = {
   root: "w-[128px]",
   pos: "left-[8%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
   num: "jersey-back-number-text text-[32px] sm:text-[36px]",
-  name: "jersey-nameplate-text max-w-[90%] break-words text-center text-[11px] leading-tight line-clamp-2 sm:text-[12px]",
+  name: "jersey-nameplate-text max-w-[90%] break-words text-center text-[10.5px] leading-tight line-clamp-2 sm:text-[11.5px]",
   emptyName:
     "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
   emptyNum:
@@ -182,12 +168,12 @@ export function PremiumJerseySlotCard({
         >
           {!empty ? (
             <>
-              <span className={`${sz.name}${nameplateOverflowClass(lastName(player.name))}`}>
+              <span className={`${sz.name} ${jerseyNameplateExtraClasses(lastName(player.name))}`}>
                 {lastName(player.name)}
               </span>
               {numStr ? (
                 <span
-                  className={`${sz.num} mt-px max-w-[92%] text-center${numberOverflowClass(lastName(player.name))}`}
+                  className={`${sz.num} mt-px max-w-[92%] text-center${jerseyNumberExtraClasses(lastName(player.name))}`}
                 >
                   {numStr}
                 </span>
