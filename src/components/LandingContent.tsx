@@ -83,9 +83,8 @@ export function LandingContent() {
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg font-medium leading-relaxed text-slate-200/95 sm:text-xl">
-              Živý editor soupisky, časový bonus za brzké odeslání a soutěž o{" "}
-              <strong className="font-bold text-white">hokejový dres</strong> — zahoď nudný formulář, tohle je hra pro
-              fanoušky, kteří to myslí vážně.
+              Staň se na chvíli trenérem českého národního týmu. Využij naplno výběr z více než 130 hráčů,
+              poskládej si formace podle sebe a sdílej svou sestavu pro hokejové MS ve Švýcarsku s ostatními.
             </p>
 
             {/* Hlavní CTA — velké, červené, glow */}
