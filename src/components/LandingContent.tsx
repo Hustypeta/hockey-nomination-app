@@ -103,9 +103,9 @@ export function LandingContent() {
               </Link>
             </div>
 
-            {/* Sociální důkaz + časový bonus (jedna karta s odkazem na pravidla) */}
-            <div className="mx-auto mt-10 flex w-full max-w-3xl flex-col gap-4 sm:mt-12">
-              <div className="mx-auto flex w-full max-w-md items-center justify-center gap-3 rounded-2xl border border-white/[0.12] bg-[#0f172a]/75 px-5 py-4 shadow-[0_0_40px_rgba(0,48,135,0.2),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm sm:max-w-lg">
+            {/* Sociální důkaz + časový bonus — vedle sebe od většího breakpointu */}
+            <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-4 sm:mt-12 lg:flex-row lg:items-stretch lg:gap-5">
+              <div className="flex min-h-0 min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/[0.12] bg-[#0f172a]/75 px-5 py-4 shadow-[0_0_40px_rgba(0,48,135,0.2),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm sm:px-6">
                 <Users className="h-8 w-8 shrink-0 text-sky-300" aria-hidden />
                 <div className="text-left text-sm leading-snug text-slate-200">
                   {nominationCount !== null ? (
@@ -129,11 +129,13 @@ export function LandingContent() {
                 </div>
               </div>
 
-              <ContestTimeBonusCallout
-                variant="landing"
-                bonusPercent={bonusPercent}
-                submissionOpen={contestStats.contestSubmissionOpen}
-              />
+              <div className="flex min-h-0 min-w-0 flex-1 flex-col self-stretch">
+                <ContestTimeBonusCallout
+                  variant="landing"
+                  bonusPercent={bonusPercent}
+                  submissionOpen={contestStats.contestSubmissionOpen}
+                />
+              </div>
             </div>
           </div>
 

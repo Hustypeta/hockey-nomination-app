@@ -45,7 +45,7 @@ export function ContestTimeBonusCallout({
     <div
       className={
         isLanding
-          ? "mx-auto mt-6 max-w-lg rounded-2xl border border-amber-500/25 bg-gradient-to-br from-amber-500/[0.12] via-[#0c1424]/80 to-[#080d16]/90 p-4 shadow-[0_0_36px_rgba(245,158,11,0.12)] sm:mt-8 sm:p-5"
+          ? "flex h-full min-h-0 w-full flex-1 flex-col rounded-2xl border border-amber-500/25 bg-gradient-to-br from-amber-500/[0.12] via-[#0c1424]/80 to-[#080d16]/90 p-4 shadow-[0_0_36px_rgba(245,158,11,0.12)] sm:p-5"
           : "w-full max-w-lg self-start text-left rounded-2xl border border-[#f1c40f]/35 bg-gradient-to-br from-[#f1c40f]/[0.14] via-[#f1c40f]/[0.06] to-transparent px-4 py-3.5 shadow-[0_0_28px_rgba(241,196,15,0.15)]"
       }
       {...(!isLanding
