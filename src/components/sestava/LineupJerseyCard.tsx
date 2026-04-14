@@ -18,9 +18,10 @@ const widthClass: Record<LineupJerseySize, string> = {
 };
 
 const nameClass: Record<LineupJerseySize, string> = {
-  compact: "text-[11px] sm:text-[12px]",
-  skater: "text-[12px] sm:text-[13px]",
-  goalie: "text-[13px] sm:text-[14px]",
+  compact:
+    "jersey-nameplate-text jersey-nameplate-text--compact max-w-[94%] text-center text-[11px] sm:text-[12px]",
+  skater: "jersey-nameplate-text max-w-[94%] text-center text-[12px] sm:text-[13px]",
+  goalie: "jersey-nameplate-text max-w-[94%] text-center text-[13px] sm:text-[14px]",
 };
 
 const badgeClass: Record<LineupJerseySize, string> = {
@@ -30,9 +31,9 @@ const badgeClass: Record<LineupJerseySize, string> = {
 };
 
 const numberClass: Record<LineupJerseySize, string> = {
-  compact: "text-[1.55rem] sm:text-[1.7rem]",
-  skater: "text-[1.75rem] sm:text-[1.95rem]",
-  goalie: "text-[2rem] sm:text-[2.2rem]",
+  compact: "jersey-back-number-text text-[1.55rem] sm:text-[1.7rem]",
+  skater: "jersey-back-number-text text-[1.75rem] sm:text-[1.95rem]",
+  goalie: "jersey-back-number-text text-[2rem] sm:text-[2.2rem]",
 };
 
 /** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` / exportní `Nhl25JerseyCard`. */
@@ -160,26 +161,8 @@ export function LineupJerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${topOverlay}`}
               >
-                <span
-                  className={`
-                    max-w-[94%] truncate text-center font-display font-semibold uppercase leading-tight text-white/95
-                    ${nmCls}
-                  `}
-                  style={{ textShadow: "0 1px 4px rgba(0,0,0,0.95)" }}
-                >
-                  {lastName(player.name)}
-                </span>
-                {numStr ? (
-                  <span
-                    className={`
-                      jersey-number mt-0.5 leading-[0.92] font-display font-bold tabular-nums tracking-tight text-white
-                      drop-shadow-[0_2px_8px_rgba(0,0,0,0.95),0_0_20px_rgba(255,255,255,0.06)]
-                      ${numCls}
-                    `}
-                  >
-                    {numStr}
-                  </span>
-                ) : null}
+                <span className={`truncate leading-tight ${nmCls}`}>{lastName(player.name)}</span>
+                {numStr ? <span className={`mt-0.5 ${numCls}`}>{numStr}</span> : null}
                 {player.position === "F" && player.role ? (
                   <span
                     className={`mt-1 rounded border border-white/25 bg-black/55 px-1.5 py-0.5 font-display font-bold uppercase tracking-wider text-white ${

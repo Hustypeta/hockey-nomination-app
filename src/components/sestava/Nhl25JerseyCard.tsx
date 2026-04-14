@@ -18,19 +18,19 @@ const widthClass: Record<Nhl25JerseySize, string> = {
 };
 
 const numberClass: Record<Nhl25JerseySize, string> = {
-  compact: "text-[1.85rem] sm:text-[2rem]",
-  skater: "text-[2.15rem] sm:text-[2.45rem] lg:text-[2.65rem]",
-  goalie: "text-[2.45rem] sm:text-[2.75rem] lg:text-[2.95rem]",
+  compact: "jersey-back-number-text text-[1.85rem] sm:text-[2rem]",
+  skater: "jersey-back-number-text text-[2.15rem] sm:text-[2.45rem] lg:text-[2.65rem]",
+  goalie: "jersey-back-number-text text-[2.45rem] sm:text-[2.75rem] lg:text-[2.95rem]",
 };
 
 const nameClass: Record<Nhl25JerseySize, string> = {
-  compact: "text-[10px] sm:text-[11px]",
-  skater: "text-[11px] sm:text-[13px] lg:text-[14px]",
-  goalie: "text-[12px] sm:text-[14px] lg:text-[15px]",
+  compact: "jersey-nameplate-text jersey-nameplate-text--compact max-w-[96%] text-center text-[10px] sm:text-[11px]",
+  skater: "jersey-nameplate-text max-w-[96%] text-center text-[11px] sm:text-[13px] lg:text-[14px]",
+  goalie: "jersey-nameplate-text max-w-[96%] text-center text-[12px] sm:text-[14px] lg:text-[15px]",
 };
 
-const nameNumShadow = {
-  textShadow: "0 1px 2px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.75)",
+const badgeShadow = {
+  textShadow: "0 1px 2px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.65)",
 } as const;
 
 /** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` (fotopodklad zadní strany). */
@@ -146,32 +146,14 @@ export function Nhl25JerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
               >
-                <span
-                  className={`
-                    max-w-[96%] text-center font-display font-bold uppercase leading-tight text-white
-                    ${nmCls}
-                  `}
-                  style={nameNumShadow}
-                >
-                  {lastName(player.name)}
-                </span>
-                {numStr ? (
-                  <span
-                    className={`
-                      mt-0.5 font-display font-bold tabular-nums leading-[0.88] tracking-tight text-white
-                      ${numCls}
-                    `}
-                    style={nameNumShadow}
-                  >
-                    {numStr}
-                  </span>
-                ) : null}
+                <span className={`leading-tight ${nmCls}`}>{lastName(player.name)}</span>
+                {numStr ? <span className={`mt-0.5 ${numCls}`}>{numStr}</span> : null}
                 {player.position === "F" && player.role ? (
                   <span
                     className={`mt-1 rounded border border-white/35 bg-black/35 px-1.5 py-0.5 font-display font-bold uppercase text-white/95 ${
                       size === "goalie" ? "text-[10px]" : "text-[9px]"
                     }`}
-                    style={nameNumShadow}
+                    style={badgeShadow}
                   >
                     {player.role}
                   </span>
@@ -181,7 +163,7 @@ export function Nhl25JerseyCard({
                     className={`mt-1 font-display font-bold uppercase tracking-[0.14em] text-white/95 ${
                       size === "goalie" ? "text-[11px]" : "text-[10px]"
                     }`}
-                    style={nameNumShadow}
+                    style={badgeShadow}
                   >
                     G
                   </span>

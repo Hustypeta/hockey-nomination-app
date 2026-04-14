@@ -28,8 +28,8 @@ const SIZE_STYLES: Record<
   compact: {
     root: "w-[124px]",
     pos: "left-[7%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "font-jersey-print text-[34px] font-bold leading-[0.82] tabular-nums tracking-[-0.02em] text-white sm:text-[36px]",
-    name: "font-jersey-print max-w-[96%] break-words text-center text-[11px] font-semibold uppercase leading-tight tracking-[0.12em] text-white line-clamp-2 sm:text-[12px]",
+    num: "jersey-back-number-text text-[34px] sm:text-[36px]",
+    name: "jersey-nameplate-text jersey-nameplate-text--compact max-w-[96%] break-words text-center text-[11px] leading-tight line-clamp-2 sm:text-[12px]",
     emptyName:
       "select-none font-jersey-print text-[10px] font-semibold uppercase leading-tight tracking-[0.2em] text-white/35 sm:text-[11px]",
     emptyNum:
@@ -42,8 +42,8 @@ const SIZE_STYLES: Record<
   skater: {
     root: "w-[158px]",
     pos: "left-[8%] top-[5%] z-20 flex h-7 w-7 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[10px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "font-sans text-[48px] font-black leading-[0.85] tabular-nums tracking-tight text-white sm:text-[52px]",
-    name: "max-w-[94%] break-words text-center font-sans text-[14px] font-bold uppercase leading-tight tracking-wide text-white line-clamp-2 sm:text-[15px]",
+    num: "jersey-back-number-text text-[48px] sm:text-[52px]",
+    name: "jersey-nameplate-text max-w-[94%] break-words text-center text-[14px] leading-tight line-clamp-2 sm:text-[15px]",
     emptyName:
       "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
     emptyNum:
@@ -56,8 +56,8 @@ const SIZE_STYLES: Record<
   goalie: {
     root: "w-[178px]",
     pos: "left-[8%] top-[5%] z-20 flex h-8 w-8 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[11px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "font-sans text-[50px] font-black leading-[0.85] tabular-nums tracking-tight text-white sm:text-[54px]",
-    name: "max-w-[94%] break-words text-center font-sans text-[13px] font-bold uppercase leading-tight tracking-wide text-white line-clamp-2 sm:text-[14px]",
+    num: "jersey-back-number-text text-[50px] sm:text-[54px]",
+    name: "jersey-nameplate-text max-w-[94%] break-words text-center text-[13px] leading-tight line-clamp-2 sm:text-[14px]",
     emptyName:
       "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
     emptyNum:
@@ -195,26 +195,8 @@ export function PremiumJerseySlotCard({
         >
           {!empty ? (
             <>
-              <span
-                className={sz.name}
-                style={{
-                  textShadow:
-                    "0 1px 2px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.75), 0 0 1px rgba(0,0,0,1)",
-                }}
-              >
-                {lastName(player.name)}
-              </span>
-              {numStr ? (
-                <span
-                  className={`${sz.num} mt-0.5 sm:mt-1`}
-                  style={{
-                    textShadow:
-                      "0 1px 2px rgba(0,0,0,0.95), 0 2px 10px rgba(0,0,0,0.8), 0 0 1px rgba(0,0,0,1)",
-                  }}
-                >
-                  {numStr}
-                </span>
-              ) : null}
+              <span className={sz.name}>{lastName(player.name)}</span>
+              {numStr ? <span className={`${sz.num} mt-0.5 sm:mt-1`}>{numStr}</span> : null}
             </>
           ) : (
             <div className="mt-[18%] flex flex-col items-center" aria-hidden>
