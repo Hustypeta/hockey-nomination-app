@@ -8,8 +8,11 @@ const VB = "0 0 100 120";
 const PATH_SKATER =
   "M 39 9 C 35 7.5 29 8 25 10.5 L 15.5 20.5 L 7 24 L 3.5 36 L 4.2 45 L 8.5 51 L 14 51.5 L 14.5 76 C 15.2 98 17.5 110 23.5 114.5 L 76.5 114.5 C 82.5 110 84.8 98 85.5 76 L 86 51.5 L 91.5 51 L 95.8 45 L 96.5 36 L 93 24 L 84.5 20.5 L 75 10.5 C 71 8 65 7.5 61 9 L 54.5 7.5 L 50 17.5 L 45.5 7.5 L 39 9 Z";
 
+/**
+ * Brankář — širší ramena a rukávy, kratší tělo (vyšší spodní lem), výraznější „blok“ než u hráče.
+ */
 const PATH_GOALIE =
-  "M 34 8 C 28 6 22 8 17 12 L 4 22 L 0.5 38 L 1.5 50 L 5.5 58 L 9 59 L 7 84 C 8 104 11 112 18 116 L 82 116 C 89 112 92 104 93 84 L 91 59 L 94.5 50 L 98.5 38 L 96 22 L 83 12 C 78 8 72 6 66 8 L 59 6 L 50 17 L 41 6 L 34 8 Z";
+  "M 31 7 C 23 5 14 8 8 14 L 1 26 L 0 42 L 1.5 54 L 6.5 62 L 11 63 L 9 86 C 10 104 13 112 20 116 L 80 116 C 87 112 90 104 91 86 L 89 63 L 93.5 54 L 99 42 L 100 26 L 92 14 C 86 8 77 5 69 7 L 58 5 L 50 20 L 42 5 Z";
 
 const RED = "#c8102e";
 const NAVY = "#003087";
@@ -29,7 +32,8 @@ type Props = {
  */
 export function CzReplicaJerseyBackSvg({ kind, empty = false, className = "" }: Props) {
   const uid = useId().replace(/:/g, "");
-  const path = kind === "goalie" ? PATH_GOALIE : PATH_SKATER;
+  const isGoalie = kind === "goalie";
+  const path = isGoalie ? PATH_GOALIE : PATH_SKATER;
   const clipId = `czjb-clip-${uid}`;
   const gRed = `czjb-red-${uid}`;
   const gYoke = `czjb-yoke-${uid}`;
@@ -41,7 +45,14 @@ export function CzReplicaJerseyBackSvg({ kind, empty = false, className = "" }: 
         <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
           <path d={path} />
         </clipPath>
-        <linearGradient id={gRed} x1="50" y1="28" x2="50" y2="118" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={gRed}
+          x1="50"
+          y1={isGoalie ? "30" : "28"}
+          x2="50"
+          y2={isGoalie ? "114" : "118"}
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset="0%" stopColor="#9e0c24" />
           <stop offset="45%" stopColor={RED} />
           <stop offset="100%" stopColor="#7a0718" />

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap&subset=latin,latin-ext');
 @import "tailwindcss";
 
 :root {
@@ -18,6 +19,8 @@
   --accent-gold-soft: rgba(241, 196, 15, 0.22);
   --font-ui: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Bebas Neue", var(--font-ui);
+  /** Potisk zadní strany dresu — blokové písmo, latin-ext (ČR). */
+  --font-jersey-print: "Oswald", ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
@@ -44,6 +47,11 @@ body {
 
 .font-display {
   font-family: var(--font-display);
+}
+
+/** Jméno a číslo na dresu (overlay přes prázdný PNG). */
+.font-jersey-print {
+  font-family: var(--font-jersey-print);
 }
 
 /* Hockey rink ice gradient */

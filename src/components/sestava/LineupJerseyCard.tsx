@@ -1,9 +1,8 @@
 "use client";
 
 import type { Player } from "@/types";
-import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
-import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
+import { CZ_JERSEY_BACK_BLANK_SRC } from "@/lib/jerseyPhotoAsset";
 
 export type LineupJerseySize = "compact" | "skater" | "goalie";
 
@@ -30,16 +29,17 @@ const badgeClass: Record<LineupJerseySize, string> = {
   goalie: "text-[11px] px-2 py-0.5",
 };
 
-const crestClass: Record<LineupJerseySize, string> = {
-  compact: "h-3 w-[0.65rem]",
-  skater: "h-[1rem] w-[0.85rem]",
-  goalie: "h-7 w-[1.35rem]",
-};
-
 const numberClass: Record<LineupJerseySize, string> = {
   compact: "text-[1.55rem] sm:text-[1.7rem]",
   skater: "text-[1.75rem] sm:text-[1.95rem]",
   goalie: "text-[2rem] sm:text-[2.2rem]",
+};
+
+/** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` / exportní `Nhl25JerseyCard`. */
+const overlayTopClass: Record<LineupJerseySize, string> = {
+  compact: "justify-start pt-[30%]",
+  skater: "justify-start pt-[31%]",
+  goalie: "justify-start pt-[29%]",
 };
 
 export interface LineupJerseyCardProps {
@@ -72,8 +72,8 @@ export function LineupJerseyCard({
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const nmCls = nameClass[size];
   const bgCls = badgeClass[size];
-  const crestSz = crestClass[size];
   const numCls = numberClass[size];
+  const topOverlay = overlayTopClass[size];
 
   const motionCls = disableMotion
     ? ""
@@ -125,41 +125,52 @@ export function LineupJerseyCard({
           ${hoverInner}
         `}
       >
-        <div
-          className={`
-            absolute left-1/2 top-1 z-20 -translate-x-1/2
-            rounded border border-[#003087]/40 bg-[#0a0508]/95 font-display font-bold uppercase tracking-[0.18em] text-white/90
-            shadow-[0_0_12px_rgba(0,0,0,0.85)]
-            ${bgCls}
-            before:absolute before:inset-y-0 before:left-0 before:w-[2px] before:rounded-l before:bg-[#c8102e]
-            before:content-['']
-          `}
-        >
-          {positionLabel}
-        </div>
+        <div className="relative overflow-hidden rounded-[8px]">
+          <div className="relative aspect-[100/120] w-full">
+            {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
+            <img
+              src={CZ_JERSEY_BACK_BLANK_SRC}
+              alt=""
+              width={400}
+              height={480}
+              decoding="async"
+              data-jersey-kind={kind}
+              className={`
+                absolute inset-0 h-full w-full object-contain object-top drop-shadow-[0_6px_16px_rgba(0,0,0,0.65)]
+                ${empty ? "opacity-[0.45] grayscale" : ""}
+              `}
+            />
 
-        <div className="relative overflow-hidden rounded-[8px] pt-[1.2rem]">
-          <JerseySilhouetteShape
-            kind={kind}
-            empty={empty}
-            visualPreset="lineup"
-            className="relative z-0 block h-auto w-full drop-shadow-[0_6px_16px_rgba(0,0,0,0.65)]"
-          />
+            <div
+              className={`
+                absolute left-1/2 top-[4%] z-20 -translate-x-1/2
+                rounded border border-[#003087]/40 bg-[#0a0508]/95 font-display font-bold uppercase tracking-[0.18em] text-white/90
+                shadow-[0_0_12px_rgba(0,0,0,0.85)]
+                ${bgCls}
+                before:absolute before:inset-y-0 before:left-0 before:w-[2px] before:rounded-l before:bg-[#c8102e]
+                before:content-['']
+              `}
+            >
+              {positionLabel}
+            </div>
 
-          {!empty ? (
-            <>
-              <CzechHockeyCrest
-                className={`
-                  pointer-events-none absolute left-[10%] top-[calc(1.2rem+5%)] z-[8]
-                  drop-shadow-[0_1px_4px_rgba(0,0,0,0.9),0_0_8px_rgba(0,0,0,0.45)]
-                  ${crestSz}
-                `}
-              />
-              <div className="pointer-events-none absolute inset-0 top-[1.2rem] flex flex-col items-center justify-center px-1 pt-[4%]">
+            {!empty ? (
+              <div
+                className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${topOverlay}`}
+              >
+                <span
+                  className={`
+                    max-w-[94%] truncate text-center font-display font-semibold uppercase leading-tight text-white/95
+                    ${nmCls}
+                  `}
+                  style={{ textShadow: "0 1px 4px rgba(0,0,0,0.95)" }}
+                >
+                  {lastName(player.name)}
+                </span>
                 {numStr ? (
                   <span
                     className={`
-                      jersey-number leading-[0.92] font-display font-bold tabular-nums tracking-tight text-white
+                      jersey-number mt-0.5 leading-[0.92] font-display font-bold tabular-nums tracking-tight text-white
                       drop-shadow-[0_2px_8px_rgba(0,0,0,0.95),0_0_20px_rgba(255,255,255,0.06)]
                       ${numCls}
                     `}
@@ -167,16 +178,6 @@ export function LineupJerseyCard({
                     {numStr}
                   </span>
                 ) : null}
-                <span
-                  className={`
-                    max-w-[94%] truncate text-center font-display font-semibold uppercase leading-tight text-white/95
-                    ${numStr ? "mt-0.5" : ""}
-                    ${nmCls}
-                  `}
-                  style={{ textShadow: "0 1px 4px rgba(0,0,0,0.95)" }}
-                >
-                  {lastName(player.name)}
-                </span>
                 {player.position === "F" && player.role ? (
                   <span
                     className={`mt-1 rounded border border-white/25 bg-black/55 px-1.5 py-0.5 font-display font-bold uppercase tracking-wider text-white ${
@@ -197,17 +198,17 @@ export function LineupJerseyCard({
                   </span>
                 ) : null}
               </div>
-            </>
-          ) : (
-            <div
-              className="pointer-events-none absolute inset-0 top-[1.2rem] flex items-center justify-center px-1 pt-[6%]"
-              aria-hidden
-            >
-              <span className="font-display text-[clamp(1.25rem,4.5vw,1.85rem)] font-bold leading-none tracking-tight text-white/25">
-                {positionLabel}
-              </span>
-            </div>
-          )}
+            ) : (
+              <div
+                className="pointer-events-none absolute inset-0 z-[15] flex items-center justify-center px-1 pt-[21%]"
+                aria-hidden
+              >
+                <span className="font-display text-[clamp(1.25rem,4.5vw,1.85rem)] font-bold leading-none tracking-tight text-white/25">
+                  {positionLabel}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

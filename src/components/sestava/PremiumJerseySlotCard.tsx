@@ -2,7 +2,7 @@
 
 import type { Player } from "@/types";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
-import { CzReplicaJerseyBackSvg } from "@/components/sestava/CzReplicaJerseyBackSvg";
+import { CZ_JERSEY_BACK_BLANK_SRC } from "@/lib/jerseyPhotoAsset";
 
 function lastName(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -27,8 +27,8 @@ const SIZE_STYLES: Record<
   compact: {
     root: "w-[124px]",
     pos: "left-[7%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "font-sans text-[34px] font-black leading-[0.85] tabular-nums tracking-tight text-white sm:text-[36px]",
-    name: "max-w-[96%] break-words text-center font-sans text-[11px] font-bold uppercase leading-tight tracking-wide text-white line-clamp-2 sm:text-[12px]",
+    num: "font-jersey-print text-[34px] font-bold leading-[0.82] tabular-nums tracking-[-0.02em] text-white sm:text-[36px]",
+    name: "font-jersey-print max-w-[96%] break-words text-center text-[11px] font-semibold uppercase leading-tight tracking-[0.12em] text-white line-clamp-2 sm:text-[12px]",
     empty: "select-none font-sans text-[30px] font-bold leading-none text-[#64748b] opacity-60 sm:text-[32px]",
     cap: "absolute -right-0.5 -top-1 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white",
     asst: "absolute -bottom-0.5 -left-0.5 z-30 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[8px] font-bold text-white shadow-md ring-2 ring-white/90",
@@ -80,7 +80,7 @@ export interface PremiumJerseySlotCardProps {
 }
 
 /**
- * Prémiová „NHL 25“ karta slotu — vektorová zadní strana dresu ČR (`CzReplicaJerseyBackSvg`) + dynamické jméno a číslo.
+ * Prémiová „NHL 25“ karta slotu — prázdný PNG podklad + dynamické jméno a číslo.
  */
 export function PremiumJerseySlotCard({
   player,
@@ -141,12 +141,17 @@ export function PremiumJerseySlotCard({
           ${empty ? "ring-2 ring-dashed ring-slate-500/45" : ""}
         `}
       >
-        <CzReplicaJerseyBackSvg
-          kind={kind}
-          empty={empty}
+        {/* eslint-disable-next-line @next/next/no-img-element -- lokální statický podklad */}
+        <img
+          src={CZ_JERSEY_BACK_BLANK_SRC}
+          alt=""
+          width={400}
+          height={480}
+          decoding="async"
+          data-jersey-kind={kind}
           className={`
-            absolute inset-0 h-full w-full drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
-            ${empty ? "opacity-[0.55]" : ""}
+            absolute inset-0 h-full w-full object-contain object-top drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
+            ${empty ? "opacity-[0.45] grayscale" : ""}
           `}
         />
 
@@ -172,7 +177,7 @@ export function PremiumJerseySlotCard({
         <div
           className={`
             pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-2
-            ${size === "compact" ? "justify-start pt-[27%]" : size === "goalie" ? "justify-start pt-[26%]" : "justify-start pt-[28%]"}
+            ${size === "compact" ? "justify-start pt-[30%]" : size === "goalie" ? "justify-start pt-[29%]" : "justify-start pt-[31%]"}
           `}
         >
           {!empty ? (
@@ -199,7 +204,7 @@ export function PremiumJerseySlotCard({
               ) : null}
             </>
           ) : (
-            <span className={`${sz.empty} mt-[18%]`} aria-hidden>
+            <span className={`${sz.empty} mt-[21%]`} aria-hidden>
               {placeholder}
             </span>
           )}
