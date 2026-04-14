@@ -113,12 +113,7 @@ export function Nhl25JerseyCard({
         </span>
       )}
 
-      <div
-        className={`
-          nhl25-jersey-card-frame relative rounded-[11px] p-[6px]
-          ${empty ? "nhl25-jersey-card-frame--empty" : "nhl25-jersey-card-frame--filled"}
-        `}
-      >
+      <div className="nhl25-jersey-card-frame nhl25-jersey-card-frame--filled relative rounded-[11px] p-[6px]">
         <div
           className={`
             absolute left-2 top-2 z-20 rounded border border-[#11457e]/35 bg-[#11457e] px-1.5 py-0.5
@@ -129,8 +124,10 @@ export function Nhl25JerseyCard({
           {positionLabel}
         </div>
 
-        <div className="relative overflow-hidden rounded-[8px] bg-[#0c0c0c] shadow-inner">
-          <div className="relative aspect-[100/120] w-full">
+        <div className="relative overflow-hidden rounded-[8px] bg-black shadow-inner">
+          <div
+            className={`relative aspect-[100/120] w-full bg-black ${empty ? "ring-1 ring-inset ring-white/12" : ""}`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
             <img
               src={CZ_JERSEY_BACK_BLANK_SRC}
@@ -141,7 +138,7 @@ export function Nhl25JerseyCard({
               data-jersey-kind={kind}
               className={`
                 absolute inset-0 h-full w-full object-contain object-top drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]
-                ${empty ? "opacity-[0.45] grayscale" : ""}
+                ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
               `}
             />
 
@@ -192,11 +189,14 @@ export function Nhl25JerseyCard({
               </div>
             ) : (
               <div
-                className="pointer-events-none absolute inset-0 z-[15] flex items-center justify-center px-1 pt-[21%]"
+                className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
                 aria-hidden
               >
-                <span className="select-none font-display text-[clamp(1.5rem,7vw,2.5rem)] font-black uppercase leading-none tracking-tighter text-white/35">
-                  {positionLabel.replace(/\d/g, "").trim() || positionLabel}
+                <span className="max-w-[96%] text-center font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-white/35 sm:text-[12px]">
+                  —
+                </span>
+                <span className="mt-0.5 select-none font-display text-[clamp(1.35rem,6vw,2.25rem)] font-bold tabular-nums leading-none text-white/25">
+                  00
                 </span>
               </div>
             )}

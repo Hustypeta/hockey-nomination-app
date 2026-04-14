@@ -18,7 +18,8 @@ const SIZE_STYLES: Record<
     pos: string;
     num: string;
     name: string;
-    empty: string;
+    emptyName: string;
+    emptyNum: string;
     cap: string;
     asst: string;
     clear: string;
@@ -29,7 +30,10 @@ const SIZE_STYLES: Record<
     pos: "left-[7%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
     num: "font-jersey-print text-[34px] font-bold leading-[0.82] tabular-nums tracking-[-0.02em] text-white sm:text-[36px]",
     name: "font-jersey-print max-w-[96%] break-words text-center text-[11px] font-semibold uppercase leading-tight tracking-[0.12em] text-white line-clamp-2 sm:text-[12px]",
-    empty: "select-none font-sans text-[30px] font-bold leading-none text-[#64748b] opacity-60 sm:text-[32px]",
+    emptyName:
+      "select-none font-jersey-print text-[10px] font-semibold uppercase leading-tight tracking-[0.2em] text-white/35 sm:text-[11px]",
+    emptyNum:
+      "select-none font-jersey-print mt-1 text-[28px] font-bold leading-none tabular-nums text-white/25 sm:text-[30px]",
     cap: "absolute -right-0.5 -top-1 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white",
     asst: "absolute -bottom-0.5 -left-0.5 z-30 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[8px] font-bold text-white shadow-md ring-2 ring-white/90",
     clear:
@@ -40,7 +44,10 @@ const SIZE_STYLES: Record<
     pos: "left-[8%] top-[5%] z-20 flex h-7 w-7 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[10px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
     num: "font-sans text-[48px] font-black leading-[0.85] tabular-nums tracking-tight text-white sm:text-[52px]",
     name: "max-w-[94%] break-words text-center font-sans text-[14px] font-bold uppercase leading-tight tracking-wide text-white line-clamp-2 sm:text-[15px]",
-    empty: "select-none font-sans text-[42px] font-bold leading-none text-[#64748b] opacity-60",
+    emptyName:
+      "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
+    emptyNum:
+      "select-none font-jersey-print mt-1 text-[34px] font-bold leading-none tabular-nums text-white/25 sm:text-[38px]",
     cap: "absolute -right-0.5 -top-1 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[11px] font-bold text-white shadow-md ring-2 ring-white",
     asst: "absolute -bottom-0.5 -left-0.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white/90",
     clear:
@@ -51,7 +58,10 @@ const SIZE_STYLES: Record<
     pos: "left-[8%] top-[5%] z-20 flex h-8 w-8 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[11px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
     num: "font-sans text-[50px] font-black leading-[0.85] tabular-nums tracking-tight text-white sm:text-[54px]",
     name: "max-w-[94%] break-words text-center font-sans text-[13px] font-bold uppercase leading-tight tracking-wide text-white line-clamp-2 sm:text-[14px]",
-    empty: "select-none font-sans text-[40px] font-bold leading-none text-[#64748b] opacity-60 sm:text-[44px]",
+    emptyName:
+      "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
+    emptyNum:
+      "select-none font-jersey-print mt-1 text-[36px] font-bold leading-none tabular-nums text-white/25 sm:text-[40px]",
     cap: "absolute -right-0.5 -top-1 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-xs font-bold text-white shadow-md ring-2 ring-white",
     asst: "absolute -bottom-0.5 -left-0.5 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white/90",
     clear:
@@ -99,7 +109,10 @@ export function PremiumJerseySlotCard({
   const sz = SIZE_STYLES[size];
   const showAssistant = isAssistant && !!player && !isCaptain;
   const empty = !player;
-  const placeholder = (emptyPlaceholder ?? positionLabel).replace(/\d/g, "").trim() || positionLabel;
+  const ghostNumText = (() => {
+    const t = (emptyPlaceholder ?? "").replace(/\d/g, "").trim();
+    return t.length > 0 && t.length <= 2 ? t : "00";
+  })();
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const showClear = !empty && typeof onClear === "function";
 
@@ -137,8 +150,8 @@ export function PremiumJerseySlotCard({
       )}
       <div
         className={`
-          relative aspect-[100/120] w-full overflow-hidden rounded-[10px]
-          ${empty ? "ring-2 ring-dashed ring-slate-500/45" : ""}
+          relative aspect-[100/120] w-full overflow-hidden rounded-[10px] bg-black
+          ${empty ? "ring-1 ring-inset ring-white/12" : ""}
         `}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- lokální statický podklad */}
@@ -151,7 +164,7 @@ export function PremiumJerseySlotCard({
           data-jersey-kind={kind}
           className={`
             absolute inset-0 h-full w-full object-contain object-top drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
-            ${empty ? "opacity-[0.45] grayscale" : ""}
+            ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
           `}
         />
 
@@ -204,9 +217,10 @@ export function PremiumJerseySlotCard({
               ) : null}
             </>
           ) : (
-            <span className={`${sz.empty} mt-[21%]`} aria-hidden>
-              {placeholder}
-            </span>
+            <div className="mt-[18%] flex flex-col items-center" aria-hidden>
+              <span className={sz.emptyName}>—</span>
+              <span className={sz.emptyNum}>{ghostNumText}</span>
+            </div>
           )}
         </div>
       </div>

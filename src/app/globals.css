@@ -109,14 +109,6 @@ body {
     0 -1px 0 rgba(15, 23, 42, 0.04) inset;
 }
 
-.nhl25-jersey-card-frame--empty {
-  background: linear-gradient(180deg, #fcfcfd 0%, #f1f5f9 100%);
-  border: 1px dashed rgba(148, 163, 184, 0.85);
-  box-shadow:
-    0 4px 14px rgba(15, 23, 42, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
 .jersey-number-nhl {
   font-family: var(--font-display);
   text-shadow:

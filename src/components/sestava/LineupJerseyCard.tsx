@@ -126,7 +126,9 @@ export function LineupJerseyCard({
         `}
       >
         <div className="relative overflow-hidden rounded-[8px]">
-          <div className="relative aspect-[100/120] w-full">
+          <div
+            className={`relative aspect-[100/120] w-full bg-black ${empty ? "ring-1 ring-inset ring-white/10" : ""}`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
             <img
               src={CZ_JERSEY_BACK_BLANK_SRC}
@@ -137,7 +139,7 @@ export function LineupJerseyCard({
               data-jersey-kind={kind}
               className={`
                 absolute inset-0 h-full w-full object-contain object-top drop-shadow-[0_6px_16px_rgba(0,0,0,0.65)]
-                ${empty ? "opacity-[0.45] grayscale" : ""}
+                ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
               `}
             />
 
@@ -200,11 +202,14 @@ export function LineupJerseyCard({
               </div>
             ) : (
               <div
-                className="pointer-events-none absolute inset-0 z-[15] flex items-center justify-center px-1 pt-[21%]"
+                className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-start px-1 pt-[29%]"
                 aria-hidden
               >
-                <span className="font-display text-[clamp(1.25rem,4.5vw,1.85rem)] font-bold leading-none tracking-tight text-white/25">
-                  {positionLabel}
+                <span className="font-jersey-print text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
+                  —
+                </span>
+                <span className="font-jersey-print mt-1 text-[clamp(1.35rem,4.5vw,1.85rem)] font-bold tabular-nums leading-none text-white/25">
+                  00
                 </span>
               </div>
             )}
