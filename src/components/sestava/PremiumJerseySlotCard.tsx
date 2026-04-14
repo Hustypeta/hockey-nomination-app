@@ -2,7 +2,7 @@
 
 import type { Player } from "@/types";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
-import { CZ_REPLICA_JERSEY_BACK_SRC } from "@/lib/replicaJerseyAsset";
+import { CzReplicaJerseyBackSvg } from "@/components/sestava/CzReplicaJerseyBackSvg";
 
 function lastName(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -80,7 +80,7 @@ export interface PremiumJerseySlotCardProps {
 }
 
 /**
- * Prémiová „NHL 25“ karta slotu — podklad je PNG zadní strany replikového dresu (`public/images/`), přes něj jméno a číslo.
+ * Prémiová „NHL 25“ karta slotu — vektorová zadní strana dresu ČR (`CzReplicaJerseyBackSvg`) + dynamické jméno a číslo.
  */
 export function PremiumJerseySlotCard({
   player,
@@ -141,18 +141,12 @@ export function PremiumJerseySlotCard({
           ${empty ? "ring-2 ring-dashed ring-slate-500/45" : ""}
         `}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element -- statický podklad z `public/`, bez optimalizace */}
-        <img
-          src={CZ_REPLICA_JERSEY_BACK_SRC}
-          alt=""
-          width={400}
-          height={480}
-          decoding="async"
-          data-jersey-kind={kind}
+        <CzReplicaJerseyBackSvg
+          kind={kind}
+          empty={empty}
           className={`
-            absolute inset-0 h-full w-full object-cover object-[50%_10%]
-            drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
-            ${empty ? "opacity-[0.28] grayscale contrast-[0.92]" : ""}
+            absolute inset-0 h-full w-full drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
+            ${empty ? "opacity-[0.55]" : ""}
           `}
         />
 
@@ -177,7 +171,7 @@ export function PremiumJerseySlotCard({
 
         <div
           className={`
-            pointer-events-none absolute inset-0 z-10 flex flex-col items-center px-2
+            pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-2
             ${size === "compact" ? "justify-start pt-[27%]" : size === "goalie" ? "justify-start pt-[26%]" : "justify-start pt-[28%]"}
           `}
         >

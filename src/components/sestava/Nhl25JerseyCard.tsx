@@ -2,7 +2,7 @@
 
 import type { Player } from "@/types";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
-import { CZ_REPLICA_JERSEY_BACK_SRC } from "@/lib/replicaJerseyAsset";
+import { CzReplicaJerseyBackSvg } from "@/components/sestava/CzReplicaJerseyBackSvg";
 
 export type Nhl25JerseySize = "compact" | "skater" | "goalie";
 
@@ -124,19 +124,14 @@ export function Nhl25JerseyCard({
 
         <div className="relative overflow-hidden rounded-[8px] bg-[#0c0c0c] shadow-inner">
           <div className="relative aspect-[100/120] w-full">
-            {/* eslint-disable-next-line @next/next/no-img-element -- statický podklad z `public/` */}
-            <img
-              src={CZ_REPLICA_JERSEY_BACK_SRC}
-              alt=""
-              width={400}
-              height={480}
-              decoding="async"
-              data-jersey-kind={kind}
-              className={`absolute inset-0 h-full w-full object-cover object-[50%_10%] drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)] ${empty ? "opacity-[0.3] grayscale" : ""}`}
+            <CzReplicaJerseyBackSvg
+              kind={kind}
+              empty={empty}
+              className={`absolute inset-0 h-full w-full drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)] ${empty ? "opacity-[0.5]" : ""}`}
             />
 
             {!empty ? (
-              <div className="pointer-events-none absolute inset-0 flex flex-col items-center px-1 pt-[26%] sm:pt-[27%]">
+              <div className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 pt-[26%] sm:pt-[27%]">
                 <span
                   className={`
                     max-w-[96%] text-center font-display font-bold uppercase leading-tight text-white
@@ -180,7 +175,7 @@ export function Nhl25JerseyCard({
               </div>
             ) : (
               <div
-                className="pointer-events-none absolute inset-0 flex items-center justify-center px-1 pt-[8%]"
+                className="pointer-events-none absolute inset-0 z-[15] flex items-center justify-center px-1 pt-[8%]"
                 aria-hidden
               >
                 <span className="select-none font-display text-[clamp(1.5rem,7vw,2.5rem)] font-black uppercase leading-none tracking-tighter text-white/35">
