@@ -196,15 +196,15 @@ export function LineBuilder({
           onSelectSlot(selected ? null : { type, lineIndex: lineIndex ?? 0, role })
         }
         className={`
-          group/slot flex w-full min-w-0 cursor-pointer flex-col items-center rounded-xl px-0.5 transition-colors duration-200
+          group/slot flex w-full min-w-0 cursor-pointer flex-col items-center rounded-xl px-0.5 transition-[background-color,box-shadow] duration-200
           ${nhl ? "gap-1 py-1" : "gap-2 py-2"}
           ${
             nhl
               ? selected
-                ? "bg-sky-50/90"
+                ? "bg-sky-100/95 shadow-[inset_0_0_0_1px_rgba(14,165,233,0.25)] ring-2 ring-sky-500/40"
                 : "hover:bg-slate-200/60"
               : selected
-                ? "bg-[#c8102e]/[0.1] ring-1 ring-[#c8102e]/25"
+                ? "bg-[#c8102e]/15 ring-2 ring-[#c8102e]/35 shadow-[inset_0_0_0_1px_rgba(200,16,46,0.12)]"
                 : "hover:bg-white/[0.03]"
           }
         `}
@@ -733,9 +733,6 @@ export function LineBuilder({
                   }
                 />
               </div>
-              <p className="mt-2 text-center text-[9px] leading-snug text-slate-500">
-                8. bek = náhradníci níže (po 7.).
-              </p>
             </div>
           </div>
         </NhlSectionShell>

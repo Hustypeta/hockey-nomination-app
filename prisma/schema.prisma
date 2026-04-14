@@ -32,7 +32,10 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  nominations   Nomination[]
+  nominations   Nomination[] @relation("NominationOwner")
+  /// Jedna nominace na uživatele započítaná do soutěže (odeslání do soutěže).
+  contestEntryNominationId String? @unique
+  contestEntryNomination   Nomination? @relation("ContestEntry", fields: [contestEntryNominationId], references: [id], onDelete: SetNull)
 
   @@map("users")
 }
@@ -83,10 +86,13 @@ model Nomination {
   captainId         String?
   lineupStructure   Json?
   createdAt         DateTime @default(now())
-  /// Časový bonus v % k bodům platný v okamžiku uložení (0 / 10 / 25 / 40), časové pásmo Europe/Prague.
+  /// U konceptů 0; u řádku „odeslání do soutěže“ koeficient v okamžiku odeslání (0 / 10 / 25 / 40).
   timeBonusPercent  Int      @default(0)
+  /// Vlastní název nominace (volitelné), max. cca 80 znaků.
+  title             String?
 
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user               User? @relation("NominationOwner", fields: [userId], references: [id], onDelete: SetNull)
+  contestEntryForUser User? @relation("ContestEntry")
 
   @@map("nominations")
 }

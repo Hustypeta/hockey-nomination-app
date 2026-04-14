@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, Info, GripVertical } from "lucide-react";
 import type { Player, Position } from "@/types";
 import { POSITION_LABELS, POSITION_LIMITS, ROLE_LABELS } from "@/types";
-import { poolPositionSquareLabel } from "@/lib/poolPositionLabel";
 import { PlayerAvatar } from "./PlayerAvatar";
 
 type Tab = "all" | "G" | "D" | "F";
@@ -81,13 +80,6 @@ function DraggableCard({
   const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined;
   const lim = POSITION_LIMITS[player.position];
   const cur = counts[player.position];
-  const posLabel = poolPositionSquareLabel(player);
-  const posBadgeClass =
-    posLabel.length >= 6
-      ? "text-[8px] leading-tight"
-      : posLabel.length >= 4
-        ? "text-[9px] leading-tight"
-        : "text-[10px] leading-none";
 
   return (
     <motion.div
@@ -133,12 +125,7 @@ function DraggableCard({
           className="min-w-0 flex-1 text-left"
         >
           <div className="flex items-start gap-2">
-            <div className="relative shrink-0">
-              <span
-                className={`absolute -left-0.5 -top-0.5 z-10 flex h-7 w-[2.75rem] items-center justify-center rounded-md bg-[#c8102e] px-0.5 font-sans font-bold text-white shadow-md ring-1 ring-white/20 ${posBadgeClass}`}
-              >
-                {posLabel}
-              </span>
+            <div className="shrink-0">
               <PlayerAvatar
                 name={player.name}
                 position={player.position}
@@ -320,10 +307,6 @@ export function PlayerPoolPanel({
           ))}
         </select>
       </div>
-
-      <p className="text-sm leading-relaxed text-slate-400">
-        Klikni na kartu pro rychlé přidání do prvního volného místa, nebo přetáhni na konkrétní dres vpravo.
-      </p>
 
       <motion.div layout className="grid gap-2 sm:grid-cols-2 sm:gap-3">
         <AnimatePresence mode="popLayout">

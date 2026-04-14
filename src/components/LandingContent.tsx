@@ -100,7 +100,7 @@ export function LandingContent() {
                   Nová nominace
                 </Link>
                 <Link
-                  href="/ucet#moje-nominace"
+                  href="/ucet/nominace"
                   className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-sky-400/40 hover:bg-white/[0.1]"
                 >
                   <ClipboardList className="h-5 w-5 shrink-0 text-sky-300" aria-hidden />
@@ -137,12 +137,12 @@ export function LandingContent() {
                       </span>
                       <span className="text-slate-400">
                         {nominationCount === 0
-                          ? "nominací zatím — buď první"
+                          ? "účastníků v soutěži zatím — buď první"
                           : nominationCount === 1
-                            ? "fanoušek už poslal nominaci"
+                            ? "účastník už odeslal nominaci do soutěže"
                             : nominationCount >= 2 && nominationCount <= 4
-                              ? "fanoušci už poslali nominaci"
-                              : "fanoušků už poslalo nominaci"}
+                              ? "účastníci už odeslali nominaci do soutěže"
+                              : "účastníků už v soutěži"}
                       </span>
                     </>
                   ) : (
@@ -208,9 +208,6 @@ export function LandingContent() {
             <h2 className="text-center font-display text-2xl font-bold uppercase tracking-[0.12em] text-white sm:text-3xl">
               Proč to zkusit
             </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-slate-400 sm:text-base">
-              Tři důvody, proč nestát jen u televize — zkus si být trenérem na chvíli s námi.
-            </p>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
               <div className="rounded-2xl border border-[#003087]/30 bg-gradient-to-b from-[#0f172a]/95 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(0,48,135,0.15)]">
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#003087]/30 text-sky-200 ring-1 ring-[#003087]/40">

@@ -88,6 +88,8 @@ export function PremiumJerseySlotCard({
   const sz = SIZE_STYLES[size];
   const showAssistant = isAssistant && !!player && !isCaptain;
   const empty = !player;
+  /** Prázdný slot bez výběru — výrazně vybledlý oproti vybranému / obsazenému. */
+  const emptyUnfocused = empty && !isSelected;
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const emptyCenterLabel = (emptyPlaceholder ?? positionLabel).trim() || "?";
   const showClear = !empty && typeof onClear === "function";
@@ -100,7 +102,7 @@ export function PremiumJerseySlotCard({
     isDragOver || isSelected
       ? isDragOver
         ? "shadow-[0_0_0_2px_rgba(212,175,55,0.95),0_0_28px_rgba(212,175,55,0.45),inset_0_0_20px_rgba(212,175,55,0.12)]"
-        : "shadow-[0_0_0_2px_rgba(212,175,55,0.9),0_0_24px_rgba(212,175,55,0.35),inset_0_0_18px_rgba(212,175,55,0.1)]"
+        : "shadow-[0_0_0_2.5px_rgba(212,175,55,0.95),0_0_32px_rgba(212,175,55,0.42),inset_0_0_20px_rgba(212,175,55,0.14)]"
       : "";
 
   const hoverFx = disableMotion
@@ -117,7 +119,13 @@ export function PremiumJerseySlotCard({
       <div
         className={`
           relative aspect-[100/120] w-full overflow-hidden rounded-[10px] bg-black
-          ${empty ? "ring-1 ring-inset ring-white/12" : ""}
+          ${
+            empty
+              ? emptyUnfocused
+                ? "ring-1 ring-inset ring-white/[0.07]"
+                : "ring-1 ring-inset ring-white/18"
+              : ""
+          }
         `}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- lokální statický podklad */}
@@ -130,11 +138,13 @@ export function PremiumJerseySlotCard({
           data-jersey-kind={kind}
           className={`
             ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
-            ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
+            ${empty ? (emptyUnfocused ? "opacity-[0.36] saturate-[0.52] brightness-[0.88]" : "opacity-[0.78] saturate-[0.95]") : ""}
           `}
         />
 
-        <div className={`absolute ${sz.pos}`}>{positionLabel}</div>
+        <div className={`absolute ${sz.pos} ${emptyUnfocused ? "opacity-50 saturate-[0.55]" : ""}`}>
+          {positionLabel}
+        </div>
 
         {isCaptain && !empty && (
           <span className={sz.cap} aria-label="Kapitán">
@@ -185,7 +195,9 @@ export function PremiumJerseySlotCard({
             </>
           ) : (
             <span
-              className="max-w-[96%] text-center font-display text-[clamp(0.95rem,4.8vw,1.5rem)] font-black uppercase leading-none tracking-[0.06em] text-white/[0.38] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]"
+              className={`max-w-[96%] text-center font-display text-[clamp(0.95rem,4.8vw,1.5rem)] font-black uppercase leading-none tracking-[0.06em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] ${
+                emptyUnfocused ? "text-white/[0.2]" : "text-white/[0.52]"
+              }`}
               aria-hidden
             >
               {emptyCenterLabel}

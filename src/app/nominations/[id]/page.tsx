@@ -29,6 +29,7 @@ async function getNomination(id: string) {
     lineupStructure,
     createdAt: nomination.createdAt,
     timeBonusPercent: nomination.timeBonusPercent,
+    title: nomination.title,
   };
 }
 
@@ -42,17 +43,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
   const captainName = captain?.name?.split(" ").pop() || "";
 
+  const label = data.title?.trim() || "Má nominace";
   return {
-    title: `MS 2026 – Nominace${captainName ? ` (C: ${captainName})` : ""}`,
+    title: `MS 2026 – ${label}${captainName ? ` (C: ${captainName})` : ""}`,
     description: `Sestava na Mistrovství světa v hokeji 2026. ${data.players?.length || 0} hráčů.`,
     openGraph: {
-      title: `MS 2026 – Má nominace`,
+      title: `MS 2026 – ${label}`,
       description: `Sestava na Mistrovství světa v hokeji 2026`,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: `MS 2026 – Má nominace`,
+      title: `MS 2026 – ${label}`,
       description: `Sestava na Mistrovství světa v hokeji 2026`,
     },
   };
@@ -71,6 +73,7 @@ export default async function NominationPage({ params }: Props) {
       captainId={data.captainId}
       lineupStructure={data.lineupStructure}
       nominationId={id}
+      title={data.title}
       allowDownload={!!session}
     />
   );

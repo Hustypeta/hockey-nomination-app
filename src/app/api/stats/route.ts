@@ -13,7 +13,10 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const now = new Date();
-    const nominationCount = await prisma.nomination.count();
+    /** Počet účtů, které už odeslaly nominaci do soutěže (ne počet konceptů). */
+    const nominationCount = await prisma.user.count({
+      where: { contestEntryNominationId: { not: null } },
+    });
     return NextResponse.json({
       nominationCount,
       contestTimeBonusPercent: getTimeBonusPercentForInstant(now),

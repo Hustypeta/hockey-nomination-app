@@ -173,11 +173,11 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                     </div>
                   ))}
                 </div>
-                <div className="mt-2.5 rounded-lg border border-dashed border-slate-300 bg-slate-50/90 px-2 py-2">
-                  <p className="mb-1.5 text-center font-display text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                    7. bek
-                  </p>
-                  <div className="mx-auto flex max-w-[6.5rem] justify-center">
+                <div className="mt-2.5 flex justify-center">
+                  <div className="inline-flex w-fit max-w-full flex-col items-center rounded-lg border border-dashed border-slate-300 bg-slate-50/90 px-2 py-2">
+                    <p className="mb-1.5 text-center font-display text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                      7. bek
+                    </p>
                     <Nhl25JerseyCard
                       player={getPlayer(lineup.defensePairs[3].lb)}
                       positionLabel="D"

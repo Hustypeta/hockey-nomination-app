@@ -25,7 +25,8 @@ interface SaveShareModalProps {
   isAuthenticated: boolean;
   lineupStructure: LineupStructure;
   captainId: string | null;
-  onSave: () => Promise<string | null>;
+  /** Při uložení k účtu — volitelný název nominace. */
+  onSave: (opts?: { title?: string | null }) => Promise<string | null>;
   isSaving: boolean;
   /** Zda server ještě přijímá uložení nominace k soutěži. */
   contestSubmissionOpen?: boolean;
@@ -54,6 +55,7 @@ export function SaveShareModal({
   const [savedId, setSavedId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
+  const [nominationTitle, setNominationTitle] = useState("");
   const baseCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const guestShareUrl = useMemo(
@@ -163,7 +165,7 @@ export function SaveShareModal({
 
   const handleSaveNomination = async () => {
     if (!isAuthenticated) return;
-    const id = await onSave();
+    const id = await onSave({ title: nominationTitle.trim() || null });
     if (id) setSavedId(id);
   };
 
@@ -197,6 +199,7 @@ export function SaveShareModal({
   const handleClose = () => {
     setSavedId(null);
     setShareHint(null);
+    setNominationTitle("");
     resetPreview();
     onClose();
   };
@@ -378,28 +381,39 @@ export function SaveShareModal({
 
           {isAuthenticated && (
             <div className="mt-6 border-t border-white/10 pt-5">
+              <label className="mb-3 block">
+                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/45">
+                  Název nominace <span className="font-normal text-white/35">(volitelné)</span>
+                </span>
+                <input
+                  type="text"
+                  value={nominationTitle}
+                  onChange={(e) => setNominationTitle(e.target.value)}
+                  maxLength={80}
+                  placeholder="např. Varianta po čtvrtfinále"
+                  disabled={!!savedId}
+                  className="w-full rounded-xl border border-white/12 bg-[#0a0c10] px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-[#c8102e]/45 focus:outline-none focus:ring-1 focus:ring-[#c8102e]/30 disabled:opacity-50"
+                />
+              </label>
+              <p className="mb-3 text-center text-[11px] leading-snug text-white/50">
+                Uložením vznikne koncept u účtu — do soutěže pošli sestavu tlačítkem{" "}
+                <strong className="text-white/75">Odeslat do soutěže</strong> v editoru. Časový bonus (aktuálně{" "}
+                <strong className="text-amber-200/90">+{contestTimeBonusPercent} %</strong>) se zapíše až při tom
+                odeslání.
+              </p>
               {!contestSubmissionOpen ? (
-                <p className="mb-3 rounded-lg border border-rose-500/35 bg-rose-950/30 px-3 py-2.5 text-center text-xs leading-relaxed text-rose-100/90">
-                  Uzávěrka soutěže už proběhla — novou nominaci do vyhodnocení nelze uložit. Odkaz a plakát pořád
+                <p className="mb-3 rounded-lg border border-amber-600/35 bg-amber-950/25 px-3 py-2.5 text-center text-xs leading-relaxed text-amber-100/90">
+                  Uzávěrka odeslání do soutěže už proběhla — koncepty u účtu můžeš dál ukládat. Odkaz a plakát pořád
                   můžeš sdílet.
                 </p>
-              ) : contestTimeBonusPercent > 0 ? (
-                <p className="mb-3 text-center text-[11px] text-amber-100/80">
-                  Při uložení se k účtu zapíše časový bonus{" "}
-                  <strong className="text-amber-200">+{contestTimeBonusPercent} %</strong> k bodům.
-                </p>
-              ) : (
-                <p className="mb-3 text-center text-[11px] text-white/45">
-                  Časový bonus je už 0 % — nominace se do soutěže stejně započítá do uzávěrky.
-                </p>
-              )}
+              ) : null}
               <button
                 type="button"
                 onClick={handleSaveNomination}
-                disabled={isSaving || !!savedId || !contestSubmissionOpen}
+                disabled={isSaving || !!savedId}
                 className="w-full rounded-xl border border-white/12 bg-white/[0.04] py-3 font-display text-sm font-semibold text-white transition-colors hover:border-[#c8102e]/40 hover:bg-white/[0.07] disabled:cursor-not-allowed disabled:opacity-45"
               >
-                {savedId ? "Nominace uložena u účtu" : isSaving ? "Ukládám…" : "Uložit nominaci k účtu"}
+                {savedId ? "Nominace uložena u účtu" : isSaving ? "Ukládám…" : "Dokončit nominaci k účtu"}
               </button>
             </div>
           )}

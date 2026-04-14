@@ -9,6 +9,8 @@ const NAV = [
   { href: "/", label: "Úvod" },
   { href: "/ucet", label: "Můj účet" },
   { href: "/sestava", label: "Editor sestavy" },
+  { href: "/forum", label: "Fórum" },
+  { href: "/zebricek", label: "Žebříček" },
   { href: "/bracket", label: "Pick’em" },
   { href: "/kdo-jsem", label: "Kdo jsem" },
   { href: "/pravidla-souteze", label: "Pravidla" },

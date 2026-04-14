@@ -21,6 +21,8 @@ interface NominationViewProps {
   captainId: string | null;
   lineupStructure?: LineupStructure | null;
   nominationId: string;
+  /** Vlastní název z účtu; když chybí, zobrazí se výchozí text. */
+  title?: string | null;
   /** Nepřihlášení nemají stažení; výchozí true kvůli zpětné kompatibilitě u serverově renderovaných stránek s session. */
   allowDownload?: boolean;
   /** Pokud je nastaveno, „Kopírovat odkaz“ použije tento řetězec (např. celý /share?z=…). */
@@ -32,6 +34,7 @@ export function NominationView({
   captainId,
   lineupStructure,
   nominationId,
+  title,
   allowDownload = true,
   linkToCopy,
 }: NominationViewProps) {
@@ -116,8 +119,8 @@ export function NominationView({
           <h1 className="font-display text-4xl text-white tracking-wider">
             MS 2026
           </h1>
-          <p className="text-[#c41e3a] font-display text-xl mt-1">
-            Má nominace
+          <p className="mt-1 font-display text-xl text-[#c41e3a]">
+            {title?.trim() || "Má nominace"}
           </p>
         </div>
       </header>

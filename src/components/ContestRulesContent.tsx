@@ -18,7 +18,9 @@ export function ContestRulesContent() {
             <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
               <li>Účast v soutěži je bezplatná.</li>
               <li>
-                Podmínkou pro zařazení do vyhodnocení je uložení kompletní nominace k uživatelskému účtu nejpozději do{" "}
+                <strong className="text-white">Nominaci do soutěže je z každého účtu možné poslat pouze jednou.</strong>{" "}
+                Koncepty sestavy můžeš u účtu ukládat opakovaně; do vyhodnocení se započítá až odeslání soutěžní nominace
+                nejpozději do{" "}
                 <strong className="text-white">13. května 2026, 23:59 (středoevropský čas)</strong>.
               </li>
               <li>Editor sestavy lze využívat k soukromým účelům i bez odeslání do soutěže.</li>
@@ -31,7 +33,7 @@ export function ContestRulesContent() {
             </h2>
             <p className="mt-3 text-white/75">
               Body získané za správné tipy hráčů (vyjma bonusů za kapitána a asistenty) se násobí koeficientem podle
-              data finálního uložení nominace:
+              data <strong className="text-white">odeslání nominace do soutěže</strong> (jednorázové tlačítko v editoru):
             </p>
             <ul className="mt-3 list-inside list-disc space-y-1.5 text-white/75">
               <li>

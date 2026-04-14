@@ -43,10 +43,6 @@ const nameClass: Record<Nhl25JerseySize, string> = {
   goalie: NHL25_CARD_UNIFIED.name,
 };
 
-const badgeShadow = {
-  textShadow: "0 1px 2px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.65)",
-} as const;
-
 /** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` (fotopodklad zadní strany). */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
   compact: "justify-start pt-[31%]",
@@ -164,22 +160,6 @@ export function Nhl25JerseyCard({
                   {lastName(player.name)}
                 </span>
                 {numStr ? <span className={`mt-px ${numCls}`}>{numStr}</span> : null}
-                {player.position === "F" && player.role ? (
-                  <span
-                    className="mt-1 rounded border border-white/35 bg-black/35 px-1.5 py-0.5 font-display text-[9px] font-bold uppercase text-white/95"
-                    style={badgeShadow}
-                  >
-                    {player.role}
-                  </span>
-                ) : null}
-                {player.position === "G" ? (
-                  <span
-                    className="mt-1 font-display text-[10px] font-bold uppercase tracking-[0.14em] text-white/95"
-                    style={badgeShadow}
-                  >
-                    G
-                  </span>
-                ) : null}
               </div>
             ) : (
               <div

@@ -449,9 +449,6 @@ export function OfficialLineupAdminEditor() {
                   <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-white sm:text-2xl">
                     Dostupní hráči
                   </h2>
-                  <p className="mt-1 max-w-lg text-[11px] leading-snug text-slate-400 sm:text-xs">
-                    Klik = první volné místo · přetáhni na dres vpravo
-                  </p>
                 </div>
                 <PlayerPoolPanel
                   players={players}
@@ -480,11 +477,6 @@ export function OfficialLineupAdminEditor() {
                   <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-slate-900 sm:text-2xl">
                     Soupiska ČR (MS 2026)
                   </h2>
-                  {selectedSlot ? (
-                    <p className="mt-1 text-[11px] leading-snug text-slate-600 sm:text-xs">
-                      Slot vybrán — vlevo jen daná pozice, nebo přetáhni sem.
-                    </p>
-                  ) : null}
                   <div className="mt-4">
                     <LineBuilder
                       lineup={lineup}

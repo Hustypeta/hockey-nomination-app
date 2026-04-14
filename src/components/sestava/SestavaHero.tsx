@@ -2,25 +2,13 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import { TOTAL_PLAYERS } from "@/types";
-import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
-import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
-
-function formatNominationCount(n: number): string {
-  return new Intl.NumberFormat("cs-CZ").format(n);
-}
 
 export function SestavaHero({
   filled,
   subtitleCounts,
-  contestTimeBonusPercent,
-  contestSubmissionOpen,
-  nominationCount,
 }: {
   filled: number;
-  subtitleCounts: string;
-  contestTimeBonusPercent: ContestTimeBonusPercent;
-  contestSubmissionOpen: boolean;
-  nominationCount: number | null;
+  subtitleCounts?: string | null;
 }) {
   const { data: session, status } = useSession();
 
@@ -51,29 +39,18 @@ export function SestavaHero({
               <h1 className="font-sans text-xl font-bold leading-snug tracking-normal text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.75)] sm:text-2xl lg:text-[1.75rem]">
                 Editor nominace
               </h1>
-              <p className="mt-0.5 line-clamp-1 text-[10px] leading-snug text-slate-400 sm:text-[11px]" title={subtitleCounts}>
-                {subtitleCounts}
-              </p>
+              {subtitleCounts ? (
+                <p
+                  className="mt-0.5 line-clamp-1 text-[10px] leading-snug text-slate-400 sm:text-[11px]"
+                  title={subtitleCounts}
+                >
+                  {subtitleCounts}
+                </p>
+              ) : null}
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-            {nominationCount != null ? (
-              <div className="flex items-baseline gap-1.5 rounded-lg border border-[#003087]/35 bg-[#003087]/12 px-2.5 py-1">
-                <span className="font-display text-lg font-bold tabular-nums text-white sm:text-xl">
-                  {formatNominationCount(nominationCount)}
-                </span>
-                <span className="text-[9px] font-medium uppercase tracking-wider text-sky-200/70">nominací</span>
-              </div>
-            ) : (
-              <span className="rounded-lg border border-white/10 px-2 py-1 text-[10px] text-white/40">…</span>
-            )}
-            <ContestTimeBonusCallout
-              variant="builder"
-              bonusPercent={contestTimeBonusPercent}
-              submissionOpen={contestSubmissionOpen}
-              compact
-            />
             {status === "loading" ? (
               <span className="text-[10px] text-white/40">…</span>
             ) : session ? (

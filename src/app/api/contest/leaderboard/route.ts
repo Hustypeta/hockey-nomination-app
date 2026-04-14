@@ -36,6 +36,7 @@ export async function GET() {
     const nominations = await prisma.nomination.findMany({
       where: {
         userId: { not: null },
+        contestEntryForUser: { isNot: null },
       },
       include: {
         user: { select: { name: true, email: true, image: true } },

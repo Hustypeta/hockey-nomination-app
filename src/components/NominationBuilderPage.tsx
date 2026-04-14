@@ -55,7 +55,14 @@ export function NominationBuilderPage() {
   const [sharePosterFooterIso, setSharePosterFooterIso] = useState<string | null>(null);
   const [siteOrigin, setSiteOrigin] = useState("");
   const wasCompleteRef = useRef(false);
-  const contestStats = useContestStats();
+  const {
+    refresh: refreshContestStats,
+    contestSubmissionOpen,
+    contestTimeBonusPercent: contestBonusRaw,
+  } = useContestStats();
+  const [contestSubmitted, setContestSubmitted] = useState(false);
+  const [contestConfirmOpen, setContestConfirmOpen] = useState(false);
+  const [submitContestBusy, setSubmitContestBusy] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -97,6 +104,23 @@ export function NominationBuilderPage() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (authStatus !== "authenticated") {
+      setContestSubmitted(false);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/contest/submission-status")
+      .then((r) => r.json())
+      .then((d: { submitted?: boolean }) => {
+        if (!cancelled && d.submitted) setContestSubmitted(true);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [authStatus]);
 
   useEffect(() => {
     if (isComplete && !wasCompleteRef.current) {
@@ -258,7 +282,8 @@ export function NominationBuilderPage() {
     toast.message("Sestava byla resetována.");
   }, []);
 
-  const handleSave = useCallback(async (): Promise<string | null> => {
+  const handleSave = useCallback(
+    async (opts?: { title?: string | null }): Promise<string | null> => {
     if (authStatus !== "authenticated") return null;
     setSaving(true);
     try {
@@ -269,6 +294,7 @@ export function NominationBuilderPage() {
           selectedPlayerIds: selectedPlayers.map((p) => p.id),
           captainId,
           lineupStructure: lineup,
+          ...(opts && "title" in opts ? { title: opts.title } : {}),
         }),
       });
       const data = await res.json();
@@ -276,12 +302,7 @@ export function NominationBuilderPage() {
         toast.error(data.error || "Chyba při ukládání");
         return null;
       }
-      const bp = data.timeBonusPercent as number | undefined;
-      if (typeof bp === "number" && bp > 0) {
-        toast.success(`Nominace uložena — časový bonus +${bp} % k bodům.`);
-      } else {
-        toast.success("Nominace uložena.");
-      }
+      toast.success("Nominace uložena u účtu jako koncept.");
       return data.id ?? null;
     } catch {
       toast.error("Chyba při ukládání — zkus to znovu.");
@@ -289,17 +310,55 @@ export function NominationBuilderPage() {
     } finally {
       setSaving(false);
     }
-  }, [authStatus, selectedPlayers, captainId, lineup]);
+  },
+  [authStatus, selectedPlayers, captainId, lineup]);
+
+  const handleSubmitToContest = useCallback(async () => {
+    if (authStatus !== "authenticated" || !isComplete || contestSubmitted) return;
+    setSubmitContestBusy(true);
+    try {
+      const res = await fetch("/api/contest/submit-nomination", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          selectedPlayerIds: selectedPlayers.map((p) => p.id),
+          captainId,
+          lineupStructure: lineup,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(typeof data.error === "string" ? data.error : "Odeslání do soutěže se nepovedlo.");
+        return;
+      }
+      const bp = data.timeBonusPercent as number | undefined;
+      toast.success(
+        typeof bp === "number" && bp > 0
+          ? `Nominace je v soutěži — časový bonus +${bp} % k bodům.`
+          : "Nominace je v soutěži."
+      );
+      setContestSubmitted(true);
+      setContestConfirmOpen(false);
+      refreshContestStats();
+    } finally {
+      setSubmitContestBusy(false);
+    }
+  }, [
+    authStatus,
+    isComplete,
+    contestSubmitted,
+    selectedPlayers,
+    captainId,
+    lineup,
+    refreshContestStats,
+  ]);
 
   if (loading) {
     return <AppLoadingScreen message="Načítám hráče…" />;
   }
 
-  const subtitleCounts =
-    "Základ 20+2 (bruslaři + 2 G) · 3 náhradníci · 25 hráčů celkem — soupiska MS";
-
-  const bonusPercent = [0, 10, 25, 40].includes(contestStats.contestTimeBonusPercent)
-    ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
+  const bonusPercent = [0, 10, 25, 40].includes(contestBonusRaw)
+    ? (contestBonusRaw as ContestTimeBonusPercent)
     : (0 as ContestTimeBonusPercent);
 
   const forcedPoolPosition: Position | null = selectedSlot
@@ -317,24 +376,30 @@ export function NominationBuilderPage() {
 
         <div className="sticky top-0 z-40">
           <SiteHeader />
-          <SestavaHero
-            filled={filled}
-            subtitleCounts={subtitleCounts}
-            contestTimeBonusPercent={bonusPercent}
-            contestSubmissionOpen={contestStats.contestSubmissionOpen}
-            nominationCount={contestStats.nominationCount}
-          />
+          <SestavaHero filled={filled} />
         </div>
 
         <div className="relative z-10 mx-auto max-w-[90rem] px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
           {isAuthenticated && (
             <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-950/25 px-4 py-2.5 text-center text-xs text-emerald-50/95 shadow-[0_0_24px_rgba(16,185,129,0.12)] sm:text-sm">
-              Jsi přihlášen — plnou nominaci můžeš <strong className="font-semibold">uložit do soutěže</strong>{" "}
-              tlačítkem dole („Uložit nominaci“). Uložené sestavy najdeš v{" "}
-              <a href="/ucet#moje-nominace" className="font-semibold text-[#f1c40f] underline-offset-2 hover:underline">
-                Moje nominace
-              </a>
-              .
+              {contestSubmitted ? (
+                <>
+                  Tvoje sestava už je <strong className="font-semibold">jednou odeslaná do soutěže</strong>. Koncepty
+                  můžeš dál ukládat — přehled v{" "}
+                  <a href="/ucet/nominace" className="font-semibold text-[#f1c40f] underline-offset-2 hover:underline">
+                    Moje nominace
+                  </a>
+                  .
+                </>
+              ) : (
+                <>
+                  Jsi přihlášen — <strong className="font-semibold">Dokončit nominaci</strong> uloží koncept u účtu,{" "}
+                  <strong className="font-semibold">Odeslat do soutěže</strong> (jednou) tě zařadí do vyhodnocení.{" "}
+                  <a href="/ucet/nominace" className="font-semibold text-[#f1c40f] underline-offset-2 hover:underline">
+                    Moje nominace
+                  </a>
+                </>
+              )}
             </div>
           )}
           {!isComplete && (
@@ -361,9 +426,6 @@ export function NominationBuilderPage() {
                     <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-white sm:text-2xl">
                       Dostupní hráči
                     </h2>
-                    <p className="mt-1 max-w-lg text-[11px] leading-snug text-slate-400 sm:text-xs">
-                      Klik = první volné místo · přetáhni na dres vpravo
-                    </p>
                   </div>
                 </div>
                 <PlayerPoolPanel
@@ -393,11 +455,6 @@ export function NominationBuilderPage() {
                   <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-slate-900 sm:text-2xl">
                     Moje sestava
                   </h2>
-                  {selectedSlot ? (
-                    <p className="mt-1 text-[11px] leading-snug text-slate-600 sm:text-xs">
-                      Slot vybrán — vlevo jen daná pozice, nebo přetáhni sem.
-                    </p>
-                  ) : null}
                   <div className="mt-4">
                     <LineBuilder
                       lineup={lineup}
@@ -430,7 +487,7 @@ export function NominationBuilderPage() {
                 }
               `}
             >
-              {isAuthenticated ? "Uložit nominaci" : "Složit nominaci"}
+              {isAuthenticated ? "Dokončit nominaci" : "Složit nominaci"}
             </button>
           </div>
         </div>
@@ -440,7 +497,10 @@ export function NominationBuilderPage() {
           onRandom={handleRandom}
           onReset={handleReset}
           shareDisabled={!isComplete}
-          shareLabel={isAuthenticated ? "Uložit nominaci" : "Složit nominaci"}
+          shareLabel={isAuthenticated ? "Dokončit nominaci" : "Složit nominaci"}
+          showContestSubmit={isAuthenticated && !contestSubmitted}
+          onContestSubmit={() => setContestConfirmOpen(true)}
+          contestSubmitDisabled={!isComplete || !contestSubmissionOpen || submitContestBusy}
         />
 
         <div
@@ -468,9 +528,56 @@ export function NominationBuilderPage() {
           captainId={captainId}
           onSave={handleSave}
           isSaving={saving}
-          contestSubmissionOpen={contestStats.contestSubmissionOpen}
+          contestSubmissionOpen={contestSubmissionOpen}
           contestTimeBonusPercent={bonusPercent}
         />
+
+        {contestConfirmOpen ? (
+          <div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            onClick={() => !submitContestBusy && setContestConfirmOpen(false)}
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="contest-submit-title"
+              className="max-h-[min(90vh,520px)] w-full max-w-md overflow-y-auto rounded-2xl border border-white/12 bg-[#12151f] p-6 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 id="contest-submit-title" className="font-display text-xl font-bold text-white">
+                Odeslat do soutěže?
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-white/75">
+                Potvrzuješ <strong className="text-white">aktuální sestavu v editoru</strong> jako svou jedinou
+                nominaci ve vyhodnocení soutěže. Tuto akci nelze vzít zpět ani ji zopakovat — z účtu jde odeslat jen
+                jednou.
+              </p>
+              {!contestSubmissionOpen ? (
+                <p className="mt-3 rounded-lg border border-rose-500/35 bg-rose-950/30 px-3 py-2 text-sm text-rose-100/90">
+                  Uzávěrka odeslání už proběhla.
+                </p>
+              ) : null}
+              <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => setContestConfirmOpen(false)}
+                  disabled={submitContestBusy}
+                  className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-white/85 hover:bg-white/5"
+                >
+                  Zrušit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleSubmitToContest()}
+                  disabled={submitContestBusy || !isComplete || !contestSubmissionOpen}
+                  className="rounded-xl bg-gradient-to-r from-[#f1c40f] to-[#c8102e] px-4 py-2.5 text-sm font-bold text-[#0a0c10] shadow-lg disabled:opacity-40"
+                >
+                  {submitContestBusy ? "Odesílám…" : "Ano, odeslat do soutěže"}
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
       </div>

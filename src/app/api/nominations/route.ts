@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
-import {
-  getTimeBonusPercentForInstant,
-  isNominationSubmissionOpen,
-} from "@/lib/contestTimeBonus";
+import { validateNominationPayload } from "@/lib/nominationPayloadServer";
 
 /** Seznam nominací přihlášeného uživatele (nejnovější první). */
 export async function GET() {
@@ -16,23 +12,37 @@ export async function GET() {
       return NextResponse.json({ error: "Nejseš přihlášený." }, { status: 401 });
     }
 
-    const rows = await prisma.nomination.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        createdAt: true,
-        timeBonusPercent: true,
-        captainId: true,
-      },
-    });
+    const [rows, me] = await Promise.all([
+      prisma.nomination.findMany({
+        where: { userId: session.user.id },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          createdAt: true,
+          timeBonusPercent: true,
+          captainId: true,
+          title: true,
+          lineupStructure: true,
+        },
+      }),
+      prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { contestEntryNominationId: true },
+      }),
+    ]);
+
+    const entryId = me?.contestEntryNominationId ?? null;
 
     return NextResponse.json({
+      contestEntryNominationId: entryId,
       nominations: rows.map((r) => ({
         id: r.id,
         createdAt: r.createdAt.toISOString(),
         timeBonusPercent: r.timeBonusPercent,
         captainId: r.captainId,
+        title: r.title,
+        lineupStructure: r.lineupStructure,
+        isContestEntry: entryId !== null && r.id === entryId,
       })),
     });
   } catch (error) {
@@ -52,61 +62,21 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { selectedPlayerIds, captainId, lineupStructure } = body;
-
-    if (!selectedPlayerIds || !Array.isArray(selectedPlayerIds)) {
-      return NextResponse.json(
-        { error: "selectedPlayerIds is required" },
-        { status: 400 }
-      );
+    const parsed = validateNominationPayload(body);
+    if (!parsed.ok) {
+      return NextResponse.json({ error: parsed.error }, { status: parsed.status });
     }
+    const { selectedPlayerIds, captainId, lineupStructure, title } = parsed.payload;
 
-    const all = loadMs2026Candidates();
-    const byId = new Map(all.map((p) => [p.id, p]));
-    const players = selectedPlayerIds
-      .map((id: string) => byId.get(id))
-      .filter(Boolean) as typeof all;
-
-    if (players.length !== selectedPlayerIds.length) {
-      return NextResponse.json(
-        { error: "Neplatní hráči v nominaci" },
-        { status: 400 }
-      );
-    }
-
-    const counts = { G: 0, D: 0, F: 0 };
-    for (const p of players) {
-      if (p.position in counts) counts[p.position as keyof typeof counts]++;
-    }
-    if (counts.G !== 3 || counts.D !== 8 || counts.F !== 14) {
-      return NextResponse.json(
-        {
-          error: `Neplatná sestava. Potřebujete: 3 brankáři, 8 obránců, 14 útočníků (25 hráčů). Máte: ${counts.G}G, ${counts.D}D, ${counts.F}F`,
-        },
-        { status: 400 }
-      );
-    }
-
-    const now = new Date();
-    if (!isNominationSubmissionOpen(now)) {
-      return NextResponse.json(
-        {
-          error:
-            "Uzávěrka soutěže už proběhla (13. 5. 2026 23:59). Novou nominaci do vyhodnocení už nelze uložit.",
-        },
-        { status: 400 }
-      );
-    }
-
-    const timeBonusPercent = getTimeBonusPercentForInstant(now);
-
+    /** Koncept u účtu — bez uzávěrky; časový bonus se uplatní až při odeslání do soutěže. */
     const nomination = await prisma.nomination.create({
       data: {
         userId: session.user.id,
         selectedPlayerIds,
         captainId: captainId || null,
         lineupStructure: lineupStructure ?? undefined,
-        timeBonusPercent,
+        timeBonusPercent: 0,
+        title,
       },
     });
 
@@ -114,7 +84,7 @@ export async function POST(request: NextRequest) {
       id: nomination.id,
       message: "Nominace uložena",
       createdAt: nomination.createdAt.toISOString(),
-      timeBonusPercent: nomination.timeBonusPercent,
+      timeBonusPercent: 0,
     });
   } catch (error) {
     console.error("Failed to create nomination:", error);

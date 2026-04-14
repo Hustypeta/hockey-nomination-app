@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export type ContestStats = {
   nominationCount: number | null;
@@ -15,11 +15,13 @@ const DEFAULT_STATS: ContestStats = {
 };
 
 /**
- * Načte /api/stats (počet nominací + aktuální časový bonus + zda jde ještě ukládat).
- * Obnovuje se každou minutu kvůli přelomu dne v časové pásmu soutěže.
+ * Načte /api/stats — počet účtů s odeslanou nominací do soutěže, časový bonus, uzávěrka odeslání.
  */
 export function useContestStats() {
   const [stats, setStats] = useState<ContestStats>(DEFAULT_STATS);
+  const [tick, setTick] = useState(0);
+
+  const refresh = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
     let cancelled = false;
@@ -53,7 +55,7 @@ export function useContestStats() {
       cancelled = true;
       clearInterval(id);
     };
-  }, []);
+  }, [tick]);
 
-  return stats;
+  return { ...stats, refresh };
 }

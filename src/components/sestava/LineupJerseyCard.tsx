@@ -81,6 +81,7 @@ export function LineupJerseyCard({
   disableMotion = false,
 }: LineupJerseyCardProps) {
   const empty = !player;
+  const emptyUnfocused = empty && !isSelected;
   const kind: "skater" | "goalie" =
     empty ? (size === "goalie" ? "goalie" : "skater") : player.position === "G" ? "goalie" : "skater";
   const showAssistant = isAssistant && !empty && !isCaptain;
@@ -155,7 +156,7 @@ export function LineupJerseyCard({
               data-jersey-kind={kind}
               className={`
                 ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_6px_16px_rgba(0,0,0,0.65)]
-                ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
+                ${empty ? (emptyUnfocused ? "opacity-[0.38] saturate-[0.55] brightness-[0.9]" : "opacity-[0.74] saturate-[0.9]") : ""}
               `}
             />
 
@@ -167,6 +168,7 @@ export function LineupJerseyCard({
                 ${bgCls}
                 before:absolute before:inset-y-0 before:left-0 before:w-[2px] before:rounded-l before:bg-[#c8102e]
                 before:content-['']
+                ${emptyUnfocused ? "opacity-50" : ""}
               `}
             >
               {positionLabel}
@@ -201,7 +203,11 @@ export function LineupJerseyCard({
                 className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-center px-1 pt-[26%] pb-[22%]"
                 aria-hidden
               >
-                <span className="max-w-[95%] text-center font-display text-[clamp(0.95rem,4.5vw,1.55rem)] font-black uppercase leading-none tracking-[0.06em] text-white/[0.38] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">
+                <span
+                  className={`max-w-[95%] text-center font-display text-[clamp(0.95rem,4.5vw,1.55rem)] font-black uppercase leading-none tracking-[0.06em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] ${
+                    emptyUnfocused ? "text-white/[0.22]" : "text-white/[0.48]"
+                  }`}
+                >
                   {positionLabel}
                 </span>
               </div>
