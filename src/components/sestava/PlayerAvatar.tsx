@@ -9,21 +9,22 @@ function positionAccentClass(position: Position) {
   return "text-red-200 ring-red-500/20";
 }
 
+/** Stejná velikost „dlaždice“; délka štítku (G / LW/RW / …) řídí jen velikost písma — přehledné v poolu. */
 function positionTileTextClass(size: "sm" | "md" | "lg", label: string) {
-  const long = label.length > 4;
+  const L = label.length;
   if (size === "sm") {
-    return long
-      ? "max-w-[2.35rem] break-all text-center text-[10px] font-bold leading-tight tracking-wide"
-      : "text-lg font-bold tracking-wide";
+    if (L <= 2) return "text-lg font-bold tracking-wide";
+    if (L <= 4) return "text-[11px] font-bold leading-tight tracking-wide";
+    return "max-w-full px-0.5 text-center text-[8px] font-bold leading-tight tracking-wide";
   }
   if (size === "md") {
-    return long
-      ? "max-w-[2.65rem] break-all text-center text-sm font-bold leading-tight tracking-wide"
-      : "text-2xl font-bold tracking-wide";
+    if (L <= 2) return "text-xl font-bold tracking-wide";
+    if (L <= 4) return "text-sm font-bold leading-tight tracking-wide";
+    return "max-w-full px-0.5 text-center text-[9px] font-bold leading-tight tracking-wide";
   }
-  return long
-    ? "max-w-[3.25rem] px-0.5 text-center text-[1.05rem] font-bold leading-tight tracking-wide sm:max-w-[3.5rem] sm:text-[1.2rem]"
-    : "text-[1.85rem] font-bold tracking-wide sm:text-[2.15rem]";
+  if (L <= 2) return "text-2xl font-bold tracking-wide";
+  if (L <= 4) return "text-base font-bold leading-tight tracking-wide";
+  return "max-w-full px-0.5 text-center text-[10px] font-bold leading-tight tracking-wide";
 }
 
 export function PlayerAvatar({
@@ -42,20 +43,26 @@ export function PlayerAvatar({
 }) {
   const label = poolPositionSquareLabel({ position, role });
   const szBox =
-    size === "sm" ? "h-10 w-10" : size === "lg" ? "h-[4.75rem] w-[4.75rem]" : "h-12 w-12";
-  const overlayLong = label.length > 4;
+    size === "sm" ? "h-10 w-10" : size === "lg" ? "h-12 w-12" : "h-11 w-11";
+  const L = label.length;
   const overlayLabelClass =
     size === "sm"
-      ? overlayLong
-        ? "max-w-full px-0.5 text-[7px] leading-tight"
-        : "text-[8px] leading-tight"
+      ? L <= 2
+        ? "text-[10px] leading-none"
+        : L <= 4
+          ? "text-[8px] leading-tight"
+          : "px-0.5 text-[7px] leading-tight"
       : size === "lg"
-        ? overlayLong
-          ? "max-w-full px-1 text-[9px] leading-tight tracking-wide"
-          : "text-[12px] leading-none tracking-wide"
-        : overlayLong
-          ? "max-w-full px-0.5 text-[8px] leading-tight"
-          : "text-[9px] leading-tight";
+        ? L <= 2
+          ? "text-[11px] leading-none"
+          : L <= 4
+            ? "text-[9px] leading-tight"
+            : "px-0.5 text-[8px] leading-tight"
+        : L <= 2
+          ? "text-[10px] leading-none"
+          : L <= 4
+            ? "text-[8px] leading-tight"
+            : "px-0.5 text-[7px] leading-tight";
 
   if (imageUrl) {
     return (

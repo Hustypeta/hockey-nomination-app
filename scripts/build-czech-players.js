@@ -130,7 +130,7 @@ const PLAYERS = [
   { name: "Matěj Blümel", position: "F", role: "RW", club: "Providence Bruins" },
   { name: "Jiří Kulich", position: "F", role: "C", club: "Buffalo Sabres" },
   { name: "Adam Klapka", position: "F", role: "RW", club: "Calgary Flames" },
-  { name: "Martin Nečas", position: "F", role: "C", club: "Colorado Avalanche" },
+  { name: "Martin Nečas", position: "F", role: "RW", club: "Colorado Avalanche" },
   { name: "Radek Faksa", position: "F", role: "C", club: "Dallas Stars" },
   { name: "David Tomášek", position: "F", role: "C", club: "Färjestad BK" },
   { name: "Mikuláš Hovorka", position: "D", role: "RB", club: "Florida Panthers" },

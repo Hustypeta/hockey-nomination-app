@@ -11,36 +11,51 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
+function lineupNameplateExtra(last: string): string {
+  const n = last.length;
+  if (n <= 8) return "max-w-[92%]";
+  if (n <= 12) return "max-w-[94%] !text-[10px] sm:!text-[11px] !leading-tight";
+  return "max-w-[96%] !text-[9px] sm:!text-[10px] !leading-tight line-clamp-2";
+}
+
+/** Jednotná šířka karty — hráči, brankáři i náhradníci. */
+const LINEUP_CARD_UNIFIED = {
+  width: "max-w-[7.1rem] sm:max-w-[7.1rem]",
+  name: "jersey-nameplate-text max-w-[90%] text-center text-[11px] sm:text-[12px]",
+  badge: "text-[10px] px-2 py-0.5",
+  number: "jersey-back-number-text text-[1.55rem] sm:text-[1.75rem]",
+  overlayTop: "justify-start pt-[31%]",
+} as const;
+
 const widthClass: Record<LineupJerseySize, string> = {
-  compact: "max-w-[5.5rem] sm:max-w-[5.85rem]",
-  skater: "max-w-[6.6rem] sm:max-w-[7.1rem]",
-  goalie: "max-w-[7.75rem] sm:max-w-[8.5rem]",
+  compact: LINEUP_CARD_UNIFIED.width,
+  skater: LINEUP_CARD_UNIFIED.width,
+  goalie: LINEUP_CARD_UNIFIED.width,
 };
 
 const nameClass: Record<LineupJerseySize, string> = {
-  compact:
-    "jersey-nameplate-text jersey-nameplate-text--compact max-w-[90%] text-center text-[10px] sm:text-[11px]",
-  skater: "jersey-nameplate-text max-w-[90%] text-center text-[11px] sm:text-[12px]",
-  goalie: "jersey-nameplate-text max-w-[88%] text-center text-[10px] sm:text-[11px]",
+  compact: LINEUP_CARD_UNIFIED.name,
+  skater: LINEUP_CARD_UNIFIED.name,
+  goalie: LINEUP_CARD_UNIFIED.name,
 };
 
 const badgeClass: Record<LineupJerseySize, string> = {
-  compact: "text-[9px] px-1.5 py-0.5",
-  skater: "text-[10px] px-2 py-0.5",
-  goalie: "text-[11px] px-2 py-0.5",
+  compact: LINEUP_CARD_UNIFIED.badge,
+  skater: LINEUP_CARD_UNIFIED.badge,
+  goalie: LINEUP_CARD_UNIFIED.badge,
 };
 
 const numberClass: Record<LineupJerseySize, string> = {
-  compact: "jersey-back-number-text text-[1.35rem] sm:text-[1.5rem]",
-  skater: "jersey-back-number-text text-[1.55rem] sm:text-[1.75rem]",
-  goalie: "jersey-back-number-text text-[1.45rem] sm:text-[1.65rem]",
+  compact: LINEUP_CARD_UNIFIED.number,
+  skater: LINEUP_CARD_UNIFIED.number,
+  goalie: LINEUP_CARD_UNIFIED.number,
 };
 
 /** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` / exportní `Nhl25JerseyCard`. */
 const overlayTopClass: Record<LineupJerseySize, string> = {
-  compact: "justify-start pt-[26%]",
-  skater: "justify-start pt-[27%]",
-  goalie: "justify-start pt-[25%]",
+  compact: LINEUP_CARD_UNIFIED.overlayTop,
+  skater: LINEUP_CARD_UNIFIED.overlayTop,
+  goalie: LINEUP_CARD_UNIFIED.overlayTop,
 };
 
 export interface LineupJerseyCardProps {
@@ -97,7 +112,7 @@ export function LineupJerseyCard({
           className={`
             absolute z-30 flex items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#7a0a1c]
             font-display font-bold text-white shadow-[0_0_16px_rgba(200,16,46,0.75)] ring-2 ring-white/70
-            ${size === "goalie" ? "-right-0.5 -top-1 h-7 w-7 text-xs" : "-right-0.5 -top-0.5 h-6 w-6 text-[11px]"}
+            -right-0.5 -top-0.5 h-6 w-6 text-[11px]
           `}
           aria-label="Kapitán"
         >
@@ -110,7 +125,7 @@ export function LineupJerseyCard({
           className={`
             absolute z-30 flex items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001233]
             font-display font-bold text-white shadow-[0_0_16px_rgba(0,48,135,0.65)] ring-2 ring-white/45
-            ${size === "goalie" ? "-left-0.5 -top-1 h-7 w-7 text-xs" : "-left-0.5 -top-0.5 h-6 w-6 text-[11px]"}
+            -left-0.5 -top-0.5 h-6 w-6 text-[11px]
           `}
           aria-label="Asistent kapitána"
         >
@@ -161,22 +176,20 @@ export function LineupJerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${topOverlay}`}
               >
-                <span className={`truncate leading-tight ${nmCls}`}>{lastName(player.name)}</span>
-                {numStr ? <span className={`mt-0.5 ${numCls}`}>{numStr}</span> : null}
+                <span className={`text-center leading-tight ${lineupNameplateExtra(lastName(player.name))} ${nmCls}`}>
+                  {lastName(player.name)}
+                </span>
+                {numStr ? <span className={`mt-px ${numCls}`}>{numStr}</span> : null}
                 {player.position === "F" && player.role ? (
                   <span
-                    className={`mt-1 rounded border border-white/25 bg-black/55 px-1.5 py-0.5 font-display font-bold uppercase tracking-wider text-white ${
-                      size === "goalie" ? "text-[10px]" : "text-[9px]"
-                    }`}
+                    className="mt-1 rounded border border-white/25 bg-black/55 px-1.5 py-0.5 font-display text-[9px] font-bold uppercase tracking-wider text-white"
                   >
                     {player.role}
                   </span>
                 ) : null}
                 {player.position === "G" ? (
                   <span
-                    className={`mt-1 font-display font-bold uppercase tracking-[0.12em] text-sky-100 ${
-                      size === "goalie" ? "text-[11px]" : "text-[10px]"
-                    }`}
+                    className="mt-1 font-display text-[10px] font-bold uppercase tracking-[0.12em] text-sky-100"
                     style={{ textShadow: "0 1px 2px rgba(0,0,0,0.85)" }}
                   >
                     G
@@ -185,14 +198,11 @@ export function LineupJerseyCard({
               </div>
             ) : (
               <div
-                className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-start px-1 pt-[29%]"
+                className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-center px-1 pt-[26%] pb-[22%]"
                 aria-hidden
               >
-                <span className="font-jersey-print text-[10px] font-semibold uppercase tracking-[0.2em] text-white/35">
-                  —
-                </span>
-                <span className="font-jersey-print mt-1 text-[clamp(1.35rem,4.5vw,1.85rem)] font-bold tabular-nums leading-none text-white/25">
-                  00
+                <span className="max-w-[95%] text-center font-display text-[clamp(0.95rem,4.5vw,1.55rem)] font-black uppercase leading-none tracking-[0.06em] text-white/[0.38] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">
+                  {positionLabel}
                 </span>
               </div>
             )}

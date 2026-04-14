@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, Info, GripVertical } from "lucide-react";
 import type { Player, Position } from "@/types";
 import { POSITION_LABELS, POSITION_LIMITS, ROLE_LABELS } from "@/types";
+import { poolPositionSquareLabel } from "@/lib/poolPositionLabel";
 import { PlayerAvatar } from "./PlayerAvatar";
 
 type Tab = "all" | "G" | "D" | "F";
@@ -57,6 +58,7 @@ function PoolAbbrevLegend() {
 function DraggableCard({
   player,
   disabled,
+  slotBlocks,
   inRoster,
   onAdd,
   onInfo,
@@ -64,6 +66,8 @@ function DraggableCard({
 }: {
   player: Player;
   disabled: boolean;
+  /** Vybraný slot ve sestavě — hráč nejde na tento slot (např. náhr. D bez 7. beka). */
+  slotBlocks: boolean;
   inRoster: boolean;
   onAdd: () => void;
   onInfo: () => void;
@@ -71,21 +75,19 @@ function DraggableCard({
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `drag-player-${player.id}`,
-    disabled: disabled || inRoster,
+    disabled: disabled || slotBlocks || inRoster,
     data: { player },
   });
   const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined;
   const lim = POSITION_LIMITS[player.position];
   const cur = counts[player.position];
-  const roleU = player.role?.trim().toUpperCase() ?? "";
-  const posLetter =
-    player.position === "G"
-      ? "G"
-      : player.position === "D"
-        ? "D"
-        : roleU && roleU.length <= 4 && !roleU.includes(" ")
-          ? roleU
-          : "F";
+  const posLabel = poolPositionSquareLabel(player);
+  const posBadgeClass =
+    posLabel.length >= 6
+      ? "text-[8px] leading-tight"
+      : posLabel.length >= 4
+        ? "text-[9px] leading-tight"
+        : "text-[10px] leading-none";
 
   return (
     <motion.div
@@ -97,12 +99,12 @@ function DraggableCard({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ type: "spring", stiffness: 420, damping: 28 }}
       className={`
-        group/pool relative flex flex-col gap-3 rounded-2xl border p-4 transition-[box-shadow,border-color,transform,opacity] duration-300 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]
-        before:pointer-events-none before:absolute before:inset-y-3 before:left-0 before:w-[3px] before:rounded-full before:bg-[#c8102e] before:opacity-90 before:shadow-[0_0_12px_rgba(200,16,46,0.5)]
+        group/pool relative flex flex-col gap-2 rounded-xl border p-3 transition-[box-shadow,border-color,transform,opacity] duration-300 [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]
+        before:pointer-events-none before:absolute before:inset-y-2.5 before:left-0 before:w-[3px] before:rounded-full before:bg-[#c8102e] before:opacity-90 before:shadow-[0_0_12px_rgba(200,16,46,0.5)]
         ${
           inRoster
             ? "border-white/[0.07] bg-[#05080f]/50 opacity-[0.72]"
-            : disabled
+            : disabled || slotBlocks
               ? "border-white/[0.05] bg-[#080d14]/80 opacity-50"
               : `border-white/[0.12] bg-gradient-to-br from-[#0a1428]/95 via-[#121c34]/92 to-[#0a0f1a]/95
                  shadow-[0_8px_32px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.07),0_0_0_1px_rgba(0,48,135,0.15)]
@@ -115,35 +117,41 @@ function DraggableCard({
         className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#003087]/20 blur-2xl"
         aria-hidden
       />
-      <div className="relative flex items-start gap-2">
+      <div className="relative flex items-start gap-1.5">
         <button
           type="button"
-          className="mt-1 touch-none text-slate-500 transition-colors hover:text-[#f1c40f]"
+          className="mt-0.5 touch-none text-slate-500 transition-colors hover:text-[#f1c40f]"
           aria-label="Přetáhni"
           {...listeners}
           {...attributes}
         >
-          <GripVertical className="h-4 w-4" />
+          <GripVertical className="h-3.5 w-3.5" />
         </button>
-        <button type="button" onClick={() => !disabled && !inRoster && onAdd()} className="min-w-0 flex-1 text-left">
-          <div className="flex items-start gap-3">
+        <button
+          type="button"
+          onClick={() => !disabled && !slotBlocks && !inRoster && onAdd()}
+          className="min-w-0 flex-1 text-left"
+        >
+          <div className="flex items-start gap-2">
             <div className="relative shrink-0">
-              <span className="absolute -left-1 -top-1 z-10 flex h-7 min-w-[1.75rem] items-center justify-center rounded-md bg-[#c8102e] px-1 font-sans text-[10px] font-bold text-white shadow-md ring-1 ring-white/20">
-                {posLetter}
+              <span
+                className={`absolute -left-0.5 -top-0.5 z-10 flex h-7 w-[2.75rem] items-center justify-center rounded-md bg-[#c8102e] px-0.5 font-sans font-bold text-white shadow-md ring-1 ring-white/20 ${posBadgeClass}`}
+              >
+                {posLabel}
               </span>
               <PlayerAvatar
                 name={player.name}
                 position={player.position}
                 role={player.role}
                 imageUrl={player.imageUrl}
-                size="lg"
+                size="md"
               />
             </div>
-            <div className="min-w-0 flex-1 pt-1">
-              <p className="break-words text-pretty text-base font-bold leading-snug text-white sm:text-[17px]">
+            <div className="min-w-0 flex-1 pt-0.5">
+              <p className="line-clamp-2 break-words text-pretty text-sm font-bold leading-snug text-white sm:text-[15px]">
                 {player.name}
               </p>
-              <p className="mt-1.5 line-clamp-2 text-sm leading-snug text-slate-300/95">
+              <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95">
                 <span className="text-slate-100">{player.club}</span>
                 {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}
               </p>
@@ -156,14 +164,14 @@ function DraggableCard({
             e.stopPropagation();
             onInfo();
           }}
-          className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-white/10 hover:text-[#f1c40f]"
+          className="rounded-lg p-1 text-slate-500 transition-colors hover:bg-white/10 hover:text-[#f1c40f]"
           aria-label="Detail"
         >
-          <Info className="h-4 w-4" />
+          <Info className="h-3.5 w-3.5" />
         </button>
       </div>
-      <div className="relative flex flex-wrap items-center gap-2 pl-8">
-        <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2.5 py-1 font-mono text-xs font-semibold tabular-nums text-sky-100/95 sm:text-[13px]">
+      <div className="relative flex flex-wrap items-center gap-1.5 pl-7">
+        <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95 sm:text-xs">
           {cur}/{lim} v nominaci
         </span>
       </div>
@@ -179,6 +187,10 @@ interface PlayerPoolPanelProps {
   onPreview: (player: Player) => void;
   /** Když je ve sestavě vybraný slot — zúží výběr na danou pozici. */
   forcedPosition?: Position | null;
+  /** Při vybraném slotu — kdo může na něj (např. náhr. D jen po 7. bekovi). Ostatní karty se ztmaví. */
+  assignableFilter?: (player: Player) => boolean;
+  /** Doplňková nápověda pod bannerem (např. pravidla pro náhradního D). */
+  slotHint?: string | null;
 }
 
 export function PlayerPoolPanel({
@@ -188,6 +200,8 @@ export function PlayerPoolPanel({
   onAddPlayer,
   onPreview,
   forcedPosition = null,
+  assignableFilter,
+  slotHint,
 }: PlayerPoolPanelProps) {
   const [tab, setTab] = useState<Tab>("all");
   /** Při vybraném slotu ve sestavě zrcadlíme pozici bez synchronizace přes effect. */
@@ -239,10 +253,17 @@ export function PlayerPoolPanel({
   return (
     <div className="flex flex-col gap-5">
       {forcedPosition && (
-        <p className="rounded-2xl border border-[#f1c40f]/35 bg-[#f1c40f]/10 px-4 py-3 text-center text-sm text-[#f1e6a8] shadow-[0_0_24px_rgba(241,196,15,0.12)]">
-          Vybraný slot ve sestavě — zobrazují se jen{" "}
-          <span className="font-bold text-white">{POSITION_LABELS[forcedPosition]}</span>.
-        </p>
+        <div className="space-y-2">
+          <p className="rounded-2xl border border-[#f1c40f]/35 bg-[#f1c40f]/10 px-4 py-3 text-center text-sm text-[#f1e6a8] shadow-[0_0_24px_rgba(241,196,15,0.12)]">
+            Vybraný slot ve sestavě — zobrazují se jen{" "}
+            <span className="font-bold text-white">{POSITION_LABELS[forcedPosition]}</span>.
+          </p>
+          {slotHint ? (
+            <p className="rounded-xl border border-sky-500/25 bg-sky-950/30 px-3 py-2 text-center text-xs leading-snug text-sky-100/90">
+              {slotHint}
+            </p>
+          ) : null}
+        </div>
       )}
       <div className="flex flex-wrap gap-2 rounded-2xl border border-white/[0.1] bg-[#0a1428]/60 p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_32px_rgba(0,48,135,0.15)] backdrop-blur-md">
         {(
@@ -304,16 +325,18 @@ export function PlayerPoolPanel({
         Klikni na kartu pro rychlé přidání do prvního volného místa, nebo přetáhni na konkrétní dres vpravo.
       </p>
 
-      <motion.div layout className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+      <motion.div layout className="grid gap-2 sm:grid-cols-2 sm:gap-3">
         <AnimatePresence mode="popLayout">
           {filtered.map((player) => {
             const inRoster = usedIds.has(player.id);
             const disabled = !canAdd(player);
+            const slotBlocks = assignableFilter ? !assignableFilter(player) : false;
             return (
               <DraggableCard
                 key={player.id}
                 player={player}
                 disabled={disabled}
+                slotBlocks={slotBlocks}
                 inRoster={inRoster}
                 counts={counts}
                 onAdd={() => onAddPlayer(player)}

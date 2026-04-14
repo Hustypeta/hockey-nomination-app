@@ -192,7 +192,9 @@ export function LineBuilder({
 
     const renderSlotBody = (isDragOver: boolean) => (
       <div
-        onClick={() => onSelectSlot(selected ? null : { type, lineIndex, role })}
+        onClick={() =>
+          onSelectSlot(selected ? null : { type, lineIndex: lineIndex ?? 0, role })
+        }
         className={`
           group/slot flex w-full min-w-0 cursor-pointer flex-col items-center rounded-xl px-0.5 transition-colors duration-200
           ${nhl ? "gap-1 py-1" : "gap-2 py-2"}

@@ -55,22 +55,24 @@ body {
 }
 
 /**
- * Vzhled potisku na zádech (jméno / velké číslo) — Oswald, světelný „hřeben“,
- * tmavý obrys přes více vrstev text-shadow (bez SVG filtrů, funguje v exportu PNG).
+ * Vzhled potisku na zádech (jméno / velké číslo) — Oswald, zapuštěný „našitý“ do úpletu:
+ * světlý horní hřeben, teplá bílá místo čisté, stíny simulují hloubku ve vláknech (export PNG OK).
  */
 .jersey-nameplate-text {
   font-family: var(--font-jersey-print);
   font-weight: 700;
   text-transform: uppercase;
-  color: #f4f4f5;
+  color: #e8e1e1;
   letter-spacing: 0.11em;
   line-height: 1.12;
   text-shadow:
-    0 0 1px rgba(0, 0, 0, 1),
-    0 1px 0 rgba(0, 0, 0, 0.92),
-    0 -0.5px 0 rgba(255, 255, 255, 0.2),
-    0 2px 3px rgba(0, 0, 0, 0.88),
-    0 4px 12px rgba(0, 0, 0, 0.48);
+    0 0.5px 0 rgba(255, 255, 255, 0.16),
+    0 -0.5px 0 rgba(55, 12, 22, 0.42),
+    0 1px 0 rgba(0, 0, 0, 0.62),
+    0 1.5px 0 rgba(0, 0, 0, 0.48),
+    0 3px 4px rgba(0, 0, 0, 0.58),
+    0 5px 10px rgba(0, 0, 0, 0.38),
+    0 0 14px rgba(0, 0, 0, 0.22);
 }
 
 .jersey-nameplate-text--compact {
@@ -80,16 +82,18 @@ body {
 .jersey-back-number-text {
   font-family: var(--font-jersey-print);
   font-weight: 700;
-  color: #fafafa;
+  color: #ebe5e5;
   letter-spacing: 0.03em;
   font-variant-numeric: tabular-nums;
   line-height: 0.88;
   text-shadow:
-    0 0 2px rgba(0, 0, 0, 1),
-    0 2px 0 rgba(0, 0, 0, 0.72),
-    0 -1px 0 rgba(255, 255, 255, 0.22),
-    0 4px 6px rgba(0, 0, 0, 0.82),
-    0 8px 20px rgba(0, 0, 0, 0.52);
+    0 1px 0 rgba(255, 255, 255, 0.22),
+    0 -1px 0 rgba(45, 8, 16, 0.45),
+    0 2px 0 rgba(0, 0, 0, 0.62),
+    0 3px 0 rgba(0, 0, 0, 0.42),
+    0 5px 5px rgba(0, 0, 0, 0.58),
+    0 8px 16px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(0, 0, 0, 0.2);
 }
 
 /* Hockey rink ice gradient */

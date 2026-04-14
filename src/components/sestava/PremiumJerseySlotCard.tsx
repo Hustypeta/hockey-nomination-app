@@ -9,64 +9,43 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
+/** Kratší písmo pro dlouhá příjmení — zůstane na „nášivce“. */
+function nameplateOverflowClass(last: string): string {
+  const n = last.length;
+  if (n <= 8) return "";
+  if (n <= 11) return " !text-[9px] sm:!text-[10px] !leading-tight";
+  if (n <= 14) return " !text-[8px] sm:!text-[9px] !leading-tight";
+  return " !text-[7px] sm:!text-[8px] !leading-tight break-words";
+}
+
+function numberOverflowClass(last: string): string {
+  const n = last.length;
+  if (n <= 11) return "";
+  return " !text-[26px] sm:!text-[28px]";
+}
+
 export type PremiumJerseySize = "compact" | "skater" | "goalie";
 
-const SIZE_STYLES: Record<
-  PremiumJerseySize,
-  {
-    root: string;
-    pos: string;
-    num: string;
-    name: string;
-    emptyName: string;
-    emptyNum: string;
-    cap: string;
-    asst: string;
-    clear: string;
-  }
-> = {
-  compact: {
-    root: "w-[118px]",
-    pos: "left-[7%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "jersey-back-number-text text-[26px] sm:text-[28px]",
-    name: "jersey-nameplate-text jersey-nameplate-text--compact max-w-[90%] break-words text-center text-[10px] leading-tight line-clamp-2 sm:text-[11px]",
-    emptyName:
-      "select-none font-jersey-print text-[10px] font-semibold uppercase leading-tight tracking-[0.2em] text-white/35 sm:text-[11px]",
-    emptyNum:
-      "select-none font-jersey-print mt-1 text-[22px] font-bold leading-none tabular-nums text-white/25 sm:text-[24px]",
-    cap: "absolute right-10 top-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white",
-    asst: "absolute bottom-2 left-2 z-30 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[8px] font-bold text-white shadow-md ring-2 ring-white/90",
-    clear:
-      "absolute right-1.5 top-1.5 z-40 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
-  },
-  skater: {
-    root: "w-[154px]",
-    pos: "left-[8%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "jersey-back-number-text text-[32px] sm:text-[36px]",
-    name: "jersey-nameplate-text max-w-[90%] break-words text-center text-[11px] leading-tight line-clamp-2 sm:text-[12px]",
-    emptyName:
-      "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
-    emptyNum:
-      "select-none font-jersey-print mt-1 text-[26px] font-bold leading-none tabular-nums text-white/25 sm:text-[30px]",
-    cap: "absolute right-10 top-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white",
-    asst: "absolute bottom-2 left-2 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white/90",
-    clear:
-      "absolute right-2 top-2 z-40 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
-  },
-  goalie: {
-    root: "w-[176px]",
-    pos: "left-[8%] top-[5%] z-20 flex h-7 w-7 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[10px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "jersey-back-number-text text-[30px] sm:text-[34px]",
-    name: "jersey-nameplate-text max-w-[88%] break-words text-center text-[10px] leading-tight line-clamp-2 sm:text-[11px]",
-    emptyName:
-      "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
-    emptyNum:
-      "select-none font-jersey-print mt-1 text-[26px] font-bold leading-none tabular-nums text-white/25 sm:text-[30px]",
-    cap: "absolute right-12 top-1.5 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[11px] font-bold text-white shadow-md ring-2 ring-white",
-    asst: "absolute bottom-2 left-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white/90",
-    clear:
-      "absolute right-2 top-2 z-40 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
-  },
+/** Jedna šířka a typografie pro všechny sloty (útok, obrana, G, náhradníci). Rozdíl jen `kind` u obrázku. */
+const PREMIUM_SLOT_UNIFIED = {
+  root: "w-[128px]",
+  pos: "left-[8%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
+  num: "jersey-back-number-text text-[32px] sm:text-[36px]",
+  name: "jersey-nameplate-text max-w-[90%] break-words text-center text-[11px] leading-tight line-clamp-2 sm:text-[12px]",
+  emptyName:
+    "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
+  emptyNum:
+    "select-none font-jersey-print mt-1 text-[26px] font-bold leading-none tabular-nums text-white/25 sm:text-[30px]",
+  cap: "absolute right-10 top-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white",
+  asst: "absolute bottom-2 left-2 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white/90",
+  clear:
+    "absolute right-2 top-2 z-40 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
+} as const;
+
+const SIZE_STYLES: Record<PremiumJerseySize, typeof PREMIUM_SLOT_UNIFIED> = {
+  compact: PREMIUM_SLOT_UNIFIED,
+  skater: PREMIUM_SLOT_UNIFIED,
+  goalie: PREMIUM_SLOT_UNIFIED,
 };
 
 export interface PremiumJerseySlotCardProps {
@@ -109,11 +88,8 @@ export function PremiumJerseySlotCard({
   const sz = SIZE_STYLES[size];
   const showAssistant = isAssistant && !!player && !isCaptain;
   const empty = !player;
-  const ghostNumText = (() => {
-    const t = (emptyPlaceholder ?? "").replace(/\d/g, "").trim();
-    return t.length > 0 && t.length <= 2 ? t : "00";
-  })();
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
+  const emptyCenterLabel = (emptyPlaceholder ?? positionLabel).trim() || "?";
   const showClear = !empty && typeof onClear === "function";
 
   const motion = disableMotion
@@ -191,21 +167,29 @@ export function PremiumJerseySlotCard({
         <div
           className={`
             pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1.5
-            ${size === "compact" ? "justify-start pt-[26%]" : size === "goalie" ? "justify-start pt-[25%]" : "justify-start pt-[27%]"}
+            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start pt-[31%]"}
           `}
         >
           {!empty ? (
             <>
-              <span className={sz.name}>{lastName(player.name)}</span>
+              <span className={`${sz.name}${nameplateOverflowClass(lastName(player.name))}`}>
+                {lastName(player.name)}
+              </span>
               {numStr ? (
-                <span className={`${sz.num} mt-0.5 max-w-[92%] text-center`}>{numStr}</span>
+                <span
+                  className={`${sz.num} mt-px max-w-[92%] text-center${numberOverflowClass(lastName(player.name))}`}
+                >
+                  {numStr}
+                </span>
               ) : null}
             </>
           ) : (
-            <div className="mt-[18%] flex flex-col items-center" aria-hidden>
-              <span className={sz.emptyName}>—</span>
-              <span className={sz.emptyNum}>{ghostNumText}</span>
-            </div>
+            <span
+              className="max-w-[96%] text-center font-display text-[clamp(0.95rem,4.8vw,1.5rem)] font-black uppercase leading-none tracking-[0.06em] text-white/[0.38] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]"
+              aria-hidden
+            >
+              {emptyCenterLabel}
+            </span>
           )}
         </div>
       </div>

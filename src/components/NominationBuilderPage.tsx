@@ -162,7 +162,7 @@ export function NominationBuilderPage() {
         });
         if (next) setLineup(next);
         setSelectedSlot(null);
-      } else if (type === "extraDefenseman" && player.position === "D" && lineIndex !== undefined) {
+      } else if (type === "extraDefenseman" && player.position === "D") {
         const next = assignPlayerToTarget(lineup, player, {
           type: "extraDefenseman",
           slotIndex: 0,
@@ -373,6 +373,12 @@ export function NominationBuilderPage() {
                   onAddPlayer={handleAddFromPool}
                   onPreview={setPreviewPlayer}
                   forcedPosition={forcedPoolPosition}
+                  assignableFilter={selectedSlot ? canAssignPlayer : undefined}
+                  slotHint={
+                    selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
+                      ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
+                      : null
+                  }
                 />
               </div>
             </section>

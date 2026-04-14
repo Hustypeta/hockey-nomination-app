@@ -11,22 +11,36 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
+function nhlNameplateExtra(last: string): string {
+  const n = last.length;
+  if (n <= 8) return "max-w-[90%]";
+  if (n <= 11) return "max-w-[92%] !text-[10px] sm:!text-[11px] lg:!text-[12px] !leading-tight";
+  return "max-w-[94%] !text-[9px] sm:!text-[10px] lg:!text-[11px] !leading-tight line-clamp-2";
+}
+
+/** Jednotná velikost karty — útok, obrana, G, náhradníci (export / share). */
+const NHL25_CARD_UNIFIED = {
+  width: "max-w-[8rem] sm:max-w-[8.5rem] lg:max-w-[9rem]",
+  number: "jersey-back-number-text text-[1.6rem] sm:text-[1.8rem] lg:text-[1.95rem]",
+  name: "jersey-nameplate-text max-w-[90%] text-center text-[11px] sm:text-[12px] lg:text-[13px]",
+} as const;
+
 const widthClass: Record<Nhl25JerseySize, string> = {
-  compact: "max-w-[7.25rem] sm:max-w-[7.75rem]",
-  skater: "max-w-[9.25rem] sm:max-w-[10rem] lg:max-w-[10.5rem]",
-  goalie: "max-w-[11.25rem] sm:max-w-[12rem] lg:max-w-[12.5rem]",
+  compact: NHL25_CARD_UNIFIED.width,
+  skater: NHL25_CARD_UNIFIED.width,
+  goalie: NHL25_CARD_UNIFIED.width,
 };
 
 const numberClass: Record<Nhl25JerseySize, string> = {
-  compact: "jersey-back-number-text text-[1.55rem] sm:text-[1.7rem]",
-  skater: "jersey-back-number-text text-[1.85rem] sm:text-[2.05rem] lg:text-[2.2rem]",
-  goalie: "jersey-back-number-text text-[1.65rem] sm:text-[1.85rem] lg:text-[2rem]",
+  compact: NHL25_CARD_UNIFIED.number,
+  skater: NHL25_CARD_UNIFIED.number,
+  goalie: NHL25_CARD_UNIFIED.number,
 };
 
 const nameClass: Record<Nhl25JerseySize, string> = {
-  compact: "jersey-nameplate-text jersey-nameplate-text--compact max-w-[90%] text-center text-[10px] sm:text-[11px]",
-  skater: "jersey-nameplate-text max-w-[90%] text-center text-[11px] sm:text-[12px] lg:text-[13px]",
-  goalie: "jersey-nameplate-text max-w-[88%] text-center text-[10px] sm:text-[11px] lg:text-[12px]",
+  compact: NHL25_CARD_UNIFIED.name,
+  skater: NHL25_CARD_UNIFIED.name,
+  goalie: NHL25_CARD_UNIFIED.name,
 };
 
 const badgeShadow = {
@@ -35,9 +49,9 @@ const badgeShadow = {
 
 /** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` (fotopodklad zadní strany). */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
-  compact: "justify-start pt-[26%]",
-  skater: "justify-start pt-[27%]",
-  goalie: "justify-start pt-[25%]",
+  compact: "justify-start pt-[31%]",
+  skater: "justify-start pt-[31%]",
+  goalie: "justify-start pt-[31%]",
 };
 
 export interface Nhl25JerseyCardProps {
@@ -91,7 +105,7 @@ export function Nhl25JerseyCard({
             absolute -right-0.5 -top-1 z-30 flex items-center justify-center rounded-full
             bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-xs font-bold text-white
             shadow-md ring-2 ring-white
-            ${size === "goalie" ? "h-7 w-7" : "h-6 w-6 text-[11px]"}
+            h-6 w-6 text-[11px]
           `}
           aria-label="Kapitán"
         >
@@ -105,7 +119,7 @@ export function Nhl25JerseyCard({
             absolute -bottom-0.5 -left-0.5 z-30 flex items-center justify-center rounded-full
             bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[10px] font-bold text-white
             shadow-md ring-2 ring-white/90
-            ${size === "goalie" ? "h-6 w-6" : "h-5 w-5 text-[9px]"}
+            h-5 w-5 text-[9px]
           `}
           aria-label="Asistent kapitána"
         >
@@ -146,13 +160,13 @@ export function Nhl25JerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
               >
-                <span className={`leading-tight ${nmCls}`}>{lastName(player.name)}</span>
-                {numStr ? <span className={`mt-0.5 ${numCls}`}>{numStr}</span> : null}
+                <span className={`text-center leading-tight ${nhlNameplateExtra(lastName(player.name))} ${nmCls}`}>
+                  {lastName(player.name)}
+                </span>
+                {numStr ? <span className={`mt-px ${numCls}`}>{numStr}</span> : null}
                 {player.position === "F" && player.role ? (
                   <span
-                    className={`mt-1 rounded border border-white/35 bg-black/35 px-1.5 py-0.5 font-display font-bold uppercase text-white/95 ${
-                      size === "goalie" ? "text-[10px]" : "text-[9px]"
-                    }`}
+                    className="mt-1 rounded border border-white/35 bg-black/35 px-1.5 py-0.5 font-display text-[9px] font-bold uppercase text-white/95"
                     style={badgeShadow}
                   >
                     {player.role}
@@ -160,9 +174,7 @@ export function Nhl25JerseyCard({
                 ) : null}
                 {player.position === "G" ? (
                   <span
-                    className={`mt-1 font-display font-bold uppercase tracking-[0.14em] text-white/95 ${
-                      size === "goalie" ? "text-[11px]" : "text-[10px]"
-                    }`}
+                    className="mt-1 font-display text-[10px] font-bold uppercase tracking-[0.14em] text-white/95"
                     style={badgeShadow}
                   >
                     G
@@ -171,14 +183,11 @@ export function Nhl25JerseyCard({
               </div>
             ) : (
               <div
-                className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
+                className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-center px-1 pt-[24%] pb-[22%]"
                 aria-hidden
               >
-                <span className="max-w-[96%] text-center font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-white/35 sm:text-[12px]">
-                  —
-                </span>
-                <span className="mt-0.5 select-none font-display text-[clamp(1.35rem,6vw,2.25rem)] font-bold tabular-nums leading-none text-white/25">
-                  00
+                <span className="max-w-[95%] text-center font-display text-[clamp(0.95rem,5vw,1.65rem)] font-black uppercase leading-none tracking-[0.06em] text-white/[0.38] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">
+                  {positionLabel}
                 </span>
               </div>
             )}
