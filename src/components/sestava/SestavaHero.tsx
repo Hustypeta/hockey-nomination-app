@@ -48,7 +48,7 @@ export function SestavaHero({
               <span className="font-display text-[11px] font-bold leading-none text-[#f1c40f]">2026</span>
             </div>
             <div className="min-w-0 flex-1">
-              <h1 className="font-display text-lg font-bold leading-tight tracking-tight text-white sm:text-xl lg:text-2xl">
+              <h1 className="font-sans text-xl font-bold leading-snug tracking-normal text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.75)] sm:text-2xl lg:text-[1.75rem]">
                 Editor nominace
               </h1>
               <p className="mt-0.5 line-clamp-1 text-[10px] leading-snug text-slate-400 sm:text-[11px]" title={subtitleCounts}>

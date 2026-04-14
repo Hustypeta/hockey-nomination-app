@@ -350,7 +350,9 @@ export function OfficialLineupAdminEditor() {
         </div>
         <div className="relative z-10 mx-auto max-w-md px-4 py-16">
           <div className="sestava-premium-panel-dark rounded-2xl p-6 shadow-xl">
-            <h1 className="font-display text-xl font-bold text-white">Admin — oficiální soupiska</h1>
+            <h1 className="font-sans text-xl font-bold leading-snug tracking-normal text-white">
+              Admin — oficiální soupiska
+            </h1>
             <p className="mt-2 text-sm text-white/65">
               Stejný editor jako u nominací. Po uložení se podle této sestavy vyhodnotí soutěž (
               <code className="text-cyan-200/90">GET /api/contest/leaderboard</code>).
@@ -400,7 +402,7 @@ export function OfficialLineupAdminEditor() {
           <header className="relative border-b border-white/[0.1] bg-gradient-to-b from-[#0a1224]/95 via-[#080d18]/92 to-[#060a14]/95 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:px-4 lg:px-6">
             <div className="mx-auto flex max-w-[90rem] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="font-display text-lg font-bold text-white sm:text-xl">
+                <h1 className="font-sans text-lg font-bold leading-snug tracking-normal text-white sm:text-xl">
                   Admin — oficiální soupiska
                 </h1>
                 <p className="mt-0.5 text-[11px] text-slate-400">{subtitleCounts}</p>
@@ -444,7 +446,7 @@ export function OfficialLineupAdminEditor() {
                   <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
                     Výběr hráčů
                   </p>
-                  <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
+                  <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-white sm:text-2xl">
                     Dostupní hráči
                   </h2>
                   <p className="mt-1 max-w-lg text-[11px] leading-snug text-slate-400 sm:text-xs">
@@ -469,7 +471,7 @@ export function OfficialLineupAdminEditor() {
                   <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
                     Oficiální zápis
                   </p>
-                  <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+                  <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-slate-900 sm:text-2xl">
                     Soupiska ČR (MS 2026)
                   </h2>
                   {selectedSlot ? (

@@ -348,7 +348,7 @@ export function NominationBuilderPage() {
                     <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
                       Výběr hráčů
                     </p>
-                    <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
+                    <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-white sm:text-2xl">
                       Dostupní hráči
                     </h2>
                     <p className="mt-1 max-w-lg text-[11px] leading-snug text-slate-400 sm:text-xs">
@@ -374,7 +374,7 @@ export function NominationBuilderPage() {
                   <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
                     Soupiska
                   </p>
-                  <h2 className="mt-1 font-display text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+                  <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-slate-900 sm:text-2xl">
                     Moje sestava
                   </h2>
                   {selectedSlot ? (
