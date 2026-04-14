@@ -8,6 +8,39 @@ import {
   isNominationSubmissionOpen,
 } from "@/lib/contestTimeBonus";
 
+/** Seznam nominací přihlášeného uživatele (nejnovější první). */
+export async function GET() {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Nejseš přihlášený." }, { status: 401 });
+    }
+
+    const rows = await prisma.nomination.findMany({
+      where: { userId: session.user.id },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        createdAt: true,
+        timeBonusPercent: true,
+        captainId: true,
+      },
+    });
+
+    return NextResponse.json({
+      nominations: rows.map((r) => ({
+        id: r.id,
+        createdAt: r.createdAt.toISOString(),
+        timeBonusPercent: r.timeBonusPercent,
+        captainId: r.captainId,
+      })),
+    });
+  } catch (error) {
+    console.error("GET /api/nominations failed:", error);
+    return NextResponse.json({ error: "Nepodařilo se načíst nominace." }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);

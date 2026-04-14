@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
 import {
   Users,
   Clock,
@@ -10,6 +11,7 @@ import {
   Trophy,
   BookOpen,
   LayoutGrid,
+  ClipboardList,
 } from "lucide-react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
 import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
@@ -41,6 +43,7 @@ function formatCs(n: number) {
 }
 
 export function LandingContent() {
+  const { status: authStatus } = useSession();
   const contestStats = useContestStats();
   const nominationCount = contestStats.nominationCount;
   const cd = useCountdown(MS_2026_KICKOFF);
@@ -86,6 +89,25 @@ export function LandingContent() {
               Staň se na chvíli trenérem českého národního týmu. Využij naplno výběr z více než 130 hráčů,
               poskládej si formace podle sebe a sdílej svou sestavu pro hokejové MS ve Švýcarsku s ostatními.
             </p>
+
+            {authStatus === "authenticated" ? (
+              <div className="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row sm:justify-center">
+                <Link
+                  href="/sestava"
+                  className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-[#c8102e]/50 bg-[#c8102e]/15 px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-[#f1c40f]/45 hover:bg-[#c8102e]/25"
+                >
+                  <Sparkles className="h-5 w-5 shrink-0 text-[#f1c40f]" aria-hidden />
+                  Nová nominace
+                </Link>
+                <Link
+                  href="/ucet#moje-nominace"
+                  className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-sky-400/40 hover:bg-white/[0.1]"
+                >
+                  <ClipboardList className="h-5 w-5 shrink-0 text-sky-300" aria-hidden />
+                  Moje nominace
+                </Link>
+              </div>
+            ) : null}
 
             {/* Hlavní CTA — velké, červené, glow */}
             <div className="mx-auto mt-10 max-w-xl sm:mt-12">

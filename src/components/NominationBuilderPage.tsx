@@ -327,6 +327,16 @@ export function NominationBuilderPage() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-[90rem] px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
+          {isAuthenticated && (
+            <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-950/25 px-4 py-2.5 text-center text-xs text-emerald-50/95 shadow-[0_0_24px_rgba(16,185,129,0.12)] sm:text-sm">
+              Jsi přihlášen — plnou nominaci můžeš <strong className="font-semibold">uložit do soutěže</strong>{" "}
+              tlačítkem dole („Uložit nominaci“). Uložené sestavy najdeš v{" "}
+              <a href="/ucet#moje-nominace" className="font-semibold text-[#f1c40f] underline-offset-2 hover:underline">
+                Moje nominace
+              </a>
+              .
+            </div>
+          )}
           {!isComplete && (
             <div className="mb-4 rounded-xl border border-[#003087]/40 bg-gradient-to-r from-[#003087]/20 via-[#0f172a]/90 to-[#c8102e]/15 px-4 py-2.5 text-center text-xs text-slate-100 shadow-[0_0_32px_rgba(0,48,135,0.15)] sm:text-sm">
               {remaining > 0 ? (
@@ -414,7 +424,7 @@ export function NominationBuilderPage() {
                 }
               `}
             >
-              {isAuthenticated ? "Uložit a sdílet" : "Složit nominaci"}
+              {isAuthenticated ? "Uložit nominaci" : "Složit nominaci"}
             </button>
           </div>
         </div>
@@ -424,7 +434,7 @@ export function NominationBuilderPage() {
           onRandom={handleRandom}
           onReset={handleReset}
           shareDisabled={!isComplete}
-          shareLabel={isAuthenticated ? "Uložit a sdílet" : "Složit nominaci"}
+          shareLabel={isAuthenticated ? "Uložit nominaci" : "Složit nominaci"}
         />
 
         <div

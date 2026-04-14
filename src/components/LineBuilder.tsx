@@ -48,8 +48,8 @@ function SectionShell({ title, kicker, children }: { title: string; kicker?: str
 function NhlSectionShell({ title, kicker, children }: { title: string; kicker?: string; children: ReactNode }) {
   return (
     <section className="min-w-0 w-full">
-      <div className="mb-1.5 flex flex-wrap items-end justify-between gap-1.5 border-b border-slate-200/90 pb-1.5">
-        <h3 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-slate-900 sm:text-[13px]">{title}</h3>
+      <div className="mb-1 flex flex-wrap items-end justify-between gap-1 border-b border-slate-200/90 pb-1">
+        <h3 className="font-display text-xs font-bold uppercase tracking-[0.16em] text-slate-900 sm:text-[13px]">{title}</h3>
         {kicker ? (
           <span className="max-w-[55%] text-right text-[8px] font-semibold uppercase leading-tight tracking-[0.16em] text-slate-500 sm:max-w-none sm:text-[9px]">
             {kicker}
@@ -194,7 +194,8 @@ export function LineBuilder({
       <div
         onClick={() => onSelectSlot(selected ? null : { type, lineIndex, role })}
         className={`
-          group/slot flex w-full min-w-0 cursor-pointer flex-col items-center gap-2 rounded-xl px-0.5 py-2 transition-colors duration-200
+          group/slot flex w-full min-w-0 cursor-pointer flex-col items-center rounded-xl px-0.5 transition-colors duration-200
+          ${nhl ? "gap-1 py-1" : "gap-2 py-2"}
           ${
             nhl
               ? selected
@@ -247,7 +248,13 @@ export function LineBuilder({
         </div>
 
         {player ? (
-          <div className="flex shrink-0 flex-wrap justify-center gap-1">
+          <div
+            className={
+              nhl
+                ? "flex shrink-0 flex-wrap justify-center gap-1 rounded-lg border border-slate-200/95 bg-gradient-to-b from-slate-50 to-slate-100/90 px-1.5 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]"
+                : "flex shrink-0 flex-wrap justify-center gap-1"
+            }
+          >
             <button
               type="button"
               onClick={(e) => {
@@ -263,7 +270,8 @@ export function LineBuilder({
                 }
               }}
               className={`
-                rounded-md border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide
+                rounded-md border px-2 py-0.5 font-bold uppercase tracking-wide
+                ${nhl ? "min-h-[26px] px-2.5 text-[10px]" : "px-2 py-0.5 text-[9px]"}
                 ${
                   captainId === player.id
                     ? nhl
@@ -285,7 +293,8 @@ export function LineBuilder({
                 toggleAssistant(player.id);
               }}
               className={`
-                rounded-md border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide
+                rounded-md border px-2 py-0.5 font-bold uppercase tracking-wide
+                ${nhl ? "min-h-[26px] px-2.5 text-[10px]" : "px-2 py-0.5 text-[9px]"}
                 ${
                   captainId === player.id
                     ? nhl
@@ -305,7 +314,7 @@ export function LineBuilder({
             </button>
           </div>
         ) : (
-          <div className="h-[22px] shrink-0" aria-hidden />
+          <div className={`shrink-0 ${nhl ? "h-[34px]" : "h-[22px]"}`} aria-hidden />
         )}
       </div>
     );
@@ -507,7 +516,7 @@ export function LineBuilder({
 
   if (nhl) {
     return (
-      <div className="nhl25-lineup-root min-w-0 w-full space-y-3 sm:space-y-4">
+      <div className="nhl25-lineup-root min-w-0 w-full space-y-2.5 sm:space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-white px-3 py-2 shadow-sm">
           <div className="flex min-w-0 items-center gap-2">
             <CzechFlagMark className="h-8 w-[2.65rem] shrink-0 rounded border border-slate-300/80 shadow-sm sm:h-9 sm:w-[3rem]" />
@@ -520,13 +529,13 @@ export function LineBuilder({
           </div>
         </div>
 
-        <div className="space-y-3 rounded-xl border border-slate-200/80 bg-white/40 p-3 shadow-sm sm:space-y-4 sm:p-4">
+        <div className="space-y-2.5 rounded-xl border border-slate-200/80 bg-white/40 p-2.5 shadow-sm sm:space-y-3 sm:p-3.5">
           <p className="text-center font-display text-[9px] font-bold uppercase tracking-[0.26em] text-slate-500 sm:text-left">
             Základ (20 + 2)
           </p>
 
           <NhlSectionShell title="Brankáři — základ" kicker="2 × G">
-            <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+            <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
               {[0, 1].map((i) => {
                 const gid = lineup.goalies[i];
                 return (
@@ -553,19 +562,19 @@ export function LineBuilder({
           </NhlSectionShell>
 
           <NhlSectionShell title="Útočné řady" kicker="4 × LW–C–RW + X u 4.">
-            <div className="flex min-w-0 flex-col gap-3">
+            <div className="flex min-w-0 flex-col gap-2">
               {[0, 1, 2, 3].map((i) => {
                 const line = lineup.forwardLines[i];
                 return (
                   <div
                     key={i}
-                    className="flex flex-col gap-2 rounded-lg border border-slate-200/70 bg-white/60 px-2.5 py-3 shadow-sm sm:flex-row sm:items-end sm:gap-4 sm:px-3"
+                    className="flex flex-col gap-1.5 rounded-lg border border-slate-200/70 bg-white/60 px-2 py-2 shadow-sm sm:flex-row sm:items-center sm:gap-3 sm:px-2.5"
                   >
-                    <div className="shrink-0 font-display text-base font-bold tracking-wide text-slate-800 sm:w-[5.25rem] sm:pb-1 sm:text-lg">
+                    <div className="shrink-0 font-display text-[15px] font-bold tracking-wide text-slate-800 sm:w-[4.75rem] sm:text-base">
                       {i + 1}. LAJNA
                     </div>
-                    <div className="flex min-w-0 flex-1 flex-col gap-2">
-                      <div className="grid min-w-0 grid-cols-3 gap-2 sm:gap-3">
+                    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                      <div className="grid min-w-0 grid-cols-3 gap-1.5 sm:gap-2">
                         <Slot
                           playerId={line.lw}
                           label="LW"
@@ -619,8 +628,8 @@ export function LineBuilder({
                         />
                       </div>
                       {i === 3 ? (
-                        <div className="rounded-md border border-dashed border-slate-300/90 bg-slate-50/90 px-2 py-2">
-                          <p className="mb-1.5 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                        <div className="rounded-md border border-dashed border-slate-300/90 bg-slate-50/90 px-2 py-1.5">
+                          <p className="mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] text-slate-500">
                             13. útok (X)
                           </p>
                           <div className="mx-auto flex max-w-[7rem] justify-center">
@@ -652,15 +661,15 @@ export function LineBuilder({
           </NhlSectionShell>
 
           <NhlSectionShell title="Obranné páry" kicker="3× pár + 7. bek">
-          <div className="space-y-3">
+          <div className="space-y-2">
             {[0, 1, 2].map((i) => {
               const pair = lineup.defensePairs[i];
               return (
                 <div key={i}>
-                  <p className="mb-1.5 text-center font-display text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                  <p className="mb-1 text-center font-display text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
                     {i + 1}. pár
                   </p>
-                  <div className="mx-auto grid max-w-lg grid-cols-2 gap-2.5 sm:gap-4">
+                  <div className="mx-auto grid max-w-lg grid-cols-2 gap-2 sm:gap-3">
                     <Slot
                       playerId={pair.lb}
                       label="LD"
@@ -699,8 +708,8 @@ export function LineBuilder({
                 </div>
               );
             })}
-            <div className="rounded-md border border-dashed border-slate-300/90 bg-slate-50/80 px-2 py-3">
-              <p className="mb-2 text-center font-display text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
+            <div className="rounded-md border border-dashed border-slate-300/90 bg-slate-50/80 px-2 py-2">
+              <p className="mb-1.5 text-center font-display text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
                 7. bek
               </p>
               <div className="mx-auto flex max-w-[12rem] justify-center">
@@ -730,14 +739,14 @@ export function LineBuilder({
         </NhlSectionShell>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <p className="text-center font-display text-[9px] font-bold uppercase tracking-[0.26em] text-slate-500 sm:text-left">
             Náhradníci (3)
           </p>
           <NhlSectionShell title="Mimo základ" kicker="G3 · F · D">
-            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3">
-              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
-                <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-2.5">
+              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-1.5 shadow-sm sm:p-2">
+                <p className="mb-1.5 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                   3. brankář
                 </p>
                 <Slot
@@ -757,8 +766,8 @@ export function LineBuilder({
                   }
                 />
               </div>
-              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
-                <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-1.5 shadow-sm sm:p-2">
+                <p className="mb-1.5 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                   Náhr. F
                 </p>
                 <Slot
@@ -778,8 +787,8 @@ export function LineBuilder({
                   }
                 />
               </div>
-              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-2 shadow-sm">
-                <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-1.5 shadow-sm sm:p-2">
+                <p className="mb-1.5 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                   Náhr. D
                 </p>
                 <Slot

@@ -26,7 +26,7 @@ const SIZE_STYLES: Record<
   }
 > = {
   compact: {
-    root: "w-[128px]",
+    root: "w-[118px]",
     pos: "left-[7%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
     num: "jersey-back-number-text text-[26px] sm:text-[28px]",
     name: "jersey-nameplate-text jersey-nameplate-text--compact max-w-[90%] break-words text-center text-[10px] leading-tight line-clamp-2 sm:text-[11px]",
@@ -40,29 +40,29 @@ const SIZE_STYLES: Record<
       "absolute right-1.5 top-1.5 z-40 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
   },
   skater: {
-    root: "w-[168px]",
-    pos: "left-[8%] top-[5%] z-20 flex h-7 w-7 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[10px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "jersey-back-number-text text-[36px] sm:text-[40px]",
-    name: "jersey-nameplate-text max-w-[90%] break-words text-center text-[12px] leading-tight line-clamp-2 sm:text-[13px]",
+    root: "w-[154px]",
+    pos: "left-[8%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
+    num: "jersey-back-number-text text-[32px] sm:text-[36px]",
+    name: "jersey-nameplate-text max-w-[90%] break-words text-center text-[11px] leading-tight line-clamp-2 sm:text-[12px]",
     emptyName:
       "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
     emptyNum:
       "select-none font-jersey-print mt-1 text-[26px] font-bold leading-none tabular-nums text-white/25 sm:text-[30px]",
-    cap: "absolute right-12 top-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[11px] font-bold text-white shadow-md ring-2 ring-white",
+    cap: "absolute right-10 top-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white",
     asst: "absolute bottom-2 left-2 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white/90",
     clear:
       "absolute right-2 top-2 z-40 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
   },
   goalie: {
-    root: "w-[196px]",
-    pos: "left-[8%] top-[5%] z-20 flex h-8 w-8 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[11px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-    num: "jersey-back-number-text text-[32px] sm:text-[36px]",
+    root: "w-[176px]",
+    pos: "left-[8%] top-[5%] z-20 flex h-7 w-7 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[10px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
+    num: "jersey-back-number-text text-[30px] sm:text-[34px]",
     name: "jersey-nameplate-text max-w-[88%] break-words text-center text-[10px] leading-tight line-clamp-2 sm:text-[11px]",
     emptyName:
       "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
     emptyNum:
       "select-none font-jersey-print mt-1 text-[26px] font-bold leading-none tabular-nums text-white/25 sm:text-[30px]",
-    cap: "absolute right-14 top-2 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-xs font-bold text-white shadow-md ring-2 ring-white",
+    cap: "absolute right-12 top-1.5 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[11px] font-bold text-white shadow-md ring-2 ring-white",
     asst: "absolute bottom-2 left-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white/90",
     clear:
       "absolute right-2 top-2 z-40 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
@@ -129,7 +129,7 @@ export function PremiumJerseySlotCard({
 
   const hoverFx = disableMotion
     ? ""
-    : "hover:scale-[1.06] hover:-translate-y-1 hover:shadow-[0_0_20px_6px_rgba(200,16,46,0.6),0_16px_40px_rgba(0,0,0,0.45)]";
+    : "hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_16px_4px_rgba(200,16,46,0.45),0_12px_28px_rgba(0,0,0,0.38)]";
 
   return (
     <div

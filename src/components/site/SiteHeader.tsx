@@ -7,6 +7,7 @@ import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
 
 const NAV = [
   { href: "/", label: "Úvod" },
+  { href: "/ucet", label: "Můj účet" },
   { href: "/sestava", label: "Editor sestavy" },
   { href: "/bracket", label: "Pick’em" },
   { href: "/kdo-jsem", label: "Kdo jsem" },
