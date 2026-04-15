@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { NominationBuilderPage } from "@/components/NominationBuilderPage";
+import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 
 export const metadata: Metadata = {
-  title: "Sestav nominaci | MS 2026",
+  title: "Sestav nominaci",
   description:
     "Vyber brankáře, obránce a útočníky, ulož si sestavu a sdílej ji s kamarády nebo na sociálních sítích.",
 };
 
 export default function SestavaPage() {
-  return <NominationBuilderPage />;
+  return (
+    <Suspense fallback={<AppLoadingScreen message="Načítám editor…" />}>
+      <NominationBuilderPage />
+    </Suspense>
+  );
 }

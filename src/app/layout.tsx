@@ -5,10 +5,15 @@ import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
-    default: "MS 2026 | Nominace",
-    template: "%s | MS 2026",
+    default: "LineUp",
+    template: "%s | LineUp",
   },
-  description: "Sestav si nominaci české reprezentace na MS v hokeji 2026.",
+  description:
+    "LineUp — sestav si svou nominaci na MS v hokeji. Fanouškovský editor sestavy, soutěž a sdílení.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

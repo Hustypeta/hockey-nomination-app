@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
   DndContext,
@@ -21,7 +22,7 @@ import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
-import { lineupToPlayers, isLineupComplete } from "@/lib/lineupUtils";
+import { lineupToPlayers, isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
 import { useContestStats } from "@/hooks/useContestStats";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 import {
@@ -36,6 +37,8 @@ import type { LineupStructure } from "@/types";
 import { EMPTY_LINEUP, TOTAL_PLAYERS } from "@/types";
 
 export function NominationBuilderPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { status: authStatus } = useSession();
   const isAuthenticated = authStatus === "authenticated";
   const [players, setPlayers] = useState<Player[]>([]);
@@ -63,6 +66,8 @@ export function NominationBuilderPage() {
   const [contestSubmitted, setContestSubmitted] = useState(false);
   const [contestConfirmOpen, setContestConfirmOpen] = useState(false);
   const [submitContestBusy, setSubmitContestBusy] = useState(false);
+  /** Načteno z /sestava?nominace=… — uložení provede PUT místo nového POST. */
+  const [editingNominationId, setEditingNominationId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -104,6 +109,37 @@ export function NominationBuilderPage() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    const raw = searchParams.get("nominace") ?? searchParams.get("nomination");
+    if (!raw?.trim()) return;
+    const id = raw.trim();
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/nominations/${id}`);
+        if (!res.ok) throw new Error("fetch");
+        const data: {
+          lineupStructure?: unknown;
+          captainId?: string | null;
+        } = await res.json();
+        if (cancelled) return;
+        const ls = data.lineupStructure;
+        if (ls && typeof ls === "object") {
+          setLineup(normalizeLineupStructure(ls as LineupStructure));
+          setCaptainId(typeof data.captainId === "string" ? data.captainId : null);
+          setEditingNominationId(id);
+          toast.success("Nominace načtena do editoru.");
+        }
+        router.replace("/sestava", { scroll: false });
+      } catch {
+        if (!cancelled) toast.error("Nominaci se nepodařilo načíst.");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams, router]);
 
   useEffect(() => {
     if (authStatus !== "authenticated") {
@@ -272,6 +308,7 @@ export function NominationBuilderPage() {
     setLineup(next);
     setCaptainId(null);
     setSelectedSlot(null);
+    setEditingNominationId(null);
     toast.success("Náhodná nominace je hotová — uprav si ji, jak chceš.");
   }, [players]);
 
@@ -279,6 +316,7 @@ export function NominationBuilderPage() {
     setLineup(EMPTY_LINEUP);
     setCaptainId(null);
     setSelectedSlot(null);
+    setEditingNominationId(null);
     toast.message("Sestava byla resetována.");
   }, []);
 
@@ -287,22 +325,28 @@ export function NominationBuilderPage() {
     if (authStatus !== "authenticated") return null;
     setSaving(true);
     try {
-      const res = await fetch("/api/nominations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          selectedPlayerIds: selectedPlayers.map((p) => p.id),
-          captainId,
-          lineupStructure: lineup,
-          ...(opts && "title" in opts ? { title: opts.title } : {}),
-        }),
-      });
+      const updating = !!editingNominationId;
+      const res = await fetch(
+        updating ? `/api/nominations/${editingNominationId}` : "/api/nominations",
+        {
+          method: updating ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            selectedPlayerIds: selectedPlayers.map((p) => p.id),
+            captainId,
+            lineupStructure: lineup,
+            ...(opts && "title" in opts ? { title: opts.title } : {}),
+          }),
+        }
+      );
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.error || "Chyba při ukládání");
         return null;
       }
-      toast.success("Nominace uložena u účtu jako koncept.");
+      toast.success(
+        updating ? "Změny uloženy." : "Nominace uložena u účtu jako koncept."
+      );
       return data.id ?? null;
     } catch {
       toast.error("Chyba při ukládání — zkus to znovu.");
@@ -311,7 +355,7 @@ export function NominationBuilderPage() {
       setSaving(false);
     }
   },
-  [authStatus, selectedPlayers, captainId, lineup]);
+  [authStatus, selectedPlayers, captainId, lineup, editingNominationId]);
 
   const handleSubmitToContest = useCallback(async () => {
     if (authStatus !== "authenticated" || !isComplete || contestSubmitted) return;

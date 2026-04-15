@@ -1,8 +1,9 @@
 "use client";
 
-import { forwardRef, type ReactNode } from "react";
-import type { Player } from "@/types";
-import type { LineupStructure, ForwardLine, DefensePair } from "@/types";
+import { forwardRef, useMemo, type ReactNode } from "react";
+import { SITE_BRAND } from "@/lib/siteBranding";
+import type { Player, LineupStructure, ForwardLine, DefensePair } from "@/types";
+import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { LineupJerseyCard } from "@/components/sestava/LineupJerseyCard";
 
 interface NominationPosterProps {
@@ -153,8 +154,12 @@ function PosterLineBlock({
 
 export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps>(
   function NominationPoster({ players, captainId, lineup, assistantIds = [] }, ref) {
+    const displayLineup = useMemo(
+      () => (lineup ? normalizeLineupStructure(lineup) : null),
+      [lineup]
+    );
     const getPlayer = (id: string) => players.find((p) => p.id === id);
-    const aids = assistantIds.length ? assistantIds : (lineup?.assistantIds ?? []);
+    const aids = assistantIds.length ? assistantIds : (displayLineup?.assistantIds ?? []);
 
     return (
       <div
@@ -188,11 +193,11 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
           </header>
 
           <div className="nomination-poster-panel rounded-xl p-2.5 sm:p-3">
-            {lineup ? (
+            {displayLineup ? (
               <div className="space-y-3">
                 <PosterSection title="Brankáři">
                   <div className="flex flex-wrap justify-center gap-2">
-                    {lineup.goalies.map((gid, i) => {
+                    {displayLineup.goalies.map((gid, i) => {
                       const p = gid ? getPlayer(gid) : null;
                       if (!p) return null;
                       return (
@@ -213,16 +218,16 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                   <div className="grid grid-cols-2 gap-x-2 gap-y-3">
                     <PosterLineBlock
                       label="1. lajna"
-                      line={lineup.forwardLines[0]}
-                      pair={lineup.defensePairs[0]}
+                      line={displayLineup.forwardLines[0]}
+                      pair={displayLineup.defensePairs[0]}
                       captainId={captainId}
                       assistantIds={aids}
                       getPlayer={getPlayer}
                     />
                     <PosterLineBlock
                       label="2. lajna"
-                      line={lineup.forwardLines[1]}
-                      pair={lineup.defensePairs[1]}
+                      line={displayLineup.forwardLines[1]}
+                      pair={displayLineup.defensePairs[1]}
                       captainId={captainId}
                       assistantIds={aids}
                       getPlayer={getPlayer}
@@ -231,8 +236,8 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                   <div className="mt-3 grid grid-cols-2 gap-x-2 border-t border-white/[0.08] pt-3">
                     <PosterLineBlock
                       label="3. lajna"
-                      line={lineup.forwardLines[2]}
-                      pair={lineup.defensePairs[2]}
+                      line={displayLineup.forwardLines[2]}
+                      pair={displayLineup.defensePairs[2]}
                       captainId={captainId}
                       assistantIds={aids}
                       getPlayer={getPlayer}
@@ -240,8 +245,8 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                     <div className="flex flex-col items-center gap-2 border-l border-white/[0.08] pl-2">
                       <PosterLineBlock
                         label="4. lajna"
-                        line={lineup.forwardLines[3]}
-                        pair={lineup.defensePairs[3]}
+                        line={displayLineup.forwardLines[3]}
+                        pair={displayLineup.defensePairs[3]}
                         captainId={captainId}
                         assistantIds={aids}
                         getPlayer={getPlayer}
@@ -251,7 +256,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                           Náhradníci
                         </p>
                         <div className="flex flex-wrap justify-center gap-1">
-                          {lineup.extraForwards.map((id, i) => {
+                          {displayLineup.extraForwards.map((id, i) => {
                             if (!id) return null;
                             const p = getPlayer(id);
                             return p ? (
@@ -265,7 +270,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                               />
                             ) : null;
                           })}
-                          {lineup.extraDefensemen.map((id) => {
+                          {displayLineup.extraDefensemen.map((id) => {
                             const p = getPlayer(id);
                             return p ? (
                               <PosterPlayerCard
@@ -305,7 +310,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
           <footer className="mt-3 border-t border-white/[0.06] pt-3 text-center">
             <p className="text-[10px] text-white/50">
               Sestaveno na{" "}
-              <span className="font-display text-[#c8102e] tracking-wide">hockey-nomination.cz</span>
+              <span className="font-display text-[#c8102e] tracking-wide">{SITE_BRAND}</span>
             </p>
           </footer>
         </div>

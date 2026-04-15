@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
+import { SITE_BRAND, SITE_TAGLINE } from "@/lib/siteBranding";
 
 const NAV = [
   { href: "/", label: "Úvod" },
@@ -31,8 +33,27 @@ export function SiteHeader() {
     <header className="relative z-20 border-b border-white/[0.12] bg-gradient-to-r from-[#060a14]/96 via-[#0c1428]/94 to-[#060a14]/96 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4">
         <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 sm:justify-start">
-          <Link href="/" className="shrink-0 font-display text-lg tracking-[0.08em] sm:text-xl" aria-label="MS 2026 — úvod">
-            MS <span className="text-[#c8102e]">2026</span>
+          <Link
+            href="/"
+            className="group/logo flex min-w-0 max-w-[min(100%,20rem)] shrink-0 items-center gap-2.5 sm:max-w-md sm:gap-3"
+            aria-label={`${SITE_BRAND} — ${SITE_TAGLINE}`}
+          >
+            <Image
+              src="/logo.png"
+              alt=""
+              width={160}
+              height={48}
+              className="h-9 w-auto max-h-10 object-contain object-left sm:h-10"
+              priority
+            />
+            <div className="flex min-w-0 flex-col gap-0.5">
+              <span className="font-display text-lg leading-none tracking-[0.06em] text-white sm:text-xl">
+                {SITE_BRAND}
+              </span>
+              <span className="line-clamp-2 text-[10px] font-medium leading-snug text-white/55 sm:text-[11px] sm:leading-tight">
+                {SITE_TAGLINE}
+              </span>
+            </div>
           </Link>
           <nav
             className="flex max-w-full flex-1 flex-wrap items-center justify-end gap-1 sm:ml-4 sm:justify-start sm:gap-1.5"

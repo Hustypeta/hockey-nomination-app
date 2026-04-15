@@ -1,23 +1,82 @@
+import type { CSSProperties } from "react";
+
 /**
- * Společná škálování příjmení na zadní straně dresu — čím delší text, tím menší písmo
- * a užší mezery, aby zůstal uvnitř „nášivky“.
+ * Odhad „šířky“ příjmení v jedné řádce (délka + širší znaky / diakritika).
  */
-export function jerseyNameplateExtraClasses(lastName: string): string {
-  const n = lastName.trim().length;
-  if (n <= 5) return "max-w-[92%]";
-  if (n <= 7) return "max-w-[93%] !text-[10px] sm:!text-[11px] !leading-[1.05] !tracking-[0.1em]";
-  if (n <= 9) return "max-w-[94%] !text-[9px] sm:!text-[10px] !leading-[1.05] !tracking-[0.085em]";
-  if (n <= 11) return "max-w-[95%] !text-[8px] sm:!text-[9px] !leading-[1.08] !tracking-[0.07em]";
-  if (n <= 13) return "max-w-[96%] !text-[7.5px] sm:!text-[8.5px] !leading-[1.08] !tracking-[0.06em] line-clamp-2";
-  if (n <= 16)
-    return "max-w-[98%] !text-[7px] sm:!text-[8px] !leading-[1.08] !tracking-[0.055em] line-clamp-2 break-words";
-  return "max-w-[98%] !text-[6.5px] sm:!text-[7.5px] !leading-[1.06] !tracking-[0.045em] line-clamp-2 break-words hyphens-auto";
+export function nameplateWidthScore(lastName: string): number {
+  let score = 0;
+  for (const ch of lastName.trim()) {
+    const c = ch.toUpperCase();
+    if ("MWŽŠČŘÝÁÍÉÚŮĎŤŇÓÖÄÜ".includes(c)) score += 1.38;
+    else if (c === " ") score += 0.35;
+    else score += 1;
+  }
+  return score;
 }
 
-/** Menší číslo při extrémně dlouhém příjmení, aby se nepřekrývalo s okrajem. */
-export function jerseyNumberExtraClasses(lastName: string): string {
-  const n = lastName.trim().length;
-  if (n <= 11) return "";
-  if (n <= 14) return " !text-[26px] sm:!text-[28px]";
-  return " !text-[24px] sm:!text-[26px]";
+function clamp(n: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, n));
+}
+
+/**
+ * Jméno na dresu — plynulé zmenšení písma a stažení mezer podle skóre (editor i export).
+ * `premium` = širší slot v hlavním editoru (128px), o něco větší rozsah písma.
+ */
+export function jerseyNameplateNameProps(
+  lastName: string,
+  variant: "card" | "premium" = "card"
+): {
+  className: string;
+  style: CSSProperties;
+} {
+  const s = lastName.trim();
+  if (!s) {
+    return { className: "jersey-nameplate-text text-center leading-tight", style: {} };
+  }
+
+  const score = nameplateWidthScore(s);
+  const scale = variant === "premium" ? 1.09 : 1;
+  const minFs = 5.45 * scale;
+  const maxFs = 11.05 * scale;
+  const low = 3.4;
+  const high = 18.2;
+  const t = clamp((score - low) / (high - low), 0, 1);
+
+  const fontSize = maxFs - t * (maxFs - minFs);
+  const letterSpacing = 0.108 - t * 0.078;
+  const lineHeight = 1.03 + t * 0.065;
+
+  const maxWClass = score <= 6 ? "max-w-[90%]" : score <= 11.5 ? "max-w-[92%]" : "max-w-[94%]";
+
+  return {
+    className: `jersey-nameplate-text text-center leading-tight ${maxWClass} [overflow-wrap:anywhere]`,
+    style: {
+      fontSize: `${Math.round(fontSize * 100) / 100}px`,
+      letterSpacing: `${Math.round(letterSpacing * 1000) / 1000}em`,
+      lineHeight,
+    },
+  };
+}
+
+/**
+ * Číslo na dresu — mírně zmenšit při dlouhém příjmení, aby sedělo s potiskem.
+ * `premium` = větší sloty v hlavním editoru (PremiumJerseySlotCard).
+ */
+export function jerseyNumberStyle(
+  lastName: string,
+  variant: "card" | "premium" = "card"
+): CSSProperties {
+  const score = nameplateWidthScore(lastName.trim());
+  if (variant === "premium") {
+    if (score <= 8.5) return {};
+    const t = clamp((score - 8.5) / 11, 0, 1);
+    const maxPx = 36;
+    const minPx = 25;
+    return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
+  }
+  if (score <= 9.5) return {};
+  const t = clamp((score - 9.5) / 10, 0, 1);
+  const maxPx = 28;
+  const minPx = 19;
+  return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
 }

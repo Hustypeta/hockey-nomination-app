@@ -1,7 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
-import { jerseyNameplateExtraClasses, jerseyNumberExtraClasses } from "@/lib/jerseyNameplate";
+import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 
@@ -15,9 +15,7 @@ export type PremiumJerseySize = "compact" | "skater" | "goalie";
 /** Jedna šířka a typografie pro všechny sloty (útok, obrana, G, náhradníci). Rozdíl jen `kind` u obrázku. */
 const PREMIUM_SLOT_UNIFIED = {
   root: "w-[128px]",
-  pos: "left-[8%] top-[5%] z-20 flex h-6 w-6 items-center justify-center rounded-md bg-[#c8102e] font-sans text-[9px] font-bold leading-none text-white shadow-[0_2px_8px_rgba(0,0,0,0.4)]",
-  num: "jersey-back-number-text text-[32px] sm:text-[36px]",
-  name: "jersey-nameplate-text max-w-[90%] break-words text-center text-[10.5px] leading-tight line-clamp-2 sm:text-[11.5px]",
+  num: "jersey-back-number-text mt-px max-w-[92%] text-center text-[32px] sm:text-[36px]",
   emptyName:
     "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
   emptyNum:
@@ -77,6 +75,8 @@ export function PremiumJerseySlotCard({
   /** Prázdný slot bez výběru — výrazně vybledlý oproti vybranému / obsazenému. */
   const emptyUnfocused = empty && !isSelected;
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
+  const ln = !empty ? lastName(player.name) : "";
+  const namePlate = !empty ? jerseyNameplateNameProps(ln, "premium") : null;
   const emptyCenterLabel = (emptyPlaceholder ?? positionLabel).trim() || "?";
   const showClear = !empty && typeof onClear === "function";
 
@@ -128,8 +128,17 @@ export function PremiumJerseySlotCard({
           `}
         />
 
-        <div className={`absolute ${sz.pos} ${emptyUnfocused ? "opacity-50 saturate-[0.55]" : ""}`}>
-          {positionLabel}
+        <div
+          className={`absolute left-1/2 top-[2.5%] z-20 -translate-x-1/2 ${emptyUnfocused ? "opacity-50 saturate-[0.55]" : ""}`}
+        >
+          <span
+            className={`
+              rounded border border-[#003087]/40 bg-[#0a0508]/95 px-2 py-0.5 font-display text-[9px] font-bold uppercase
+              tracking-[0.14em] text-white/90 shadow-[0_0_12px_rgba(0,0,0,0.85)]
+            `}
+          >
+            {positionLabel}
+          </span>
         </div>
 
         {isCaptain && !empty && (
@@ -163,18 +172,18 @@ export function PremiumJerseySlotCard({
         <div
           className={`
             pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1.5
-            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start pt-[31%]"}
+            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start px-1.5 pt-[27%]"}
           `}
         >
           {!empty ? (
             <>
-              <span className={`${sz.name} ${jerseyNameplateExtraClasses(lastName(player.name))}`}>
-                {lastName(player.name)}
-              </span>
+              {namePlate ? (
+                <span className={namePlate.className} style={namePlate.style}>
+                  {ln}
+                </span>
+              ) : null}
               {numStr ? (
-                <span
-                  className={`${sz.num} mt-px max-w-[92%] text-center${jerseyNumberExtraClasses(lastName(player.name))}`}
-                >
+                <span className={sz.num} style={jerseyNumberStyle(ln, "premium")}>
                   {numStr}
                 </span>
               ) : null}

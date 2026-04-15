@@ -3,6 +3,7 @@
 import { forwardRef } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
+import { SITE_BRAND } from "@/lib/siteBranding";
 
 interface RosterSheetProps {
   players: Player[];
@@ -181,9 +182,7 @@ export const RosterSheet = forwardRef<HTMLDivElement, RosterSheetProps>(
         </div>
       )}
 
-      <p className="text-center text-xs text-gray-500 mt-6">
-        hockey-nomination.cz
-      </p>
+      <p className="text-center text-xs text-gray-500 mt-6">{SITE_BRAND}</p>
     </div>
   );
 });

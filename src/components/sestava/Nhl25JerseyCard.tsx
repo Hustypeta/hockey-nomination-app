@@ -1,7 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
-import { jerseyNameplateExtraClasses, jerseyNumberExtraClasses } from "@/lib/jerseyNameplate";
+import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 
@@ -12,11 +12,11 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
-/** Jednotná velikost karty — útok, obrana, G, náhradníci (export / share). */
+/** Jednotná velikost karty — útok, obrana, G, náhradníci (export / share). Jméno řeší `jerseyNameplateNameProps`. */
 const NHL25_CARD_UNIFIED = {
   width: "max-w-[8rem] sm:max-w-[8.5rem] lg:max-w-[9rem]",
-  number: "jersey-back-number-text text-[1.6rem] sm:text-[1.8rem] lg:text-[1.95rem]",
-  name: "jersey-nameplate-text max-w-[90%] text-center text-[10.5px] sm:text-[11.5px] lg:text-[12.5px]",
+  number:
+    "jersey-back-number-text text-[1.5rem] sm:text-[1.7rem] lg:text-[1.85rem] max-w-[92%] text-center",
 } as const;
 
 const widthClass: Record<Nhl25JerseySize, string> = {
@@ -31,17 +31,11 @@ const numberClass: Record<Nhl25JerseySize, string> = {
   goalie: NHL25_CARD_UNIFIED.number,
 };
 
-const nameClass: Record<Nhl25JerseySize, string> = {
-  compact: NHL25_CARD_UNIFIED.name,
-  skater: NHL25_CARD_UNIFIED.name,
-  goalie: NHL25_CARD_UNIFIED.name,
-};
-
-/** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` (fotopodklad zadní strany). */
+/** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
-  compact: "justify-start pt-[31%]",
-  skater: "justify-start pt-[31%]",
-  goalie: "justify-start pt-[31%]",
+  compact: "justify-start px-2 pt-[26%]",
+  skater: "justify-start px-2 pt-[26%]",
+  goalie: "justify-start px-2 pt-[26%]",
 };
 
 export interface Nhl25JerseyCardProps {
@@ -72,7 +66,8 @@ export function Nhl25JerseyCard({
   const w = widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = numberClass[size];
-  const nmCls = nameClass[size];
+  const ln = !empty ? lastName(player.name) : "";
+  const namePlate = !empty ? jerseyNameplateNameProps(ln) : null;
 
   const motionCls = disableMotion
     ? ""
@@ -117,18 +112,19 @@ export function Nhl25JerseyCard({
         </span>
       )}
 
-      <div className="nhl25-jersey-card-frame nhl25-jersey-card-frame--filled relative rounded-[11px] p-[6px]">
-        <div
-          className={`
-            absolute left-2 top-2 z-20 rounded border border-[#11457e]/35 bg-[#11457e] px-1.5 py-0.5
-            font-display text-[11px] font-bold tracking-wide text-white shadow-sm
-            sm:text-[12px]
-          `}
-        >
-          {positionLabel}
+      <div className="nhl25-jersey-card-frame nhl25-jersey-card-frame--filled flex flex-col gap-1 rounded-[11px] p-[5px]">
+        <div className="flex min-h-[1rem] shrink-0 items-center justify-center px-0.5">
+          <span
+            className={`
+              rounded border border-[#11457e]/45 bg-[#11457e] px-2 py-0.5 font-display text-[10px] font-bold
+              uppercase tracking-[0.14em] text-white shadow-sm
+            `}
+          >
+            {positionLabel}
+          </span>
         </div>
 
-        <div className="relative overflow-hidden rounded-[8px] bg-black shadow-inner">
+        <div className="relative w-full overflow-hidden rounded-[8px] bg-black shadow-inner">
           <div
             className={`relative aspect-[100/120] w-full bg-black ${empty ? "ring-1 ring-inset ring-white/12" : ""}`}
           >
@@ -150,13 +146,15 @@ export function Nhl25JerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
               >
-                <span
-                  className={`text-center leading-tight ${jerseyNameplateExtraClasses(lastName(player.name))} ${nmCls}`}
-                >
-                  {lastName(player.name)}
-                </span>
+                {namePlate ? (
+                  <span className={namePlate.className} style={namePlate.style}>
+                    {ln}
+                  </span>
+                ) : null}
                 {numStr ? (
-                  <span className={`mt-px ${numCls}${jerseyNumberExtraClasses(lastName(player.name))}`}>{numStr}</span>
+                  <span className={`mt-px ${numCls}`} style={jerseyNumberStyle(ln, "card")}>
+                    {numStr}
+                  </span>
                 ) : null}
               </div>
             ) : (

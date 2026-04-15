@@ -1,7 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
-import { jerseyNameplateExtraClasses, jerseyNumberExtraClasses } from "@/lib/jerseyNameplate";
+import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 
@@ -12,31 +12,17 @@ function lastName(name: string) {
   return parts[parts.length - 1] || name;
 }
 
-/** Jednotná šířka karty — hráči, brankáři i náhradníci. */
+/** Jednotná šířka karty — hráči, brankáři i náhradníci. Jméno řeší `jerseyNameplateNameProps`. */
 const LINEUP_CARD_UNIFIED = {
   width: "max-w-[7.1rem] sm:max-w-[7.1rem]",
-  name: "jersey-nameplate-text max-w-[90%] text-center text-[10.5px] sm:text-[11.5px]",
-  badge: "text-[10px] px-2 py-0.5",
-  number: "jersey-back-number-text text-[1.55rem] sm:text-[1.75rem]",
-  overlayTop: "justify-start pt-[31%]",
+  number: "jersey-back-number-text text-[1.55rem] sm:text-[1.75rem] max-w-[92%] text-center",
+  overlayTop: "justify-start px-2 pt-[26%]",
 } as const;
 
 const widthClass: Record<LineupJerseySize, string> = {
   compact: LINEUP_CARD_UNIFIED.width,
   skater: LINEUP_CARD_UNIFIED.width,
   goalie: LINEUP_CARD_UNIFIED.width,
-};
-
-const nameClass: Record<LineupJerseySize, string> = {
-  compact: LINEUP_CARD_UNIFIED.name,
-  skater: LINEUP_CARD_UNIFIED.name,
-  goalie: LINEUP_CARD_UNIFIED.name,
-};
-
-const badgeClass: Record<LineupJerseySize, string> = {
-  compact: LINEUP_CARD_UNIFIED.badge,
-  skater: LINEUP_CARD_UNIFIED.badge,
-  goalie: LINEUP_CARD_UNIFIED.badge,
 };
 
 const numberClass: Record<LineupJerseySize, string> = {
@@ -81,10 +67,10 @@ export function LineupJerseyCard({
   const showAssistant = isAssistant && !empty && !isCaptain;
   const w = widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
-  const nmCls = nameClass[size];
-  const bgCls = badgeClass[size];
   const numCls = numberClass[size];
   const topOverlay = overlayTopClass[size];
+  const ln = !empty ? lastName(player.name) : "";
+  const namePlate = !empty ? jerseyNameplateNameProps(ln) : null;
 
   const motionCls = disableMotion
     ? ""
@@ -130,12 +116,26 @@ export function LineupJerseyCard({
 
       <div
         className={`
-          relative rounded-[10px] border border-white/[0.12] bg-[#060a12] p-[5px]
+          flex flex-col gap-1 rounded-[10px] border border-white/[0.12] bg-[#060a12] p-[5px]
           shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_32px_rgba(0,0,0,0.55)]
           ${disableMotion ? "" : "transition-[box-shadow,transform] duration-300 ease-out"}
           ${hoverInner}
         `}
       >
+        <div className="flex min-h-[1rem] shrink-0 items-center justify-center px-0.5">
+          <span
+            className={`
+              relative rounded border border-[#003087]/40 bg-[#0a0508]/95 px-2 py-0.5 font-display text-[10px] font-bold
+              uppercase tracking-[0.18em] text-white/90 shadow-[0_0_12px_rgba(0,0,0,0.85)]
+              before:absolute before:inset-y-0 before:left-0 before:w-[2px] before:rounded-l before:bg-[#c8102e]
+              before:content-['']
+              ${emptyUnfocused ? "opacity-50" : ""}
+            `}
+          >
+            {positionLabel}
+          </span>
+        </div>
+
         <div className="relative overflow-hidden rounded-[8px]">
           <div
             className={`relative aspect-[100/120] w-full bg-black ${empty ? "ring-1 ring-inset ring-white/10" : ""}`}
@@ -154,31 +154,19 @@ export function LineupJerseyCard({
               `}
             />
 
-            <div
-              className={`
-                absolute left-1/2 top-[4%] z-20 -translate-x-1/2
-                rounded border border-[#003087]/40 bg-[#0a0508]/95 font-display font-bold uppercase tracking-[0.18em] text-white/90
-                shadow-[0_0_12px_rgba(0,0,0,0.85)]
-                ${bgCls}
-                before:absolute before:inset-y-0 before:left-0 before:w-[2px] before:rounded-l before:bg-[#c8102e]
-                before:content-['']
-                ${emptyUnfocused ? "opacity-50" : ""}
-              `}
-            >
-              {positionLabel}
-            </div>
-
             {!empty ? (
               <div
-                className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${topOverlay}`}
+                className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center ${topOverlay}`}
               >
-                <span
-                  className={`text-center leading-tight ${jerseyNameplateExtraClasses(lastName(player.name))} ${nmCls}`}
-                >
-                  {lastName(player.name)}
-                </span>
+                {namePlate ? (
+                  <span className={namePlate.className} style={namePlate.style}>
+                    {ln}
+                  </span>
+                ) : null}
                 {numStr ? (
-                  <span className={`mt-px ${numCls}${jerseyNumberExtraClasses(lastName(player.name))}`}>{numStr}</span>
+                  <span className={`mt-px ${numCls}`} style={jerseyNumberStyle(ln, "card")}>
+                    {numStr}
+                  </span>
                 ) : null}
                 {player.position === "F" && player.role ? (
                   <span

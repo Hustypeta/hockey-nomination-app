@@ -4,10 +4,10 @@ import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Sestav si nominaci na MS 2026 a vyhraj dres",
+    absolute: "LineUp — sestav si svou nominaci na MS v hokeji",
   },
   description:
-    "Sestav si nominaci na MS 2026 a vyhraj dres — časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.",
+    "LineUp — sestav si svou nominaci na MS v hokeji. Časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.",
 };
 
 export default function HomePage() {

@@ -1,8 +1,9 @@
 "use client";
 
-import { forwardRef, useLayoutEffect, useState } from "react";
+import { forwardRef, useLayoutEffect, useMemo, useState } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
+import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
 
 export interface Nhl25SharePosterProps {
@@ -28,9 +29,10 @@ const formatCsDate = (d: Date) =>
 
 export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps>(
   function Nhl25SharePoster(
-    { players, lineup, captainId, assistantIds = [], siteUrl = "", footerInstantIso = null },
+    { players, lineup: lineupProp, captainId, assistantIds = [], siteUrl = "", footerInstantIso = null },
     ref
   ) {
+    const lineup = useMemo(() => normalizeLineupStructure(lineupProp), [lineupProp]);
     const aids = assistantIds.length ? assistantIds : (lineup.assistantIds ?? []);
     const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) ?? null : null);
 
@@ -43,6 +45,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
 
     const host = siteUrl.replace(/^https?:\/\//, "");
     const extraD = lineup.extraDefensemen[0] ?? null;
+    const seventhDefenseId = lineup.defensePairs[3].lb ?? lineup.extraDefensemen[0] ?? null;
 
     return (
       <div
@@ -77,7 +80,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       key={`g-${i}`}
                       player={getPlayer(gid)}
                       positionLabel="G"
-                      size="goalie"
+                      size="compact"
                       isCaptain={gid ? captainId === gid : false}
                       isAssistant={gid ? aids.includes(gid) : false}
                       disableMotion
@@ -173,15 +176,11 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       7. bek
                     </p>
                     <Nhl25JerseyCard
-                      player={getPlayer(lineup.defensePairs[3].lb)}
+                      player={getPlayer(seventhDefenseId)}
                       positionLabel="D"
                       size="compact"
-                      isCaptain={
-                        lineup.defensePairs[3].lb ? captainId === lineup.defensePairs[3].lb : false
-                      }
-                      isAssistant={
-                        lineup.defensePairs[3].lb ? aids.includes(lineup.defensePairs[3].lb) : false
-                      }
+                      isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
+                      isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
                       disableMotion
                     />
                   </div>

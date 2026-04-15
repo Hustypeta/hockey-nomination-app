@@ -1,6 +1,6 @@
-# MS 2026 Editor sestavy nominace
+# LineUp — editor sestavy nominace (MS 2026)
 
-MVP aplikace pro hokejové fanoušky – sestav si svou nominaci na Mistrovství světa 2026.
+MVP aplikace **LineUp** pro hokejové fanoušky – sestav si svou nominaci na Mistrovství světa 2026.
 
 ## Tech stack
 

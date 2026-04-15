@@ -1,5 +1,7 @@
 "use client";
 
+import { SITE_BRAND } from "@/lib/siteBranding";
+
 const DEFAULT_INTRO =
   "Staň se na chvíli trenérem národního týmu České hokejové reprezentace. Sestav si svojí vlastní nominaci a soutěž o zajímavé ceny.";
 
@@ -41,10 +43,8 @@ export function AppLoadingScreen({
               ČR
             </span>
           </div>
-          <h1 className="font-display text-3xl tracking-[0.12em] text-white md:text-4xl">
-            MS 2026
-          </h1>
-          <p className="mt-1 font-display text-sm text-[#c41e3a]/90">Nominace</p>
+          <h1 className="font-display text-3xl tracking-[0.14em] text-white md:text-4xl">{SITE_BRAND}</h1>
+          <p className="mt-1 font-display text-sm tracking-[0.18em] text-[#c41e3a]/90">MS 2026 · nominace</p>
           {introText ? (
             <p className="mt-6 text-center text-sm leading-relaxed text-white/80 sm:text-[15px]">
               {introText}

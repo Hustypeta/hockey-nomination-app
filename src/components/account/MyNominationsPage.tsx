@@ -243,10 +243,7 @@ export function MyNominationsPage() {
                   </div>
                 ) : (
                   <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-stretch sm:gap-4 sm:p-4">
-                    <Link
-                      href={`/nominations/${n.id}`}
-                      className="group flex min-w-0 flex-1 gap-4 rounded-lg outline-none ring-offset-2 ring-offset-[#0a1428] transition hover:bg-white/[0.03] focus-visible:ring-2 focus-visible:ring-[#c8102e]/50"
-                    >
+                    <div className="group flex min-w-0 flex-1 gap-4 rounded-lg">
                       {lineup && players.length > 0 ? (
                         <PosterThumb
                           players={players}
@@ -258,7 +255,7 @@ export function MyNominationsPage() {
                         <div className="h-[100px] w-[180px] shrink-0 rounded-xl border border-white/10 bg-[#0f172a]/90" />
                       )}
                       <div className="min-w-0 flex-1 py-0.5">
-                        <p className="text-base font-semibold text-white group-hover:text-[#f1c40f]">
+                        <p className="text-base font-semibold text-white">
                           {n.title?.trim() || "Nominace bez názvu"}
                         </p>
                         <p className="mt-1 text-xs text-slate-400">{formatNominationWhen(n.createdAt)}</p>
@@ -278,8 +275,20 @@ export function MyNominationsPage() {
                         ) : null}
                         <p className="mt-2 font-mono text-[10px] text-slate-600">{n.id}</p>
                       </div>
-                    </Link>
-                    <div className="flex shrink-0 flex-row items-center gap-2 sm:flex-col sm:items-end sm:justify-center">
+                    </div>
+                    <div className="flex shrink-0 flex-row flex-wrap items-center justify-end gap-2 sm:flex-col sm:items-end sm:justify-center">
+                      <Link
+                        href={`/sestava?nominace=${encodeURIComponent(n.id)}`}
+                        className="inline-flex items-center justify-center rounded-lg bg-[#003087] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0040a8]"
+                      >
+                        Upravit v editoru
+                      </Link>
+                      <Link
+                        href={`/nominations/${n.id}`}
+                        className="inline-flex items-center justify-center rounded-lg border border-white/15 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-[#f1c40f]/35 hover:text-white"
+                      >
+                        Veřejný náhled
+                      </Link>
                       <button
                         type="button"
                         onClick={() => {
@@ -291,12 +300,6 @@ export function MyNominationsPage() {
                         <Pencil className="h-3.5 w-3.5" aria-hidden />
                         Přejmenovat
                       </button>
-                      <Link
-                        href={`/nominations/${n.id}`}
-                        className="inline-flex items-center justify-center rounded-lg py-2 text-sm font-semibold text-[#f1c40f] hover:underline"
-                      >
-                        Otevřít →
-                      </Link>
                     </div>
                   </div>
                 )}

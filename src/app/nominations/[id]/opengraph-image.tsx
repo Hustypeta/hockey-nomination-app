@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { prisma } from "@/lib/prisma";
 import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
+import { SITE_BRAND } from "@/lib/siteBranding";
 
 export const alt = "MS 2026 – Má nominace";
 export const size = { width: 1200, height: 630 };
@@ -139,7 +140,7 @@ export default async function Image({
             color: "rgba(255,255,255,0.5)",
           }}
         >
-          Sestav si vlastní na hockey-nomination.cz
+          {`Sestav si vlastní na ${SITE_BRAND}`}
         </div>
       </div>
     ),
