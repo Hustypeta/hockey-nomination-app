@@ -17,9 +17,9 @@ export type PremiumJerseySize = "compact" | "skater" | "goalie";
 const PREMIUM_SLOT_UNIFIED = {
   root: "w-[92px] min-[380px]:w-[100px] sm:w-[112px] lg:w-[128px]",
   emptyName:
-    "select-none font-jersey-print text-[9px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 min-[380px]:text-[10px] sm:text-[12px]",
+    "select-none font-jersey-print text-[9px] font-semibold uppercase leading-tight tracking-[0.14em] text-[#002d54]/28 min-[380px]:text-[10px] sm:text-[12px]",
   emptyNum:
-    "select-none font-jersey-print mt-1 text-[20px] font-bold leading-none tabular-nums text-white/25 min-[380px]:text-[22px] sm:text-[26px] lg:text-[30px]",
+    "select-none font-jersey-print mt-1 text-[20px] font-bold leading-none tabular-nums text-white/22 [-webkit-text-stroke:1px_rgba(0,45,84,0.22)] min-[380px]:text-[22px] sm:text-[26px] lg:text-[30px]",
   capUnderNum:
     "mt-2 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white sm:h-6 sm:w-6 sm:text-[11px]",
   asstUnderNum:
@@ -199,7 +199,7 @@ export function PremiumJerseySlotCard({
               ) : null}
               {numStr ? (
                 <span
-                  className={`mt-2 max-w-[92%] text-center text-[17px] min-[380px]:text-[19px] sm:text-[22px] lg:text-[24px] xl:text-[26px] jersey-back-number-text ${lightRinkSurface ? "jersey-back-number-text--on-light-ice" : "jersey-back-number-text--woven"}`}
+                  className={`mt-1.5 max-w-[92%] text-center text-[18px] min-[380px]:text-[20px] sm:text-[23px] lg:text-[26px] xl:text-[28px] jersey-back-number-text ${lightRinkSurface ? "jersey-back-number-text--on-light-ice" : "jersey-back-number-text--woven"}`}
                   style={jerseyNumberStyle(ln, "premium")}
                 >
                   {numStr}
