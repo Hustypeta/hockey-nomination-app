@@ -10,7 +10,7 @@ type JsonRow = {
   position: string;
   role: string;
   club: string;
-  /** Repre / jednorázově přidělené (viz `scripts/assign-jersey-numbers.mjs`). */
+  /** Repre / klub; u různých hráčů se čísla mohou opakovat. */
   jerseyNumber?: number | string;
 };
 

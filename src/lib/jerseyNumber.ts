@@ -1,5 +1,10 @@
 import type { Player } from "@/types";
 
+/**
+ * Čísla dresů v datech nejsou globálně unikátní — dva hráči mohou mít stejné číslo (např. repre vs. klub).
+ * Rozlišení je vždy přes `player.id` / jméno.
+ */
+
 /** Jen pro případné jiné použití (testy, starý kód). Dres v sestavě číslo bez repre neukazuje. */
 export function pseudoJerseyNumberFromId(playerId: string): string {
   let h = 0;
