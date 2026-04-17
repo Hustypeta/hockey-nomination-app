@@ -234,6 +234,7 @@ export function LineBuilder({
               isSelected={selected}
               isDragOver={isDragOver}
               onClear={onClear}
+              lightRinkSurface
             />
           ) : (
             <LineupJerseyCard
@@ -518,7 +519,7 @@ export function LineBuilder({
   if (nhl) {
     return (
       <div className="nhl25-lineup-root min-w-0 w-full space-y-2.5 sm:space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-white px-3 py-2 shadow-sm">
+        <div className="squad-ice-builder-inner flex flex-wrap items-center justify-between gap-2 rounded-lg px-3 py-2 shadow-sm">
           <div className="min-w-0">
             <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-500">Česká republika</p>
             <p className="truncate font-display text-lg font-bold tracking-[0.08em] text-slate-900 sm:text-xl">
@@ -527,7 +528,7 @@ export function LineBuilder({
           </div>
         </div>
 
-        <div className="space-y-2.5 rounded-xl border border-slate-200/80 bg-white/40 p-2.5 shadow-sm sm:space-y-3 sm:p-3.5">
+        <div className="squad-ice-builder-inner space-y-2.5 rounded-xl p-2.5 shadow-sm sm:space-y-3 sm:p-3.5">
           <p className="text-center font-display text-[9px] font-bold uppercase tracking-[0.26em] text-slate-500 sm:text-left">
             Základ (20 + 2)
           </p>
@@ -566,7 +567,7 @@ export function LineBuilder({
                 return (
                   <div
                     key={i}
-                    className="flex flex-col gap-1.5 rounded-lg border border-slate-200/70 bg-white/60 px-2 py-2 shadow-sm sm:flex-row sm:items-center sm:gap-3 sm:px-2.5"
+                    className="squad-ice-builder-inner flex flex-col gap-1.5 rounded-lg px-2 py-2 shadow-sm sm:flex-row sm:items-center sm:gap-3 sm:px-2.5"
                   >
                     <div className="shrink-0 font-display text-[15px] font-bold tracking-wide text-slate-800 sm:w-[4.75rem] sm:text-base">
                       {i + 1}. LAJNA
@@ -626,7 +627,7 @@ export function LineBuilder({
                         />
                       </div>
                       {i === 3 ? (
-                        <div className="rounded-md border border-dashed border-slate-300/90 bg-slate-50/90 px-2 py-1.5">
+                        <div className="squad-ice-builder-inner-dashed rounded-md px-2 py-1.5">
                           <p className="mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] text-slate-500">
                             13. útok (X)
                           </p>
@@ -710,7 +711,7 @@ export function LineBuilder({
                 </div>
               );
             })}
-            <div className="rounded-md border border-dashed border-slate-300/90 bg-slate-50/80 px-2 py-2">
+            <div className="squad-ice-builder-inner-dashed rounded-md px-2 py-2">
               <p className="mb-1.5 text-center font-display text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
                 7. bek
               </p>
@@ -744,7 +745,7 @@ export function LineBuilder({
           </p>
           <NhlSectionShell title="Mimo základ" kicker="G3 · F · D">
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-2.5">
-              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-1.5 shadow-sm sm:p-2">
+              <div className="squad-ice-builder-inner rounded-lg p-1.5 shadow-sm sm:p-2">
                 <p className="mb-1.5 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                   3. brankář
                 </p>
@@ -765,7 +766,7 @@ export function LineBuilder({
                   }
                 />
               </div>
-              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-1.5 shadow-sm sm:p-2">
+              <div className="squad-ice-builder-inner rounded-lg p-1.5 shadow-sm sm:p-2">
                 <p className="mb-1.5 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                   Náhr. F
                 </p>
@@ -786,7 +787,7 @@ export function LineBuilder({
                   }
                 />
               </div>
-              <div className="rounded-lg border border-slate-200/80 bg-white/70 p-1.5 shadow-sm sm:p-2">
+              <div className="squad-ice-builder-inner rounded-lg p-1.5 shadow-sm sm:p-2">
                 <p className="mb-1.5 text-center text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                   Náhr. D
                 </p>

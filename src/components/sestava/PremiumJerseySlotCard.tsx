@@ -16,7 +16,6 @@ export type PremiumJerseySize = "compact" | "skater" | "goalie";
 /** Jedna šířka a typografie pro všechny sloty (útok, obrana, G, náhradníci). Rozdíl jen `kind` u obrázku. */
 const PREMIUM_SLOT_UNIFIED = {
   root: "w-[92px] min-[380px]:w-[100px] sm:w-[112px] lg:w-[128px]",
-  num: "jersey-back-number-text jersey-back-number-text--woven mt-2 max-w-[92%] text-center text-[17px] min-[380px]:text-[19px] sm:text-[22px] lg:text-[24px] xl:text-[26px]",
   emptyName:
     "select-none font-jersey-print text-[9px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 min-[380px]:text-[10px] sm:text-[12px]",
   emptyNum:
@@ -53,6 +52,8 @@ export interface PremiumJerseySlotCardProps {
   className?: string;
   /** Vypne hover animace (např. export PNG). */
   disableMotion?: boolean;
+  /** NHL25 světlý panel — světlý led za dres místo tmavého `.squad-ice-fill`. */
+  lightRinkSurface?: boolean;
 }
 
 /**
@@ -71,8 +72,10 @@ export function PremiumJerseySlotCard({
   onClear,
   className = "",
   disableMotion = false,
+  lightRinkSurface = false,
 }: PremiumJerseySlotCardProps) {
   const sz = SIZE_STYLES[size];
+  const iceFill = lightRinkSurface ? "squad-ice-surface-light" : "squad-ice-fill";
   const showAssistant = isAssistant && !!player && !isCaptain;
   const empty = !player;
   /** Prázdný slot bez výběru — výrazně vybledlý oproti vybranému / obsazenému. */
@@ -96,7 +99,9 @@ export function PremiumJerseySlotCard({
 
   const hoverFx = disableMotion
     ? ""
-    : "hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_16px_4px_rgba(200,16,46,0.45),0_12px_28px_rgba(0,0,0,0.38)]";
+    : lightRinkSurface
+      ? "hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,100,130,0.18)]"
+      : "hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_16px_4px_rgba(200,16,46,0.45),0_12px_28px_rgba(0,0,0,0.38)]";
 
   return (
     <div
@@ -107,12 +112,16 @@ export function PremiumJerseySlotCard({
     >
       <div
         className={`
-          squad-ice-fill relative aspect-[100/120] w-full overflow-hidden rounded-[10px]
+          ${iceFill} relative aspect-[100/120] w-full overflow-hidden rounded-[10px]
           ${
             empty
               ? emptyUnfocused
-                ? "ring-1 ring-inset ring-white/[0.07]"
-                : "ring-1 ring-inset ring-white/18"
+                ? lightRinkSurface
+                  ? "ring-1 ring-inset ring-slate-300/50"
+                  : "ring-1 ring-inset ring-white/[0.07]"
+                : lightRinkSurface
+                  ? "ring-1 ring-inset ring-cyan-400/45"
+                  : "ring-1 ring-inset ring-white/18"
               : ""
           }
         `}
@@ -126,7 +135,7 @@ export function PremiumJerseySlotCard({
           decoding="async"
           data-jersey-kind={kind}
           className={`
-            ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_6px_18px_rgba(0,0,0,0.42)]
+            ${CZ_JERSEY_CARD_IMG_BASE} ${lightRinkSurface ? "drop-shadow-[0_4px_14px_rgba(15,60,80,0.2)]" : "drop-shadow-[0_6px_18px_rgba(0,0,0,0.42)]"}
             ${empty ? (emptyUnfocused ? "opacity-[0.36] saturate-[0.52] brightness-[0.88]" : "opacity-[0.78] saturate-[0.95]") : ""}
           `}
         />
@@ -136,8 +145,12 @@ export function PremiumJerseySlotCard({
         >
           <span
             className={`
-              inline-flex rounded-md border border-[#003087]/50 bg-[#0a0508]/95 px-2.5 py-1 font-display text-[10px] font-bold uppercase
-              tracking-[0.12em] text-white/95 shadow-[0_2px_10px_rgba(0,0,0,0.65)] min-[380px]:text-[11px] sm:px-3 sm:py-1.5 sm:text-xs
+              inline-flex rounded-md px-2.5 py-1 font-display text-[10px] font-bold uppercase tracking-[0.12em] min-[380px]:text-[11px] sm:px-3 sm:py-1.5 sm:text-xs
+              ${
+                lightRinkSurface
+                  ? "border border-cyan-800/25 bg-white/95 text-slate-800 shadow-[0_2px_8px_rgba(15,60,80,0.12)]"
+                  : "border border-[#003087]/50 bg-[#0a0508]/95 text-white/95 shadow-[0_2px_10px_rgba(0,0,0,0.65)]"
+              }
             `}
           >
             {positionLabel}
@@ -174,14 +187,21 @@ export function PremiumJerseySlotCard({
               {namePlate && namePlate.lines.length > 0 ? (
                 <div className="flex w-full max-w-full flex-col items-center gap-y-px">
                   {namePlate.lines.map((line, idx) => (
-                    <span key={idx} className={namePlate.className} style={namePlate.style}>
+                    <span
+                      key={idx}
+                      className={`${namePlate.className}${lightRinkSurface ? " jersey-nameplate-text--on-light-ice" : ""}`}
+                      style={namePlate.style}
+                    >
                       {line}
                     </span>
                   ))}
                 </div>
               ) : null}
               {numStr ? (
-                <span className={sz.num} style={jerseyNumberStyle(ln, "premium")}>
+                <span
+                  className={`mt-2 max-w-[92%] text-center text-[17px] min-[380px]:text-[19px] sm:text-[22px] lg:text-[24px] xl:text-[26px] jersey-back-number-text ${lightRinkSurface ? "jersey-back-number-text--on-light-ice" : "jersey-back-number-text--woven"}`}
+                  style={jerseyNumberStyle(ln, "premium")}
+                >
                   {numStr}
                 </span>
               ) : null}
@@ -198,8 +218,14 @@ export function PremiumJerseySlotCard({
             </>
           ) : (
             <span
-              className={`max-w-[96%] text-center font-display text-[clamp(0.95rem,4.8vw,1.5rem)] font-black uppercase leading-none tracking-[0.06em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] ${
-                emptyUnfocused ? "text-white/[0.2]" : "text-white/[0.52]"
+              className={`max-w-[96%] text-center font-display text-[clamp(0.95rem,4.8vw,1.5rem)] font-black uppercase leading-none tracking-[0.06em] ${
+                lightRinkSurface
+                  ? emptyUnfocused
+                    ? "text-slate-400/80 drop-shadow-none"
+                    : "text-slate-600 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]"
+                  : emptyUnfocused
+                    ? "text-white/[0.2] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]"
+                    : "text-white/[0.52] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]"
               }`}
               aria-hidden
             >

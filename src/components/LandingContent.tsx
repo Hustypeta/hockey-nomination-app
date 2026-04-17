@@ -81,7 +81,7 @@ export function LandingContent() {
                 MS 2026
               </span>{" "}
               a{" "}
-              <span className="bg-gradient-to-r from-[#f1c40f] via-[#fde047] to-[#f1c40f] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#bae6fd] via-[#7dd3fc] to-[#38bdf8] bg-clip-text text-transparent">
                 vyhraj dres
               </span>
             </h1>
@@ -95,9 +95,9 @@ export function LandingContent() {
               <div className="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row sm:justify-center">
                 <Link
                   href="/sestava"
-                  className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-[#c8102e]/50 bg-[#c8102e]/15 px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-[#f1c40f]/45 hover:bg-[#c8102e]/25"
+                  className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-[#c8102e]/50 bg-[#c8102e]/15 px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-[#00B4FF]/45 hover:bg-[#c8102e]/25"
                 >
-                  <Sparkles className="h-5 w-5 shrink-0 text-[#f1c40f]" aria-hidden />
+                  <Sparkles className="h-5 w-5 shrink-0 text-sky-300" aria-hidden />
                   Nová nominace
                 </Link>
                 <Link
@@ -114,13 +114,13 @@ export function LandingContent() {
             <div className="mx-auto mt-10 max-w-xl sm:mt-12">
               <Link
                 href="/sestava"
-                className="landing-cta-pulse group relative flex min-h-[4.25rem] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#e01e3c] to-[#9e0c24] px-6 py-5 text-center font-display text-xl font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(241,196,15,0.45),0_12px_56px_rgba(200,16,46,0.55),0_0_80px_rgba(200,16,46,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(241,196,15,0.6),0_16px_64px_rgba(200,16,46,0.65)] active:scale-[0.99] sm:min-h-[4.75rem] sm:text-2xl"
+                className="landing-cta-pulse group relative flex min-h-[4.25rem] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#e01e3c] to-[#9e0c24] px-6 py-5 text-center font-display text-xl font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(125,211,252,0.45),0_12px_56px_rgba(200,16,46,0.55),0_0_80px_rgba(200,16,46,0.35),0_0_48px_rgba(0,180,255,0.2)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(125,211,252,0.55),0_16px_64px_rgba(200,16,46,0.65),0_0_56px_rgba(0,180,255,0.28)] active:scale-[0.99] sm:min-h-[4.75rem] sm:text-2xl"
               >
                 <span
                   className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-60"
                   aria-hidden
                 />
-                <Sparkles className="relative h-7 w-7 shrink-0 text-[#f1c40f]" aria-hidden />
+                <Sparkles className="relative h-7 w-7 shrink-0 text-sky-200" aria-hidden />
                 <span className="relative">Sestavit nominaci</span>
                 <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
               </Link>
@@ -188,7 +188,7 @@ export function LandingContent() {
           <div className="mx-auto mt-12 max-w-2xl sm:mt-14">
             <div className="rounded-2xl border border-[#c8102e]/25 bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 p-5 shadow-[0_0_48px_rgba(200,16,46,0.15)] sm:p-6">
               <div className="flex items-center justify-center gap-2 text-white/90">
-                <Clock className="h-5 w-5 text-[#f1c40f]" aria-hidden />
+                <Clock className="h-5 w-5 text-sky-300" aria-hidden />
                 <span className="font-display text-sm font-bold uppercase tracking-[0.22em]">
                   Odpočet do šampionátu
                 </span>
@@ -208,7 +208,7 @@ export function LandingContent() {
                       className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4"
                     >
                       <div className="font-display text-3xl font-bold tabular-nums text-white sm:text-4xl">{x.v}</div>
-                      <div className="text-[10px] font-semibold uppercase tracking-wider text-[#f1c40f]/80">
+                      <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-300/85">
                         {x.l}
                       </div>
                     </div>
@@ -257,7 +257,7 @@ export function LandingContent() {
                 </p>
                 <Link
                   href="/pravidla-souteze"
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#f1c40f] transition hover:text-white"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-sky-300 transition hover:text-white"
                 >
                   <BookOpen className="h-4 w-4 shrink-0" aria-hidden />
                   Pravidla soutěže
@@ -301,7 +301,7 @@ export function LandingContent() {
           <div className="mx-auto mt-14 flex max-w-md flex-col items-center gap-4 sm:mt-16">
             <Link
               href="/sestava"
-              className="text-center text-sm font-semibold text-slate-400 underline-offset-4 transition hover:text-[#f1c40f] hover:underline"
+              className="text-center text-sm font-semibold text-slate-400 underline-offset-4 transition hover:text-sky-300 hover:underline"
             >
               Nebo přejít rovnou do editoru sestavy →
             </Link>

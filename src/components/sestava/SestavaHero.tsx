@@ -27,14 +27,7 @@ export function SestavaHero({
       <div className="relative mx-auto max-w-[90rem] px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6">
         {/* Řádek 1: logo, titulek, komunita, bonus, přihlášení */}
         <div className="flex flex-col gap-2 sm:gap-2.5 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-            <div className="relative flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl border border-white/15 bg-gradient-to-br from-[#c8102e] via-[#9e0c24] to-[#003087] shadow-[0_0_20px_rgba(200,16,46,0.3)] sm:h-12 sm:w-12">
-              <span className="font-display text-[0.5rem] font-bold uppercase tracking-[0.2em] text-white/85">
-                IIHF
-              </span>
-              <span className="font-display text-lg font-bold leading-none text-white">MS</span>
-              <span className="font-display text-[11px] font-bold leading-none text-[#f1c40f]">2026</span>
-            </div>
+          <div className="flex min-w-0 items-center">
             <div className="min-w-0 flex-1">
               <h1 className="font-sans text-xl font-bold leading-snug tracking-normal text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.75)] sm:text-2xl lg:text-[1.75rem]">
                 Editor nominace
@@ -86,7 +79,7 @@ export function SestavaHero({
               {filled}
               <span className="text-lg font-semibold text-white/35 sm:text-xl">/{TOTAL_PLAYERS}</span>
             </span>
-            <span className="rounded-full border border-[#f1c40f]/35 bg-[#f1c40f]/12 px-2 py-0.5 font-display text-xs font-bold tabular-nums text-[#f1c40f]">
+            <span className="rounded-full border border-sky-400/35 bg-sky-400/12 px-2 py-0.5 font-display text-xs font-bold tabular-nums text-sky-300">
               {pct}%
             </span>
           </div>

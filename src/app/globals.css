@@ -21,8 +21,8 @@
   --squad-ice-side-b: rgba(0, 50, 80, 0.3);
   --glow-red: rgba(200, 16, 46, 0.45);
   --glow-blue: rgba(0, 48, 135, 0.5);
-  --accent-gold: #f1c40f;
-  --accent-gold-soft: rgba(241, 196, 15, 0.22);
+  --accent-gold: #7dd3fc;
+  --accent-gold-soft: rgba(125, 211, 252, 0.28);
   --font-ui: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Bebas Neue", var(--font-ui);
   /** Potisk zadní strany dresu — úzké sportovní písmo, latin-ext (sdílení / export). */
@@ -178,6 +178,42 @@ body {
     radial-gradient(ellipse 100% 90% at 50% -20%, rgba(255, 255, 255, 0.75), transparent 52%),
     radial-gradient(ellipse 85% 70% at 100% 100%, rgba(0, 120, 150, 0.07), transparent 48%),
     linear-gradient(180deg, #f2fafc 0%, #e4f1f7 42%, #d5e8f0 100%);
+}
+
+/** Vnitřní bloky NHL25 „Moje sestava“ — stejný tón ledu jako za PNG dresu */
+.squad-ice-builder-inner {
+  border: 1px solid rgba(100, 170, 195, 0.38);
+  background:
+    radial-gradient(ellipse 100% 72% at 50% 0%, rgba(255, 255, 255, 0.92), transparent 55%),
+    radial-gradient(ellipse 75% 55% at 100% 100%, rgba(120, 200, 220, 0.18), transparent 48%),
+    linear-gradient(180deg, #f4fcfe 0%, #e6f3f9 48%, #d9ecf4 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 1px 2px rgba(15, 60, 80, 0.06);
+}
+
+.squad-ice-builder-inner-dashed {
+  border: 1px dashed rgba(100, 160, 185, 0.55);
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 255, 255, 0.75), transparent 55%),
+    linear-gradient(180deg, #eef9fc 0%, #e2f2f8 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+/** Potisk na světlém ledu (NHL25 sloty) — přebije i `--woven` */
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--on-light-ice {
+  color: #0f172a;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95),
+    0 1px 2px rgba(15, 23, 42, 0.12);
+}
+
+.jersey-back-number-text.jersey-back-number-text--on-light-ice {
+  color: #0f172a;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9),
+    0 2px 4px rgba(15, 23, 42, 0.12);
 }
 
 /* Hockey rink ice gradient */
@@ -350,8 +386,8 @@ body {
     radial-gradient(ellipse 100% 90% at 50% -20%, rgba(200, 16, 46, 0.05), transparent 50%),
     radial-gradient(ellipse 100% 85% at 50% -15%, rgba(255, 255, 255, 0.65), transparent 52%),
     radial-gradient(ellipse 80% 70% at 100% 100%, rgba(0, 120, 150, 0.07), transparent 45%),
-    linear-gradient(180deg, #f2fafc 0%, #e5f2f8 42%, #d8eaf0 100%);
-  border: 1px solid rgba(15, 23, 42, 0.1);
+    linear-gradient(180deg, #f4fcfe 0%, #e6f3f9 42%, #d9ecf4 100%);
+  border: 1px solid rgba(100, 170, 195, 0.35);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.9),
     0 0 0 2px rgba(200, 16, 46, 0.08),
@@ -366,13 +402,13 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(241, 196, 15, 0.5) 18%,
+    rgba(125, 211, 252, 0.55) 18%,
     rgba(200, 16, 46, 0.85) 42%,
     rgba(0, 48, 135, 0.65) 58%,
-    rgba(241, 196, 15, 0.45) 82%,
+    rgba(125, 211, 252, 0.45) 82%,
     transparent
   );
-  box-shadow: 0 0 20px rgba(200, 16, 46, 0.25), 0 0 28px rgba(241, 196, 15, 0.15);
+  box-shadow: 0 0 20px rgba(200, 16, 46, 0.25), 0 0 28px rgba(0, 180, 255, 0.18);
 }
 
 @keyframes landing-cta-glow {
@@ -380,12 +416,14 @@ body {
   100% {
     box-shadow:
       0 8px 40px rgba(200, 16, 46, 0.45),
+      0 0 28px rgba(0, 180, 255, 0.22),
       0 0 0 1px rgba(255, 255, 255, 0.12) inset,
       0 0 0 0 rgba(200, 16, 46, 0.4);
   }
   50% {
     box-shadow:
       0 12px 48px rgba(200, 16, 46, 0.55),
+      0 0 40px rgba(0, 180, 255, 0.32),
       0 0 0 1px rgba(255, 255, 255, 0.15) inset,
       0 0 32px 4px rgba(200, 16, 46, 0.25);
   }

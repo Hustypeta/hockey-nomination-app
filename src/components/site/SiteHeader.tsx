@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Menu, X, Sparkles } from "lucide-react";
-import { SITE_BRAND, SITE_LOGO_URL, SITE_WORDMARK } from "@/lib/siteBranding";
+import { Menu, X } from "lucide-react";
+import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 
 const NAV = [
   { href: "/", label: "Úvod" },
@@ -88,8 +88,8 @@ export function SiteHeader() {
           {/* Brand */}
           <Link
             href="/"
-            className="group/brand flex min-w-0 flex-1 items-center gap-3 sm:gap-3.5 lg:max-w-[min(100%,20rem)] lg:flex-none"
-            aria-label={`${SITE_WORDMARK} — ${SITE_BRAND}`}
+            className="group/brand flex min-w-0 flex-1 items-center gap-2 sm:gap-2.5 lg:max-w-[min(100%,18rem)] lg:flex-none"
+            aria-label={`${SITE_BRAND} · MS 2026`}
           >
             <div className="relative shrink-0">
               <div
@@ -104,22 +104,12 @@ export function SiteHeader() {
                 height={60}
                 decoding="async"
                 fetchPriority="high"
-                className="relative h-9 w-auto object-contain object-left transition duration-300 group-hover/brand:scale-[1.06] sm:h-10 lg:h-11"
+                className="relative h-10 w-auto object-contain object-left transition duration-300 group-hover/brand:scale-[1.06] sm:h-11 lg:h-12"
               />
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="font-site-wordmark truncate text-[0.95rem] font-bold leading-tight tracking-[-0.02em] text-white sm:text-lg lg:text-xl">
-                {SITE_WORDMARK}
-              </p>
-              <p className="mt-0.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#00B4FF]/90 sm:text-[11px]">
-                <Sparkles className="h-3 w-3 shrink-0 text-[#00B4FF]" aria-hidden />
-                <span className="truncate text-white/50">
-                  <span className="text-white/70">{SITE_BRAND}</span>
-                  <span className="text-white/35"> · </span>
-                  <span>MS 2026</span>
-                </span>
-              </p>
-            </div>
+            <span className="shrink-0 font-display text-sm font-bold uppercase tracking-[0.14em] text-white/80 sm:text-base">
+              MS 2026
+            </span>
           </Link>
 
           {/* Desktop nav */}
