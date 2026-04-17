@@ -72,10 +72,11 @@ export function jerseyNameplateNameProps(
   const score = layoutWidthScore(lines);
   /** Dvě kratší řádky = méně horizontálního stresu → mírně větší písmo než jedna ultraúzká řádka. */
   const multilineEase = lineCount > 1 ? 1.09 : 1;
-  const scale = variant === "premium" ? 1.2 : 1.24;
+  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. */
+  const scale = variant === "premium" ? 1.02 : 1.24;
 
-  const minFs = (variant === "premium" ? 4.35 : 4.05) * scale * multilineEase;
-  const maxFs = (variant === "premium" ? 12.6 : 11.35) * scale * multilineEase;
+  const minFs = (variant === "premium" ? 3.75 : 4.05) * scale * multilineEase;
+  const maxFs = (variant === "premium" ? 10.2 : 11.35) * scale * multilineEase;
 
   const low = 2.85;
   const high = 21.5;
@@ -86,10 +87,17 @@ export function jerseyNameplateNameProps(
   const letterSpacing = baseTrack - t * (lineCount > 1 ? 0.048 : 0.068);
   const lineHeight = lineCount > 1 ? 1.0 + t * 0.04 : 1.02 + t * 0.06;
 
+  const woven = variant === "premium" ? "jersey-nameplate-text--woven" : "";
+
   return {
     lines,
-    className:
-      "jersey-nameplate-text block w-full max-w-full px-0.5 text-center [overflow-wrap:anywhere] hyphens-none",
+    className: [
+      "jersey-nameplate-text",
+      woven,
+      "block w-full max-w-full px-0.5 text-center [overflow-wrap:anywhere] hyphens-none",
+    ]
+      .filter(Boolean)
+      .join(" "),
     style: {
       fontSize: `${Math.round(fontSize * 100) / 100}px`,
       letterSpacing: `${Math.round(letterSpacing * 1000) / 1000}em`,
@@ -113,8 +121,8 @@ export function jerseyNumberStyle(
   if (variant === "premium") {
     if (!longName) return {};
     const t = clamp((score - 8.8) / 12, 0, 1);
-    const maxPx = lines.length > 1 ? 32 : 34;
-    const minPx = lines.length > 1 ? 22 : 24;
+    const maxPx = lines.length > 1 ? 28 : 30;
+    const minPx = lines.length > 1 ? 19 : 21;
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (!longName) return {};

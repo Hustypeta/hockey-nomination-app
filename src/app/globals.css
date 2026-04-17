@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap&subset=latin,latin-ext');
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap&subset=latin,latin-ext');
 @import "tailwindcss";
@@ -14,6 +15,10 @@
   --surface-hover: #1a2436;
   --border: #2a3548;
   --ice: #e8f4f8;
+  /** Editor sestavy + alfa u dresu — jedna „ledová“ paleta */
+  --squad-ice-highlight: rgba(140, 210, 225, 0.16);
+  --squad-ice-side-a: rgba(0, 80, 110, 0.35);
+  --squad-ice-side-b: rgba(0, 50, 80, 0.3);
   --glow-red: rgba(200, 16, 46, 0.45);
   --glow-blue: rgba(0, 48, 135, 0.5);
   --accent-gold: #f1c40f;
@@ -50,6 +55,41 @@ body {
   font-family: var(--font-display);
 }
 
+.font-site-wordmark {
+  font-family: var(--font-wordmark);
+}
+
+/* Premium navbar — vstupní animace */
+@keyframes site-header-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.site-header-reveal {
+  animation: site-header-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes site-nav-mobile-in {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.site-nav-mobile-panel {
+  animation: site-nav-mobile-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /** Jméno a číslo na dresu (overlay přes prázdný PNG). */
 .font-jersey-print {
   font-family: var(--font-jersey-print);
@@ -79,6 +119,32 @@ body {
   letter-spacing: 0.09em;
 }
 
+/**
+ * Premium editor — jméno jako součást úpletu (méně „plakátový“ stín než základní třída).
+ */
+.jersey-nameplate-text.jersey-nameplate-text--woven {
+  color: #e8e2e2;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-shadow:
+    0 0.5px 0 rgba(255, 255, 255, 0.1),
+    0 -0.5px 1px rgba(90, 20, 30, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 2px 4px rgba(0, 0, 0, 0.28);
+}
+
+/** Číslo v premium slotu — zapuštěný potisk, těsnější vztah k jménu nad ním */
+.jersey-back-number-text.jersey-back-number-text--woven {
+  color: #eae5e5;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-shadow:
+    0 0.5px 0 rgba(255, 255, 255, 0.12),
+    0 -0.5px 1px rgba(85, 12, 22, 0.38),
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 5px rgba(0, 0, 0, 0.32);
+}
+
 .jersey-back-number-text {
   font-family: var(--font-jersey-print);
   font-weight: 800;
@@ -93,6 +159,25 @@ body {
     0 2px 1px rgba(0, 0, 0, 0.58),
     0 4px 8px rgba(0, 0, 0, 0.42),
     0 0 1px rgba(0, 0, 0, 0.85);
+}
+
+/**
+ * Tmavý „led“ — shodné pozadí pro celou stránku /sestava (ambient) i výřez za PNG dresu.
+ * NHL25 světlý blok používá `.squad-ice-surface-light` (stejná rodina, světlý led).
+ */
+.squad-ice-fill {
+  background:
+    radial-gradient(ellipse 115% 75% at 50% -15%, var(--squad-ice-highlight), transparent 58%),
+    radial-gradient(ellipse 60% 50% at 0% 45%, var(--squad-ice-side-a), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 100% 55%, var(--squad-ice-side-b), transparent 50%),
+    linear-gradient(170deg, #0b1f2a 0%, #071419 38%, #040a0f 100%);
+}
+
+.squad-ice-surface-light {
+  background:
+    radial-gradient(ellipse 100% 90% at 50% -20%, rgba(255, 255, 255, 0.75), transparent 52%),
+    radial-gradient(ellipse 85% 70% at 100% 100%, rgba(0, 120, 150, 0.07), transparent 48%),
+    linear-gradient(180deg, #f2fafc 0%, #e4f1f7 42%, #d5e8f0 100%);
 }
 
 /* Hockey rink ice gradient */
@@ -111,17 +196,18 @@ body {
     0 0 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Editor sestavy – prémiový tmavý panel */
+/* Editor sestavy – ledový panel (shodná paleta jako `.squad-ice-fill`) */
 .lineup-board {
   background:
-    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(0, 48, 135, 0.22), transparent 55%),
-    radial-gradient(ellipse 90% 60% at 100% 50%, rgba(200, 16, 46, 0.08), transparent 45%),
-    linear-gradient(165deg, #0d121f 0%, #080b12 48%, #05080f 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+    radial-gradient(ellipse 115% 75% at 50% -15%, rgba(160, 220, 235, 0.12), transparent 58%),
+    radial-gradient(ellipse 60% 50% at 0% 45%, rgba(0, 80, 110, 0.28), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 100% 55%, rgba(0, 50, 80, 0.26), transparent 50%),
+    linear-gradient(170deg, #0b1f2a 0%, #071419 48%, #040a0f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
-    0 0 0 1px rgba(0, 48, 135, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 28px 80px rgba(0, 0, 0, 0.55);
+    0 0 0 1px rgba(0, 100, 130, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 28px 80px rgba(0, 0, 0, 0.45);
 }
 
 .lineup-board-accent {
@@ -176,14 +262,15 @@ body {
 /* Export plakát — stejný tmavý „ledový“ panel jako editor sestavy (ne světlé rink pozadí). */
 .nomination-poster-panel {
   background:
-    radial-gradient(ellipse 120% 80% at 50% -25%, rgba(0, 48, 135, 0.2), transparent 55%),
-    radial-gradient(ellipse 90% 55% at 100% 40%, rgba(200, 16, 46, 0.06), transparent 48%),
-    linear-gradient(165deg, #0d121f 0%, #080b12 48%, #06080f 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+    radial-gradient(ellipse 115% 75% at 50% -15%, rgba(160, 220, 235, 0.1), transparent 58%),
+    radial-gradient(ellipse 60% 50% at 0% 45%, rgba(0, 80, 110, 0.26), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 100% 55%, rgba(0, 50, 80, 0.24), transparent 50%),
+    linear-gradient(170deg, #0b1f2a 0%, #071419 48%, #040a0f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
-    0 0 0 1px rgba(0, 48, 135, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 18px 48px rgba(0, 0, 0, 0.45);
+    0 0 0 1px rgba(0, 100, 130, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 18px 48px rgba(0, 0, 0, 0.42);
 }
 
 /* Jersey number style */
@@ -243,32 +330,34 @@ body {
   position: relative;
 }
 
-/* Prémiový tmavý panel (pool / obal sekcí) */
+/* Prémiový panel — stejný led jako ambient (jemnější sklo + repre nádech) */
 .sestava-premium-panel-dark {
   background:
-    radial-gradient(ellipse 100% 120% at 50% -30%, rgba(200, 16, 46, 0.08), transparent 55%),
-    radial-gradient(ellipse 80% 80% at 100% 100%, rgba(0, 48, 135, 0.12), transparent 45%),
-    linear-gradient(165deg, rgba(15, 23, 42, 0.92) 0%, rgba(8, 12, 22, 0.96) 50%, rgba(5, 8, 15, 0.98) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 100% 120% at 50% -28%, rgba(200, 16, 46, 0.06), transparent 55%),
+    radial-gradient(ellipse 115% 75% at 50% -10%, rgba(160, 220, 235, 0.1), transparent 58%),
+    radial-gradient(ellipse 80% 80% at 100% 100%, rgba(0, 80, 110, 0.2), transparent 45%),
+    linear-gradient(168deg, rgba(14, 32, 42, 0.94) 0%, rgba(7, 16, 22, 0.97) 52%, rgba(4, 10, 14, 0.99) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.11);
   box-shadow:
-    0 0 0 1px rgba(200, 16, 46, 0.12),
-    0 0 60px rgba(0, 48, 135, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 0 0 1px rgba(0, 100, 130, 0.14),
+    0 0 60px rgba(0, 60, 90, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
-/* Světlý panel „Moje sestava“ — sjednocení s českými akcenty */
+/* Světlý led — panel „Moje sestava“ + stejný tón za PNG dresu v NHL25 kartách */
 .nhl25-moje-sestava-panel {
   background:
-    radial-gradient(ellipse 100% 90% at 50% -20%, rgba(200, 16, 46, 0.06), transparent 50%),
-    radial-gradient(ellipse 80% 70% at 100% 100%, rgba(0, 48, 135, 0.08), transparent 45%),
-    linear-gradient(180deg, #ffffff 0%, #f6f8fc 42%, #eef2f7 100%);
+    radial-gradient(ellipse 100% 90% at 50% -20%, rgba(200, 16, 46, 0.05), transparent 50%),
+    radial-gradient(ellipse 100% 85% at 50% -15%, rgba(255, 255, 255, 0.65), transparent 52%),
+    radial-gradient(ellipse 80% 70% at 100% 100%, rgba(0, 120, 150, 0.07), transparent 45%),
+    linear-gradient(180deg, #f2fafc 0%, #e5f2f8 42%, #d8eaf0 100%);
   border: 1px solid rgba(15, 23, 42, 0.1);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.9),
-    0 0 0 2px rgba(200, 16, 46, 0.1),
+    0 0 0 2px rgba(200, 16, 46, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 28px 64px rgba(15, 23, 42, 0.12),
-    0 0 80px rgba(0, 48, 135, 0.08);
+    0 28px 64px rgba(15, 23, 42, 0.1),
+    0 0 80px rgba(0, 100, 130, 0.08);
 }
 
 .nhl25-moje-sestava-accent {

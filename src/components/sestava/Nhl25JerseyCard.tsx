@@ -125,9 +125,9 @@ export function Nhl25JerseyCard({
           </span>
         </div>
 
-        <div className="relative w-full overflow-hidden rounded-[8px] bg-transparent shadow-inner">
+        <div className="squad-ice-surface-light relative w-full overflow-hidden rounded-[8px] shadow-inner">
           <div
-            className={`relative aspect-[100/120] w-full bg-transparent ${empty ? "ring-1 ring-inset ring-white/12" : ""}`}
+            className={`squad-ice-surface-light relative aspect-[100/120] w-full ${empty ? "ring-1 ring-inset ring-slate-300/50" : ""}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
             <img

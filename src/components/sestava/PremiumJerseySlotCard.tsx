@@ -16,13 +16,15 @@ export type PremiumJerseySize = "compact" | "skater" | "goalie";
 /** Jedna šířka a typografie pro všechny sloty (útok, obrana, G, náhradníci). Rozdíl jen `kind` u obrázku. */
 const PREMIUM_SLOT_UNIFIED = {
   root: "w-[92px] min-[380px]:w-[100px] sm:w-[112px] lg:w-[128px]",
-  num: "jersey-back-number-text mt-px max-w-[92%] text-center text-[20px] min-[380px]:text-[22px] sm:text-[26px] lg:text-[28px] xl:text-[32px]",
+  num: "jersey-back-number-text jersey-back-number-text--woven mt-2 max-w-[92%] text-center text-[17px] min-[380px]:text-[19px] sm:text-[22px] lg:text-[24px] xl:text-[26px]",
   emptyName:
     "select-none font-jersey-print text-[9px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 min-[380px]:text-[10px] sm:text-[12px]",
   emptyNum:
     "select-none font-jersey-print mt-1 text-[20px] font-bold leading-none tabular-nums text-white/25 min-[380px]:text-[22px] sm:text-[26px] lg:text-[30px]",
-  cap: "absolute right-6 top-1 z-30 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white sm:right-10 sm:top-1.5 sm:h-5 sm:w-5 sm:text-[10px]",
-  asst: "absolute bottom-1.5 left-1.5 z-30 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[8px] font-bold text-white shadow-md ring-2 ring-white/90 sm:bottom-2 sm:left-2 sm:h-5 sm:w-5 sm:text-[9px]",
+  capUnderNum:
+    "mt-2 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white sm:h-6 sm:w-6 sm:text-[11px]",
+  asstUnderNum:
+    "mt-2 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white/90 sm:h-6 sm:w-6 sm:text-[10px]",
   clear:
     "absolute right-1 top-1 z-40 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0] sm:right-2 sm:top-2 sm:h-6 sm:w-6",
 } as const;
@@ -105,7 +107,7 @@ export function PremiumJerseySlotCard({
     >
       <div
         className={`
-          relative aspect-[100/120] w-full overflow-hidden rounded-[10px] bg-transparent
+          squad-ice-fill relative aspect-[100/120] w-full overflow-hidden rounded-[10px]
           ${
             empty
               ? emptyUnfocused
@@ -124,18 +126,18 @@ export function PremiumJerseySlotCard({
           decoding="async"
           data-jersey-kind={kind}
           className={`
-            ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
+            ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_6px_18px_rgba(0,0,0,0.42)]
             ${empty ? (emptyUnfocused ? "opacity-[0.36] saturate-[0.52] brightness-[0.88]" : "opacity-[0.78] saturate-[0.95]") : ""}
           `}
         />
 
         <div
-          className={`absolute left-1/2 top-[2.5%] z-20 -translate-x-1/2 ${emptyUnfocused ? "opacity-50 saturate-[0.55]" : ""}`}
+          className={`absolute bottom-2 left-2 z-20 max-w-[calc(100%-2.5rem)] sm:bottom-2.5 sm:left-2.5 ${emptyUnfocused ? "opacity-50 saturate-[0.55]" : ""}`}
         >
           <span
             className={`
-              rounded border border-[#003087]/40 bg-[#0a0508]/95 px-2 py-0.5 font-display text-[9px] font-bold uppercase
-              tracking-[0.14em] text-white/90 shadow-[0_0_12px_rgba(0,0,0,0.85)]
+              inline-flex rounded-md border border-[#003087]/50 bg-[#0a0508]/95 px-2.5 py-1 font-display text-[10px] font-bold uppercase
+              tracking-[0.12em] text-white/95 shadow-[0_2px_10px_rgba(0,0,0,0.65)] min-[380px]:text-[11px] sm:px-3 sm:py-1.5 sm:text-xs
             `}
           >
             {positionLabel}
@@ -143,17 +145,6 @@ export function PremiumJerseySlotCard({
         </div>
 
         {!empty ? <JerseyCornerFlagCz /> : null}
-
-        {isCaptain && !empty && (
-          <span className={sz.cap} aria-label="Kapitán">
-            C
-          </span>
-        )}
-        {showAssistant && (
-          <span className={sz.asst} aria-label="Asistent kapitána">
-            A
-          </span>
-        )}
 
         {showClear ? (
           <button
@@ -175,23 +166,33 @@ export function PremiumJerseySlotCard({
         <div
           className={`
             pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1
-            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start px-1 pt-[26%]"}
+            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start px-1 pb-[18%] pt-[31%] sm:pb-[16%] sm:pt-[32%]"}
           `}
         >
           {!empty ? (
             <>
               {namePlate && namePlate.lines.length > 0 ? (
-                <span className="flex w-full max-w-full flex-col items-center gap-[0.1em]">
+                <div className="flex w-full max-w-full flex-col items-center gap-y-px">
                   {namePlate.lines.map((line, idx) => (
                     <span key={idx} className={namePlate.className} style={namePlate.style}>
                       {line}
                     </span>
                   ))}
-                </span>
+                </div>
               ) : null}
               {numStr ? (
                 <span className={sz.num} style={jerseyNumberStyle(ln, "premium")}>
                   {numStr}
+                </span>
+              ) : null}
+              {isCaptain ? (
+                <span className={sz.capUnderNum} aria-label="Kapitán">
+                  C
+                </span>
+              ) : null}
+              {showAssistant ? (
+                <span className={sz.asstUnderNum} aria-label="Asistent kapitána">
+                  A
                 </span>
               ) : null}
             </>

@@ -116,8 +116,8 @@ export function LineupJerseyCard({
 
       <div
         className={`
-          flex flex-col gap-1 rounded-[10px] border border-white/[0.12] bg-[#060a12] p-[5px]
-          shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_32px_rgba(0,0,0,0.55)]
+          squad-ice-fill flex flex-col gap-1 rounded-[10px] border border-white/[0.14] p-[5px]
+          shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_32px_rgba(0,0,0,0.45)]
           ${disableMotion ? "" : "transition-[box-shadow,transform] duration-300 ease-out"}
           ${hoverInner}
         `}
@@ -138,7 +138,7 @@ export function LineupJerseyCard({
 
         <div className="relative overflow-hidden rounded-[8px]">
           <div
-            className={`relative aspect-[100/120] w-full bg-transparent ${empty ? "ring-1 ring-inset ring-white/10" : ""}`}
+            className={`squad-ice-fill relative aspect-[100/120] w-full ${empty ? "ring-1 ring-inset ring-white/12" : ""}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
             <img
