@@ -34,9 +34,9 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
-  compact: "justify-start px-2 pt-[26%]",
-  skater: "justify-start px-2 pt-[26%]",
-  goalie: "justify-start px-2 pt-[26%]",
+  compact: "justify-start px-1.5 pt-[25%]",
+  skater: "justify-start px-1.5 pt-[25%]",
+  goalie: "justify-start px-1.5 pt-[25%]",
 };
 
 export interface Nhl25JerseyCardProps {
@@ -125,9 +125,9 @@ export function Nhl25JerseyCard({
           </span>
         </div>
 
-        <div className="relative w-full overflow-hidden rounded-[8px] bg-black shadow-inner">
+        <div className="relative w-full overflow-hidden rounded-[8px] bg-transparent shadow-inner">
           <div
-            className={`relative aspect-[100/120] w-full bg-black ${empty ? "ring-1 ring-inset ring-white/12" : ""}`}
+            className={`relative aspect-[100/120] w-full bg-transparent ${empty ? "ring-1 ring-inset ring-white/12" : ""}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
             <img
@@ -149,9 +149,13 @@ export function Nhl25JerseyCard({
                 <div
                   className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
                 >
-                  {namePlate ? (
-                    <span className={namePlate.className} style={namePlate.style}>
-                      {ln}
+                  {namePlate && namePlate.lines.length > 0 ? (
+                    <span className="flex w-full max-w-full flex-col items-center gap-[0.1em]">
+                      {namePlate.lines.map((line, idx) => (
+                        <span key={idx} className={namePlate.className} style={namePlate.style}>
+                          {line}
+                        </span>
+                      ))}
                     </span>
                   ) : null}
                   {numStr ? (

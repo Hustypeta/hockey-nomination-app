@@ -4,10 +4,10 @@ import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "LineUp — sestav si svou nominaci na MS v hokeji",
+    absolute: "LineUp",
   },
   description:
-    "LineUp — sestav si svou nominaci na MS v hokeji. Časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.",
+    "Časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.",
 };
 
 export default function HomePage() {

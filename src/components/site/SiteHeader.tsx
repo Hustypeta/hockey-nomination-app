@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { SITE_BRAND, SITE_LOGO_URL, SITE_TAGLINE } from "@/lib/siteBranding";
+import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 
 const NAV = [
   { href: "/", label: "Úvod" },
@@ -20,10 +20,10 @@ const NAV = [
 
 function navLinkClass(active: boolean) {
   return [
-    "rounded-lg px-2.5 py-1.5 text-xs font-medium transition sm:px-3 sm:text-sm",
+    "rounded-xl px-3 py-2 text-sm font-semibold tracking-wide transition duration-200 sm:px-3.5 sm:py-2.5 sm:text-[0.9375rem] lg:text-base",
     active
-      ? "bg-white/[0.12] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]"
-      : "text-white/65 hover:bg-white/[0.06] hover:text-white",
+      ? "bg-gradient-to-b from-white/[0.16] to-white/[0.08] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_0_0_1px_rgba(255,255,255,0.12)]"
+      : "text-white/80 hover:bg-white/[0.08] hover:text-white",
   ].join(" ");
 }
 
@@ -46,30 +46,32 @@ export function SiteHeader() {
   }, [mobileNavOpen]);
 
   return (
-    <header className="relative z-20 border-b border-white/[0.12] bg-gradient-to-r from-[#060a14]/96 via-[#0c1428]/94 to-[#060a14]/96 shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 lg:flex-wrap lg:gap-x-4 lg:gap-y-3">
+    <header className="relative z-20 border-b border-white/[0.14] bg-gradient-to-r from-[#050912]/98 via-[#0a1428]/96 to-[#050912]/98 shadow-[0_12px_48px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl backdrop-saturate-150">
+      {/* jemný trikolorní akcent nahoře */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-[#c8102e]/0 via-[#c8102e]/70 via-white/50 to-[#003087]/80"
+        aria-hidden
+      />
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:gap-5 sm:px-6 sm:py-5 lg:flex-wrap lg:gap-x-5 lg:gap-y-3">
         <Link
           href="/"
-          className="group/logo flex min-w-0 flex-1 items-center gap-2 sm:max-w-md sm:gap-2.5 lg:flex-none lg:max-w-[min(100%,18rem)]"
-          aria-label={`${SITE_BRAND} — ${SITE_TAGLINE}`}
+          className="group/logo flex min-w-0 flex-1 items-center gap-3 sm:max-w-md sm:gap-3.5 lg:flex-none lg:max-w-[min(100%,22rem)]"
+          aria-label={SITE_BRAND}
         >
           {/* Lokální PNG z `public/` — klasický <img> kvůli stabilnímu servování (Next image optimizer na některých hostinzích vrací null). */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={SITE_LOGO_URL}
             alt=""
-            width={160}
-            height={48}
+            width={280}
+            height={84}
             decoding="async"
             fetchPriority="high"
-            className="h-8 w-auto max-h-9 shrink-0 object-contain object-left sm:h-10 sm:max-h-10"
+            className="h-11 w-auto shrink-0 object-contain object-left drop-shadow-[0_4px_20px_rgba(200,16,46,0.35)] transition duration-300 group-hover/logo:scale-[1.03] sm:h-[52px] lg:h-14"
           />
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="block truncate font-display text-base leading-none tracking-[0.06em] text-white sm:text-lg lg:text-xl">
+          <div className="flex min-w-0 flex-1 flex-col justify-center">
+            <span className="block truncate bg-gradient-to-br from-white via-white to-slate-200 bg-clip-text font-display text-xl font-bold leading-none tracking-[0.12em] text-transparent drop-shadow-[0_2px_24px_rgba(255,255,255,0.12)] sm:text-2xl lg:text-3xl">
               {SITE_BRAND}
-            </span>
-            <span className="mt-0.5 line-clamp-1 text-[10px] font-medium leading-snug text-white/55 sm:text-[11px] lg:line-clamp-2">
-              {SITE_TAGLINE}
             </span>
           </div>
         </Link>
@@ -85,9 +87,9 @@ export function SiteHeader() {
           <span className="sr-only">{mobileNavOpen ? "Zavřít menu" : "Otevřít menu"}</span>
         </button>
 
-        <div className="hidden min-w-0 flex-1 flex-wrap items-center justify-end gap-x-2 gap-y-2 lg:flex">
+        <div className="hidden min-w-0 flex-1 flex-wrap items-center justify-end gap-x-3 gap-y-2 lg:flex">
           <nav
-            className="flex max-w-full flex-wrap items-center justify-end gap-1.5"
+            className="flex max-w-full flex-wrap items-center justify-end gap-2"
             aria-label="Hlavní navigace"
           >
             {NAV.map(({ href, label }) => {
@@ -102,15 +104,15 @@ export function SiteHeader() {
               );
             })}
           </nav>
-          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 border-l border-white/10 pl-3 md:pl-4">
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-3 border-l border-white/15 pl-4 md:pl-5">
             {status === "authenticated" ? (
               <>
-                <span className="hidden max-w-[200px] truncate text-xs text-white/50 xl:inline">
+                <span className="hidden max-w-[220px] truncate text-sm text-white/65 xl:inline">
                   {session?.user?.email}
                 </span>
                 <Link
                   href="/sestava"
-                  className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#9e0c24] px-4 py-2.5 font-display text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-[#c8102e]/30 transition hover:brightness-110"
+                  className="rounded-xl bg-gradient-to-r from-[#e01432] via-[#c8102e] to-[#8f0b22] px-5 py-3 font-display text-base font-bold uppercase tracking-[0.14em] text-white shadow-[0_0_28px_rgba(200,16,46,0.45),0_8px_24px_rgba(0,0,0,0.35)] ring-1 ring-white/15 transition hover:brightness-110 hover:ring-white/25"
                 >
                   Do editoru sestavy
                 </Link>
@@ -120,13 +122,13 @@ export function SiteHeader() {
                 <button
                   type="button"
                   onClick={() => signIn("google", { callbackUrl: "/sestava" })}
-                  className="rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2 text-sm font-medium text-white/90 transition hover:border-[#003087]/50 hover:bg-white/[0.07]"
+                  className="rounded-xl border border-white/20 bg-white/[0.06] px-4 py-2.5 text-base font-semibold text-white transition hover:border-[#003087]/55 hover:bg-white/[0.1]"
                 >
                   Přihlásit
                 </button>
                 <Link
                   href="/sestava"
-                  className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#9e0c24] px-4 py-2.5 font-display text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-[#c8102e]/30 transition hover:brightness-110"
+                  className="rounded-xl bg-gradient-to-r from-[#e01432] via-[#c8102e] to-[#8f0b22] px-5 py-3 font-display text-base font-bold uppercase tracking-[0.14em] text-white shadow-[0_0_28px_rgba(200,16,46,0.45),0_8px_24px_rgba(0,0,0,0.35)] ring-1 ring-white/15 transition hover:brightness-110 hover:ring-white/25"
                 >
                   Začít
                 </Link>
@@ -160,7 +162,7 @@ export function SiteHeader() {
                     <li key={href}>
                       <Link
                         href={href}
-                        className={`block rounded-xl px-4 py-3.5 text-base font-medium ${active ? "bg-white/[0.14] text-white" : "text-white/75 hover:bg-white/[0.06] hover:text-white"}`}
+                        className={`block rounded-xl px-4 py-4 text-lg font-semibold tracking-wide ${active ? "bg-white/[0.16] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]" : "text-white/85 hover:bg-white/[0.08] hover:text-white"}`}
                         onClick={() => setMobileNavOpen(false)}
                       >
                         {label}
@@ -178,7 +180,7 @@ export function SiteHeader() {
                   ) : null}
                   <Link
                     href="/sestava"
-                    className="block rounded-xl bg-gradient-to-r from-[#c8102e] to-[#9e0c24] py-3.5 text-center font-display text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-[#c8102e]/30"
+                    className="block rounded-xl bg-gradient-to-r from-[#e01432] via-[#c8102e] to-[#8f0b22] py-4 text-center font-display text-base font-bold uppercase tracking-[0.14em] text-white shadow-[0_0_24px_rgba(200,16,46,0.4)] ring-1 ring-white/15"
                     onClick={() => setMobileNavOpen(false)}
                   >
                     Do editoru sestavy
@@ -192,13 +194,13 @@ export function SiteHeader() {
                       setMobileNavOpen(false);
                       void signIn("google", { callbackUrl: "/sestava" });
                     }}
-                    className="rounded-xl border border-white/15 bg-white/[0.04] py-3 text-sm font-medium text-white/90"
+                    className="rounded-xl border border-white/20 bg-white/[0.06] py-3.5 text-base font-semibold text-white"
                   >
                     Přihlásit
                   </button>
                   <Link
                     href="/sestava"
-                    className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#9e0c24] py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-[#c8102e]/30"
+                    className="rounded-xl bg-gradient-to-r from-[#e01432] via-[#c8102e] to-[#8f0b22] py-3.5 text-center font-display text-base font-bold uppercase tracking-[0.14em] text-white shadow-[0_0_24px_rgba(200,16,46,0.4)] ring-1 ring-white/15"
                     onClick={() => setMobileNavOpen(false)}
                   >
                     Začít

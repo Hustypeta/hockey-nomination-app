@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap&subset=latin,latin-ext');
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap&subset=latin,latin-ext');
 @import "tailwindcss";
 
@@ -19,8 +20,8 @@
   --accent-gold-soft: rgba(241, 196, 15, 0.22);
   --font-ui: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Bebas Neue", var(--font-ui);
-  /** Potisk zadní strany dresu — blokové písmo, latin-ext (ČR). */
-  --font-jersey-print: "Oswald", ui-sans-serif, system-ui, sans-serif;
+  /** Potisk zadní strany dresu — úzké sportovní písmo, latin-ext (sdílení / export). */
+  --font-jersey-print: "Barlow Condensed", "Oswald", ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
@@ -55,24 +56,23 @@ body {
 }
 
 /**
- * Vzhled potisku na zádech (jméno / velké číslo) — Oswald, zapuštěný „našitý“ do úpletu:
- * světlý horní hřeben, teplá bílá místo čisté, stíny simulují hloubku ve vláknech (export PNG OK).
+ * Vzhled potisku jména na zádech — čistý kontrast pro náhledy a sdílené PNG.
  */
 .jersey-nameplate-text {
   font-family: var(--font-jersey-print);
   font-weight: 800;
   text-transform: uppercase;
-  color: #e8e1e1;
-  letter-spacing: 0.09em;
-  line-height: 1.12;
+  color: #f6f2f2;
+  letter-spacing: 0.07em;
+  line-height: 1.08;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
   text-shadow:
-    0 0.5px 0 rgba(255, 255, 255, 0.16),
-    0 -0.5px 0 rgba(55, 12, 22, 0.42),
-    0 1px 0 rgba(0, 0, 0, 0.62),
-    0 1.5px 0 rgba(0, 0, 0, 0.48),
-    0 3px 4px rgba(0, 0, 0, 0.58),
-    0 5px 10px rgba(0, 0, 0, 0.38),
-    0 0 14px rgba(0, 0, 0, 0.22);
+    0 0.5px 0 rgba(255, 255, 255, 0.42),
+    0 -0.5px 0 rgba(45, 10, 18, 0.38),
+    0 1px 1.5px rgba(0, 0, 0, 0.65),
+    0 2px 6px rgba(0, 0, 0, 0.45),
+    0 0 1px rgba(0, 0, 0, 0.9);
 }
 
 .jersey-nameplate-text--compact {
@@ -81,19 +81,18 @@ body {
 
 .jersey-back-number-text {
   font-family: var(--font-jersey-print);
-  font-weight: 700;
-  color: #ebe5e5;
-  letter-spacing: 0.03em;
+  font-weight: 800;
+  color: #f2eded;
+  letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
   line-height: 0.88;
+  -webkit-font-smoothing: antialiased;
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.22),
-    0 -1px 0 rgba(45, 8, 16, 0.45),
-    0 2px 0 rgba(0, 0, 0, 0.62),
-    0 3px 0 rgba(0, 0, 0, 0.42),
-    0 5px 5px rgba(0, 0, 0, 0.58),
-    0 8px 16px rgba(0, 0, 0, 0.45),
-    0 0 18px rgba(0, 0, 0, 0.2);
+    0 1px 0 rgba(255, 255, 255, 0.28),
+    0 -1px 0 rgba(45, 8, 16, 0.4),
+    0 2px 1px rgba(0, 0, 0, 0.58),
+    0 4px 8px rgba(0, 0, 0, 0.42),
+    0 0 1px rgba(0, 0, 0, 0.85);
 }
 
 /* Hockey rink ice gradient */

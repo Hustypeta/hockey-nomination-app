@@ -23,8 +23,7 @@ export const metadata: Metadata = {
     default: "LineUp",
     template: "%s | LineUp",
   },
-  description:
-    "LineUp — sestav si svou nominaci na MS v hokeji. Fanouškovský editor sestavy, soutěž a sdílení.",
+  description: "Fanouškovský editor sestavy, soutěž a sdílení.",
   icons: {
     icon: SITE_ICON_URL,
     apple: SITE_ICON_URL,

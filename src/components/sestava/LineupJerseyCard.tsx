@@ -16,7 +16,7 @@ function lastName(name: string) {
 const LINEUP_CARD_UNIFIED = {
   width: "max-w-[7.1rem] sm:max-w-[7.1rem]",
   number: "jersey-back-number-text text-[1.55rem] sm:text-[1.75rem] max-w-[92%] text-center",
-  overlayTop: "justify-start px-2 pt-[26%]",
+  overlayTop: "justify-start px-1.5 pt-[25%]",
 } as const;
 
 const widthClass: Record<LineupJerseySize, string> = {
@@ -138,7 +138,7 @@ export function LineupJerseyCard({
 
         <div className="relative overflow-hidden rounded-[8px]">
           <div
-            className={`relative aspect-[100/120] w-full bg-black ${empty ? "ring-1 ring-inset ring-white/10" : ""}`}
+            className={`relative aspect-[100/120] w-full bg-transparent ${empty ? "ring-1 ring-inset ring-white/10" : ""}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
             <img
@@ -158,9 +158,13 @@ export function LineupJerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center ${topOverlay}`}
               >
-                {namePlate ? (
-                  <span className={namePlate.className} style={namePlate.style}>
-                    {ln}
+                {namePlate && namePlate.lines.length > 0 ? (
+                  <span className="flex w-full max-w-full flex-col items-center gap-[0.1em]">
+                    {namePlate.lines.map((line, idx) => (
+                      <span key={idx} className={namePlate.className} style={namePlate.style}>
+                        {line}
+                      </span>
+                    ))}
                   </span>
                 ) : null}
                 {numStr ? (

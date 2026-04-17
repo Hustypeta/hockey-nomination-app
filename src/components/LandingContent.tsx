@@ -19,7 +19,6 @@ import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
-import { SITE_BRAND_LINE } from "@/lib/siteBranding";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T18:00:00+02:00");
@@ -76,9 +75,6 @@ export function LandingContent() {
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-4xl text-center lg:max-w-5xl">
-            <p className="mx-auto mb-8 max-w-3xl text-pretty text-lg font-medium leading-snug text-slate-100/95 sm:mb-10 sm:text-xl">
-              {SITE_BRAND_LINE}
-            </p>
             <h1 className="mx-auto max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
               Sestav si nominaci na{" "}
               <span className="bg-gradient-to-r from-white via-white to-sky-100 bg-clip-text text-transparent">
@@ -257,14 +253,7 @@ export function LandingContent() {
                   <Trophy className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
-                  Svoji nominaci můžeš odeslat do soutěže o zajímavé hokejové ceny. Více v{" "}
-                  <Link
-                    href="/pravidla-souteze"
-                    className="font-semibold text-[#f1c40f] underline decoration-[#f1c40f]/35 underline-offset-[3px] transition hover:text-white hover:decoration-white/50"
-                  >
-                    pravidlech soutěže
-                  </Link>
-                  .
+                  Svoji nominaci můžeš odeslat do soutěže o zajímavé hokejové ceny.
                 </p>
                 <Link
                   href="/pravidla-souteze"

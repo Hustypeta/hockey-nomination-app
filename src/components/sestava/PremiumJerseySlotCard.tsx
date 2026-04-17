@@ -105,7 +105,7 @@ export function PremiumJerseySlotCard({
     >
       <div
         className={`
-          relative aspect-[100/120] w-full overflow-hidden rounded-[10px] bg-black
+          relative aspect-[100/120] w-full overflow-hidden rounded-[10px] bg-transparent
           ${
             empty
               ? emptyUnfocused
@@ -174,15 +174,19 @@ export function PremiumJerseySlotCard({
 
         <div
           className={`
-            pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1.5
-            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start px-1.5 pt-[27%]"}
+            pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1
+            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start px-1 pt-[26%]"}
           `}
         >
           {!empty ? (
             <>
-              {namePlate ? (
-                <span className={namePlate.className} style={namePlate.style}>
-                  {ln}
+              {namePlate && namePlate.lines.length > 0 ? (
+                <span className="flex w-full max-w-full flex-col items-center gap-[0.1em]">
+                  {namePlate.lines.map((line, idx) => (
+                    <span key={idx} className={namePlate.className} style={namePlate.style}>
+                      {line}
+                    </span>
+                  ))}
                 </span>
               ) : null}
               {numStr ? (
