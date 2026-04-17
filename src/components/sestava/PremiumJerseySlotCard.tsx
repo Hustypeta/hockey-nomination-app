@@ -4,6 +4,7 @@ import type { Player } from "@/types";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
+import { JerseyCornerFlagCz } from "@/components/sestava/JerseyCornerFlagCz";
 
 function lastName(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -14,16 +15,16 @@ export type PremiumJerseySize = "compact" | "skater" | "goalie";
 
 /** Jedna šířka a typografie pro všechny sloty (útok, obrana, G, náhradníci). Rozdíl jen `kind` u obrázku. */
 const PREMIUM_SLOT_UNIFIED = {
-  root: "w-[128px]",
-  num: "jersey-back-number-text mt-px max-w-[92%] text-center text-[32px] sm:text-[36px]",
+  root: "w-[92px] min-[380px]:w-[100px] sm:w-[112px] lg:w-[128px]",
+  num: "jersey-back-number-text mt-px max-w-[92%] text-center text-[20px] min-[380px]:text-[22px] sm:text-[26px] lg:text-[28px] xl:text-[32px]",
   emptyName:
-    "select-none font-jersey-print text-[11px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 sm:text-[12px]",
+    "select-none font-jersey-print text-[9px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/35 min-[380px]:text-[10px] sm:text-[12px]",
   emptyNum:
-    "select-none font-jersey-print mt-1 text-[26px] font-bold leading-none tabular-nums text-white/25 sm:text-[30px]",
-  cap: "absolute right-10 top-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white",
-  asst: "absolute bottom-2 left-2 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white/90",
+    "select-none font-jersey-print mt-1 text-[20px] font-bold leading-none tabular-nums text-white/25 min-[380px]:text-[22px] sm:text-[26px] lg:text-[30px]",
+  cap: "absolute right-6 top-1 z-30 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white sm:right-10 sm:top-1.5 sm:h-5 sm:w-5 sm:text-[10px]",
+  asst: "absolute bottom-1.5 left-1.5 z-30 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[8px] font-bold text-white shadow-md ring-2 ring-white/90 sm:bottom-2 sm:left-2 sm:h-5 sm:w-5 sm:text-[9px]",
   clear:
-    "absolute right-2 top-2 z-40 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0]",
+    "absolute right-1 top-1 z-40 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0] sm:right-2 sm:top-2 sm:h-6 sm:w-6",
 } as const;
 
 const SIZE_STYLES: Record<PremiumJerseySize, typeof PREMIUM_SLOT_UNIFIED> = {
@@ -140,6 +141,8 @@ export function PremiumJerseySlotCard({
             {positionLabel}
           </span>
         </div>
+
+        {!empty ? <JerseyCornerFlagCz /> : null}
 
         {isCaptain && !empty && (
           <span className={sz.cap} aria-label="Kapitán">

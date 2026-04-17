@@ -80,12 +80,14 @@ function DraggableCard({
   const lim = POSITION_LIMITS[player.position];
   const cur = counts[player.position];
 
+  const canInteract = !disabled && !slotBlocks && !inRoster;
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       className={`
-        group/pool relative flex flex-col gap-2 rounded-xl border p-3
+        group/pool relative flex flex-col gap-2 rounded-xl border p-3 sm:p-3.5
         transition-[opacity,box-shadow,border-color,transform] duration-200 ease-out
         before:pointer-events-none before:absolute before:inset-y-2.5 before:left-0 before:w-[3px] before:rounded-full before:bg-[#c8102e] before:opacity-90 before:shadow-[0_0_12px_rgba(200,16,46,0.5)]
         ${
@@ -112,22 +114,25 @@ function DraggableCard({
         className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#003087]/20 blur-2xl"
         aria-hidden
       />
-      <div className="relative flex items-start gap-1.5">
-        <button
-          type="button"
-          className="mt-0.5 touch-none text-slate-500 transition-colors hover:text-[#f1c40f]"
-          aria-label="Přetáhni"
+      <div className="relative flex gap-2">
+        <div
+          className={`
+            flex min-w-0 flex-1 touch-pan-y flex-col gap-1.5 rounded-lg px-0.5 py-0.5
+            ${
+              canInteract
+                ? "cursor-grab active:cursor-grabbing"
+                : "cursor-default"
+            }
+          `}
           {...listeners}
           {...attributes}
-        >
-          <GripVertical className="h-3.5 w-3.5" />
-        </button>
-        <button
-          type="button"
-          onClick={() => !disabled && !slotBlocks && !inRoster && onAdd()}
-          className="min-w-0 flex-1 text-left"
+          onClick={() => canInteract && onAdd()}
         >
           <div className="flex items-start gap-2">
+            <GripVertical
+              className={`mt-1 h-4 w-4 shrink-0 sm:h-4 sm:w-4 ${canInteract ? "text-[#f1c40f]/80" : "text-slate-600"}`}
+              aria-hidden
+            />
             <div className="shrink-0">
               <PlayerAvatar
                 name={player.name}
@@ -147,23 +152,29 @@ function DraggableCard({
               </p>
             </div>
           </div>
-        </button>
+          <div className="flex flex-wrap items-center gap-1.5 pl-6 sm:pl-7">
+            <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95 sm:text-xs">
+              {cur}/{lim} v nominaci
+            </span>
+            {canInteract ? (
+              <span className="text-[10px] font-medium leading-tight text-sky-200/75 sm:hidden">
+                Přetáhni → soupiska
+              </span>
+            ) : null}
+          </div>
+        </div>
         <button
           type="button"
+          onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation();
             onInfo();
           }}
-          className="rounded-lg p-1 text-slate-500 transition-colors hover:bg-white/10 hover:text-[#f1c40f]"
-          aria-label="Detail"
+          className="shrink-0 self-start rounded-lg p-2 text-slate-500 transition-colors hover:bg-white/10 hover:text-[#f1c40f] sm:p-1.5"
+          aria-label="Detail hráče"
         >
-          <Info className="h-3.5 w-3.5" />
+          <Info className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
         </button>
-      </div>
-      <div className="relative flex flex-wrap items-center gap-1.5 pl-7">
-        <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95 sm:text-xs">
-          {cur}/{lim} v nominaci
-        </span>
       </div>
     </div>
   );
@@ -270,7 +281,7 @@ export function PlayerPoolPanel({
             disabled={!!forcedPosition}
             onClick={() => setTab(key)}
             className={`
-              flex-1 min-w-[4.5rem] rounded-xl px-3 py-3 font-display text-sm font-bold tracking-wide transition-all
+              flex-1 min-w-[4.5rem] rounded-xl px-2.5 py-2.5 font-display text-sm font-bold tracking-wide transition-all sm:px-3 sm:py-3
               disabled:cursor-not-allowed disabled:opacity-40
               ${
                 activeTab === key
@@ -291,7 +302,7 @@ export function PlayerPoolPanel({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Hledat jméno, klub, ligu…"
-          className="w-full rounded-2xl border border-white/[0.12] bg-[#0a1428]/80 py-4 pl-11 pr-4 text-sm text-white shadow-[inset_0_2px_8px_rgba(0,0,0,0.25)] placeholder:text-slate-500 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-2 focus:ring-[#c8102e]/25"
+          className="w-full rounded-2xl border border-white/[0.12] bg-[#0a1428]/80 py-3.5 pl-11 pr-3.5 text-sm text-white shadow-[inset_0_2px_8px_rgba(0,0,0,0.25)] placeholder:text-slate-500 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-2 focus:ring-[#c8102e]/25 sm:py-4 sm:pr-4"
         />
       </div>
 
@@ -311,7 +322,7 @@ export function PlayerPoolPanel({
         </select>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-3">
         {filtered.map((player) => {
           const inRoster = usedIds.has(player.id);
           const disabled = !canAdd(player);

@@ -4,6 +4,7 @@ import type { Player } from "@/types";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
+import { JerseyCornerFlagCz } from "@/components/sestava/JerseyCornerFlagCz";
 
 export type Nhl25JerseySize = "compact" | "skater" | "goalie";
 
@@ -16,7 +17,7 @@ function lastName(name: string) {
 const NHL25_CARD_UNIFIED = {
   width: "max-w-[8rem] sm:max-w-[8.5rem] lg:max-w-[9rem]",
   number:
-    "jersey-back-number-text text-[1.5rem] sm:text-[1.7rem] lg:text-[1.85rem] max-w-[92%] text-center",
+    "jersey-back-number-text text-[1.28rem] sm:text-[1.42rem] lg:text-[1.52rem] max-w-[92%] text-center",
 } as const;
 
 const widthClass: Record<Nhl25JerseySize, string> = {
@@ -143,20 +144,23 @@ export function Nhl25JerseyCard({
             />
 
             {!empty ? (
-              <div
-                className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
-              >
-                {namePlate ? (
-                  <span className={namePlate.className} style={namePlate.style}>
-                    {ln}
-                  </span>
-                ) : null}
-                {numStr ? (
-                  <span className={`mt-px ${numCls}`} style={jerseyNumberStyle(ln, "card")}>
-                    {numStr}
-                  </span>
-                ) : null}
-              </div>
+              <>
+                <JerseyCornerFlagCz />
+                <div
+                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
+                >
+                  {namePlate ? (
+                    <span className={namePlate.className} style={namePlate.style}>
+                      {ln}
+                    </span>
+                  ) : null}
+                  {numStr ? (
+                    <span className={`mt-px ${numCls}`} style={jerseyNumberStyle(ln, "card")}>
+                      {numStr}
+                    </span>
+                  ) : null}
+                </div>
+              </>
             ) : (
               <div
                 className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-center px-1 pt-[24%] pb-[22%]"

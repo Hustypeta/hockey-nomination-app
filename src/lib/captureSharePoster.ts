@@ -17,21 +17,31 @@ export async function captureElementToCanvas(
   });
 }
 
+export type PosterLetterboxTheme = "light" | "dark";
+
 /** Zachová celý plakát uvnitř cílového poměru (letterbox, prémiové pozadí). */
 export function letterboxCanvas(
   source: HTMLCanvasElement,
   targetW: number,
-  targetH: number
+  targetH: number,
+  opts?: { theme?: PosterLetterboxTheme }
 ): HTMLCanvasElement {
   const out = document.createElement("canvas");
   out.width = targetW;
   out.height = targetH;
   const ctx = out.getContext("2d");
   if (!ctx) return source;
+  const dark = opts?.theme === "dark";
   const g = ctx.createLinearGradient(0, 0, targetW, targetH);
-  g.addColorStop(0, "#f8fafc");
-  g.addColorStop(0.45, "#eef2f7");
-  g.addColorStop(1, "#e2e8f0");
+  if (dark) {
+    g.addColorStop(0, "#0f172a");
+    g.addColorStop(0.5, "#0c1220");
+    g.addColorStop(1, "#05080f");
+  } else {
+    g.addColorStop(0, "#f8fafc");
+    g.addColorStop(0.45, "#eef2f7");
+    g.addColorStop(1, "#e2e8f0");
+  }
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, targetW, targetH);
   const sw = source.width;

@@ -3,10 +3,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
   DndContext,
+  DragOverlay,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
 } from "@dnd-kit/core";
 import { toast } from "sonner";
 import { LineBuilder } from "@/components/LineBuilder";
@@ -16,6 +19,7 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
+import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 import { lineupToPlayers, isLineupComplete } from "@/lib/lineupUtils";
 import {
   tryAutoAssignPlayer,
@@ -47,10 +51,14 @@ export function OfficialLineupAdminEditor() {
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const wasCompleteRef = useRef(false);
+  const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 12 },
+      activationConstraint: { distance: 8 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 200, tolerance: 6 },
     })
   );
 
@@ -243,8 +251,22 @@ export function OfficialLineupAdminEditor() {
     [lineup, selectedSlot, canAssignPlayer, assignPlayerToSlot]
   );
 
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const activeId = event.active.id.toString();
+      if (!activeId.startsWith("drag-player-")) {
+        setPoolDragPlayer(null);
+        return;
+      }
+      const pid = activeId.replace("drag-player-", "");
+      setPoolDragPlayer(players.find((p) => p.id === pid) ?? null);
+    },
+    [players]
+  );
+
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
+      setPoolDragPlayer(null);
       const overId = event.over?.id?.toString();
       const activeId = event.active.id.toString();
       if (!overId || !activeId.startsWith("drag-player-")) return;
@@ -262,6 +284,8 @@ export function OfficialLineupAdminEditor() {
     },
     [lineup, players]
   );
+
+  const handleDragCancel = useCallback(() => setPoolDragPlayer(null), []);
 
   const handleRandom = useCallback(() => {
     const next = buildRandomLineup(players);
@@ -393,7 +417,12 @@ export function OfficialLineupAdminEditor() {
     : null;
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
       <div className="sestava-page-ambient min-h-screen pb-[13rem] text-white sm:pb-44 lg:pb-36">
         <SestavaAmbientBackground />
 
@@ -425,7 +454,7 @@ export function OfficialLineupAdminEditor() {
           </header>
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[90rem] px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
+        <div className="relative z-10 mx-auto max-w-[90rem] px-3.5 py-5 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
           {!isComplete && (
             <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-center text-xs text-amber-100 sm:text-sm">
               {remaining > 0 ? (
@@ -439,9 +468,9 @@ export function OfficialLineupAdminEditor() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-6 xl:gap-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
             <section className="min-w-0">
-              <div className="sestava-premium-panel-dark rounded-2xl p-4 backdrop-blur-sm sm:p-5">
+              <div className="sestava-premium-panel-dark rounded-2xl p-3.5 backdrop-blur-sm sm:p-5">
                 <div className="mb-4">
                   <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
                     Výběr hráčů
@@ -449,6 +478,9 @@ export function OfficialLineupAdminEditor() {
                   <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-white sm:text-2xl">
                     Dostupní hráči
                   </h2>
+                  <p className="mt-1.5 text-[11px] leading-snug text-white/55 sm:text-xs">
+                    Přetáhni na slot vpravo, nebo klepni na jméno pro rychlé doplnění.
+                  </p>
                 </div>
                 <PlayerPoolPanel
                   players={players}
@@ -469,7 +501,7 @@ export function OfficialLineupAdminEditor() {
 
             <section className="min-w-0">
               <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
-                <div className="nhl25-moje-sestava-panel rounded-2xl p-4 sm:p-5 lg:p-6">
+                <div className="nhl25-moje-sestava-panel rounded-2xl p-3.5 sm:p-5 lg:p-6">
                   <div className="nhl25-moje-sestava-accent mb-3" aria-hidden />
                   <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
                     Oficiální zápis
@@ -521,6 +553,24 @@ export function OfficialLineupAdminEditor() {
           shareDisabled={!isComplete || saving}
           shareLabel={saving ? "Ukládám…" : "Uložit oficiální soupisku"}
         />
+
+        <DragOverlay dropAnimation={null}>
+          {poolDragPlayer ? (
+            <div className="pointer-events-none flex max-w-[min(100vw-2rem,20rem)] items-center gap-3 rounded-2xl border-2 border-[#f1c40f]/70 bg-gradient-to-br from-[#0a1428]/98 to-[#05080f]/98 px-4 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.65),0_0_0_1px_rgba(200,16,46,0.35)] ring-2 ring-[#c8102e]/50 backdrop-blur-md">
+              <PlayerAvatar
+                name={poolDragPlayer.name}
+                position={poolDragPlayer.position}
+                role={poolDragPlayer.role}
+                imageUrl={poolDragPlayer.imageUrl}
+                size="md"
+              />
+              <div className="min-w-0">
+                <p className="truncate font-bold text-white">{poolDragPlayer.name}</p>
+                <p className="text-[11px] font-semibold text-sky-200/90">Pusť na slot</p>
+              </div>
+            </div>
+          ) : null}
+        </DragOverlay>
 
         <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
       </div>

@@ -28,7 +28,7 @@ export function DroppableSlotWrap({
       ref={setNodeRef}
       className={`
         ${className}
-        min-w-0 w-full rounded-2xl transition-[box-shadow,background-color] duration-200
+        min-w-0 w-full rounded-2xl py-0.5 transition-[box-shadow,background-color] duration-200 sm:py-0
         ${isOver ? overCls : ""}
       `}
     >

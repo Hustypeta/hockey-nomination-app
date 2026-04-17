@@ -35,7 +35,8 @@ export function jerseyNameplateNameProps(
   }
 
   const score = nameplateWidthScore(s);
-  const scale = variant === "premium" ? 1.09 : 1;
+  /** větší jména na dresu oproti číslu (plakát + editor) */
+  const scale = variant === "premium" ? 1.22 : 1.28;
   const minFs = 5.45 * scale;
   const maxFs = 11.05 * scale;
   const low = 3.4;
@@ -70,13 +71,13 @@ export function jerseyNumberStyle(
   if (variant === "premium") {
     if (score <= 8.5) return {};
     const t = clamp((score - 8.5) / 11, 0, 1);
-    const maxPx = 36;
-    const minPx = 25;
+    const maxPx = 34;
+    const minPx = 24;
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (score <= 9.5) return {};
   const t = clamp((score - 9.5) / 10, 0, 1);
-  const maxPx = 28;
-  const minPx = 19;
+  const maxPx = 26;
+  const minPx = 18;
   return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
 }

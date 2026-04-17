@@ -2,8 +2,23 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "sonner";
+import { SITE_ICON_URL } from "@/lib/siteBranding";
+
+function metadataBaseUrl(): URL {
+  for (const raw of [process.env.NEXT_PUBLIC_SITE_URL, process.env.NEXTAUTH_URL]) {
+    const t = raw?.trim();
+    if (!t) continue;
+    try {
+      return new URL(t);
+    } catch {
+      /* ignore */
+    }
+  }
+  return new URL("http://localhost:3000");
+}
 
 export const metadata: Metadata = {
+  metadataBase: metadataBaseUrl(),
   title: {
     default: "LineUp",
     template: "%s | LineUp",
@@ -11,8 +26,8 @@ export const metadata: Metadata = {
   description:
     "LineUp — sestav si svou nominaci na MS v hokeji. Fanouškovský editor sestavy, soutěž a sdílení.",
   icons: {
-    icon: "/icon.png",
-    apple: "/icon.png",
+    icon: SITE_ICON_URL,
+    apple: SITE_ICON_URL,
   },
 };
 

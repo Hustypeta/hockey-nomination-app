@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { signIn } from "next-auth/react";
 import { Download, Share2, Link2, Copy, ChevronLeft } from "lucide-react";
@@ -12,6 +12,7 @@ import {
   canvasToPngDataUrl,
   letterboxCanvas,
   downloadDataUrl,
+  type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
@@ -23,6 +24,9 @@ interface SaveShareModalProps {
   /** Před exportem obrázku — např. aktualizace data ve footeru (volá se uvnitř flushSync). */
   onBeforeCapture?: () => void;
   isAuthenticated: boolean;
+  /** Název nominace (propíše se na plakát + při uložení na server). */
+  nominationTitle: string;
+  onNominationTitleChange: (value: string) => void;
   lineupStructure: LineupStructure;
   captainId: string | null;
   /** Při uložení k účtu — volitelný název nominace. */
@@ -32,6 +36,9 @@ interface SaveShareModalProps {
   contestSubmissionOpen?: boolean;
   /** Aktuální časový bonus (pro info u tlačítka uložit). */
   contestTimeBonusPercent?: ContestTimeBonusPercent;
+  /** Světlý / tmavý plakát (řídí skrytý DOM před exportem). */
+  posterTheme?: PosterLetterboxTheme;
+  onPosterThemeChange?: (t: PosterLetterboxTheme) => void;
 }
 
 const SHARE_TITLE = "MS 2026 – nominace";
@@ -43,19 +50,26 @@ export function SaveShareModal({
   captureRef,
   onBeforeCapture,
   isAuthenticated,
+  nominationTitle,
+  onNominationTitleChange,
   lineupStructure,
   captainId,
   onSave,
   isSaving,
   contestSubmissionOpen = true,
   contestTimeBonusPercent = 0,
+  posterTheme = "light",
+  onPosterThemeChange,
 }: SaveShareModalProps) {
   const [shareBusy, setShareBusy] = useState(false);
   const [shareHint, setShareHint] = useState<string | null>(null);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
-  const [nominationTitle, setNominationTitle] = useState("");
+  const [previewFrame, setPreviewFrame] = useState<"original" | "1x1" | "9x16" | "16x9">("original");
+  /** Téma pozadí letterboxu — podle okamžiku generování plakátu. */
+  const [exportLetterboxTheme, setExportLetterboxTheme] = useState<PosterLetterboxTheme>("light");
+  const [framedPreviewUrl, setFramedPreviewUrl] = useState<string | null>(null);
   const baseCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const guestShareUrl = useMemo(
@@ -80,8 +94,27 @@ export function SaveShareModal({
 
   const resetPreview = useCallback(() => {
     setPreviewDataUrl(null);
+    setFramedPreviewUrl(null);
+    setPreviewFrame("original");
     baseCanvasRef.current = null;
   }, []);
+
+  useEffect(() => {
+    if (!previewDataUrl) {
+      setFramedPreviewUrl(null);
+      return;
+    }
+    const base = baseCanvasRef.current;
+    if (!base) return;
+    if (previewFrame === "original") {
+      setFramedPreviewUrl(previewDataUrl);
+      return;
+    }
+    const map = { "1x1": [1080, 1080], "9x16": [1080, 1920], "16x9": [1920, 1080] } as const;
+    const [w, h] = map[previewFrame];
+    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
+    setFramedPreviewUrl(canvasToPngDataUrl(out));
+  }, [previewDataUrl, previewFrame, exportLetterboxTheme]);
 
   const handleGeneratePoster = async () => {
     setShareBusy(true);
@@ -97,9 +130,13 @@ export function SaveShareModal({
         setShareHint("Plakát se nepodařilo najít. Zkus stránku obnovit.");
         return;
       }
-      const canvas = await captureElementToCanvas(el, { scale: 3, backgroundColor: "#e8ecf2" });
+      const bg = posterTheme === "dark" ? "#0b0e14" : "#e8ecf2";
+      const canvas = await captureElementToCanvas(el, { scale: 3, backgroundColor: bg });
       baseCanvasRef.current = canvas;
-      setPreviewDataUrl(canvasToPngDataUrl(canvas));
+      setExportLetterboxTheme(posterTheme === "dark" ? "dark" : "light");
+      const raw = canvasToPngDataUrl(canvas);
+      setPreviewDataUrl(raw);
+      setPreviewFrame("original");
     } catch (err) {
       console.error(err);
       setShareHint("Generování obrázku se nepovedlo. Zkus to znovu.");
@@ -111,14 +148,14 @@ export function SaveShareModal({
   const downloadAspect = (w: number, h: number, suffix: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
-    const out = letterboxCanvas(base, w, h);
+    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     downloadDataUrl(canvasToPngDataUrl(out), `ms2026-nominace-${suffix}.png`);
   };
 
   const webSharePng = async (w: number, h: number, filename: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
-    const out = letterboxCanvas(base, w, h);
+    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     const dataUrl = canvasToPngDataUrl(out);
     const result = await sharePngDataUrl(dataUrl, {
       filename,
@@ -199,7 +236,6 @@ export function SaveShareModal({
   const handleClose = () => {
     setSavedId(null);
     setShareHint(null);
-    setNominationTitle("");
     resetPreview();
     onClose();
   };
@@ -230,6 +266,38 @@ export function SaveShareModal({
 
           {!previewDataUrl ? (
             <>
+              {onPosterThemeChange ? (
+                <div className="mb-4 rounded-xl border border-white/10 bg-black/20 p-3">
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-white/45">
+                    Vzhled plakátu
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onPosterThemeChange("light")}
+                      className={`flex-1 rounded-lg py-2.5 text-xs font-bold transition-colors sm:text-sm ${
+                        posterTheme === "light"
+                          ? "bg-white text-slate-900 ring-2 ring-[#c8102e]/60"
+                          : "bg-white/5 text-white/55 hover:bg-white/10"
+                      }`}
+                    >
+                      Světlý
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onPosterThemeChange("dark")}
+                      className={`flex-1 rounded-lg py-2.5 text-xs font-bold transition-colors sm:text-sm ${
+                        posterTheme === "dark"
+                          ? "bg-[#0f172a] text-white ring-2 ring-sky-500/50"
+                          : "bg-white/5 text-white/55 hover:bg-white/10"
+                      }`}
+                    >
+                      Tmavý (sítě)
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
               <div className="flex flex-col gap-3 sm:gap-4">
                 <button
                   type="button"
@@ -277,10 +345,39 @@ export function SaveShareModal({
             </>
           ) : (
             <div className="space-y-5">
+              <div>
+                <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                  Náhled — poměr stran
+                </p>
+                <div className="mb-3 grid grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">
+                  {(
+                    [
+                      ["original", "Plakát"],
+                      ["1x1", "1 : 1"],
+                      ["9x16", "9 : 16"],
+                      ["16x9", "16 : 9"],
+                    ] as const
+                  ).map(([id, label]) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setPreviewFrame(id)}
+                      className={`rounded-lg py-2 text-center text-[10px] font-bold uppercase tracking-wide sm:text-[11px] ${
+                        previewFrame === id
+                          ? "bg-[#003087] text-white ring-1 ring-sky-400/50"
+                          : "bg-white/5 text-white/55 ring-1 ring-white/10 hover:bg-white/10"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="overflow-hidden rounded-2xl border border-white/12 bg-black/30 p-2 shadow-inner">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={previewDataUrl}
+                  src={framedPreviewUrl ?? previewDataUrl ?? undefined}
                   alt="Náhled plakátu nominace"
                   className="mx-auto max-h-[min(48vh,480px)] w-auto max-w-full rounded-lg object-contain"
                 />
@@ -302,6 +399,14 @@ export function SaveShareModal({
                 >
                   <Download className="h-4 w-4" aria-hidden />
                   Stáhnout PNG 1:1
+                </button>
+                <button
+                  type="button"
+                  onClick={() => downloadAspect(1920, 1080, "wide-16x9")}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors hover:bg-white/[0.14] sm:col-span-2"
+                >
+                  <Download className="h-4 w-4" aria-hidden />
+                  Stáhnout PNG 16:9
                 </button>
               </div>
 
@@ -388,7 +493,7 @@ export function SaveShareModal({
                 <input
                   type="text"
                   value={nominationTitle}
-                  onChange={(e) => setNominationTitle(e.target.value)}
+                  onChange={(e) => onNominationTitleChange(e.target.value)}
                   maxLength={80}
                   placeholder="např. Varianta po čtvrtfinále"
                   disabled={!!savedId}

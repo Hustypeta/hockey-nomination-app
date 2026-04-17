@@ -60,7 +60,7 @@ body {
  */
 .jersey-nameplate-text {
   font-family: var(--font-jersey-print);
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   color: #e8e1e1;
   letter-spacing: 0.09em;
@@ -151,10 +151,14 @@ body {
     0 -1px 0 rgba(15, 23, 42, 0.04) inset;
 }
 
-/** Světlý plakát (export): stejná šířka karet — brankáři i tři sloupce v řadách. */
+/**
+ * Světlý plakát (export): karty ne přes pevnou šířku sloupce — zabrání překryvu LW/C/RW
+ * při úzkém sloupci (popisek lajny + tři sloupce).
+ */
 .nhl25-share-poster-capture .nhl25-jersey-card-root {
-  width: 7rem;
-  max-width: 7rem;
+  width: 100%;
+  max-width: 6.5rem;
+  margin-inline: auto;
 }
 
 .jersey-number-nhl {

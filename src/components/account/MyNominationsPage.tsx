@@ -29,11 +29,15 @@ function PosterThumb({
   lineup,
   captainId,
   createdAtIso,
+  nominationTitle,
+  watermarkUserLabel,
 }: {
   players: Player[];
   lineup: LineupStructure;
   captainId: string | null;
   createdAtIso: string;
+  nominationTitle?: string | null;
+  watermarkUserLabel?: string | null;
 }) {
   const ls = normalizeLineupStructure(lineup);
   if (!isLineupComplete(ls)) {
@@ -54,8 +58,10 @@ function PosterThumb({
           lineup={ls}
           captainId={captainId}
           assistantIds={ls.assistantIds ?? []}
+          nominationTitle={nominationTitle ?? undefined}
           siteUrl=""
           footerInstantIso={createdAtIso}
+          watermarkUserLabel={watermarkUserLabel ?? undefined}
         />
       </div>
     </div>
@@ -63,7 +69,9 @@ function PosterThumb({
 }
 
 export function MyNominationsPage() {
-  const { status } = useSession();
+  const { status, data: session } = useSession();
+  const accountWatermark =
+    session?.user?.name?.trim() || session?.user?.email?.split("@")[0]?.trim() || "";
   const [players, setPlayers] = useState<Player[]>([]);
   const [nominations, setNominations] = useState<NominationRow[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -250,6 +258,8 @@ export function MyNominationsPage() {
                           lineup={lineup}
                           captainId={n.captainId}
                           createdAtIso={n.createdAt}
+                          nominationTitle={n.title}
+                          watermarkUserLabel={accountWatermark || null}
                         />
                       ) : (
                         <div className="h-[100px] w-[180px] shrink-0 rounded-xl border border-white/10 bg-[#0f172a]/90" />

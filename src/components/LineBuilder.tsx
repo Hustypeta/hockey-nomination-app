@@ -540,7 +540,7 @@ export function LineBuilder({
                   <Slot
                     key={i}
                     playerId={gid}
-                    label={`G${i + 1}`}
+                    label="G"
                     type="goalie"
                     lineIndex={i}
                     jerseySize="goalie"
@@ -572,7 +572,7 @@ export function LineBuilder({
                       {i + 1}. LAJNA
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                      <div className="grid min-w-0 grid-cols-3 gap-1.5 sm:gap-2">
+                      <div className="grid min-w-0 grid-cols-3 gap-2 sm:gap-2.5">
                         <Slot
                           playerId={line.lw}
                           label="LW"
@@ -703,6 +703,10 @@ export function LineBuilder({
                       }
                     />
                   </div>
+                  <div
+                    className="mx-auto mt-2 h-1 w-full max-w-lg rounded-full bg-gradient-to-r from-transparent via-[#003087] to-transparent shadow-[0_0_14px_rgba(0,48,135,0.35)]"
+                    aria-hidden
+                  />
                 </div>
               );
             })}
@@ -746,7 +750,7 @@ export function LineBuilder({
                 </p>
                 <Slot
                   playerId={lineup.goalies[2]}
-                  label="G3"
+                  label="G"
                   type="goalie"
                   lineIndex={2}
                   jerseySize="goalie"
@@ -832,7 +836,7 @@ export function LineBuilder({
                 <Slot
                   key={i}
                   playerId={gid}
-                  label={`G${i + 1}`}
+                  label="G"
                   type="goalie"
                   lineIndex={i}
                   jerseySize="goalie"
@@ -874,7 +878,7 @@ export function LineBuilder({
               <div className="flex justify-center">
                 <Slot
                   playerId={lineup.goalies[2]}
-                  label="G3"
+                  label="G"
                   type="goalie"
                   lineIndex={2}
                   jerseySize="goalie"

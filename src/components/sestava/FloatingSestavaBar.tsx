@@ -9,8 +9,10 @@ export function FloatingSestavaBar({
   shareDisabled,
   shareLabel,
   onContestSubmit,
-  contestSubmitDisabled,
+  contestSubmitBusy,
+  contestSubmitInactive,
   showContestSubmit,
+  className = "",
 }: {
   onShare: () => void;
   onRandom: () => void;
@@ -19,11 +21,18 @@ export function FloatingSestavaBar({
   shareLabel: string;
   /** Odeslání do soutěže (jednou na účet). */
   onContestSubmit?: () => void;
-  contestSubmitDisabled?: boolean;
+  /** true = probíhá POST — tlačítko je skutečně disabled. */
+  contestSubmitBusy?: boolean;
+  /** true = šedý stav (nepřipravená nominace / uzávěrka); kliknutí stále proběhne (rodič ukáže nápovědu). */
+  contestSubmitInactive?: boolean;
   showContestSubmit?: boolean;
+  /** Např. skrýt lištu pod mobilním výběrem hráčů (`max-lg:hidden`). */
+  className?: string;
 }) {
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center border-t border-white/[0.1] bg-gradient-to-t from-[#05080f] via-[#080d16]/98 to-transparent px-3 pt-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-4 lg:pt-5">
+    <div
+      className={`pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center border-t border-white/[0.1] bg-gradient-to-t from-[#05080f] via-[#080d16]/98 to-transparent px-3 pt-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-4 lg:pt-5 ${className}`}
+    >
       <div className="pointer-events-auto flex w-full max-w-3xl flex-col gap-2.5 rounded-2xl border border-white/[0.12] bg-gradient-to-br from-[#0f172a]/95 via-[#0a1428]/96 to-[#05080f]/95 p-3 shadow-[0_-24px_72px_rgba(0,0,0,0.65),0_0_0_1px_rgba(241,196,15,0.12),0_0_48px_rgba(200,16,46,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl backdrop-saturate-150 sm:flex-row sm:items-stretch sm:justify-center sm:gap-3 sm:p-4">
         <div className="flex w-full flex-col gap-2 sm:flex-1 sm:flex-row sm:gap-2">
           <button
@@ -46,9 +55,17 @@ export function FloatingSestavaBar({
             <button
               type="button"
               onClick={onContestSubmit}
-              disabled={contestSubmitDisabled}
+              disabled={!!contestSubmitBusy}
+              aria-busy={!!contestSubmitBusy}
               className={`
-                flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#f1c40f]/45 bg-[#f1c40f]/[0.09] px-3 py-3.5 text-sm font-bold tracking-tight text-[#f1e6a8] shadow-[0_0_24px_rgba(241,196,15,0.12)] transition-all hover:bg-[#f1c40f]/15 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-white/25
+                flex flex-1 items-center justify-center gap-2 rounded-xl border-2 px-3 py-3.5 text-sm font-bold tracking-tight shadow-[0_0_24px_rgba(241,196,15,0.12)] transition-all active:scale-[0.98]
+                ${
+                  contestSubmitBusy
+                    ? "cursor-not-allowed border-white/10 bg-white/[0.03] text-white/25"
+                    : contestSubmitInactive
+                      ? "cursor-pointer border-white/15 bg-white/[0.05] text-white/45 hover:bg-white/[0.08] hover:text-white/65"
+                      : "border-[#f1c40f]/45 bg-[#f1c40f]/[0.09] text-[#f1e6a8] hover:bg-[#f1c40f]/15"
+                }
               `}
             >
               <Trophy className="h-5 w-5 shrink-0 opacity-95" aria-hidden />
