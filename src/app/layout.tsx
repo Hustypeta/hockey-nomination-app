@@ -20,8 +20,8 @@ function metadataBaseUrl(): URL {
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
   title: {
-    default: "LineUp",
-    template: "%s | LineUp",
+    default: "Lineup",
+    template: "%s | Lineup",
   },
   description: "Fanouškovský editor sestavy, soutěž a sdílení.",
   icons: {

@@ -185,8 +185,71 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   ))}
                 </div>
               </section>
+            </div>
 
-              <section className={`rounded-lg border border-dashed px-2 py-2 sm:px-2.5 sm:py-2.5 ${dark ? "border-white/18 bg-black/15" : "border-slate-300/70 bg-slate-50/80"}`}>
+            <div className="min-w-0 space-y-3 sm:space-y-4">
+              <section>
+                <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:text-[11px] ${heading}`}>
+                  Obranné páry
+                </h2>
+                <div className="grid min-w-0 grid-cols-2 gap-1.5 sm:gap-2">
+                  {lineup.defensePairs.slice(0, 3).map((pair, i) => (
+                    <div key={i} className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
+                      <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
+                        {i + 1}. pár
+                      </p>
+                      <div className="grid min-w-0 grid-cols-2 gap-1 sm:gap-1.5">
+                        <PosterJerseyWrap>
+                          <Nhl25JerseyCard
+                            player={getPlayer(pair.lb)}
+                            positionLabel="LD"
+                            size="compact"
+                            nameplateVariant="poster"
+                            isCaptain={pair.lb ? captainId === pair.lb : false}
+                            isAssistant={pair.lb ? aids.includes(pair.lb) : false}
+                            disableMotion
+                          />
+                        </PosterJerseyWrap>
+                        <PosterJerseyWrap>
+                          <Nhl25JerseyCard
+                            player={getPlayer(pair.rb)}
+                            positionLabel="RD"
+                            size="compact"
+                            nameplateVariant="poster"
+                            isCaptain={pair.rb ? captainId === pair.rb : false}
+                            isAssistant={pair.rb ? aids.includes(pair.rb) : false}
+                            disableMotion
+                          />
+                        </PosterJerseyWrap>
+                      </div>
+                      <div
+                        className="mx-auto mt-1.5 h-0.5 w-[88%] rounded-full bg-gradient-to-r from-transparent via-[#003087] to-transparent opacity-95 shadow-[0_0_10px_rgba(0,48,135,0.4)] sm:mt-2 sm:h-1"
+                        aria-hidden
+                      />
+                    </div>
+                  ))}
+                  <div className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
+                    <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
+                      7. bek
+                    </p>
+                    <PosterJerseyWrap>
+                      <Nhl25JerseyCard
+                        player={getPlayer(seventhDefenseId)}
+                        positionLabel="D"
+                        size="compact"
+                        nameplateVariant="poster"
+                        isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
+                        isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
+                        disableMotion
+                      />
+                    </PosterJerseyWrap>
+                  </div>
+                </div>
+              </section>
+
+              <section
+                className={`rounded-lg border border-dashed px-2 py-2 sm:px-2.5 sm:py-2.5 ${dark ? "border-white/18 bg-black/15" : "border-slate-300/70 bg-slate-50/80"}`}
+              >
                 <h2
                   className={`mb-2 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${dark ? "text-white/90" : "text-slate-800"}`}
                 >
@@ -262,67 +325,6 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                 ) : null}
               </section>
             </div>
-
-            <div className="min-w-0 space-y-3 sm:space-y-4">
-              <section>
-                <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:text-[11px] ${heading}`}>
-                  Obranné páry
-                </h2>
-                <div className="grid min-w-0 grid-cols-2 gap-1.5 sm:gap-2">
-                  {lineup.defensePairs.slice(0, 3).map((pair, i) => (
-                    <div key={i} className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
-                      <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
-                        {i + 1}. pár
-                      </p>
-                      <div className="grid min-w-0 grid-cols-2 gap-1 sm:gap-1.5">
-                        <PosterJerseyWrap>
-                          <Nhl25JerseyCard
-                            player={getPlayer(pair.lb)}
-                            positionLabel="LD"
-                            size="compact"
-                            nameplateVariant="poster"
-                            isCaptain={pair.lb ? captainId === pair.lb : false}
-                            isAssistant={pair.lb ? aids.includes(pair.lb) : false}
-                            disableMotion
-                          />
-                        </PosterJerseyWrap>
-                        <PosterJerseyWrap>
-                          <Nhl25JerseyCard
-                            player={getPlayer(pair.rb)}
-                            positionLabel="RD"
-                            size="compact"
-                            nameplateVariant="poster"
-                            isCaptain={pair.rb ? captainId === pair.rb : false}
-                            isAssistant={pair.rb ? aids.includes(pair.rb) : false}
-                            disableMotion
-                          />
-                        </PosterJerseyWrap>
-                      </div>
-                      <div
-                        className="mx-auto mt-1.5 h-0.5 w-[88%] rounded-full bg-gradient-to-r from-transparent via-[#003087] to-transparent opacity-95 shadow-[0_0_10px_rgba(0,48,135,0.4)] sm:mt-2 sm:h-1"
-                        aria-hidden
-                      />
-                    </div>
-                  ))}
-                  <div className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
-                    <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
-                      7. bek
-                    </p>
-                    <PosterJerseyWrap>
-                      <Nhl25JerseyCard
-                        player={getPlayer(seventhDefenseId)}
-                        positionLabel="D"
-                        size="compact"
-                        nameplateVariant="poster"
-                        isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
-                        isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
-                        disableMotion
-                      />
-                    </PosterJerseyWrap>
-                  </div>
-                </div>
-              </section>
-            </div>
           </div>
         </div>
 
@@ -332,7 +334,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
           }`}
         >
           <div className={`max-w-[48%] text-left text-[9px] leading-snug sm:text-[10px] ${dark ? "text-white/45" : "text-slate-500"}`}>
-            <p className="font-display font-bold tracking-wide text-[#c8102e]">LineUp 2026</p>
+            <p className="font-display font-bold tracking-wide text-[#c8102e]">Lineup 2026</p>
             {wm ? <p className="mt-0.5 font-medium text-white/70">{wm}</p> : null}
           </div>
           <div className="min-w-0 flex-1 text-center">

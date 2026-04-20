@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Sdílená nominace — LineUp";
+export const alt = "Sdílená nominace — Lineup";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -45,7 +45,7 @@ export default async function Image() {
             Sdílená nominace
           </span>
           <span style={{ color: "rgba(255,255,255,0.55)", fontSize: 26, fontWeight: 700, letterSpacing: "0.12em" }}>
-            LineUp · MS 2026
+            Lineup · MS 2026
           </span>
           <span style={{ color: "rgba(255,255,255,0.72)", fontSize: 30, maxWidth: 900, lineHeight: 1.4 }}>
             Podívej se na sestavu a porovnej ji se svou.

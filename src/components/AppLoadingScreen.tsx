@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { SITE_BRAND } from "@/lib/siteBranding";
 
 const DEFAULT_INTRO =
@@ -12,6 +13,8 @@ type AppLoadingScreenProps = {
    * Úvodní text místo výchozího. `null` = nezobrazovat (např. stránka sdíleného odkazu).
    */
   intro?: string | null;
+  /** Nepřihlášení — výrazné Přihlásit + blok výhod (editor sestavy). */
+  showSignInCta?: boolean;
 };
 
 /**
@@ -20,8 +23,15 @@ type AppLoadingScreenProps = {
 export function AppLoadingScreen({
   message = "Načítám…",
   intro,
+  showSignInCta = false,
 }: AppLoadingScreenProps) {
   const introText = intro === undefined ? DEFAULT_INTRO : intro;
+
+  const handleSignIn = () => {
+    const cb =
+      typeof window !== "undefined" ? `${window.location.pathname}${window.location.search}` : "/sestava";
+    signIn(undefined, { callbackUrl: cb || "/sestava" });
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0c0e12]">
@@ -57,6 +67,42 @@ export function AppLoadingScreen({
             />
             <span className="text-sm tracking-wide">{message}</span>
           </div>
+
+          {showSignInCta ? (
+            <div className="mt-8 w-full border-t border-white/[0.08] pt-8">
+              <button
+                type="button"
+                onClick={handleSignIn}
+                className="w-full rounded-xl bg-gradient-to-r from-[#003087] to-[#002056] px-5 py-3.5 text-center font-display text-base font-bold uppercase tracking-[0.12em] text-white shadow-[0_8px_28px_rgba(0,48,135,0.45)] transition hover:brightness-110 active:scale-[0.99]"
+              >
+                Přihlásit se
+              </button>
+
+              <div className="mt-5 rounded-xl border border-sky-500/25 bg-[#0f172a]/85 px-4 py-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-sky-200/95">
+                  Proč se přihlásit?
+                </p>
+                <ul className="mt-3 space-y-2.5 text-[13px] leading-snug text-white/82">
+                  <li className="flex gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#c41e3a]" aria-hidden />
+                    <span>Ukládat nominaci k účtu a vrátit se k ní později.</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#003f87]" aria-hidden />
+                    <span>Kratší odkaz po uložení místo dlouhého sdíleného řetězce v URL.</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" aria-hidden />
+                    <span>Odeslat nominaci do soutěže (když je otevřená) a zapojit se do vyhodnocení.</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" aria-hidden />
+                    <span>Přehled nominací v sekci účet.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

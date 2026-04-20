@@ -4,7 +4,7 @@ import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "LineUp",
+    absolute: "Lineup",
   },
   description:
     "Časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.",

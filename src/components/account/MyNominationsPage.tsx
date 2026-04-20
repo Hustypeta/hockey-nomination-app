@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Loader2, Pencil, X } from "lucide-react";
+import { Loader2, Pencil, Share2, X } from "lucide-react";
 import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
@@ -292,6 +292,13 @@ export function MyNominationsPage() {
                         className="inline-flex items-center justify-center rounded-lg bg-[#003087] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0040a8]"
                       >
                         Upravit v editoru
+                      </Link>
+                      <Link
+                        href={`/sestava?nominace=${encodeURIComponent(n.id)}&sdilet=1`}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-gradient-to-r from-[#c8102e] to-[#9e0c24] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#c8102e]/20 transition hover:brightness-110"
+                      >
+                        <Share2 className="h-4 w-4" aria-hidden />
+                        Sdílet
                       </Link>
                       <Link
                         href={`/nominations/${n.id}`}

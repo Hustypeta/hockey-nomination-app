@@ -3,6 +3,20 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 
+/**
+ * Railway (a obecně reverse proxy bez VERCEL=1): NextAuth bere `origin` jen z NEXTAUTH_URL,
+ * pokud není AUTH_TRUST_HOST — pak se špatně počítá HTTPS / cookie prefix (`__Secure-…`) a OAuth
+ * končí „State cookie was missing“. Viz `detect-origin` v next-auth.
+ */
+const onRailway = Boolean(process.env.RAILWAY_ENVIRONMENT ?? process.env.RAILWAY_PROJECT_ID);
+if (onRailway && process.env.AUTH_TRUST_HOST !== "false") {
+  process.env.AUTH_TRUST_HOST ??= "true";
+}
+const railwayHost = process.env.RAILWAY_PUBLIC_DOMAIN?.trim();
+if (onRailway && !process.env.NEXTAUTH_URL?.trim() && railwayHost) {
+  process.env.NEXTAUTH_URL = /^https?:\/\//i.test(railwayHost) ? railwayHost : `https://${railwayHost}`;
+}
+
 /** NextAuth vyžaduje v produkci tajný klíč (šifrování JWT / cookies). */
 function nextAuthSecret(): string | undefined {
   return process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET ?? undefined;

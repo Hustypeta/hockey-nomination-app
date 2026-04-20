@@ -134,6 +134,7 @@ export function NominationBuilderPage() {
 
   useEffect(() => {
     const raw = searchParams.get("nominace") ?? searchParams.get("nomination");
+    const openShareAfterLoad = searchParams.get("sdilet") === "1";
     if (!raw?.trim()) return;
     const id = raw.trim();
     let cancelled = false;
@@ -154,6 +155,7 @@ export function NominationBuilderPage() {
           setShareNominationTitle(typeof data.title === "string" ? data.title : "");
           setEditingNominationId(id);
           toast.success("Nominace načtena do editoru.");
+          if (openShareAfterLoad) setModalOpen(true);
         }
         router.replace("/sestava", { scroll: false });
       } catch {
@@ -479,7 +481,9 @@ export function NominationBuilderPage() {
   }, [isComplete, contestSubmissionOpen]);
 
   if (loading) {
-    return <AppLoadingScreen message="Načítám hráče…" />;
+    return (
+      <AppLoadingScreen message="Načítám hráče…" showSignInCta={authStatus === "unauthenticated"} />
+    );
   }
 
   const bonusPercent = [0, 10, 25, 40].includes(contestBonusRaw)

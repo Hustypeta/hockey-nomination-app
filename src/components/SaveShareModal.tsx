@@ -264,9 +264,11 @@ export function SaveShareModal({
               <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.28em] text-[#c8102e]/90">
                 MS 2026
               </p>
-              <h2 className="font-display text-2xl tracking-wide text-white sm:text-3xl">Sdílet nominaci</h2>
-              <p className="mt-2 max-w-md text-sm text-white/55">
-                Prémiový plakát ve stylu sestavy — idealní pro skupiny a sociální sítě.
+              <h2 className="font-display text-2xl tracking-wide text-white sm:text-3xl">Sdílet sestavu</h2>
+              <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/65">
+                Zde si můžete vybrat, jakým způsobem chcete svoji sestavu sdílet. Pokud jste přihlášeni, můžete si také
+                uložit koncept sestavy na svůj účet (kliknutím na{" "}
+                <strong className="font-semibold text-white/85">Uložit sestavu</strong> dole).
               </p>
             </div>
           </div>
@@ -354,10 +356,6 @@ export function SaveShareModal({
                     {copied ? "Zkopírováno" : "Kopírovat"}
                   </button>
                 </div>
-                <p className="mt-2 text-[10px] leading-snug text-white/38">
-                  Odkaz je komprimovaný — kratší než dřív, staré odkazy pořád fungují. Pro náhled v sociálních sítích si ulož
-                  nominaci k účtu — tam je kratší URL než hostovaný odkaz.
-                </p>
               </div>
             </>
           ) : (
@@ -549,9 +547,9 @@ export function SaveShareModal({
                 type="button"
                 onClick={handleSaveNomination}
                 disabled={isSaving || !!savedId}
-                className="w-full rounded-xl border border-white/12 bg-white/[0.04] py-3 font-display text-sm font-semibold text-white transition-colors hover:border-[#c8102e]/40 hover:bg-white/[0.07] disabled:cursor-not-allowed disabled:opacity-45"
+                className="w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3.5 font-sans text-base font-semibold leading-snug tracking-normal text-white shadow-inner transition-colors hover:border-[#c8102e]/45 hover:bg-white/[0.09] disabled:cursor-not-allowed disabled:opacity-45 sm:py-4 sm:text-lg"
               >
-                {savedId ? "Nominace uložena u účtu" : isSaving ? "Ukládám…" : "Dokončit nominaci k účtu"}
+                {savedId ? "Sestava uložena u účtu" : isSaving ? "Ukládám…" : "Uložit sestavu"}
               </button>
             </div>
           )}

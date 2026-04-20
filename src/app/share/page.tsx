@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SharePageClient } from "./SharePageClient";
 
-const ogTitle = "Sdílená nominace — LineUp · MS 2026";
+const ogTitle = "Sdílená nominace — Lineup · MS 2026";
 const ogDescription =
   "Otevři odkaz a zobrazí se celá soupiska českého národního týmu z fanouškovského editoru.";
 
@@ -17,13 +17,13 @@ export async function generateMetadata({
     description: ogDescription,
     openGraph: {
       title: ogTitle,
-      description: hasPayload ? ogDescription : "LineUp — editor nominace na MS 2026.",
+      description: hasPayload ? ogDescription : "Lineup — editor nominace na MS 2026.",
       images: [
         {
           url: "/share/opengraph-image",
           width: 1200,
           height: 630,
-          alt: "LineUp — nominace",
+          alt: "Lineup — nominace",
         },
       ],
       type: "website",
