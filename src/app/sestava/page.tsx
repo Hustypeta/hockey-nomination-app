@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { NominationBuilderPage } from "@/components/NominationBuilderPage";
-import { AppLoadingScreen } from "@/components/AppLoadingScreen";
+import { SestavaLoadingFallback } from "./SestavaLoadingFallback";
 
 export const metadata: Metadata = {
   title: "Sestav nominaci",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function SestavaPage() {
   return (
-    <Suspense fallback={<AppLoadingScreen message="Načítám editor…" />}>
+    <Suspense fallback={<SestavaLoadingFallback />}>
       <NominationBuilderPage />
     </Suspense>
   );

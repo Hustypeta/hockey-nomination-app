@@ -482,7 +482,7 @@ export function NominationBuilderPage() {
 
   if (loading) {
     return (
-      <AppLoadingScreen message="Načítám hráče…" showSignInCta={authStatus === "unauthenticated"} />
+      <AppLoadingScreen message="Načítám hráče…" showSignInCta={authStatus !== "authenticated"} />
     );
   }
 
