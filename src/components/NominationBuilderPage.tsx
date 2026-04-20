@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import type { PosterLetterboxTheme } from "@/lib/captureSharePoster";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -19,6 +19,7 @@ import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { LineBuilder } from "@/components/LineBuilder";
 import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
+import { NamesOnlySharePoster } from "@/components/NamesOnlySharePoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
@@ -28,6 +29,7 @@ import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
+import { encodeSharePayload } from "@/lib/sharePayload";
 import { lineupToPlayers, isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
 import { useContestStats } from "@/hooks/useContestStats";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -53,6 +55,9 @@ export function NominationBuilderPage() {
   const shareWatermarkLabel =
     authStatus === "authenticated" && wmFromSession ? wmFromSession : null;
   const [sharePosterTheme, setSharePosterTheme] = useState<PosterLetterboxTheme>("light");
+  const [sharePosterVariant, setSharePosterVariant] = useState<"jerseys" | "names">("jerseys");
+  const [savedNominationSlug, setSavedNominationSlug] = useState<string | null>(null);
+  const [guestShareCode, setGuestShareCode] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
@@ -82,6 +87,25 @@ export function NominationBuilderPage() {
   const [editingNominationId, setEditingNominationId] = useState<string | null>(null);
   /** Název na plakátu a v modalu uložení (synchronizované). */
   const [shareNominationTitle, setShareNominationTitle] = useState("");
+
+  const longGuestShareUrl = useMemo(() => {
+    if (typeof window === "undefined") return "";
+    return `${window.location.origin}/share?z=${encodeSharePayload({
+      v: 1,
+      captainId,
+      lineupStructure: lineup,
+    })}`;
+  }, [captainId, lineup]);
+
+  const shareUrlForModal = useMemo(() => {
+    if (typeof window === "undefined") return "";
+    const o = (siteOrigin && siteOrigin.length > 0 ? siteOrigin : window.location.origin).replace(/\/$/, "");
+    if (savedNominationSlug) return `${o}/v/${savedNominationSlug}`;
+    if (guestShareCode) return `${o}/l/${guestShareCode}`;
+    if (editingNominationId) return `${o}/nominations/${editingNominationId}`;
+    return "";
+  }, [siteOrigin, guestShareCode, savedNominationSlug, editingNominationId]);
+
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
   const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
@@ -124,6 +148,57 @@ export function NominationBuilderPage() {
     setSiteOrigin(typeof window !== "undefined" ? window.location.origin : "");
   }, []);
 
+  /** Krátký odkaz /l/{code}, dokud nemáme /v/{slug} z uložené nominace. */
+  useEffect(() => {
+    if (!modalOpen) return;
+    if (savedNominationSlug) {
+      setGuestShareCode(null);
+      return;
+    }
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      void (async () => {
+        try {
+          const payload = {
+            captainId,
+            lineupStructure: lineup,
+            title: shareNominationTitle.trim() || null,
+          };
+          if (guestShareCode) {
+            const res = await fetch(`/api/share-links/${guestShareCode}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            if (!cancelled && res.ok) return;
+            if (!cancelled && res.status === 404) setGuestShareCode(null);
+            else if (!cancelled) return;
+          }
+          const res = await fetch("/api/share-links", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = (await res.json()) as { code?: string };
+          if (!cancelled && data.code) setGuestShareCode(data.code);
+        } catch {
+          /* ignore */
+        }
+      })();
+    }, 450);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [
+    modalOpen,
+    savedNominationSlug,
+    guestShareCode,
+    captainId,
+    lineup,
+    shareNominationTitle,
+  ]);
+
   useEffect(() => {
     fetch("/api/players")
       .then((res) => res.json())
@@ -146,6 +221,7 @@ export function NominationBuilderPage() {
           lineupStructure?: unknown;
           captainId?: string | null;
           title?: string | null;
+          slug?: string | null;
         } = await res.json();
         if (cancelled) return;
         const ls = data.lineupStructure;
@@ -153,6 +229,7 @@ export function NominationBuilderPage() {
           setLineup(normalizeLineupStructure(ls as LineupStructure));
           setCaptainId(typeof data.captainId === "string" ? data.captainId : null);
           setShareNominationTitle(typeof data.title === "string" ? data.title : "");
+          setSavedNominationSlug(typeof data.slug === "string" ? data.slug : null);
           setEditingNominationId(id);
           toast.success("Nominace načtena do editoru.");
           if (openShareAfterLoad) setModalOpen(true);
@@ -360,6 +437,8 @@ export function NominationBuilderPage() {
     setSelectedSlot(null);
     setEditingNominationId(null);
     setShareNominationTitle("");
+    setSavedNominationSlug(null);
+    setGuestShareCode(null);
     toast.success("Náhodná nominace je hotová — uprav si ji, jak chceš.");
   }, [players]);
 
@@ -369,6 +448,8 @@ export function NominationBuilderPage() {
     setSelectedSlot(null);
     setEditingNominationId(null);
     setShareNominationTitle("");
+    setSavedNominationSlug(null);
+    setGuestShareCode(null);
     toast.message("Sestava byla resetována.");
   }, []);
 
@@ -395,6 +476,9 @@ export function NominationBuilderPage() {
       if (!res.ok) {
         toast.error(data.error || "Chyba při ukládání");
         return null;
+      }
+      if (typeof data.slug === "string" && data.slug) {
+        setSavedNominationSlug(data.slug);
       }
       toast.success(
         updating ? "Změny uloženy." : "Nominace uložena u účtu jako koncept."
@@ -706,39 +790,52 @@ export function NominationBuilderPage() {
           className="pointer-events-none fixed left-0 top-0 z-[-1] w-[920px] max-w-[920px] -translate-x-full"
           aria-hidden
         >
-          <Nhl25SharePoster
-            ref={shareCaptureRef}
-            players={players}
-            lineup={lineup}
-            captainId={captainId}
-            assistantIds={lineup.assistantIds ?? []}
-            nominationTitle={shareNominationTitle}
-            siteUrl={siteOrigin}
-            footerInstantIso={sharePosterFooterIso}
-            posterTheme={sharePosterTheme}
-            watermarkUserLabel={shareWatermarkLabel}
-          />
+          {sharePosterVariant === "jerseys" ? (
+            <Nhl25SharePoster
+              ref={shareCaptureRef}
+              players={players}
+              lineup={lineup}
+              captainId={captainId}
+              assistantIds={lineup.assistantIds ?? []}
+              nominationTitle={shareNominationTitle}
+              siteUrl={siteOrigin}
+              footerInstantIso={sharePosterFooterIso}
+              posterTheme={sharePosterTheme}
+              watermarkUserLabel={shareWatermarkLabel}
+            />
+          ) : (
+            <NamesOnlySharePoster
+              ref={shareCaptureRef}
+              players={players}
+              lineup={lineup}
+              nominationTitle={shareNominationTitle}
+              siteUrl={siteOrigin}
+              footerInstantIso={sharePosterFooterIso}
+            />
+          )}
         </div>
 
         <SaveShareModal
           isOpen={modalOpen}
-          onClose={() => {
-            setShareNominationTitle("");
-            setModalOpen(false);
-          }}
+          onClose={() => setModalOpen(false)}
           captureRef={shareCaptureRef}
           onBeforeCapture={() => setSharePosterFooterIso(new Date().toISOString())}
           isAuthenticated={isAuthenticated}
           nominationTitle={shareNominationTitle}
           onNominationTitleChange={setShareNominationTitle}
+          players={players}
           lineupStructure={lineup}
           captainId={captainId}
+          assistantIds={lineup.assistantIds ?? []}
+          shareLinkHref={shareUrlForModal || longGuestShareUrl}
           onSave={handleSave}
           isSaving={saving}
           contestSubmissionOpen={contestSubmissionOpen}
           contestTimeBonusPercent={bonusPercent}
           posterTheme={sharePosterTheme}
           onPosterThemeChange={setSharePosterTheme}
+          posterVariant={sharePosterVariant}
+          onPosterVariantChange={setSharePosterVariant}
         />
 
         <DragOverlay dropAnimation={null}>

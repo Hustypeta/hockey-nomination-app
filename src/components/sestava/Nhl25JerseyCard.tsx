@@ -32,6 +32,10 @@ const numberClass: Record<Nhl25JerseySize, string> = {
   goalie: NHL25_CARD_UNIFIED.number,
 };
 
+/** Větší číslo na exportním plakátu (sdílení) — jedna velikost, capture nemusí trefit breakpointy. */
+const POSTER_EXPORT_NUMBER =
+  "jersey-back-number-text jersey-back-number-text--woven text-[1.56rem] max-w-[92%] text-center leading-none";
+
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
   compact: "justify-start px-1.5 pt-[25%]",
@@ -69,7 +73,7 @@ export function Nhl25JerseyCard({
   const showAssistant = isAssistant && !empty && !isCaptain;
   const w = widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
-  const numCls = numberClass[size];
+  const numCls = nameplateVariant === "poster" ? POSTER_EXPORT_NUMBER : numberClass[size];
   const ln = !empty ? lastName(player.name) : "";
   const npVar = nameplateVariant === "poster" ? "poster" : "card";
   const namePlate = !empty ? jerseyNameplateNameProps(ln, npVar) : null;
@@ -151,7 +155,11 @@ export function Nhl25JerseyCard({
               <>
                 <JerseyCornerFlagCz />
                 <div
-                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
+                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${
+                    nameplateVariant === "poster"
+                      ? "justify-start px-1.5 pt-[33%]"
+                      : overlayTopClass[size]
+                  }`}
                 >
                   {namePlate && namePlate.lines.length > 0 ? (
                     <span className="flex w-full max-w-full flex-col items-center gap-[0.1em]">

@@ -33,9 +33,9 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-/** Na plakátu stejná šířka dresu v mřížce 2/3 sloupců (obrana působila menší). */
+/** Na plakátu stejná šířka dresu v mřížce 2/3 sloupců — větší než dřív, stále vejde bez překryvu. */
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
-  return <div className="mx-auto w-[6.5rem] min-[400px]:w-[7rem] sm:w-[7.25rem]">{children}</div>;
+  return <div className="mx-auto w-[7.5rem] min-[400px]:w-[7.875rem] sm:w-[8rem]">{children}</div>;
 }
 
 export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps>(
@@ -116,7 +116,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                 <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:mb-2.5 sm:pb-1.5 sm:text-[11px] ${heading}`}>
                   Brankáři
                 </h2>
-                <div className="grid min-w-0 grid-cols-3 gap-1.5 sm:gap-2">
+                <div className="grid min-w-0 grid-cols-3 gap-1 sm:gap-1.5">
                   {lineup.goalies.map((gid, i) => (
                     <PosterJerseyWrap key={`g-${i}`}>
                       <Nhl25JerseyCard
@@ -146,7 +146,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       <span className={`shrink-0 font-display text-[9px] font-bold uppercase tracking-wide sm:text-[11px] ${subheading}`}>
                         {i + 1}. lajna
                       </span>
-                      <div className="grid min-w-0 w-full grid-cols-3 gap-1 sm:gap-2">
+                      <div className="grid min-w-0 w-full grid-cols-3 gap-1 sm:gap-1.5">
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(line.lw)}
@@ -192,13 +192,13 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                 <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:text-[11px] ${heading}`}>
                   Obranné páry
                 </h2>
-                <div className="grid min-w-0 grid-cols-2 gap-1.5 sm:gap-2">
+                <div className="grid min-w-0 grid-cols-2 gap-1 sm:gap-1.5">
                   {lineup.defensePairs.slice(0, 3).map((pair, i) => (
                     <div key={i} className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
                       <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
                         {i + 1}. pár
                       </p>
-                      <div className="grid min-w-0 grid-cols-2 gap-1 sm:gap-1.5">
+                      <div className="grid min-w-0 grid-cols-2 gap-0.5 sm:gap-1">
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(pair.lb)}
@@ -258,7 +258,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                 <p className={`mb-2 text-center text-[9px] font-semibold uppercase tracking-wider ${subheading}`}>
                   13. útok · náhradníci
                 </p>
-                <div className={`grid min-w-0 gap-2 ${extraD ? "grid-cols-3" : "grid-cols-2"}`}>
+                <div className={`grid min-w-0 gap-1.5 sm:gap-2 ${extraD ? "grid-cols-3" : "grid-cols-2"}`}>
                   <div className="min-w-0">
                     <p className={`mb-1 text-center text-[8px] font-bold uppercase tracking-wider sm:text-[10px] ${subheading}`}>
                       X

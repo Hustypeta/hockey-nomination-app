@@ -1,23 +1,24 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { NominationView } from "@/app/nominations/[id]/NominationView";
 import { prisma } from "@/lib/prisma";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
-import { NominationView } from "./NominationView";
+import type { LineupStructure } from "@/types";
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 };
 
-async function getNomination(id: string) {
+async function getNominationBySlug(slug: string) {
   const nomination = await prisma.nomination.findUnique({
-    where: { id },
+    where: { slug },
   });
   if (!nomination) return null;
 
   const orderedPlayers = await resolvePlayersByIds(nomination.selectedPlayerIds);
 
-  const rawLineup = nomination.lineupStructure as import("@/types").LineupStructure | null;
+  const rawLineup = nomination.lineupStructure as LineupStructure | null;
   const lineupStructure = rawLineup ? normalizeLineupStructure(rawLineup) : null;
 
   return {
@@ -28,21 +29,20 @@ async function getNomination(id: string) {
     createdAt: nomination.createdAt,
     timeBonusPercent: nomination.timeBonusPercent,
     title: nomination.title,
+    slug: nomination.slug,
   };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const data = await getNomination(id);
+  const { slug } = await params;
+  const data = await getNominationBySlug(slug);
   if (!data) return { title: "Nominace nenalezena" };
 
-  const captain = data.players?.find(
-    (p: { id: string } | undefined) => p?.id === data.captainId
-  );
+  const captain = data.players?.find((p: { id: string } | undefined) => p?.id === data.captainId);
   const captainName = captain?.name?.split(" ").pop() || "";
 
   const label = data.title?.trim() || "Má nominace";
-  const ogImg = `/nominations/${encodeURIComponent(id)}/opengraph-image`;
+  const ogImagePath = `/v/${encodeURIComponent(slug)}/opengraph-image`;
 
   return {
     title: `MS 2026 – ${label}${captainName ? ` (C: ${captainName})` : ""}`,
@@ -51,20 +51,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `MS 2026 – ${label}`,
       description: `Sestava na Mistrovství světa v hokeji 2026`,
       type: "website",
-      images: [{ url: ogImg, width: 1200, height: 630, alt: label }],
+      images: [{ url: ogImagePath, width: 1200, height: 630, alt: label }],
     },
     twitter: {
       card: "summary_large_image",
       title: `MS 2026 – ${label}`,
       description: `Sestava na Mistrovství světa v hokeji 2026`,
-      images: [ogImg],
+      images: [ogImagePath],
     },
   };
 }
 
-export default async function NominationPage({ params }: Props) {
-  const { id } = await params;
-  const data = await getNomination(id);
+export default async function NominationBySlugPage({ params }: Props) {
+  const { slug } = await params;
+  const data = await getNominationBySlug(slug);
 
   if (!data) notFound();
 
@@ -73,9 +73,14 @@ export default async function NominationPage({ params }: Props) {
       players={data.players}
       captainId={data.captainId}
       lineupStructure={data.lineupStructure}
-      nominationId={id}
+      nominationId={data.id}
       title={data.title}
       allowDownload
+      linkToCopy={
+        typeof process.env.NEXT_PUBLIC_SITE_URL === "string" && process.env.NEXT_PUBLIC_SITE_URL
+          ? `${process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/v/${slug}`
+          : undefined
+      }
     />
   );
 }

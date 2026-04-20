@@ -6,6 +6,7 @@ import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
 import { normalizeNominationTitle } from "@/lib/nominationTitle";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { validateNominationPayload } from "@/lib/nominationPayloadServer";
+import { allocateNominationSlug } from "@/lib/allocateNominationSlug";
 import type { LineupStructure } from "@/types";
 
 export async function GET(
@@ -35,6 +36,7 @@ export async function GET(
       createdAt: nomination.createdAt,
       timeBonusPercent: nomination.timeBonusPercent,
       title: nomination.title,
+      slug: nomination.slug,
       lineupStructure,
     });
   } catch (error) {
@@ -77,13 +79,15 @@ export async function PATCH(
 
     const title = normalizeNominationTitle((body as { title?: unknown }).title);
 
+    const slug = await allocateNominationSlug(prisma, title, id);
+
     const updated = await prisma.nomination.update({
       where: { id },
-      data: { title },
-      select: { id: true, title: true },
+      data: { title, slug },
+      select: { id: true, title: true, slug: true },
     });
 
-    return NextResponse.json({ id: updated.id, title: updated.title });
+    return NextResponse.json({ id: updated.id, title: updated.title, slug: updated.slug });
   } catch (error) {
     console.error("PATCH /api/nominations/[id] failed:", error);
     return NextResponse.json({ error: "Uložení se nepovedlo." }, { status: 500 });
@@ -122,17 +126,21 @@ export async function PUT(
 
     const { selectedPlayerIds, captainId, lineupStructure, title } = parsed.payload;
 
-    await prisma.nomination.update({
+    const slug = await allocateNominationSlug(prisma, title ?? null, id);
+
+    const row = await prisma.nomination.update({
       where: { id },
       data: {
         selectedPlayerIds,
         captainId: captainId || null,
         lineupStructure: lineupStructure ?? undefined,
         title,
+        slug,
       },
+      select: { slug: true },
     });
 
-    return NextResponse.json({ id, message: "Nominace uložena" });
+    return NextResponse.json({ id, slug: row.slug, message: "Nominace uložena" });
   } catch (error) {
     console.error("PUT /api/nominations/[id] failed:", error);
     return NextResponse.json({ error: "Uložení se nepovedlo." }, { status: 500 });

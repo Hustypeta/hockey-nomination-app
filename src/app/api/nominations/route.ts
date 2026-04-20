@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { allocateNominationSlug } from "@/lib/allocateNominationSlug";
 import { validateNominationPayload } from "@/lib/nominationPayloadServer";
 
 /** Seznam nominací přihlášeného uživatele (nejnovější první). */
@@ -22,6 +23,7 @@ export async function GET() {
           timeBonusPercent: true,
           captainId: true,
           title: true,
+          slug: true,
           lineupStructure: true,
         },
       }),
@@ -41,6 +43,7 @@ export async function GET() {
         timeBonusPercent: r.timeBonusPercent,
         captainId: r.captainId,
         title: r.title,
+        slug: r.slug,
         lineupStructure: r.lineupStructure,
         isContestEntry: entryId !== null && r.id === entryId,
       })),
@@ -68,6 +71,8 @@ export async function POST(request: NextRequest) {
     }
     const { selectedPlayerIds, captainId, lineupStructure, title } = parsed.payload;
 
+    const slug = await allocateNominationSlug(prisma, title ?? null, null);
+
     /** Koncept u účtu — bez uzávěrky; časový bonus se uplatní až při odeslání do soutěže. */
     const nomination = await prisma.nomination.create({
       data: {
@@ -77,11 +82,13 @@ export async function POST(request: NextRequest) {
         lineupStructure: lineupStructure ?? undefined,
         timeBonusPercent: 0,
         title,
+        slug,
       },
     });
 
     return NextResponse.json({
       id: nomination.id,
+      slug: nomination.slug,
       message: "Nominace uložena",
       createdAt: nomination.createdAt.toISOString(),
       timeBonusPercent: 0,

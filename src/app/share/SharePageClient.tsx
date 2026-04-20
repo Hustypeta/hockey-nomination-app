@@ -5,9 +5,9 @@ import Link from "next/link";
 import { NominationView } from "@/app/nominations/[id]/NominationView";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { decodeSharePayload } from "@/lib/sharePayload";
+import type { SharePayload } from "@/lib/sharePayload";
 import { lineupToPlayers } from "@/lib/lineupUtils";
 import type { Player } from "@/types";
-import { useSession } from "next-auth/react";
 
 function useClientLocationHref() {
   return useSyncExternalStore(
@@ -17,9 +17,15 @@ function useClientLocationHref() {
   );
 }
 
-function ShareContentInner({ initialZ }: { initialZ: string | null }) {
-  const z = initialZ;
-  const { status } = useSession();
+function ShareContentInner({
+  initialZ,
+  initialPayload,
+  nominationTitle,
+}: {
+  initialZ: string | null;
+  initialPayload: SharePayload | null;
+  nominationTitle?: string | null;
+}) {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const fullUrl = useClientLocationHref();
@@ -32,7 +38,7 @@ function ShareContentInner({ initialZ }: { initialZ: string | null }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const payload = z ? decodeSharePayload(z) : null;
+  const payload = initialPayload ?? (initialZ ? decodeSharePayload(initialZ) : null);
 
   if (loading) {
     return <AppLoadingScreen message="Načítám odkaz…" intro={null} />;
@@ -69,12 +75,27 @@ function ShareContentInner({ initialZ }: { initialZ: string | null }) {
       captainId={payload.captainId}
       lineupStructure={payload.lineupStructure}
       nominationId="share"
-      allowDownload={status === "authenticated"}
+      title={nominationTitle ?? undefined}
+      allowDownload
       linkToCopy={fullUrl || undefined}
     />
   );
 }
 
-export function SharePageClient({ initialZ }: { initialZ: string | null }) {
-  return <ShareContentInner initialZ={initialZ} />;
+export function SharePageClient({
+  initialZ,
+  initialPayload = null,
+  nominationTitle = null,
+}: {
+  initialZ: string | null;
+  initialPayload?: SharePayload | null;
+  nominationTitle?: string | null;
+}) {
+  return (
+    <ShareContentInner
+      initialZ={initialZ}
+      initialPayload={initialPayload}
+      nominationTitle={nominationTitle}
+    />
+  );
 }

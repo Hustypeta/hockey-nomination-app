@@ -90,11 +90,24 @@ model Nomination {
   timeBonusPercent  Int      @default(0)
   /// Vlastní název nominace (volitelné), max. cca 80 znaků.
   title             String?
+  /// Krátká veřejná URL část (např. /v/moje-sestava). Jedinečné napříč tabulkou.
+  slug              String?  @unique
 
   user               User? @relation("NominationOwner", fields: [userId], references: [id], onDelete: SetNull)
   contestEntryForUser User? @relation("ContestEntry")
 
   @@map("nominations")
+}
+
+/// Krátký odkaz pro hosta (/l/{code}) — bez účtu, přepíše se při změně sestavy novým kódem.
+model ShareLink {
+  code              String   @id @db.VarChar(12)
+  captainId         String?
+  lineupStructure   Json
+  title             String?
+  createdAt         DateTime @default(now())
+
+  @@map("share_links")
 }
 
 /// Jedna řádka: oficiální soupiska pro vyhodnocení soutěže (admin editor).

@@ -126,6 +126,23 @@ body {
     0 0.5px 0 rgba(0, 45, 84, 0.1);
 }
 
+/** Export PNG — menší měřítko snižuje čitelnost; posílit kontrast jména i čísla. */
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven {
+  color: #001a33;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.65),
+    0 2px 4px rgba(0, 0, 0, 0.22),
+    0 0 1px rgba(0, 26, 51, 0.85);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven {
+  -webkit-text-stroke-width: clamp(1.25px, 0.095em, 3.1px);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.28);
+}
+
 /**
  * Číslo — bílá výplň, středně silný obrys v #002d54 (jako na reálném dresu).
  * paint-order: obrys pod výplní, aby zůstala čistá bílá plocha uvnitř.

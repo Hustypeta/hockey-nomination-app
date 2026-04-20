@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { signIn } from "next-auth/react";
 import { Download, Share2, Link2, Copy, ChevronLeft } from "lucide-react";
 import type { LineupStructure } from "@/types";
-import { encodeSharePayload } from "@/lib/sharePayload";
+import type { Player } from "@/types";
+import { ShareModalLinkPreview } from "@/components/ShareModalLinkPreview";
 import { sharePngDataUrl } from "@/lib/sharePosterImage";
 import {
   captureElementToCanvas,
@@ -29,6 +30,10 @@ interface SaveShareModalProps {
   onNominationTitleChange: (value: string) => void;
   lineupStructure: LineupStructure;
   captainId: string | null;
+  assistantIds?: string[];
+  players: Player[];
+  /** Nejlepší dostupný odkaz (krátký /v/slug, /l/code, nebo záložní dlouhý). */
+  shareLinkHref: string;
   /** Při uložení k účtu — volitelný název nominace. */
   onSave: (opts?: { title?: string | null }) => Promise<string | null>;
   isSaving: boolean;
@@ -39,6 +44,9 @@ interface SaveShareModalProps {
   /** Světlý / tmavý plakát (řídí skrytý DOM před exportem). */
   posterTheme?: PosterLetterboxTheme;
   onPosterThemeChange?: (t: PosterLetterboxTheme) => void;
+  /** Dresy vs. jen jména (grafika jako soupiska). */
+  posterVariant?: "jerseys" | "names";
+  onPosterVariantChange?: (v: "jerseys" | "names") => void;
 }
 
 const SHARE_TITLE = "MS 2026 – nominace";
@@ -52,14 +60,19 @@ export function SaveShareModal({
   isAuthenticated,
   nominationTitle,
   onNominationTitleChange,
+  players,
   lineupStructure,
   captainId,
+  assistantIds = [],
+  shareLinkHref,
   onSave,
   isSaving,
   contestSubmissionOpen = true,
   contestTimeBonusPercent = 0,
   posterTheme = "light",
   onPosterThemeChange,
+  posterVariant = "jerseys",
+  onPosterVariantChange,
 }: SaveShareModalProps) {
   const [shareBusy, setShareBusy] = useState(false);
   const [shareHint, setShareHint] = useState<string | null>(null);
@@ -72,25 +85,7 @@ export function SaveShareModal({
   const [framedPreviewUrl, setFramedPreviewUrl] = useState<string | null>(null);
   const baseCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const guestShareUrl = useMemo(
-    () =>
-      typeof window !== "undefined"
-        ? `${window.location.origin}/share?z=${encodeSharePayload({
-            v: 1,
-            captainId,
-            lineupStructure,
-          })}`
-        : "",
-    [captainId, lineupStructure]
-  );
-
-  const linkToShow = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    if (savedId) return `${window.location.origin}/nominations/${savedId}`;
-    return guestShareUrl;
-  }, [guestShareUrl, savedId]);
-
-  const linkForSocial = linkToShow || guestShareUrl || "";
+  const linkForSocial = shareLinkHref || "";
 
   const resetPreview = useCallback(() => {
     setPreviewDataUrl(null);
@@ -98,6 +93,10 @@ export function SaveShareModal({
     setPreviewFrame("original");
     baseCanvasRef.current = null;
   }, []);
+
+  useEffect(() => {
+    resetPreview();
+  }, [posterVariant, resetPreview]);
 
   useEffect(() => {
     if (!previewDataUrl) {
@@ -130,10 +129,17 @@ export function SaveShareModal({
         setShareHint("Plakát se nepodařilo najít. Zkus stránku obnovit.");
         return;
       }
-      const bg = posterTheme === "dark" ? "#0b0e14" : "#e8ecf2";
+      const bg =
+        posterVariant === "names"
+          ? "#060b14"
+          : posterTheme === "dark"
+            ? "#0b0e14"
+            : "#e8ecf2";
       const canvas = await captureElementToCanvas(el, { scale: 3, backgroundColor: bg });
       baseCanvasRef.current = canvas;
-      setExportLetterboxTheme(posterTheme === "dark" ? "dark" : "light");
+      setExportLetterboxTheme(
+        posterVariant === "names" ? "dark" : posterTheme === "dark" ? "dark" : "light"
+      );
       const raw = canvasToPngDataUrl(canvas);
       setPreviewDataUrl(raw);
       setPreviewFrame("original");
@@ -173,7 +179,7 @@ export function SaveShareModal({
   };
 
   const handleShareLink = async () => {
-    const url = linkToShow || guestShareUrl;
+    const url = linkForSocial;
     if (!url) return;
     try {
       if (navigator.share) {
@@ -193,7 +199,7 @@ export function SaveShareModal({
   };
 
   const handleCopyLink = async () => {
-    const url = linkToShow || guestShareUrl;
+    const url = linkForSocial;
     if (!url) return;
     await navigator.clipboard.writeText(url);
     setCopied(true);
@@ -204,46 +210,6 @@ export function SaveShareModal({
     if (!isAuthenticated) return;
     const id = await onSave({ title: nominationTitle.trim() || null });
     if (id) setSavedId(id);
-  };
-
-  const openWhatsApp = () => {
-    const text = encodeURIComponent(`${SHARE_TEXT}\n${linkForSocial}`);
-    window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
-  };
-
-  const openFacebook = () => {
-    if (!linkForSocial) return;
-    window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(linkForSocial)}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-  };
-
-  const openX = () => {
-    const text = encodeURIComponent(SHARE_TEXT);
-    const url = encodeURIComponent(linkForSocial);
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank", "noopener,noreferrer");
-  };
-
-  const instagramStories = () => {
-    downloadAspect(1080, 1920, "stories-9x16");
-    setShareHint(
-      "PNG pro Stories (9:16) stažen — v Instagramu otevři Stories → galerie a vyber soubor."
-    );
-  };
-
-  const openTikTokUpload = () => {
-    window.open("https://www.tiktok.com/upload?lang=cs", "_blank", "noopener,noreferrer");
-    setShareHint(
-      "Na TikToku přidej video nebo obrázek — ideálně stáhni plakát v poměru 9:16 výše a nahraj ze zařízení."
-    );
-  };
-
-  const snapchatFromFilesHint = () => {
-    setShareHint(
-      "Snapchat nemá webové nahrávání jako TikTok — ulož PNG (9:16), pak v aplikaci vlož ze souborů / fotoaparátu."
-    );
   };
 
   const handleClose = () => {
@@ -279,9 +245,78 @@ export function SaveShareModal({
             </p>
           )}
 
+          <div className="mb-5 rounded-xl border border-white/10 bg-black/20 p-4">
+            <label className="block">
+              <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/45">
+                Název nominace <span className="font-normal text-white/35">(volitelné)</span>
+              </span>
+              <input
+                type="text"
+                value={nominationTitle}
+                onChange={(e) => onNominationTitleChange(e.target.value)}
+                maxLength={80}
+                placeholder="např. Varianta po čtvrtfinále"
+                disabled={!!savedId}
+                className="w-full rounded-xl border border-white/12 bg-[#0a0c10] px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-[#c8102e]/45 focus:outline-none focus:ring-1 focus:ring-[#c8102e]/30 disabled:opacity-50"
+              />
+            </label>
+            <p className="mt-2 text-[11px] leading-snug text-white/45">
+              Zobrazí se na plakátu a v náhledu odkazu. Po uložení nominace k účtu už název na serveru neměň zde — přejmenuj v přehledu nominací.
+            </p>
+          </div>
+
+          {players.length > 0 ? (
+            <ShareModalLinkPreview
+              players={players}
+              lineupStructure={lineupStructure}
+              captainId={captainId}
+              assistantIds={assistantIds}
+              nominationTitle={nominationTitle}
+              posterVariant={posterVariant}
+              posterTheme={posterTheme}
+            />
+          ) : null}
+
           {!previewDataUrl ? (
             <>
-              {onPosterThemeChange ? (
+              {onPosterVariantChange ? (
+                <div className="mb-4 rounded-xl border border-white/10 bg-black/20 p-3">
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-white/45">
+                    Typ obrázku
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onPosterVariantChange("jerseys")}
+                      className={`flex-1 rounded-lg py-2.5 text-xs font-bold transition-colors sm:text-sm ${
+                        posterVariant === "jerseys"
+                          ? "bg-white text-slate-900 ring-2 ring-[#c8102e]/60"
+                          : "bg-white/5 text-white/55 hover:bg-white/10"
+                      }`}
+                    >
+                      S dresy
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onPosterVariantChange("names")}
+                      className={`flex-1 rounded-lg py-2.5 text-xs font-bold transition-colors sm:text-sm ${
+                        posterVariant === "names"
+                          ? "bg-[#003087] text-white ring-2 ring-sky-400/45"
+                          : "bg-white/5 text-white/55 hover:bg-white/10"
+                      }`}
+                    >
+                      Jen jména
+                    </button>
+                  </div>
+                  <p className="mt-2 text-[11px] leading-snug text-white/45">
+                    {posterVariant === "names"
+                      ? "Tmavá grafika se jmény — vhodná na feed nebo posílání jako obrázek (podobná soupisce)."
+                      : "Plakát s fotkami dresů — přepni Světlý / Tmavý podle pozadí."}
+                  </p>
+                </div>
+              ) : null}
+
+              {onPosterThemeChange && posterVariant === "jerseys" ? (
                 <div className="mb-4 rounded-xl border border-white/10 bg-black/20 p-3">
                   <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-white/45">
                     Vzhled plakátu
@@ -344,7 +379,7 @@ export function SaveShareModal({
                   <input
                     type="text"
                     readOnly
-                    value={linkToShow || guestShareUrl}
+                    value={linkForSocial}
                     className="min-w-0 flex-1 truncate rounded-lg border border-white/10 bg-[#0a0c10] px-3 py-2.5 text-xs text-white/90"
                   />
                   <button
@@ -434,58 +469,6 @@ export function SaveShareModal({
                 Sdílet přes systém (9:16)
               </button>
 
-              <div>
-                <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">
-                  Rychlé sdílení
-                </p>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  <button
-                    type="button"
-                    onClick={openWhatsApp}
-                    className="rounded-lg border border-white/12 bg-[#25D366]/15 py-2.5 text-center text-xs font-bold text-[#b8f5c8] transition-colors hover:bg-[#25D366]/25"
-                  >
-                    WhatsApp
-                  </button>
-                  <button
-                    type="button"
-                    onClick={openFacebook}
-                    className="rounded-lg border border-white/12 bg-[#1877f2]/15 py-2.5 text-center text-xs font-bold text-[#a8c7ff] transition-colors hover:bg-[#1877f2]/25"
-                  >
-                    Facebook
-                  </button>
-                  <button
-                    type="button"
-                    onClick={instagramStories}
-                    className="rounded-lg border border-white/12 bg-gradient-to-br from-[#f09433]/20 via-[#e6683c]/20 to-[#bc1888]/20 py-2.5 text-center text-xs font-bold text-pink-100/90 transition-colors hover:opacity-95"
-                  >
-                    IG Stories
-                  </button>
-                  <button
-                    type="button"
-                    onClick={openX}
-                    className="rounded-lg border border-white/12 bg-white/10 py-2.5 text-center text-xs font-bold text-white/90 transition-colors hover:bg-white/15"
-                  >
-                    X
-                  </button>
-                </div>
-                <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  <button
-                    type="button"
-                    onClick={openTikTokUpload}
-                    className="rounded-lg border border-white/12 bg-black/35 py-2.5 text-center text-xs font-bold text-white/90 transition-colors hover:bg-black/45 sm:col-span-2"
-                  >
-                    TikTok (upload)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={snapchatFromFilesHint}
-                    className="rounded-lg border border-[#FFFC00]/25 bg-[#FFFC00]/10 py-2.5 text-center text-xs font-bold text-yellow-100/95 transition-colors hover:bg-[#FFFC00]/15 sm:col-span-2"
-                  >
-                    Snapchat — návod
-                  </button>
-                </div>
-              </div>
-
               <div className="flex flex-col gap-2 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
@@ -517,20 +500,6 @@ export function SaveShareModal({
 
           {isAuthenticated && (
             <div className="mt-6 border-t border-white/10 pt-5">
-              <label className="mb-3 block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/45">
-                  Název nominace <span className="font-normal text-white/35">(volitelné)</span>
-                </span>
-                <input
-                  type="text"
-                  value={nominationTitle}
-                  onChange={(e) => onNominationTitleChange(e.target.value)}
-                  maxLength={80}
-                  placeholder="např. Varianta po čtvrtfinále"
-                  disabled={!!savedId}
-                  className="w-full rounded-xl border border-white/12 bg-[#0a0c10] px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-[#c8102e]/45 focus:outline-none focus:ring-1 focus:ring-[#c8102e]/30 disabled:opacity-50"
-                />
-              </label>
               <p className="mb-3 text-center text-[11px] leading-snug text-white/50">
                 Uložením vznikne koncept u účtu — do soutěže pošli sestavu tlačítkem{" "}
                 <strong className="text-white/75">Odeslat do soutěže</strong> v editoru. Časový bonus (aktuálně{" "}
