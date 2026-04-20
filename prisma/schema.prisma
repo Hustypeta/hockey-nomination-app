@@ -99,9 +99,10 @@ model Nomination {
   @@map("nominations")
 }
 
-/// Krátký odkaz pro hosta (/l/{code}) — bez účtu, přepíše se při změně sestavy novým kódem.
+/// Hostovské sdílení: `code` = vnitřní ID pro PATCH; `slug` = veřejná URL /v/{slug} z názvu nominace.
 model ShareLink {
   code              String   @id @db.VarChar(12)
+  slug              String?  @unique
   captainId         String?
   lineupStructure   Json
   title             String?

@@ -4,9 +4,6 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { signIn } from "next-auth/react";
 import { Download, Share2, Link2, Copy, ChevronLeft } from "lucide-react";
-import type { LineupStructure } from "@/types";
-import type { Player } from "@/types";
-import { ShareModalLinkPreview } from "@/components/ShareModalLinkPreview";
 import { sharePngDataUrl } from "@/lib/sharePosterImage";
 import {
   captureElementToCanvas,
@@ -28,10 +25,6 @@ interface SaveShareModalProps {
   /** Název nominace (propíše se na plakát + při uložení na server). */
   nominationTitle: string;
   onNominationTitleChange: (value: string) => void;
-  lineupStructure: LineupStructure;
-  captainId: string | null;
-  assistantIds?: string[];
-  players: Player[];
   /** Nejlepší dostupný odkaz (krátký /v/slug, /l/code, nebo záložní dlouhý). */
   shareLinkHref: string;
   /** Při uložení k účtu — volitelný název nominace. */
@@ -60,10 +53,6 @@ export function SaveShareModal({
   isAuthenticated,
   nominationTitle,
   onNominationTitleChange,
-  players,
-  lineupStructure,
-  captainId,
-  assistantIds = [],
   shareLinkHref,
   onSave,
   isSaving,
@@ -86,6 +75,7 @@ export function SaveShareModal({
   const baseCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const linkForSocial = shareLinkHref || "";
+  const titleOk = nominationTitle.trim().length > 0;
 
   const resetPreview = useCallback(() => {
     setPreviewDataUrl(null);
@@ -116,6 +106,10 @@ export function SaveShareModal({
   }, [previewDataUrl, previewFrame, exportLetterboxTheme]);
 
   const handleGeneratePoster = async () => {
+    if (!nominationTitle.trim()) {
+      setShareHint("Nejdřív vyplň název nominace.");
+      return;
+    }
     setShareBusy(true);
     setShareHint(null);
     try {
@@ -135,7 +129,7 @@ export function SaveShareModal({
           : posterTheme === "dark"
             ? "#0b0e14"
             : "#e8ecf2";
-      const canvas = await captureElementToCanvas(el, { scale: 3, backgroundColor: bg });
+      const canvas = await captureElementToCanvas(el, { scale: 5, backgroundColor: bg });
       baseCanvasRef.current = canvas;
       setExportLetterboxTheme(
         posterVariant === "names" ? "dark" : posterTheme === "dark" ? "dark" : "light"
@@ -179,6 +173,7 @@ export function SaveShareModal({
   };
 
   const handleShareLink = async () => {
+    if (!nominationTitle.trim()) return;
     const url = linkForSocial;
     if (!url) return;
     try {
@@ -199,6 +194,7 @@ export function SaveShareModal({
   };
 
   const handleCopyLink = async () => {
+    if (!nominationTitle.trim()) return;
     const url = linkForSocial;
     if (!url) return;
     await navigator.clipboard.writeText(url);
@@ -208,7 +204,9 @@ export function SaveShareModal({
 
   const handleSaveNomination = async () => {
     if (!isAuthenticated) return;
-    const id = await onSave({ title: nominationTitle.trim() || null });
+    const t = nominationTitle.trim();
+    if (!t) return;
+    const id = await onSave({ title: t });
     if (id) setSavedId(id);
   };
 
@@ -248,34 +246,24 @@ export function SaveShareModal({
           <div className="mb-5 rounded-xl border border-white/10 bg-black/20 p-4">
             <label className="block">
               <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/45">
-                Název nominace <span className="font-normal text-white/35">(volitelné)</span>
+                Název nominace <span className="font-normal text-rose-300/90">*</span>
               </span>
               <input
                 type="text"
                 value={nominationTitle}
                 onChange={(e) => onNominationTitleChange(e.target.value)}
                 maxLength={80}
+                required
                 placeholder="např. Varianta po čtvrtfinále"
                 disabled={!!savedId}
                 className="w-full rounded-xl border border-white/12 bg-[#0a0c10] px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-[#c8102e]/45 focus:outline-none focus:ring-1 focus:ring-[#c8102e]/30 disabled:opacity-50"
               />
             </label>
             <p className="mt-2 text-[11px] leading-snug text-white/45">
-              Zobrazí se na plakátu a v náhledu odkazu. Po uložení nominace k účtu už název na serveru neměň zde — přejmenuj v přehledu nominací.
+              Určuje text na plakátu a veřejnou adresu odkazu ve tvaru{" "}
+              <span className="text-sky-300/90">…/váš-název</span>.
             </p>
           </div>
-
-          {players.length > 0 ? (
-            <ShareModalLinkPreview
-              players={players}
-              lineupStructure={lineupStructure}
-              captainId={captainId}
-              assistantIds={assistantIds}
-              nominationTitle={nominationTitle}
-              posterVariant={posterVariant}
-              posterTheme={posterTheme}
-            />
-          ) : null}
 
           {!previewDataUrl ? (
             <>
@@ -352,7 +340,7 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={handleGeneratePoster}
-                  disabled={shareBusy}
+                  disabled={shareBusy || !titleOk}
                   className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#d41432] to-[#9e0c24] py-4 font-display text-lg font-bold tracking-wide text-white shadow-[0_12px_40px_rgba(200,16,46,0.35)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55 sm:py-5 sm:text-xl"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
@@ -364,7 +352,8 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={handleShareLink}
-                  className="w-full rounded-xl border-2 border-[#003087]/80 bg-[#003087]/25 py-3.5 font-display text-base font-bold tracking-wide text-white transition-colors hover:bg-[#003087]/40 sm:py-4 sm:text-lg"
+                  disabled={!titleOk}
+                  className="w-full rounded-xl border-2 border-[#003087]/80 bg-[#003087]/25 py-3.5 font-display text-base font-bold tracking-wide text-white transition-colors hover:bg-[#003087]/40 disabled:cursor-not-allowed disabled:opacity-45 sm:py-4 sm:text-lg"
                 >
                   <span className="flex items-center justify-center gap-2">
                     <Link2 className="h-5 w-5 shrink-0 opacity-90" aria-hidden />
@@ -385,7 +374,8 @@ export function SaveShareModal({
                   <button
                     type="button"
                     onClick={handleCopyLink}
-                    className="flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#003087] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0040a8]"
+                    disabled={!titleOk}
+                    className="flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#003087] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0040a8] disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     <Copy className="h-4 w-4" aria-hidden />
                     {copied ? "Zkopírováno" : "Kopírovat"}
@@ -463,7 +453,8 @@ export function SaveShareModal({
               <button
                 type="button"
                 onClick={() => webSharePng(1080, 1920, "ms2026-nominace-stories.png")}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#002266] py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-[#003087]/20"
+                disabled={!titleOk || shareBusy}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#002266] py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-[#003087]/20 disabled:cursor-not-allowed disabled:opacity-45"
               >
                 <Share2 className="h-4 w-4" aria-hidden />
                 Sdílet přes systém (9:16)
@@ -473,7 +464,8 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={handleCopyLink}
-                  className="flex items-center justify-center gap-2 rounded-lg border border-white/15 px-4 py-2 text-sm text-white/85 hover:bg-white/5"
+                  disabled={!titleOk}
+                  className="flex items-center justify-center gap-2 rounded-lg border border-white/15 px-4 py-2 text-sm text-white/85 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   <Copy className="h-4 w-4" aria-hidden />
                   {copied ? "Odkaz zkopírován" : "Kopírovat odkaz"}
@@ -481,7 +473,8 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={handleShareLink}
-                  className="text-sm font-semibold text-sky-300/90 underline-offset-2 hover:underline"
+                  disabled={!titleOk}
+                  className="text-sm font-semibold text-sky-300/90 underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   Sdílet odkaz…
                 </button>
@@ -515,7 +508,7 @@ export function SaveShareModal({
               <button
                 type="button"
                 onClick={handleSaveNomination}
-                disabled={isSaving || !!savedId}
+                disabled={isSaving || !!savedId || !titleOk}
                 className="w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3.5 font-sans text-base font-semibold leading-snug tracking-normal text-white shadow-inner transition-colors hover:border-[#c8102e]/45 hover:bg-white/[0.09] disabled:cursor-not-allowed disabled:opacity-45 sm:py-4 sm:text-lg"
               >
                 {savedId ? "Sestava uložena u účtu" : isSaving ? "Ukládám…" : "Uložit sestavu"}

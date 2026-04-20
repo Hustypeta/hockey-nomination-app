@@ -30,7 +30,12 @@ import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 import { encodeSharePayload } from "@/lib/sharePayload";
-import { lineupToPlayers, isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
+import {
+  lineupToPlayers,
+  isLineupComplete,
+  isLeadershipComplete,
+  normalizeLineupStructure,
+} from "@/lib/lineupUtils";
 import { useContestStats } from "@/hooks/useContestStats";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
@@ -58,6 +63,8 @@ export function NominationBuilderPage() {
   const [sharePosterVariant, setSharePosterVariant] = useState<"jerseys" | "names">("jerseys");
   const [savedNominationSlug, setSavedNominationSlug] = useState<string | null>(null);
   const [guestShareCode, setGuestShareCode] = useState<string | null>(null);
+  /** Veřejná část URL /v/{slug} z hostovského sdílení (stejný tvar jako u uložené nominace). */
+  const [guestShareSlug, setGuestShareSlug] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
@@ -101,10 +108,10 @@ export function NominationBuilderPage() {
     if (typeof window === "undefined") return "";
     const o = (siteOrigin && siteOrigin.length > 0 ? siteOrigin : window.location.origin).replace(/\/$/, "");
     if (savedNominationSlug) return `${o}/v/${savedNominationSlug}`;
-    if (guestShareCode) return `${o}/l/${guestShareCode}`;
+    if (guestShareSlug) return `${o}/v/${guestShareSlug}`;
     if (editingNominationId) return `${o}/nominations/${editingNominationId}`;
     return "";
-  }, [siteOrigin, guestShareCode, savedNominationSlug, editingNominationId]);
+  }, [siteOrigin, guestShareSlug, savedNominationSlug, editingNominationId]);
 
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
@@ -124,6 +131,8 @@ export function NominationBuilderPage() {
   const selectedPlayers = lineupToPlayers(lineup, players);
   const usedIds = new Set(selectedPlayers.map((p) => p.id));
   const isComplete = isLineupComplete(lineup);
+  const leadershipOk = useMemo(() => isLeadershipComplete(lineup, captainId), [lineup, captainId]);
+  const canOpenShareModal = isComplete && leadershipOk;
   const filled = selectedPlayers.length;
   const remaining = TOTAL_PLAYERS - filled;
 
@@ -148,13 +157,23 @@ export function NominationBuilderPage() {
     setSiteOrigin(typeof window !== "undefined" ? window.location.origin : "");
   }, []);
 
-  /** Krátký odkaz /l/{code}, dokud nemáme /v/{slug} z uložené nominace. */
+  useEffect(() => {
+    if (!shareNominationTitle.trim()) {
+      setGuestShareCode(null);
+      setGuestShareSlug(null);
+    }
+  }, [shareNominationTitle]);
+
+  /** Hostovský záznam: /v/{slug} z názvu — vyžaduje plnou sestavu, C, 2× A a vyplněný název. */
   useEffect(() => {
     if (!modalOpen) return;
     if (savedNominationSlug) {
       setGuestShareCode(null);
+      setGuestShareSlug(null);
       return;
     }
+    if (!canOpenShareModal || !shareNominationTitle.trim()) return;
+
     let cancelled = false;
     const timer = window.setTimeout(() => {
       void (async () => {
@@ -162,7 +181,7 @@ export function NominationBuilderPage() {
           const payload = {
             captainId,
             lineupStructure: lineup,
-            title: shareNominationTitle.trim() || null,
+            title: shareNominationTitle.trim(),
           };
           if (guestShareCode) {
             const res = await fetch(`/api/share-links/${guestShareCode}`, {
@@ -170,7 +189,11 @@ export function NominationBuilderPage() {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(payload),
             });
-            if (!cancelled && res.ok) return;
+            const data = (await res.json()) as { slug?: string };
+            if (!cancelled && res.ok) {
+              if (typeof data.slug === "string") setGuestShareSlug(data.slug);
+              return;
+            }
             if (!cancelled && res.status === 404) setGuestShareCode(null);
             else if (!cancelled) return;
           }
@@ -179,8 +202,9 @@ export function NominationBuilderPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
-          const data = (await res.json()) as { code?: string };
+          const data = (await res.json()) as { code?: string; slug?: string };
           if (!cancelled && data.code) setGuestShareCode(data.code);
+          if (!cancelled && typeof data.slug === "string") setGuestShareSlug(data.slug);
         } catch {
           /* ignore */
         }
@@ -193,6 +217,7 @@ export function NominationBuilderPage() {
   }, [
     modalOpen,
     savedNominationSlug,
+    canOpenShareModal,
     guestShareCode,
     captainId,
     lineup,
@@ -439,6 +464,7 @@ export function NominationBuilderPage() {
     setShareNominationTitle("");
     setSavedNominationSlug(null);
     setGuestShareCode(null);
+    setGuestShareSlug(null);
     toast.success("Náhodná nominace je hotová — uprav si ji, jak chceš.");
   }, [players]);
 
@@ -450,6 +476,7 @@ export function NominationBuilderPage() {
     setShareNominationTitle("");
     setSavedNominationSlug(null);
     setGuestShareCode(null);
+    setGuestShareSlug(null);
     toast.message("Sestava byla resetována.");
   }, []);
 
@@ -468,7 +495,7 @@ export function NominationBuilderPage() {
             selectedPlayerIds: selectedPlayers.map((p) => p.id),
             captainId,
             lineupStructure: lineup,
-            ...(opts && "title" in opts ? { title: opts.title } : {}),
+            title: opts && "title" in opts ? opts.title : shareNominationTitle.trim(),
           }),
         }
       );
@@ -491,7 +518,7 @@ export function NominationBuilderPage() {
       setSaving(false);
     }
   },
-  [authStatus, selectedPlayers, captainId, lineup, editingNominationId]);
+  [authStatus, selectedPlayers, captainId, lineup, editingNominationId, shareNominationTitle]);
 
   const handleSubmitToContest = useCallback(async () => {
     if (authStatus !== "authenticated") {
@@ -504,6 +531,14 @@ export function NominationBuilderPage() {
     }
     if (!isComplete) {
       toast.error("Nejdřív doplň celou nominaci (25 hráčů), pak můžeš odeslat do soutěže.");
+      return;
+    }
+    if (!leadershipOk) {
+      toast.error("Zvol kapitána (C) a přesně dva asistenty (A).");
+      return;
+    }
+    if (!shareNominationTitle.trim()) {
+      toast.error("Vyplň název nominace.");
       return;
     }
     if (!contestSubmissionOpen) {
@@ -520,6 +555,7 @@ export function NominationBuilderPage() {
           selectedPlayerIds: selectedPlayers.map((p) => p.id),
           captainId,
           lineupStructure: lineup,
+          title: shareNominationTitle.trim(),
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -544,6 +580,8 @@ export function NominationBuilderPage() {
   }, [
     authStatus,
     isComplete,
+    leadershipOk,
+    shareNominationTitle,
     contestSubmitted,
     contestSubmissionOpen,
     selectedPlayers,
@@ -557,12 +595,20 @@ export function NominationBuilderPage() {
       toast.error("Nejdřív doplň celou nominaci (25 hráčů), pak můžeš odeslat do soutěže.");
       return;
     }
+    if (!leadershipOk) {
+      toast.error("Zvol kapitána (C) a přesně dva asistenty (A).");
+      return;
+    }
+    if (!shareNominationTitle.trim()) {
+      toast.error("Vyplň název nominace (např. v modalu Dokončit nominaci).");
+      return;
+    }
     if (!contestSubmissionOpen) {
       toast.error("Uzávěrka odeslání do soutěže už proběhla.");
       return;
     }
     setContestConfirmOpen(true);
-  }, [isComplete, contestSubmissionOpen]);
+  }, [isComplete, leadershipOk, contestSubmissionOpen, shareNominationTitle]);
 
   if (loading) {
     return (
@@ -632,6 +678,13 @@ export function NominationBuilderPage() {
               )}
             </div>
           )}
+          {isComplete && !leadershipOk ? (
+            <div className="mb-4 rounded-xl border border-amber-500/35 bg-amber-950/30 px-4 py-2.5 text-center text-xs text-amber-100/95 shadow-[0_0_28px_rgba(245,158,11,0.12)] sm:text-sm">
+              Ještě zvol <strong className="font-semibold">kapitána</strong> (tlačítko C) a přesně{" "}
+              <strong className="font-semibold">dva asistenty</strong> (A) u hráčů v soupisce — bez toho nominaci
+              neuložíš ani nesdílíš.
+            </div>
+          ) : null}
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
             {showDesktopPoolColumn ? (
@@ -758,11 +811,11 @@ export function NominationBuilderPage() {
             <button
               type="button"
               onClick={() => setModalOpen(true)}
-              disabled={!isComplete}
+              disabled={!canOpenShareModal}
               className={`
                 rounded-2xl px-12 py-4 font-display text-xl font-bold tracking-wide transition-all
                 ${
-                  isComplete
+                  canOpenShareModal
                     ? "bg-gradient-to-r from-[#c8102e] via-[#a30d26] to-[#003087] text-white shadow-[0_12px_40px_rgba(200,16,46,0.35),0_0_0_1px_rgba(241,196,15,0.25)] ring-1 ring-white/20 hover:scale-[1.02] hover:shadow-[0_16px_48px_rgba(200,16,46,0.45)]"
                     : "cursor-not-allowed bg-white/[0.06] text-white/35 ring-1 ring-white/[0.08]"
                 }
@@ -777,12 +830,14 @@ export function NominationBuilderPage() {
           onShare={() => setModalOpen(true)}
           onRandom={handleRandom}
           onReset={handleReset}
-          shareDisabled={!isComplete}
+          shareDisabled={!canOpenShareModal}
           shareLabel={isAuthenticated ? "Dokončit nominaci" : "Složit nominaci"}
           showContestSubmit={isAuthenticated && !contestSubmitted}
           onContestSubmit={handleContestSubmitClick}
           contestSubmitBusy={submitContestBusy}
-          contestSubmitInactive={!isComplete || !contestSubmissionOpen}
+          contestSubmitInactive={
+            !isComplete || !leadershipOk || !shareNominationTitle.trim() || !contestSubmissionOpen
+          }
           className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
         />
 
@@ -823,10 +878,6 @@ export function NominationBuilderPage() {
           isAuthenticated={isAuthenticated}
           nominationTitle={shareNominationTitle}
           onNominationTitleChange={setShareNominationTitle}
-          players={players}
-          lineupStructure={lineup}
-          captainId={captainId}
-          assistantIds={lineup.assistantIds ?? []}
           shareLinkHref={shareUrlForModal || longGuestShareUrl}
           onSave={handleSave}
           isSaving={saving}

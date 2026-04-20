@@ -1,11 +1,17 @@
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
+import {
+  normalizeLineupStructure,
+  isLineupComplete,
+  isLeadershipComplete,
+} from "@/lib/lineupUtils";
 import { normalizeNominationTitle } from "@/lib/nominationTitle";
+import type { LineupStructure } from "@/types";
 
 export type ValidNominationPayload = {
   selectedPlayerIds: string[];
   captainId: string | null;
   lineupStructure: unknown;
-  title: string | null;
+  title: string;
 };
 
 /** Společná kontrola těla POST pro koncept i odeslání do soutěže. */
@@ -16,7 +22,7 @@ export function validateNominationPayload(body: unknown):
     return { ok: false, error: "Neplatný požadavek.", status: 400 };
   }
   const b = body as Record<string, unknown>;
-  const { selectedPlayerIds, lineupStructure } = b;
+  const { selectedPlayerIds } = b;
   const rawCaptain = b.captainId;
   const captainId =
     typeof rawCaptain === "string" && rawCaptain.trim() ? rawCaptain.trim() : null;
@@ -24,6 +30,35 @@ export function validateNominationPayload(body: unknown):
 
   if (!selectedPlayerIds || !Array.isArray(selectedPlayerIds)) {
     return { ok: false, error: "selectedPlayerIds is required", status: 400 };
+  }
+
+  if (!b.lineupStructure || typeof b.lineupStructure !== "object") {
+    return { ok: false, error: "Chybí platná struktura sestavy (lineupStructure).", status: 400 };
+  }
+
+  const lineupStructureNorm = normalizeLineupStructure(b.lineupStructure as LineupStructure);
+  if (!isLineupComplete(lineupStructureNorm)) {
+    return {
+      ok: false,
+      error: "Sestava musí být kompletní — všech 25 hráčů na správných pozicích.",
+      status: 400,
+    };
+  }
+
+  if (!captainId) {
+    return { ok: false, error: "Vyber kapitána týmu (tlačítko C u hráče).", status: 400 };
+  }
+
+  if (!isLeadershipComplete(lineupStructureNorm, captainId)) {
+    return {
+      ok: false,
+      error: "Zvol přesně dva asistenty kapitána (A) — u dvou hráčů v sestavě.",
+      status: 400,
+    };
+  }
+
+  if (!title) {
+    return { ok: false, error: "Vyplň název nominace.", status: 400 };
   }
 
   const all = loadMs2026Candidates();
@@ -53,7 +88,7 @@ export function validateNominationPayload(body: unknown):
     payload: {
       selectedPlayerIds: selectedPlayerIds as string[],
       captainId,
-      lineupStructure,
+      lineupStructure: lineupStructureNorm,
       title,
     },
   };

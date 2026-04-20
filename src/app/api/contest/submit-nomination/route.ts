@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { allocateNominationSlug } from "@/lib/allocateNominationSlug";
 import { validateNominationPayload } from "@/lib/nominationPayloadServer";
 import {
   getTimeBonusPercentForInstant,
@@ -70,6 +71,8 @@ export async function POST(request: NextRequest) {
 
     const timeBonusPercent = getTimeBonusPercentForInstant(now);
 
+    const slug = await allocateNominationSlug(prisma, title, null);
+
     /**
      * Bez interaktivního `prisma.$transaction(callback)` — s PrismaPg + poolerem (Railway) často padá P2028
      * „Transaction not found“. Sekvence create → update + rollback při chybě update.
@@ -82,6 +85,7 @@ export async function POST(request: NextRequest) {
         lineupStructure: lineupStructure ?? undefined,
         timeBonusPercent,
         title,
+        slug,
       },
     });
     try {

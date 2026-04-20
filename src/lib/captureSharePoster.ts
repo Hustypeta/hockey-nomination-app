@@ -8,7 +8,8 @@ export async function captureElementToCanvas(
   element: HTMLElement,
   options?: { scale?: number; backgroundColor?: string | null }
 ): Promise<HTMLCanvasElement> {
-  const pixelRatio = options?.scale ?? 3;
+  /** Vyšší než 1:1 s cílovým PNG — ostřejší text po zmenšení (sociální sítě 1080px). */
+  const pixelRatio = options?.scale ?? 4;
   await document.fonts.ready.catch(() => undefined);
   return toCanvas(element, {
     pixelRatio,

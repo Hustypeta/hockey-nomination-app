@@ -123,3 +123,41 @@ export function isLineupComplete(lineup: LineupStructure): boolean {
   const p3RbEmpty = !p3.rb;
   return fCount === 14 && dCount === 8 && gCount === 3 && p3RbEmpty;
 }
+
+/** Všichni hráči z rozestavení (pro ověření C / A). */
+export function collectLineupPlayerIds(lineup: LineupStructure): Set<string> {
+  const ids = new Set<string>();
+  for (const l of lineup.forwardLines) {
+    if (l.lw) ids.add(l.lw);
+    if (l.c) ids.add(l.c);
+    if (l.rw) ids.add(l.rw);
+    if (l.x) ids.add(l.x);
+  }
+  for (const p of lineup.defensePairs) {
+    if (p.lb) ids.add(p.lb);
+    if (p.rb) ids.add(p.rb);
+  }
+  for (const g of lineup.goalies) {
+    if (g) ids.add(g);
+  }
+  if (lineup.extraForwards[0]) ids.add(lineup.extraForwards[0]);
+  for (const d of lineup.extraDefensemen) {
+    if (d) ids.add(d);
+  }
+  return ids;
+}
+
+/** Jeden kapitán a přesně dva asistenti (jako v editoru — max. 2× A). */
+export function isLeadershipComplete(lineup: LineupStructure, captainId: string | null): boolean {
+  if (!captainId) return false;
+  const roster = collectLineupPlayerIds(lineup);
+  if (!roster.has(captainId)) return false;
+  const raw = lineup.assistantIds ?? [];
+  const asst = [...new Set(raw.filter(Boolean))];
+  if (asst.length !== 2) return false;
+  for (const a of asst) {
+    if (a === captainId) return false;
+    if (!roster.has(a)) return false;
+  }
+  return true;
+}

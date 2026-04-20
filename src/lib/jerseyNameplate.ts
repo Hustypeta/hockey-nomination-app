@@ -87,14 +87,14 @@ export function jerseyNameplateNameProps(
   const score = layoutWidthScore(lines);
   /** Dvě kratší řádky = méně horizontálního stresu → mírně větší písmo než jedna ultraúzká řádka. */
   const multilineEase = lineCount > 1 ? 1.09 : 1;
-  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = ještě menší rozsah pro PNG plakát. */
+  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = PNG plakát — větší strop kvůli čitelnosti exportu. */
   const scale =
-    variant === "premium" ? 1.02 : variant === "poster" ? 1.18 : 1.24;
+    variant === "premium" ? 1.02 : variant === "poster" ? 1.28 : 1.24;
 
   const minFs =
-    (variant === "premium" ? 3.75 : variant === "poster" ? 4.15 : 4.05) * scale * multilineEase;
+    (variant === "premium" ? 3.75 : variant === "poster" ? 4.45 : 4.05) * scale * multilineEase;
   const maxFs =
-    (variant === "premium" ? 10.2 : variant === "poster" ? 9.05 : 11.35) * scale * multilineEase;
+    (variant === "premium" ? 10.2 : variant === "poster" ? 10.35 : 11.35) * scale * multilineEase;
 
   const low = 2.85;
   const high = 21.5;
@@ -146,10 +146,10 @@ export function jerseyNumberStyle(
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (variant === "poster") {
-    if (!longName) return { fontSize: "25px" };
+    if (!longName) return { fontSize: "28px" };
     const t = clamp((score - 9) / 14, 0, 1);
-    const maxPx = lines.length > 1 ? 21.5 : 22.5;
-    const minPx = lines.length > 1 ? 17.5 : 18.5;
+    const maxPx = lines.length > 1 ? 23.5 : 24.5;
+    const minPx = lines.length > 1 ? 19 : 20;
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (!longName) return {};

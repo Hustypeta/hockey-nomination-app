@@ -10,3 +10,7 @@ export const SITE_BRAND = "Lineup";
 
 /** Dlouhý název produktu — hlavní wordmark v hlavičce (vedle loga). */
 export const SITE_WORDMARK = "Hockey Nomination";
+
+/** Kontakt pro dotazy k GDPR / osobním údajům (nastavte v .env na produkci). */
+export const SITE_CONTACT_EMAIL =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "kontakt@hokejlineup.cz";

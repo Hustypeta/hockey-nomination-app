@@ -85,24 +85,21 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
     return (
       <div
         ref={ref}
-        className={`nhl25-share-poster-capture relative w-[920px] max-w-[920px] shrink-0 overflow-hidden rounded-2xl border ${shell}`}
+        className={`nhl25-share-poster-capture relative w-[920px] max-w-[920px] shrink-0 overflow-hidden rounded-2xl border antialiased [text-rendering:geometricPrecision] ${shell}`}
       >
         <div className="nhl25-moje-sestava-accent mx-8 mt-5 rounded-full" aria-hidden />
 
         <header className="relative px-8 pb-2 pt-6">
           <div className="min-w-0 text-center sm:text-left">
-            <h1
-              className={`font-display text-[1.65rem] font-bold leading-tight tracking-wide sm:text-3xl ${dark ? "text-white" : "text-slate-900"}`}
-            >
-              Moje nominace na MS 2026
-            </h1>
             {titleLine ? (
-              <p className="mt-2 line-clamp-2 font-display text-[1.05rem] font-semibold leading-snug tracking-wide text-[#5ab0ff] sm:text-xl">
+              <h1
+                className={`line-clamp-3 font-display text-[1.65rem] font-bold leading-tight tracking-wide sm:text-3xl ${dark ? "text-white" : "text-slate-900"}`}
+              >
                 {titleLine}
-              </p>
+              </h1>
             ) : null}
             <p
-              className={`font-display text-[11px] font-semibold uppercase tracking-[0.22em] ${dark ? "text-sky-300/85" : "text-[#003087]/85"} ${titleLine ? "mt-1.5" : "mt-1"}`}
+              className={`font-display text-[12px] font-semibold uppercase tracking-[0.22em] sm:text-[13px] ${dark ? "text-sky-300/85" : "text-[#003087]/85"} ${titleLine ? "mt-2" : ""}`}
             >
               Český nároďák · soupiska
             </p>
@@ -113,28 +110,33 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-5">
             <div className="min-w-0 space-y-3 sm:space-y-3.5">
               <section>
-                <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:mb-2.5 sm:pb-1.5 sm:text-[11px] ${heading}`}>
+                <h2 className={`mb-2 border-b pb-1 font-display text-[12px] font-bold uppercase tracking-[0.2em] sm:mb-2.5 sm:pb-1.5 sm:text-[13px] ${heading}`}>
                   Brankáři
                 </h2>
                 <div className="grid min-w-0 grid-cols-3 gap-1 sm:gap-1.5">
                   {lineup.goalies.map((gid, i) => (
-                    <PosterJerseyWrap key={`g-${i}`}>
-                      <Nhl25JerseyCard
-                        player={getPlayer(gid)}
-                        positionLabel="G"
-                        size="compact"
-                        nameplateVariant="poster"
-                        isCaptain={gid ? captainId === gid : false}
-                        isAssistant={gid ? aids.includes(gid) : false}
-                        disableMotion
-                      />
-                    </PosterJerseyWrap>
+                    <div key={`g-${i}`} className="flex min-w-0 flex-col gap-1">
+                      <span className={`shrink-0 text-center font-display text-[11px] font-bold uppercase tracking-wide sm:text-[12px] ${subheading}`}>
+                        {i + 1}. golman
+                      </span>
+                      <PosterJerseyWrap>
+                        <Nhl25JerseyCard
+                          player={getPlayer(gid)}
+                          positionLabel="G"
+                          size="compact"
+                          nameplateVariant="poster"
+                          isCaptain={gid ? captainId === gid : false}
+                          isAssistant={gid ? aids.includes(gid) : false}
+                          disableMotion
+                        />
+                      </PosterJerseyWrap>
+                    </div>
                   ))}
                 </div>
               </section>
 
               <section>
-                <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:mb-2.5 sm:pb-1.5 sm:text-[11px] ${heading}`}>
+                <h2 className={`mb-2 border-b pb-1 font-display text-[12px] font-bold uppercase tracking-[0.2em] sm:mb-2.5 sm:pb-1.5 sm:text-[13px] ${heading}`}>
                   Útočné řady
                 </h2>
                 <div className="space-y-1.5 sm:space-y-2">
@@ -143,7 +145,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       key={i}
                       className={`flex min-w-0 flex-col gap-1 rounded-lg border px-1.5 py-1.5 sm:gap-1.5 sm:px-2 sm:py-2 ${lineBox}`}
                     >
-                      <span className={`shrink-0 font-display text-[9px] font-bold uppercase tracking-wide sm:text-[11px] ${subheading}`}>
+                      <span className={`shrink-0 font-display text-[11px] font-bold uppercase tracking-wide sm:text-[12px] ${subheading}`}>
                         {i + 1}. lajna
                       </span>
                       <div className="grid min-w-0 w-full grid-cols-3 gap-1 sm:gap-1.5">
@@ -189,13 +191,13 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
 
             <div className="min-w-0 space-y-3 sm:space-y-4">
               <section>
-                <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:text-[11px] ${heading}`}>
+                <h2 className={`mb-2 border-b pb-1 font-display text-[12px] font-bold uppercase tracking-[0.2em] sm:text-[13px] ${heading}`}>
                   Obranné páry
                 </h2>
                 <div className="grid min-w-0 grid-cols-2 gap-1 sm:gap-1.5">
                   {lineup.defensePairs.slice(0, 3).map((pair, i) => (
                     <div key={i} className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
-                      <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
+                      <p className={`mb-1 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${pairTitle}`}>
                         {i + 1}. pár
                       </p>
                       <div className="grid min-w-0 grid-cols-2 gap-0.5 sm:gap-1">
@@ -229,7 +231,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                     </div>
                   ))}
                   <div className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
-                    <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
+                    <p className={`mb-1 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${pairTitle}`}>
                       7. bek
                     </p>
                     <PosterJerseyWrap>
@@ -251,16 +253,16 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                 className={`rounded-lg border border-dashed px-2 py-2 sm:px-2.5 sm:py-2.5 ${dark ? "border-white/18 bg-black/15" : "border-slate-300/70 bg-slate-50/80"}`}
               >
                 <h2
-                  className={`mb-2 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${dark ? "text-white/90" : "text-slate-800"}`}
+                  className={`mb-2 text-center font-display text-[12px] font-bold uppercase tracking-[0.18em] sm:text-[13px] ${dark ? "text-white/90" : "text-slate-800"}`}
                 >
                   Doplněk soupisky
                 </h2>
-                <p className={`mb-2 text-center text-[9px] font-semibold uppercase tracking-wider ${subheading}`}>
+                <p className={`mb-2 text-center text-[11px] font-semibold uppercase tracking-wider ${subheading}`}>
                   13. útok · náhradníci
                 </p>
                 <div className={`grid min-w-0 gap-1.5 sm:gap-2 ${extraD ? "grid-cols-3" : "grid-cols-2"}`}>
                   <div className="min-w-0">
-                    <p className={`mb-1 text-center text-[8px] font-bold uppercase tracking-wider sm:text-[10px] ${subheading}`}>
+                    <p className={`mb-1 text-center text-[10px] font-bold uppercase tracking-wider sm:text-[12px] ${subheading}`}>
                       X
                     </p>
                     <PosterJerseyWrap>
@@ -280,7 +282,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                     </PosterJerseyWrap>
                   </div>
                   <div className="min-w-0">
-                    <p className={`mb-1 text-center text-[8px] font-bold uppercase tracking-wider sm:text-[10px] ${subheading}`}>
+                    <p className={`mb-1 text-center text-[10px] font-bold uppercase tracking-wider sm:text-[12px] ${subheading}`}>
                       náhr. F
                     </p>
                     <PosterJerseyWrap>
@@ -301,7 +303,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   </div>
                   {extraD ? (
                     <div className="min-w-0">
-                      <p className={`mb-1 text-center text-[8px] font-bold uppercase tracking-wider sm:text-[10px] ${subheading}`}>
+                      <p className={`mb-1 text-center text-[10px] font-bold uppercase tracking-wider sm:text-[12px] ${subheading}`}>
                         náhr. D
                       </p>
                       <PosterJerseyWrap>
@@ -319,7 +321,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   ) : null}
                 </div>
                 {!extraD ? (
-                  <p className={`mt-2 text-center text-[8px] leading-snug sm:text-[10px] ${subheading}`}>
+                  <p className={`mt-2 text-center text-[11px] leading-snug sm:text-[12px] ${subheading}`}>
                     Osmého beka doplň v editoru pod 7. bekem.
                   </p>
                 ) : null}
@@ -333,12 +335,12 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
             dark ? "border-white/10 bg-black/35" : "border-slate-200/90 bg-slate-100/80"
           }`}
         >
-          <div className={`max-w-[48%] text-left text-[9px] leading-snug sm:text-[10px] ${dark ? "text-white/45" : "text-slate-500"}`}>
+          <div className={`max-w-[48%] text-left text-[11px] leading-snug sm:text-[12px] ${dark ? "text-white/45" : "text-slate-500"}`}>
             <p className="font-display font-bold tracking-wide text-[#c8102e]">Lineup 2026</p>
             {wm ? <p className="mt-0.5 font-medium text-white/70">{wm}</p> : null}
           </div>
           <div className="min-w-0 flex-1 text-center">
-            <p className={`text-[11px] font-medium ${dark ? "text-white/75" : "text-slate-600"}`}>
+            <p className={`text-[13px] font-medium ${dark ? "text-white/75" : "text-slate-600"}`}>
               {dateLabel ? `Sestaveno ${dateLabel}` : "Sestaveno"}
             </p>
             {host ? (

@@ -15,6 +15,56 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   });
 
   if (!nomination) {
+    const share = await prisma.shareLink.findUnique({
+      where: { slug },
+      select: { title: true },
+    });
+    if (share) {
+      const label = share.title?.trim() || "Sdílená nominace";
+      return new ImageResponse(
+        (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "linear-gradient(165deg, #0f1728 0%, #05080f 45%, #1a0a0c 100%)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 16,
+                padding: 48,
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{ color: "#c8102e", fontSize: 28, fontWeight: 700, letterSpacing: "0.2em" }}
+              >
+                ČESKÁ REPREZENTACE
+              </span>
+              <span
+                style={{ color: "#ffffff", fontSize: 56, fontWeight: 800, lineHeight: 1.15, maxWidth: 1000 }}
+              >
+                {label}
+              </span>
+              <span
+                style={{ color: "rgba(255,255,255,0.55)", fontSize: 26, fontWeight: 700, letterSpacing: "0.12em" }}
+              >
+                Lineup · MS 2026
+              </span>
+            </div>
+          </div>
+        ),
+        { ...size }
+      );
+    }
     return new ImageResponse(
       (
         <div

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth/next";
 import { SiteShell } from "@/components/site/SiteShell";
 import { BracketPickemComingSoon } from "@/components/bracket/BracketPickemComingSoon";
+import { authOptions } from "@/lib/auth";
 
 /**
  * Plný Pick’em je zatím vypnutý — kód žije v {@link BracketPickemContent}.
@@ -15,7 +18,12 @@ export const metadata: Metadata = {
   description: "Bracket Pick’em pro MS 2026 připravujeme. Brzy doplníme tipování play-off.",
 };
 
-export default function BracketPage() {
+export default async function BracketPage() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    redirect(`/api/auth/signin?callbackUrl=${encodeURIComponent("/bracket")}`);
+  }
+
   return (
     <SiteShell>
       <BracketPickemComingSoon />

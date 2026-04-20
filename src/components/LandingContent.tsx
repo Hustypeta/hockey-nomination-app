@@ -13,7 +13,9 @@ import {
   LayoutGrid,
   ClipboardList,
   MessageSquare,
+  LogIn,
 } from "lucide-react";
+import { signIn } from "next-auth/react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
 import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
@@ -44,7 +46,9 @@ function formatCs(n: number) {
 }
 
 export function LandingContent() {
-  const { status: authStatus } = useSession();
+  const { data: session } = useSession();
+  /** Bez přihlášeného uživatele — spolehlivější než jen status (řeší edge případy session). */
+  const showGuestLoginPitch = !session?.user;
   const contestStats = useContestStats();
   const nominationCount = contestStats.nominationCount;
   const cd = useCountdown(MS_2026_KICKOFF);
@@ -91,7 +95,7 @@ export function LandingContent() {
               poskládej si formace podle sebe a sdílej svou sestavu pro hokejové MS ve Švýcarsku s ostatními.
             </p>
 
-            {authStatus === "authenticated" ? (
+            {session?.user ? (
               <div className="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row sm:justify-center">
                 <Link
                   href="/sestava"
@@ -125,6 +129,33 @@ export function LandingContent() {
                 <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
               </Link>
             </div>
+
+            {/* Proč se přihlásit — hosté, výš na stránce (dřív bylo až pod dlouhým blokem „Proč to zkusit“). */}
+            {showGuestLoginPitch ? (
+              <div className="mx-auto mt-10 max-w-5xl sm:mt-12">
+                <h2 className="text-center font-display text-2xl font-bold uppercase tracking-[0.12em] text-white sm:text-3xl">
+                  Proč se přihlásit
+                </h2>
+                <div className="mt-6 rounded-2xl border border-sky-400/25 bg-gradient-to-b from-[#0c182e]/95 via-[#080f1a]/98 to-[#05080f]/95 p-6 shadow-[0_0_48px_rgba(56,189,248,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8">
+                  <div className="mx-auto max-w-3xl text-center">
+                    <p className="text-pretty text-base leading-relaxed text-slate-200 sm:text-lg">
+                      Přihlaš se a získej možnost ukládat nominace, přístup do soutěže o dres, Pick’emu a komunitního fóra.
+                    </p>
+                    <p className="mx-auto mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-slate-400">
+                      Do Pick’emu a na komunitní fórum se dostanou jen přihlášení uživatelé.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => signIn("google", { callbackUrl: "/sestava" })}
+                      className="landing-cta-pulse mt-8 inline-flex min-h-[4rem] w-full max-w-lg items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-[#003087] via-[#0040a8] to-[#002266] px-8 py-5 font-display text-lg font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(125,211,252,0.45),0_12px_48px_rgba(0,48,135,0.45),0_0_64px_rgba(0,180,255,0.18)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(125,211,252,0.55),0_16px_56px_rgba(0,48,135,0.55)] active:scale-[0.99] sm:min-h-[4.25rem] sm:text-xl"
+                    >
+                      <LogIn className="h-7 w-7 shrink-0 text-sky-200" aria-hidden />
+                      Přihlásit se
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
 
             {/* Sociální důkaz + časový bonus — vedle sebe od většího breakpointu */}
             <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-5 sm:mt-12 lg:flex-row lg:items-stretch lg:gap-6">

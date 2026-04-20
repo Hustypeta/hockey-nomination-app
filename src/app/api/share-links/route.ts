@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { normalizeLineupStructure } from "@/lib/lineupUtils";
-import { normalizeNominationTitle } from "@/lib/nominationTitle";
-import type { LineupStructure } from "@/types";
+import { allocateShareLinkSlug } from "@/lib/allocateNominationSlug";
+import { validateGuestShareBody } from "@/lib/validateGuestShareBody";
 
 function genShareCode(len = 10) {
   const chars = "abcdefghijkmnpqrstuvwxyz23456789";
@@ -15,20 +14,14 @@ function genShareCode(len = 10) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as {
-      captainId?: unknown;
-      lineupStructure?: unknown;
-      title?: unknown;
-    };
-
-    const raw = body.lineupStructure;
-    if (!raw || typeof raw !== "object") {
-      return NextResponse.json({ error: "Chybí lineupStructure." }, { status: 400 });
+    const body = await request.json();
+    const parsed = validateGuestShareBody(body);
+    if (!parsed.ok) {
+      return NextResponse.json({ error: parsed.error }, { status: parsed.status });
     }
+    const { title, captainId, lineupStructure } = parsed;
 
-    const lineupStructure = normalizeLineupStructure(raw as LineupStructure);
-    const captainId = typeof body.captainId === "string" ? body.captainId : null;
-    const title = normalizeNominationTitle(body.title);
+    const slug = await allocateShareLinkSlug(prisma, title, null);
 
     let code = genShareCode(10);
     for (let attempt = 0; attempt < 8; attempt++) {
@@ -40,6 +33,7 @@ export async function POST(request: NextRequest) {
     await prisma.shareLink.create({
       data: {
         code,
+        slug,
         captainId,
         lineupStructure: lineupStructure as object,
         title,
@@ -47,10 +41,12 @@ export async function POST(request: NextRequest) {
     });
 
     const origin = new URL(request.url).origin;
+    const path = `/v/${encodeURIComponent(slug)}`;
     return NextResponse.json({
       code,
-      path: `/l/${code}`,
-      url: `${origin}/l/${code}`,
+      slug,
+      path,
+      url: `${origin}${path}`,
     });
   } catch (e) {
     console.error("POST /api/share-links", e);

@@ -75,3 +75,32 @@ export async function allocateNominationSlug(
     }
   }
 }
+
+/** Veřejná část URL pro hostovský ShareLink — nesmí kolidovat s Nomination.slug ani s jiným ShareLink. */
+export async function allocateShareLinkSlug(
+  prisma: PrismaClient,
+  title: string,
+  excludeCode: string | null
+): Promise<string> {
+  let base = slugifyNominationTitle(title);
+  if (!base || base.length < 2) {
+    base = `sdileni-${randomSlugSuffix(8)}`;
+  }
+
+  let candidate = base;
+  let n = 0;
+  for (;;) {
+    const [nomClash, linkRow] = await Promise.all([
+      prisma.nomination.findFirst({ where: { slug: candidate }, select: { id: true } }),
+      prisma.shareLink.findFirst({ where: { slug: candidate }, select: { code: true } }),
+    ]);
+    const linkClash =
+      linkRow && (!excludeCode || linkRow.code !== excludeCode) ? linkRow : null;
+    if (!nomClash && !linkClash) return candidate;
+    n += 1;
+    candidate = `${base}-${n}`;
+    if (n > 200) {
+      return `${base}-${randomSlugSuffix(6)}`;
+    }
+  }
+}

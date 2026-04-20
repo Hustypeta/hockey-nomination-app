@@ -84,30 +84,30 @@ export function SiteHeader() {
           aria-hidden
         />
 
-        <div className="relative mx-auto flex max-w-7xl items-center gap-3 px-4 py-3.5 sm:gap-4 sm:px-6 sm:py-4">
+        <div className="relative mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:gap-4 sm:px-6 sm:py-5 lg:py-6">
           {/* Brand */}
           <Link
             href="/"
-            className="group/brand flex min-w-0 flex-1 items-center gap-2 sm:gap-2.5 lg:max-w-[min(100%,18rem)] lg:flex-none"
+            className="group/brand flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:flex-none lg:gap-4"
             aria-label={`${SITE_BRAND} · MS 2026`}
           >
             <div className="relative shrink-0">
               <div
-                className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#00B4FF]/25 via-transparent to-[#c8102e]/15 opacity-0 blur-md transition-opacity duration-300 group-hover/brand:opacity-100"
+                className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-[#00B4FF]/25 via-transparent to-[#c8102e]/15 opacity-0 blur-xl transition-opacity duration-300 group-hover/brand:opacity-100"
                 aria-hidden
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={SITE_LOGO_URL}
                 alt=""
-                width={200}
-                height={60}
+                width={560}
+                height={168}
                 decoding="async"
                 fetchPriority="high"
-                className="relative h-10 w-auto object-contain object-left transition duration-300 group-hover/brand:scale-[1.06] sm:h-11 lg:h-12"
+                className="relative h-[5rem] w-auto max-h-[min(46vh,15rem)] object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[6.5rem] md:h-[7.75rem] lg:h-[8.75rem] xl:h-[10rem]"
               />
             </div>
-            <span className="shrink-0 font-display text-sm font-bold uppercase tracking-[0.14em] text-white/80 sm:text-base">
+            <span className="shrink-0 font-display text-sm font-bold uppercase tracking-[0.14em] text-white/80 sm:text-base lg:text-lg">
               MS 2026
             </span>
           </Link>
