@@ -632,7 +632,7 @@ export function NominationBuilderPage() {
                 </h2>
                 <span className="w-[5.5rem] shrink-0" aria-hidden />
               </div>
-              <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 sm:px-4">
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-2 sm:px-4">
                 <div className="sestava-premium-panel-dark rounded-2xl p-3.5 backdrop-blur-sm sm:p-4">
                   <p className="mb-3 text-[11px] leading-snug text-white/55">
                     Klepni na hráče — doplní se vybraný slot. Můžeš i přetáhnout na dres.
@@ -652,6 +652,16 @@ export function NominationBuilderPage() {
                     }
                   />
                 </div>
+              </div>
+              <div className="fixed bottom-0 left-0 right-0 z-[53] flex justify-center border-t border-white/[0.1] bg-[#05080f]/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 lg:hidden">
+                <button
+                  type="button"
+                  onClick={() => setSelectedSlot(null)}
+                  className="flex w-full max-w-md items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] py-3.5 text-sm font-bold text-white shadow-lg shadow-black/40"
+                >
+                  <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
+                  Hotovo — zpět do soupisky
+                </button>
               </div>
             </div>
           ) : null}

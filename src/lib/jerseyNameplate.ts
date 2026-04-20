@@ -50,9 +50,23 @@ function layoutWidthScore(lines: string[]): number {
  * `premium` = širší slot v hlavním editoru.
  * Dlouhá jednoslovná jména zůstaní na jednom řádku s menším písmem (čitelné na sdílených PNG).
  */
+/** Pro exportní plakát — menší strop písma a případný „řez“ dlouhého jednoslového příjmení na dvě řádky. */
+function splitNameplateLinesForPoster(lastName: string): string[] {
+  const base = splitNameplateLines(lastName);
+  if (base.length !== 1) return base;
+  const line = base[0]!;
+  const score = nameplateWidthScore(line);
+  if (score <= 15.5 || line.length < 10) return base;
+  const mid = Math.ceil(line.length / 2);
+  const left = line.slice(0, mid).trimEnd();
+  const right = line.slice(mid).trimStart();
+  if (left.length < 3 || right.length < 3) return base;
+  return [left, right];
+}
+
 export function jerseyNameplateNameProps(
   lastName: string,
-  variant: "card" | "premium" = "card"
+  variant: "card" | "premium" | "poster" = "card"
 ): {
   lines: string[];
   className: string;
@@ -63,7 +77,8 @@ export function jerseyNameplateNameProps(
     return { lines: [], className: "jersey-nameplate-text text-center", style: {} };
   }
 
-  const lines = splitNameplateLines(s);
+  const linesRaw = variant === "poster" ? splitNameplateLinesForPoster(s) : splitNameplateLines(s);
+  const lines = linesRaw;
   if (lines.length === 0) {
     return { lines: [], className: "jersey-nameplate-text text-center leading-tight", style: {} };
   }
@@ -72,11 +87,14 @@ export function jerseyNameplateNameProps(
   const score = layoutWidthScore(lines);
   /** Dvě kratší řádky = méně horizontálního stresu → mírně větší písmo než jedna ultraúzká řádka. */
   const multilineEase = lineCount > 1 ? 1.09 : 1;
-  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. */
-  const scale = variant === "premium" ? 1.02 : 1.24;
+  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = ještě menší rozsah pro PNG plakát. */
+  const scale =
+    variant === "premium" ? 1.02 : variant === "poster" ? 1.18 : 1.24;
 
-  const minFs = (variant === "premium" ? 3.75 : 4.05) * scale * multilineEase;
-  const maxFs = (variant === "premium" ? 10.2 : 11.35) * scale * multilineEase;
+  const minFs =
+    (variant === "premium" ? 3.75 : variant === "poster" ? 3.05 : 4.05) * scale * multilineEase;
+  const maxFs =
+    (variant === "premium" ? 10.2 : variant === "poster" ? 6.85 : 11.35) * scale * multilineEase;
 
   const low = 2.85;
   const high = 21.5;
@@ -87,7 +105,8 @@ export function jerseyNameplateNameProps(
   const letterSpacing = baseTrack - t * (lineCount > 1 ? 0.048 : 0.068);
   const lineHeight = lineCount > 1 ? 1.0 + t * 0.04 : 1.02 + t * 0.06;
 
-  const woven = variant === "premium" ? "jersey-nameplate-text--woven" : "";
+  const woven =
+    variant === "premium" || variant === "poster" ? "jersey-nameplate-text--woven" : "";
 
   return {
     lines,
@@ -112,17 +131,25 @@ export function jerseyNameplateNameProps(
  */
 export function jerseyNumberStyle(
   lastName: string,
-  variant: "card" | "premium" = "card"
+  variant: "card" | "premium" | "poster" = "card"
 ): CSSProperties {
-  const lines = splitNameplateLines(lastName.trim());
+  const lines =
+    variant === "poster" ? splitNameplateLinesForPoster(lastName.trim()) : splitNameplateLines(lastName.trim());
   const score = layoutWidthScore(lines);
   const longName = score > (lines.length > 1 ? 9.5 : 8.8);
 
   if (variant === "premium") {
     if (!longName) return {};
-    const t = clamp((score - 8.8) / 12, 0, 1);
-    const maxPx = lines.length > 1 ? 28 : 30;
-    const minPx = lines.length > 1 ? 19 : 21;
+    const t = clamp((score - 8.8) / 14, 0, 1);
+    const maxPx = lines.length > 1 ? 26.5 : 27.5;
+    const minPx = lines.length > 1 ? 22 : 23;
+    return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
+  }
+  if (variant === "poster") {
+    if (!longName) return {};
+    const t = clamp((score - 9) / 14, 0, 1);
+    const maxPx = lines.length > 1 ? 18.5 : 19.5;
+    const minPx = lines.length > 1 ? 15.5 : 16;
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (!longName) return {};

@@ -639,7 +639,7 @@ export function LineBuilder({
                               lineIndex={3}
                               role="x"
                               dndId="slot-fwd-3-x"
-                              jerseySize="compact"
+                              jerseySize="skater"
                               onClear={
                                 line.x
                                   ? () => {
@@ -776,7 +776,7 @@ export function LineBuilder({
                   type="extraForward"
                   lineIndex={0}
                   dndId="slot-xf-0"
-                  jerseySize="compact"
+                  jerseySize="skater"
                   onClear={
                     lineup.extraForwards[0]
                       ? () => {
@@ -797,7 +797,7 @@ export function LineBuilder({
                   type="extraDefenseman"
                   lineIndex={0}
                   dndId="slot-xd-0"
-                  jerseySize="compact"
+                  jerseySize="skater"
                   onClear={
                     lineup.extraDefensemen[0]
                       ? () => {
@@ -906,7 +906,7 @@ export function LineBuilder({
                   type="extraForward"
                   lineIndex={0}
                   dndId="slot-xf-0"
-                  jerseySize="compact"
+                  jerseySize="skater"
                   onClear={
                     lineup.extraForwards[0]
                       ? () => {
@@ -929,7 +929,7 @@ export function LineBuilder({
                   type="extraDefenseman"
                   lineIndex={0}
                   dndId="slot-xd-0"
-                  jerseySize="compact"
+                  jerseySize="skater"
                   onClear={
                     lineup.extraDefensemen[0]
                       ? () => {

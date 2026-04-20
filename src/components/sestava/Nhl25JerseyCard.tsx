@@ -43,6 +43,8 @@ export interface Nhl25JerseyCardProps {
   player?: Player | null;
   positionLabel: string;
   size?: Nhl25JerseySize;
+  /** `poster` = menší písmo a dělení jmen pro exportní plakát. */
+  nameplateVariant?: "card" | "poster";
   isCaptain?: boolean;
   isAssistant?: boolean;
   isSelected?: boolean;
@@ -59,6 +61,7 @@ export function Nhl25JerseyCard({
   isSelected = false,
   className = "",
   disableMotion = false,
+  nameplateVariant = "card",
 }: Nhl25JerseyCardProps) {
   const empty = !player;
   const kind: "skater" | "goalie" =
@@ -68,7 +71,8 @@ export function Nhl25JerseyCard({
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = numberClass[size];
   const ln = !empty ? lastName(player.name) : "";
-  const namePlate = !empty ? jerseyNameplateNameProps(ln) : null;
+  const npVar = nameplateVariant === "poster" ? "poster" : "card";
+  const namePlate = !empty ? jerseyNameplateNameProps(ln, npVar) : null;
 
   const motionCls = disableMotion
     ? ""
@@ -159,7 +163,7 @@ export function Nhl25JerseyCard({
                     </span>
                   ) : null}
                   {numStr ? (
-                    <span className={`mt-px ${numCls}`} style={jerseyNumberStyle(ln, "card")}>
+                    <span className={`mt-px ${numCls}`} style={jerseyNumberStyle(ln, npVar)}>
                       {numStr}
                     </span>
                   ) : null}

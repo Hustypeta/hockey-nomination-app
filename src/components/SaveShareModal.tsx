@@ -233,6 +233,19 @@ export function SaveShareModal({
     );
   };
 
+  const openTikTokUpload = () => {
+    window.open("https://www.tiktok.com/upload?lang=cs", "_blank", "noopener,noreferrer");
+    setShareHint(
+      "Na TikToku přidej video nebo obrázek — ideálně stáhni plakát v poměru 9:16 výše a nahraj ze zařízení."
+    );
+  };
+
+  const snapchatFromFilesHint = () => {
+    setShareHint(
+      "Snapchat nemá webové nahrávání jako TikTok — ulož PNG (9:16), pak v aplikaci vlož ze souborů / fotoaparátu."
+    );
+  };
+
   const handleClose = () => {
     setSavedId(null);
     setShareHint(null);
@@ -341,6 +354,10 @@ export function SaveShareModal({
                     {copied ? "Zkopírováno" : "Kopírovat"}
                   </button>
                 </div>
+                <p className="mt-2 text-[10px] leading-snug text-white/38">
+                  Odkaz je komprimovaný — kratší než dřív, staré odkazy pořád fungují. Pro náhled v sociálních sítích si ulož
+                  nominaci k účtu — tam je kratší URL než hostovaný odkaz.
+                </p>
               </div>
             </>
           ) : (
@@ -451,6 +468,22 @@ export function SaveShareModal({
                     className="rounded-lg border border-white/12 bg-white/10 py-2.5 text-center text-xs font-bold text-white/90 transition-colors hover:bg-white/15"
                   >
                     X
+                  </button>
+                </div>
+                <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  <button
+                    type="button"
+                    onClick={openTikTokUpload}
+                    className="rounded-lg border border-white/12 bg-black/35 py-2.5 text-center text-xs font-bold text-white/90 transition-colors hover:bg-black/45 sm:col-span-2"
+                  >
+                    TikTok (upload)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={snapchatFromFilesHint}
+                    className="rounded-lg border border-[#FFFC00]/25 bg-[#FFFC00]/10 py-2.5 text-center text-xs font-bold text-yellow-100/95 transition-colors hover:bg-[#FFFC00]/15 sm:col-span-2"
+                  >
+                    Snapchat — návod
                   </button>
                 </div>
               </div>

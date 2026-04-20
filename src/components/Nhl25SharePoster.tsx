@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useLayoutEffect, useMemo, useState } from "react";
+import { forwardRef, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
@@ -32,6 +32,11 @@ const formatCsDate = (d: Date) =>
     month: "long",
     year: "numeric",
   }).format(d);
+
+/** Na plakátu stejná šířka dresu v mřížce 2/3 sloupců (obrana působila menší). */
+function PosterJerseyWrap({ children }: { children: ReactNode }) {
+  return <div className="mx-auto w-[6.5rem] min-[400px]:w-[7rem] sm:w-[7.25rem]">{children}</div>;
+}
 
 export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps>(
   function Nhl25SharePoster(
@@ -104,210 +109,221 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
           </div>
         </header>
 
-        <div className={`relative mx-6 mb-5 mt-3 rounded-xl border px-4 py-4 sm:px-5 sm:py-5 ${panel}`}>
-          {/* Dva sloupce; doplněk soupisky je pod mřížkou přes celou šířku */}
-          <div className="grid grid-cols-2 gap-4 lg:gap-5">
-            {/* Sloupec: útok + brankáři (jako na „ledové“ straně) */}
-            <div className="min-w-0 space-y-4">
+        <div className={`relative mx-5 mb-4 mt-2 rounded-xl border px-3 py-3 sm:mx-6 sm:mb-5 sm:mt-3 sm:px-4 sm:py-4 ${panel}`}>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-5">
+            <div className="min-w-0 space-y-3 sm:space-y-3.5">
               <section>
-                <h2 className={`mb-2.5 border-b pb-1.5 font-display text-[11px] font-bold uppercase tracking-[0.2em] ${heading}`}>
+                <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:mb-2.5 sm:pb-1.5 sm:text-[11px] ${heading}`}>
                   Brankáři
                 </h2>
-                <div className="grid min-w-0 grid-cols-3 gap-2">
+                <div className="grid min-w-0 grid-cols-3 gap-1.5 sm:gap-2">
                   {lineup.goalies.map((gid, i) => (
-                    <Nhl25JerseyCard
-                      key={`g-${i}`}
-                      player={getPlayer(gid)}
-                      positionLabel="G"
-                      size="compact"
-                      isCaptain={gid ? captainId === gid : false}
-                      isAssistant={gid ? aids.includes(gid) : false}
-                      disableMotion
-                    />
+                    <PosterJerseyWrap key={`g-${i}`}>
+                      <Nhl25JerseyCard
+                        player={getPlayer(gid)}
+                        positionLabel="G"
+                        size="compact"
+                        nameplateVariant="poster"
+                        isCaptain={gid ? captainId === gid : false}
+                        isAssistant={gid ? aids.includes(gid) : false}
+                        disableMotion
+                      />
+                    </PosterJerseyWrap>
                   ))}
                 </div>
               </section>
 
               <section>
-                <h2 className={`mb-2.5 border-b pb-1.5 font-display text-[11px] font-bold uppercase tracking-[0.2em] ${heading}`}>
+                <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:mb-2.5 sm:pb-1.5 sm:text-[11px] ${heading}`}>
                   Útočné řady
                 </h2>
-                <div className="space-y-2">
+                <div className="space-y-1.5 sm:space-y-2">
                   {lineup.forwardLines.map((line, i) => (
                     <div
                       key={i}
-                      className={`flex min-w-0 flex-col gap-1.5 rounded-lg border px-2 py-2 sm:px-2.5 sm:py-2.5 ${lineBox}`}
+                      className={`flex min-w-0 flex-col gap-1 rounded-lg border px-1.5 py-1.5 sm:gap-1.5 sm:px-2 sm:py-2 ${lineBox}`}
                     >
-                      <span className={`shrink-0 font-display text-[10px] font-bold uppercase tracking-wide sm:text-[11px] ${subheading}`}>
+                      <span className={`shrink-0 font-display text-[9px] font-bold uppercase tracking-wide sm:text-[11px] ${subheading}`}>
                         {i + 1}. lajna
                       </span>
-                      <div className="grid min-w-0 w-full grid-cols-3 gap-2">
-                        <Nhl25JerseyCard
-                          player={getPlayer(line.lw)}
-                          positionLabel="LW"
-                          size="compact"
-                          isCaptain={line.lw ? captainId === line.lw : false}
-                          isAssistant={line.lw ? aids.includes(line.lw) : false}
-                          disableMotion
-                        />
-                        <Nhl25JerseyCard
-                          player={getPlayer(line.c)}
-                          positionLabel="C"
-                          size="compact"
-                          isCaptain={line.c ? captainId === line.c : false}
-                          isAssistant={line.c ? aids.includes(line.c) : false}
-                          disableMotion
-                        />
-                        <Nhl25JerseyCard
-                          player={getPlayer(line.rw)}
-                          positionLabel="RW"
-                          size="compact"
-                          isCaptain={line.rw ? captainId === line.rw : false}
-                          isAssistant={line.rw ? aids.includes(line.rw) : false}
-                          disableMotion
-                        />
+                      <div className="grid min-w-0 w-full grid-cols-3 gap-1 sm:gap-2">
+                        <PosterJerseyWrap>
+                          <Nhl25JerseyCard
+                            player={getPlayer(line.lw)}
+                            positionLabel="LW"
+                            size="compact"
+                            nameplateVariant="poster"
+                            isCaptain={line.lw ? captainId === line.lw : false}
+                            isAssistant={line.lw ? aids.includes(line.lw) : false}
+                            disableMotion
+                          />
+                        </PosterJerseyWrap>
+                        <PosterJerseyWrap>
+                          <Nhl25JerseyCard
+                            player={getPlayer(line.c)}
+                            positionLabel="C"
+                            size="compact"
+                            nameplateVariant="poster"
+                            isCaptain={line.c ? captainId === line.c : false}
+                            isAssistant={line.c ? aids.includes(line.c) : false}
+                            disableMotion
+                          />
+                        </PosterJerseyWrap>
+                        <PosterJerseyWrap>
+                          <Nhl25JerseyCard
+                            player={getPlayer(line.rw)}
+                            positionLabel="RW"
+                            size="compact"
+                            nameplateVariant="poster"
+                            isCaptain={line.rw ? captainId === line.rw : false}
+                            isAssistant={line.rw ? aids.includes(line.rw) : false}
+                            disableMotion
+                          />
+                        </PosterJerseyWrap>
                       </div>
                     </div>
                   ))}
                 </div>
               </section>
+
+              <section className={`rounded-lg border border-dashed px-2 py-2 sm:px-2.5 sm:py-2.5 ${dark ? "border-white/18 bg-black/15" : "border-slate-300/70 bg-slate-50/80"}`}>
+                <h2
+                  className={`mb-2 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${dark ? "text-white/90" : "text-slate-800"}`}
+                >
+                  Doplněk soupisky
+                </h2>
+                <p className={`mb-2 text-center text-[9px] font-semibold uppercase tracking-wider ${subheading}`}>
+                  13. útok · náhradníci
+                </p>
+                <div className={`grid min-w-0 gap-2 ${extraD ? "grid-cols-3" : "grid-cols-2"}`}>
+                  <div className="min-w-0">
+                    <p className={`mb-1 text-center text-[8px] font-bold uppercase tracking-wider sm:text-[10px] ${subheading}`}>
+                      X
+                    </p>
+                    <PosterJerseyWrap>
+                      <Nhl25JerseyCard
+                        player={getPlayer(lineup.forwardLines[3].x)}
+                        positionLabel="X"
+                        size="compact"
+                        nameplateVariant="poster"
+                        isCaptain={
+                          lineup.forwardLines[3].x ? captainId === lineup.forwardLines[3].x : false
+                        }
+                        isAssistant={
+                          lineup.forwardLines[3].x ? aids.includes(lineup.forwardLines[3].x) : false
+                        }
+                        disableMotion
+                      />
+                    </PosterJerseyWrap>
+                  </div>
+                  <div className="min-w-0">
+                    <p className={`mb-1 text-center text-[8px] font-bold uppercase tracking-wider sm:text-[10px] ${subheading}`}>
+                      náhr. F
+                    </p>
+                    <PosterJerseyWrap>
+                      <Nhl25JerseyCard
+                        player={getPlayer(lineup.extraForwards[0] ?? null)}
+                        positionLabel="F"
+                        size="compact"
+                        nameplateVariant="poster"
+                        isCaptain={
+                          lineup.extraForwards[0] ? captainId === lineup.extraForwards[0] : false
+                        }
+                        isAssistant={
+                          lineup.extraForwards[0] ? aids.includes(lineup.extraForwards[0]) : false
+                        }
+                        disableMotion
+                      />
+                    </PosterJerseyWrap>
+                  </div>
+                  {extraD ? (
+                    <div className="min-w-0">
+                      <p className={`mb-1 text-center text-[8px] font-bold uppercase tracking-wider sm:text-[10px] ${subheading}`}>
+                        náhr. D
+                      </p>
+                      <PosterJerseyWrap>
+                        <Nhl25JerseyCard
+                          player={getPlayer(extraD)}
+                          positionLabel="D"
+                          size="compact"
+                          nameplateVariant="poster"
+                          isCaptain={captainId === extraD}
+                          isAssistant={aids.includes(extraD)}
+                          disableMotion
+                        />
+                      </PosterJerseyWrap>
+                    </div>
+                  ) : null}
+                </div>
+                {!extraD ? (
+                  <p className={`mt-2 text-center text-[8px] leading-snug sm:text-[10px] ${subheading}`}>
+                    Osmého beka doplň v editoru pod 7. bekem.
+                  </p>
+                ) : null}
+              </section>
             </div>
 
-            {/* Sloupec: obrana (vč. 7. beka v mřížce) */}
-            <div className="min-w-0 space-y-4">
+            <div className="min-w-0 space-y-3 sm:space-y-4">
               <section>
-                <h2 className={`mb-2 border-b pb-1.5 font-display text-[11px] font-bold uppercase tracking-[0.2em] ${heading}`}>
+                <h2 className={`mb-2 border-b pb-1 font-display text-[10px] font-bold uppercase tracking-[0.2em] sm:text-[11px] ${heading}`}>
                   Obranné páry
                 </h2>
-                <div className="grid min-w-0 grid-cols-2 gap-2 sm:gap-2.5">
+                <div className="grid min-w-0 grid-cols-2 gap-1.5 sm:gap-2">
                   {lineup.defensePairs.slice(0, 3).map((pair, i) => (
-                    <div
-                      key={i}
-                      className={`min-w-0 rounded-lg border px-1.5 py-2 sm:px-2 sm:py-2.5 ${lineBox}`}
-                    >
-                      <p className={`mb-1 text-center font-display text-[9px] font-bold uppercase tracking-[0.18em] ${pairTitle}`}>
+                    <div key={i} className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
+                      <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
                         {i + 1}. pár
                       </p>
-                      <div className="grid min-w-0 grid-cols-2 gap-1.5 sm:gap-2">
-                        <Nhl25JerseyCard
-                          player={getPlayer(pair.lb)}
-                          positionLabel="LD"
-                          size="compact"
-                          isCaptain={pair.lb ? captainId === pair.lb : false}
-                          isAssistant={pair.lb ? aids.includes(pair.lb) : false}
-                          disableMotion
-                        />
-                        <Nhl25JerseyCard
-                          player={getPlayer(pair.rb)}
-                          positionLabel="RD"
-                          size="compact"
-                          isCaptain={pair.rb ? captainId === pair.rb : false}
-                          isAssistant={pair.rb ? aids.includes(pair.rb) : false}
-                          disableMotion
-                        />
+                      <div className="grid min-w-0 grid-cols-2 gap-1 sm:gap-1.5">
+                        <PosterJerseyWrap>
+                          <Nhl25JerseyCard
+                            player={getPlayer(pair.lb)}
+                            positionLabel="LD"
+                            size="compact"
+                            nameplateVariant="poster"
+                            isCaptain={pair.lb ? captainId === pair.lb : false}
+                            isAssistant={pair.lb ? aids.includes(pair.lb) : false}
+                            disableMotion
+                          />
+                        </PosterJerseyWrap>
+                        <PosterJerseyWrap>
+                          <Nhl25JerseyCard
+                            player={getPlayer(pair.rb)}
+                            positionLabel="RD"
+                            size="compact"
+                            nameplateVariant="poster"
+                            isCaptain={pair.rb ? captainId === pair.rb : false}
+                            isAssistant={pair.rb ? aids.includes(pair.rb) : false}
+                            disableMotion
+                          />
+                        </PosterJerseyWrap>
                       </div>
                       <div
-                        className="mx-auto mt-2 h-1 w-[92%] rounded-full bg-gradient-to-r from-transparent via-[#003087] to-transparent opacity-95 shadow-[0_0_14px_rgba(0,48,135,0.45)]"
+                        className="mx-auto mt-1.5 h-0.5 w-[88%] rounded-full bg-gradient-to-r from-transparent via-[#003087] to-transparent opacity-95 shadow-[0_0_10px_rgba(0,48,135,0.4)] sm:mt-2 sm:h-1"
                         aria-hidden
                       />
                     </div>
                   ))}
-                  <div className={`min-w-0 rounded-lg border px-1.5 py-2 sm:px-2 sm:py-2.5 ${lineBox}`}>
-                    <p className={`mb-1 text-center font-display text-[9px] font-bold uppercase tracking-[0.18em] ${pairTitle}`}>
+                  <div className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
+                    <p className={`mb-1 text-center font-display text-[8px] font-bold uppercase tracking-[0.18em] sm:text-[9px] ${pairTitle}`}>
                       7. bek
                     </p>
-                    <div className="flex justify-center">
+                    <PosterJerseyWrap>
                       <Nhl25JerseyCard
                         player={getPlayer(seventhDefenseId)}
                         positionLabel="D"
                         size="compact"
+                        nameplateVariant="poster"
                         isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
                         isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
                         disableMotion
                       />
-                    </div>
+                    </PosterJerseyWrap>
                   </div>
                 </div>
               </section>
             </div>
           </div>
-
-          <section
-            className={`mt-5 border-t border-dashed pt-5 sm:mt-6 sm:pt-6 ${dark ? "border-white/15" : "border-slate-300/60"}`}
-          >
-            <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-              <h2
-                className={`font-display text-sm font-bold uppercase tracking-[0.18em] sm:text-base ${dark ? "text-white" : "text-slate-900"}`}
-              >
-                Doplněk soupisky
-              </h2>
-              <p className={`text-[10px] font-semibold uppercase tracking-wider sm:text-[11px] ${subheading}`}>
-                13. útok · náhradníci
-              </p>
-            </div>
-            <div className={`grid min-w-0 gap-3 sm:gap-4 ${extraD ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-1 sm:grid-cols-2"}`}>
-              <div className={`min-w-0 rounded-lg border p-2 sm:p-3 ${dark ? "border-white/12 bg-[#0f1218]/95" : "border-slate-200/90 bg-white/95"}`}>
-                <p className={`mb-2 text-center text-[10px] font-bold uppercase tracking-wider sm:text-[11px] ${subheading}`}>
-                  13. útok (X)
-                </p>
-                <div className="flex justify-center">
-                  <Nhl25JerseyCard
-                    player={getPlayer(lineup.forwardLines[3].x)}
-                    positionLabel="X"
-                    size="compact"
-                    isCaptain={
-                      lineup.forwardLines[3].x ? captainId === lineup.forwardLines[3].x : false
-                    }
-                    isAssistant={
-                      lineup.forwardLines[3].x ? aids.includes(lineup.forwardLines[3].x) : false
-                    }
-                    disableMotion
-                  />
-                </div>
-              </div>
-              <div className={`min-w-0 rounded-lg border p-2 sm:p-3 ${dark ? "border-white/12 bg-[#0f1218]/95" : "border-slate-200/90 bg-white/95"}`}>
-                <p className={`mb-2 text-center text-[10px] font-bold uppercase tracking-wider sm:text-[11px] ${subheading}`}>
-                  Náhradní útočník
-                </p>
-                <div className="flex justify-center">
-                  <Nhl25JerseyCard
-                    player={getPlayer(lineup.extraForwards[0] ?? null)}
-                    positionLabel="F"
-                    size="compact"
-                    isCaptain={
-                      lineup.extraForwards[0] ? captainId === lineup.extraForwards[0] : false
-                    }
-                    isAssistant={
-                      lineup.extraForwards[0] ? aids.includes(lineup.extraForwards[0]) : false
-                    }
-                    disableMotion
-                  />
-                </div>
-              </div>
-              {extraD ? (
-                <div className={`min-w-0 rounded-lg border p-2 sm:p-3 ${dark ? "border-white/12 bg-[#0f1218]/95" : "border-slate-200/90 bg-white/95"}`}>
-                  <p className={`mb-2 text-center text-[10px] font-bold uppercase tracking-wider sm:text-[11px] ${subheading}`}>
-                    Náhradní obránce
-                  </p>
-                  <div className="flex justify-center">
-                    <Nhl25JerseyCard
-                      player={getPlayer(extraD)}
-                      positionLabel="D"
-                      size="compact"
-                      isCaptain={captainId === extraD}
-                      isAssistant={aids.includes(extraD)}
-                      disableMotion
-                    />
-                  </div>
-                </div>
-              ) : null}
-            </div>
-            {!extraD ? (
-              <p className={`mt-3 text-center text-[10px] leading-snug sm:text-[11px] ${subheading}`}>
-                Na soupisce MS je i osmý bek v náhradnících — v editoru ho doplň po sedmém bekovi v obraně.
-              </p>
-            ) : null}
-          </section>
         </div>
 
         <footer

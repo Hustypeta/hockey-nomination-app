@@ -111,7 +111,7 @@ function DraggableCard({
       `}
     >
       <div
-        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#003087]/20 blur-2xl"
+        className="pointer-events-none absolute -right-6 -top-6 h-16 w-16 rounded-full bg-[#003087]/18 opacity-90"
         aria-hidden
       />
       <div className="relative flex gap-2">
@@ -328,16 +328,20 @@ export function PlayerPoolPanel({
           const disabled = !canAdd(player);
           const slotBlocks = assignableFilter ? !assignableFilter(player) : false;
           return (
-            <DraggableCard
+            <div
               key={player.id}
-              player={player}
-              disabled={disabled}
-              slotBlocks={slotBlocks}
-              inRoster={inRoster}
-              counts={counts}
-              onAdd={() => onAddPlayer(player)}
-              onInfo={() => onPreview(player)}
-            />
+              className="[content-visibility:auto] [contain-intrinsic-size:168px]"
+            >
+              <DraggableCard
+                player={player}
+                disabled={disabled}
+                slotBlocks={slotBlocks}
+                inRoster={inRoster}
+                counts={counts}
+                onAdd={() => onAddPlayer(player)}
+                onInfo={() => onPreview(player)}
+              />
+            </div>
           );
         })}
       </div>

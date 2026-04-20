@@ -1,7 +1,10 @@
 /** Značka aplikace — jednotně v meta, hlavičce a úvodu. */
-/** Odkazy na soubory v `public/images/` (hlavička, favicon). */
-export const SITE_LOGO_URL = "/images/logo.png";
-export const SITE_ICON_URL = "/images/icon.png";
+const assetV = process.env.NEXT_PUBLIC_ASSET_VERSION?.trim();
+const assetQ = assetV && assetV.length > 0 ? `?v=${encodeURIComponent(assetV)}` : "";
+
+/** Odkazy na soubory v `public/images/` (hlavička, favicon). `?v=` obchází agresivní cache po výměně obrázku. */
+export const SITE_LOGO_URL = `/images/logo.png${assetQ}`;
+export const SITE_ICON_URL = `/images/icon.png${assetQ}`;
 
 export const SITE_BRAND = "LineUp";
 
