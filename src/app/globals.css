@@ -154,6 +154,15 @@ body {
     0 2px 7px rgba(0, 0, 0, 0.32);
 }
 
+/** Plakát — příjmení pod siluetou vedle vlajky (hem), velké modré písmo. */
+.nhl25-share-poster-capture .nhl25-poster-jersey-hem-name span {
+  color: #003087;
+  font-size: clamp(0.82rem, 2.4vw, 1.05rem);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
 /**
  * Číslo — bílá výplň, středně silný obrys v #002d54 (jako na reálném dresu).
  * paint-order: obrys pod výplní, aby zůstala čistá bílá plocha uvnitř.

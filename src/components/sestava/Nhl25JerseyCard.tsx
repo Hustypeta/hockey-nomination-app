@@ -1,10 +1,14 @@
 "use client";
 
 import type { Player } from "@/types";
-import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
+import {
+  jerseyNameplateNameProps,
+  jerseyNumberStyle,
+  splitNameplateLines,
+} from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
-import { JerseyCornerFlagCz } from "@/components/sestava/JerseyCornerFlagCz";
+import { JerseyCornerFlagCz, JerseyFlagCzInline } from "@/components/sestava/JerseyCornerFlagCz";
 
 export type Nhl25JerseySize = "compact" | "skater" | "goalie";
 
@@ -47,7 +51,7 @@ export interface Nhl25JerseyCardProps {
   player?: Player | null;
   positionLabel: string;
   size?: Nhl25JerseySize;
-  /** `poster` = menší písmo a dělení jmen pro exportní plakát. */
+  /** `poster` = číslo jen na zádech, příjmení pod siluetou u vlajky (sdílecí plakát). */
   nameplateVariant?: "card" | "poster";
   isCaptain?: boolean;
   isAssistant?: boolean;
@@ -76,7 +80,10 @@ export function Nhl25JerseyCard({
   const numCls = nameplateVariant === "poster" ? POSTER_EXPORT_NUMBER : numberClass[size];
   const ln = !empty ? lastName(player.name) : "";
   const npVar = nameplateVariant === "poster" ? "poster" : "card";
-  const namePlate = !empty ? jerseyNameplateNameProps(ln, npVar) : null;
+  const namePlate =
+    !empty && nameplateVariant !== "poster" ? jerseyNameplateNameProps(ln, npVar) : null;
+  const hemLines =
+    !empty && nameplateVariant === "poster" && ln ? splitNameplateLines(ln) : [];
 
   const motionCls = disableMotion
     ? ""
@@ -153,18 +160,16 @@ export function Nhl25JerseyCard({
 
             {!empty ? (
               <>
-                <JerseyCornerFlagCz />
+                {nameplateVariant !== "poster" ? <JerseyCornerFlagCz /> : null}
                 <div
                   className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center ${
                     nameplateVariant === "poster"
-                      ? "justify-start px-2 pt-[35%]"
+                      ? "justify-start px-2 pt-[38%]"
                       : `px-1 ${overlayTopClass[size]}`
                   }`}
                 >
                   {namePlate && namePlate.lines.length > 0 ? (
-                    <span
-                      className={`flex w-full min-w-0 flex-col items-center gap-[0.08em] ${nameplateVariant === "poster" ? "max-w-[94%]" : "max-w-full"}`}
-                    >
+                    <span className="flex w-full min-w-0 flex-col items-center gap-[0.08em] max-w-full">
                       {namePlate.lines.map((line, idx) => (
                         <span key={idx} className={namePlate.className} style={namePlate.style}>
                           {line}
@@ -174,8 +179,12 @@ export function Nhl25JerseyCard({
                   ) : null}
                   {numStr ? (
                     <span
-                      className={`${nameplateVariant === "poster" ? "mt-1" : "mt-px"} ${numCls}`}
-                      style={jerseyNumberStyle(ln, npVar)}
+                      className={`${nameplateVariant !== "poster" ? "mt-px " : ""}${numCls}`}
+                      style={
+                        nameplateVariant === "poster"
+                          ? jerseyNumberStyle(".", "poster")
+                          : jerseyNumberStyle(ln, npVar)
+                      }
                     >
                       {numStr}
                     </span>
@@ -193,6 +202,22 @@ export function Nhl25JerseyCard({
               </div>
             )}
           </div>
+
+          {nameplateVariant === "poster" && hemLines.length > 0 ? (
+            <div className="pointer-events-none mt-1 flex items-end justify-end gap-2 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-2 py-1.5">
+              <JerseyFlagCzInline width={24} height={16} className="translate-y-[1px]" />
+              <span className="nhl25-poster-jersey-hem-name flex min-w-0 max-w-[min(100%,9.25rem)] flex-col items-end gap-0 leading-[1.05]">
+                {hemLines.map((line, idx) => (
+                  <span
+                    key={idx}
+                    className="text-right font-display font-black uppercase tracking-[0.06em] text-[#003087]"
+                  >
+                    {line}
+                  </span>
+                ))}
+              </span>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
