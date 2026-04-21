@@ -1,4 +1,7 @@
-import { getFontEmbedCSS, toCanvas, type Options } from "html-to-image";
+import { getFontEmbedCSS, toCanvas } from "html-to-image";
+
+/** Balíček `html-to-image` exportuje `Options` jen interně — typ bereme z `toCanvas`. */
+export type HtmlToImageOptions = NonNullable<Parameters<typeof toCanvas>[1]>;
 
 /**
  * Sjednocené volby pro html-to-image (`toCanvas` / `toPng`):
@@ -6,9 +9,12 @@ import { getFontEmbedCSS, toCanvas, type Options } from "html-to-image";
  *   aby se při serializaci do SVG/canvas nepoužilo rozmazané systémové písmo.
  * – `skipFonts: false` vynutí embed Google Fonts z odkazů v dokumentu.
  */
-export async function buildHtmlToImageOptions(element: HTMLElement, partial: Options): Promise<Options> {
+export async function buildHtmlToImageOptions(
+  element: HTMLElement,
+  partial: HtmlToImageOptions
+): Promise<HtmlToImageOptions> {
   await document.fonts.ready.catch(() => undefined);
-  const base: Options = {
+  const base: HtmlToImageOptions = {
     cacheBust: true,
     skipFonts: false,
     preferredFontFormat: "woff2",
