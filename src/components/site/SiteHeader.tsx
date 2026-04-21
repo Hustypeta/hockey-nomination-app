@@ -88,7 +88,7 @@ export function SiteHeader() {
           {/* Brand */}
           <Link
             href="/"
-            className="group/brand flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:min-w-0 lg:max-w-[min(42%,22rem)] lg:flex-none lg:gap-4 xl:max-w-[min(40%,24rem)]"
+            className="group/brand flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:min-w-0 lg:max-w-[min(34%,17.5rem)] lg:flex-none lg:gap-3 xl:max-w-[min(32%,18.5rem)]"
             aria-label={`${SITE_BRAND} · MS 2026`}
           >
             <div className="relative shrink-0">
@@ -104,20 +104,23 @@ export function SiteHeader() {
                 height={168}
                 decoding="async"
                 fetchPriority="high"
-                className="relative h-[5rem] w-auto max-h-[min(46vh,15rem)] max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[6.5rem] md:h-[7.75rem] lg:h-[7.75rem] xl:h-[9rem]"
+                className="relative h-[5rem] w-auto max-h-[min(46vh,15rem)] max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[6.5rem] md:h-[7.75rem] lg:h-[6.25rem] xl:h-[7.25rem] 2xl:h-[8.5rem]"
               />
             </div>
-            <span className="shrink-0 font-display text-sm font-bold uppercase tracking-[0.14em] text-white/80 sm:text-base lg:text-lg">
+            <span className="shrink-0 font-display text-sm font-bold uppercase tracking-[0.14em] text-white/80 sm:text-base lg:text-base xl:text-lg">
               MS 2026
             </span>
           </Link>
 
-          {/* Desktop: navigace bere zbylé místo (scroll), účet+CTA vždy celé — nesmí se překrývat */}
-          <div className="ml-auto hidden min-w-0 flex-1 items-center gap-8 pl-3 sm:gap-10 lg:flex lg:ml-0 xl:gap-12">
+          {/* Desktop: navigace bere zbylé místo (scroll + clip), účet+CTA vpravo nesmí překrývat odkazy */}
+          <div className="ml-auto hidden min-w-0 flex-1 items-center gap-8 pl-2 sm:gap-10 lg:flex lg:ml-0 xl:gap-12 2xl:gap-[4.25rem]">
+            {/* Vnější box drží šířku — navigace uvnitř jen scrolluje, nesmí „podjet“ pod účet */}
+            <div className="min-w-0 flex-1 overflow-hidden">
             <nav
-              className="flex min-h-[2.75rem] min-w-0 flex-1 touch-pan-x items-center gap-0.5 overflow-x-auto overflow-y-visible overscroll-x-contain pr-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="isolate min-h-[2.75rem] min-w-0 touch-pan-x overflow-x-auto overflow-y-hidden overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               aria-label="Hlavní navigace"
             >
+              <div className="flex w-max items-center gap-0.5 pr-4 sm:pr-6 xl:pr-10">
               {NAV.map(({ href, label }) => {
                 const active = isActive(pathname, href);
                 return (
@@ -125,9 +128,9 @@ export function SiteHeader() {
                     key={href}
                     href={href}
                     className={`
-                    group/nav relative whitespace-nowrap rounded-xl px-3 py-2 text-[0.8125rem] font-semibold tracking-wide
+                    group/nav relative shrink-0 whitespace-nowrap rounded-xl px-2.5 py-2 text-[0.8125rem] font-semibold tracking-wide lg:px-2 xl:px-2.5 2xl:px-3
                     transition-all duration-200 ease-out will-change-transform
-                    hover:scale-[1.05] hover:text-white
+                    hover:text-white lg:hover:scale-[1.02]
                     focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
                     ${active ? "text-white" : "text-slate-400"}
                   `}
@@ -153,14 +156,16 @@ export function SiteHeader() {
                   </Link>
                 );
               })}
+              </div>
             </nav>
+            </div>
 
-            <div className="relative z-10 flex shrink-0 flex-none items-center gap-3 border-l border-white/[0.08] pl-5 xl:pl-7">
+            <div className="flex shrink-0 flex-none items-center gap-2 border-l border-white/[0.08] bg-[linear-gradient(90deg,rgba(20,28,44,0)_0%,rgba(20,28,44,0.92)_14%,#141c2c_28%)] pl-5 shadow-[-12px_0_18px_-6px_rgba(12,17,26,0.95)] sm:gap-3 sm:pl-6 xl:pl-8">
             {status === "authenticated" && user ? (
-              <div className="flex shrink-0 items-center gap-3">
+              <div className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
                 <Link
                   href="/ucet"
-                  className="group/avatar flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 transition-all duration-200 hover:bg-white/[0.06]"
+                  className="group/avatar flex min-w-0 max-w-[10.5rem] items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-all duration-200 hover:bg-white/[0.06] min-[1800px]:max-w-[13rem]"
                   title={user.email ?? ""}
                 >
                   {user.image ? (
@@ -177,7 +182,7 @@ export function SiteHeader() {
                       {userInitials(user)}
                     </span>
                   )}
-                  <span className="hidden max-w-[10rem] truncate text-xs font-medium text-slate-400 transition group-hover/avatar:text-slate-200 2xl:inline">
+                  <span className="hidden min-w-0 truncate text-xs font-medium text-slate-400 transition group-hover/avatar:text-slate-200 min-[1920px]:inline">
                     {user.email}
                   </span>
                 </Link>
@@ -185,11 +190,11 @@ export function SiteHeader() {
                   href="/sestava"
                   style={{ "--ice": ICE, "--ice-dim": ICE_DIM } as CSSProperties}
                   className={`
-                    inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[var(--ice-dim)] to-[var(--ice)]
-                    px-4 py-2.5 font-display text-sm font-bold uppercase tracking-[0.12em] text-[#03050a]
+                    inline-flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-[var(--ice-dim)] to-[var(--ice)]
+                    px-3 py-2.5 font-display text-xs font-bold uppercase tracking-[0.12em] text-[#03050a] xl:px-4 xl:text-sm
                     shadow-[0_0_28px_rgba(0,180,255,0.45),0_6px_20px_rgba(0,0,0,0.35)]
                     ring-1 ring-white/20 transition duration-200
-                    hover:scale-[1.05] hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)]
+                    hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)] lg:hover:scale-100 hover:scale-[1.03]
                     active:scale-[0.98]
                   `}
                 >
@@ -217,7 +222,7 @@ export function SiteHeader() {
                     px-4 py-2.5 font-display text-sm font-bold uppercase tracking-[0.12em] text-[#03050a]
                     shadow-[0_0_28px_rgba(0,180,255,0.45),0_6px_20px_rgba(0,0,0,0.35)]
                     ring-1 ring-white/20 transition duration-200
-                    hover:scale-[1.05] hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)]
+                    hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)] lg:hover:scale-100 hover:scale-[1.03]
                     active:scale-[0.98]
                   `}
                 >

@@ -1,29 +1,28 @@
 import type { Metadata } from "next";
 import { SharePageClient } from "./SharePageClient";
 
-const ogTitle = "Sdílená nominace — Lineup · MS 2026";
+const ogTitle = "Sestav si nominaci a vyhraj dres — Lineup · MS 2026";
 const ogDescription =
-  "Otevři odkaz a zobrazí se celá soupiska českého národního týmu z fanouškovského editoru.";
+  "Sestav si nominaci v editoru, sdílej odkaz s kamarády a zapoj se do soutěže o dres.";
 
 export async function generateMetadata({
   searchParams,
 }: {
   searchParams: Promise<{ z?: string }>;
 }): Promise<Metadata> {
-  const { z } = await searchParams;
-  const hasPayload = Boolean(z?.length);
+  await searchParams;
   return {
     title: ogTitle,
     description: ogDescription,
     openGraph: {
       title: ogTitle,
-      description: hasPayload ? ogDescription : "Lineup — editor nominace na MS 2026.",
+      description: ogDescription,
       images: [
         {
           url: "/share/opengraph-image",
           width: 1200,
           height: 630,
-          alt: "Lineup — nominace",
+          alt: "Lineup · Sestav si nominaci a vyhraj dres",
         },
       ],
       type: "website",
