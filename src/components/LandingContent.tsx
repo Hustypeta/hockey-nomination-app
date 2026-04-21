@@ -139,10 +139,8 @@ export function LandingContent() {
                 <div className="mt-6 rounded-2xl border border-sky-400/25 bg-gradient-to-b from-[#0c182e]/95 via-[#080f1a]/98 to-[#05080f]/95 p-6 shadow-[0_0_48px_rgba(56,189,248,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8">
                   <div className="mx-auto max-w-3xl text-center">
                     <p className="text-pretty text-base leading-relaxed text-slate-200 sm:text-lg">
-                      Přihlaš se a získej možnost ukládat nominace, přístup do soutěže o dres, Pick’emu a komunitního fóra.
-                    </p>
-                    <p className="mx-auto mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-slate-400">
-                      Do Pick’emu a na komunitní fórum se dostanou jen přihlášení uživatelé.
+                      Přihlaš se a získej možnost ukládat nominace a přístup do soutěže o dres. Pick’em play-off a
+                      komunitní fórum zatím připravujeme — brzy doplníme.
                     </p>
                     <button
                       type="button"
@@ -304,10 +302,10 @@ export function LandingContent() {
                 </p>
                 <Link
                   href="/bracket"
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-slate-300 transition hover:text-white"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-slate-400 transition hover:text-slate-200"
                 >
-                  Otevřít Pick’em
-                  <ChevronRight className="h-4 w-4" aria-hidden />
+                  Pick’em — připravujeme
+                  <ChevronRight className="h-4 w-4 opacity-70" aria-hidden />
                 </Link>
               </div>
               <div className="rounded-2xl border border-violet-400/20 bg-gradient-to-b from-violet-950/35 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(139,92,246,0.12)]">
@@ -319,10 +317,10 @@ export function LandingContent() {
                 </p>
                 <Link
                   href="/forum"
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-violet-200/95 transition hover:text-white"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-violet-300/70 transition hover:text-violet-200"
                 >
-                  Fórum
-                  <ChevronRight className="h-4 w-4" aria-hidden />
+                  Fórum — připravujeme
+                  <ChevronRight className="h-4 w-4 opacity-70" aria-hidden />
                 </Link>
               </div>
             </div>

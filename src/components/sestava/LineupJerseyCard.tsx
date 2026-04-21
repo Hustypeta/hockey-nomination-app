@@ -48,6 +48,8 @@ export interface LineupJerseyCardProps {
   className?: string;
   /** Bez animací a hoveru — pro statický PNG. */
   disableMotion?: boolean;
+  /** Zda kreslit příjmení (a roli F / štítek G) na dresu; `false` = jen číslo (+ C/A). */
+  nameOnJersey?: boolean;
 }
 
 export function LineupJerseyCard({
@@ -59,6 +61,7 @@ export function LineupJerseyCard({
   isSelected = false,
   className = "",
   disableMotion = false,
+  nameOnJersey = true,
 }: LineupJerseyCardProps) {
   const empty = !player;
   const emptyUnfocused = empty && !isSelected;
@@ -70,7 +73,8 @@ export function LineupJerseyCard({
   const numCls = numberClass[size];
   const topOverlay = overlayTopClass[size];
   const ln = !empty ? lastName(player.name) : "";
-  const namePlate = !empty ? jerseyNameplateNameProps(ln) : null;
+  const namePlate =
+    !empty && nameOnJersey ? jerseyNameplateNameProps(ln) : { lines: [] as string[], className: "", style: {} };
 
   const motionCls = disableMotion
     ? ""
@@ -158,7 +162,7 @@ export function LineupJerseyCard({
               <div
                 className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center ${topOverlay}`}
               >
-                {namePlate && namePlate.lines.length > 0 ? (
+                {nameOnJersey && namePlate.lines.length > 0 ? (
                   <span className="flex w-full max-w-full flex-col items-center gap-[0.1em]">
                     {namePlate.lines.map((line, idx) => (
                       <span key={idx} className={namePlate.className} style={namePlate.style}>
@@ -168,18 +172,21 @@ export function LineupJerseyCard({
                   </span>
                 ) : null}
                 {numStr ? (
-                  <span className={`mt-px ${numCls}`} style={jerseyNumberStyle(ln, "card")}>
+                  <span
+                    className={`${nameOnJersey ? "mt-px" : "mt-[18%]"} ${numCls}`}
+                    style={jerseyNumberStyle(ln, "card")}
+                  >
                     {numStr}
                   </span>
                 ) : null}
-                {player.position === "F" && player.role ? (
+                {nameOnJersey && player.position === "F" && player.role ? (
                   <span
                     className="mt-1 rounded border border-white/25 bg-black/55 px-1.5 py-0.5 font-display text-[9px] font-bold uppercase tracking-wider text-white"
                   >
                     {player.role}
                   </span>
                 ) : null}
-                {player.position === "G" ? (
+                {nameOnJersey && player.position === "G" ? (
                   <span
                     className="mt-1 font-display text-[10px] font-bold uppercase tracking-[0.12em] text-sky-100"
                     style={{ textShadow: "0 1px 2px rgba(0,0,0,0.85)" }}

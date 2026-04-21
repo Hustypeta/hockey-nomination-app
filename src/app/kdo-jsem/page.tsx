@@ -1,16 +1,6 @@
-import type { Metadata } from "next";
-import { KdoJsemContent } from "@/components/KdoJsemContent";
-import { SiteShell } from "@/components/site/SiteShell";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Kdo jsem",
-  description: "Krátký úvod k autorovi projektu MS 2026 — fanouškovský editor sestavy nominace.",
-};
-
+/** Stránka dočasně skrytá — obnovení: vrátit metadata + KdoJsemContent ve SiteShell. */
 export default function KdoJsemPage() {
-  return (
-    <SiteShell>
-      <KdoJsemContent />
-    </SiteShell>
-  );
+  redirect("/");
 }

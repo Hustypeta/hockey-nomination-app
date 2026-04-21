@@ -21,7 +21,7 @@ const formatCsDate = (d: Date) =>
 
 function NamePill({ children }: { children: string }) {
   return (
-    <div className="flex min-h-[2.65rem] items-center justify-center rounded-lg bg-white/[0.96] px-2.5 py-2 text-center font-sans text-[16px] font-bold leading-snug tracking-wide text-[#0a1628] shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[2.75rem] sm:text-[17px]">
+    <div className="flex min-h-[2.75rem] items-center justify-center rounded-lg bg-white/[0.96] px-2.5 py-2 text-center font-sans text-[17px] font-bold leading-snug tracking-wide text-[#0a1628] shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[2.85rem] sm:text-[18px]">
       <span className="line-clamp-2 break-words">{children}</span>
     </div>
   );

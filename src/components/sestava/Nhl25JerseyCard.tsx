@@ -34,7 +34,7 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Větší číslo na exportním plakátu (sdílení) — jedna velikost, capture nemusí trefit breakpointy. */
 const POSTER_EXPORT_NUMBER =
-  "jersey-back-number-text jersey-back-number-text--woven text-[1.56rem] max-w-[92%] text-center leading-none";
+  "jersey-back-number-text jersey-back-number-text--woven text-[1.58rem] max-w-[92%] text-center leading-none";
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
@@ -157,7 +157,7 @@ export function Nhl25JerseyCard({
                 <div
                   className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${
                     nameplateVariant === "poster"
-                      ? "justify-start px-1.5 pt-[33%]"
+                      ? "justify-start px-1.5 pt-[30%]"
                       : overlayTopClass[size]
                   }`}
                 >

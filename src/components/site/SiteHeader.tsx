@@ -15,7 +15,6 @@ const NAV = [
   { href: "/forum", label: "Fórum" },
   { href: "/zebricek", label: "Žebříček" },
   { href: "/bracket", label: "Pick’em" },
-  { href: "/kdo-jsem", label: "Kdo jsem" },
   { href: "/pravidla-souteze", label: "Pravidla" },
 ] as const;
 

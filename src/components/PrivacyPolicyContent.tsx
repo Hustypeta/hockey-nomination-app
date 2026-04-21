@@ -177,11 +177,6 @@ export function PrivacyPolicyContent() {
                   Pravidla soutěže
                 </Link>
               </li>
-              <li>
-                <Link href="/kdo-jsem" className="font-semibold text-sky-300/90 underline-offset-4 hover:underline">
-                  Kdo jsem
-                </Link>
-              </li>
             </ul>
           </section>
         </div>

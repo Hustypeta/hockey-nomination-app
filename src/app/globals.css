@@ -128,19 +128,20 @@ body {
 
 /** Export PNG — menší měřítko snižuje čitelnost; posílit kontrast jména i čísla. */
 .nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven {
-  color: #001a33;
+  color: #001429;
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.65),
-    0 2px 4px rgba(0, 0, 0, 0.22),
-    0 0 1px rgba(0, 26, 51, 0.85);
+    0 1px 0 rgba(255, 255, 255, 0.72),
+    0 2px 5px rgba(0, 0, 0, 0.26),
+    0 1px 8px rgba(0, 0, 0, 0.12),
+    0 0 1px rgba(0, 26, 51, 0.92);
 }
 
 .nhl25-share-poster-capture .jersey-back-number-text,
 .nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven {
-  -webkit-text-stroke-width: clamp(1.25px, 0.095em, 3.1px);
+  -webkit-text-stroke-width: clamp(1.35px, 0.1em, 3.25px);
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.55),
-    0 2px 6px rgba(0, 0, 0, 0.28);
+    0 1px 0 rgba(255, 255, 255, 0.62),
+    0 2px 7px rgba(0, 0, 0, 0.32);
 }
 
 /**
@@ -448,4 +449,16 @@ body {
   .landing-cta-pulse {
     animation: none;
   }
+}
+
+/**
+ * Režim snímku obrazovky pro Facebook cover (`/?cover=true`) — schovat toast Sonner,
+ * aby ve výřezu nebyly notifikace.
+ */
+html.social-cover [data-sonner-toaster] {
+  display: none !important;
+}
+
+html.social-cover body {
+  overflow-x: hidden;
 }
