@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "sonner";
+import { resolveFacebookAppId } from "@/lib/facebookApp";
 import {
   SITE_ICON_URL,
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
@@ -22,7 +23,7 @@ function metadataBaseUrl(): URL {
   return new URL("http://localhost:3000");
 }
 
-const fbAppId = process.env.NEXT_PUBLIC_FB_APP_ID?.trim();
+const fbAppId = resolveFacebookAppId();
 
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
