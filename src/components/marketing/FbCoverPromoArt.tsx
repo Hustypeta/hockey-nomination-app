@@ -6,6 +6,7 @@ import { NamesOnlySharePoster } from "@/components/NamesOnlySharePoster";
 import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import { FB_PROMO_HEIGHT, FB_PROMO_WIDTH } from "@/components/marketing/fbCoverDimensions";
 import { SquadPromoPreview } from "@/components/marketing/SquadPromoPreview";
+import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import {
   PROMO_FB_CAPTAIN_ID,
   PROMO_FB_LINEUP,
@@ -14,7 +15,7 @@ import {
 } from "@/lib/promoFbCoverData";
 import { SITE_LOGO_URL } from "@/lib/siteBranding";
 
-const POSTER_CAPTURE_W = 920;
+const POSTER_CAPTURE_W = SHARE_POSTER_WIDTH_PX;
 /** Šířka náhledu — max. využití šířky plátna (dva vedle sebe). */
 const POSTER_DISPLAY_W = 378;
 const POSTER_SCALE = POSTER_DISPLAY_W / POSTER_CAPTURE_W;

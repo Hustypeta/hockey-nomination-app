@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import type { PosterLetterboxTheme } from "@/lib/captureSharePoster";
+import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
@@ -842,7 +843,8 @@ export function NominationBuilderPage() {
         />
 
         <div
-          className="pointer-events-none fixed left-0 top-0 z-[-1] w-[920px] max-w-[920px] -translate-x-full"
+          className="pointer-events-none fixed left-0 top-0 z-[-1] -translate-x-full"
+          style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
           aria-hidden
         >
           {sharePosterVariant === "jerseys" ? (

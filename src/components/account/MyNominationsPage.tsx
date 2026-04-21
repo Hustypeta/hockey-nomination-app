@@ -8,6 +8,7 @@ import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
+import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import type { NominationListItem } from "@/components/account/UserAccountHub";
 
 type NominationRow = NominationListItem & {
@@ -51,7 +52,10 @@ function PosterThumb({
     <div className="relative h-[100px] w-[180px] shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#e8ecf2] shadow-inner">
       <div
         className="pointer-events-none absolute left-0 top-0 origin-top-left"
-        style={{ transform: "scale(0.195)", width: 920 }}
+        style={{
+          width: SHARE_POSTER_WIDTH_PX,
+          transform: `scale(${(920 * 0.195) / SHARE_POSTER_WIDTH_PX})`,
+        }}
       >
         <Nhl25SharePoster
           players={players}

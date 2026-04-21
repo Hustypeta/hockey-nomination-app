@@ -3,6 +3,7 @@
 import { forwardRef, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 import type { Player, LineupStructure } from "@/types";
 import { buildNamesOnlyRoster } from "@/lib/namesOnlyRoster";
+import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 
 export interface NamesOnlySharePosterProps {
   players: Player[];
@@ -57,7 +58,8 @@ export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePos
     return (
       <div
         ref={ref}
-        className="names-only-share-poster relative w-[920px] max-w-[920px] shrink-0 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:geometricPrecision]"
+        className="names-only-share-poster relative shrink-0 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:geometricPrecision]"
+        style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
       >
         {/* Dekorativní blok v barvách webu — podobný princip jako Livesport */}
         <div

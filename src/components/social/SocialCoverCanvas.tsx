@@ -11,12 +11,13 @@ import {
   PROMO_FB_PLAYERS,
   PROMO_FB_TITLE,
 } from "@/lib/promoFbCoverData";
+import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 import { SOCIAL_COVER_HEIGHT, SOCIAL_COVER_WIDTH } from "@/lib/socialCoverDimensions";
 import { SocialCoverBackdrop } from "@/components/social/SocialCoverBackdrop";
 
-const POSTER_CAPTURE_W = 920;
-/** Větší náhledy dresů než na FB promo mini — stále stejný capture šířky 920px. */
+const POSTER_CAPTURE_W = SHARE_POSTER_WIDTH_PX;
+/** Šířka náhledu odvozená od {@link SHARE_POSTER_WIDTH_PX}. */
 const POSTER_DISPLAY_W = 440;
 const POSTER_SCALE = POSTER_DISPLAY_W / POSTER_CAPTURE_W;
 const POSTER_CLIP_H_JERSEYS = 312;

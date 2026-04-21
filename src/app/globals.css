@@ -131,20 +131,19 @@ body {
   margin-inline: auto;
 }
 
-/** Export PNG — menší měřítko snižuje čitelnost; posílit kontrast jména i čísla. */
+/**
+ * Export PNG — jména jako číslo: bílá výplň + modrý obrys (#002d54), ať vizuálně ladí a čtou se i na yoku.
+ * paint-order: obrys pod výplní (stejně jako .jersey-back-number-text).
+ */
 .nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven {
   font-weight: 900;
-  color: #000d1a;
-  /* jemný „obrys“ pro ostré čtení při downsacle (html-to-image) */
-  -webkit-text-stroke-width: clamp(0.26px, 0.045em, 0.85px);
-  -webkit-text-stroke-color: rgba(255, 255, 255, 0.92);
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.7px, 0.068em, 2.05px);
+  -webkit-text-stroke-color: #002d54;
   paint-order: stroke fill;
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.82),
-    0 2px 4px rgba(255, 255, 255, 0.45),
-    0 2px 6px rgba(0, 0, 0, 0.28),
-    0 1px 10px rgba(0, 0, 0, 0.14),
-    0 0 1px rgba(0, 18, 40, 0.98);
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .nhl25-share-poster-capture .jersey-back-number-text,
@@ -296,12 +295,11 @@ body {
 }
 
 /**
- * Světlý plakát (export): karty ne přes pevnou šířku sloupce — zabrání překryvu LW/C/RW
- * při úzkém sloupci (popisek lajny + tři sloupce).
+ * Světlý plakát (export): šířka karty podle širšího layoutu (`SHARE_POSTER_WIDTH_PX`), bez umělého smrštění.
  */
 .nhl25-share-poster-capture .nhl25-jersey-card-root {
   width: 100%;
-  max-width: 6.5rem;
+  max-width: 9.25rem;
   margin-inline: auto;
 }
 

@@ -4,6 +4,7 @@ import { forwardRef, useLayoutEffect, useMemo, useState, type ReactNode } from "
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
+import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
 
 export interface Nhl25SharePosterProps {
@@ -33,9 +34,11 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-/** Na plakátu stejná šířka dresu v mřížce 2/3 sloupců — větší než dřív, stále vejde bez překryvu. */
+/** Na plakátu stejná šířka dresu v mřížce — širší layout (`SHARE_POSTER_WIDTH_PX`) umožní větší karty. */
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
-  return <div className="mx-auto w-[7.5rem] min-[400px]:w-[7.875rem] sm:w-[8rem]">{children}</div>;
+  return (
+    <div className="mx-auto w-[8.5rem] min-[400px]:w-[8.85rem] sm:w-[9.125rem]">{children}</div>
+  );
 }
 
 export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps>(
@@ -85,7 +88,8 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
     return (
       <div
         ref={ref}
-        className={`nhl25-share-poster-capture relative w-[920px] max-w-[920px] shrink-0 overflow-hidden rounded-2xl border antialiased [text-rendering:geometricPrecision] ${shell}`}
+        className={`nhl25-share-poster-capture relative shrink-0 overflow-hidden rounded-2xl border antialiased [text-rendering:geometricPrecision] ${shell}`}
+        style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
       >
         <div className="nhl25-moje-sestava-accent mx-8 mt-5 rounded-full" aria-hidden />
 

@@ -12,7 +12,7 @@ import type { LineupStructure } from "@/types";
 
 const POSTER_PNG_OPTS = {
   quality: 1,
-  pixelRatio: 2 as const,
+  pixelRatio: 4 as const,
   backgroundColor: "#05080f",
 };
 
@@ -88,7 +88,7 @@ export function NominationView({
     try {
       const dataUrl = await toPng(ref.current, {
         quality: 1,
-        pixelRatio: 2,
+        pixelRatio: 4,
         backgroundColor: exportMode === "poster" ? "#0c0e12" : "#ffffff",
       });
       const link = document.createElement("a");

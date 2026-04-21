@@ -15,7 +15,7 @@ function lastName(name: string) {
 
 /** Jednotná velikost karty — útok, obrana, G, náhradníci (export / share). Jméno řeší `jerseyNameplateNameProps`. */
 const NHL25_CARD_UNIFIED = {
-  width: "max-w-[8rem] sm:max-w-[8.5rem] lg:max-w-[9rem]",
+  width: "max-w-[8.85rem] sm:max-w-[9.15rem] lg:max-w-[9.35rem]",
   number:
     "jersey-back-number-text text-[1.28rem] sm:text-[1.42rem] lg:text-[1.52rem] max-w-[92%] text-center",
 } as const;
