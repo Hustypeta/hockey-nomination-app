@@ -6,8 +6,10 @@ const assetQ = assetV && assetV.length > 0 ? `?v=${encodeURIComponent(assetV)}` 
 export const SITE_LOGO_URL = `/images/logo.png${assetQ}`;
 export const SITE_ICON_URL = `/images/icon.png${assetQ}`;
 
-/** Výchozí OG/Twitter náhled odkazu — plakát (dresy MS 2026), doporučeno 1200×630 px. */
+/** Výchozí OG/Twitter náhled odkazu — plakát (dresy MS 2026). Rozměry musí odpovídat souboru (po úpravách spusť `node scripts/pad-og-top.mjs`). */
 export const SITE_OG_DEFAULT_IMAGE_URL = `/images/promo/og-share-ms2026-jerseys.png${assetQ}`;
+export const SITE_OG_DEFAULT_IMAGE_WIDTH = 960;
+export const SITE_OG_DEFAULT_IMAGE_HEIGHT = 728;
 
 export const SITE_BRAND = "Lineup";
 

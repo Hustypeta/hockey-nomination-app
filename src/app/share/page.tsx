@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { SITE_OG_DEFAULT_IMAGE_URL } from "@/lib/siteBranding";
+import {
+  SITE_OG_DEFAULT_IMAGE_HEIGHT,
+  SITE_OG_DEFAULT_IMAGE_URL,
+  SITE_OG_DEFAULT_IMAGE_WIDTH,
+} from "@/lib/siteBranding";
 import { SharePageClient } from "./SharePageClient";
 
 const ogTitle = "Sestav si nominaci a vyhraj dres — Lineup · MS 2026";
@@ -22,8 +26,8 @@ export async function generateMetadata({
       images: [
         {
           url: SITE_OG_DEFAULT_IMAGE_URL,
-          width: 1200,
-          height: 630,
+          width: SITE_OG_DEFAULT_IMAGE_WIDTH,
+          height: SITE_OG_DEFAULT_IMAGE_HEIGHT,
           alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
         },
       ],

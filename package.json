@@ -17,6 +17,7 @@
     "sort:candidates": "npx ts-node --project scripts/tsconfig.json scripts/sort-ms-candidates.ts",
     "stats:extraliga": "node scripts/extraliga-coverage.mjs",
     "promo:capture-squad": "node scripts/capture-promo-squad.cjs",
+    "og:pad-top": "node scripts/pad-og-top.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -49,6 +50,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "playwright": "^1.51.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5"
