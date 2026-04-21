@@ -4,17 +4,12 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { toPng } from "html-to-image";
+import { buildHtmlToImageOptions } from "@/lib/captureSharePoster";
 import { NominationPoster } from "@/components/NominationPoster";
 import { RosterSheet } from "@/components/RosterSheet";
 import { sharePngDataUrl } from "@/lib/sharePosterImage";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
-
-const POSTER_PNG_OPTS = {
-  quality: 1,
-  pixelRatio: 4 as const,
-  backgroundColor: "#05080f",
-};
 
 interface NominationViewProps {
   players: Player[];
@@ -56,7 +51,12 @@ export function NominationView({
         ? `${window.location.origin}/nominations/${nominationId}`
         : undefined);
     try {
-      const dataUrl = await toPng(posterRef.current, POSTER_PNG_OPTS);
+      const pngOpts = await buildHtmlToImageOptions(posterRef.current, {
+        quality: 1,
+        pixelRatio: 7,
+        backgroundColor: "#05080f",
+      });
+      const dataUrl = await toPng(posterRef.current, pngOpts);
       const result = await sharePngDataUrl(dataUrl, {
         filename: `ms2026-nominace-${nominationId}.png`,
         title: "MS 2026 – nominace",
@@ -86,11 +86,12 @@ export function NominationView({
     if (!ref.current) return;
     setDownloading(true);
     try {
-      const dataUrl = await toPng(ref.current, {
+      const pngOpts = await buildHtmlToImageOptions(ref.current, {
         quality: 1,
-        pixelRatio: 4,
+        pixelRatio: 7,
         backgroundColor: exportMode === "poster" ? "#0c0e12" : "#ffffff",
       });
+      const dataUrl = await toPng(ref.current, pngOpts);
       const link = document.createElement("a");
       link.download = exportMode === "poster"
         ? `ms2026-nominace-${nominationId}.png`

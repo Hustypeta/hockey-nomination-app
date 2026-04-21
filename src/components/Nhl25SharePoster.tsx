@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
+import { forwardRef, useMemo, useState, type ReactNode } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
@@ -34,10 +34,10 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-/** Na plakátu stejná šířka dresu v mřížce — širší layout (`SHARE_POSTER_WIDTH_PX`) umožní větší karty. */
+/** Dres na plakátu — jednotlivé sloty co největší (priorita čitelnost příjmení). */
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto w-[8.5rem] min-[400px]:w-[8.85rem] sm:w-[9.125rem]">{children}</div>
+    <div className="mx-auto w-[10.25rem] min-[420px]:w-[10.65rem] sm:w-[11rem]">{children}</div>
   );
 }
 
@@ -61,10 +61,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
     const aids = assistantIds.length ? assistantIds : (lineup.assistantIds ?? []);
     const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) ?? null : null);
 
-    const [mountedDateLabel, setMountedDateLabel] = useState("");
-    useLayoutEffect(() => {
-      setMountedDateLabel(formatCsDate(new Date()));
-    }, []);
+    const [mountedDateLabel] = useState(() => formatCsDate(new Date()));
 
     const dateLabel = footerInstantIso ? formatCsDate(new Date(footerInstantIso)) : mountedDateLabel;
 
@@ -77,23 +74,24 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
     const shell = dark
       ? "border-white/10 bg-gradient-to-b from-[#0f141c] via-[#0a0d12] to-[#050608] shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
       : "border-slate-300/90 bg-gradient-to-b from-white via-[#f4f6f9] to-[#e8ecf2] shadow-[0_20px_50px_rgba(15,23,42,0.12)]";
-    const panel = dark
-      ? "border-white/10 bg-[#12151f]/95 shadow-inner"
-      : "border-slate-200/90 bg-white/90 shadow-inner";
+    /** Bez velkého „bílého rámečku“ — jen siluety, více místa pro dresy (export / IG). */
+    const innerChrome =
+      dark ? "border-0 bg-transparent shadow-none" : "border-0 bg-transparent shadow-none";
     const heading = dark ? "border-white/10 text-white" : "border-slate-200 text-slate-800";
     const subheading = dark ? "text-white/55" : "text-slate-600";
-    const lineBox = dark ? "border-white/10 bg-[#0f1218]/90" : "border-slate-200/70 bg-slate-50/90";
+    const lineBox =
+      dark ? "border-white/[0.14] bg-black/[0.28]" : "border-slate-400/35 bg-white/[0.52]";
     const pairTitle = dark ? "text-white/45" : "text-slate-500";
 
     return (
       <div
         ref={ref}
-        className={`nhl25-share-poster-capture relative shrink-0 overflow-hidden rounded-2xl border antialiased [text-rendering:geometricPrecision] ${shell}`}
+        className={`nhl25-share-poster-capture relative shrink-0 overflow-hidden rounded-2xl border antialiased [text-rendering:optimizeLegibility] ${shell}`}
         style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
       >
         <div className="nhl25-moje-sestava-accent mx-8 mt-5 rounded-full" aria-hidden />
 
-        <header className="relative px-8 pb-2 pt-6">
+        <header className="relative px-6 pb-1 pt-4 sm:px-8">
           <div className="min-w-0 text-center sm:text-left">
             {titleLine ? (
               <h1
@@ -110,8 +108,8 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
           </div>
         </header>
 
-        <div className={`relative mx-5 mb-4 mt-2 rounded-xl border px-3 py-3 sm:mx-6 sm:mb-5 sm:mt-3 sm:px-4 sm:py-4 ${panel}`}>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-5">
+        <div className={`relative mx-2 mb-3 mt-1 px-1 py-1 sm:mx-4 sm:mb-4 ${innerChrome}`}>
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
             <div className="min-w-0 space-y-3 sm:space-y-3.5">
               <section>
                 <h2 className={`mb-2 border-b pb-1 font-display text-[12px] font-bold uppercase tracking-[0.2em] sm:mb-2.5 sm:pb-1.5 sm:text-[13px] ${heading}`}>
@@ -198,13 +196,13 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                 <h2 className={`mb-2 border-b pb-1 font-display text-[12px] font-bold uppercase tracking-[0.2em] sm:text-[13px] ${heading}`}>
                   Obranné páry
                 </h2>
-                <div className="grid min-w-0 grid-cols-2 gap-1 sm:gap-1.5">
+                <div className="flex min-w-0 flex-col gap-2 sm:gap-2.5">
                   {lineup.defensePairs.slice(0, 3).map((pair, i) => (
-                    <div key={i} className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
+                    <div key={i} className={`min-w-0 rounded-lg border px-1.5 py-1.5 sm:px-2 sm:py-2 ${lineBox}`}>
                       <p className={`mb-1 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${pairTitle}`}>
                         {i + 1}. pár
                       </p>
-                      <div className="grid min-w-0 grid-cols-2 gap-0.5 sm:gap-1">
+                      <div className="mx-auto grid min-w-0 max-w-[22.5rem] grid-cols-2 gap-1 sm:gap-1.5">
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(pair.lb)}
@@ -228,33 +226,31 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                           />
                         </PosterJerseyWrap>
                       </div>
-                      <div
-                        className="mx-auto mt-1.5 h-0.5 w-[88%] rounded-full bg-gradient-to-r from-transparent via-[#003087] to-transparent opacity-95 shadow-[0_0_10px_rgba(0,48,135,0.4)] sm:mt-2 sm:h-1"
-                        aria-hidden
-                      />
                     </div>
                   ))}
-                  <div className={`min-w-0 rounded-lg border px-1 py-1.5 sm:px-1.5 sm:py-2 ${lineBox}`}>
+                  <div className={`min-w-0 rounded-lg border px-1.5 py-1.5 sm:px-2 sm:py-2 ${lineBox}`}>
                     <p className={`mb-1 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${pairTitle}`}>
                       7. bek
                     </p>
-                    <PosterJerseyWrap>
-                      <Nhl25JerseyCard
-                        player={getPlayer(seventhDefenseId)}
-                        positionLabel="D"
-                        size="compact"
-                        nameplateVariant="poster"
-                        isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
-                        isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
-                        disableMotion
-                      />
-                    </PosterJerseyWrap>
+                    <div className="mx-auto flex max-w-[11.5rem] justify-center">
+                      <PosterJerseyWrap>
+                        <Nhl25JerseyCard
+                          player={getPlayer(seventhDefenseId)}
+                          positionLabel="D"
+                          size="compact"
+                          nameplateVariant="poster"
+                          isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
+                          isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
+                          disableMotion
+                        />
+                      </PosterJerseyWrap>
+                    </div>
                   </div>
                 </div>
               </section>
 
               <section
-                className={`rounded-lg border border-dashed px-2 py-2 sm:px-2.5 sm:py-2.5 ${dark ? "border-white/18 bg-black/15" : "border-slate-300/70 bg-slate-50/80"}`}
+                className={`rounded-lg border border-dashed px-1.5 py-1.5 sm:px-2 sm:py-2 ${dark ? "border-white/14 bg-black/20" : "border-slate-400/40 bg-white/[0.48]"}`}
               >
                 <h2
                   className={`mb-2 text-center font-display text-[12px] font-bold uppercase tracking-[0.18em] sm:text-[13px] ${dark ? "text-white/90" : "text-slate-800"}`}

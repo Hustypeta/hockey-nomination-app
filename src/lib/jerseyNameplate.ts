@@ -88,26 +88,26 @@ export function jerseyNameplateNameProps(
   const score = layoutWidthScore(lines);
   /** Dvě kratší řádky = méně horizontálního stresu → mírně větší písmo než jedna ultraúzká řádka. */
   const multilineEase = lineCount > 1 ? 1.09 : 1;
-  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = plakát / sdílení — střední strop (čitelné i při náhledu). */
+  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = plakát — vyšší měřítko kvůli čitelnosti exportu. */
   const scale =
-    variant === "premium" ? 1.02 : variant === "poster" ? 1.28 : 1.24;
+    variant === "premium" ? 1.02 : variant === "poster" ? 1.46 : 1.24;
 
   /** Na exportním PNG je yoke úzký — nižší strop + nižší podlaha, aby dlouhá jména zůstala uvnitř siluety. */
   const minFs =
     variant === "premium"
       ? 3.75 * scale * multilineEase
       : variant === "poster"
-        ? 3.35 * scale * multilineEase
+        ? 4 * scale * multilineEase
         : 4.05 * scale * multilineEase;
   const maxFs =
     variant === "premium"
       ? 10.2 * scale * multilineEase
       : variant === "poster"
-        ? 8.85 * scale * multilineEase
+        ? 10.35 * scale * multilineEase
         : 11.35 * scale * multilineEase;
 
-  const low = variant === "poster" ? 2.45 : 2.85;
-  const high = variant === "poster" ? 17.2 : 21.5;
+  const low = variant === "poster" ? 2.4 : 2.85;
+  const high = variant === "poster" ? 16.4 : 21.5;
   const t = clamp((score - low) / (high - low), 0, 1);
 
   const fontSize = maxFs - t * (maxFs - minFs);
@@ -120,7 +120,7 @@ export function jerseyNameplateNameProps(
 
   const posterClamp =
     variant === "poster"
-      ? "jersey-nameplate-text--poster-crop max-w-[min(100%,5.6rem)] sm:max-w-[min(100%,5.85rem)]"
+      ? "jersey-nameplate-text--poster-crop max-w-[min(100%,6.9rem)] sm:max-w-[min(100%,7.2rem)]"
       : "";
 
   return {

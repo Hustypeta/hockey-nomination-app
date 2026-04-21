@@ -1,4 +1,26 @@
-import { toCanvas } from "html-to-image";
+import { getFontEmbedCSS, toCanvas, type Options } from "html-to-image";
+
+/**
+ * Sjednocené volby pro html-to-image (`toCanvas` / `toPng`):
+ * – `preferredFontFormat: woff2` + vložený CSS z `@font-face` (Barlow Condensed na dresu),
+ *   aby se při serializaci do SVG/canvas nepoužilo rozmazané systémové písmo.
+ * – `skipFonts: false` vynutí embed Google Fonts z odkazů v dokumentu.
+ */
+export async function buildHtmlToImageOptions(element: HTMLElement, partial: Options): Promise<Options> {
+  await document.fonts.ready.catch(() => undefined);
+  const base: Options = {
+    cacheBust: true,
+    skipFonts: false,
+    preferredFontFormat: "woff2",
+    ...partial,
+  };
+  try {
+    const fontEmbedCSS = await getFontEmbedCSS(element, base);
+    return { ...base, fontEmbedCSS };
+  } catch {
+    return base;
+  }
+}
 
 /**
  * Export plakátu přes html-to-image (SVG → canvas v prohlížeči).
@@ -8,14 +30,13 @@ export async function captureElementToCanvas(
   element: HTMLElement,
   options?: { scale?: number; backgroundColor?: string | null }
 ): Promise<HTMLCanvasElement> {
-  /** Vyšší než 1:1 s cílovým PNG — ostřejší text po zmenšení (sociální sítě 1080px). */
-  const pixelRatio = options?.scale ?? 6;
-  await document.fonts.ready.catch(() => undefined);
-  return toCanvas(element, {
+  /** Vyšší poměr = ostřejší potisk po případném zmenšení na 1080px (Instagram). */
+  const pixelRatio = options?.scale ?? 8;
+  const opts = await buildHtmlToImageOptions(element, {
     pixelRatio,
     backgroundColor: options?.backgroundColor ?? "#e8ecf2",
-    cacheBust: true,
   });
+  return toCanvas(element, opts);
 }
 
 export type PosterLetterboxTheme = "light" | "dark";

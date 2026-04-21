@@ -106,7 +106,7 @@ body {
   letter-spacing: 0.052em;
   line-height: 1.05;
   -webkit-font-smoothing: antialiased;
-  text-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.45),
     0 0.5px 0 rgba(0, 45, 84, 0.12);
@@ -299,7 +299,7 @@ body {
  */
 .nhl25-share-poster-capture .nhl25-jersey-card-root {
   width: 100%;
-  max-width: 9.25rem;
+  max-width: 12rem;
   margin-inline: auto;
 }
 

@@ -15,7 +15,7 @@ function lastName(name: string) {
 
 /** Jednotná velikost karty — útok, obrana, G, náhradníci (export / share). Jméno řeší `jerseyNameplateNameProps`. */
 const NHL25_CARD_UNIFIED = {
-  width: "max-w-[8.85rem] sm:max-w-[9.15rem] lg:max-w-[9.35rem]",
+  width: "max-w-[9.5rem] sm:max-w-[10rem] lg:max-w-[10.5rem]",
   number:
     "jersey-back-number-text text-[1.28rem] sm:text-[1.42rem] lg:text-[1.52rem] max-w-[92%] text-center",
 } as const;
@@ -34,7 +34,7 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Větší číslo na exportním plakátu (sdílení) — jedna velikost, capture nemusí trefit breakpointy. */
 const POSTER_EXPORT_NUMBER =
-  "jersey-back-number-text jersey-back-number-text--woven text-[1.58rem] max-w-[92%] text-center leading-none";
+  "jersey-back-number-text jersey-back-number-text--woven text-[1.72rem] max-w-[92%] text-center leading-none";
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {

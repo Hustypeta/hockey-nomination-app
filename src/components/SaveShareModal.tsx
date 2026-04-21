@@ -129,7 +129,7 @@ export function SaveShareModal({
           : posterTheme === "dark"
             ? "#0b0e14"
             : "#e8ecf2";
-      const canvas = await captureElementToCanvas(el, { scale: 7, backgroundColor: bg });
+      const canvas = await captureElementToCanvas(el, { scale: 9, backgroundColor: bg });
       baseCanvasRef.current = canvas;
       setExportLetterboxTheme(
         posterVariant === "names" ? "dark" : posterTheme === "dark" ? "dark" : "light"

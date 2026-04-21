@@ -64,14 +64,15 @@ export function SiteHeader() {
     <>
       <header
         className={`
-          site-header-reveal sticky top-0 z-[80] border-b border-white/[0.08]
-          bg-[#03050a]/75 shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_-1px_0_rgba(255,255,255,0.04)]
+          site-header-reveal sticky top-0 z-[80] border-b border-white/[0.12]
+          bg-gradient-to-b from-[#1c2739]/93 via-[#141c2c]/90 to-[#0c111a]/86
+          shadow-[0_4px_24px_rgba(0,0,0,0.26),inset_0_-1px_0_rgba(255,255,255,0.06)]
           backdrop-blur-2xl backdrop-saturate-150
         `}
       >
-        {/* Ledový wash + jemná červená/modrá linka (repre nádech) */}
+        {/* Světlejší nahoře — černá silueta v logu lépe čte oproti téměř černému baru */}
         <div
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,180,255,0.06)_0%,transparent_42%,rgba(0,48,135,0.08)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.055)_0%,rgba(0,180,255,0.065)_26%,transparent_46%,rgba(0,48,135,0.065)_100%)]"
           aria-hidden
         />
         <div
