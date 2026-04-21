@@ -1,8 +1,10 @@
 /**
  * App ID z Meta for Developers (developers.facebook.com → aplikace → Nastavení → Základní → ID aplikace).
  *
- * Pořadí: proměnné prostředí na serveru (jakýkoli hosting), jinak {@link FACEBOOK_APP_ID_FALLBACK} níže.
- * Bez platného ID Sharing Debugger hlásí chybějící fb:app_id.
+ * **Na Railway/hostingu bez nového buildu používej `FACEBOOK_APP_ID` (bez NEXT_PUBLIC).**
+ * `NEXT_PUBLIC_*` Next.js při **buildu** přepíše přímo do bundle — hodnota přidaná jen do runtime env po deployi tam **nebude**.
+ *
+ * Pořadí: serverové env za běhu → fallback v kódu → `NEXT_PUBLIC_FB_APP_ID` (jen po rebuildu platné).
  */
 export const FACEBOOK_APP_ID_FALLBACK = "";
 
@@ -17,12 +19,11 @@ function normalizeFacebookAppId(raw: string | undefined): string | undefined {
   return t;
 }
 
-/** Volat v generateMetadata (ideálně po `connection()`), ať se načte až za běhu — ne při prázdném buildu. */
 export function resolveFacebookAppId(): string | undefined {
   return (
-    normalizeFacebookAppId(process.env.NEXT_PUBLIC_FB_APP_ID) ??
     normalizeFacebookAppId(process.env.FACEBOOK_APP_ID) ??
     normalizeFacebookAppId(process.env.META_APP_ID) ??
-    normalizeFacebookAppId(FACEBOOK_APP_ID_FALLBACK)
+    normalizeFacebookAppId(FACEBOOK_APP_ID_FALLBACK) ??
+    normalizeFacebookAppId(process.env.NEXT_PUBLIC_FB_APP_ID)
   );
 }

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
 import "./globals.css";
+import { FacebookAppIdMeta } from "@/components/FacebookAppIdMeta";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "sonner";
-import { resolveFacebookAppId } from "@/lib/facebookApp";
 import {
   SITE_ICON_URL,
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
@@ -24,11 +23,8 @@ function metadataBaseUrl(): URL {
   return new URL("http://localhost:3000");
 }
 
-/** generateMetadata (+ connection) — fb:app_id ze server env se načte při requestu (Railway někdy nemá env při samotném buildu). */
+/** fb:app_id řeší navíc {@link FacebookAppIdMeta} v <head> + env FACEBOOK_APP_ID (runtime). */
 export async function generateMetadata(): Promise<Metadata> {
-  await connection();
-  const fbAppId = resolveFacebookAppId();
-
   return {
     metadataBase: metadataBaseUrl(),
     title: {
@@ -57,7 +53,6 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       images: [SITE_OG_DEFAULT_IMAGE_URL],
     },
-    ...(fbAppId ? { facebook: { appId: fbAppId } } : {}),
   };
 }
 
@@ -68,6 +63,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
+      <head>
+        <FacebookAppIdMeta />
+      </head>
       <body className="antialiased min-h-screen bg-[#05080f] font-sans text-white">
         <AuthProvider>
           {children}
