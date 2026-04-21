@@ -56,7 +56,8 @@ function splitNameplateLinesForPoster(lastName: string): string[] {
   if (base.length !== 1) return base;
   const line = base[0]!;
   const score = nameplateWidthScore(line);
-  if (score <= 15.5 || line.length < 10) return base;
+  /** Časněji než na kartě — na úzkém yoku PNG udržet dvě kratší řádky místo jedné ultra dlouhé. */
+  if (score <= 11.8 || line.length < 8) return base;
   const mid = Math.ceil(line.length / 2);
   const left = line.slice(0, mid).trimEnd();
   const right = line.slice(mid).trimStart();
@@ -91,29 +92,45 @@ export function jerseyNameplateNameProps(
   const scale =
     variant === "premium" ? 1.02 : variant === "poster" ? 1.28 : 1.24;
 
+  /** Na exportním PNG je yoke úzký — nižší strop + nižší podlaha, aby dlouhá jména zůstala uvnitř siluety. */
   const minFs =
-    (variant === "premium" ? 3.75 : variant === "poster" ? 4.35 : 4.05) * scale * multilineEase;
+    variant === "premium"
+      ? 3.75 * scale * multilineEase
+      : variant === "poster"
+        ? 3.35 * scale * multilineEase
+        : 4.05 * scale * multilineEase;
   const maxFs =
-    (variant === "premium" ? 10.2 : variant === "poster" ? 10.35 : 11.35) * scale * multilineEase;
+    variant === "premium"
+      ? 10.2 * scale * multilineEase
+      : variant === "poster"
+        ? 8.85 * scale * multilineEase
+        : 11.35 * scale * multilineEase;
 
-  const low = 2.85;
-  const high = 21.5;
+  const low = variant === "poster" ? 2.45 : 2.85;
+  const high = variant === "poster" ? 17.2 : 21.5;
   const t = clamp((score - low) / (high - low), 0, 1);
 
   const fontSize = maxFs - t * (maxFs - minFs);
-  const baseTrack = lineCount > 1 ? 0.072 : 0.098;
-  const letterSpacing = baseTrack - t * (lineCount > 1 ? 0.048 : 0.068);
+  const baseTrack = lineCount > 1 ? 0.072 : variant === "poster" ? 0.082 : 0.098;
+  const letterSpacing = baseTrack - t * (lineCount > 1 ? 0.048 : variant === "poster" ? 0.062 : 0.068);
   const lineHeight = lineCount > 1 ? 1.0 + t * 0.04 : 1.02 + t * 0.06;
 
   const woven =
     variant === "premium" || variant === "poster" ? "jersey-nameplate-text--woven" : "";
+
+  const posterClamp =
+    variant === "poster"
+      ? "jersey-nameplate-text--poster-crop max-w-[min(100%,5.6rem)] sm:max-w-[min(100%,5.85rem)]"
+      : "";
 
   return {
     lines,
     className: [
       "jersey-nameplate-text",
       woven,
-      "block w-full max-w-full px-0.5 text-center [overflow-wrap:anywhere] hyphens-none",
+      posterClamp,
+      "box-border min-w-0 shrink px-0.5",
+      "block w-full max-w-full text-center [overflow-wrap:anywhere] hyphens-none",
     ]
       .filter(Boolean)
       .join(" "),

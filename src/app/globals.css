@@ -126,14 +126,25 @@ body {
     0 0.5px 0 rgba(0, 45, 84, 0.1);
 }
 
+/** Úzký výřez exportu — potisk držet ve středu bílého yoku (PNG má zaoblený panel). */
+.jersey-nameplate-text--poster-crop {
+  margin-inline: auto;
+}
+
 /** Export PNG — menší měřítko snižuje čitelnost; posílit kontrast jména i čísla. */
 .nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven {
-  color: #001429;
+  font-weight: 900;
+  color: #000d1a;
+  /* jemný „obrys“ pro ostré čtení při downsacle (html-to-image) */
+  -webkit-text-stroke-width: clamp(0.26px, 0.045em, 0.85px);
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.92);
+  paint-order: stroke fill;
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.72),
-    0 2px 5px rgba(0, 0, 0, 0.26),
-    0 1px 8px rgba(0, 0, 0, 0.12),
-    0 0 1px rgba(0, 26, 51, 0.92);
+    0 1px 0 rgba(255, 255, 255, 0.82),
+    0 2px 4px rgba(255, 255, 255, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.28),
+    0 1px 10px rgba(0, 0, 0, 0.14),
+    0 0 1px rgba(0, 18, 40, 0.98);
 }
 
 .nhl25-share-poster-capture .jersey-back-number-text,

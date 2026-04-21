@@ -155,14 +155,16 @@ export function Nhl25JerseyCard({
               <>
                 <JerseyCornerFlagCz />
                 <div
-                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${
+                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center ${
                     nameplateVariant === "poster"
-                      ? "justify-start px-1.5 pt-[30%]"
-                      : overlayTopClass[size]
+                      ? "justify-start px-2 pt-[30%]"
+                      : `px-1 ${overlayTopClass[size]}`
                   }`}
                 >
                   {namePlate && namePlate.lines.length > 0 ? (
-                    <span className="flex w-full max-w-full flex-col items-center gap-[0.1em]">
+                    <span
+                      className={`flex w-full min-w-0 flex-col items-center gap-[0.08em] ${nameplateVariant === "poster" ? "max-w-[92%]" : "max-w-full"}`}
+                    >
                       {namePlate.lines.map((line, idx) => (
                         <span key={idx} className={namePlate.className} style={namePlate.style}>
                           {line}
