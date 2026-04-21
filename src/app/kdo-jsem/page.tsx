@@ -1,6 +1,17 @@
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { KdoJsemContent } from "@/components/KdoJsemContent";
+import { SiteShell } from "@/components/site/SiteShell";
 
-/** Stránka dočasně skrytá — obnovení: vrátit metadata + KdoJsemContent ve SiteShell. */
+export const metadata: Metadata = {
+  title: "Kdo jsem",
+  description:
+    "Tvůrce projektu Lineup — fanouškovský nástroj pro sestavu nominace českého hokeje.",
+};
+
 export default function KdoJsemPage() {
-  redirect("/");
+  return (
+    <SiteShell>
+      <KdoJsemContent />
+    </SiteShell>
+  );
 }

@@ -19,3 +19,13 @@ export const SITE_WORDMARK = "Hockey Nomination";
 /** Kontakt pro dotazy k GDPR / osobním údajům (nastavte v .env na produkci). */
 export const SITE_CONTACT_EMAIL =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "kontakt@hokejlineup.cz";
+
+/** Veřejná FB stránka projektu (paticka — ikona). */
+export const SITE_FACEBOOK_PAGE_URL =
+  "https://www.facebook.com/profile.php?id=61568992616673";
+
+/** Volitelné — ikona v patičce se aktivuje po doplnění URL (nebo přes NEXT_PUBLIC_* na produkci). */
+export const SITE_INSTAGRAM_PAGE_URL =
+  process.env.NEXT_PUBLIC_INSTAGRAM_PAGE_URL?.trim() ?? "";
+export const SITE_X_PAGE_URL = process.env.NEXT_PUBLIC_X_PAGE_URL?.trim() ?? "";
+export const SITE_TIKTOK_PAGE_URL = process.env.NEXT_PUBLIC_TIKTOK_PAGE_URL?.trim() ?? "";

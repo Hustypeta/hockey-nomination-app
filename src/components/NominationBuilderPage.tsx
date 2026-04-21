@@ -636,7 +636,7 @@ export function NominationBuilderPage() {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <div className="sestava-page-ambient min-h-screen pb-[13rem] text-white sm:pb-44 lg:pb-36">
+      <div className="sestava-page-ambient min-h-screen pb-[10.75rem] text-white sm:pb-44 lg:pb-36">
         <SestavaAmbientBackground />
 
         <div className="sticky top-0 z-40">
@@ -644,9 +644,9 @@ export function NominationBuilderPage() {
           <SestavaHero filled={filled} />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[90rem] px-3.5 py-5 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
+        <div className="relative z-10 mx-auto max-w-[90rem] px-3 pb-5 pt-2 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
           {isAuthenticated && (
-            <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-950/25 px-4 py-2.5 text-center text-xs text-emerald-50/95 shadow-[0_0_24px_rgba(16,185,129,0.12)] sm:text-sm">
+            <div className="mb-3 rounded-xl border border-emerald-500/30 bg-emerald-950/25 px-3 py-2 text-center text-[11px] text-emerald-50/95 shadow-[0_0_24px_rgba(16,185,129,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
               {contestSubmitted ? (
                 <>
                   Tvoje sestava už je <strong className="font-semibold">jednou odeslaná do soutěže</strong>. Koncepty
@@ -668,7 +668,7 @@ export function NominationBuilderPage() {
             </div>
           )}
           {!isComplete && (
-            <div className="mb-4 rounded-xl border border-[#003087]/40 bg-gradient-to-r from-[#003087]/20 via-[#0f172a]/90 to-[#c8102e]/15 px-4 py-2.5 text-center text-xs text-slate-100 shadow-[0_0_32px_rgba(0,48,135,0.15)] sm:text-sm">
+            <div className="mb-3 rounded-xl border border-[#003087]/40 bg-gradient-to-r from-[#003087]/20 via-[#0f172a]/90 to-[#c8102e]/15 px-3 py-2 text-center text-[11px] text-slate-100 shadow-[0_0_32px_rgba(0,48,135,0.15)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
               {remaining > 0 ? (
                 <>
                   Ještě <span className="font-semibold text-[#f1c40f]">{remaining}</span>{" "}
@@ -680,14 +680,14 @@ export function NominationBuilderPage() {
             </div>
           )}
           {isComplete && !leadershipOk ? (
-            <div className="mb-4 rounded-xl border border-amber-500/35 bg-amber-950/30 px-4 py-2.5 text-center text-xs text-amber-100/95 shadow-[0_0_28px_rgba(245,158,11,0.12)] sm:text-sm">
+            <div className="mb-3 rounded-xl border border-amber-500/35 bg-amber-950/30 px-3 py-2 text-center text-[11px] text-amber-100/95 shadow-[0_0_28px_rgba(245,158,11,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
               Ještě zvol <strong className="font-semibold">kapitána</strong> (tlačítko C) a přesně{" "}
               <strong className="font-semibold">dva asistenty</strong> (A) u hráčů v soupisce — bez toho nominaci
               neuložíš ani nesdílíš.
             </div>
           ) : null}
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
+          <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
             {showDesktopPoolColumn ? (
               <section className="min-w-0 hidden lg:block">
                 <div className="sestava-premium-panel-dark rounded-2xl p-3.5 backdrop-blur-sm sm:p-5">
@@ -724,8 +724,8 @@ export function NominationBuilderPage() {
 
             <section className="min-w-0">
               <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
-                <div className="nhl25-moje-sestava-panel rounded-2xl p-3.5 sm:p-5 lg:p-6">
-                  <div className="nhl25-moje-sestava-accent mb-3" aria-hidden />
+                <div className="nhl25-moje-sestava-panel rounded-2xl p-3 sm:p-5 lg:p-6">
+                  <div className="nhl25-moje-sestava-accent mb-2 sm:mb-3" aria-hidden />
                   <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
                     Soupiska
                   </p>

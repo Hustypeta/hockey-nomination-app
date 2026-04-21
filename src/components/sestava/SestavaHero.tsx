@@ -24,12 +24,12 @@ export function SestavaHero({
         }}
         aria-hidden
       />
-      <div className="relative mx-auto max-w-[90rem] px-3 py-2.5 sm:px-4 sm:py-3 lg:px-6">
+      <div className="relative mx-auto max-w-[90rem] px-3 py-1.5 sm:px-4 sm:py-3 lg:px-6">
         {/* Řádek 1: logo, titulek, komunita, bonus, přihlášení */}
-        <div className="flex flex-col gap-2 sm:gap-2.5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-1.5 sm:gap-2.5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 items-center">
             <div className="min-w-0 flex-1">
-              <h1 className="font-sans text-xl font-bold leading-snug tracking-normal text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.75)] sm:text-2xl lg:text-[1.75rem]">
+              <h1 className="font-sans text-lg font-bold leading-snug tracking-normal text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.75)] sm:text-2xl lg:text-[1.75rem]">
                 Editor nominace
               </h1>
               {subtitleCounts ? (
@@ -72,10 +72,10 @@ export function SestavaHero({
         </div>
 
         {/* Řádek 2: obsazeno + progress */}
-        <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-2">
+        <div className="mt-1.5 flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-1.5 sm:mt-2 sm:pt-2">
           <div className="flex items-center gap-2">
             <span className="text-[9px] font-bold uppercase tracking-wider text-white/40">Sestava</span>
-            <span className="font-display text-2xl font-bold tabular-nums leading-none text-white sm:text-3xl">
+            <span className="font-display text-xl font-bold tabular-nums leading-none text-white sm:text-3xl">
               {filled}
               <span className="text-lg font-semibold text-white/35 sm:text-xl">/{TOTAL_PLAYERS}</span>
             </span>

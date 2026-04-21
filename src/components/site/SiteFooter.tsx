@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE_BRAND } from "@/lib/siteBranding";
+import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 
 export function SiteFooter() {
   return (
@@ -7,9 +8,12 @@ export function SiteFooter() {
       <p>
         {SITE_BRAND} · Neoficiální fanouškovský nástroj · Česká trikolora inspirována reprezentací
       </p>
+      <div className="mt-5">
+        <SocialSiteIcons />
+      </div>
       <nav
-        className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-white/50"
-        aria-label="Právní informace"
+        className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-white/50"
+        aria-label="Odkazy v patičce"
       >
         <Link href="/ochrana-udaju" className="underline-offset-4 hover:text-white/75 hover:underline">
           Ochrana osobních údajů
