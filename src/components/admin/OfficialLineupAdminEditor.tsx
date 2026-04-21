@@ -48,6 +48,7 @@ export function OfficialLineupAdminEditor() {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const wasCompleteRef = useRef(false);
@@ -361,6 +362,35 @@ export function OfficialLineupAdminEditor() {
     }
   }, [lineup, captainId, loadOfficial]);
 
+  const handleClearStoredOfficial = useCallback(async () => {
+    if (
+      !window.confirm(
+        "Odstranit uloženou oficiální soupisku z databáze? Veřejný žebříček soutěže přestane zobrazovat body, dokud znovu neuložíš kompletní sestavu."
+      )
+    ) {
+      return;
+    }
+    setClearing(true);
+    try {
+      const res = await fetch("/api/admin/official-lineup", {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(typeof data.error === "string" ? data.error : "Odstranění selhalo.");
+        return;
+      }
+      toast.success(data.message ?? "Odstraněno.");
+      setLineup(EMPTY_LINEUP);
+      setCaptainId(null);
+      setUpdatedAt(null);
+      await loadOfficial();
+    } finally {
+      setClearing(false);
+    }
+  }, [loadOfficial]);
+
   if (!authChecked || loading) {
     return <AppLoadingScreen message="Načítám…" />;
   }
@@ -442,6 +472,19 @@ export function OfficialLineupAdminEditor() {
                 ) : null}
               </div>
               <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={handleClearStoredOfficial}
+                  disabled={clearing || !updatedAt}
+                  title={
+                    updatedAt
+                      ? "Smaže řádek official_lineup — žebříček přejde do stavu „není zveřejněno“."
+                      : "Žádná uložená soupiska k odstranění."
+                  }
+                  className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-100 hover:bg-amber-500/15 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {clearing ? "…" : "Smazat uloženou soupisku"}
+                </button>
                 <button
                   type="button"
                   onClick={handleLogout}

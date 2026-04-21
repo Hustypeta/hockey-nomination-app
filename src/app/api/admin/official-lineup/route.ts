@@ -109,3 +109,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Uložení se nepovedlo." }, { status: 500 });
   }
 }
+
+/** Smaže záznam oficiální soupisky — žebříček soutěže přestane být veřejně „publikovaný“, dokud se znovu neuloží kompletní sestava. */
+export async function DELETE() {
+  if (!(await requireAdmin())) {
+    return NextResponse.json({ error: "Neautorizováno." }, { status: 401 });
+  }
+
+  try {
+    await prisma.officialLineup.deleteMany({ where: { id: OFFICIAL_ID } });
+    return NextResponse.json({ ok: true, message: "Oficiální soupiska odstraněna — žebříček je dočasně neveřejný." });
+  } catch (e) {
+    console.error("official-lineup DELETE:", e);
+    return NextResponse.json({ error: "Odstranění se nepovedlo." }, { status: 500 });
+  }
+}
