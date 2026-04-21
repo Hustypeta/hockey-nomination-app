@@ -1,23 +1,26 @@
 import Link from "next/link";
 import { SitePageHero } from "@/components/site/SitePageHero";
-import { SITE_CONTACT_EMAIL } from "@/lib/siteBranding";
 
 const sectionClass = "sestava-premium-panel-dark rounded-2xl p-4 sm:p-5";
 
-/** Datum „platné od“ — při větší změně obsahu aktualizujte. */
-const EFFECTIVE_FROM = "14. dubna 2026";
+/** Datum poslední aktualizace — při větší změně obsahu aktualizujte. */
+const EFFECTIVE_FROM = "21. dubna 2026";
+
+const PRIVACY_CONTACT_EMAIL = "petr.hustak263@gmail.com";
 
 export function PrivacyPolicyContent() {
   return (
     <main className="pb-16 pt-2 sm:pb-20">
       <SitePageHero
-        title="Ochrana osobních údajů"
-        subtitle={`Platné od ${EFFECTIVE_FROM} · GDPR`}
+        title="Zásady ochrany osobních údajů"
+        subtitle={`Poslední aktualizace: ${EFFECTIVE_FROM} · GDPR`}
         align="center"
       />
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <p className="mb-6 text-center text-xs text-white/45">
-          Tyto zásady popisují zpracování osobních údajů ve webové aplikaci Lineup (fanouškovský editor nominace na MS v hokeji).
+        <p className="mb-6 text-center text-sm leading-relaxed text-white/78">
+          Tyto zásady popisují, jakým způsobem nakládáme s vašimi osobními údaji v rámci provozu webu hokejlineup.cz a aplikace
+          Lineup (dále jen „služba“). Ochrana vašeho soukromí je pro nás prioritou a při zpracování údajů postupujeme v souladu s
+          nařízením GDPR.
         </p>
         <div className="space-y-4 text-sm leading-relaxed text-white/78 sm:space-y-5">
           <section className={sectionClass}>
@@ -25,147 +28,164 @@ export function PrivacyPolicyContent() {
               1. Správce osobních údajů
             </h2>
             <p className="mt-3 text-white/75">
-              Správcem je provozovatel webu <strong className="text-white">hokejlineup.cz</strong> / aplikace Lineup (dále jen
-              „služba“). Dotazy k ochraně osobních údajů posílejte na{" "}
-              <a href={`mailto:${SITE_CONTACT_EMAIL}`} className="font-semibold text-sky-300/90 underline-offset-4 hover:underline">
-                {SITE_CONTACT_EMAIL}
+              Správcem osobních údajů je provozovatel služby hokejlineup.cz. V případě jakýchkoli dotazů ohledně ochrany soukromí
+              nebo uplatnění vašich práv nás můžete kontaktovat na e-mailové adrese:{" "}
+              <a
+                href={`mailto:${PRIVACY_CONTACT_EMAIL}`}
+                className="font-semibold text-sky-300/90 underline-offset-4 hover:underline"
+              >
+                {PRIVACY_CONTACT_EMAIL}
               </a>
-              .
             </p>
           </section>
 
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
-              2. Jaké údaje zpracováváme
+              2. Rozsah zpracovávaných údajů
             </h2>
+            <p className="mt-3 text-white/75">
+              Zpracováváme pouze údaje nezbytné pro zajištění funkčnosti služby a vaši účast v soutěžích:
+            </p>
             <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
               <li>
-                <strong className="text-white">Údaje z účtu Google při přihlášení</strong> — zejména e-mailová adresa a případně
-                jméno a profilový obrázek podle toho, co Google poskytne a co povolíte v dialogu přihlášení.
+                <strong className="text-white">Údaje z účtu Google:</strong> Při přihlášení zpracováváme zejména vaši e-mailovou
+                adresu, jméno a profilový obrázek. Rozsah těchto údajů závisí na tom, jaké informace poskytujete společnosti Google a
+                co povolíte v dialogu pro přihlášení.
               </li>
               <li>
-                <strong className="text-white">Údaje, které v aplikaci vytvoříte</strong> — například nominace, sestavy, příspěvky ve
-                fóru nebo jiný obsah uložený ve službě v souvislosti s vaším účtem.
+                <strong className="text-white">Obsah vytvořený uživatelem:</strong> Údaje, které do aplikace sami vložíte — například
+                vaše nominace, sestavy, příspěvky ve fóru nebo jiný obsah spojený s vaším účtem.
               </li>
               <li>
-                <strong className="text-white">Technické a provozní údaje</strong> — například IP adresa, typ prohlížeče, základní
-                protokolové údaje potřebné k zabezpečení a provozu serveru (viz také část o cookies níže).
+                <strong className="text-white">Technické a provozní údaje:</strong> IP adresa, typ prohlížeče a základní
+                protokolové údaje (logy) nezbytné pro zajištění bezpečnosti serveru a stabilitu služby.
               </li>
             </ul>
           </section>
 
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
-              3. Účely a právní základy zpracování
+              3. Účel a právní základ zpracování
             </h2>
-            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+            <p className="mt-3 text-white/75">
+              Vaše údaje zpracováváme na základě následujících právních titulů:
+            </p>
+            <ul className="mt-3 list-inside list-disc space-y-3 text-white/75">
               <li>
-                <strong className="text-white">Poskytování služby a uživatelského účtu</strong> (přihlášení, uložení nominace,
-                soutěž, žebříčky, sdílení apod.) —{" "}
-                <strong className="text-white">plnění smlouvy</strong> ve smyslu čl. 6 odst. 1 písm. b) GDPR (užití služby).
+                <strong className="text-white">Plnění smlouvy</strong> (čl. 6 odst. 1 písm. b) GDPR): Abychom vám mohli poskytovat
+                samotnou službu (vytvoření účtu, uložení nominací, účast v soutěžích o dresy, žebříčky a sdílení obsahu).
               </li>
               <li>
-                <strong className="text-white">Plnění právních povinností</strong> (pokud nastanou) — čl. 6 odst. 1 písm. c) GDPR.
+                <strong className="text-white">Oprávněný zájem</strong> (čl. 6 odst. 1 písm. f) GDPR): Zajištění bezpečnosti služby,
+                prevence podvodů a zneužití, řešení technických incidentů a provádění základní anonymní analytiky provozu.
               </li>
               <li>
-                <strong className="text-white">Oprávněný zájem</strong> — zabezpečení služby, prevence zneužití, řešení incidentů,
-                základní analytika provozu; pokud zákon vyžaduje vyvážení vašich práv a našich zájmů — čl. 6 odst. 1 písm. f) GDPR.
+                <strong className="text-white">Plnění právních povinností</strong> (čl. 6 odst. 1 písm. c) GDPR): Pokud nám uchování
+                údajů ukládá zákon (např. v souvislosti s daněmi nebo účetnictvím u výherců soutěží).
               </li>
               <li>
-                <strong className="text-white">Marketing a reklama</strong> — pokud bychom zaváděli např. zasílání obchodních
-                sdělení e-mailem nebo personalizovanou reklamu nad rámec nezbytného provozu, budeme u takového zpracování typicky
-                vyžadovat <strong className="text-white">váš výslovný souhlas</strong> (čl. 6 odst. 1 písm. a) GDPR) a upřesníme to
-                v rozhraní služby. Samotné zobrazení reklamy na stránce může souviset s cookies třetích stran — viz níže.
+                <strong className="text-white">Souhlas</strong> (čl. 6 odst. 1 písm. a) GDPR): V případě zasílání marketingových
+                sdělení nebo pokročilé personalizované reklamy vás vždy požádáme o výslovný souhlas přímo v rozhraní aplikace.
               </li>
             </ul>
           </section>
 
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
-              4. Přihlášení přes Google
+              4. Přihlášení prostřednictvím Google
             </h2>
             <p className="mt-3 text-white/75">
-              Přihlášení zajišťuje společnost Google. Údaje zpracovává Google podle svých podmínek; zpracování údajů pro potřeby této
-              služby popisují tyto zásady. Účet Google můžete spravovat ve svém profilu Google.
-            </p>
-          </section>
-
-          <section className={sectionClass}>
-            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">5. Cookies a podobné technologie</h2>
-            <p className="mt-3 text-white/75">
-              Služba může používat cookies nezbytné pro fungování webu (např. session, bezpečnost). Pokud nasadíme analytiku nebo
-              reklamní nástroje třetích stran vyžadující souhlas, doplníme mechanismus nastavení (banner / předvolby) a tento dokument.
-              Aktuálně nepředpokládáme rozšířené profilování návštěvníků nad rámec provozu účtu.
+              Autentizaci uživatelů zajišťuje společnost Google LLC. Proces zpracování údajů ze strany společnosti Google se řídí jejich
+              vlastními podmínkami ochrany osobního soukromí. Propojení se službou Lineup můžete kdykoli spravovat nebo zrušit v
+              nastavení svého Google účtu.
             </p>
           </section>
 
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
-              6. Příjemci a zpracovatelé
+              5. Cookies a technické ukládání
             </h2>
+            <p className="mt-3 text-white/75">
+              Služba využívá soubory cookies nezbytné pro její technické fungování (např. přihlášení, zabezpečení relace). V případě
+              využívání analytických nebo reklamních nástrojů třetích stran, které vyžadují souhlas, vám bude zobrazen cookie banner
+              pro nastavení vašich preferencí.
+            </p>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              6. Příjemci a zpracovatelé údajů
+            </h2>
+            <p className="mt-3 text-white/75">
+              K vašim údajům mají přístup pouze prověření dodavatelé, kteří zajišťují provoz technické infrastruktury:
+            </p>
             <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
               <li>
-                <strong className="text-white">Hosting a infrastruktura</strong> — poskytovatel hostingu (např. Railway), kde běží
-                aplikace a databáze.
+                <strong className="text-white">Poskytovatel hostingu:</strong> (např. Railway) – infrastruktura pro běh aplikace a
+                databáze.
               </li>
               <li>
-                <strong className="text-white">Google</strong> — přihlášení OAuth.
+                <strong className="text-white">Společnost Google:</strong> Poskytovatel služby OAuth pro přihlašování.
               </li>
               <li>
-                Jiné subjekty pouze v rozsahu nezbytném pro daný účel (např. poskytovatel e-mailu pro transakční zprávy), po uzavření
-                standardních smluv o zpracování podle GDPR tam, kde to zákon vyžaduje.
+                <strong className="text-white">Další subjekty:</strong> Pouze v nezbytném rozsahu (např. doručovací služby v případě
+                zasílání výhry ze soutěže).
               </li>
             </ul>
           </section>
 
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
-              7. Předávání do třetích zemí
+              7. Předávání údajů do třetích zemí
             </h2>
             <p className="mt-3 text-white/75">
-              U některých nástrojů (např. Google, cloudová infrastruktura) může docházet k předávání údajů mimo EU/EHP. V takovém
-              případě se řídíme standardními smluvními doložkami EU nebo rozhodnutím o odpovídající ochraně podle GDPR.
+              Vzhledem k využití globálních služeb (Google, cloudová infrastruktura) může docházet k předávání údajů mimo EU/EHP. V
+              takových případech je ochrana zajištěna prostřednictvím standardních smluvních doložek EU nebo rozhodnutím o odpovídající
+              ochraně dat.
             </p>
           </section>
 
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
-              8. Doba uchovávání
+              8. Doba uchovávání údajů
             </h2>
             <p className="mt-3 text-white/75">
-              Údaje uchováváme po dobu existence účtu a plnění služby, případně po dobu nutnou pro řešení sporů, oprávněné nároky a
-              zákonné povinnosti. Po smazání účtu nebo na žádost údaje smažeme nebo anonymizujeme, pokud není nutné je dále uchovat ze
-              zákona.
+              Údaje uchováváme po dobu existence vašeho uživatelského účtu nebo po dobu nezbytnou k plnění účelu (např. do vyhodnocení
+              soutěže). Po smazání účtu nebo na vaši žádost údaje vymažeme či anonymizujeme, pokud nám zákon neukládá povinnost jejich
+              další archivace.
             </p>
           </section>
 
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">9. Vaše práva</h2>
-            <p className="mt-3 text-white/75">
-              Máte právo na přístup k údajům, opravu, výmaz („být zapomenut“), omezení zpracování, přenositelnost údajů (je-li
-              relevantní), vznést námitku proti zpracování založenému na oprávněném zájmu a právo podat stížnost u Úřadu pro ochranu
-              osobních údajů (
-              <a
-                href="https://www.uoou.cz/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-sky-300/90 underline-offset-4 hover:underline"
-              >
-                uoou.cz
-              </a>
-              ).
-            </p>
-            <p className="mt-3 text-white/75">
-              Pokud je zpracování založeno na souhlasu, můžete souhlas kdykoli odvolat — odvolání nemá vliv na zákonnost zpracování
-              před jeho odvoláním.
-            </p>
+            <p className="mt-3 text-white/75">Podle GDPR máte právo:</p>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>na přístup k vašim osobním údajům a informaci, jak je zpracováváme,</li>
+              <li>na opravu nepřesných údajů,</li>
+              <li>na výmaz údajů („právo být zapomenut“),</li>
+              <li>na omezení zpracování,</li>
+              <li>vznést námitku proti zpracování založeném na oprávněném zájmu,</li>
+              <li>na přenositelnost údajů,</li>
+              <li>
+                podat stížnost u Úřadu pro ochranu osobních údajů (
+                <a
+                  href="https://www.uoou.cz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-sky-300/90 underline-offset-4 hover:underline"
+                >
+                  www.uoou.cz
+                </a>
+                ).
+              </li>
+            </ul>
           </section>
 
           <section className={sectionClass}>
-            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">10. Změny zásad</h2>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">10. Změny těchto zásad</h2>
             <p className="mt-3 text-white/75">
-              Tyto zásady můžeme aktualizovat; významnou změnu zde zvýrazníme a případně vás informujeme ve službě. Datum účinnosti je
-              uvedeno v záhlaví stránky.
+              Tyto zásady můžeme v závislosti na vývoji služby aktualizovat. O významných změnách vás budeme informovat přímo v aplikaci
+              nebo upozorněním na webu.
             </p>
           </section>
 

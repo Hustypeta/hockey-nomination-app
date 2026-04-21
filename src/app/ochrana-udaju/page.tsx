@@ -3,9 +3,9 @@ import { PrivacyPolicyContent } from "@/components/PrivacyPolicyContent";
 import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
-  title: "Ochrana osobních údajů",
+  title: "Zásady ochrany osobních údajů",
   description:
-    "Informace o zpracování osobních údajů v aplikaci Lineup (přihlášení Google, účet, nominace, cookies, vaše práva).",
+    "Zásady ochrany osobních údajů pro hokejlineup.cz a Lineup — Google přihlášení, účet, nominace, soutěže, cookies, GDPR.",
 };
 
 export default function OchranaUdajuPage() {

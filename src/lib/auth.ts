@@ -52,12 +52,27 @@ const providers: NextAuthOptions["providers"] = googleConfigured
       GoogleProvider({
         clientId: googleClientId!,
         clientSecret: googleClientSecret!,
+        /**
+         * Bez toho NextAuth vyhodí OAuthAccountNotLinked („sign in with the same account…“), když User se stejným
+         * e-mailem už v DB je, ale řádek Account pro tento Google sub ještě neexistuje (reconnect, migrace, apod.).
+         * Google ověřuje vlastnictví e-mailu; riziko popisuje NextAuth FAQ.
+         */
+        allowDangerousEmailAccountLinking: true,
+        authorization: {
+          params: {
+            prompt: "select_account",
+          },
+        },
       }),
     ]
   : [];
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  pages: {
+    /** Výchozí `/api/auth/signin` nahrazeno vlastní stránkou — čitelná chyba z `?error=` místo slepého tlačítka. */
+    signIn: "/auth/signin",
+  },
   providers,
   callbacks: {
     session({ session, user }) {
