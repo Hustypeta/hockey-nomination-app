@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "sonner";
@@ -23,39 +24,42 @@ function metadataBaseUrl(): URL {
   return new URL("http://localhost:3000");
 }
 
-const fbAppId = resolveFacebookAppId();
+/** generateMetadata (+ connection) — fb:app_id ze server env se načte při requestu (Railway někdy nemá env při samotném buildu). */
+export async function generateMetadata(): Promise<Metadata> {
+  await connection();
+  const fbAppId = resolveFacebookAppId();
 
-export const metadata: Metadata = {
-  metadataBase: metadataBaseUrl(),
-  title: {
-    default: "Lineup",
-    template: "%s | Lineup",
-  },
-  description: "Fanouškovský editor sestavy, soutěž a sdílení.",
-  icons: {
-    icon: SITE_ICON_URL,
-    apple: SITE_ICON_URL,
-  },
-  /** Explicitní og:image — statický plakát (Facebook nefetchuje spolehlivě dynamické route jako default pro /) */
-  openGraph: {
-    type: "website",
-    locale: "cs_CZ",
-    siteName: "Lineup",
-    images: [
-      {
-        url: SITE_OG_DEFAULT_IMAGE_URL,
-        width: SITE_OG_DEFAULT_IMAGE_WIDTH,
-        height: SITE_OG_DEFAULT_IMAGE_HEIGHT,
-        alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: [SITE_OG_DEFAULT_IMAGE_URL],
-  },
-  ...(fbAppId ? { facebook: { appId: fbAppId } } : {}),
-};
+  return {
+    metadataBase: metadataBaseUrl(),
+    title: {
+      default: "Lineup",
+      template: "%s | Lineup",
+    },
+    description: "Fanouškovský editor sestavy, soutěž a sdílení.",
+    icons: {
+      icon: SITE_ICON_URL,
+      apple: SITE_ICON_URL,
+    },
+    openGraph: {
+      type: "website",
+      locale: "cs_CZ",
+      siteName: "Lineup",
+      images: [
+        {
+          url: SITE_OG_DEFAULT_IMAGE_URL,
+          width: SITE_OG_DEFAULT_IMAGE_WIDTH,
+          height: SITE_OG_DEFAULT_IMAGE_HEIGHT,
+          alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [SITE_OG_DEFAULT_IMAGE_URL],
+    },
+    ...(fbAppId ? { facebook: { appId: fbAppId } } : {}),
+  };
+}
 
 export default function RootLayout({
   children,
