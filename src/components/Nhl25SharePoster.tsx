@@ -37,7 +37,7 @@ const formatCsDate = (d: Date) =>
 /** Dres na plakátu — jednotlivé sloty co největší (priorita čitelnost příjmení). */
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto w-[10.25rem] min-[420px]:w-[10.65rem] sm:w-[11rem]">{children}</div>
+    <div className="mx-auto w-[10.75rem] min-[420px]:w-[11.15rem] sm:w-[11.5rem]">{children}</div>
   );
 }
 
@@ -202,7 +202,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       <p className={`mb-1 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${pairTitle}`}>
                         {i + 1}. pár
                       </p>
-                      <div className="mx-auto grid min-w-0 max-w-[22.5rem] grid-cols-2 gap-1 sm:gap-1.5">
+                      <div className="mx-auto grid min-w-0 max-w-[24.5rem] grid-cols-2 gap-1 sm:gap-1.5">
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(pair.lb)}
@@ -232,7 +232,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                     <p className={`mb-1 text-center font-display text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px] ${pairTitle}`}>
                       7. bek
                     </p>
-                    <div className="mx-auto flex max-w-[11.5rem] justify-center">
+                    <div className="mx-auto flex max-w-[12.75rem] justify-center">
                       <PosterJerseyWrap>
                         <Nhl25JerseyCard
                           player={getPlayer(seventhDefenseId)}

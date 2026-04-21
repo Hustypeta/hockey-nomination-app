@@ -90,24 +90,24 @@ export function jerseyNameplateNameProps(
   const multilineEase = lineCount > 1 ? 1.09 : 1;
   /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = plakát — vyšší měřítko kvůli čitelnosti exportu. */
   const scale =
-    variant === "premium" ? 1.02 : variant === "poster" ? 1.46 : 1.24;
+    variant === "premium" ? 1.02 : variant === "poster" ? 1.72 : 1.24;
 
   /** Na exportním PNG je yoke úzký — nižší strop + nižší podlaha, aby dlouhá jména zůstala uvnitř siluety. */
   const minFs =
     variant === "premium"
       ? 3.75 * scale * multilineEase
       : variant === "poster"
-        ? 4 * scale * multilineEase
+        ? 4.28 * scale * multilineEase
         : 4.05 * scale * multilineEase;
   const maxFs =
     variant === "premium"
       ? 10.2 * scale * multilineEase
       : variant === "poster"
-        ? 10.35 * scale * multilineEase
+        ? 11.65 * scale * multilineEase
         : 11.35 * scale * multilineEase;
 
-  const low = variant === "poster" ? 2.4 : 2.85;
-  const high = variant === "poster" ? 16.4 : 21.5;
+  const low = variant === "poster" ? 2.28 : 2.85;
+  const high = variant === "poster" ? 15.95 : 21.5;
   const t = clamp((score - low) / (high - low), 0, 1);
 
   const fontSize = maxFs - t * (maxFs - minFs);
@@ -120,7 +120,7 @@ export function jerseyNameplateNameProps(
 
   const posterClamp =
     variant === "poster"
-      ? "jersey-nameplate-text--poster-crop max-w-[min(100%,6.9rem)] sm:max-w-[min(100%,7.2rem)]"
+      ? "jersey-nameplate-text--poster-crop max-w-[min(100%,7.95rem)] sm:max-w-[min(100%,8.25rem)]"
       : "";
 
   return {
@@ -163,10 +163,10 @@ export function jerseyNumberStyle(
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (variant === "poster") {
-    if (!longName) return { fontSize: "27px" };
+    if (!longName) return { fontSize: "34px" };
     const t = clamp((score - 9) / 14, 0, 1);
-    const maxPx = lines.length > 1 ? 23.5 : 24.5;
-    const minPx = lines.length > 1 ? 19 : 19.5;
+    const maxPx = lines.length > 1 ? 29 : 30;
+    const minPx = lines.length > 1 ? 23.5 : 24;
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (!longName) return {};

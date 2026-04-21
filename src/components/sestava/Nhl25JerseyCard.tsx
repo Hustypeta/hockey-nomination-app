@@ -34,7 +34,7 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Větší číslo na exportním plakátu (sdílení) — jedna velikost, capture nemusí trefit breakpointy. */
 const POSTER_EXPORT_NUMBER =
-  "jersey-back-number-text jersey-back-number-text--woven text-[1.72rem] max-w-[92%] text-center leading-none";
+  "jersey-back-number-text jersey-back-number-text--woven text-[2.2rem] max-w-[92%] text-center leading-none";
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
@@ -157,13 +157,13 @@ export function Nhl25JerseyCard({
                 <div
                   className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center ${
                     nameplateVariant === "poster"
-                      ? "justify-start px-2 pt-[30%]"
+                      ? "justify-start px-2 pt-[35%]"
                       : `px-1 ${overlayTopClass[size]}`
                   }`}
                 >
                   {namePlate && namePlate.lines.length > 0 ? (
                     <span
-                      className={`flex w-full min-w-0 flex-col items-center gap-[0.08em] ${nameplateVariant === "poster" ? "max-w-[92%]" : "max-w-full"}`}
+                      className={`flex w-full min-w-0 flex-col items-center gap-[0.08em] ${nameplateVariant === "poster" ? "max-w-[94%]" : "max-w-full"}`}
                     >
                       {namePlate.lines.map((line, idx) => (
                         <span key={idx} className={namePlate.className} style={namePlate.style}>
@@ -173,7 +173,10 @@ export function Nhl25JerseyCard({
                     </span>
                   ) : null}
                   {numStr ? (
-                    <span className={`mt-px ${numCls}`} style={jerseyNumberStyle(ln, npVar)}>
+                    <span
+                      className={`${nameplateVariant === "poster" ? "mt-1" : "mt-px"} ${numCls}`}
+                      style={jerseyNumberStyle(ln, npVar)}
+                    >
                       {numStr}
                     </span>
                   ) : null}
