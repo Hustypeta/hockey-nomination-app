@@ -10,12 +10,21 @@ export const metadata: Metadata = {
       "Sestav nominaci českého týmu v editoru, sdílej odkaz s kamarády a sleduj soutěž o dres.",
     type: "website",
     locale: "cs_CZ",
+    images: [
+      {
+        url: "/share/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Lineup · Sestav si nominaci a vyhraj dres",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sestav si nominaci a vyhraj dres — Lineup",
     description:
       "Sestav nominaci českého týmu v editoru, sdílej odkaz s kamarády a sleduj soutěž o dres.",
+    images: ["/share/opengraph-image"],
   },
 };
 

@@ -28,6 +28,24 @@ export const metadata: Metadata = {
     icon: SITE_ICON_URL,
     apple: SITE_ICON_URL,
   },
+  /** Explicitní og:image — Facebook Debugger nesmí odvozovat jen z twitter:* nebo jiných tagů */
+  openGraph: {
+    type: "website",
+    locale: "cs_CZ",
+    siteName: "Lineup",
+    images: [
+      {
+        url: "/share/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Lineup · MS 2026 · Sestav si nominaci a vyhraj dres",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/share/opengraph-image"],
+  },
 };
 
 export default function RootLayout({
