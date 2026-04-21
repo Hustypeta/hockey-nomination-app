@@ -84,11 +84,11 @@ export function SiteHeader() {
           aria-hidden
         />
 
-        <div className="relative mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:gap-4 sm:px-6 sm:py-5 lg:py-6">
+        <div className="relative mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:gap-4 sm:px-6 sm:py-5 lg:gap-4 lg:py-6">
           {/* Brand */}
           <Link
             href="/"
-            className="group/brand flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:flex-none lg:gap-4"
+            className="group/brand flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:min-w-0 lg:max-w-[min(42%,22rem)] lg:flex-none lg:gap-4 xl:max-w-[min(40%,24rem)]"
             aria-label={`${SITE_BRAND} · MS 2026`}
           >
             <div className="relative shrink-0">
@@ -104,7 +104,7 @@ export function SiteHeader() {
                 height={168}
                 decoding="async"
                 fetchPriority="high"
-                className="relative h-[5rem] w-auto max-h-[min(46vh,15rem)] object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[6.5rem] md:h-[7.75rem] lg:h-[8.75rem] xl:h-[10rem]"
+                className="relative h-[5rem] w-auto max-h-[min(46vh,15rem)] max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[6.5rem] md:h-[7.75rem] lg:h-[7.75rem] xl:h-[9rem]"
               />
             </div>
             <span className="shrink-0 font-display text-sm font-bold uppercase tracking-[0.14em] text-white/80 sm:text-base lg:text-lg">
@@ -112,9 +112,12 @@ export function SiteHeader() {
             </span>
           </Link>
 
-          {/* Desktop: navigace + účet v jednom řádku s mezerou — nesmí se překrývat s avatarem */}
-          <div className="ml-auto hidden min-w-0 items-center gap-6 xl:gap-8 lg:flex">
-            <nav className="flex min-w-0 shrink items-center gap-0.5" aria-label="Hlavní navigace">
+          {/* Desktop: navigace bere zbylé místo (scroll), účet+CTA vždy celé — nesmí se překrývat */}
+          <div className="ml-auto hidden min-w-0 flex-1 items-center gap-8 pl-3 sm:gap-10 lg:flex lg:ml-0 xl:gap-12">
+            <nav
+              className="flex min-h-[2.75rem] min-w-0 flex-1 touch-pan-x items-center gap-0.5 overflow-x-auto overflow-y-visible overscroll-x-contain pr-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              aria-label="Hlavní navigace"
+            >
               {NAV.map(({ href, label }) => {
                 const active = isActive(pathname, href);
                 return (
@@ -152,11 +155,9 @@ export function SiteHeader() {
               })}
             </nav>
 
-            <div className="flex shrink-0 items-center gap-3">
-              <div className="h-6 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" aria-hidden />
-
+            <div className="relative z-10 flex shrink-0 flex-none items-center gap-3 border-l border-white/[0.08] pl-5 xl:pl-7">
             {status === "authenticated" && user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex shrink-0 items-center gap-3">
                 <Link
                   href="/ucet"
                   className="group/avatar flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 transition-all duration-200 hover:bg-white/[0.06]"
@@ -176,7 +177,7 @@ export function SiteHeader() {
                       {userInitials(user)}
                     </span>
                   )}
-                  <span className="hidden max-w-[10rem] truncate text-xs font-medium text-slate-400 transition group-hover/avatar:text-slate-200 xl:inline">
+                  <span className="hidden max-w-[10rem] truncate text-xs font-medium text-slate-400 transition group-hover/avatar:text-slate-200 2xl:inline">
                     {user.email}
                   </span>
                 </Link>
