@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_OG_DEFAULT_IMAGE_URL } from "@/lib/siteBranding";
 import { SharePageClient } from "./SharePageClient";
 
 const ogTitle = "Sestav si nominaci a vyhraj dres — Lineup · MS 2026";
@@ -17,12 +18,13 @@ export async function generateMetadata({
     openGraph: {
       title: ogTitle,
       description: ogDescription,
+      url: "/share",
       images: [
         {
-          url: "/share/opengraph-image",
+          url: SITE_OG_DEFAULT_IMAGE_URL,
           width: 1200,
           height: 630,
-          alt: "Lineup · Sestav si nominaci a vyhraj dres",
+          alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
         },
       ],
       type: "website",
@@ -31,7 +33,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: ogTitle,
       description: ogDescription,
-      images: ["/share/opengraph-image"],
+      images: [SITE_OG_DEFAULT_IMAGE_URL],
     },
   };
 }

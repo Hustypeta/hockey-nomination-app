@@ -2,13 +2,42 @@ import type { Metadata } from "next";
 import { LandingContent } from "@/components/LandingContent";
 import { SocialCoverPage } from "@/components/social/SocialCoverPage";
 import { SiteShell } from "@/components/site/SiteShell";
+import { SITE_OG_DEFAULT_IMAGE_URL } from "@/lib/siteBranding";
+
+const homeOgDesc =
+  "Časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.";
 
 const homeMetadata: Metadata = {
   title: {
     absolute: "Lineup",
   },
-  description:
-    "Časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.",
+  description: homeOgDesc,
+  alternates: {
+    canonical: "/",
+  },
+  /** og:url + obrázek — explicitně pro Facebook Debugger na domovské URL */
+  openGraph: {
+    type: "website",
+    locale: "cs_CZ",
+    url: "/",
+    siteName: "Lineup",
+    title: "Lineup · MS 2026",
+    description: homeOgDesc,
+    images: [
+      {
+        url: SITE_OG_DEFAULT_IMAGE_URL,
+        width: 1200,
+        height: 630,
+        alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lineup · MS 2026",
+    description: homeOgDesc,
+    images: [SITE_OG_DEFAULT_IMAGE_URL],
+  },
 };
 
 export async function generateMetadata({

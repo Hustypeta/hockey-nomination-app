@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "sonner";
-import { SITE_ICON_URL } from "@/lib/siteBranding";
+import { SITE_ICON_URL, SITE_OG_DEFAULT_IMAGE_URL } from "@/lib/siteBranding";
 
 function metadataBaseUrl(): URL {
   for (const raw of [process.env.NEXT_PUBLIC_SITE_URL, process.env.NEXTAUTH_URL]) {
@@ -17,6 +17,8 @@ function metadataBaseUrl(): URL {
   return new URL("http://localhost:3000");
 }
 
+const fbAppId = process.env.NEXT_PUBLIC_FB_APP_ID?.trim();
+
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
   title: {
@@ -28,24 +30,25 @@ export const metadata: Metadata = {
     icon: SITE_ICON_URL,
     apple: SITE_ICON_URL,
   },
-  /** Explicitní og:image — Facebook Debugger nesmí odvozovat jen z twitter:* nebo jiných tagů */
+  /** Explicitní og:image — statický plakát (Facebook nefetchuje spolehlivě dynamické route jako default pro /) */
   openGraph: {
     type: "website",
     locale: "cs_CZ",
     siteName: "Lineup",
     images: [
       {
-        url: "/share/opengraph-image",
+        url: SITE_OG_DEFAULT_IMAGE_URL,
         width: 1200,
         height: 630,
-        alt: "Lineup · MS 2026 · Sestav si nominaci a vyhraj dres",
+        alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/share/opengraph-image"],
+    images: [SITE_OG_DEFAULT_IMAGE_URL],
   },
+  ...(fbAppId ? { facebook: { appId: fbAppId } } : {}),
 };
 
 export default function RootLayout({

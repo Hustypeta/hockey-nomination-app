@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_OG_DEFAULT_IMAGE_URL } from "@/lib/siteBranding";
 
 export const metadata: Metadata = {
   title: "Sdílená nominace",
@@ -12,10 +13,10 @@ export const metadata: Metadata = {
     locale: "cs_CZ",
     images: [
       {
-        url: "/share/opengraph-image",
+        url: SITE_OG_DEFAULT_IMAGE_URL,
         width: 1200,
         height: 630,
-        alt: "Lineup · Sestav si nominaci a vyhraj dres",
+        alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
       },
     ],
   },
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     title: "Sestav si nominaci a vyhraj dres — Lineup",
     description:
       "Sestav nominaci českého týmu v editoru, sdílej odkaz s kamarády a sleduj soutěž o dres.",
-    images: ["/share/opengraph-image"],
+    images: [SITE_OG_DEFAULT_IMAGE_URL],
   },
 };
 

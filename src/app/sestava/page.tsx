@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { NominationBuilderPage } from "@/components/NominationBuilderPage";
+import { SITE_OG_DEFAULT_IMAGE_URL } from "@/lib/siteBranding";
 import { SestavaLoadingFallback } from "./SestavaLoadingFallback";
 
 export const metadata: Metadata = {
@@ -11,12 +12,13 @@ export const metadata: Metadata = {
     title: "Sestav si nominaci a vyhraj dres — Lineup · MS 2026",
     description:
       "Vyber hráče v editoru, ulož nominaci a sdílej ji. Zapoj se do soutěže o hokejový dres.",
+    url: "/sestava",
     images: [
       {
-        url: "/sestava/opengraph-image",
+        url: SITE_OG_DEFAULT_IMAGE_URL,
         width: 1200,
         height: 630,
-        alt: "Lineup · Sestav si nominaci a vyhraj dres",
+        alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
       },
     ],
     type: "website",
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
     title: "Sestav si nominaci a vyhraj dres — Lineup · MS 2026",
     description:
       "Vyber hráče v editoru, ulož nominaci a sdílej ji. Zapoj se do soutěže o hokejový dres.",
-    images: ["/sestava/opengraph-image"],
+    images: [SITE_OG_DEFAULT_IMAGE_URL],
   },
 };
 
