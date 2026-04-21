@@ -132,93 +132,123 @@ export function Nhl25JerseyCard({
         <div className="flex min-h-[1rem] shrink-0 items-center justify-center px-0.5">
           <span
             className={`
-              rounded border border-[#11457e]/45 bg-[#11457e] px-2 py-0.5 font-display text-[10px] font-bold
-              uppercase tracking-[0.14em] text-white shadow-sm
+              rounded border border-[#11457e]/45 bg-[#11457e] font-display font-bold uppercase tracking-[0.14em] text-white shadow-sm
+              ${nameplateVariant === "poster" ? "px-2.5 py-1 text-[11px]" : "px-2 py-0.5 text-[10px]"}
             `}
           >
             {positionLabel}
           </span>
         </div>
 
-        <div className="squad-ice-surface-light relative w-full overflow-hidden rounded-[8px] shadow-inner">
-          <div
-            className={`squad-ice-surface-light relative aspect-[100/120] w-full ${empty ? "ring-1 ring-inset ring-slate-300/50" : ""}`}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
-            <img
-              src={CZ_JERSEY_BACK_BLANK_SRC}
-              alt=""
-              width={400}
-              height={480}
-              decoding="async"
-              data-jersey-kind={kind}
-              className={`
+        {nameplateVariant === "poster" && !empty ? (
+          <div className="squad-ice-surface-light relative w-full rounded-[8px] shadow-inner">
+            <div
+              className={
+                hemLines.length > 0
+                  ? "overflow-hidden rounded-t-[8px]"
+                  : "overflow-hidden rounded-[8px]"
+              }
+            >
+              <div
+                className={`squad-ice-surface-light relative aspect-[100/120] w-full ${empty ? "ring-1 ring-inset ring-slate-300/50" : ""}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
+                <img
+                  src={CZ_JERSEY_BACK_BLANK_SRC}
+                  alt=""
+                  width={400}
+                  height={480}
+                  decoding="async"
+                  data-jersey-kind={kind}
+                  className={`
                 ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]
                 ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
               `}
-            />
-
-            {!empty ? (
-              <>
-                {nameplateVariant !== "poster" ? <JerseyCornerFlagCz /> : null}
+                />
                 <div
-                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center ${
-                    nameplateVariant === "poster"
-                      ? "justify-start px-2 pt-[38%]"
-                      : `px-1 ${overlayTopClass[size]}`
-                  }`}
+                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-start px-2 pt-[38%]`}
                 >
-                  {namePlate && namePlate.lines.length > 0 ? (
-                    <span className="flex w-full min-w-0 flex-col items-center gap-[0.08em] max-w-full">
-                      {namePlate.lines.map((line, idx) => (
-                        <span key={idx} className={namePlate.className} style={namePlate.style}>
-                          {line}
-                        </span>
-                      ))}
-                    </span>
-                  ) : null}
                   {numStr ? (
-                    <span
-                      className={`${nameplateVariant !== "poster" ? "mt-px " : ""}${numCls}`}
-                      style={
-                        nameplateVariant === "poster"
-                          ? jerseyNumberStyle(".", "poster")
-                          : jerseyNumberStyle(ln, npVar)
-                      }
-                    >
+                    <span className={`${numCls}`} style={jerseyNumberStyle(".", "poster")}>
                       {numStr}
                     </span>
                   ) : null}
                 </div>
-              </>
-            ) : (
-              <div
-                className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-center px-1 pt-[24%] pb-[22%]"
-                aria-hidden
-              >
-                <span className="max-w-[95%] text-center font-display text-[clamp(0.95rem,5vw,1.65rem)] font-black uppercase leading-none tracking-[0.06em] text-white/[0.38] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">
-                  {positionLabel}
-                </span>
               </div>
-            )}
-          </div>
-
-          {nameplateVariant === "poster" && hemLines.length > 0 ? (
-            <div className="pointer-events-none mt-1 flex items-end justify-end gap-2 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-2 py-1.5">
-              <JerseyFlagCzInline width={24} height={16} className="translate-y-[1px]" />
-              <span className="nhl25-poster-jersey-hem-name flex min-w-0 max-w-[min(100%,9.25rem)] flex-col items-end gap-0 leading-[1.05]">
-                {hemLines.map((line, idx) => (
-                  <span
-                    key={idx}
-                    className="text-right font-display font-black uppercase tracking-[0.06em] text-[#003087]"
-                  >
-                    {line}
-                  </span>
-                ))}
-              </span>
             </div>
-          ) : null}
-        </div>
+            {hemLines.length > 0 ? (
+              <div className="pointer-events-none flex w-full min-w-0 items-end justify-end gap-2 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-2 py-2 pb-2.5 rounded-b-[8px]">
+                <span className="nhl25-poster-jersey-hem-name flex min-w-0 flex-1 flex-col items-end gap-0.5 leading-snug">
+                  {hemLines.map((line, idx) => (
+                    <span
+                      key={idx}
+                      className="block w-full text-right font-display font-black uppercase text-[#003087] [overflow-wrap:anywhere]"
+                    >
+                      {line}
+                    </span>
+                  ))}
+                </span>
+                <JerseyFlagCzInline width={26} height={17} className="shrink-0 translate-y-[2px]" />
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <div className="squad-ice-surface-light relative w-full overflow-hidden rounded-[8px] shadow-inner">
+            <div
+              className={`squad-ice-surface-light relative aspect-[100/120] w-full ${empty ? "ring-1 ring-inset ring-slate-300/50" : ""}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
+              <img
+                src={CZ_JERSEY_BACK_BLANK_SRC}
+                alt=""
+                width={400}
+                height={480}
+                decoding="async"
+                data-jersey-kind={kind}
+                className={`
+                ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]
+                ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
+              `}
+              />
+
+              {!empty ? (
+                <>
+                  <JerseyCornerFlagCz />
+                  <div
+                    className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
+                  >
+                    {namePlate && namePlate.lines.length > 0 ? (
+                      <span className="flex w-full min-w-0 flex-col items-center gap-[0.08em] max-w-full">
+                        {namePlate.lines.map((line, idx) => (
+                          <span key={idx} className={namePlate.className} style={namePlate.style}>
+                            {line}
+                          </span>
+                        ))}
+                      </span>
+                    ) : null}
+                    {numStr ? (
+                      <span
+                        className={`mt-px ${numCls}`}
+                        style={jerseyNumberStyle(ln, npVar)}
+                      >
+                        {numStr}
+                      </span>
+                    ) : null}
+                  </div>
+                </>
+              ) : (
+                <div
+                  className="pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-center px-1 pt-[24%] pb-[22%]"
+                  aria-hidden
+                >
+                  <span className="max-w-[95%] text-center font-display text-[clamp(0.95rem,5vw,1.65rem)] font-black uppercase leading-none tracking-[0.06em] text-white/[0.38] drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">
+                    {positionLabel}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

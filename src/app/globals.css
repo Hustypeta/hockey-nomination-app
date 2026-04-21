@@ -154,12 +154,12 @@ body {
     0 2px 7px rgba(0, 0, 0, 0.32);
 }
 
-/** Plakát — příjmení pod siluetou vedle vlajky (hem), velké modré písmo. */
+/** Plakát — příjmení pod siluetou vedle vlajky (hem), čitelné, bez ořezu (wrap). */
 .nhl25-share-poster-capture .nhl25-poster-jersey-hem-name span {
   color: #003087;
-  font-size: clamp(0.82rem, 2.4vw, 1.05rem);
+  font-size: clamp(0.88rem, 2.65vw, 1.12rem);
   font-weight: 900;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.035em;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
@@ -308,7 +308,7 @@ body {
  */
 .nhl25-share-poster-capture .nhl25-jersey-card-root {
   width: 100%;
-  max-width: 12.75rem;
+  max-width: 13.25rem;
   margin-inline: auto;
 }
 
