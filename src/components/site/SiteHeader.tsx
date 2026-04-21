@@ -112,51 +112,48 @@ export function SiteHeader() {
             </span>
           </Link>
 
-          {/* Desktop nav */}
-          <nav
-            className="ml-auto hidden min-w-0 items-center gap-0.5 lg:flex"
-            aria-label="Hlavní navigace"
-          >
-            {NAV.map(({ href, label }) => {
-              const active = isActive(pathname, href);
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`
+          {/* Desktop: navigace + účet v jednom řádku s mezerou — nesmí se překrývat s avatarem */}
+          <div className="ml-auto hidden min-w-0 items-center gap-6 xl:gap-8 lg:flex">
+            <nav className="flex min-w-0 shrink items-center gap-0.5" aria-label="Hlavní navigace">
+              {NAV.map(({ href, label }) => {
+                const active = isActive(pathname, href);
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`
                     group/nav relative whitespace-nowrap rounded-xl px-3 py-2 text-[0.8125rem] font-semibold tracking-wide
                     transition-all duration-200 ease-out will-change-transform
                     hover:scale-[1.05] hover:text-white
                     focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
                     ${active ? "text-white" : "text-slate-400"}
                   `}
-                >
-                  <span className="relative z-10">{label}</span>
-                  {active ? (
-                    <span
-                      className="absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-gradient-to-r from-[#00B4FF] via-cyan-300 to-[#00B4FF] shadow-[0_0_12px_rgba(0,180,255,0.65)]"
-                      aria-hidden
-                    />
-                  ) : (
-                    <span
-                      className="absolute inset-x-3 bottom-1 h-0.5 scale-x-0 rounded-full bg-gradient-to-r from-[#00B4FF] to-cyan-200 opacity-0 transition-all duration-200 group-hover/nav:scale-x-100 group-hover/nav:opacity-100"
-                      aria-hidden
-                    />
-                  )}
-                  {!active ? (
-                    <span
-                      className="absolute inset-0 -z-0 rounded-xl bg-white/[0.04] opacity-0 transition-opacity duration-200 group-hover/nav:opacity-100"
-                      aria-hidden
-                    />
-                  ) : null}
-                </Link>
-              );
-            })}
-          </nav>
+                  >
+                    <span className="relative z-10">{label}</span>
+                    {active ? (
+                      <span
+                        className="absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-gradient-to-r from-[#00B4FF] via-cyan-300 to-[#00B4FF] shadow-[0_0_12px_rgba(0,180,255,0.65)]"
+                        aria-hidden
+                      />
+                    ) : (
+                      <span
+                        className="absolute inset-x-3 bottom-1 h-0.5 scale-x-0 rounded-full bg-gradient-to-r from-[#00B4FF] to-cyan-200 opacity-0 transition-all duration-200 group-hover/nav:scale-x-100 group-hover/nav:opacity-100"
+                        aria-hidden
+                      />
+                    )}
+                    {!active ? (
+                      <span
+                        className="absolute inset-0 -z-0 rounded-xl bg-white/[0.04] opacity-0 transition-opacity duration-200 group-hover/nav:opacity-100"
+                        aria-hidden
+                      />
+                    ) : null}
+                  </Link>
+                );
+              })}
+            </nav>
 
-          {/* Desktop actions */}
-          <div className="hidden shrink-0 items-center gap-3 pl-2 lg:flex">
-            <div className="h-6 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" aria-hidden />
+            <div className="flex shrink-0 items-center gap-3">
+              <div className="h-6 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" aria-hidden />
 
             {status === "authenticated" && user ? (
               <div className="flex items-center gap-3">
@@ -227,6 +224,7 @@ export function SiteHeader() {
                 </Link>
               </div>
             )}
+            </div>
           </div>
 
           {/* Mobile menu toggle */}
