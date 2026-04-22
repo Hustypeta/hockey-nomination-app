@@ -19,6 +19,7 @@ export function KdoJsemContent() {
                 width={600}
                 height={900}
                 priority
+                unoptimized
                 className="w-full rounded-2xl border border-white/[0.08] bg-black object-cover shadow-[0_24px_48px_rgba(0,0,0,0.45)]"
                 sizes="(max-width:640px) 85vw, 300px"
               />

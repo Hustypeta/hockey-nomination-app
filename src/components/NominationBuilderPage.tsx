@@ -25,6 +25,7 @@ import { SaveShareModal } from "@/components/SaveShareModal";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
 import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
@@ -825,6 +826,10 @@ export function NominationBuilderPage() {
               {isAuthenticated ? "Dokončit nominaci" : "Složit nominaci"}
             </button>
           </div>
+        </div>
+
+        <div className="relative z-10">
+          <SiteFooter />
         </div>
 
         <FloatingSestavaBar
