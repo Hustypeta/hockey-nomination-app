@@ -134,7 +134,7 @@ export function NominationBuilderPage() {
   const usedIds = new Set(selectedPlayers.map((p) => p.id));
   const isComplete = isLineupComplete(lineup);
   const leadershipOk = useMemo(() => isLeadershipComplete(lineup, captainId), [lineup, captainId]);
-  const canOpenShareModal = isComplete && leadershipOk;
+  const canOpenShareModal = isComplete;
   const filled = selectedPlayers.length;
   const remaining = TOTAL_PLAYERS - filled;
 
@@ -166,7 +166,7 @@ export function NominationBuilderPage() {
     }
   }, [shareNominationTitle]);
 
-  /** Hostovský záznam: /v/{slug} z názvu — vyžaduje plnou sestavu, C, 2× A a vyplněný název. */
+  /** Hostovský záznam: /v/{slug} z názvu — vyžaduje plnou sestavu a vyplněný název. */
   useEffect(() => {
     if (!modalOpen) return;
     if (savedNominationSlug) {
@@ -536,8 +536,10 @@ export function NominationBuilderPage() {
       return;
     }
     if (!leadershipOk) {
-      toast.error("Zvol kapitána (C) a přesně dva asistenty (A).");
-      return;
+      const ok = window.confirm(
+        "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+      );
+      if (!ok) return;
     }
     if (!shareNominationTitle.trim()) {
       toast.error("Vyplň název nominace.");
@@ -598,8 +600,10 @@ export function NominationBuilderPage() {
       return;
     }
     if (!leadershipOk) {
-      toast.error("Zvol kapitána (C) a přesně dva asistenty (A).");
-      return;
+      const ok = window.confirm(
+        "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+      );
+      if (!ok) return;
     }
     if (!shareNominationTitle.trim()) {
       toast.error("Vyplň název nominace (např. v modalu Dokončit nominaci).");
@@ -681,11 +685,11 @@ export function NominationBuilderPage() {
             </div>
           )}
           {isComplete && !leadershipOk ? (
-            <div className="mb-3 rounded-xl border border-amber-500/35 bg-amber-950/30 px-3 py-2 text-center text-[11px] text-amber-100/95 shadow-[0_0_28px_rgba(245,158,11,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
-              Ještě zvol <strong className="font-semibold">kapitána</strong> (tlačítko C) a přesně{" "}
-              <strong className="font-semibold">dva asistenty</strong> (A) u hráčů v soupisce — bez toho nominaci
-              neuložíš ani nesdílíš.
-            </div>
+                  <div className="mb-3 rounded-xl border border-amber-500/35 bg-amber-950/30 px-3 py-2 text-center text-[11px] text-amber-100/95 shadow-[0_0_28px_rgba(245,158,11,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
+                    Ještě zvol <strong className="font-semibold">kapitána</strong> (tlačítko C) a přesně{" "}
+                    <strong className="font-semibold">dva asistenty</strong> (A) u hráčů v soupisce — bez toho bude
+                    nominace vypadat neúplně.
+                  </div>
           ) : null}
 
           <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
@@ -812,7 +816,16 @@ export function NominationBuilderPage() {
           <div className="mt-6 hidden justify-center lg:flex">
             <button
               type="button"
-              onClick={() => setModalOpen(true)}
+              onClick={() => {
+                if (!isComplete) return;
+                if (!leadershipOk) {
+                  const ok = window.confirm(
+                    "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+                  );
+                  if (!ok) return;
+                }
+                setModalOpen(true);
+              }}
               disabled={!canOpenShareModal}
               className={`
                 rounded-2xl px-12 py-4 font-display text-xl font-bold tracking-wide transition-all
@@ -833,7 +846,16 @@ export function NominationBuilderPage() {
         </div>
 
         <FloatingSestavaBar
-          onShare={() => setModalOpen(true)}
+          onShare={() => {
+            if (!isComplete) return;
+            if (!leadershipOk) {
+              const ok = window.confirm(
+                "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+              );
+              if (!ok) return;
+            }
+            setModalOpen(true);
+          }}
           onRandom={handleRandom}
           onReset={handleReset}
           shareDisabled={!canOpenShareModal}
@@ -842,7 +864,7 @@ export function NominationBuilderPage() {
           onContestSubmit={handleContestSubmitClick}
           contestSubmitBusy={submitContestBusy}
           contestSubmitInactive={
-            !isComplete || !leadershipOk || !shareNominationTitle.trim() || !contestSubmissionOpen
+            !isComplete || !shareNominationTitle.trim() || !contestSubmissionOpen
           }
           className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
         />

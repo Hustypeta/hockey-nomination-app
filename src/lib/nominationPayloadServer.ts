@@ -2,7 +2,6 @@ import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 import {
   normalizeLineupStructure,
   isLineupComplete,
-  isLeadershipComplete,
 } from "@/lib/lineupUtils";
 import { normalizeNominationTitle } from "@/lib/nominationTitle";
 import type { LineupStructure } from "@/types";
@@ -41,18 +40,6 @@ export function validateNominationPayload(body: unknown):
     return {
       ok: false,
       error: "Sestava musí být kompletní — všech 25 hráčů na správných pozicích.",
-      status: 400,
-    };
-  }
-
-  if (!captainId) {
-    return { ok: false, error: "Vyber kapitána týmu (tlačítko C u hráče).", status: 400 };
-  }
-
-  if (!isLeadershipComplete(lineupStructureNorm, captainId)) {
-    return {
-      ok: false,
-      error: "Zvol přesně dva asistenty kapitána (A) — u dvou hráčů v sestavě.",
       status: 400,
     };
   }
