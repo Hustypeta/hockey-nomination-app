@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { FacebookAppIdMeta } from "@/components/FacebookAppIdMeta";
 import { AuthProvider } from "@/components/AuthProvider";
+import { CompleteRegistrationTracker } from "@/components/CompleteRegistrationTracker";
+import { MetaPixel } from "@/components/MetaPixel";
 import { Toaster } from "sonner";
 import {
   SITE_ICON_URL,
@@ -65,9 +67,11 @@ export default function RootLayout({
     <html lang="cs">
       <head>
         <FacebookAppIdMeta />
+        <MetaPixel />
       </head>
       <body className="antialiased min-h-screen bg-[#05080f] font-sans text-white">
         <AuthProvider>
+          <CompleteRegistrationTracker />
           {children}
           <Toaster
             theme="dark"
