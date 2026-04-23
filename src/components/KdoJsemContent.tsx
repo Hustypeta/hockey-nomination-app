@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { SitePageHero } from "@/components/site/SitePageHero";
 
@@ -13,15 +12,14 @@ export function KdoJsemContent() {
         <div className="sestava-premium-panel-dark rounded-2xl p-5 shadow-[0_24px_64px_rgba(0,0,0,0.35)] sm:p-7">
           <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
             <figure className="mx-auto shrink-0 sm:mx-0 w-full max-w-[280px] sm:max-w-[300px]">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element -- veřejný statický asset z /public */}
+              <img
                 src="/images/kdo-jsem-autor.png"
                 alt="Autor projektu Lineup ve fanouškovském dresu české reprezentace"
                 width={600}
                 height={900}
-                priority
-                unoptimized
+                loading="eager"
                 className="w-full rounded-2xl border border-white/[0.08] bg-black object-cover shadow-[0_24px_48px_rgba(0,0,0,0.45)]"
-                sizes="(max-width:640px) 85vw, 300px"
               />
             </figure>
             <div className="min-w-0 flex-1 space-y-6 text-sm leading-relaxed text-white/82">
