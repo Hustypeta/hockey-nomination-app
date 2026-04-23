@@ -8,11 +8,21 @@ export function AuthorBriefTeaser() {
       aria-labelledby="author-teaser-heading"
     >
       <div className="flex items-start gap-4">
-        <div
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#003087]/30 text-sky-200 ring-1 ring-[#003087]/40"
-          aria-hidden
-        >
-          <UserRound className="h-6 w-6" />
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl ring-1 ring-white/15">
+          {/* eslint-disable-next-line @next/next/no-img-element -- veřejný statický asset z /public */}
+          <img
+            src="/images/kdo-jsem-autor.png"
+            alt=""
+            width={96}
+            height={96}
+            className="h-full w-full object-cover"
+            loading="eager"
+            decoding="async"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 to-transparent"
+            aria-hidden
+          />
         </div>
         <div className="min-w-0 flex-1">
           <h2
