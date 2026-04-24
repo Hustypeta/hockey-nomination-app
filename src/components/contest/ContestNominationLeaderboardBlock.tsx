@@ -21,6 +21,7 @@ type Row = {
 /** Žebříček sestavovací soutěže — data z GET /api/contest/leaderboard. */
 export function ContestNominationLeaderboardBlock({ className = "" }: { className?: string }) {
   const [published, setPublished] = useState<boolean | null>(null);
+  const [hidden, setHidden] = useState<boolean>(false);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [rows, setRows] = useState<Row[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +35,7 @@ export function ContestNominationLeaderboardBlock({ className = "" }: { classNam
           return;
         }
         setPublished(!!data.published);
+        setHidden(!!data.hidden);
         setUpdatedAt(typeof data.updatedAt === "string" ? data.updatedAt : null);
         setRows(Array.isArray(data.leaderboard) ? data.leaderboard : []);
       })
@@ -53,6 +55,10 @@ export function ContestNominationLeaderboardBlock({ className = "" }: { classNam
         </p>
       ) : published === null ? (
         <p className="mt-8 text-white/50">Načítám…</p>
+      ) : hidden ? (
+        <p className="mt-8 rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-white/75">
+          Vyhodnocení soutěže zatím není veřejné — probíhá interní testování.
+        </p>
       ) : !published ? (
         <p className="mt-8 rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-white/75">
           Oficiální soupiska ještě není zveřejněna — žebříček zatím není k dispozici.

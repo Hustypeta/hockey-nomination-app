@@ -1,17 +1,38 @@
-import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 import { scoreNominationAgainstOfficial } from "@/lib/contestScoring";
 import { prisma } from "@/lib/prisma";
+import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
 import { isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
 import type { LineupStructure } from "@/types";
 
 const OFFICIAL_ID = "official";
 
-export async function GET() {
+async function isAdmin(): Promise<boolean> {
+  const token = (await cookies()).get(CONTEST_ADMIN_COOKIE)?.value;
+  return verifyAdminToken(token);
+}
+
+function leaderboardIsPublic(): boolean {
+  return process.env.CONTEST_LEADERBOARD_PUBLIC?.trim().toLowerCase() === "true";
+}
+
+export async function GET(_request: NextRequest) {
   try {
+    if (!leaderboardIsPublic() && !(await isAdmin())) {
+      return NextResponse.json({
+        published: false,
+        hidden: true,
+        updatedAt: null as string | null,
+        leaderboard: [],
+      });
+    }
+
     const official = await prisma.officialLineup.findUnique({ where: { id: OFFICIAL_ID } });
     if (!official?.lineupStructure) {
       return NextResponse.json({
         published: false,
+        hidden: false,
         updatedAt: null as string | null,
         leaderboard: [] as Array<{
           nominationId: string;
@@ -104,6 +125,7 @@ export async function GET() {
 
     return NextResponse.json({
       published: true,
+      hidden: false,
       updatedAt: official.updatedAt.toISOString(),
       leaderboard: ranked,
     });

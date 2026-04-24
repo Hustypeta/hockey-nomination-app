@@ -90,7 +90,7 @@ export function jerseyNameplateNameProps(
   const multilineEase = lineCount > 1 ? 1.09 : 1;
   /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = plakát — vyšší měřítko kvůli čitelnosti exportu. */
   const scale =
-    variant === "premium" ? 1.02 : variant === "poster" ? 1.72 : 1.24;
+    variant === "premium" ? 1.12 : variant === "poster" ? 1.72 : 1.38;
 
   /** Na exportním PNG je yoke úzký — nižší strop + nižší podlaha, aby dlouhá jména zůstala uvnitř siluety. */
   const minFs =
@@ -111,9 +111,10 @@ export function jerseyNameplateNameProps(
   const t = clamp((score - low) / (high - low), 0, 1);
 
   const fontSize = maxFs - t * (maxFs - minFs);
-  const baseTrack = lineCount > 1 ? 0.072 : variant === "poster" ? 0.082 : 0.098;
-  const letterSpacing = baseTrack - t * (lineCount > 1 ? 0.048 : variant === "poster" ? 0.062 : 0.068);
-  const lineHeight = lineCount > 1 ? 1.0 + t * 0.04 : 1.02 + t * 0.06;
+  const baseTrack = lineCount > 1 ? 0.066 : variant === "poster" ? 0.082 : 0.078;
+  const letterSpacing =
+    baseTrack - t * (lineCount > 1 ? 0.042 : variant === "poster" ? 0.062 : 0.054);
+  const lineHeight = lineCount > 1 ? 1.04 + t * 0.04 : 1.08 + t * 0.06;
 
   const woven =
     variant === "premium" || variant === "poster" ? "jersey-nameplate-text--woven" : "";

@@ -143,10 +143,6 @@ export function ContestRulesContent() {
             </h2>
             <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
               <li>
-                Tato pravidla jsou orientační. Finální znění bude upřesněno a zasláno účastníkům e-mailem před zahájením
-                platnosti soutěže.
-              </li>
-              <li>
                 Veškeré časové údaje se řídí kalendářním datem a časem platným v České republice (pásmo{" "}
                 <strong className="text-white">Europe/Prague</strong>).
               </li>
