@@ -21,7 +21,7 @@ export function ContestRulesContent() {
                 <strong className="text-white">Nominaci do soutěže je z každého účtu možné poslat pouze jednou.</strong>{" "}
                 Koncepty sestavy můžeš u účtu ukládat opakovaně; do vyhodnocení se započítá až odeslání soutěžní nominace
                 nejpozději do{" "}
-                <strong className="text-white">13. května 2026, 23:59 (středoevropský čas)</strong>.
+                <strong className="text-white">10. května 2026, 23:59 (středoevropský čas)</strong>.
               </li>
               <li>Editor sestavy lze využívat k soukromým účelům i bez odeslání do soutěže.</li>
             </ul>
@@ -47,10 +47,6 @@ export function ContestRulesContent() {
               <li>
                 Do <strong className="text-white">10. května 2026</strong> (včetně): bonus{" "}
                 <strong className="text-white">+10 %</strong> ke skóre.
-              </li>
-              <li>
-                Od <strong className="text-white">11. května 2026</strong> do uzávěrky: bez časového bonusu (
-                <strong className="text-white">0 %</strong>).
               </li>
             </ul>
           </section>

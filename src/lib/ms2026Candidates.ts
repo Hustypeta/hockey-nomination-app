@@ -20,6 +20,14 @@ function overriddenClub(name: string, club: string): string {
   return club.trim();
 }
 
+function overriddenRole(name: string, role: string | undefined, position: string): string | null {
+  const n = name.trim();
+  if (position === "G") return "G";
+  const base = role?.trim();
+  if (n === "Martin Kaut") return "RW";
+  return base && base.length > 0 ? base : null;
+}
+
 /** Stabilní ID napříč seedem / API / uloženými nominacemi (bez náhodného cuid). */
 export function stableCandidatePlayerId(
   name: string,
@@ -34,9 +42,8 @@ export function stableCandidatePlayerId(
 
 function rowToPlayer(p: JsonRow): Player {
   const pos = p.position as Player["position"];
-  const roleNorm =
-    p.role?.trim() || (pos === "G" ? "G" : null);
   const idKey = p.role?.trim() || p.position;
+  const roleNorm = overriddenRole(p.name, p.role, pos);
   // ID musí zůstat stabilní i když opravujeme klubové údaje (jinak by se rozbily uložené nominace).
   const idClub = p.club.trim();
   const club = overriddenClub(p.name, p.club);

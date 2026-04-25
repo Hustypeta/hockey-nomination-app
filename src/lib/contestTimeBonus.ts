@@ -4,8 +4,8 @@
 
 export const CONTEST_TIMEZONE = "Europe/Prague";
 
-/** Uzávěrka odeslání nominace do soutěže (včetně tohoto dne, do půlnoci předcházející 14. 5.). */
-const SUBMISSION_LAST_YMD = "2026-05-13";
+/** Uzávěrka odeslání nominace do soutěže (včetně tohoto dne). */
+const SUBMISSION_LAST_YMD = "2026-05-10";
 
 /** Hranice bonusů (včetně uvedeného dne): do 30. 4. → 40 %, do 7. 5. → 25 %, do 10. 5. → 10 %, poté 0 %. */
 const BONUS_40_UNTIL = "2026-04-30";
@@ -56,9 +56,9 @@ export function getLandingBonusHeadline(percent: ContestTimeBonusPercent): strin
     case 10:
       return "Do 10. 5. 2026 máš +10 % k bodům";
     default:
-      return "Časový bonus už neplatí — nominace do soutěže do 13. 5. 2026";
+      return "Časový bonus už neplatí — nominace do soutěže do 10. 5. 2026";
   }
 }
 
 export const CONTEST_DEADLINE_CS =
-  "13. května 2026, 23:59 (čas ČR, středoevropský)";
+  "10. května 2026, 23:59 (čas ČR, středoevropský)";

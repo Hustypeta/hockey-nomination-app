@@ -67,10 +67,10 @@ export default function RootLayout({
     <html lang="cs">
       <head>
         <FacebookAppIdMeta />
-        <MetaPixel />
       </head>
       <body className="antialiased min-h-screen bg-[#05080f] font-sans text-white">
         <AuthProvider>
+          <MetaPixel />
           <CompleteRegistrationTracker />
           {children}
           <Toaster

@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Uzávěrka soutěže už proběhla (13. 5. 2026 23:59). Nominaci do soutěže už nelze odeslat.",
+            "Uzávěrka soutěže už proběhla (10. 5. 2026 23:59). Nominaci do soutěže už nelze odeslat.",
         },
         { status: 400 }
       );
