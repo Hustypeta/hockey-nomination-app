@@ -14,6 +14,12 @@ type JsonRow = {
   jerseyNumber?: number | string;
 };
 
+function overriddenClub(name: string, club: string): string {
+  const n = name.trim();
+  if (n === "Daniel Gazda") return "HC Dynamo Pardubice";
+  return club.trim();
+}
+
 /** Stabilní ID napříč seedem / API / uloženými nominacemi (bez náhodného cuid). */
 export function stableCandidatePlayerId(
   name: string,
@@ -31,14 +37,17 @@ function rowToPlayer(p: JsonRow): Player {
   const roleNorm =
     p.role?.trim() || (pos === "G" ? "G" : null);
   const idKey = p.role?.trim() || p.position;
+  // ID musí zůstat stabilní i když opravujeme klubové údaje (jinak by se rozbily uložené nominace).
+  const idClub = p.club.trim();
+  const club = overriddenClub(p.name, p.club);
   const jerseyNumber = parseStoredJerseyNumber(p.jerseyNumber);
   return {
-    id: stableCandidatePlayerId(p.name, p.club, idKey),
+    id: stableCandidatePlayerId(p.name, idClub, idKey),
     name: p.name.trim(),
     position: pos,
     role: pos === "G" ? "G" : roleNorm,
-    club: p.club.trim(),
-    league: leagueForClub(p.club),
+    club,
+    league: leagueForClub(club),
     ...(jerseyNumber != null ? { jerseyNumber } : {}),
   };
 }

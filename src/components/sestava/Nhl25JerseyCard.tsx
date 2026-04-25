@@ -1,6 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
+import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import {
   jerseyNameplateNameProps,
   jerseyNumberStyle,
@@ -11,11 +12,6 @@ import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyP
 import { JerseyCornerFlagCz, JerseyFlagCzInline } from "@/components/sestava/JerseyCornerFlagCz";
 
 export type Nhl25JerseySize = "compact" | "skater" | "goalie";
-
-function lastName(name: string) {
-  const parts = name.trim().split(/\s+/);
-  return parts[parts.length - 1] || name;
-}
 
 /** Jednotná velikost karty — útok, obrana, G, náhradníci (export / share). Jméno řeší `jerseyNameplateNameProps`. */
 const NHL25_CARD_UNIFIED = {
@@ -78,7 +74,7 @@ export function Nhl25JerseyCard({
   const w = widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = nameplateVariant === "poster" ? POSTER_EXPORT_NUMBER : numberClass[size];
-  const ln = !empty ? lastName(player.name) : "";
+  const ln = !empty ? jerseyNameOnJersey(player.name) : "";
   const npVar = nameplateVariant === "poster" ? "poster" : "card";
   const namePlate =
     !empty && nameplateVariant !== "poster" ? jerseyNameplateNameProps(ln, npVar) : null;

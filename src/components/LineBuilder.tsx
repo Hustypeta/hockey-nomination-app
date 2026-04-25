@@ -16,6 +16,8 @@ interface LineBuilderProps {
   selectedSlot: { type: string; lineIndex?: number; role?: string } | null;
   onSelectSlot: (slot: { type: string; lineIndex?: number; role?: string } | null) => void;
   enableDnd?: boolean;
+  /** Zobrazit jen „kopii“ sestavy bez ovládání (pro veřejné sdílení). */
+  readOnly?: boolean;
   /** NHL 25: světlý panel, G nahoře, 4× LW–C–RW, pak obrana; doplňkové sloty pod tím. */
   layoutVariant?: "classic" | "nhl25";
 }
@@ -69,6 +71,7 @@ export function LineBuilder({
   onSelectSlot,
   selectedSlot,
   enableDnd = true,
+  readOnly = false,
   layoutVariant = "classic",
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
@@ -191,11 +194,12 @@ export function LineBuilder({
 
     const renderSlotBody = (isDragOver: boolean) => (
       <div
-        onClick={() =>
-          onSelectSlot(selected ? null : { type, lineIndex: lineIndex ?? 0, role })
-        }
+        onClick={() => {
+          if (readOnly) return;
+          onSelectSlot(selected ? null : { type, lineIndex: lineIndex ?? 0, role });
+        }}
         className={`
-          group/slot flex w-full min-w-0 cursor-pointer flex-col items-center rounded-xl px-0.5 transition-[background-color,box-shadow] duration-200
+          group/slot flex w-full min-w-0 flex-col items-center rounded-xl px-0.5 transition-[background-color,box-shadow] duration-200
           ${nhl ? "gap-1 py-1" : "gap-2 py-2"}
           ${
             nhl
@@ -206,6 +210,7 @@ export function LineBuilder({
                 ? "bg-[#c8102e]/15 ring-2 ring-[#c8102e]/35 shadow-[inset_0_0_0_1px_rgba(200,16,46,0.12)]"
                 : "hover:bg-white/[0.03]"
           }
+          ${readOnly ? "cursor-default" : "cursor-pointer"}
         `}
       >
         <div className="relative flex w-full min-w-0 justify-center">
@@ -249,7 +254,7 @@ export function LineBuilder({
           )}
         </div>
 
-        {player ? (
+        {player && !readOnly ? (
           <div
             className={
               nhl

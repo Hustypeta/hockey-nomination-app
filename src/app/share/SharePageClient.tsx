@@ -8,6 +8,7 @@ import { decodeSharePayload } from "@/lib/sharePayload";
 import type { SharePayload } from "@/lib/sharePayload";
 import { lineupToPlayers } from "@/lib/lineupUtils";
 import type { Player } from "@/types";
+import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 
 function useClientLocationHref() {
   return useSyncExternalStore(
@@ -33,7 +34,10 @@ function ShareContentInner({
   useEffect(() => {
     fetch("/api/players")
       .then((res) => res.json())
-      .then((data: Player[]) => setPlayers(data))
+      .then((data: Player[]) => {
+        setPlayers(data);
+        if (Array.isArray(data)) initJerseyNameDisambiguation(data);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);

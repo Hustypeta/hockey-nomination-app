@@ -3,6 +3,7 @@
 import type { Player } from "@/types";
 import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
 import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
+import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 
 export interface NationalJerseyProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
@@ -14,11 +15,6 @@ export interface NationalJerseyProps {
   /** Vybraný slot řeší rodič (Slot) – tady jen kvůli API. */
   isSelected?: boolean;
   className?: string;
-}
-
-function lastName(name: string) {
-  const parts = name.trim().split(/\s+/);
-  return parts[parts.length - 1] || name;
 }
 
 /** w-full + max-w — ve 3 sloupcích v kartě lajny se dres zmenší, nepřekrývá sousedy */
@@ -130,7 +126,7 @@ export function NationalJersey({
                 className={`max-w-[98%] truncate font-display font-semibold uppercase leading-tight text-white ${nameCls}`}
                 style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9), 0 0 14px rgba(0,0,0,0.45)" }}
               >
-                {lastName(player.name)}
+                {jerseyNameOnJersey(player.name)}
               </div>
               {player.position !== "G" && player.role && (
                 <div

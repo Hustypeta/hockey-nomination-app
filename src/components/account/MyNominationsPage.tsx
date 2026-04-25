@@ -7,6 +7,7 @@ import { Loader2, Pencil, Share2, X } from "lucide-react";
 import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
+import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
 import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import type { NominationListItem } from "@/components/account/UserAccountHub";
@@ -88,7 +89,11 @@ export function MyNominationsPage() {
     fetch("/api/players")
       .then((r) => r.json())
       .then((data: Player[]) => {
-        if (!cancelled) setPlayers(Array.isArray(data) ? data : []);
+        if (!cancelled) {
+          const list = Array.isArray(data) ? data : [];
+          setPlayers(list);
+          initJerseyNameDisambiguation(list);
+        }
       })
       .catch(() => {
         if (!cancelled) setPlayers([]);

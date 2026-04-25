@@ -1,15 +1,11 @@
 "use client";
 
 import type { Player } from "@/types";
+import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 import { JerseyCornerFlagCz } from "@/components/sestava/JerseyCornerFlagCz";
-
-function lastName(name: string) {
-  const parts = name.trim().split(/\s+/);
-  return parts[parts.length - 1] || name;
-}
 
 export type PremiumJerseySize = "compact" | "skater" | "goalie";
 
@@ -81,7 +77,7 @@ export function PremiumJerseySlotCard({
   /** Prázdný slot bez výběru — výrazně vybledlý oproti vybranému / obsazenému. */
   const emptyUnfocused = empty && !isSelected;
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
-  const ln = !empty ? lastName(player.name) : "";
+  const ln = !empty ? jerseyNameOnJersey(player.name) : "";
   const namePlate = !empty ? jerseyNameplateNameProps(ln, "premium") : null;
   const emptyCenterLabel = (emptyPlaceholder ?? positionLabel).trim() || "?";
   const showClear = !empty && typeof onClear === "function";

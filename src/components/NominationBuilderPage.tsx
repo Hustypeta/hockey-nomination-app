@@ -32,6 +32,7 @@ import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 import { encodeSharePayload } from "@/lib/sharePayload";
+import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import {
   lineupToPlayers,
   isLineupComplete,
@@ -229,7 +230,10 @@ export function NominationBuilderPage() {
   useEffect(() => {
     fetch("/api/players")
       .then((res) => res.json())
-      .then((data) => setPlayers(data))
+      .then((data) => {
+        setPlayers(data);
+        if (Array.isArray(data)) initJerseyNameDisambiguation(data);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);

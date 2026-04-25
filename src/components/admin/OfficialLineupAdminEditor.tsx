@@ -26,6 +26,7 @@ import {
   assignPlayerToTarget,
   buildRandomLineup,
 } from "@/lib/lineupAssign";
+import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import type { Position } from "@/types";
 import { parseDroppableId } from "@/lib/dndSlotIds";
 import type { Player } from "@/types";
@@ -114,7 +115,11 @@ export function OfficialLineupAdminEditor() {
       await fetch("/api/players")
         .then((r) => r.json())
         .then((data) => {
-          if (!cancelled) setPlayers(Array.isArray(data) ? data : []);
+          if (!cancelled) {
+            const list = Array.isArray(data) ? data : [];
+            setPlayers(list);
+            initJerseyNameDisambiguation(list);
+          }
         })
         .catch(console.error)
         .finally(() => {

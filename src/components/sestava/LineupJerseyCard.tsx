@@ -1,16 +1,12 @@
 "use client";
 
 import type { Player } from "@/types";
+import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 
 export type LineupJerseySize = "compact" | "skater" | "goalie";
-
-function lastName(name: string) {
-  const parts = name.trim().split(/\s+/);
-  return parts[parts.length - 1] || name;
-}
 
 /** Jednotná šířka karty — hráči, brankáři i náhradníci. Jméno řeší `jerseyNameplateNameProps`. */
 const LINEUP_CARD_UNIFIED = {
@@ -72,7 +68,7 @@ export function LineupJerseyCard({
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = numberClass[size];
   const topOverlay = overlayTopClass[size];
-  const ln = !empty ? lastName(player.name) : "";
+  const ln = !empty ? jerseyNameOnJersey(player.name) : "";
   const namePlate =
     !empty && nameOnJersey ? jerseyNameplateNameProps(ln) : { lines: [] as string[], className: "", style: {} };
 

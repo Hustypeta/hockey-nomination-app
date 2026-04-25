@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { NominationView } from "@/app/nominations/[id]/NominationView";
-import { SharePageClient } from "@/app/share/SharePageClient";
+import { ReadonlySquadBuilderView } from "@/components/ReadonlySquadBuilderView";
 import { prisma } from "@/lib/prisma";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
-import { resolvePlayersByIds } from "@/lib/resolveNominationPlayers";
-import type { SharePayload } from "@/lib/sharePayload";
+import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 import type { LineupStructure } from "@/types";
 
 type Props = {
@@ -18,8 +16,6 @@ async function getNominationBySlug(slug: string) {
   });
   if (!nomination) return null;
 
-  const orderedPlayers = await resolvePlayersByIds(nomination.selectedPlayerIds);
-
   const rawLineup = nomination.lineupStructure as LineupStructure | null;
   const lineupStructure = rawLineup ? normalizeLineupStructure(rawLineup) : null;
 
@@ -27,7 +23,6 @@ async function getNominationBySlug(slug: string) {
     kind: "nomination" as const,
     id: nomination.id,
     captainId: nomination.captainId,
-    players: orderedPlayers,
     lineupStructure,
     createdAt: nomination.createdAt,
     timeBonusPercent: nomination.timeBonusPercent,
@@ -41,14 +36,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const nomData = await getNominationBySlug(slug);
   if (nomData) {
-    const captain = nomData.players?.find((p) => p?.id === nomData.captainId);
+    const all = loadMs2026Candidates();
+    const captain = all.find((p) => p.id === nomData.captainId) ?? null;
     const captainName = captain?.name?.split(" ").pop() || "";
     const label = nomData.title?.trim() || "Má nominace";
     const ogImagePath = `/v/${encodeURIComponent(slug)}/opengraph-image`;
 
     return {
       title: `MS 2026 – ${label}${captainName ? ` (C: ${captainName})` : ""}`,
-      description: `Sestava na Mistrovství světa v hokeji 2026. ${nomData.players?.length || 0} hráčů.`,
+      description: `Sestava na Mistrovství světa v hokeji 2026.`,
       openGraph: {
         title: `MS 2026 – ${label}`,
         description: `Sestava na Mistrovství světa v hokeji 2026`,
@@ -94,20 +90,14 @@ export default async function NominationBySlugPage({ params }: Props) {
   const { slug } = await params;
 
   const data = await getNominationBySlug(slug);
-  if (data) {
+  const players = loadMs2026Candidates();
+  if (data?.lineupStructure) {
     return (
-      <NominationView
-        players={data.players}
-        captainId={data.captainId}
-        lineupStructure={data.lineupStructure}
-        nominationId={data.id}
+      <ReadonlySquadBuilderView
         title={data.title}
-        allowDownload
-        linkToCopy={
-          typeof process.env.NEXT_PUBLIC_SITE_URL === "string" && process.env.NEXT_PUBLIC_SITE_URL
-            ? `${process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/v/${slug}`
-            : undefined
-        }
+        players={players}
+        captainId={data.captainId ?? null}
+        lineupStructure={data.lineupStructure}
       />
     );
   }
@@ -116,17 +106,12 @@ export default async function NominationBySlugPage({ params }: Props) {
   if (!row) notFound();
 
   const lineupStructure = normalizeLineupStructure(row.lineupStructure as unknown as LineupStructure);
-  const payload: SharePayload = {
-    v: 1,
-    captainId: row.captainId,
-    lineupStructure,
-  };
-
   return (
-    <SharePageClient
-      initialZ={null}
-      initialPayload={payload}
-      nominationTitle={row.title}
+    <ReadonlySquadBuilderView
+      title={row.title}
+      players={players}
+      captainId={row.captainId ?? null}
+      lineupStructure={lineupStructure}
     />
   );
 }
