@@ -26,12 +26,16 @@ import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 const MS_2026_KICKOFF = new Date("2026-05-15T18:00:00+02:00");
 
 function useCountdown(target: Date) {
-  const [now, setNow] = useState(() => Date.now());
+  // Pozor: Client Component se renderuje i na serveru. `Date.now()` při SSR způsobí hydration mismatch.
+  // Proto první render držíme deterministický a čas doplníme až po mountu.
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
+    setNow(Date.now());
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
   return useMemo(() => {
+    if (now === null) return null;
     const diff = Math.max(0, target.getTime() - now);
     const d = Math.floor(diff / 86400000);
     const h = Math.floor((diff % 86400000) / 3600000);
@@ -222,7 +226,16 @@ export function LandingContent() {
                   Odpočet do šampionátu
                 </span>
               </div>
-              {cd.ended ? (
+              {!cd ? (
+                <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4" aria-label="Odpočet se načítá">
+                  {["dní", "hod", "min", "sek"].map((l) => (
+                    <div key={l} className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4">
+                      <div className="font-display text-3xl font-bold tabular-nums text-white/70 sm:text-4xl">—</div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-300/85">{l}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : cd.ended ? (
                 <p className="mt-4 text-center font-display text-2xl font-bold text-white">MS je tady — sestav sestavu!</p>
               ) : (
                 <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4">
