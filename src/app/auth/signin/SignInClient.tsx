@@ -7,6 +7,11 @@ import { signIn } from "next-auth/react";
 import { LogIn } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { SitePageHero } from "@/components/site/SitePageHero";
+import {
+  DEV_GOOGLE_OAUTH_REDIRECT_URI,
+  SITE_CANONICAL_HOST,
+  SITE_GOOGLE_OAUTH_REDIRECT_URI,
+} from "@/lib/siteBranding";
 
 /** NextAuth error kódy → krátká vysvětlení (viz node_modules/next-auth/core/pages/signin.js). */
 function errorExplanation(code: string | null): string | null {
@@ -15,7 +20,15 @@ function errorExplanation(code: string | null): string | null {
     OAuthAccountNotLinked:
       "Tento Google účet nelze automaticky propojit s účtem, který už ve službě existuje (kolize e-mailu / účtu). Zkus jiný Google účet nebo dej vědět správci — případně zkontroluj databázi uživatelů.",
     OAuthCallback:
-      "Google nevrátil platný token (callback). Zkontroluj redirect URI v Google Cloud Console a proměnné NEXTAUTH_URL / GOOGLE_CLIENT_SECRET na serveru.",
+      "Google nevrátil platný token (redirect uri mismatch = špatná adresa v Google Cloud Console nebo jiné NEXTAUTH_URL než očekáváš). V Google Cloud Console → API a služby → Pověření → tvůj OAuth 2.0 Client ID (typ Web) v sekci „Autorizované přesměrovací identifikátory URI“ musí být přesně: " +
+      SITE_GOOGLE_OAUTH_REDIRECT_URI +
+      " (a na hostingu / Railway proměnná NEXTAUTH_URL=https://" +
+      SITE_CANONICAL_HOST +
+      " bez www a bez lomítka na konci). Pro vývoj v Cursoru/localhost ještě: " +
+      DEV_GOOGLE_OAUTH_REDIRECT_URI +
+      ". V sekci „Autorizované domény JavaScriptu“ přidej https://" +
+      SITE_CANONICAL_HOST +
+      " a pro lokál http://localhost:3000. Zkontroluj taky GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET (stejný projekt v Google).",
     OAuthSignin: "Chyba při startu OAuth u poskytovatele.",
     Callback: "Chyba při dokončení přihlášení na serveru (často databáze nebo konfigurace). Mrkni do logů nasazení.",
     Configuration: "Chyba konfigurace NextAuth (např. chybí NEXTAUTH_SECRET v produkci).",

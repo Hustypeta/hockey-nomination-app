@@ -2,6 +2,15 @@
 /** Jediná kanonická veřejná doména (bez www) — og:url, metadataBase, přesměrování. */
 export const SITE_CANONICAL_HOST = "hokejlineup.cz" as const;
 
+/**
+ * Přesná adresa, kterou musí mít **Authorized redirect URIs** u Google OAuth (NextAuth /api/auth/...).
+ * Musí 1:1 odpovídat `NEXTAUTH_URL` + `/api/auth/callback/google` na produkci.
+ */
+export const SITE_GOOGLE_OAUTH_REDIRECT_URI =
+  `https://${SITE_CANONICAL_HOST}/api/auth/callback/google` as const;
+
+export const DEV_GOOGLE_OAUTH_REDIRECT_URI = "http://localhost:3000/api/auth/callback/google" as const;
+
 const assetV = process.env.NEXT_PUBLIC_ASSET_VERSION?.trim();
 const assetQ = assetV && assetV.length > 0 ? `?v=${encodeURIComponent(assetV)}` : "";
 
