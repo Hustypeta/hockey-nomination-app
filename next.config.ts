@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host" as const, value: "www.hokejlineup.cz" }],
+        destination: "https://hokejlineup.cz/:path*",
+        permanent: true,
+      },
       { source: "/logo.png", destination: "/images/logo.png", permanent: false },
       { source: "/icon.png", destination: "/images/icon.png", permanent: false },
     ];

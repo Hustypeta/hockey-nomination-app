@@ -2,6 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
+import { toCanonicalHokejlineupUrl } from "@/lib/siteBranding";
 
 /**
  * Railway (a obecně reverse proxy bez VERCEL=1): NextAuth bere `origin` jen z NEXTAUTH_URL,
@@ -14,7 +15,24 @@ if (onRailway && process.env.AUTH_TRUST_HOST !== "false") {
 }
 const railwayHost = process.env.RAILWAY_PUBLIC_DOMAIN?.trim();
 if (onRailway && !process.env.NEXTAUTH_URL?.trim() && railwayHost) {
-  process.env.NEXTAUTH_URL = /^https?:\/\//i.test(railwayHost) ? railwayHost : `https://${railwayHost}`;
+  const href = /^https?:\/\//i.test(railwayHost) ? railwayHost : `https://${railwayHost}`;
+  try {
+    const c = toCanonicalHokejlineupUrl(href);
+    process.env.NEXTAUTH_URL = c.origin;
+  } catch {
+    process.env.NEXTAUTH_URL = href;
+  }
+}
+
+const nextAuthUrlRaw = process.env.NEXTAUTH_URL?.trim();
+if (nextAuthUrlRaw) {
+  try {
+    const c = toCanonicalHokejlineupUrl(nextAuthUrlRaw);
+    process.env.NEXTAUTH_URL =
+      c.pathname === "/" && !c.search && !c.hash ? c.origin : c.toString();
+  } catch {
+    /* ponechat původní */
+  }
 }
 
 /** NextAuth vyžaduje v produkci tajný klíč (šifrování JWT / cookies). */

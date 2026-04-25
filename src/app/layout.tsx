@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { FacebookAppIdMeta } from "@/components/FacebookAppIdMeta";
 import { AuthProvider } from "@/components/AuthProvider";
 import { CompleteRegistrationTracker } from "@/components/CompleteRegistrationTracker";
 import { MetaPixel } from "@/components/MetaPixel";
@@ -10,14 +9,16 @@ import {
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
   SITE_OG_DEFAULT_IMAGE_WIDTH,
+  toCanonicalHokejlineupUrl,
 } from "@/lib/siteBranding";
+import { resolveFacebookAppId } from "@/lib/facebookApp";
 
 function metadataBaseUrl(): URL {
   for (const raw of [process.env.NEXT_PUBLIC_SITE_URL, process.env.NEXTAUTH_URL]) {
     const t = raw?.trim();
     if (!t) continue;
     try {
-      return new URL(t);
+      return toCanonicalHokejlineupUrl(t);
     } catch {
       /* ignore */
     }
@@ -25,8 +26,9 @@ function metadataBaseUrl(): URL {
   return new URL("http://localhost:3000");
 }
 
-/** fb:app_id řeší navíc {@link FacebookAppIdMeta} v <head> + env FACEBOOK_APP_ID (runtime). */
+/** fb:app_id — `metadata.facebook.appId` (správné `property=`) + env `FACEBOOK_APP_ID` (viz {@link resolveFacebookAppId}). */
 export async function generateMetadata(): Promise<Metadata> {
+  const facebookAppId = resolveFacebookAppId();
   return {
     metadataBase: metadataBaseUrl(),
     title: {
@@ -38,6 +40,9 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: SITE_ICON_URL,
       apple: SITE_ICON_URL,
     },
+    ...(facebookAppId
+      ? { facebook: { appId: facebookAppId } as const }
+      : {}),
     openGraph: {
       type: "website",
       locale: "cs_CZ",
@@ -65,9 +70,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
-      <head>
-        <FacebookAppIdMeta />
-      </head>
       <body className="antialiased min-h-screen bg-[#05080f] font-sans text-white">
         <AuthProvider>
           <MetaPixel />

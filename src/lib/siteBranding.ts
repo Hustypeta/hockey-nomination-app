@@ -1,4 +1,7 @@
 /** Značka aplikace — jednotně v meta, hlavičce a úvodu. */
+/** Jediná kanonická veřejná doména (bez www) — og:url, metadataBase, přesměrování. */
+export const SITE_CANONICAL_HOST = "hokejlineup.cz" as const;
+
 const assetV = process.env.NEXT_PUBLIC_ASSET_VERSION?.trim();
 const assetQ = assetV && assetV.length > 0 ? `?v=${encodeURIComponent(assetV)}` : "";
 
@@ -29,3 +32,15 @@ export const SITE_INSTAGRAM_PAGE_URL =
   process.env.NEXT_PUBLIC_INSTAGRAM_PAGE_URL?.trim() ?? "";
 export const SITE_X_PAGE_URL = process.env.NEXT_PUBLIC_X_PAGE_URL?.trim() ?? "";
 export const SITE_TIKTOK_PAGE_URL = process.env.NEXT_PUBLIC_TIKTOK_PAGE_URL?.trim() ?? "";
+
+/**
+ * Sjednotí `www.hokejlineup.cz` → `hokejlineup.cz` (Open Graph, NextAuth, sdílení).
+ * Ostatní hostitelé (localhost, Railway preview) se nemění.
+ */
+export function toCanonicalHokejlineupUrl(href: string | URL): URL {
+  const u = typeof href === "string" ? new URL(href) : new URL(href.toString());
+  if (u.hostname === `www.${SITE_CANONICAL_HOST}`) {
+    u.hostname = SITE_CANONICAL_HOST;
+  }
+  return u;
+}
