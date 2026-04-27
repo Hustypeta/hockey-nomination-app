@@ -124,10 +124,6 @@ export function ContestRulesContent() {
                 <strong className="text-white">2. a 3. místo:</strong> Věcné ceny s hokejovou tematikou.
               </li>
               <li>
-                U prvních tří umístění bude na stránkách zveřejněn odborný komentář k nominaci, případně krátké
-                videohodnocení.
-              </li>
-              <li>
                 V případě rovnosti bodů rozhoduje o pořadí dřívější čas odeslání platné nominace, následně los.
               </li>
             </ul>
