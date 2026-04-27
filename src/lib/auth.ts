@@ -5,14 +5,13 @@ import { prisma } from "@/lib/prisma";
 import { toCanonicalHokejlineupUrl } from "@/lib/siteBranding";
 
 /**
- * Railway (a obecně reverse proxy bez VERCEL=1): NextAuth bere `origin` jen z NEXTAUTH_URL,
- * pokud není AUTH_TRUST_HOST — pak se špatně počítá HTTPS / cookie prefix (`__Secure-…`) a OAuth
- * končí „State cookie was missing“. Viz `detect-origin` v next-auth.
+ * NextAuth `detectOrigin`: pokud je `AUTH_TRUST_HOST` nebo `VERCEL`, origin = protokol + `x-forwarded-host`
+ * (ne `NEXTAUTH_URL`). Na Railway můžou být hlavičky u `/api/auth/signin` a `/api/auth/callback` nekonzistentní
+ * a pak se liší názvy/konfigurace cookies (`__Secure-…`) → chyba „State cookie was missing“.
+ * Proto: máš-li v env nastavené `NEXTAUTH_URL` (doporučeno pro vlastní doménu), **nepoužívej** auto `AUTH_TRUST_HOST`
+ * — NextAuth bude vždy brát `process.env.NEXTAUTH_URL` jako origin (stabilní OAuth).
  */
 const onRailway = Boolean(process.env.RAILWAY_ENVIRONMENT ?? process.env.RAILWAY_PROJECT_ID);
-if (onRailway && process.env.AUTH_TRUST_HOST !== "false") {
-  process.env.AUTH_TRUST_HOST ??= "true";
-}
 const railwayHost = process.env.RAILWAY_PUBLIC_DOMAIN?.trim();
 if (onRailway && !process.env.NEXTAUTH_URL?.trim() && railwayHost) {
   const href = /^https?:\/\//i.test(railwayHost) ? railwayHost : `https://${railwayHost}`;
@@ -33,6 +32,10 @@ if (nextAuthUrlRaw) {
   } catch {
     /* ponechat původní */
   }
+  /* „false“ jako string je pořád truthy — musí zmizet úplně, jinak `detectOrigin` dál bere forwarded host. */
+  delete process.env.AUTH_TRUST_HOST;
+} else if (onRailway) {
+  process.env.AUTH_TRUST_HOST ??= "true";
 }
 
 /** NextAuth vyžaduje v produkci tajný klíč (šifrování JWT / cookies). */
@@ -86,6 +89,10 @@ const providers: NextAuthOptions["providers"] = googleConfigured
   : [];
 
 export const authOptions: NextAuthOptions = {
+  /** Konzistentní s veřejnou URL; na https produkci nutné pro prefix `__Secure-` u OAuth cookies. */
+  useSecureCookies: process.env.NEXTAUTH_URL
+    ? process.env.NEXTAUTH_URL.startsWith("https://")
+    : process.env.NODE_ENV === "production",
   adapter: PrismaAdapter(prisma),
   pages: {
     /** Výchozí `/api/auth/signin` nahrazeno vlastní stránkou — čitelná chyba z `?error=` místo slepého tlačítka. */
