@@ -13,6 +13,8 @@ import {
 } from "@/lib/siteBranding";
 import { resolveFacebookAppId } from "@/lib/facebookApp";
 
+const SITE_URL = "https://hokejlineup.cz";
+
 function metadataBaseUrl(): URL {
   for (const raw of [process.env.NEXT_PUBLIC_SITE_URL, process.env.NEXTAUTH_URL]) {
     const t = raw?.trim();
@@ -68,9 +70,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Lineup",
+    url: SITE_URL,
+    description: "Fanouškovský editor sestavy, soutěž a sdílení.",
+  } as const;
+
   return (
     <html lang="cs">
       <body className="antialiased min-h-screen bg-[#05080f] font-sans text-white">
+        <script
+          type="application/ld+json"
+          // JSON-LD musí být čisté JSON string (ne JSX object)
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <AuthProvider>
           <MetaPixel />
           <CompleteRegistrationTracker />
