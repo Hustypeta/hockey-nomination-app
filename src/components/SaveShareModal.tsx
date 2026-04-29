@@ -9,7 +9,6 @@ import {
   captureElementToCanvas,
   canvasToPngDataUrl,
   coverCanvas,
-  letterboxCanvas,
   downloadDataUrl,
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";

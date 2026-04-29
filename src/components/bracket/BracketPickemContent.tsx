@@ -155,9 +155,11 @@ export function BracketPickemContent() {
     if (z) {
       const decoded = decodeBracketPayload(z);
       if (decoded) {
-        setPicks(decoded);
-        setHydrated(true);
-        toast.message("Tipy načteny z odkazu.");
+        queueMicrotask(() => {
+          setPicks(decoded);
+          setHydrated(true);
+          toast.message("Tipy načteny z odkazu.");
+        });
         return;
       }
       toast.error("Odkaz se nepodařilo načíst.");
@@ -166,12 +168,14 @@ export function BracketPickemContent() {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as BracketPickemPayload;
-        if (parsed?.v === 1) setPicks(parsed);
+        if (parsed?.v === 1) {
+          queueMicrotask(() => setPicks(parsed));
+        }
       }
     } catch {
       /* ignore */
     }
-    setHydrated(true);
+    queueMicrotask(() => setHydrated(true));
   }, [searchParams]);
 
   useEffect(() => {
