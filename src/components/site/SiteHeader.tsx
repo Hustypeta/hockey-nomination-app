@@ -155,7 +155,7 @@ export function SiteHeader() {
           {/* Desktop: zalamovaná navigace — všechny položky vidět bez skrytého scrollu */}
           <div className="hidden min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-center lg:flex lg:flex-row lg:items-center lg:gap-6 xl:gap-8 2xl:gap-10">
             <nav className="isolate min-w-0 flex-1 lg:min-w-0" aria-label="Hlavní navigace">
-              <div className="flex flex-wrap items-center gap-x-0.5 gap-y-2 lg:justify-end">
+              <div className="flex flex-wrap items-center gap-x-0 gap-y-2 lg:flex-nowrap lg:justify-end">
                 {NAV.map((item) => {
                   const { href } = item;
                   const active = isActive(pathname, href);
@@ -164,7 +164,7 @@ export function SiteHeader() {
                       key={href}
                       href={href}
                       className={`
-                    group/nav relative shrink-0 whitespace-nowrap rounded-xl px-3 py-2.5 text-[1rem] font-semibold leading-tight tracking-wide sm:px-3.5 md:text-[1.125rem] lg:px-3 xl:text-[1.25rem] xl:px-3.5 2xl:px-4 2xl:text-[1.625rem]
+                    group/nav relative shrink-0 whitespace-nowrap rounded-xl px-2 py-2 text-[0.95rem] font-semibold leading-tight tracking-wide sm:px-2.5 sm:text-[1rem] md:text-[1.05rem] lg:px-2.5 lg:text-[1rem] xl:px-3 xl:text-[1.05rem] 2xl:px-3 2xl:text-[1.1rem]
                     transition-colors duration-200 ease-out
                     hover:text-white
                     focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
