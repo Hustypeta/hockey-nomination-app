@@ -103,7 +103,7 @@ export function SiteHeader() {
           <Link
             href="/"
             className="group/brand flex min-w-0 flex-1 shrink-0 items-center gap-2 sm:gap-3 lg:max-w-none lg:flex-none lg:gap-3 xl:min-w-0 xl:max-w-[min(38%,20rem)]"
-            aria-label={`${SITE_BRAND} · MS 2026`}
+            aria-label={SITE_BRAND}
           >
             <div className="relative shrink-0">
               <div
@@ -121,9 +121,6 @@ export function SiteHeader() {
                 className="relative h-[5rem] w-auto max-h-[min(46vh,15rem)] max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[6.5rem] md:h-[7.75rem] lg:h-[5.75rem] xl:h-[6.5rem] 2xl:h-[7.75rem]"
               />
             </div>
-            <span className="shrink-0 font-display text-sm font-bold uppercase tracking-[0.14em] text-white/80 sm:text-base lg:text-base xl:text-lg">
-              MS 2026
-            </span>
           </Link>
 
           {/* Mobile menu toggle */}
