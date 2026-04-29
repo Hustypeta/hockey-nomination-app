@@ -118,6 +118,44 @@ export function coverCanvas(
   return out;
 }
 
+/**
+ * Vyplní šířku cílového formátu bez ořezu nahoře/dole:
+ * - zachová celou výšku plakátu
+ * - přebytek řeže jen ze stran (left/right)
+ *
+ * Pozn.: Pokud je zdroj užší než cílový formát při zachování výšky, vrátí výsledek
+ * s pruhy po stranách (neřežeme nahoře/dole).
+ */
+export function sideCropCanvas(
+  source: HTMLCanvasElement,
+  targetW: number,
+  targetH: number,
+  opts?: { theme?: PosterLetterboxTheme }
+): HTMLCanvasElement {
+  const out = document.createElement("canvas");
+  out.width = targetW;
+  out.height = targetH;
+  const ctx = out.getContext("2d");
+  if (!ctx) return source;
+
+  const dark = opts?.theme === "dark";
+  ctx.fillStyle = dark ? "#05080f" : "#e2e8f0";
+  ctx.fillRect(0, 0, targetW, targetH);
+
+  const sw = source.width;
+  const sh = source.height;
+  const scale = targetH / sh; // vždy zachovej plnou výšku
+  const dw = sw * scale;
+  const dh = sh * scale; // ~= targetH
+  const dx = (targetW - dw) / 2; // když dw > targetW, je dx záporné → ořez jen ze stran
+  const dy = 0; // nikdy neřež shora/dole
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(source, dx, dy, dw, dh);
+  return out;
+}
+
 export function downloadDataUrl(dataUrl: string, filename: string) {
   const a = document.createElement("a");
   a.href = dataUrl;

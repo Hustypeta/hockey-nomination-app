@@ -8,7 +8,7 @@ import { sharePngDataUrl } from "@/lib/sharePosterImage";
 import {
   captureElementToCanvas,
   canvasToPngDataUrl,
-  coverCanvas,
+  sideCropCanvas,
   downloadDataUrl,
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
@@ -102,7 +102,7 @@ export function SaveShareModal({
     }
     const map = { "1x1": [1080, 1080], "9x16": [1080, 1920], "16x9": [1920, 1080] } as const;
     const [w, h] = map[previewFrame];
-    const out = coverCanvas(base, w, h, { theme: exportLetterboxTheme });
+    const out = sideCropCanvas(base, w, h, { theme: exportLetterboxTheme });
     setFramedPreviewUrl(canvasToPngDataUrl(out));
   }, [previewDataUrl, previewFrame, exportLetterboxTheme]);
 
@@ -151,14 +151,14 @@ export function SaveShareModal({
   const downloadAspect = (w: number, h: number, suffix: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
-    const out = coverCanvas(base, w, h, { theme: exportLetterboxTheme });
+    const out = sideCropCanvas(base, w, h, { theme: exportLetterboxTheme });
     downloadDataUrl(canvasToPngDataUrl(out), `ms2026-nominace-${suffix}.png`);
   };
 
   const webSharePng = async (w: number, h: number, filename: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
-    const out = coverCanvas(base, w, h, { theme: exportLetterboxTheme });
+    const out = sideCropCanvas(base, w, h, { theme: exportLetterboxTheme });
     const dataUrl = canvasToPngDataUrl(out);
     const result = await sharePngDataUrl(dataUrl, {
       filename,
@@ -422,7 +422,7 @@ export function SaveShareModal({
                 <img
                   src={framedPreviewUrl ?? previewDataUrl ?? undefined}
                   alt="Náhled plakátu nominace"
-                  className="h-[min(72vh,720px)] w-full rounded-lg object-cover"
+                  className="mx-auto max-h-[min(72vh,720px)] w-full max-w-full rounded-lg object-contain"
                 />
               </div>
 
