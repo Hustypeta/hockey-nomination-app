@@ -8,6 +8,7 @@ import { sharePngDataUrl } from "@/lib/sharePosterImage";
 import {
   captureElementToCanvas,
   canvasToPngDataUrl,
+  coverCanvas,
   letterboxCanvas,
   downloadDataUrl,
   type PosterLetterboxTheme,
@@ -102,7 +103,10 @@ export function SaveShareModal({
     }
     const map = { "1x1": [1080, 1080], "9x16": [1080, 1920], "16x9": [1920, 1080] } as const;
     const [w, h] = map[previewFrame];
-    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
+    const out =
+      previewFrame === "1x1"
+        ? coverCanvas(base, w, h, { theme: exportLetterboxTheme })
+        : letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     setFramedPreviewUrl(canvasToPngDataUrl(out));
   }, [previewDataUrl, previewFrame, exportLetterboxTheme]);
 
@@ -151,14 +155,20 @@ export function SaveShareModal({
   const downloadAspect = (w: number, h: number, suffix: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
-    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
+    const out =
+      suffix === "1x1"
+        ? coverCanvas(base, w, h, { theme: exportLetterboxTheme })
+        : letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     downloadDataUrl(canvasToPngDataUrl(out), `ms2026-nominace-${suffix}.png`);
   };
 
   const webSharePng = async (w: number, h: number, filename: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
-    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
+    const out =
+      filename.includes("1x1")
+        ? coverCanvas(base, w, h, { theme: exportLetterboxTheme })
+        : letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     const dataUrl = canvasToPngDataUrl(out);
     const result = await sharePngDataUrl(dataUrl, {
       filename,
