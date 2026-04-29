@@ -85,40 +85,6 @@ export function letterboxCanvas(
   return out;
 }
 
-/**
- * Vyplní celý cílový poměr (cover) a ořízne přebytek.
- * Vhodné pro IG feed (1:1), kde nechceme letterbox okraje.
- */
-export function coverCanvas(
-  source: HTMLCanvasElement,
-  targetW: number,
-  targetH: number,
-  opts?: { theme?: PosterLetterboxTheme }
-): HTMLCanvasElement {
-  const out = document.createElement("canvas");
-  out.width = targetW;
-  out.height = targetH;
-  const ctx = out.getContext("2d");
-  if (!ctx) return source;
-
-  // Fallback fill (kdyby se zdroj nepovedlo vykreslit), jinak to cover stejně celé přepíše.
-  const dark = opts?.theme === "dark";
-  ctx.fillStyle = dark ? "#05080f" : "#e2e8f0";
-  ctx.fillRect(0, 0, targetW, targetH);
-
-  const sw = source.width;
-  const sh = source.height;
-  const scale = Math.max(targetW / sw, targetH / sh);
-  const dw = sw * scale;
-  const dh = sh * scale;
-  const dx = (targetW - dw) / 2;
-  const dy = (targetH - dh) / 2;
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(source, dx, dy, dw, dh);
-  return out;
-}
-
 export function downloadDataUrl(dataUrl: string, filename: string) {
   const a = document.createElement("a");
   a.href = dataUrl;

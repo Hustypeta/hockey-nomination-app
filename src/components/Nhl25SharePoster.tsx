@@ -34,10 +34,12 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-/** Dres na plakátu — jednotlivé sloty co největší (priorita čitelnost příjmení). */
+/** Dres naplní buňku mřížky (žádný zbytečný „pruh“ kolem max-w karty). */
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto w-[11.15rem] min-[420px]:w-[11.6rem] sm:w-[12.1rem]">{children}</div>
+    <div className="min-w-0 w-full [&_.nhl25-jersey-card-root]:mx-0 [&_.nhl25-jersey-card-root]:max-w-none">
+      {children}
+    </div>
   );
 }
 
@@ -89,9 +91,9 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
         className={`nhl25-share-poster-capture relative shrink-0 overflow-hidden rounded-2xl border antialiased subpixel-antialiased [text-rendering:optimizeLegibility] ${shell}`}
         style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
       >
-        <div className="nhl25-moje-sestava-accent mx-8 mt-5 rounded-full" aria-hidden />
+        <div className="nhl25-moje-sestava-accent mx-5 mt-4 rounded-full sm:mx-7" aria-hidden />
 
-        <header className="relative px-6 pb-2 pt-5 sm:px-8">
+        <header className="relative px-4 pb-1.5 pt-4 sm:px-6">
           <div className="min-w-0 text-center sm:text-left">
             {titleLine ? (
               <h1
@@ -108,14 +110,14 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
           </div>
         </header>
 
-        <div className={`relative mx-2 mb-3 mt-1 px-1 py-1 sm:mx-4 sm:mb-4 ${innerChrome}`}>
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
+        <div className={`relative mx-1 mb-2.5 mt-1 px-0 py-1 sm:mx-2.5 sm:mb-3.5 ${innerChrome}`}>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-x-4 sm:gap-y-4">
             <div className="min-w-0 space-y-3 sm:space-y-3.5">
               <section>
                 <h2 className={`mb-2 border-b pb-1.5 font-display text-[15px] font-extrabold uppercase tracking-[0.14em] sm:mb-2.5 sm:pb-2 sm:text-[16px] ${heading}`}>
                   Brankáři
                 </h2>
-                <div className="grid min-w-0 grid-cols-3 gap-1 sm:gap-1.5">
+                <div className="grid min-w-0 grid-cols-3 gap-1 sm:gap-2">
                   {lineup.goalies.map((gid, i) => (
                     <div key={`g-${i}`} className="flex min-w-0 flex-col gap-1">
                       <span className={`shrink-0 text-center font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
@@ -150,7 +152,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       <span className={`shrink-0 font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
                         {i + 1}. lajna
                       </span>
-                      <div className="grid min-w-0 w-full grid-cols-3 gap-1 sm:gap-1.5">
+                      <div className="grid min-w-0 w-full grid-cols-3 gap-1 sm:gap-2">
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(line.lw)}
@@ -202,7 +204,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       <p className={`mb-1 text-center font-display text-[13px] font-extrabold uppercase tracking-[0.12em] sm:text-[14px] ${pairTitle}`}>
                         {i + 1}. pár
                       </p>
-                      <div className="mx-auto grid min-w-0 max-w-[25.5rem] grid-cols-2 gap-1 sm:gap-1.5">
+                      <div className="grid min-w-0 w-full grid-cols-2 gap-1.5 sm:gap-2">
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(pair.lb)}
@@ -232,7 +234,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                     <p className={`mb-1 text-center font-display text-[13px] font-extrabold uppercase tracking-[0.12em] sm:text-[14px] ${pairTitle}`}>
                       7. bek
                     </p>
-                    <div className="mx-auto flex max-w-[13.5rem] justify-center">
+                    <div className="flex w-full min-w-0 justify-center">
                       <PosterJerseyWrap>
                         <Nhl25JerseyCard
                           player={getPlayer(seventhDefenseId)}
@@ -331,7 +333,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
         </div>
 
         <footer
-          className={`flex flex-col gap-2 border-t px-6 py-3.5 sm:flex-row sm:items-end sm:justify-between sm:px-8 ${
+          className={`flex flex-col gap-2 border-t px-4 py-3.5 sm:flex-row sm:items-end sm:justify-between sm:px-6 ${
             dark ? "border-white/10 bg-black/35" : "border-slate-200/90 bg-slate-100/80"
           }`}
         >
