@@ -164,10 +164,10 @@ export function jerseyNumberStyle(
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (variant === "poster") {
-    if (!longName) return { fontSize: "34px" };
+    if (!longName) return { fontSize: "44px" };
     const t = clamp((score - 9) / 14, 0, 1);
-    const maxPx = lines.length > 1 ? 29 : 30;
-    const minPx = lines.length > 1 ? 23.5 : 24;
+    const maxPx = lines.length > 1 ? 40 : 42;
+    const minPx = lines.length > 1 ? 30 : 32;
     return { fontSize: `${Math.round((maxPx - t * (maxPx - minPx)) * 10) / 10}px` };
   }
   if (!longName) return {};

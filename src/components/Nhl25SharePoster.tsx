@@ -34,12 +34,10 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-/** Dres naplní buňku mřížky (žádný zbytečný „pruh“ kolem max-w karty). */
+/** Dres má vždy stejnou vizuální velikost (nesmí se „nafukovat“ podle počtu sloupců). */
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
   return (
-    <div className="min-w-0 w-full [&_.nhl25-jersey-card-root]:mx-0 [&_.nhl25-jersey-card-root]:max-w-none">
-      {children}
-    </div>
+    <div className="flex min-w-0 w-full justify-center">{children}</div>
   );
 }
 

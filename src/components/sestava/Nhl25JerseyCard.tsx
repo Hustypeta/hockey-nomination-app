@@ -34,7 +34,7 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Větší číslo na exportním plakátu (sdílení) — jedna velikost, capture nemusí trefit breakpointy. */
 const POSTER_EXPORT_NUMBER =
-  "jersey-back-number-text jersey-back-number-text--woven text-[2.65rem] max-w-[92%] text-center leading-none";
+  "jersey-back-number-text jersey-back-number-text--woven text-[3.15rem] max-w-[92%] text-center leading-none";
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
@@ -162,7 +162,7 @@ export function Nhl25JerseyCard({
               `}
                 />
                 <div
-                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-start px-2 pt-[38%]`}
+                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-start px-2 pt-[44%]`}
                 >
                   {numStr ? (
                     <span className={`${numCls}`} style={jerseyNumberStyle(".", "poster")}>
@@ -178,7 +178,7 @@ export function Nhl25JerseyCard({
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
-                      className="block w-full text-right font-display text-[15px] font-black uppercase leading-[1.05] text-[#003087] [overflow-wrap:anywhere]"
+                      className="block w-full text-right font-display text-[17px] font-black uppercase leading-[1.04] text-[#003087] [overflow-wrap:anywhere]"
                     >
                       {line}
                     </span>
