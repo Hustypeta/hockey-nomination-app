@@ -45,11 +45,11 @@ export function AppLoadingScreen({
       <div className="relative flex min-h-screen flex-col items-center justify-center px-6 py-10">
         <div className="flex w-full max-w-lg flex-col items-center rounded-2xl border border-[#2a3142] bg-[#151922]/90 px-6 py-10 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:px-8 sm:py-12">
           <div
-            className="relative mb-6 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-2 border-[#003f87]/45 bg-[#003f87]/[0.08] shadow-[inset_0_0_24px_rgba(0,63,135,0.15)] sm:mb-8"
+            className="relative mb-10 flex h-[13.5rem] w-[13.5rem] items-center justify-center rounded-full border-4 border-[#003f87]/45 bg-[#003f87]/[0.08] shadow-[inset_0_0_36px_rgba(0,63,135,0.15)] sm:mb-12"
             aria-hidden
           >
-            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#c41e3a]/90 border-r-[#003f87]/50 animate-spin [animation-duration:1.15s]" />
-            <span className="relative z-10 font-display text-[10px] tracking-[0.2em] text-[#003f87]/90">
+            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#c41e3a]/90 border-r-[#003f87]/50 animate-spin [animation-duration:1.15s]" />
+            <span className="relative z-10 font-display text-3xl tracking-[0.2em] text-[#003f87]/90 sm:text-4xl">
               ČR
             </span>
           </div>

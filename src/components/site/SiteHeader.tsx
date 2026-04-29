@@ -164,7 +164,7 @@ export function SiteHeader() {
                       key={href}
                       href={href}
                       className={`
-                    group/nav relative shrink-0 whitespace-nowrap rounded-xl px-2 py-2 text-[0.8125rem] font-semibold tracking-wide sm:px-2.5 lg:px-2 xl:px-2.5 2xl:px-3
+                    group/nav relative shrink-0 whitespace-nowrap rounded-xl px-3 py-2.5 text-[1rem] font-semibold leading-tight tracking-wide sm:px-3.5 md:text-[1.125rem] lg:px-3 xl:text-[1.25rem] xl:px-3.5 2xl:px-4 2xl:text-[1.625rem]
                     transition-colors duration-200 ease-out
                     hover:text-white
                     focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
@@ -176,7 +176,7 @@ export function SiteHeader() {
                       </span>
                       {active ? (
                         <span
-                          className="absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-gradient-to-r from-[#00B4FF] via-cyan-300 to-[#00B4FF] shadow-[0_0_12px_rgba(0,180,255,0.65)]"
+                          className="absolute inset-x-3 bottom-1 h-0.5 rounded-full bg-gradient-to-r from-[#00B4FF] via-cyan-300 to-[#00B4FF] shadow-[0_0_12px_rgba(0,180,255,0.65)]"
                           aria-hidden
                         />
                       ) : (
