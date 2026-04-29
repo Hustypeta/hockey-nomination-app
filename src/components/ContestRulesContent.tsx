@@ -8,9 +8,22 @@ const sectionGoldClass =
 export function ContestRulesContent() {
   return (
     <main className="pb-16 pt-2 sm:pb-20">
-      <SitePageHero title="Pravidla soutěže" subtitle="Nominace na MS v hokeji 2026" align="center" />
+      <SitePageHero title="Pravidla" subtitle="Soutěž (nominace) a Pick’em" align="center" />
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="space-y-4 text-sm leading-relaxed text-white/78 sm:space-y-5">
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              Pravidla soutěže (nominace)
+            </h2>
+            <p className="mt-3 text-white/75">
+              Tato část popisuje soutěž o ceny založenou na odeslání nominace. Pod ní najdeš samostatně{" "}
+              <Link href="/bracket" className="text-cyan-200/90 underline-offset-4 hover:underline">
+                pravidla Pick’em
+              </Link>{" "}
+              (tipování skupin a play-off).
+            </p>
+          </section>
+
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
               1. Základní ustanovení
@@ -140,6 +153,87 @@ export function ContestRulesContent() {
               </li>
             </ul>
           </section>
+
+          <section className={sectionGoldClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              Pravidla Pick’em
+            </h2>
+            <p className="mt-3 text-white/75">
+              Pick’em je tipovací hra k MS 2026. Tipy se počítají ze{" "}
+              <strong className="text-white">všech zápasů turnaje</strong> (skupiny i play-off) podle{" "}
+              <strong className="text-white">oficiálních statistik IIHF</strong>. Pokud máš uložené tipy, můžeš je sdílet
+              odkazem.
+            </p>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              P1. Co se tipuje
+            </h2>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>
+                <strong className="text-white">Pořadí skupin:</strong> celé pořadí ve skupině A i B (1.–8. místo).
+              </li>
+              <li>
+                <strong className="text-white">Play-off pavouk:</strong> čtvrtfinále, semifinále, finále a zápas o bronz.
+              </li>
+              <li>
+                <strong className="text-white">Bonusové tipy (Česko):</strong>{" "}
+                nejlepší český střelec, nejlepší český hráč v bodování, nejtrestanější český hráč (PIM), počet gólů českého
+                týmu, počet trestných minut českého týmu.
+              </li>
+            </ul>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              P2. Uzávěrka tipů
+            </h2>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>
+                Tipování Pick’em se uzavírá{" "}
+                <strong className="text-white">před začátkem MS 2026</strong> (konkrétní datum a čas bude zobrazen přímo na
+                stránce Pick’em).
+              </li>
+              <li>Po uzávěrce lze tipy pouze zobrazit (read‑only).</li>
+            </ul>
+          </section>
+
+          <section className={sectionClass}>
+            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
+              P3. Bodování
+            </h2>
+            <p className="mt-3 text-white/75">
+              Bodování je nastavené tak, aby dávalo smysl jak pro skupiny, tak pro play-off a bonusy. Vyhodnocení se provede
+              po skončení turnaje podle oficiálních výsledků.
+            </p>
+            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
+              <li>
+                <strong className="text-white">Skupiny (A/B):</strong> 2 body za každý tým na přesné pozici (1.–8.).
+              </li>
+              <li>
+                <strong className="text-white">Čtvrtfinále:</strong> 3 body za správně určeného postupujícího v každém
+                zápase.
+              </li>
+              <li>
+                <strong className="text-white">Semifinále:</strong> 4 body za správně určeného postupujícího.
+              </li>
+              <li>
+                <strong className="text-white">Finále:</strong> 6 bodů za mistra.
+              </li>
+              <li>
+                <strong className="text-white">Bronz:</strong> 3 body za vítěze zápasu o bronz.
+              </li>
+              <li>
+                <strong className="text-white">Bonusy:</strong> 5 bodů za každou správnou položku (CZ střelec, CZ body,
+                CZ PIM, góly ČR, PIM ČR).
+              </li>
+            </ul>
+            <p className="mt-3 rounded-lg border border-white/[0.1] bg-black/30 px-3 py-2.5 text-xs leading-relaxed text-white/62 sm:text-sm">
+              <strong className="text-white/80">Poznámka:</strong> PIM = trestné minuty podle oficiálních statistik IIHF.
+              Gólové i trestné součty českého týmu se počítají za celý turnaj (skupiny + play‑off).
+            </p>
+          </section>
         </div>
 
         <p className="mt-10 text-center">
@@ -148,6 +242,14 @@ export function ContestRulesContent() {
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition hover:border-cyan-300/45 hover:bg-cyan-500/15"
           >
             Otevřít editor sestavy
+          </Link>
+        </p>
+        <p className="mt-4 text-center">
+          <Link
+            href="/bracket"
+            className="text-sm font-medium text-cyan-200/90 underline-offset-4 transition hover:text-cyan-100 hover:underline"
+          >
+            Otevřít Pick’em
           </Link>
         </p>
         <p className="mt-4 text-center">
