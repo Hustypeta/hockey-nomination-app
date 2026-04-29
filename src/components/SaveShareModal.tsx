@@ -8,7 +8,7 @@ import { sharePngDataUrl } from "@/lib/sharePosterImage";
 import {
   captureElementToCanvas,
   canvasToPngDataUrl,
-  sideCropCanvas,
+  letterboxCanvas,
   downloadDataUrl,
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
@@ -45,6 +45,7 @@ interface SaveShareModalProps {
 
 const SHARE_TITLE = "MS 2026 – nominace";
 const SHARE_TEXT = "Moje nominace na MS v hokeji 2026 🇨🇿";
+/** Produktové pravidlo: plakát nikdy nesmí oříznout hráče — vždy zachovej celý obsah (contain). */
 
 export function SaveShareModal({
   isOpen,
@@ -102,7 +103,8 @@ export function SaveShareModal({
     }
     const map = { "1x1": [1080, 1080], "9x16": [1080, 1920], "16x9": [1920, 1080] } as const;
     const [w, h] = map[previewFrame];
-    const out = sideCropCanvas(base, w, h, { theme: exportLetterboxTheme });
+    // Záměrně: žádný crop. Když budeš chtít "vyplnit", musí to být nová explicitní volba.
+    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     setFramedPreviewUrl(canvasToPngDataUrl(out));
   }, [previewDataUrl, previewFrame, exportLetterboxTheme]);
 
@@ -151,14 +153,14 @@ export function SaveShareModal({
   const downloadAspect = (w: number, h: number, suffix: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
-    const out = sideCropCanvas(base, w, h, { theme: exportLetterboxTheme });
+    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     downloadDataUrl(canvasToPngDataUrl(out), `ms2026-nominace-${suffix}.png`);
   };
 
   const webSharePng = async (w: number, h: number, filename: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
-    const out = sideCropCanvas(base, w, h, { theme: exportLetterboxTheme });
+    const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     const dataUrl = canvasToPngDataUrl(out);
     const result = await sharePngDataUrl(dataUrl, {
       filename,
