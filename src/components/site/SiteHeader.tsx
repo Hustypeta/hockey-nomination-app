@@ -15,9 +15,9 @@ const NAV: NavItem[] = [
   { href: "/", label: "Úvod" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
   { href: "/sestava", label: "Editor sestavy", shortLabel: "Editor" },
+  { href: "/bracket", label: "Pick’em" },
   { href: "/forum", label: "Fórum" },
   { href: "/zebricek", label: "Žebříček" },
-  { href: "/bracket", label: "Pick’em" },
   { href: "/pravidla-souteze", label: "Pravidla" },
 ];
 
