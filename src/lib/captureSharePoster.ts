@@ -1,4 +1,5 @@
 import { getFontEmbedCSS, toCanvas } from "html-to-image";
+import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 
 /** Balíček `html-to-image` exportuje `Options` jen interně — typ bereme z `toCanvas`. */
 export type HtmlToImageOptions = NonNullable<Parameters<typeof toCanvas>[1]>;
@@ -15,7 +16,7 @@ export async function buildHtmlToImageOptions(
 ): Promise<HtmlToImageOptions> {
   await document.fonts.ready.catch(() => undefined);
   const base: HtmlToImageOptions = {
-    cacheBust: true,
+    cacheBust: false,
     skipFonts: false,
     preferredFontFormat: "woff2",
     ...partial,
@@ -36,8 +37,7 @@ export async function captureElementToCanvas(
   element: HTMLElement,
   options?: { scale?: number; backgroundColor?: string | null }
 ): Promise<HTMLCanvasElement> {
-  /** Vyšší poměr = ostřejší potisk po případném zmenšení na 1080px (Instagram). */
-  const pixelRatio = options?.scale ?? 8;
+  const pixelRatio = options?.scale ?? SHARE_POSTER_CAPTURE_PIXEL_RATIO;
   const opts = await buildHtmlToImageOptions(element, {
     pixelRatio,
     backgroundColor: options?.backgroundColor ?? "#e8ecf2",

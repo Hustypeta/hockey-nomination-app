@@ -14,6 +14,7 @@ import {
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
+import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 
 interface SaveShareModalProps {
   isOpen: boolean;
@@ -117,8 +118,7 @@ export function SaveShareModal({
       flushSync(() => {
         onBeforeCapture?.();
       });
-      await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
-      await new Promise<void>((r) => queueMicrotask(r));
+      await new Promise<void>((r) => requestAnimationFrame(() => r()));
       const el = captureRef.current;
       if (!el) {
         setShareHint("Plakát se nepodařilo najít. Zkus stránku obnovit.");
@@ -130,7 +130,10 @@ export function SaveShareModal({
           : posterTheme === "dark"
             ? "#0b0e14"
             : "#e8ecf2";
-      const canvas = await captureElementToCanvas(el, { scale: 9, backgroundColor: bg });
+      const canvas = await captureElementToCanvas(el, {
+        scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
+        backgroundColor: bg,
+      });
       baseCanvasRef.current = canvas;
       setExportLetterboxTheme(
         posterVariant === "names" ? "dark" : posterTheme === "dark" ? "dark" : "light"
