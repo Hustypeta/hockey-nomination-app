@@ -47,6 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `MS 2026 – ${label}${captainName ? ` (C: ${captainName})` : ""}`,
     description: `Sestava na Mistrovství světa v hokeji 2026. ${data.players?.length || 0} hráčů.`,
+    robots: { index: false, follow: true },
     openGraph: {
       title: `MS 2026 – ${label}`,
       description: `Sestava na Mistrovství světa v hokeji 2026`,
