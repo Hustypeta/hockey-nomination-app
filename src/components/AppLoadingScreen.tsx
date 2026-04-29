@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { SITE_BRAND } from "@/lib/siteBranding";
+import { SITE_BRAND, SITE_INSTAGRAM_PAGE_URL } from "@/lib/siteBranding";
 
 const DEFAULT_INTRO =
   "Staň se na chvíli trenérem národního týmu České hokejové reprezentace. Sestav si svojí vlastní nominaci a soutěž o zajímavé ceny.";
@@ -102,6 +102,19 @@ export function AppLoadingScreen({
                 </ul>
               </div>
             </div>
+          ) : null}
+
+          {SITE_INSTAGRAM_PAGE_URL ? (
+            <p className={`text-center ${showSignInCta ? "mt-7" : "mt-8"}`}>
+              <a
+                href={SITE_INSTAGRAM_PAGE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium text-sky-300/95 underline-offset-4 transition hover:text-sky-200 hover:underline"
+              >
+                Instagram
+              </a>
+            </p>
           ) : null}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SITE_BRAND } from "@/lib/siteBranding";
+import { SITE_BRAND, SITE_INSTAGRAM_PAGE_URL } from "@/lib/siteBranding";
 import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 
 export function SiteFooter() {
@@ -24,6 +24,21 @@ export function SiteFooter() {
         <Link href="/pravidla-souteze" className="underline-offset-4 hover:text-white/75 hover:underline">
           Pravidla soutěže
         </Link>
+        {SITE_INSTAGRAM_PAGE_URL ? (
+          <>
+            <span aria-hidden className="text-white/25">
+              ·
+            </span>
+            <a
+              href={SITE_INSTAGRAM_PAGE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline-offset-4 hover:text-white/75 hover:underline"
+            >
+              Instagram
+            </a>
+          </>
+        ) : null}
       </nav>
     </footer>
   );

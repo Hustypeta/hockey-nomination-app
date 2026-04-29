@@ -36,7 +36,12 @@ export const SITE_CONTACT_EMAIL =
 export const SITE_FACEBOOK_PAGE_URL =
   "https://www.facebook.com/profile.php?id=61568992616673";
 
-/** Volitelné — ikona v patičce se aktivuje po doplnění URL (nebo přes NEXT_PUBLIC_* na produkci). */
+/**
+ * Kompletní URL profilu (typicky `https://www.instagram.com/tvuj_handle/`).
+ * Kde URL najdeš: v aplikaci Instagram → Profil → menu (≡) → „Odkaz na profil“ / Copy link;
+ * v prohlížeči otevři svůj profil a zkopíruj adresu z řádku (po přihlášení).
+ * Na Railway: proměnná `NEXT_PUBLIC_INSTAGRAM_PAGE_URL` (stejná hodnota jako v browseru).
+ */
 export const SITE_INSTAGRAM_PAGE_URL =
   process.env.NEXT_PUBLIC_INSTAGRAM_PAGE_URL?.trim() ?? "";
 export const SITE_X_PAGE_URL = process.env.NEXT_PUBLIC_X_PAGE_URL?.trim() ?? "";
