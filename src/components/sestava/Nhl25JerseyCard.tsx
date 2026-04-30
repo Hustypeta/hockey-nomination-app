@@ -173,8 +173,8 @@ export function Nhl25JerseyCard({
               </div>
             </div>
             {hemLines.length > 0 ? (
-              <div className="pointer-events-none flex w-full min-w-0 items-end justify-end gap-2 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-2 py-2 pb-2.5 rounded-b-[8px]">
-                <span className="nhl25-poster-jersey-hem-name flex min-w-0 flex-1 flex-col items-end gap-0.5 leading-snug">
+              <div className="pointer-events-none flex min-h-[3.25rem] w-full min-w-0 items-center justify-end gap-2 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-2 py-2 pb-2.5 rounded-b-[8px]">
+                <span className="nhl25-poster-jersey-hem-name flex min-w-0 flex-1 flex-col items-end justify-center gap-0.5 leading-snug">
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
