@@ -421,6 +421,20 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
+/* Pick'em panel — světlejší sklo (ať není “moc tmavé”) */
+.pickem-panel {
+  background:
+    radial-gradient(ellipse 100% 120% at 50% -28%, rgba(200, 16, 46, 0.07), transparent 55%),
+    radial-gradient(ellipse 115% 75% at 50% -10%, rgba(160, 220, 235, 0.14), transparent 58%),
+    radial-gradient(ellipse 80% 80% at 100% 100%, rgba(0, 120, 170, 0.18), transparent 45%),
+    linear-gradient(168deg, rgba(22, 48, 64, 0.90) 0%, rgba(12, 26, 36, 0.94) 52%, rgba(8, 18, 26, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 0 0 1px rgba(0, 140, 190, 0.14),
+    0 0 70px rgba(0, 80, 120, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
 /* Světlý led — panel „Moje sestava“ + stejný tón za PNG dresu v NHL25 kartách */
 .nhl25-moje-sestava-panel {
   background:

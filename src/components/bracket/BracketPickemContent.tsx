@@ -26,10 +26,10 @@ import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
 const STORAGE_KEY = "ms2026-bracket-pickem-v3";
 
 const selectCls =
-  "mt-1 w-full rounded-lg border border-white/12 bg-[#05080f]/90 px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
+  "mt-1 w-full rounded-lg border border-white/14 bg-white/[0.07] px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
 
 const inputCls =
-  "mt-1 w-full rounded-lg border border-white/12 bg-[#05080f]/90 px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] placeholder:text-white/35 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
+  "mt-1 w-full rounded-lg border border-white/14 bg-white/[0.07] px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] placeholder:text-white/40 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
 
 function clonePicks(p: BracketPickemPayload): BracketPickemPayload {
   return JSON.parse(JSON.stringify(p)) as BracketPickemPayload;
@@ -63,6 +63,48 @@ function flagEmoji(teamId: string): string {
     ITA: "🇮🇹",
   };
   return map[teamId] ?? "🏒";
+}
+
+function twemojiFlagUrl(teamId: string): string | null {
+  const map: Record<string, string> = {
+    USA: "1f1fa-1f1f8",
+    SUI: "1f1e8-1f1ed",
+    FIN: "1f1eb-1f1ee",
+    GER: "1f1e9-1f1ea",
+    LAT: "1f1f1-1f1fb",
+    AUT: "1f1e6-1f1f9",
+    HUN: "1f1ed-1f1fa",
+    GBR: "1f1ec-1f1e7",
+    CAN: "1f1e8-1f1e6",
+    SWE: "1f1f8-1f1ea",
+    CZE: "1f1e8-1f1ff",
+    DEN: "1f1e9-1f1f0",
+    SVK: "1f1f8-1f1f0",
+    NOR: "1f1f3-1f1f4",
+    SLO: "1f1f8-1f1ee",
+    ITA: "1f1ee-1f1f9",
+  };
+  const code = map[teamId];
+  if (!code) return null;
+  return `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${code}.svg`;
+}
+
+function FlagIcon({ id, className }: { id: string; className?: string }) {
+  const src = twemojiFlagUrl(id);
+  if (!src) return <span className={className}>{flagEmoji(id)}</span>;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={id}
+      className={className}
+      width={20}
+      height={20}
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+    />
+  );
 }
 
 function teamSelectOptions(teams: BracketTeam[]) {
@@ -112,7 +154,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="sestava-premium-panel-dark rounded-2xl p-5 shadow-[0_20px_56px_rgba(0,0,0,0.38)] sm:p-6">
+    <section className="pickem-panel rounded-2xl p-5 shadow-[0_20px_56px_rgba(0,0,0,0.30)] sm:p-6">
       <h2 className="font-display text-lg font-bold tracking-wide text-white sm:text-xl">{title}</h2>
       {hint ? <p className="mt-2 text-xs leading-relaxed text-white/55 sm:text-sm">{hint}</p> : null}
       <div className="mt-5 space-y-5">{children}</div>
@@ -134,14 +176,16 @@ function SortableTeamRow({
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] ${
+      className={`flex items-center gap-3 rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${
         isDragging ? "opacity-80 ring-2 ring-[#f1c40f]/35" : ""
       }`}
       {...attributes}
       {...listeners}
     >
       <span className="w-6 shrink-0 text-center font-display text-sm font-black text-white/65">{rank}</span>
-      <span className="text-xl leading-none">{flagEmoji(id)}</span>
+      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
+        <FlagIcon id={id} className="h-[18px] w-[18px]" />
+      </span>
       <span className="min-w-0 flex-1 truncate font-display text-sm font-bold text-white">{name}</span>
       <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">{id}</span>
     </div>
@@ -266,16 +310,18 @@ function MatchBox({
     `flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm font-semibold ${
       id && winner === id
         ? "border-[#f1c40f]/55 bg-[#f1c40f]/[0.10] text-amber-100"
-        : "border-white/10 bg-black/35 text-white/80 hover:border-white/18"
+        : "border-white/12 bg-white/[0.06] text-white/85 hover:border-white/22"
     }`;
   return (
-    <div className="rounded-2xl border border-white/[0.10] bg-black/25 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+    <div className="rounded-2xl border border-white/[0.12] bg-white/[0.04] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
       <p className="mb-2 text-center font-display text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">
         {title}
       </p>
       <button type="button" className={rowCls(left)} onClick={() => onPickWinner(left)} disabled={!left}>
         <span className="flex min-w-0 items-center gap-2">
-          <span className="text-lg">{left ? flagEmoji(left) : "🏒"}</span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
+            {left ? <FlagIcon id={left} className="h-[16px] w-[16px]" /> : <span className="text-sm">🏒</span>}
+          </span>
           <span className="truncate">{teamLabel(teamById, left)}</span>
         </span>
         <span className="text-[10px] font-bold uppercase tracking-wider text-white/35">{left ?? ""}</span>
@@ -287,7 +333,9 @@ function MatchBox({
         disabled={!right}
       >
         <span className="flex min-w-0 items-center gap-2">
-          <span className="text-lg">{right ? flagEmoji(right) : "🏒"}</span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
+            {right ? <FlagIcon id={right} className="h-[16px] w-[16px]" /> : <span className="text-sm">🏒</span>}
+          </span>
           <span className="truncate">{teamLabel(teamById, right)}</span>
         </span>
         <span className="text-[10px] font-bold uppercase tracking-wider text-white/35">{right ?? ""}</span>
@@ -366,21 +414,54 @@ export function BracketPickemContent() {
     const B2 = B[1] ?? null;
     const B3 = B[2] ?? null;
     const B4 = B[3] ?? null;
+    // IIHF cross-over: 1A–4B, 2A–3B, 1B–4A, 2B–3A
     return [
-      { teamLeft: A1, teamRight: B4 }, // A1–B4
-      { teamLeft: B2, teamRight: A3 }, // B2–A3
-      { teamLeft: B1, teamRight: A4 }, // B1–A4
-      { teamLeft: A2, teamRight: B3 }, // A2–B3
+      { teamLeft: A1, teamRight: B4 },
+      { teamLeft: A2, teamRight: B3 },
+      { teamLeft: B1, teamRight: A4 },
+      { teamLeft: B2, teamRight: A3 },
     ] as const;
   }, [picks.groupAOrder, picks.groupBOrder]);
 
   const computedSemifinals = useMemo(() => {
-    const w = picks.quarterfinals.map((m) => m.winner ?? null);
+    // IIHF po QF re-seeding: nejlepší semifinalista vs nejhorší (podle pozice ve skupině; v případě shody A před B).
+    const A = picks.groupAOrder;
+    const B = picks.groupBOrder;
+    const pos = (id: string): { group: "A" | "B"; place: number } | null => {
+      const ia = A.indexOf(id);
+      if (ia >= 0) return { group: "A", place: ia + 1 };
+      const ib = B.indexOf(id);
+      if (ib >= 0) return { group: "B", place: ib + 1 };
+      return null;
+    };
+    const seedKey = (id: string): [number, number] => {
+      const p = pos(id);
+      if (!p) return [99, 9];
+      // menší = lepší (1..4); při shodě A před B (jen deterministicky)
+      return [p.place, p.group === "A" ? 0 : 1];
+    };
+
+    const winners = picks.quarterfinals
+      .map((m) => m.winner ?? null)
+      .filter(Boolean) as string[];
+
+    if (winners.length < 4) {
+      return [
+        { teamLeft: winners[0] ?? null, teamRight: winners[1] ?? null },
+        { teamLeft: winners[2] ?? null, teamRight: winners[3] ?? null },
+      ] as const;
+    }
+
+    const sorted = [...winners].sort((a, b) => {
+      const ka = seedKey(a);
+      const kb = seedKey(b);
+      return ka[0] - kb[0] || ka[1] - kb[1];
+    });
     return [
-      { teamLeft: w[0] ?? null, teamRight: w[1] ?? null },
-      { teamLeft: w[2] ?? null, teamRight: w[3] ?? null },
+      { teamLeft: sorted[0] ?? null, teamRight: sorted[3] ?? null },
+      { teamLeft: sorted[1] ?? null, teamRight: sorted[2] ?? null },
     ] as const;
-  }, [picks.quarterfinals]);
+  }, [picks.quarterfinals, picks.groupAOrder, picks.groupBOrder]);
 
   const computedFinal = useMemo(() => {
     const w = picks.semifinals.map((m) => m.winner ?? null);
@@ -526,7 +607,7 @@ export function BracketPickemContent() {
 
         <Section
           title="Čtvrtfinále"
-          hint="Vyplň všechy čtyři dvojice a u každé vyber postupujícího. Nápověda ukazuje typický kříž play-off (1.×4., 2.×3.)."
+          hint="Dle IIHF se čtvrtfinále hraje cross-over: 1A–4B, 2A–3B, 1B–4A, 2B–3A. Vyber postupující v každém zápase."
         >
           <div className="grid gap-4 sm:grid-cols-2">
             {picks.quarterfinals.map((m, i) => (
@@ -551,7 +632,10 @@ export function BracketPickemContent() {
           </p>
         </Section>
 
-        <Section title="Bracket" hint="Pavouk play-off: čtvrtfinále → semifinále → finále a bronz. Klikni na tým, který postupuje.">
+        <Section
+          title="Bracket"
+          hint="IIHF po čtvrtfinále re-seeduje semifinalisty (nejlepší vs nejhorší). Klikni na tým, který postupuje."
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             <MatchBox
               title="Semifinále 1"
@@ -590,10 +674,7 @@ export function BracketPickemContent() {
           </div>
         </Section>
 
-        <Section
-          title="Bonusové otázky"
-          hint="Krátké tipy — vyhodnocení dodáme podle oficiálních statistik po turnaji."
-        >
+        <Section title="Doplňující otázky" hint="Krátké tipy — vyhodnocení dodáme podle oficiálních statistik po turnaji.">
           <label className="block text-xs font-medium text-white/65">
             MVP turnaje (jméno)
             <input
@@ -654,7 +735,7 @@ export function BracketPickemContent() {
         </Section>
       </div>
 
-      <div className="sestava-premium-panel-dark mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#f1c40f]/22 shadow-[0_0_48px_rgba(241,196,15,0.06)]">
+      <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#f1c40f]/22 shadow-[0_0_48px_rgba(241,196,15,0.06)]">
         <Trophy className="h-8 w-8 text-[#f1c40f]/90" aria-hidden />
         <p className="text-sm text-white/75">
           Pick’em je jen pro radost — <strong className="text-white">bez vstupného</strong>, bez účtu. Chceš nominovat

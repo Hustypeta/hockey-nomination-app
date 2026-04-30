@@ -42,10 +42,10 @@ export const MS2026_GROUP_B_TEAMS: BracketTeam[] = GROUP_B_IDS.map((id) => byId.
 export const MS2026_GROUP_A_VENUE = "Curych · Swiss Life Arena";
 export const MS2026_GROUP_B_VENUE = "Fribourg · BCF Arena";
 
-/** Typický kříž MS (16 týmů): A1–B4, B2–A3, B1–A4, A2–B3 — pro nápovědu u čtvrtfinále. */
+/** Čtvrtfinále MS (cross-over): 1A–4B, 2A–3B, 1B–4A, 2B–3A — dle IIHF. */
 export const MS2026_QF_LABELS = [
   "1. ze skupiny A × 4. ze skupiny B",
-  "2. ze skupiny B × 3. ze skupiny A",
-  "1. ze skupiny B × 4. ze skupiny A",
   "2. ze skupiny A × 3. ze skupiny B",
+  "1. ze skupiny B × 4. ze skupiny A",
+  "2. ze skupiny B × 3. ze skupiny A",
 ] as const;
