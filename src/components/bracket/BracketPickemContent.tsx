@@ -23,7 +23,7 @@ import type { BracketMatchPick, BracketPickemPayload } from "@/types/bracketPick
 import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
 
 /** v3: drag&drop pořadí skupin + bracket (MS 2026). */
-const STORAGE_KEY = "ms2026-bracket-pickem-v3";
+const STORAGE_KEY = "ms2026-bracket-pickem-v4";
 
 const selectCls =
   "mt-1 w-full rounded-lg border border-white/14 bg-white/[0.07] px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
@@ -348,6 +348,7 @@ export function BracketPickemContent() {
   const searchParams = useSearchParams();
   const [picks, setPicks] = useState<BracketPickemPayload>(() => ({ ...EMPTY_BRACKET_PICKEM }));
   const [hydrated, setHydrated] = useState(false);
+  const [czPlayers, setCzPlayers] = useState<{ id: string; name: string }[]>([]);
 
   const allTeams = useMemo(() => MS2026_BRACKET_TEAMS, []);
   const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
@@ -355,11 +356,39 @@ export function BracketPickemContent() {
   const ensureDefaults = useCallback((p: BracketPickemPayload): BracketPickemPayload => {
     const aDefault = MS2026_GROUP_A_TEAMS.map((t) => t.id);
     const bDefault = MS2026_GROUP_B_TEAMS.map((t) => t.id);
+    const bonus = (p as BracketPickemPayload).bonus ?? ({} as BracketPickemPayload["bonus"]);
     return {
       ...p,
       groupAOrder: Array.isArray(p.groupAOrder) && p.groupAOrder.length === aDefault.length ? p.groupAOrder : aDefault,
       groupBOrder: Array.isArray(p.groupBOrder) && p.groupBOrder.length === bDefault.length ? p.groupBOrder : bDefault,
+      bonus: {
+        topCzechGoalScorerId: bonus.topCzechGoalScorerId ?? "",
+        topCzechPointsLeaderId: bonus.topCzechPointsLeaderId ?? "",
+        mostPenalizedCzechPlayerId: bonus.mostPenalizedCzechPlayerId ?? "",
+        czechTeamGoals: bonus.czechTeamGoals ?? "",
+        czechTeamPim: bonus.czechTeamPim ?? "",
+      },
     };
+  }, []);
+
+  // CZ hráči pro bonus tipy (výběr z DB kandidátů).
+  useEffect(() => {
+    fetch("/api/players")
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("players fetch failed"))))
+      .then((rows) => {
+        const list = Array.isArray(rows)
+          ? (rows as Array<{ id?: unknown; name?: unknown }>).flatMap((x) => {
+              const id = typeof x.id === "string" ? x.id : null;
+              const name = typeof x.name === "string" ? x.name : null;
+              return id && name ? [{ id, name }] : [];
+            })
+          : [];
+        setCzPlayers(list);
+      })
+      .catch(() => {
+        // fallback: prázdno (stále lze vyplnit čísla), ale dropdown nebude mít data
+        setCzPlayers([]);
+      });
   }, []);
 
   useEffect(() => {
@@ -674,64 +703,84 @@ export function BracketPickemContent() {
           </div>
         </Section>
 
-        <Section title="Doplňující otázky" hint="Krátké tipy — vyhodnocení dodáme podle oficiálních statistik po turnaji.">
+        <Section
+          title="Bonusové tipy"
+          hint="Vyhodnocení jde udělat jen z českých hráčů + týmových součtů (bez databáze všech hráčů světa)."
+        >
           <label className="block text-xs font-medium text-white/65">
-            MVP turnaje (jméno)
-            <input
-              type="text"
-              className={inputCls}
-              value={picks.bonus.mvp}
-              onChange={(e) => setBonus("mvp", e.target.value)}
-              placeholder="např. David Pastrňák"
-              autoComplete="off"
-            />
-          </label>
-          <label className="block text-xs font-medium text-white/65">
-            Nejlepší střelec českého týmu
-            <input
-              type="text"
-              className={inputCls}
-              value={picks.bonus.topCzechScorer}
-              onChange={(e) => setBonus("topCzechScorer", e.target.value)}
-              placeholder="jméno hráče"
-              autoComplete="off"
-            />
-          </label>
-          <label className="block text-xs font-medium text-white/65">
-            Vítěz kanadského bodování (celý turnaj)
-            <input
-              type="text"
-              className={inputCls}
-              value={picks.bonus.pointsLeader}
-              onChange={(e) => setBonus("pointsLeader", e.target.value)}
-              placeholder="jméno hráče"
-              autoComplete="off"
-            />
-          </label>
-          <label className="block text-xs font-medium text-white/65">
-            Postoupí Česko do čtvrtfinále?
+            Nejlepší český střelec (CZ hráč)
             <select
               className={selectCls}
-              value={picks.bonus.czechQuarterFinals}
-              onChange={(e) => setBonus("czechQuarterFinals", e.target.value)}
+              value={picks.bonus.topCzechGoalScorerId}
+              onChange={(e) => setBonus("topCzechGoalScorerId", e.target.value)}
             >
-              <option value="">— nevybráno —</option>
-              <option value="ano">Ano</option>
-              <option value="ne">Ne</option>
+              <option value="">— vyber hráče —</option>
+              {czPlayers.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
             </select>
           </label>
+
           <label className="block text-xs font-medium text-white/65">
-            Součet gólů ve finále (obě týmy dohromady)
-            <input
-              type="text"
-              inputMode="numeric"
-              className={inputCls}
-              value={picks.bonus.finalTotalGoals}
-              onChange={(e) => setBonus("finalTotalGoals", e.target.value)}
-              placeholder="např. 5"
-              autoComplete="off"
-            />
+            Nejlepší český hráč v bodování (CZ hráč)
+            <select
+              className={selectCls}
+              value={picks.bonus.topCzechPointsLeaderId}
+              onChange={(e) => setBonus("topCzechPointsLeaderId", e.target.value)}
+            >
+              <option value="">— vyber hráče —</option>
+              {czPlayers.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
           </label>
+
+          <label className="block text-xs font-medium text-white/65">
+            Nejtrestanější český hráč (PIM) (CZ hráč)
+            <select
+              className={selectCls}
+              value={picks.bonus.mostPenalizedCzechPlayerId}
+              onChange={(e) => setBonus("mostPenalizedCzechPlayerId", e.target.value)}
+            >
+              <option value="">— vyber hráče —</option>
+              {czPlayers.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block text-xs font-medium text-white/65">
+              Počet gólů českého týmu
+              <input
+                type="text"
+                inputMode="numeric"
+                className={inputCls}
+                value={picks.bonus.czechTeamGoals}
+                onChange={(e) => setBonus("czechTeamGoals", e.target.value.replace(/[^\d]/g, ""))}
+                placeholder="např. 22"
+                autoComplete="off"
+              />
+            </label>
+            <label className="block text-xs font-medium text-white/65">
+              Počet trestných minut českého týmu
+              <input
+                type="text"
+                inputMode="numeric"
+                className={inputCls}
+                value={picks.bonus.czechTeamPim}
+                onChange={(e) => setBonus("czechTeamPim", e.target.value.replace(/[^\d]/g, ""))}
+                placeholder="např. 48"
+                autoComplete="off"
+              />
+            </label>
+          </div>
         </Section>
       </div>
 

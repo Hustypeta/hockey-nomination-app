@@ -2,7 +2,7 @@ import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from
 import type { BracketMatchPick, BracketPickemPayload } from "@/types/bracketPickem";
 import { MS2026_GROUP_A_TEAMS, MS2026_GROUP_B_TEAMS } from "@/data/ms2026BracketTeams";
 
-export const BRACKET_PAYLOAD_VERSION = 2 as const;
+export const BRACKET_PAYLOAD_VERSION = 3 as const;
 
 function isMatchPick(x: unknown): x is BracketMatchPick {
   if (!x || typeof x !== "object") return false;
@@ -49,7 +49,7 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
     if (!data || typeof data !== "object") return null;
     const o = data as Record<string, unknown>;
     const v = o.v;
-    if (v !== 1 && v !== BRACKET_PAYLOAD_VERSION) return null;
+    if (v !== 1 && v !== 2 && v !== BRACKET_PAYLOAD_VERSION) return null;
 
     const qf = o.quarterfinals;
     const sf = o.semifinals;
@@ -61,6 +61,14 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
     if (!bonus || typeof bonus !== "object") return null;
     const b = bonus as Record<string, unknown>;
     const str = (k: string) => (typeof b[k] === "string" ? b[k] : "");
+
+    const bonusV3 = () => ({
+      topCzechGoalScorerId: str("topCzechGoalScorerId"),
+      topCzechPointsLeaderId: str("topCzechPointsLeaderId"),
+      mostPenalizedCzechPlayerId: str("mostPenalizedCzechPlayerId"),
+      czechTeamGoals: str("czechTeamGoals"),
+      czechTeamPim: str("czechTeamPim"),
+    });
 
     const payload: BracketPickemPayload = {
       v: BRACKET_PAYLOAD_VERSION,
@@ -77,11 +85,16 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
       final: normalizeMatch(o.final as BracketMatchPick),
       bronze: normalizeMatch(o.bronze as BracketMatchPick),
       bonus: {
-        mvp: str("mvp"),
-        topCzechScorer: str("topCzechScorer"),
-        pointsLeader: str("pointsLeader"),
-        czechQuarterFinals: str("czechQuarterFinals"),
-        finalTotalGoals: str("finalTotalGoals"),
+        ...(v === 3
+          ? bonusV3()
+          : {
+              // migrace starších payloadů (v1/v2) → v3
+              topCzechGoalScorerId: "",
+              topCzechPointsLeaderId: "",
+              mostPenalizedCzechPlayerId: "",
+              czechTeamGoals: "",
+              czechTeamPim: "",
+            }),
       },
     };
     return payload;
