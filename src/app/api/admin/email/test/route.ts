@@ -62,19 +62,6 @@ const HTML = `<!doctype html>
                           />
                         </div>
 
-                        <div
-                          style="
-                            margin: 10px auto 0 auto;
-                            height: 4px;
-                            width: 220px;
-                            max-width: 100%;
-                            border-radius: 999px;
-                            background: linear-gradient(90deg, rgba(125,211,252,0.0), rgba(200,16,46,0.90), rgba(0,48,135,0.75), rgba(125,211,252,0.0));
-                            box-shadow: 0 0 20px rgba(200,16,46,0.22), 0 0 26px rgba(0,180,255,0.14);
-                          "
-                          aria-hidden
-                        ></div>
-
                         <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-weight: 900; letter-spacing: 0.14em; font-size: 28px; color:#ffffff;">
                           Lineup
                         </div>
