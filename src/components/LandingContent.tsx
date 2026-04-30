@@ -23,7 +23,7 @@ import { useContestStats } from "@/hooks/useContestStats";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
-const MS_2026_KICKOFF = new Date("2026-05-15T18:00:00+02:00");
+const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
 
 function useCountdown(target: Date) {
   // Pozor: Client Component se renderuje i na serveru. `Date.now()` při SSR způsobí hydration mismatch.
