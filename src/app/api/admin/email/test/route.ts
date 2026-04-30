@@ -25,7 +25,7 @@ function secretOk(req: NextRequest): boolean {
   if (!required) return false;
   const header = req.headers.get("x-email-secret")?.trim();
   const query = req.nextUrl.searchParams.get("secret")?.trim();
-  return (header && header === required) || (query && query === required);
+  return Boolean((header && header === required) || (query && query === required));
 }
 
 async function resendSendSingle(to: string) {
