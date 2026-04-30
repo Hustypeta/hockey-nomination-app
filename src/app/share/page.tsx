@@ -19,6 +19,8 @@ export async function generateMetadata({
   return {
     title: ogTitle,
     description: ogDescription,
+    robots: { index: false, follow: true },
+    alternates: { canonical: "/share" },
     openGraph: {
       title: ogTitle,
       description: ogDescription,

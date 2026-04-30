@@ -6,6 +6,8 @@ import { BracketPickemComingSoon } from "@/components/bracket/BracketPickemComin
 export const metadata: Metadata = {
   title: "Fórum",
   description: "Sdílení nominací, diskuze a reakce — připravujeme.",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "/forum" },
 };
 
 export default function ForumPage() {

@@ -8,7 +8,6 @@ const staticRoutes = [
   "/pravidla-souteze",
   "/zebricek",
   "/bracket",
-  "/forum",
   "/kdo-jsem",
   "/ochrana-udaju",
 ];

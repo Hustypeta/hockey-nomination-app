@@ -25,7 +25,7 @@ function metadataBaseUrl(): URL {
       /* ignore */
     }
   }
-  return new URL("http://localhost:3000");
+  return new URL(SITE_URL);
 }
 
 /** fb:app_id — `metadata.facebook.appId` (správné `property=`) + env `FACEBOOK_APP_ID` (viz {@link resolveFacebookAppId}). */
