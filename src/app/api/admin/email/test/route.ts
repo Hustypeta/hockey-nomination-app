@@ -8,6 +8,7 @@ const TEXT =
 
 const CTA_URL = "https://hokejlineup.cz/sestava";
 const PREHEADER = "Dnes končí 40 % bonus — odešli nominaci včas.";
+const LOGO_URL = "https://hokejlineup.cz/images/logo.png";
 
 const HTML = `<!doctype html>
 <html lang="cs">
@@ -31,8 +32,10 @@ const HTML = `<!doctype html>
                 <!-- Glow background -->
                 <div
                   style="
-                    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,63,135,0.55) 0%, rgba(0,0,0,0) 55%);
-                    padding: 24px;
+                    background:
+                      radial-gradient(ellipse 90% 60% at 50% -20%, rgba(0,63,135,0.58) 0%, rgba(0,0,0,0) 58%),
+                      radial-gradient(ellipse 70% 55% at 10% 110%, rgba(200,16,46,0.20) 0%, rgba(0,0,0,0) 60%);
+                    padding: 22px;
                     border-radius: 22px;
                   "
                 >
@@ -40,33 +43,37 @@ const HTML = `<!doctype html>
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
                     style="
                       width:100%;
-                      background-color: rgba(21,25,34,0.92);
-                      border: 1px solid #2a3142;
+                      background-color: rgba(17,23,32,0.94);
+                      border: 1px solid rgba(255,255,255,0.14);
                       border-radius: 18px;
-                      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+                      box-shadow: 0 24px 84px rgba(0,0,0,0.50);
                     "
                   >
                     <tr>
                       <td style="padding:28px 22px; text-align:center;">
-                        <!-- Logo circle -->
+                        <!-- Logo -->
+                        <div style="margin: 0 auto 10px auto; text-align:center;">
+                          <img
+                            src="${LOGO_URL}"
+                            width="138"
+                            height="138"
+                            alt="Lineup"
+                            style="display:block; margin:0 auto; width:138px; height:138px; border-radius:22px;"
+                          />
+                        </div>
+
                         <div
                           style="
-                            width: 152px;
-                            height: 152px;
-                            margin: 0 auto 18px auto;
-                            border-radius: 9999px;
-                            background-color: rgba(0,63,135,0.08);
-                            border: 4px solid rgba(0,63,135,0.45);
-                            box-shadow: inset 0 0 36px rgba(0,63,135,0.15);
-                            display: table;
+                            margin: 10px auto 0 auto;
+                            height: 4px;
+                            width: 220px;
+                            max-width: 100%;
+                            border-radius: 999px;
+                            background: linear-gradient(90deg, rgba(125,211,252,0.0), rgba(200,16,46,0.90), rgba(0,48,135,0.75), rgba(125,211,252,0.0));
+                            box-shadow: 0 0 20px rgba(200,16,46,0.22), 0 0 26px rgba(0,180,255,0.14);
                           "
-                        >
-                          <div style="display: table-cell; vertical-align: middle; text-align:center;">
-                            <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-weight: 800; letter-spacing: 0.20em; font-size: 34px; color: rgba(0,63,135,0.95);">
-                              ČR
-                            </div>
-                          </div>
-                        </div>
+                          aria-hidden
+                        ></div>
 
                         <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-weight: 900; letter-spacing: 0.14em; font-size: 28px; color:#ffffff;">
                           Lineup
@@ -75,7 +82,7 @@ const HTML = `<!doctype html>
                           MS 2026 · nominace
                         </div>
 
-                        <div style="margin-top:18px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.82); text-align:left;">
+                        <div style="margin-top:18px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.84); text-align:left;">
                           <p style="margin:0 0 12px 0;">
                             Velice Vám děkuji za Váš zájem o platformu <strong style="color:#ffffff;">Lineup</strong>.
                           </p>
@@ -96,8 +103,8 @@ const HTML = `<!doctype html>
                                 href="${CTA_URL}"
                                 style="
                                   display:inline-block;
-                                  padding: 14px 18px;
-                                  border-radius: 14px;
+                                  padding: 14px 20px;
+                                  border-radius: 16px;
                                   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
                                   font-weight: 900;
                                   letter-spacing: 0.12em;
@@ -105,8 +112,8 @@ const HTML = `<!doctype html>
                                   font-size: 13px;
                                   color: #ffffff;
                                   text-decoration:none;
-                                  background: linear-gradient(90deg, #003087 0%, #002056 100%);
-                                  box-shadow: 0 8px 28px rgba(0,48,135,0.45);
+                                  background: linear-gradient(90deg, #003087 0%, #002a5c 42%, #c8102e 100%);
+                                  box-shadow: 0 12px 40px rgba(0,48,135,0.35), 0 0 30px rgba(200,16,46,0.12);
                                 "
                               >
                                 Otevřít editor nominace
@@ -115,7 +122,7 @@ const HTML = `<!doctype html>
                           </tr>
                         </table>
 
-                        <div style="margin-top:18px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.55);">
+                        <div style="margin-top:18px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.58);">
                           Pokud tenhle e‑mail nechceš dostávat, odpověz “odhlásit”.
                         </div>
                       </td>
