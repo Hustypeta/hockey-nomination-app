@@ -22,6 +22,8 @@ interface SaveShareModalProps {
   captureRef: React.RefObject<HTMLDivElement | null>;
   /** Před exportem obrázku — např. aktualizace data ve footeru (volá se uvnitř flushSync). */
   onBeforeCapture?: () => void;
+  /** Po exportu — typicky vrátí capture DOM zpět do "hidden" režimu. */
+  onAfterCapture?: () => void;
   isAuthenticated: boolean;
   /** Název nominace (propíše se na plakát + při uložení na server). */
   nominationTitle: string;
@@ -52,6 +54,7 @@ export function SaveShareModal({
   onClose,
   captureRef,
   onBeforeCapture,
+  onAfterCapture,
   isAuthenticated,
   nominationTitle,
   onNominationTitleChange,
@@ -147,6 +150,7 @@ export function SaveShareModal({
       setShareHint("Generování obrázku se nepovedlo. Zkus to znovu.");
     } finally {
       setShareBusy(false);
+      onAfterCapture?.();
     }
   };
 

@@ -78,6 +78,7 @@ export function NominationBuilderPage() {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [shareCaptureVisible, setShareCaptureVisible] = useState(false);
   const [saving, setSaving] = useState(false);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
   const shareCaptureRef = useRef<HTMLDivElement>(null);
@@ -876,7 +877,11 @@ export function NominationBuilderPage() {
         />
 
         <div
-          className="pointer-events-none fixed left-0 top-0 z-[-1] -translate-x-full"
+          className={
+            shareCaptureVisible
+              ? "pointer-events-none fixed inset-0 z-[40] flex items-start justify-center pt-6"
+              : "pointer-events-none fixed left-0 top-0 z-[-1] -translate-x-full"
+          }
           style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
           aria-hidden
         >
@@ -907,9 +912,16 @@ export function NominationBuilderPage() {
 
         <SaveShareModal
           isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
+          onClose={() => {
+            setModalOpen(false);
+            setShareCaptureVisible(false);
+          }}
           captureRef={shareCaptureRef}
-          onBeforeCapture={() => setSharePosterFooterIso(new Date().toISOString())}
+          onBeforeCapture={() => {
+            setShareCaptureVisible(true);
+            setSharePosterFooterIso(new Date().toISOString());
+          }}
+          onAfterCapture={() => setShareCaptureVisible(false)}
           isAuthenticated={isAuthenticated}
           nominationTitle={shareNominationTitle}
           onNominationTitleChange={setShareNominationTitle}
