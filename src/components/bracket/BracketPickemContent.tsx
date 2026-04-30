@@ -640,7 +640,6 @@ export function BracketPickemContent() {
   return (
     <main className="relative z-10 mx-auto max-w-3xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
       <SitePageHero
-        kicker="Zdarma"
         title="Bracket Pick’em"
         subtitle="Playoff MS 2026 — vyplň vítěze skupin, čtvrtfinálové páry a postup až do finále a o bronz. Tipy se ukládají v prohlížeči; odkazem je můžeš sdílet."
         align="center"
