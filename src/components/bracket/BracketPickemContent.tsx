@@ -826,17 +826,6 @@ export function BracketPickemContent() {
         align="center"
       />
 
-      <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-center">
-        <button
-          type="button"
-          onClick={submitPickem}
-          disabled={submitting}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#f1c40f] px-5 py-3 font-display text-sm font-black text-slate-900 shadow-[0_12px_40px_rgba(241,196,15,0.22)] transition hover:brightness-105 disabled:opacity-60"
-        >
-          {submitting ? "Odesílám…" : "Odeslat Pick’em"}
-        </button>
-      </div>
-
       <div className="space-y-8">
         <Section
           title="Pořadí ve skupinách"
