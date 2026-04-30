@@ -209,8 +209,22 @@ function GroupOrderDnd({
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
   return (
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/45">{title}</p>
-      <p className="mt-1 text-xs text-white/55">{venue}</p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">{title}</p>
+          <p className="mt-1 text-xs text-white/65">{venue}</p>
+        </div>
+        <div
+          className="mt-0.5 h-2 w-16 rounded-full opacity-80"
+          style={{
+            background:
+              title === "Skupina A"
+                ? "linear-gradient(90deg, rgba(0,48,135,0.0), rgba(0,48,135,0.65), rgba(200,16,46,0.0))"
+                : "linear-gradient(90deg, rgba(200,16,46,0.0), rgba(200,16,46,0.65), rgba(0,48,135,0.0))",
+          }}
+          aria-hidden
+        />
+      </div>
       <div className="mt-4">
         <DndContext
           sensors={sensors}
@@ -290,6 +304,173 @@ function MatchPickRow({
 function teamLabel(teamById: Map<string, BracketTeam>, id: string | null) {
   if (!id) return "—";
   return teamById.get(id)?.name ?? id;
+}
+
+function BracketTeamChip({
+  id,
+  name,
+  selected,
+  onPick,
+  disabled,
+}: {
+  id: string | null;
+  name: string;
+  selected: boolean;
+  onPick: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onPick}
+      disabled={disabled || !id}
+      className={`group flex w-full items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition ${
+        selected
+          ? "border-[#f1c40f]/60 bg-[#f1c40f]/[0.10] text-amber-100"
+          : "border-white/12 bg-white/[0.06] text-white/85 hover:border-white/22"
+      } ${disabled ? "opacity-70" : ""}`}
+    >
+      <span className="flex min-w-0 items-center gap-2">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
+          {id ? <FlagIcon id={id} className="h-[18px] w-[18px]" /> : <span className="text-sm">🏒</span>}
+        </span>
+        <span className="min-w-0 truncate font-display text-sm font-bold">{name}</span>
+      </span>
+      <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.18em] text-white/35 group-hover:text-white/45">
+        {id ?? ""}
+      </span>
+    </button>
+  );
+}
+
+function BracketMatchCard({
+  title,
+  match,
+  teamById,
+  onPickWinner,
+  className,
+}: {
+  title: string;
+  match: BracketMatchPick;
+  teamById: Map<string, BracketTeam>;
+  onPickWinner: (id: string | null) => void;
+  className?: string;
+}) {
+  const leftName = teamLabel(teamById, match.teamLeft);
+  const rightName = teamLabel(teamById, match.teamRight);
+  return (
+    <div className={`rounded-2xl border border-white/[0.12] bg-white/[0.04] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${className ?? ""}`}>
+      <p className="mb-2 text-center font-display text-[11px] font-black uppercase tracking-[0.22em] text-white/55">
+        {title}
+      </p>
+      <div className="space-y-2">
+        <BracketTeamChip
+          id={match.teamLeft}
+          name={leftName}
+          selected={Boolean(match.teamLeft && match.winner === match.teamLeft)}
+          onPick={() => onPickWinner(match.teamLeft)}
+          disabled={!match.teamLeft}
+        />
+        <BracketTeamChip
+          id={match.teamRight}
+          name={rightName}
+          selected={Boolean(match.teamRight && match.winner === match.teamRight)}
+          onPick={() => onPickWinner(match.teamRight)}
+          disabled={!match.teamRight}
+        />
+      </div>
+    </div>
+  );
+}
+
+function BracketConnector({
+  className,
+}: {
+  className?: string;
+}) {
+  return <div className={`pointer-events-none absolute ${className ?? ""}`} aria-hidden />;
+}
+
+function BracketTree({
+  quarterfinals,
+  semifinals,
+  finalMatch,
+  bronzeMatch,
+  teamById,
+  onPickQf,
+  onPickSf,
+  onPickFinal,
+  onPickBronze,
+}: {
+  quarterfinals: BracketMatchPick[];
+  semifinals: BracketMatchPick[];
+  finalMatch: BracketMatchPick;
+  bronzeMatch: BracketMatchPick;
+  teamById: Map<string, BracketTeam>;
+  onPickQf: (i: number, winner: string | null) => void;
+  onPickSf: (i: number, winner: string | null) => void;
+  onPickFinal: (winner: string | null) => void;
+  onPickBronze: (winner: string | null) => void;
+}) {
+  // IG-friendly: jeden pavouk, na mobilu horizontální scroll
+  return (
+    <div className="relative -mx-4 overflow-x-auto px-4 pb-2">
+      <div className="relative grid min-w-[980px] grid-cols-[280px_240px_240px_240px] gap-6">
+        {/* Column headers */}
+        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Čtvrtfinále</div>
+        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Semifinále</div>
+        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Finále</div>
+        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">O bronz</div>
+
+        {/* Bracket body */}
+        <div className="relative grid grid-rows-[auto_auto_auto_auto] gap-5">
+          {quarterfinals.slice(0, 2).map((m, i) => (
+            <BracketMatchCard
+              key={`qf-${i}`}
+              title={`QF ${i + 1}`}
+              match={m}
+              teamById={teamById}
+              onPickWinner={(id) => onPickQf(i, id)}
+            />
+          ))}
+          {quarterfinals.slice(2, 4).map((m, i) => (
+            <BracketMatchCard
+              key={`qf-${i + 2}`}
+              title={`QF ${i + 3}`}
+              match={m}
+              teamById={teamById}
+              onPickWinner={(id) => onPickQf(i + 2, id)}
+            />
+          ))}
+        </div>
+
+        <div className="relative grid grid-rows-[1fr_1fr] gap-8 pt-[54px]">
+          {semifinals.map((m, i) => (
+            <BracketMatchCard
+              key={`sf-${i}`}
+              title={`SF ${i + 1}`}
+              match={m}
+              teamById={teamById}
+              onPickWinner={(id) => onPickSf(i, id)}
+            />
+          ))}
+        </div>
+
+        <div className="relative flex flex-col justify-center pt-[54px]">
+          <BracketMatchCard title="FINÁLE" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
+        </div>
+
+        <div className="relative flex flex-col justify-center pt-[54px]">
+          <BracketMatchCard title="BRONZ" match={bronzeMatch} teamById={teamById} onPickWinner={onPickBronze} />
+        </div>
+
+        {/* Connectors (simple, clean lines) */}
+        <BracketConnector className="left-[280px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10" />
+        <BracketConnector className="left-[526px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10" />
+        <BracketConnector className="left-[772px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10" />
+      </div>
+    </div>
+  );
 }
 
 function MatchBox({
@@ -680,22 +861,20 @@ export function BracketPickemContent() {
         </Section>
 
         <Section
-          title="Čtvrtfinále"
-          hint="Dle IIHF se čtvrtfinále hraje cross-over: 1A–4B, 2A–3B, 1B–4A, 2B–3A. Vyber postupující v každém zápase."
+          title="Play‑off pavouk"
+          hint="Dle IIHF se čtvrtfinále hraje cross-over (1A–4B, 2A–3B, 1B–4A, 2B–3A) a po čtvrtfinále se semifinalisti re-seedují (nejlepší vs nejhorší). Klikni na tým, který postupuje."
         >
-          <div className="grid gap-4 sm:grid-cols-2">
-            {picks.quarterfinals.map((m, i) => (
-              <MatchBox
-                key={i}
-                title={`Čtvrtfinále ${i + 1}`}
-                left={m.teamLeft}
-                right={m.teamRight}
-                winner={m.winner}
-                teamById={teamById}
-                onPickWinner={(id) => setQuarter(i, { ...m, winner: id })}
-              />
-            ))}
-          </div>
+          <BracketTree
+            quarterfinals={picks.quarterfinals}
+            semifinals={picks.semifinals}
+            finalMatch={picks.final}
+            bronzeMatch={picks.bronze}
+            teamById={teamById}
+            onPickQf={(i, winner) => setQuarter(i, { ...picks.quarterfinals[i], winner })}
+            onPickSf={(i, winner) => setSemi(i, { ...picks.semifinals[i], winner })}
+            onPickFinal={(winner) => setFinal({ ...picks.final, winner })}
+            onPickBronze={(winner) => setBronze({ ...picks.bronze, winner })}
+          />
           <p className="text-xs text-white/45">
             {MS2026_QF_LABELS.map((l, i) => (
               <span key={l}>
@@ -704,48 +883,6 @@ export function BracketPickemContent() {
               </span>
             ))}
           </p>
-        </Section>
-
-        <Section
-          title="Bracket"
-          hint="IIHF po čtvrtfinále re-seeduje semifinalisty (nejlepší vs nejhorší). Klikni na tým, který postupuje."
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <MatchBox
-              title="Semifinále 1"
-              left={picks.semifinals[0].teamLeft}
-              right={picks.semifinals[0].teamRight}
-              winner={picks.semifinals[0].winner}
-              teamById={teamById}
-              onPickWinner={(id) => setSemi(0, { ...picks.semifinals[0], winner: id })}
-            />
-            <MatchBox
-              title="Semifinále 2"
-              left={picks.semifinals[1].teamLeft}
-              right={picks.semifinals[1].teamRight}
-              winner={picks.semifinals[1].winner}
-              teamById={teamById}
-              onPickWinner={(id) => setSemi(1, { ...picks.semifinals[1], winner: id })}
-            />
-          </div>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <MatchBox
-              title="Finále"
-              left={picks.final.teamLeft}
-              right={picks.final.teamRight}
-              winner={picks.final.winner}
-              teamById={teamById}
-              onPickWinner={(id) => setFinal({ ...picks.final, winner: id })}
-            />
-            <MatchBox
-              title="O bronz"
-              left={picks.bronze.teamLeft}
-              right={picks.bronze.teamRight}
-              winner={picks.bronze.winner}
-              teamById={teamById}
-              onPickWinner={(id) => setBronze({ ...picks.bronze, winner: id })}
-            />
-          </div>
         </Section>
 
         <Section
