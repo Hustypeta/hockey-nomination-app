@@ -178,9 +178,13 @@ async function resendSendSingle(to: string) {
 
 type BroadcastBody = {
   mode?: "dry-run" | "send";
+  /** Povinné pro bezpečné ostré odeslání (idempotence). Např. "deadline-40-2026-04-30". */
+  campaignId?: string;
   limit?: number;
   offset?: number;
   throttleMs?: number;
+  /** Pokud true, zkusí znovu odeslat i záznamy se statusem "failed". */
+  retryFailed?: boolean;
 };
 
 export async function POST(req: NextRequest) {
@@ -196,10 +200,12 @@ export async function POST(req: NextRequest) {
   }
 
   const mode = body.mode === "send" ? "send" : "dry-run";
+  const campaignId = typeof body.campaignId === "string" ? body.campaignId.trim() : "";
   const limit = typeof body.limit === "number" && Number.isFinite(body.limit) ? Math.max(1, Math.floor(body.limit)) : null;
   const offset = typeof body.offset === "number" && Number.isFinite(body.offset) ? Math.max(0, Math.floor(body.offset)) : 0;
   const throttleMs =
     typeof body.throttleMs === "number" && Number.isFinite(body.throttleMs) ? Math.max(0, Math.floor(body.throttleMs)) : 350;
+  const retryFailed = Boolean(body.retryFailed);
 
   const users = await prisma.user.findMany({
     where: { email: { not: null } },
@@ -215,6 +221,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       ok: true,
       mode,
+      campaignId: campaignId || null,
       offset,
       limit,
       count: emails.length,
@@ -222,18 +229,59 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  if (!campaignId) {
+    return NextResponse.json(
+      { error: "Chybí campaignId (povinné pro odeslání, aby se nic neposlalo 2×)." },
+      { status: 400 }
+    );
+  }
+
   let sent = 0;
+  let skipped = 0;
   let failed = 0;
   const errors: Array<{ to: string; error: string }> = [];
 
   for (const to of emails) {
     try {
-      await resendSendSingle(to);
+      const existing = await prisma.emailBroadcastSend.findUnique({
+        where: { campaignId_email: { campaignId, email: to } },
+        select: { status: true },
+      });
+      if (existing?.status === "sent") {
+        skipped++;
+        continue;
+      }
+      if (existing?.status === "failed" && !retryFailed) {
+        skipped++;
+        continue;
+      }
+
+      // Založ/označ záznam předem: idempotence i při dvojím spuštění.
+      await prisma.emailBroadcastSend.upsert({
+        where: { campaignId_email: { campaignId, email: to } },
+        create: { campaignId, email: to, status: "sending" },
+        update: { status: "sending", error: null },
+      });
+
+      const r = await resendSendSingle(to);
+      await prisma.emailBroadcastSend.update({
+        where: { campaignId_email: { campaignId, email: to } },
+        data: { status: "sent", resendId: r.id ?? null, error: null },
+      });
       sent++;
       if (throttleMs > 0) await sleep(throttleMs);
     } catch (e: any) {
       failed++;
       errors.push({ to, error: String(e?.message ?? e) });
+      try {
+        await prisma.emailBroadcastSend.upsert({
+          where: { campaignId_email: { campaignId, email: to } },
+          create: { campaignId, email: to, status: "failed", error: String(e?.message ?? e) },
+          update: { status: "failed", error: String(e?.message ?? e) },
+        });
+      } catch {
+        /* ignore */
+      }
       if (throttleMs > 0) await sleep(Math.max(throttleMs, 600));
     }
   }
@@ -241,10 +289,12 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     ok: failed === 0,
     mode,
+    campaignId,
     offset,
     limit,
     attempted: emails.length,
     sent,
+    skipped,
     failed,
     errors: errors.slice(0, 20),
   });

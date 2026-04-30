@@ -54,6 +54,21 @@ model PickemEntry {
   @@map("pickem_entries")
 }
 
+model EmailBroadcastSend {
+  id         String   @id @default(cuid())
+  campaignId String
+  email      String
+  status     String   @default("sending") // sending | sent | failed
+  resendId   String?
+  error      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([campaignId, email])
+  @@index([campaignId])
+  @@map("email_broadcast_sends")
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
