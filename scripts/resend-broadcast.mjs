@@ -43,6 +43,11 @@ const HTML = `
 `.trim();
 
 async function resendSend({ apiKey, from, to, subject, text, html }) {
+  const replyTo = (process.env.RESEND_REPLY_TO ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -53,6 +58,7 @@ async function resendSend({ apiKey, from, to, subject, text, html }) {
       from,
       to,
       subject,
+      ...(replyTo.length ? { reply_to: replyTo } : {}),
       text,
       html,
     }),
