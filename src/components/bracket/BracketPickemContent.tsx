@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Link2, RotateCcw, Trash2, Trophy } from "lucide-react";
+import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
+import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   MS2026_BRACKET_TEAMS,
   MS2026_GROUP_A_TEAMS,
@@ -19,8 +22,8 @@ import { encodeBracketPayload, decodeBracketPayload } from "@/lib/bracketPayload
 import type { BracketMatchPick, BracketPickemPayload } from "@/types/bracketPickem";
 import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
 
-/** v2: oficiální skupiny IIHF MS 2026 (16 týmů vč. SLO, ITA; bez KAZ/FRA). */
-const STORAGE_KEY = "ms2026-bracket-pickem-v2";
+/** v3: drag&drop pořadí skupin + bracket (MS 2026). */
+const STORAGE_KEY = "ms2026-bracket-pickem-v3";
 
 const selectCls =
   "mt-1 w-full rounded-lg border border-white/12 bg-[#05080f]/90 px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
@@ -32,16 +35,63 @@ function clonePicks(p: BracketPickemPayload): BracketPickemPayload {
   return JSON.parse(JSON.stringify(p)) as BracketPickemPayload;
 }
 
-function teamSelectOptions(teams: BracketTeam[]) {
-  return [{ id: "", name: "— vyber —" }, ...teams];
-}
-
 function winnerOptions(left: string | null, right: string | null) {
   const opts: { id: string; name: string }[] = [{ id: "", name: "— postupuje —" }];
   const byId = new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t.name]));
   if (left) opts.push({ id: left, name: byId.get(left) ?? left });
   if (right && right !== left) opts.push({ id: right, name: byId.get(right) ?? right });
   return opts;
+}
+
+function flagEmoji(teamId: string): string {
+  const map: Record<string, string> = {
+    USA: "🇺🇸",
+    SUI: "🇨🇭",
+    FIN: "🇫🇮",
+    GER: "🇩🇪",
+    LAT: "🇱🇻",
+    AUT: "🇦🇹",
+    HUN: "🇭🇺",
+    GBR: "🇬🇧",
+    CAN: "🇨🇦",
+    SWE: "🇸🇪",
+    CZE: "🇨🇿",
+    DEN: "🇩🇰",
+    SVK: "🇸🇰",
+    NOR: "🇳🇴",
+    SLO: "🇸🇮",
+    ITA: "🇮🇹",
+  };
+  return map[teamId] ?? "🏒";
+}
+
+function teamSelectOptions(teams: BracketTeam[]) {
+  return [{ id: "", name: "— vyber —" }, ...teams];
+}
+
+function TeamSelect({
+  label,
+  value,
+  onChange,
+  teams,
+}: {
+  label: string;
+  value: string | null;
+  onChange: (id: string | null) => void;
+  teams: BracketTeam[];
+}) {
+  return (
+    <label className="block text-xs font-medium text-white/65">
+      {label}
+      <select className={selectCls} value={value ?? ""} onChange={(e) => onChange(e.target.value || null)}>
+        {teamSelectOptions(teams).map((t) => (
+          <option key={t.id || "empty"} value={t.id}>
+            {t.name}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
 }
 
 function normalizeWinner(m: BracketMatchPick): BracketMatchPick {
@@ -70,32 +120,81 @@ function Section({
   );
 }
 
-function TeamSelect({
-  label,
-  value,
-  onChange,
-  teams,
+function SortableTeamRow({
+  id,
+  rank,
+  name,
 }: {
-  label: string;
-  value: string | null;
-  onChange: (id: string | null) => void;
-  teams: BracketTeam[];
+  id: string;
+  rank: number;
+  name: string;
 }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
   return (
-    <label className="block text-xs font-medium text-white/65">
-      {label}
-      <select
-        className={selectCls}
-        value={value ?? ""}
-        onChange={(e) => onChange(e.target.value || null)}
-      >
-        {teamSelectOptions(teams).map((t) => (
-          <option key={t.id || "empty"} value={t.id}>
-            {t.name}
-          </option>
-        ))}
-      </select>
-    </label>
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      className={`flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] ${
+        isDragging ? "opacity-80 ring-2 ring-[#f1c40f]/35" : ""
+      }`}
+      {...attributes}
+      {...listeners}
+    >
+      <span className="w-6 shrink-0 text-center font-display text-sm font-black text-white/65">{rank}</span>
+      <span className="text-xl leading-none">{flagEmoji(id)}</span>
+      <span className="min-w-0 flex-1 truncate font-display text-sm font-bold text-white">{name}</span>
+      <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">{id}</span>
+    </div>
+  );
+}
+
+function GroupOrderDnd({
+  title,
+  venue,
+  order,
+  teamById,
+  onChange,
+}: {
+  title: string;
+  venue: string;
+  order: string[];
+  teamById: Map<string, BracketTeam>;
+  onChange: (next: string[]) => void;
+}) {
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  return (
+    <div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/45">{title}</p>
+      <p className="mt-1 text-xs text-white/55">{venue}</p>
+      <div className="mt-4">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(e) => {
+            const { active, over } = e;
+            if (!over || active.id === over.id) return;
+            const oldIndex = order.indexOf(String(active.id));
+            const newIndex = order.indexOf(String(over.id));
+            if (oldIndex < 0 || newIndex < 0) return;
+            onChange(arrayMove(order, oldIndex, newIndex));
+          }}
+        >
+          <SortableContext items={order} strategy={verticalListSortingStrategy}>
+            <div className="space-y-2">
+              {order.map((id, idx) => {
+                const t = teamById.get(id);
+                return (
+                  <SortableTeamRow key={id} id={id} rank={idx + 1} name={t?.name ?? id} />
+                );
+              })}
+            </div>
+          </SortableContext>
+        </DndContext>
+      </div>
+      <p className="mt-3 text-[11px] leading-relaxed text-white/45">
+        Přetáhni týmy a nastav pořadí 1–8. (Neřešíme skóre; je to čistě tip pořadí.)
+      </p>
+    </div>
   );
 }
 
@@ -143,12 +242,77 @@ function MatchPickRow({
   );
 }
 
+function teamLabel(teamById: Map<string, BracketTeam>, id: string | null) {
+  if (!id) return "—";
+  return teamById.get(id)?.name ?? id;
+}
+
+function MatchBox({
+  title,
+  left,
+  right,
+  winner,
+  onPickWinner,
+  teamById,
+}: {
+  title: string;
+  left: string | null;
+  right: string | null;
+  winner: string | null;
+  onPickWinner: (id: string | null) => void;
+  teamById: Map<string, BracketTeam>;
+}) {
+  const rowCls = (id: string | null) =>
+    `flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm font-semibold ${
+      id && winner === id
+        ? "border-[#f1c40f]/55 bg-[#f1c40f]/[0.10] text-amber-100"
+        : "border-white/10 bg-black/35 text-white/80 hover:border-white/18"
+    }`;
+  return (
+    <div className="rounded-2xl border border-white/[0.10] bg-black/25 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+      <p className="mb-2 text-center font-display text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">
+        {title}
+      </p>
+      <button type="button" className={rowCls(left)} onClick={() => onPickWinner(left)} disabled={!left}>
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="text-lg">{left ? flagEmoji(left) : "🏒"}</span>
+          <span className="truncate">{teamLabel(teamById, left)}</span>
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-white/35">{left ?? ""}</span>
+      </button>
+      <button
+        type="button"
+        className={`${rowCls(right)} mt-2`}
+        onClick={() => onPickWinner(right)}
+        disabled={!right}
+      >
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="text-lg">{right ? flagEmoji(right) : "🏒"}</span>
+          <span className="truncate">{teamLabel(teamById, right)}</span>
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-white/35">{right ?? ""}</span>
+      </button>
+    </div>
+  );
+}
+
 export function BracketPickemContent() {
   const searchParams = useSearchParams();
   const [picks, setPicks] = useState<BracketPickemPayload>(() => ({ ...EMPTY_BRACKET_PICKEM }));
   const [hydrated, setHydrated] = useState(false);
 
   const allTeams = useMemo(() => MS2026_BRACKET_TEAMS, []);
+  const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
+
+  const ensureDefaults = useCallback((p: BracketPickemPayload): BracketPickemPayload => {
+    const aDefault = MS2026_GROUP_A_TEAMS.map((t) => t.id);
+    const bDefault = MS2026_GROUP_B_TEAMS.map((t) => t.id);
+    return {
+      ...p,
+      groupAOrder: Array.isArray(p.groupAOrder) && p.groupAOrder.length === aDefault.length ? p.groupAOrder : aDefault,
+      groupBOrder: Array.isArray(p.groupBOrder) && p.groupBOrder.length === bDefault.length ? p.groupBOrder : bDefault,
+    };
+  }, []);
 
   useEffect(() => {
     const z = searchParams.get("z");
@@ -156,7 +320,7 @@ export function BracketPickemContent() {
       const decoded = decodeBracketPayload(z);
       if (decoded) {
         queueMicrotask(() => {
-          setPicks(decoded);
+            setPicks(ensureDefaults(decoded));
           setHydrated(true);
           toast.message("Tipy načteny z odkazu.");
         });
@@ -167,16 +331,16 @@ export function BracketPickemContent() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as BracketPickemPayload;
-        if (parsed?.v === 1) {
-          queueMicrotask(() => setPicks(parsed));
-        }
+          const parsed = JSON.parse(raw) as BracketPickemPayload;
+          if (parsed && typeof parsed === "object") {
+            queueMicrotask(() => setPicks(ensureDefaults(parsed)));
+          }
       }
     } catch {
       /* ignore */
     }
     queueMicrotask(() => setHydrated(true));
-  }, [searchParams]);
+  }, [searchParams, ensureDefaults]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -187,9 +351,88 @@ export function BracketPickemContent() {
     }
   }, [picks, hydrated]);
 
-  const setGroupWinner = (key: "groupAWinner" | "groupBWinner", id: string | null) => {
-    setPicks((p) => ({ ...p, [key]: id }));
+  const setGroupOrder = (which: "A" | "B", next: string[]) => {
+    setPicks((p) => (which === "A" ? { ...p, groupAOrder: next } : { ...p, groupBOrder: next }));
   };
+
+  const computedQuarterfinals = useMemo(() => {
+    const A = picks.groupAOrder;
+    const B = picks.groupBOrder;
+    const A1 = A[0] ?? null;
+    const A2 = A[1] ?? null;
+    const A3 = A[2] ?? null;
+    const A4 = A[3] ?? null;
+    const B1 = B[0] ?? null;
+    const B2 = B[1] ?? null;
+    const B3 = B[2] ?? null;
+    const B4 = B[3] ?? null;
+    return [
+      { teamLeft: A1, teamRight: B4 }, // A1–B4
+      { teamLeft: B2, teamRight: A3 }, // B2–A3
+      { teamLeft: B1, teamRight: A4 }, // B1–A4
+      { teamLeft: A2, teamRight: B3 }, // A2–B3
+    ] as const;
+  }, [picks.groupAOrder, picks.groupBOrder]);
+
+  const computedSemifinals = useMemo(() => {
+    const w = picks.quarterfinals.map((m) => m.winner ?? null);
+    return [
+      { teamLeft: w[0] ?? null, teamRight: w[1] ?? null },
+      { teamLeft: w[2] ?? null, teamRight: w[3] ?? null },
+    ] as const;
+  }, [picks.quarterfinals]);
+
+  const computedFinal = useMemo(() => {
+    const w = picks.semifinals.map((m) => m.winner ?? null);
+    return { teamLeft: w[0] ?? null, teamRight: w[1] ?? null };
+  }, [picks.semifinals]);
+
+  const computedBronze = useMemo(() => {
+    const loser = (m: BracketMatchPick) => {
+      if (!m.teamLeft || !m.teamRight || !m.winner) return null;
+      return m.winner === m.teamLeft ? m.teamRight : m.teamLeft;
+    };
+    return { teamLeft: loser(picks.semifinals[0]), teamRight: loser(picks.semifinals[1]) };
+  }, [picks.semifinals]);
+
+  // Když se změní pořadí skupin, přepočítej dvojice QF a smaž neplatné vítěze.
+  useEffect(() => {
+    if (!hydrated) return;
+    setPicks((p) => {
+      const nextQf = p.quarterfinals.map((m, i) => {
+        const base = computedQuarterfinals[i];
+        const merged: BracketMatchPick = { ...m, teamLeft: base?.teamLeft ?? null, teamRight: base?.teamRight ?? null };
+        return normalizeWinner(merged);
+      });
+      return { ...p, quarterfinals: nextQf };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [computedQuarterfinals, hydrated]);
+
+  // QF winners → SF teams
+  useEffect(() => {
+    if (!hydrated) return;
+    setPicks((p) => {
+      const nextSf = p.semifinals.map((m, i) => {
+        const base = computedSemifinals[i];
+        const merged: BracketMatchPick = { ...m, teamLeft: base?.teamLeft ?? null, teamRight: base?.teamRight ?? null };
+        return normalizeWinner(merged);
+      });
+      return { ...p, semifinals: nextSf };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [computedSemifinals, hydrated]);
+
+  // SF winners → Final + Bronze teams
+  useEffect(() => {
+    if (!hydrated) return;
+    setPicks((p) => {
+      const nextFinal = normalizeWinner({ ...p.final, teamLeft: computedFinal.teamLeft, teamRight: computedFinal.teamRight });
+      const nextBronze = normalizeWinner({ ...p.bronze, teamLeft: computedBronze.teamLeft, teamRight: computedBronze.teamRight });
+      return { ...p, final: nextFinal, bronze: nextBronze };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [computedFinal, computedBronze, hydrated]);
 
   const setQuarter = (index: number, m: BracketMatchPick) => {
     setPicks((p) => {
@@ -260,21 +503,23 @@ export function BracketPickemContent() {
 
       <div className="space-y-8">
         <Section
-          title="Vítězové skupin"
-          hint={`Oficiální skupiny IIHF MS 2026. Skupina A (${MS2026_GROUP_A_VENUE}), skupina B (${MS2026_GROUP_B_VENUE}). Vyber vítěze každé skupiny.`}
+          title="Pořadí ve skupinách"
+          hint={`Oficiální skupiny IIHF MS 2026. Přetáhni týmy a nastav pořadí ve skupině A (${MS2026_GROUP_A_VENUE}) a skupině B (${MS2026_GROUP_B_VENUE}).`}
         >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <TeamSelect
-              label={`Skupina A — ${MS2026_GROUP_A_VENUE}`}
-              value={picks.groupAWinner}
-              onChange={(v) => setGroupWinner("groupAWinner", v)}
-              teams={MS2026_GROUP_A_TEAMS}
+          <div className="grid gap-6 sm:grid-cols-2">
+            <GroupOrderDnd
+              title="Skupina A"
+              venue={MS2026_GROUP_A_VENUE}
+              order={picks.groupAOrder}
+              teamById={teamById}
+              onChange={(next) => setGroupOrder("A", next)}
             />
-            <TeamSelect
-              label={`Skupina B — ${MS2026_GROUP_B_VENUE}`}
-              value={picks.groupBWinner}
-              onChange={(v) => setGroupWinner("groupBWinner", v)}
-              teams={MS2026_GROUP_B_TEAMS}
+            <GroupOrderDnd
+              title="Skupina B"
+              venue={MS2026_GROUP_B_VENUE}
+              order={picks.groupBOrder}
+              teamById={teamById}
+              onChange={(next) => setGroupOrder("B", next)}
             />
           </div>
         </Section>
@@ -283,48 +528,66 @@ export function BracketPickemContent() {
           title="Čtvrtfinále"
           hint="Vyplň všechy čtyři dvojice a u každé vyber postupujícího. Nápověda ukazuje typický kříž play-off (1.×4., 2.×3.)."
         >
-          {picks.quarterfinals.map((m, i) => (
-            <MatchPickRow
-              key={i}
-              title={`Čtvrtfinále ${i + 1}`}
-              subtitle={MS2026_QF_LABELS[i]}
-              match={m}
-              onChange={(next) => setQuarter(i, next)}
-              teamPool={allTeams}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {picks.quarterfinals.map((m, i) => (
+              <MatchBox
+                key={i}
+                title={`Čtvrtfinále ${i + 1}`}
+                left={m.teamLeft}
+                right={m.teamRight}
+                winner={m.winner}
+                teamById={teamById}
+                onPickWinner={(id) => setQuarter(i, { ...m, winner: id })}
+              />
+            ))}
+          </div>
+          <p className="text-xs text-white/45">
+            {MS2026_QF_LABELS.map((l, i) => (
+              <span key={l}>
+                <span className="font-semibold text-white/60">QF{i + 1}:</span> {l}
+                {i < MS2026_QF_LABELS.length - 1 ? " · " : ""}
+              </span>
+            ))}
+          </p>
+        </Section>
+
+        <Section title="Bracket" hint="Pavouk play-off: čtvrtfinále → semifinále → finále a bronz. Klikni na tým, který postupuje.">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <MatchBox
+              title="Semifinále 1"
+              left={picks.semifinals[0].teamLeft}
+              right={picks.semifinals[0].teamRight}
+              winner={picks.semifinals[0].winner}
+              teamById={teamById}
+              onPickWinner={(id) => setSemi(0, { ...picks.semifinals[0], winner: id })}
             />
-          ))}
-        </Section>
-
-        <Section title="Semifinále" hint="Dva zápasy — vždy dva týmy a postupující do finále.">
-          <MatchPickRow
-            title="Semifinále 1"
-            match={picks.semifinals[0]}
-            onChange={(next) => setSemi(0, next)}
-            teamPool={allTeams}
-          />
-          <MatchPickRow
-            title="Semifinále 2"
-            match={picks.semifinals[1]}
-            onChange={(next) => setSemi(1, next)}
-            teamPool={allTeams}
-          />
-        </Section>
-
-        <Section title="Medailové zápasy" hint="Finále o zlato a zápas o bronz.">
-          <MatchPickRow
-            title="Finále"
-            subtitle="O mistra světa"
-            match={picks.final}
-            onChange={setFinal}
-            teamPool={allTeams}
-          />
-          <MatchPickRow
-            title="O bronz"
-            subtitle="Třetí místo"
-            match={picks.bronze}
-            onChange={setBronze}
-            teamPool={allTeams}
-          />
+            <MatchBox
+              title="Semifinále 2"
+              left={picks.semifinals[1].teamLeft}
+              right={picks.semifinals[1].teamRight}
+              winner={picks.semifinals[1].winner}
+              teamById={teamById}
+              onPickWinner={(id) => setSemi(1, { ...picks.semifinals[1], winner: id })}
+            />
+          </div>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <MatchBox
+              title="Finále"
+              left={picks.final.teamLeft}
+              right={picks.final.teamRight}
+              winner={picks.final.winner}
+              teamById={teamById}
+              onPickWinner={(id) => setFinal({ ...picks.final, winner: id })}
+            />
+            <MatchBox
+              title="O bronz"
+              left={picks.bronze.teamLeft}
+              right={picks.bronze.teamRight}
+              winner={picks.bronze.winner}
+              teamById={teamById}
+              onPickWinner={(id) => setBronze({ ...picks.bronze, winner: id })}
+            />
+          </div>
         </Section>
 
         <Section

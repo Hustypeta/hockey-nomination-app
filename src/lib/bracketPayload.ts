@@ -1,7 +1,8 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
 import type { BracketMatchPick, BracketPickemPayload } from "@/types/bracketPickem";
+import { MS2026_GROUP_A_TEAMS, MS2026_GROUP_B_TEAMS } from "@/data/ms2026BracketTeams";
 
-export const BRACKET_PAYLOAD_VERSION = 1 as const;
+export const BRACKET_PAYLOAD_VERSION = 2 as const;
 
 function isMatchPick(x: unknown): x is BracketMatchPick {
   if (!x || typeof x !== "object") return false;
@@ -20,6 +21,22 @@ function normalizeMatch(m: BracketMatchPick): BracketMatchPick {
   return { teamLeft, teamRight, winner: w };
 }
 
+function defaultGroupOrder(which: "A" | "B"): string[] {
+  return (which === "A" ? MS2026_GROUP_A_TEAMS : MS2026_GROUP_B_TEAMS).map((t) => t.id);
+}
+
+function normalizeOrder(raw: unknown, which: "A" | "B"): string[] {
+  const base = defaultGroupOrder(which);
+  if (!Array.isArray(raw)) return base;
+  const ids = raw.filter((x) => typeof x === "string") as string[];
+  const set = new Set(ids);
+  // zachovej jen známé id + doplň chybějící na konec
+  const known = base.filter((id) => set.has(id));
+  const missing = base.filter((id) => !set.has(id));
+  const out = [...known, ...missing];
+  return out.length === base.length ? out : base;
+}
+
 export function encodeBracketPayload(payload: BracketPickemPayload): string {
   return compressToEncodedURIComponent(JSON.stringify(payload));
 }
@@ -31,7 +48,8 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
     const data = JSON.parse(json) as unknown;
     if (!data || typeof data !== "object") return null;
     const o = data as Record<string, unknown>;
-    if (o.v !== BRACKET_PAYLOAD_VERSION) return null;
+    const v = o.v;
+    if (v !== 1 && v !== BRACKET_PAYLOAD_VERSION) return null;
 
     const qf = o.quarterfinals;
     const sf = o.semifinals;
@@ -46,8 +64,14 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
 
     const payload: BracketPickemPayload = {
       v: BRACKET_PAYLOAD_VERSION,
-      groupAWinner: typeof o.groupAWinner === "string" ? o.groupAWinner : null,
-      groupBWinner: typeof o.groupBWinner === "string" ? o.groupBWinner : null,
+      groupAOrder:
+        v === 1
+          ? defaultGroupOrder("A")
+          : normalizeOrder((o as Record<string, unknown>).groupAOrder, "A"),
+      groupBOrder:
+        v === 1
+          ? defaultGroupOrder("B")
+          : normalizeOrder((o as Record<string, unknown>).groupBOrder, "B"),
       quarterfinals: (qf as BracketMatchPick[]).map(normalizeMatch),
       semifinals: (sf as BracketMatchPick[]).map(normalizeMatch),
       final: normalizeMatch(o.final as BracketMatchPick),

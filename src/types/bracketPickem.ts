@@ -13,9 +13,11 @@ export type BracketBonusPicks = {
 };
 
 export type BracketPickemPayload = {
-  v: 1;
-  groupAWinner: string | null;
-  groupBWinner: string | null;
+  v: 2;
+  /** Pořadí týmů ve skupině A (1 → 8). */
+  groupAOrder: string[];
+  /** Pořadí týmů ve skupině B (1 → 8). */
+  groupBOrder: string[];
   quarterfinals: BracketMatchPick[];
   semifinals: BracketMatchPick[];
   final: BracketMatchPick;
@@ -24,9 +26,9 @@ export type BracketPickemPayload = {
 };
 
 export const EMPTY_BRACKET_PICKEM: BracketPickemPayload = {
-  v: 1,
-  groupAWinner: null,
-  groupBWinner: null,
+  v: 2,
+  groupAOrder: [],
+  groupBOrder: [],
   quarterfinals: [
     { teamLeft: null, teamRight: null, winner: null },
     { teamLeft: null, teamRight: null, winner: null },
