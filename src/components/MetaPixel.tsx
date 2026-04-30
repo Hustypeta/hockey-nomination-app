@@ -1,17 +1,44 @@
 "use client";
 
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Script from "next/script";
+
+type FbqParams = Record<string, unknown>;
+type FbqFn = {
+  (action: "init", pixelId: string): void;
+  (action: "track", eventName: string, params?: FbqParams): void;
+  (action: "trackCustom", eventName: string, params?: FbqParams): void;
+};
 
 declare global {
   interface Window {
-    fbq?: (...args: any[]) => void;
-    _fbq?: (...args: any[]) => void;
+    fbq?: FbqFn;
+    _fbq?: FbqFn;
+  }
+}
+
+export function metaTrack(action: "track" | "trackCustom", eventName: string, params?: FbqParams) {
+  if (typeof window === "undefined") return;
+  try {
+    const fbq = window.fbq;
+    if (!fbq) return;
+    if (action === "track") fbq("track", eventName, params);
+    else fbq("trackCustom", eventName, params);
+  } catch {
+    /* ignore */
   }
 }
 
 export function MetaPixel() {
   const id = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
   if (!id) return null;
+
+  const pathname = usePathname();
+  useEffect(() => {
+    // App Router: PageView i při client-side navigaci
+    metaTrack("track", "PageView");
+  }, [pathname]);
 
   return (
     <>

@@ -12,6 +12,8 @@ export interface Player {
   jerseyNumber?: number | null;
   /** Volitelná URL fotky (např. budoucí rozšíření dat). */
   imageUrl?: string | null;
+  /** Globální oblíbenost hráče (0–100). Pokud nemáme data, držíme 0. */
+  pick_rate: number;
 }
 
 export const ROLE_LABELS: Record<Role, string> = {

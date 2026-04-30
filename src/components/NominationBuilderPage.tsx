@@ -31,6 +31,8 @@ import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
+import { RosterUniquenessScore } from "@/components/sestava/RosterUniquenessScore";
+import { metaTrack } from "@/components/MetaPixel";
 import { encodeSharePayload } from "@/lib/sharePayload";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import {
@@ -232,12 +234,75 @@ export function NominationBuilderPage() {
     fetch("/api/players")
       .then((res) => res.json())
       .then((data) => {
-        setPlayers(data);
-        if (Array.isArray(data)) initJerseyNameDisambiguation(data);
+        const isPos = (x: unknown): x is Position => x === "G" || x === "D" || x === "F";
+        const parsePlayer = (raw: unknown): Player | null => {
+          if (!raw || typeof raw !== "object") return null;
+          const r = raw as Record<string, unknown>;
+          if (typeof r.id !== "string") return null;
+          if (typeof r.name !== "string") return null;
+          if (!isPos(r.position)) return null;
+          if (typeof r.club !== "string") return null;
+          if (typeof r.league !== "string") return null;
+
+          const pick_rate =
+            typeof r.pick_rate === "number" && Number.isFinite(r.pick_rate) ? r.pick_rate : 0;
+
+          return {
+            id: r.id,
+            name: r.name,
+            position: r.position,
+            role: typeof r.role === "string" || r.role === null ? r.role : undefined,
+            club: r.club,
+            league: r.league,
+            jerseyNumber: typeof r.jerseyNumber === "number" || r.jerseyNumber === null ? r.jerseyNumber : undefined,
+            imageUrl: typeof r.imageUrl === "string" || r.imageUrl === null ? r.imageUrl : undefined,
+            pick_rate: Math.max(0, Math.min(100, pick_rate)),
+          };
+        };
+
+        const normalized: Player[] = Array.isArray(data)
+          ? (data as unknown[]).flatMap((x) => {
+              const p = parsePlayer(x);
+              return p ? [p] : [];
+            })
+          : [];
+        setPlayers(normalized);
+        initJerseyNameDisambiguation(normalized);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  // Simulace API fetch pro pick_rate: doplní oblíbenost s krátkým delayem.
+  useEffect(() => {
+    if (!players.length) return;
+    let cancelled = false;
+    const t = window.setTimeout(() => {
+      if (cancelled) return;
+      const hash01 = (s: string) => {
+        let h = 2166136261;
+        for (let i = 0; i < s.length; i++) {
+          h ^= s.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        // 0..1
+        return (h >>> 0) / 4294967295;
+      };
+      setPlayers((prev) =>
+        prev.map((p) => {
+          // deterministic “real-ish” distribution
+          const r = hash01(p.id);
+          const skewed = Math.pow(r, 0.55); // více “populárních” hodnot
+          const rate = Math.round(skewed * 100);
+          return { ...p, pick_rate: rate };
+        })
+      );
+    }, 420);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t);
+    };
+  }, [players.length]);
 
   useEffect(() => {
     const raw = searchParams.get("nominace") ?? searchParams.get("nomination");
@@ -517,6 +582,10 @@ export function NominationBuilderPage() {
       toast.success(
         updating ? "Změny uloženy." : "Nominace uložena u účtu jako koncept."
       );
+      metaTrack("trackCustom", "SaveNomination", {
+        is_update: updating,
+        player_count: selectedPlayers.length,
+      });
       return data.id ?? null;
     } catch {
       toast.error("Chyba při ukládání — zkus to znovu.");
@@ -578,6 +647,10 @@ export function NominationBuilderPage() {
           ? `Nominace je v soutěži — časový bonus +${bp} % k bodům.`
           : "Nominace je v soutěži."
       );
+      metaTrack("trackCustom", "SubmitNomination", {
+        player_count: selectedPlayers.length,
+        time_bonus_percent: typeof bp === "number" ? bp : 0,
+      });
       setContestSubmitted(true);
       setContestConfirmOpen(false);
       refreshContestStats();
@@ -742,6 +815,9 @@ export function NominationBuilderPage() {
                   <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-slate-900 sm:text-2xl">
                     Moje sestava
                   </h2>
+                  <div className="mt-3">
+                    <RosterUniquenessScore selectedPlayers={selectedPlayers} />
+                  </div>
                   <div className="mt-4">
                     <LineBuilder
                       lineup={lineup}

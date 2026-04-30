@@ -13,6 +13,7 @@ const MOCK_FILLED: Player = {
   club: "Boston",
   league: "NHL",
   jerseyNumber: 88,
+  pick_rate: 0,
 };
 
 export function JerseyPreviewClient() {

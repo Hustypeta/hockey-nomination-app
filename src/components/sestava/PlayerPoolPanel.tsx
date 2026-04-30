@@ -9,6 +9,46 @@ import { POSITION_LABELS, POSITION_LIMITS, ROLE_LABELS } from "@/types";
 import { PlayerAvatar } from "./PlayerAvatar";
 
 type Tab = "all" | "G" | "D" | "F";
+type PickRateSort = "popular" | "unique";
+
+function clamp01(x: number) {
+  return Math.max(0, Math.min(1, x));
+}
+
+function sortPlayersByPickRate(players: Player[], direction: "asc" | "desc") {
+  const dir = direction === "asc" ? 1 : -1;
+  return [...players].sort((a, b) => {
+    const ar = Number.isFinite(a.pick_rate) ? a.pick_rate : 0;
+    const br = Number.isFinite(b.pick_rate) ? b.pick_rate : 0;
+    if (ar !== br) return (ar - br) * dir;
+    return a.name.localeCompare(b.name, "cs");
+  });
+}
+
+function PickRateBadge({ rate }: { rate: number }) {
+  const r = Number.isFinite(rate) ? rate : 0;
+  if (r > 50) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-400/10 px-2 py-0.5 text-[11px] font-bold text-emerald-400">
+        <span aria-hidden>🔥</span>
+        {r}%
+      </span>
+    );
+  }
+  if (r < 15) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/10 px-2 py-0.5 text-[11px] font-bold text-amber-400">
+        <span aria-hidden>💎</span>
+        {r}%
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center rounded-full bg-slate-400/10 px-2 py-0.5 text-[11px] font-bold text-slate-400">
+      {r}%
+    </span>
+  );
+}
 
 function PoolAbbrevLegend() {
   return (
@@ -79,6 +119,7 @@ function DraggableCard({
   const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined;
   const lim = POSITION_LIMITS[player.position];
   const cur = counts[player.position];
+  const rate = Number.isFinite(player.pick_rate) ? Math.max(0, Math.min(100, player.pick_rate)) : 0;
 
   const canInteract = !disabled && !slotBlocks && !inRoster;
 
@@ -143,9 +184,12 @@ function DraggableCard({
               />
             </div>
             <div className="min-w-0 flex-1 pt-0.5">
-              <p className="line-clamp-2 break-words text-pretty text-sm font-bold leading-snug text-white sm:text-[15px]">
-                {player.name}
-              </p>
+              <div className="flex items-start justify-between gap-2">
+                <p className="line-clamp-2 break-words text-pretty text-sm font-bold leading-snug text-white sm:text-[15px]">
+                  {player.name}
+                </p>
+                <PickRateBadge rate={rate} />
+              </div>
               <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95">
                 <span className="text-slate-100">{player.club}</span>
                 {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}
@@ -175,6 +219,13 @@ function DraggableCard({
         >
           <Info className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
         </button>
+      </div>
+      <div className="mt-1 h-[2px] w-full overflow-hidden rounded-full bg-white/10">
+        <div
+          className="h-full rounded-full bg-sky-300/70"
+          style={{ width: `${Math.round(clamp01(rate / 100) * 100)}%` }}
+          aria-hidden
+        />
       </div>
     </div>
   );
@@ -209,6 +260,7 @@ export function PlayerPoolPanel({
   const activeTab: Tab = (forcedPosition ?? tab) as Tab;
   const [q, setQ] = useState("");
   const [league, setLeague] = useState<string>("");
+  const [pickSort, setPickSort] = useState<PickRateSort>("popular");
 
   const leagues = useMemo(() => {
     const s = new Set<string>();
@@ -231,8 +283,9 @@ export function PlayerPoolPanel({
           (p.league && p.league.toLowerCase().includes(nq))
       );
     }
-    return list;
-  }, [players, tab, league, q, forcedPosition]);
+    // pick rate sort
+    return sortPlayersByPickRate(list, pickSort === "popular" ? "desc" : "asc");
+  }, [players, tab, league, q, forcedPosition, pickSort]);
 
   const canAdd = (player: Player) => {
     if (usedIds.has(player.id)) return false;
@@ -319,6 +372,16 @@ export function PlayerPoolPanel({
               {lg}
             </option>
           ))}
+        </select>
+
+        <select
+          value={pickSort}
+          onChange={(e) => setPickSort(e.target.value as PickRateSort)}
+          className="rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20"
+          aria-label="Řazení podle oblíbenosti"
+        >
+          <option value="popular">Nejoblíbenější</option>
+          <option value="unique">Unikátní</option>
         </select>
       </div>
 

@@ -2,12 +2,7 @@
 
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-
-declare global {
-  interface Window {
-    fbq?: (...args: any[]) => void;
-  }
-}
+import { metaTrack } from "@/components/MetaPixel";
 
 const STORAGE_PREFIX = "lineup:metaPixel:completeRegistration:";
 
@@ -25,7 +20,7 @@ export function CompleteRegistrationTracker() {
 
     // Pixel might not be configured or may still be loading.
     try {
-      window.fbq?.("track", "CompleteRegistration");
+      metaTrack("track", "CompleteRegistration");
       window.localStorage.setItem(key, "1");
     } catch {
       /* ignore */

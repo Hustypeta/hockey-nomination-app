@@ -55,6 +55,7 @@ function rowToPlayer(p: JsonRow): Player {
     role: pos === "G" ? "G" : roleNorm,
     club,
     league: leagueForClub(club),
+    pick_rate: 0,
     ...(jerseyNumber != null ? { jerseyNumber } : {}),
   };
 }

@@ -6,7 +6,7 @@ import { normalizeLineupStructure } from "@/lib/lineupUtils";
  * jako po načtení přes `loadMs2026Candidates()` (`cand_…`). Znovu vygenerovat / zkontrolovat:
  * `npx tsx scripts/dump-promo-candidate-ids.ts`
  */
-export const PROMO_FB_PLAYERS: Player[] = [
+const PROMO_FB_PLAYERS_RAW = [
   {
     id: "cand_975b7f3a3b23aa69d226d610",
     name: "Lukáš Dostál",
@@ -232,7 +232,9 @@ export const PROMO_FB_PLAYERS: Player[] = [
     league: "NHL",
     jerseyNumber: 3,
   },
-];
+ ] satisfies Array<Omit<Player, "pick_rate">>;
+
+export const PROMO_FB_PLAYERS: Player[] = PROMO_FB_PLAYERS_RAW.map((p) => ({ ...p, pick_rate: 0 }));
 
 const RAW_LINEUP: LineupStructure = {
   goalies: ["cand_975b7f3a3b23aa69d226d610", "cand_dd459449c5eb27ffa43adc30", "cand_c93953938ab381b7f4d92555"],

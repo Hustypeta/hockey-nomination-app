@@ -23,6 +23,7 @@ export async function resolvePlayersByIds(ids: string[]): Promise<Player[]> {
         club: r.club,
         league: r.league?.trim() || leagueForClub(r.club),
         jerseyNumber: r.jerseyNumber ?? null,
+        pick_rate: 0,
       });
     }
   }
