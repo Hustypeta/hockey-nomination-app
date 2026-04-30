@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Link2, RotateCcw, Trash2, Trophy } from "lucide-react";
+import { Link2, Trash2, Trophy } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -32,16 +33,20 @@ const selectCls =
 const inputCls =
   "mt-1 w-full rounded-lg border border-white/14 bg-white/[0.07] px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] placeholder:text-white/40 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
 
-function clonePicks(p: BracketPickemPayload): BracketPickemPayload {
-  return JSON.parse(JSON.stringify(p)) as BracketPickemPayload;
+function useIsMobile(breakpointPx = 720) {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width:${breakpointPx}px)`);
+    const apply = () => setMobile(mq.matches);
+    apply();
+    mq.addEventListener?.("change", apply);
+    return () => mq.removeEventListener?.("change", apply);
+  }, [breakpointPx]);
+  return mobile;
 }
 
-function winnerOptions(left: string | null, right: string | null) {
-  const opts: { id: string; name: string }[] = [{ id: "", name: "— postupuje —" }];
-  const byId = new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t.name]));
-  if (left) opts.push({ id: left, name: byId.get(left) ?? left });
-  if (right && right !== left) opts.push({ id: right, name: byId.get(right) ?? right });
-  return opts;
+function clonePicks(p: BracketPickemPayload): BracketPickemPayload {
+  return JSON.parse(JSON.stringify(p)) as BracketPickemPayload;
 }
 
 function flagEmoji(teamId: string): string {
@@ -105,35 +110,6 @@ function FlagIcon({ id, className }: { id: string; className?: string }) {
       decoding="async"
       referrerPolicy="no-referrer"
     />
-  );
-}
-
-function teamSelectOptions(teams: BracketTeam[]) {
-  return [{ id: "", name: "— vyber —" }, ...teams];
-}
-
-function TeamSelect({
-  label,
-  value,
-  onChange,
-  teams,
-}: {
-  label: string;
-  value: string | null;
-  onChange: (id: string | null) => void;
-  teams: BracketTeam[];
-}) {
-  return (
-    <label className="block text-xs font-medium text-white/65">
-      {label}
-      <select className={selectCls} value={value ?? ""} onChange={(e) => onChange(e.target.value || null)}>
-        {teamSelectOptions(teams).map((t) => (
-          <option key={t.id || "empty"} value={t.id}>
-            {t.name}
-          </option>
-        ))}
-      </select>
-    </label>
   );
 }
 
@@ -257,46 +233,89 @@ function GroupOrderDnd({
   );
 }
 
-function MatchPickRow({
+function GroupOrderTap({
   title,
-  subtitle,
-  match,
+  venue,
+  order,
+  teamById,
   onChange,
-  teamPool,
 }: {
   title: string;
-  subtitle?: string;
-  match: BracketMatchPick;
-  onChange: (next: BracketMatchPick) => void;
-  teamPool: BracketTeam[];
+  venue: string;
+  order: string[];
+  teamById: Map<string, BracketTeam>;
+  onChange: (next: string[]) => void;
 }) {
-  const setField = (field: keyof BracketMatchPick, raw: string | null) => {
-    const next: BracketMatchPick = { ...match, [field]: raw };
-    onChange(normalizeWinner(next));
+  const move = (from: number, dir: -1 | 1) => {
+    const to = from + dir;
+    if (to < 0 || to >= order.length) return;
+    const next = [...order];
+    const tmp = next[from];
+    next[from] = next[to];
+    next[to] = tmp;
+    onChange(next);
   };
 
   return (
-    <div className="rounded-xl border border-white/[0.09] bg-black/35 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-      <p className="font-display text-sm font-semibold text-white">{title}</p>
-      {subtitle ? <p className="mt-1 text-[11px] text-[#003087]/90">{subtitle}</p> : null}
-      <div className="mt-3 grid gap-3 sm:grid-cols-3">
-        <TeamSelect label="Tým A" value={match.teamLeft} onChange={(v) => setField("teamLeft", v)} teams={teamPool} />
-        <TeamSelect label="Tým B" value={match.teamRight} onChange={(v) => setField("teamRight", v)} teams={teamPool} />
-        <label className="block text-xs font-medium text-white/65">
-          Postupuje
-          <select
-            className={selectCls}
-            value={match.winner ?? ""}
-            onChange={(e) => setField("winner", e.target.value || null)}
-          >
-            {winnerOptions(match.teamLeft, match.teamRight).map((t) => (
-              <option key={t.id || "w-empty"} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </label>
+    <div>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">{title}</p>
+          <p className="mt-1 text-xs text-white/65">{venue}</p>
+        </div>
+        <div
+          className="mt-0.5 h-2 w-16 rounded-full opacity-80"
+          style={{
+            background:
+              title === "Skupina A"
+                ? "linear-gradient(90deg, rgba(0,48,135,0.0), rgba(0,48,135,0.65), rgba(200,16,46,0.0))"
+                : "linear-gradient(90deg, rgba(200,16,46,0.0), rgba(200,16,46,0.65), rgba(0,48,135,0.0))",
+          }}
+          aria-hidden
+        />
       </div>
+
+      <div className="mt-4 space-y-2">
+        {order.map((id, idx) => {
+          const t = teamById.get(id);
+          return (
+            <div
+              key={id}
+              className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+            >
+              <span className="w-6 shrink-0 text-center font-display text-sm font-black text-white/65">{idx + 1}</span>
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
+                <FlagIcon id={id} className="h-[18px] w-[18px]" />
+              </span>
+              <span className="min-w-0 flex-1 truncate font-display text-sm font-bold text-white">
+                {t?.name ?? id}
+              </span>
+              <div className="flex shrink-0 items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => move(idx, -1)}
+                  disabled={idx === 0}
+                  className="rounded-lg border border-white/12 bg-white/[0.04] px-2 py-1 text-xs font-black text-white/70 disabled:opacity-40"
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  onClick={() => move(idx, 1)}
+                  disabled={idx === order.length - 1}
+                  className="rounded-lg border border-white/12 bg-white/[0.04] px-2 py-1 text-xs font-black text-white/70 disabled:opacity-40"
+                >
+                  ↓
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-3 text-[11px] leading-relaxed text-white/45">
+        Klepáním na ↑↓ nastav pořadí 1–8. (Na mobilu je to spolehlivější než přetahování.)
+      </p>
     </div>
   );
 }
@@ -306,44 +325,63 @@ function teamLabel(teamById: Map<string, BracketTeam>, id: string | null) {
   return teamById.get(id)?.name ?? id;
 }
 
-function BracketTeamChip({
+function BracketNode({
   id,
   name,
   selected,
+  dimmed,
   onPick,
   disabled,
 }: {
   id: string | null;
   name: string;
   selected: boolean;
+  dimmed?: boolean;
   onPick: () => void;
   disabled?: boolean;
 }) {
+  const reduceMotion = useReducedMotion();
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onPick}
       disabled={disabled || !id}
-      className={`group flex w-full items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition ${
+      whileHover={reduceMotion ? undefined : { scale: 1.01 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.995 }}
+      className={`group relative flex h-12 w-full items-center justify-between gap-3 overflow-hidden rounded-xl border px-3 text-left transition ${
         selected
-          ? "border-[#f1c40f]/60 bg-[#f1c40f]/[0.10] text-amber-100"
+          ? "border-sky-300/55 bg-sky-300/[0.10] text-sky-100 shadow-[0_0_0_1px_rgba(125,211,252,0.14),0_0_28px_rgba(125,211,252,0.16)]"
           : "border-white/12 bg-white/[0.06] text-white/85 hover:border-white/22"
-      } ${disabled ? "opacity-70" : ""}`}
+      } ${dimmed ? "opacity-55" : ""} ${disabled ? "opacity-65" : ""}`}
     >
-      <span className="flex min-w-0 items-center gap-2">
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
+      {selected ? (
+        <span
+          className="pointer-events-none absolute inset-0 opacity-70"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 140% at 15% 50%, rgba(125,211,252,0.22), rgba(0,0,0,0) 60%)",
+          }}
+          aria-hidden
+        />
+      ) : null}
+      <span className="relative z-10 flex min-w-0 items-center gap-2.5">
+        <span
+          className={`flex h-8 w-8 items-center justify-center rounded-full ring-1 ${
+            selected ? "bg-sky-200/10 ring-sky-300/30" : "bg-white/[0.06] ring-white/10"
+          }`}
+        >
           {id ? <FlagIcon id={id} className="h-[18px] w-[18px]" /> : <span className="text-sm">🏒</span>}
         </span>
-        <span className="min-w-0 truncate font-display text-sm font-bold">{name}</span>
+        <span className="min-w-0 truncate font-display text-sm font-black tracking-wide">{name}</span>
       </span>
-      <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.18em] text-white/35 group-hover:text-white/45">
+      <span className="relative z-10 shrink-0 text-[10px] font-black uppercase tracking-[0.22em] text-white/35 group-hover:text-white/45">
         {id ?? ""}
       </span>
-    </button>
+    </motion.button>
   );
 }
 
-function BracketMatchCard({
+function PremiumMatchCard({
   title,
   match,
   teamById,
@@ -356,42 +394,174 @@ function BracketMatchCard({
   onPickWinner: (id: string | null) => void;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
   const leftName = teamLabel(teamById, match.teamLeft);
   const rightName = teamLabel(teamById, match.teamRight);
+  const leftSelected = Boolean(match.teamLeft && match.winner === match.teamLeft);
+  const rightSelected = Boolean(match.teamRight && match.winner === match.teamRight);
   return (
-    <div className={`rounded-2xl border border-white/[0.12] bg-white/[0.04] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${className ?? ""}`}>
-      <p className="mb-2 text-center font-display text-[11px] font-black uppercase tracking-[0.22em] text-white/55">
+    <motion.div
+      layout
+      className={`relative rounded-2xl border border-white/[0.12] bg-white/[0.04] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm ${
+        className ?? ""
+      }`}
+      whileHover={reduceMotion ? undefined : { y: -1 }}
+      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-[0.7]"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 80% at 20% 0%, rgba(125,211,252,0.16), rgba(0,0,0,0) 62%)",
+        }}
+        aria-hidden
+      />
+      <p className="relative z-10 mb-2 text-center font-display text-[11px] font-black uppercase tracking-[0.22em] text-white/55">
         {title}
       </p>
-      <div className="space-y-2">
-        <BracketTeamChip
+      <div className="relative z-10 space-y-2">
+        <BracketNode
           id={match.teamLeft}
           name={leftName}
-          selected={Boolean(match.teamLeft && match.winner === match.teamLeft)}
+          selected={leftSelected}
+          dimmed={Boolean(match.winner) && !leftSelected}
           onPick={() => onPickWinner(match.teamLeft)}
           disabled={!match.teamLeft}
         />
-        <BracketTeamChip
+        <BracketNode
           id={match.teamRight}
           name={rightName}
-          selected={Boolean(match.teamRight && match.winner === match.teamRight)}
+          selected={rightSelected}
+          dimmed={Boolean(match.winner) && !rightSelected}
           onPick={() => onPickWinner(match.teamRight)}
           disabled={!match.teamRight}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
 
-function BracketConnector({
-  className,
+function ConnectorSvg({
+  quarterfinals,
+  semifinals,
+  finalMatch,
 }: {
-  className?: string;
+  quarterfinals: BracketMatchPick[];
+  semifinals: BracketMatchPick[];
+  finalMatch: BracketMatchPick;
 }) {
-  return <div className={`pointer-events-none absolute ${className ?? ""}`} aria-hidden />;
+  const qfWinnerId = (i: number) => quarterfinals[i]?.winner ?? null;
+  const sfTeamId = (i: number, side: "L" | "R") =>
+    side === "L" ? semifinals[i]?.teamLeft ?? null : semifinals[i]?.teamRight ?? null;
+  const sfWinnerId = (i: number) => semifinals[i]?.winner ?? null;
+
+  // Fixed coordinate system (works because cards have stable spacing in desktop layout)
+  const W = 1000;
+  const H = 640;
+  const xQf = 180;
+  const xSf = 500;
+  const xFinal = 780;
+  const yQf = [120, 250, 390, 520];
+  const ySf = [210, 450];
+  const yFinal = 330;
+
+  const path = (x1: number, y1: number, x2: number, y2: number) => {
+    const mx = (x1 + x2) / 2;
+    return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+  };
+
+  const qfToSf = [
+    { qf: 0, sf: 0 },
+    { qf: 1, sf: 0 },
+    { qf: 2, sf: 1 },
+    { qf: 3, sf: 1 },
+  ];
+
+  const winnerGlow = "#7dd3fc";
+  const baseStroke = "rgba(255,255,255,0.12)";
+
+  const highlightFor = (qfIdx: number, sfIdx: number) => {
+    const w = qfWinnerId(qfIdx);
+    if (!w) return false;
+    return sfTeamId(sfIdx, "L") === w || sfTeamId(sfIdx, "R") === w;
+  };
+
+  const highlightSfToFinal = (sfIdx: number) => {
+    const w = sfWinnerId(sfIdx);
+    if (!w) return false;
+    return finalMatch.teamLeft === w || finalMatch.teamRight === w;
+  };
+
+  return (
+    <svg
+      className="pointer-events-none absolute inset-0 h-full w-full"
+      viewBox={`0 0 ${W} ${H}`}
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <defs>
+        <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+          <feMerge>
+            <feMergeNode in="coloredBlur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* QF -> SF base */}
+      {qfToSf.map((m) => (
+        <path
+          key={`b-${m.qf}-${m.sf}`}
+          d={path(xQf, yQf[m.qf], xSf, ySf[m.sf])}
+          stroke={baseStroke}
+          strokeWidth="2"
+          fill="none"
+        />
+      ))}
+      {/* SF -> Final base */}
+      {[0, 1].map((sf) => (
+        <path
+          key={`sf-base-${sf}`}
+          d={path(xSf, ySf[sf], xFinal, yFinal)}
+          stroke={baseStroke}
+          strokeWidth="2"
+          fill="none"
+        />
+      ))}
+
+      {/* Highlights */}
+      {qfToSf
+        .filter((m) => highlightFor(m.qf, m.sf))
+        .map((m) => (
+          <path
+            key={`h-${m.qf}-${m.sf}`}
+            d={path(xQf, yQf[m.qf], xSf, ySf[m.sf])}
+            stroke={winnerGlow}
+            strokeOpacity="0.75"
+            strokeWidth="2.5"
+            fill="none"
+            filter="url(#glow)"
+          />
+        ))}
+      {[0, 1]
+        .filter((sf) => highlightSfToFinal(sf))
+        .map((sf) => (
+          <path
+            key={`sf-h-${sf}`}
+            d={path(xSf, ySf[sf], xFinal, yFinal)}
+            stroke={winnerGlow}
+            strokeOpacity="0.75"
+            strokeWidth="2.5"
+            fill="none"
+            filter="url(#glow)"
+          />
+        ))}
+    </svg>
+  );
 }
 
-function BracketTree({
+function DesktopBracketLayout({
   quarterfinals,
   semifinals,
   finalMatch,
@@ -412,10 +582,11 @@ function BracketTree({
   onPickFinal: (winner: string | null) => void;
   onPickBronze: (winner: string | null) => void;
 }) {
-  // IG-friendly: jeden pavouk, na mobilu horizontální scroll
+  // Desktop: plný pavouk bez scrollu + konektory (SVG)
   return (
-    <div className="relative -mx-4 overflow-x-auto px-4 pb-2 xl:mx-0 xl:overflow-visible xl:px-0">
-      <div className="relative grid min-w-[980px] grid-cols-[280px_240px_240px_240px] gap-6 xl:min-w-0 xl:grid-cols-4 xl:gap-5">
+    <div className="relative">
+      <ConnectorSvg quarterfinals={quarterfinals} semifinals={semifinals} finalMatch={finalMatch} />
+      <div className="relative grid grid-cols-4 gap-5">
         {/* Column headers */}
         <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Čtvrtfinále</div>
         <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Semifinále</div>
@@ -423,9 +594,9 @@ function BracketTree({
         <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">O bronz</div>
 
         {/* Bracket body */}
-        <div className="relative grid grid-rows-[auto_auto_auto_auto] gap-5 xl:gap-4">
+        <div className="relative grid grid-rows-[auto_auto_auto_auto] gap-4">
           {quarterfinals.slice(0, 2).map((m, i) => (
-            <BracketMatchCard
+            <PremiumMatchCard
               key={`qf-${i}`}
               title={`QF ${i + 1}`}
               match={m}
@@ -434,7 +605,7 @@ function BracketTree({
             />
           ))}
           {quarterfinals.slice(2, 4).map((m, i) => (
-            <BracketMatchCard
+            <PremiumMatchCard
               key={`qf-${i + 2}`}
               title={`QF ${i + 3}`}
               match={m}
@@ -444,9 +615,9 @@ function BracketTree({
           ))}
         </div>
 
-        <div className="relative grid grid-rows-[1fr_1fr] gap-8 pt-[54px] xl:gap-6 xl:pt-[48px]">
+        <div className="relative grid grid-rows-[1fr_1fr] gap-6 pt-[48px]">
           {semifinals.map((m, i) => (
-            <BracketMatchCard
+            <PremiumMatchCard
               key={`sf-${i}`}
               title={`SF ${i + 1}`}
               match={m}
@@ -456,72 +627,133 @@ function BracketTree({
           ))}
         </div>
 
-        <div className="relative flex flex-col justify-center pt-[54px] xl:pt-[48px]">
-          <BracketMatchCard title="FINÁLE" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
+        <div className="relative flex flex-col justify-center pt-[48px]">
+          <PremiumMatchCard title="FINÁLE" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
         </div>
 
-        <div className="relative flex flex-col justify-center pt-[54px] xl:pt-[48px]">
-          <BracketMatchCard title="BRONZ" match={bronzeMatch} teamById={teamById} onPickWinner={onPickBronze} />
+        <div className="relative flex flex-col justify-center pt-[48px]">
+          <PremiumMatchCard title="BRONZ" match={bronzeMatch} teamById={teamById} onPickWinner={onPickBronze} />
         </div>
-
-        {/* Connectors (simple, clean lines) */}
-        <BracketConnector className="left-[280px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10 xl:hidden" />
-        <BracketConnector className="left-[526px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10 xl:hidden" />
-        <BracketConnector className="left-[772px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10 xl:hidden" />
       </div>
     </div>
   );
 }
 
-function MatchBox({
-  title,
-  left,
-  right,
-  winner,
-  onPickWinner,
+function MobileRoundSnap({
+  quarterfinals,
+  semifinals,
+  finalMatch,
+  bronzeMatch,
   teamById,
+  onPickQf,
+  onPickSf,
+  onPickFinal,
+  onPickBronze,
 }: {
-  title: string;
-  left: string | null;
-  right: string | null;
-  winner: string | null;
-  onPickWinner: (id: string | null) => void;
+  quarterfinals: BracketMatchPick[];
+  semifinals: BracketMatchPick[];
+  finalMatch: BracketMatchPick;
+  bronzeMatch: BracketMatchPick;
   teamById: Map<string, BracketTeam>;
+  onPickQf: (i: number, winner: string | null) => void;
+  onPickSf: (i: number, winner: string | null) => void;
+  onPickFinal: (winner: string | null) => void;
+  onPickBronze: (winner: string | null) => void;
 }) {
-  const rowCls = (id: string | null) =>
-    `flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm font-semibold ${
-      id && winner === id
-        ? "border-[#f1c40f]/55 bg-[#f1c40f]/[0.10] text-amber-100"
-        : "border-white/12 bg-white/[0.06] text-white/85 hover:border-white/22"
-    }`;
+  const reduceMotion = useReducedMotion();
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [round, setRound] = useState<"qf" | "sf" | "fin" | "bronze">("qf");
+
+  const rounds: Array<{ id: typeof round; label: string }> = [
+    { id: "qf", label: "QF" },
+    { id: "sf", label: "SF" },
+    { id: "fin", label: "FIN" },
+    { id: "bronze", label: "BRONZ" },
+  ];
+
+  const scrollTo = (id: typeof round) => {
+    const el = scrollerRef.current?.querySelector<HTMLElement>(`[data-round="${id}"]`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", inline: "start", block: "nearest" });
+    setRound(id);
+  };
+
   return (
-    <div className="rounded-2xl border border-white/[0.12] bg-white/[0.04] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-      <p className="mb-2 text-center font-display text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">
-        {title}
-      </p>
-      <button type="button" className={rowCls(left)} onClick={() => onPickWinner(left)} disabled={!left}>
-        <span className="flex min-w-0 items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
-            {left ? <FlagIcon id={left} className="h-[16px] w-[16px]" /> : <span className="text-sm">🏒</span>}
-          </span>
-          <span className="truncate">{teamLabel(teamById, left)}</span>
-        </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-white/35">{left ?? ""}</span>
-      </button>
-      <button
-        type="button"
-        className={`${rowCls(right)} mt-2`}
-        onClick={() => onPickWinner(right)}
-        disabled={!right}
+    <div className="space-y-4">
+      <div className="flex items-center justify-center gap-2">
+        {rounds.map((r) => {
+          const active = r.id === round;
+          return (
+            <button
+              key={r.id}
+              type="button"
+              onClick={() => scrollTo(r.id)}
+              className={`rounded-full border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.22em] transition ${
+                active
+                  ? "border-sky-300/40 bg-sky-300/[0.10] text-sky-100 shadow-[0_0_18px_rgba(125,211,252,0.16)]"
+                  : "border-white/12 bg-white/[0.04] text-white/60 hover:border-white/20 hover:bg-white/[0.06]"
+              }`}
+            >
+              {r.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div
+        ref={scrollerRef}
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:thin]"
       >
-        <span className="flex min-w-0 items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
-            {right ? <FlagIcon id={right} className="h-[16px] w-[16px]" /> : <span className="text-sm">🏒</span>}
-          </span>
-          <span className="truncate">{teamLabel(teamById, right)}</span>
-        </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-white/35">{right ?? ""}</span>
-      </button>
+        <motion.div
+          data-round="qf"
+          className="w-[92%] shrink-0 snap-start"
+          initial={false}
+          animate={{ opacity: 1 }}
+        >
+          <div className="grid gap-4">
+            {quarterfinals.map((m, i) => (
+              <PremiumMatchCard
+                key={`m-qf-${i}`}
+                title={`Čtvrtfinále ${i + 1}`}
+                match={m}
+                teamById={teamById}
+                onPickWinner={(id) => onPickQf(i, id)}
+              />
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div data-round="sf" className="w-[92%] shrink-0 snap-start" initial={false} animate={{ opacity: 1 }}>
+          <div className="grid gap-4">
+            {semifinals.map((m, i) => (
+              <PremiumMatchCard
+                key={`m-sf-${i}`}
+                title={`Semifinále ${i + 1}`}
+                match={m}
+                teamById={teamById}
+                onPickWinner={(id) => onPickSf(i, id)}
+              />
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div data-round="fin" className="w-[92%] shrink-0 snap-start" initial={false} animate={{ opacity: 1 }}>
+          <div className="grid gap-4">
+            <PremiumMatchCard title="Finále" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
+          </div>
+        </motion.div>
+
+        <motion.div
+          data-round="bronze"
+          className="w-[92%] shrink-0 snap-start"
+          initial={false}
+          animate={{ opacity: 1 }}
+        >
+          <div className="grid gap-4">
+            <PremiumMatchCard title="O bronz" match={bronzeMatch} teamById={teamById} onPickWinner={onPickBronze} />
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }
@@ -534,8 +766,8 @@ export function BracketPickemContent() {
   const [czPlayers, setCzPlayers] = useState<{ id: string; name: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
-  const allTeams = useMemo(() => MS2026_BRACKET_TEAMS, []);
   const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
+  const isMobile = useIsMobile(900);
 
   const ensureDefaults = useCallback((p: BracketPickemPayload): BracketPickemPayload => {
     const aDefault = MS2026_GROUP_A_TEAMS.map((t) => t.id);
@@ -700,7 +932,6 @@ export function BracketPickemContent() {
       });
       return { ...p, quarterfinals: nextQf };
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [computedQuarterfinals, hydrated]);
 
   // QF winners → SF teams
@@ -714,7 +945,6 @@ export function BracketPickemContent() {
       });
       return { ...p, semifinals: nextSf };
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [computedSemifinals, hydrated]);
 
   // SF winners → Final + Bronze teams
@@ -725,7 +955,6 @@ export function BracketPickemContent() {
       const nextBronze = normalizeWinner({ ...p.bronze, teamLeft: computedBronze.teamLeft, teamRight: computedBronze.teamRight });
       return { ...p, final: nextFinal, bronze: nextBronze };
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [computedFinal, computedBronze, hydrated]);
 
   const setQuarter = (index: number, m: BracketMatchPick) => {
@@ -775,9 +1004,13 @@ export function BracketPickemContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(picks),
       });
-      const data = (await r.json().catch(() => null)) as any;
+      const data: unknown = await r.json().catch(() => null);
+      const apiError =
+        data && typeof data === "object" && "error" in data && typeof (data as { error?: unknown }).error === "string"
+          ? (data as { error: string }).error
+          : null;
       if (!r.ok) {
-        toast.error(data?.error ?? "Odeslání se nepovedlo.");
+        toast.error(apiError ?? "Odeslání se nepovedlo.");
         return;
       }
       toast.success("Pick’em odeslán a uložen k účtu.");
@@ -832,20 +1065,40 @@ export function BracketPickemContent() {
           hint={`Oficiální skupiny IIHF MS 2026. Přetáhni týmy a nastav pořadí ve skupině A (${MS2026_GROUP_A_VENUE}) a skupině B (${MS2026_GROUP_B_VENUE}).`}
         >
           <div className="grid gap-6 sm:grid-cols-2">
-            <GroupOrderDnd
-              title="Skupina A"
-              venue={MS2026_GROUP_A_VENUE}
-              order={picks.groupAOrder}
-              teamById={teamById}
-              onChange={(next) => setGroupOrder("A", next)}
-            />
-            <GroupOrderDnd
-              title="Skupina B"
-              venue={MS2026_GROUP_B_VENUE}
-              order={picks.groupBOrder}
-              teamById={teamById}
-              onChange={(next) => setGroupOrder("B", next)}
-            />
+            {isMobile ? (
+              <GroupOrderTap
+                title="Skupina A"
+                venue={MS2026_GROUP_A_VENUE}
+                order={picks.groupAOrder}
+                teamById={teamById}
+                onChange={(next) => setGroupOrder("A", next)}
+              />
+            ) : (
+              <GroupOrderDnd
+                title="Skupina A"
+                venue={MS2026_GROUP_A_VENUE}
+                order={picks.groupAOrder}
+                teamById={teamById}
+                onChange={(next) => setGroupOrder("A", next)}
+              />
+            )}
+            {isMobile ? (
+              <GroupOrderTap
+                title="Skupina B"
+                venue={MS2026_GROUP_B_VENUE}
+                order={picks.groupBOrder}
+                teamById={teamById}
+                onChange={(next) => setGroupOrder("B", next)}
+              />
+            ) : (
+              <GroupOrderDnd
+                title="Skupina B"
+                venue={MS2026_GROUP_B_VENUE}
+                order={picks.groupBOrder}
+                teamById={teamById}
+                onChange={(next) => setGroupOrder("B", next)}
+              />
+            )}
           </div>
         </Section>
 
@@ -853,17 +1106,31 @@ export function BracketPickemContent() {
           title="Play‑off pavouk"
           hint="Dle IIHF se čtvrtfinále hraje cross-over (1A–4B, 2A–3B, 1B–4A, 2B–3A) a po čtvrtfinále se semifinalisti re-seedují (nejlepší vs nejhorší). Klikni na tým, který postupuje."
         >
-          <BracketTree
-            quarterfinals={picks.quarterfinals}
-            semifinals={picks.semifinals}
-            finalMatch={picks.final}
-            bronzeMatch={picks.bronze}
-            teamById={teamById}
-            onPickQf={(i, winner) => setQuarter(i, { ...picks.quarterfinals[i], winner })}
-            onPickSf={(i, winner) => setSemi(i, { ...picks.semifinals[i], winner })}
-            onPickFinal={(winner) => setFinal({ ...picks.final, winner })}
-            onPickBronze={(winner) => setBronze({ ...picks.bronze, winner })}
-          />
+          {isMobile ? (
+            <MobileRoundSnap
+              quarterfinals={picks.quarterfinals}
+              semifinals={picks.semifinals}
+              finalMatch={picks.final}
+              bronzeMatch={picks.bronze}
+              teamById={teamById}
+              onPickQf={(i, winner) => setQuarter(i, { ...picks.quarterfinals[i], winner })}
+              onPickSf={(i, winner) => setSemi(i, { ...picks.semifinals[i], winner })}
+              onPickFinal={(winner) => setFinal({ ...picks.final, winner })}
+              onPickBronze={(winner) => setBronze({ ...picks.bronze, winner })}
+            />
+          ) : (
+            <DesktopBracketLayout
+              quarterfinals={picks.quarterfinals}
+              semifinals={picks.semifinals}
+              finalMatch={picks.final}
+              bronzeMatch={picks.bronze}
+              teamById={teamById}
+              onPickQf={(i, winner) => setQuarter(i, { ...picks.quarterfinals[i], winner })}
+              onPickSf={(i, winner) => setSemi(i, { ...picks.semifinals[i], winner })}
+              onPickFinal={(winner) => setFinal({ ...picks.final, winner })}
+              onPickBronze={(winner) => setBronze({ ...picks.bronze, winner })}
+            />
+          )}
           <p className="text-xs text-white/45">
             {MS2026_QF_LABELS.map((l, i) => (
               <span key={l}>
