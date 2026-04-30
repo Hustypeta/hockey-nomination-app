@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Link2, RotateCcw, Trash2, Trophy } from "lucide-react";
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
@@ -346,9 +347,11 @@ function MatchBox({
 
 export function BracketPickemContent() {
   const searchParams = useSearchParams();
+  const { status: authStatus } = useSession();
   const [picks, setPicks] = useState<BracketPickemPayload>(() => ({ ...EMPTY_BRACKET_PICKEM }));
   const [hydrated, setHydrated] = useState(false);
   const [czPlayers, setCzPlayers] = useState<{ id: string; name: string }[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
   const allTeams = useMemo(() => MS2026_BRACKET_TEAMS, []);
   const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
@@ -578,10 +581,61 @@ export function BracketPickemContent() {
     );
   }, [picks]);
 
+  const submitPickem = useCallback(async () => {
+    if (authStatus !== "authenticated") {
+      toast.error("Pro odeslání Pick’emu se musíš přihlásit.");
+      return;
+    }
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const r = await fetch("/api/pickem/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(picks),
+      });
+      const data = (await r.json().catch(() => null)) as any;
+      if (!r.ok) {
+        toast.error(data?.error ?? "Odeslání se nepovedlo.");
+        return;
+      }
+      toast.success("Pick’em odeslán a uložen k účtu.");
+    } catch {
+      toast.error("Odeslání se nepovedlo.");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [authStatus, picks, submitting]);
+
   const resetAll = () => {
     setPicks(clonePicks(EMPTY_BRACKET_PICKEM));
     toast.message("Formulář vyprázdněn.");
   };
+
+  if (authStatus !== "authenticated") {
+    return (
+      <main className="relative z-10 mx-auto max-w-3xl px-4 pb-14 pt-6 sm:px-6 sm:pb-20">
+        <SitePageHero
+          kicker="Pick’em"
+          title="Bracket Pick’em"
+          subtitle="Pro odeslání tipů a vyhodnocení se musíš přihlásit. Po přihlášení se ti tipy uloží k účtu."
+          align="center"
+        />
+        <div className="pickem-panel mx-auto mt-8 max-w-xl rounded-2xl p-6 text-center shadow-[0_20px_56px_rgba(0,0,0,0.30)]">
+          <p className="text-sm text-white/75">
+            Přihlášení je nutné, aby šlo Pick’em jednoznačně přiřadit k účtu a později vyhodnotit.
+          </p>
+          <button
+            type="button"
+            onClick={() => signIn(undefined, { callbackUrl: "/bracket" })}
+            className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] via-[#002a5c] to-[#c8102e] px-6 py-3 font-display text-sm font-bold text-white shadow-[0_12px_40px_rgba(0,48,135,0.35),0_0_32px_rgba(200,16,46,0.15)] transition hover:brightness-110"
+          >
+            Přihlásit se
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="relative z-10 mx-auto max-w-3xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
@@ -593,6 +647,14 @@ export function BracketPickemContent() {
       />
 
       <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-center">
+        <button
+          type="button"
+          onClick={submitPickem}
+          disabled={submitting}
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#f1c40f] px-5 py-3 font-display text-sm font-black text-slate-900 shadow-[0_12px_40px_rgba(241,196,15,0.22)] transition hover:brightness-105 disabled:opacity-60"
+        >
+          {submitting ? "Odesílám…" : "Odeslat Pick’em"}
+        </button>
         <button
           type="button"
           onClick={copyLink}
@@ -786,21 +848,33 @@ export function BracketPickemContent() {
 
       <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#f1c40f]/22 shadow-[0_0_48px_rgba(241,196,15,0.06)]">
         <Trophy className="h-8 w-8 text-[#f1c40f]/90" aria-hidden />
-        <p className="text-sm text-white/75">
-          Pick’em je jen pro radost — <strong className="text-white">bez vstupného</strong>, bez účtu. Chceš nominovat
-          hráče?{" "}
+        <p className="text-sm text-white/78">
+          Hotovo? Klikni na <strong className="text-white">Odeslat Pick’em</strong> a tipy se uloží k tvému účtu.
+        </p>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <button
+            type="button"
+            onClick={submitPickem}
+            disabled={submitting}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#f1c40f] px-5 py-3 font-display text-sm font-black text-slate-900 shadow-[0_12px_40px_rgba(241,196,15,0.22)] transition hover:brightness-105 disabled:opacity-60"
+          >
+            {submitting ? "Odesílám…" : "Odeslat Pick’em"}
+          </button>
+          <button
+            type="button"
+            onClick={copyLink}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07]"
+          >
+            <RotateCcw className="h-4 w-4" aria-hidden />
+            Zkopírovat odkaz
+          </button>
+        </div>
+        <p className="text-xs text-white/50">
+          Chceš nominovat hráče?{" "}
           <Link href="/sestava" className="font-semibold text-cyan-300 underline-offset-2 hover:underline">
             Editor sestavy nominace
           </Link>
         </p>
-        <button
-          type="button"
-          onClick={copyLink}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-amber-100/90 underline-offset-2 hover:underline"
-        >
-          <RotateCcw className="h-4 w-4" aria-hidden />
-          Znovu zkopírovat odkaz
-        </button>
       </div>
     </main>
   );

@@ -33,11 +33,25 @@ model User {
   accounts      Account[]
   sessions      Session[]
   nominations   Nomination[] @relation("NominationOwner")
+  pickemEntry   PickemEntry?
   /// Jedna nominace na uživatele započítaná do soutěže (odeslání do soutěže).
   contestEntryNominationId String? @unique
   contestEntryNomination   Nomination? @relation("ContestEntry", fields: [contestEntryNominationId], references: [id], onDelete: SetNull)
 
   @@map("users")
+}
+
+model PickemEntry {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  /** Uložené tipy (celý payload Pick’em). */
+  payload   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("pickem_entries")
 }
 
 model Account {
