@@ -18,6 +18,7 @@
     "stats:extraliga": "node scripts/extraliga-coverage.mjs",
     "promo:capture-squad": "node scripts/capture-promo-squad.cjs",
     "og:pad-top": "node scripts/pad-og-top.mjs",
+    "email:broadcast": "node scripts/resend-broadcast.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {
