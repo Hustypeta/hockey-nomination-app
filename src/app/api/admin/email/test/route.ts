@@ -26,7 +26,7 @@ const HTML = `<!doctype html>
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#0c0e12; width:100%;">
       <tr>
         <td align="center" style="padding:28px 16px;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" style="width:100%; max-width:560px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="680" style="width:100%; max-width:680px;">
             <tr>
               <td style="padding:0;">
                 <!-- Glow background -->
@@ -35,7 +35,7 @@ const HTML = `<!doctype html>
                     background:
                       radial-gradient(ellipse 90% 60% at 50% -20%, rgba(0,63,135,0.58) 0%, rgba(0,0,0,0) 58%),
                       radial-gradient(ellipse 70% 55% at 10% 110%, rgba(200,16,46,0.20) 0%, rgba(0,0,0,0) 60%);
-                    padding: 20px;
+                    padding: 12px;
                     border-radius: 22px;
                   "
                 >
@@ -50,7 +50,7 @@ const HTML = `<!doctype html>
                     "
                   >
                     <tr>
-                      <td style="padding:24px 20px; text-align:center;">
+                      <td style="padding:26px 22px; text-align:center;">
                         <!-- Logo -->
                         <div style="margin: 2px auto 10px auto; text-align:center;">
                           <img
@@ -60,10 +60,6 @@ const HTML = `<!doctype html>
                             alt="Lineup"
                             style="display:block; margin:0 auto; width:120px; height:120px; border-radius:18px;"
                           />
-                        </div>
-
-                        <div style="margin-top:6px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-weight: 800; letter-spacing: 0.18em; font-size: 12px; color: rgba(196,30,58,0.92); text-transform: uppercase;">
-                          MS 2026 · nominace
                         </div>
 
                         <div style="margin-top:16px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.86); text-align:center;">
