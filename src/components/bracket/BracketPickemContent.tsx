@@ -654,22 +654,6 @@ export function BracketPickemContent() {
         >
           {submitting ? "Odesílám…" : "Odeslat Pick’em"}
         </button>
-        <button
-          type="button"
-          onClick={copyLink}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] via-[#002a5c] to-[#c8102e] px-5 py-3 font-display text-sm font-bold text-white shadow-[0_12px_40px_rgba(0,48,135,0.35),0_0_32px_rgba(200,16,46,0.15)] transition hover:brightness-110"
-        >
-          <Link2 className="h-4 w-4" aria-hidden />
-          Zkopírovat odkaz s tipy
-        </button>
-        <button
-          type="button"
-          onClick={resetAll}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.05] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07]"
-        >
-          <Trash2 className="h-4 w-4" aria-hidden />
-          Vymazat
-        </button>
       </div>
 
       <div className="space-y-8">
@@ -864,8 +848,16 @@ export function BracketPickemContent() {
             onClick={copyLink}
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07]"
           >
-            <RotateCcw className="h-4 w-4" aria-hidden />
-            Zkopírovat odkaz
+            <Link2 className="h-4 w-4" aria-hidden />
+            Zkopírovat odkaz s tipy
+          </button>
+          <button
+            type="button"
+            onClick={resetAll}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07]"
+          >
+            <Trash2 className="h-4 w-4" aria-hidden />
+            Vymazat
           </button>
         </div>
         <p className="text-xs text-white/50">
