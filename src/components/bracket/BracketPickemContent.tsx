@@ -414,8 +414,8 @@ function BracketTree({
 }) {
   // IG-friendly: jeden pavouk, na mobilu horizontální scroll
   return (
-    <div className="relative -mx-4 overflow-x-auto px-4 pb-2">
-      <div className="relative grid min-w-[980px] grid-cols-[280px_240px_240px_240px] gap-6">
+    <div className="relative -mx-4 overflow-x-auto px-4 pb-2 xl:mx-0 xl:overflow-visible xl:px-0">
+      <div className="relative grid min-w-[980px] grid-cols-[280px_240px_240px_240px] gap-6 xl:min-w-0 xl:grid-cols-4 xl:gap-5">
         {/* Column headers */}
         <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Čtvrtfinále</div>
         <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Semifinále</div>
@@ -423,7 +423,7 @@ function BracketTree({
         <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">O bronz</div>
 
         {/* Bracket body */}
-        <div className="relative grid grid-rows-[auto_auto_auto_auto] gap-5">
+        <div className="relative grid grid-rows-[auto_auto_auto_auto] gap-5 xl:gap-4">
           {quarterfinals.slice(0, 2).map((m, i) => (
             <BracketMatchCard
               key={`qf-${i}`}
@@ -444,7 +444,7 @@ function BracketTree({
           ))}
         </div>
 
-        <div className="relative grid grid-rows-[1fr_1fr] gap-8 pt-[54px]">
+        <div className="relative grid grid-rows-[1fr_1fr] gap-8 pt-[54px] xl:gap-6 xl:pt-[48px]">
           {semifinals.map((m, i) => (
             <BracketMatchCard
               key={`sf-${i}`}
@@ -456,18 +456,18 @@ function BracketTree({
           ))}
         </div>
 
-        <div className="relative flex flex-col justify-center pt-[54px]">
+        <div className="relative flex flex-col justify-center pt-[54px] xl:pt-[48px]">
           <BracketMatchCard title="FINÁLE" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
         </div>
 
-        <div className="relative flex flex-col justify-center pt-[54px]">
+        <div className="relative flex flex-col justify-center pt-[54px] xl:pt-[48px]">
           <BracketMatchCard title="BRONZ" match={bronzeMatch} teamById={teamById} onPickWinner={onPickBronze} />
         </div>
 
         {/* Connectors (simple, clean lines) */}
-        <BracketConnector className="left-[280px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10" />
-        <BracketConnector className="left-[526px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10" />
-        <BracketConnector className="left-[772px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10" />
+        <BracketConnector className="left-[280px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10 xl:hidden" />
+        <BracketConnector className="left-[526px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10 xl:hidden" />
+        <BracketConnector className="left-[772px] top-[72px] h-[calc(100%-72px)] w-px bg-white/10 xl:hidden" />
       </div>
     </div>
   );
@@ -819,7 +819,7 @@ export function BracketPickemContent() {
   }
 
   return (
-    <main className="relative z-10 mx-auto max-w-3xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
+    <main className="relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
       <SitePageHero
         title="Bracket Pick’em"
         subtitle="Playoff MS 2026 — vyplň vítěze skupin, čtvrtfinálové páry a postup až do finále a o bronz. Tipy se ukládají v prohlížeči; odkazem je můžeš sdílet."
