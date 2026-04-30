@@ -26,7 +26,7 @@ const HTML = `<!doctype html>
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#0c0e12; width:100%;">
       <tr>
         <td align="center" style="padding:28px 16px;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="width:100%; max-width:640px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" style="width:100%; max-width:560px;">
             <tr>
               <td style="padding:0;">
                 <!-- Glow background -->
@@ -35,7 +35,7 @@ const HTML = `<!doctype html>
                     background:
                       radial-gradient(ellipse 90% 60% at 50% -20%, rgba(0,63,135,0.58) 0%, rgba(0,0,0,0) 58%),
                       radial-gradient(ellipse 70% 55% at 10% 110%, rgba(200,16,46,0.20) 0%, rgba(0,0,0,0) 60%);
-                    padding: 22px;
+                    padding: 20px;
                     border-radius: 22px;
                   "
                 >
@@ -50,48 +50,44 @@ const HTML = `<!doctype html>
                     "
                   >
                     <tr>
-                      <td style="padding:28px 22px; text-align:center;">
+                      <td style="padding:24px 20px; text-align:center;">
                         <!-- Logo -->
-                        <div style="margin: 0 auto 10px auto; text-align:center;">
+                        <div style="margin: 2px auto 10px auto; text-align:center;">
                           <img
                             src="${LOGO_URL}"
-                            width="138"
-                            height="138"
+                            width="120"
+                            height="120"
                             alt="Lineup"
-                            style="display:block; margin:0 auto; width:138px; height:138px; border-radius:22px;"
+                            style="display:block; margin:0 auto; width:120px; height:120px; border-radius:18px;"
                           />
                         </div>
 
-                        <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-weight: 900; letter-spacing: 0.14em; font-size: 28px; color:#ffffff;">
-                          Lineup
-                        </div>
-                        <div style="margin-top:6px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-weight: 700; letter-spacing: 0.18em; font-size: 12px; color: rgba(196,30,58,0.92); text-transform: uppercase;">
+                        <div style="margin-top:6px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-weight: 800; letter-spacing: 0.18em; font-size: 12px; color: rgba(196,30,58,0.92); text-transform: uppercase;">
                           MS 2026 · nominace
                         </div>
 
-                        <div style="margin-top:18px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.84); text-align:left;">
-                          <p style="margin:0 0 12px 0;">
+                        <div style="margin-top:16px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.86); text-align:center;">
+                          <p style="margin:0 0 10px 0;">
                             Velice Vám děkuji za Váš zájem o platformu <strong style="color:#ffffff;">Lineup</strong>.
                           </p>
-                          <p style="margin:0 0 12px 0;">
-                            Nezapomeňte, že se dnes blíží poslední den pro odeslání nominace do soutěže s
-                            <strong style="color:#ffffff;">40&nbsp;% bonusem</strong>.
+                          <p style="margin:0 0 10px 0;">
+                            Dnes je poslední den pro odeslání nominace do soutěže s <strong style="color:#ffffff;">40&nbsp;% bonusem</strong>.
                           </p>
-                          <p style="margin:0 0 0 0;">
+                          <p style="margin:0;">
                             <strong style="color:#ffffff;">Risk je zisk!</strong>
                           </p>
                         </div>
 
                         <!-- CTA button -->
-                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:22px auto 0 auto;">
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:18px auto 0 auto;">
                           <tr>
                             <td align="center" bgcolor="#003087" style="border-radius: 14px;">
                               <a
                                 href="${CTA_URL}"
                                 style="
                                   display:inline-block;
-                                  padding: 14px 20px;
-                                  border-radius: 16px;
+                                  padding: 14px 22px;
+                                  border-radius: 18px;
                                   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
                                   font-weight: 900;
                                   letter-spacing: 0.12em;
@@ -109,7 +105,7 @@ const HTML = `<!doctype html>
                           </tr>
                         </table>
 
-                        <div style="margin-top:18px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.58);">
+                        <div style="margin-top:14px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.58);">
                           Pokud tenhle e‑mail nechceš dostávat, odpověz “odhlásit”.
                         </div>
                       </td>
