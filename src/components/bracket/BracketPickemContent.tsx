@@ -23,6 +23,8 @@ import { SitePageHero } from "@/components/site/SitePageHero";
 import { encodeBracketPayload, decodeBracketPayload } from "@/lib/bracketPayload";
 import type { BracketMatchPick, BracketPickemPayload } from "@/types/bracketPickem";
 import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
+import type { Player, Position } from "@/types";
+import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 
 /** v3: drag&drop pořadí skupin + bracket (MS 2026). */
 const STORAGE_KEY = "ms2026-bracket-pickem-v4";
@@ -758,16 +760,138 @@ function MobileRoundSnap({
   );
 }
 
+function PickemPlayerPicker({
+  open,
+  title,
+  players,
+  value,
+  onSelect,
+  onClose,
+}: {
+  open: boolean;
+  title: string;
+  players: Player[];
+  value: string;
+  onSelect: (id: string) => void;
+  onClose: () => void;
+}) {
+  const [q, setQ] = useState("");
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (!open) setQ("");
+  }, [open]);
+
+  const filtered = useMemo(() => {
+    const nq = q.trim().toLowerCase();
+    const base = players;
+    if (!nq) return base;
+    return base.filter(
+      (p) =>
+        p.name.toLowerCase().includes(nq) ||
+        p.club.toLowerCase().includes(nq) ||
+        (p.league && p.league.toLowerCase().includes(nq))
+    );
+  }, [players, q]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-[70]">
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden
+      />
+      <motion.div
+        initial={reduceMotion ? false : { opacity: 0, y: 10, scale: 0.985 }}
+        animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+        exit={reduceMotion ? undefined : { opacity: 0, y: 10, scale: 0.985 }}
+        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+        className="absolute left-1/2 top-1/2 w-[min(920px,calc(100%-1.5rem))] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-[#0a1428]/95 via-[#121c34]/92 to-[#05080f]/95 shadow-[0_24px_80px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)]"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="flex items-start justify-between gap-3 border-b border-white/10 px-5 py-4 sm:px-7">
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-sky-200/70">Výběr hráče</p>
+            <h3 className="mt-1 font-display text-base font-black tracking-wide text-white sm:text-lg">{title}</h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/85 hover:bg-white/[0.1]"
+          >
+            Zavřít
+          </button>
+        </div>
+
+        <div className="px-5 pb-5 pt-4 sm:px-7">
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Hledat jméno, klub, ligu…"
+            className="w-full rounded-2xl border border-white/[0.12] bg-[#0a1428]/70 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-[#f1c40f]/40 focus:outline-none focus:ring-2 focus:ring-[#003087]/25"
+          />
+
+          <div className="mt-4 grid max-h-[60vh] gap-3 overflow-y-auto pr-1 sm:grid-cols-2">
+            {filtered.map((p) => {
+              const selected = value === p.id;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => {
+                    onSelect(p.id);
+                    onClose();
+                  }}
+                  className={`group flex w-full items-center gap-3 rounded-2xl border p-3 text-left transition ${
+                    selected
+                      ? "border-sky-300/40 bg-sky-300/[0.10] shadow-[0_0_0_1px_rgba(125,211,252,0.14),0_0_28px_rgba(125,211,252,0.12)]"
+                      : "border-white/12 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.06]"
+                  }`}
+                >
+                  <PlayerAvatar
+                    name={p.name}
+                    position={p.position}
+                    role={p.role}
+                    imageUrl={p.imageUrl}
+                    size="md"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-display text-sm font-black text-white">{p.name}</p>
+                    <p className="mt-1 truncate text-xs text-slate-300/90">
+                      <span className="text-slate-100">{p.club}</span>
+                      {p.league ? <span className="text-slate-500"> · {p.league}</span> : null}
+                    </p>
+                  </div>
+                  <span className="shrink-0 text-[10px] font-black uppercase tracking-[0.22em] text-white/35">
+                    {selected ? "Vybráno" : ""}
+                  </span>
+                </button>
+              );
+            })}
+            {filtered.length === 0 ? (
+              <p className="col-span-full py-8 text-center text-sm text-white/45">Nikdo neodpovídá filtru.</p>
+            ) : null}
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export function BracketPickemContent() {
   const searchParams = useSearchParams();
   const { status: authStatus } = useSession();
   const [picks, setPicks] = useState<BracketPickemPayload>(() => ({ ...EMPTY_BRACKET_PICKEM }));
   const [hydrated, setHydrated] = useState(false);
-  const [czPlayers, setCzPlayers] = useState<{ id: string; name: string }[]>([]);
+  const [czPlayers, setCzPlayers] = useState<Player[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
   const isMobile = useIsMobile(900);
+  const [picker, setPicker] = useState<null | { field: "topCzechGoalScorerId" | "topCzechPointsLeaderId" | "mostPenalizedCzechPlayerId"; title: string }>(null);
 
   const ensureDefaults = useCallback((p: BracketPickemPayload): BracketPickemPayload => {
     const aDefault = MS2026_GROUP_A_TEAMS.map((t) => t.id);
@@ -792,11 +916,33 @@ export function BracketPickemContent() {
     fetch("/api/players")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("players fetch failed"))))
       .then((rows) => {
+        const isPos = (x: unknown): x is Position => x === "G" || x === "D" || x === "F";
+        const parsePlayer = (raw: unknown): Player | null => {
+          if (!raw || typeof raw !== "object") return null;
+          const r2 = raw as Record<string, unknown>;
+          if (typeof r2.id !== "string") return null;
+          if (typeof r2.name !== "string") return null;
+          if (!isPos(r2.position)) return null;
+          if (typeof r2.club !== "string") return null;
+          if (typeof r2.league !== "string") return null;
+
+          return {
+            id: r2.id,
+            name: r2.name,
+            position: r2.position,
+            role: typeof r2.role === "string" || r2.role === null ? r2.role : undefined,
+            club: r2.club,
+            league: r2.league,
+            jerseyNumber: typeof r2.jerseyNumber === "number" || r2.jerseyNumber === null ? r2.jerseyNumber : undefined,
+            imageUrl: typeof r2.imageUrl === "string" || r2.imageUrl === null ? r2.imageUrl : undefined,
+            pick_rate: 0,
+          };
+        };
+
         const list = Array.isArray(rows)
-          ? (rows as Array<{ id?: unknown; name?: unknown }>).flatMap((x) => {
-              const id = typeof x.id === "string" ? x.id : null;
-              const name = typeof x.name === "string" ? x.name : null;
-              return id && name ? [{ id, name }] : [];
+          ? (rows as unknown[]).flatMap((x) => {
+              const p = parsePlayer(x);
+              return p ? [p] : [];
             })
           : [];
         setCzPlayers(list);
@@ -980,6 +1126,8 @@ export function BracketPickemContent() {
     setPicks((p) => ({ ...p, bonus: { ...p.bonus, [key]: value } }));
   };
 
+  const playerNameById = useMemo(() => new Map(czPlayers.map((p) => [p.id, p.name] as const)), [czPlayers]);
+
   const copyLink = useCallback(() => {
     const z = encodeBracketPayload(picks);
     const url = `${typeof window !== "undefined" ? window.location.origin : ""}/bracket?z=${z}`;
@@ -1055,7 +1203,7 @@ export function BracketPickemContent() {
     <main className="relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
       <SitePageHero
         title="Bracket Pick’em"
-        subtitle="Playoff MS 2026 — vyplň vítěze skupin, čtvrtfinálové páry a postup až do finále a o bronz. Tipy se ukládají v prohlížeči; odkazem je můžeš sdílet."
+        subtitle="Vítejte v Pick'emu pro MS v hokeji 2026. Zde si můžete tipnout pořadí skupin, výsledky play off a také vyzkoušet bonusové tipy. Žebříček nejlepších tiperů bude zveřejněn na našem webu."
         align="center"
       />
 
@@ -1145,53 +1293,86 @@ export function BracketPickemContent() {
           title="Bonusové tipy"
           hint="Vyhodnocení jde udělat jen z českých hráčů + týmových součtů (bez databáze všech hráčů světa)."
         >
-          <label className="block text-xs font-medium text-white/65">
-            Nejlepší český střelec (CZ hráč)
-            <select
-              className={selectCls}
-              value={picks.bonus.topCzechGoalScorerId}
-              onChange={(e) => setBonus("topCzechGoalScorerId", e.target.value)}
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="sm:col-span-2">
+              <p className="text-xs font-medium text-white/65">Nejlepší český střelec (CZ hráč)</p>
+              <button
+                type="button"
+                onClick={() => setPicker({ field: "topCzechGoalScorerId", title: "Nejlepší český střelec" })}
+                className="mt-1 flex w-full items-center justify-between gap-3 rounded-xl border border-white/14 bg-white/[0.07] px-3 py-2.5 text-left text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-white/20"
+              >
+                <span className="min-w-0 truncate">
+                  {picks.bonus.topCzechGoalScorerId
+                    ? playerNameById.get(picks.bonus.topCzechGoalScorerId) ?? "Vybraný hráč"
+                    : "— vyber hráče —"}
+                </span>
+                <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/75">
+                  Vybrat
+                </span>
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => setBonus("topCzechGoalScorerId", "")}
+              className="self-end rounded-xl border border-white/14 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white/80 hover:bg-white/[0.1]"
             >
-              <option value="">— vyber hráče —</option>
-              {czPlayers.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </label>
+              Vymazat
+            </button>
+          </div>
 
-          <label className="block text-xs font-medium text-white/65">
-            Nejlepší český hráč v bodování (CZ hráč)
-            <select
-              className={selectCls}
-              value={picks.bonus.topCzechPointsLeaderId}
-              onChange={(e) => setBonus("topCzechPointsLeaderId", e.target.value)}
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="sm:col-span-2">
+              <p className="text-xs font-medium text-white/65">Nejlepší český hráč v bodování (CZ hráč)</p>
+              <button
+                type="button"
+                onClick={() => setPicker({ field: "topCzechPointsLeaderId", title: "Nejlepší český hráč v bodování" })}
+                className="mt-1 flex w-full items-center justify-between gap-3 rounded-xl border border-white/14 bg-white/[0.07] px-3 py-2.5 text-left text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-white/20"
+              >
+                <span className="min-w-0 truncate">
+                  {picks.bonus.topCzechPointsLeaderId
+                    ? playerNameById.get(picks.bonus.topCzechPointsLeaderId) ?? "Vybraný hráč"
+                    : "— vyber hráče —"}
+                </span>
+                <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/75">
+                  Vybrat
+                </span>
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => setBonus("topCzechPointsLeaderId", "")}
+              className="self-end rounded-xl border border-white/14 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white/80 hover:bg-white/[0.1]"
             >
-              <option value="">— vyber hráče —</option>
-              {czPlayers.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </label>
+              Vymazat
+            </button>
+          </div>
 
-          <label className="block text-xs font-medium text-white/65">
-            Nejtrestanější český hráč (PIM) (CZ hráč)
-            <select
-              className={selectCls}
-              value={picks.bonus.mostPenalizedCzechPlayerId}
-              onChange={(e) => setBonus("mostPenalizedCzechPlayerId", e.target.value)}
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="sm:col-span-2">
+              <p className="text-xs font-medium text-white/65">Nejtrestanější český hráč (PIM) (CZ hráč)</p>
+              <button
+                type="button"
+                onClick={() => setPicker({ field: "mostPenalizedCzechPlayerId", title: "Nejtrestanější český hráč (PIM)" })}
+                className="mt-1 flex w-full items-center justify-between gap-3 rounded-xl border border-white/14 bg-white/[0.07] px-3 py-2.5 text-left text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-white/20"
+              >
+                <span className="min-w-0 truncate">
+                  {picks.bonus.mostPenalizedCzechPlayerId
+                    ? playerNameById.get(picks.bonus.mostPenalizedCzechPlayerId) ?? "Vybraný hráč"
+                    : "— vyber hráče —"}
+                </span>
+                <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/75">
+                  Vybrat
+                </span>
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => setBonus("mostPenalizedCzechPlayerId", "")}
+              className="self-end rounded-xl border border-white/14 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white/80 hover:bg-white/[0.1]"
             >
-              <option value="">— vyber hráče —</option>
-              {czPlayers.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </label>
+              Vymazat
+            </button>
+          </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-xs font-medium text-white/65">
@@ -1221,6 +1402,26 @@ export function BracketPickemContent() {
           </div>
         </Section>
       </div>
+
+      <PickemPlayerPicker
+        open={picker !== null}
+        title={picker?.title ?? ""}
+        players={czPlayers}
+        value={
+          picker?.field === "topCzechGoalScorerId"
+            ? picks.bonus.topCzechGoalScorerId
+            : picker?.field === "topCzechPointsLeaderId"
+              ? picks.bonus.topCzechPointsLeaderId
+              : picker?.field === "mostPenalizedCzechPlayerId"
+                ? picks.bonus.mostPenalizedCzechPlayerId
+                : ""
+        }
+        onSelect={(id) => {
+          if (!picker) return;
+          setBonus(picker.field, id);
+        }}
+        onClose={() => setPicker(null)}
+      />
 
       <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#f1c40f]/22 shadow-[0_0_48px_rgba(241,196,15,0.06)]">
         <Trophy className="h-8 w-8 text-[#f1c40f]/90" aria-hidden />
