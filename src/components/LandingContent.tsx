@@ -187,52 +187,51 @@ export function LandingContent() {
                     <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-sky-200/70">
                       Komunita
                     </p>
-                    {nominationCount !== null ? (
-                      <>
-                        <p className="mt-1 font-display text-4xl font-bold leading-none tabular-nums tracking-tight text-white drop-shadow-[0_2px_24px_rgba(56,189,248,0.35)] sm:text-[2.65rem]">
-                          {formatCs(nominationCount)}
-                        </p>
-                        <p className="mt-2 text-sm leading-snug text-slate-300/95">
-                          {nominationCount === 0
-                            ? "účastníků v soutěži zatím — buď první"
-                            : nominationCount === 1
-                              ? "fanoušek už poslal nominaci do soutěže"
-                              : nominationCount >= 2 && nominationCount <= 4
-                                ? "fanoušci už poslali nominaci do soutěže"
-                                : "fanoušků už poslalo nominaci do soutěže"}
-                        </p>
-                        <div className="mt-3 grid w-full max-w-[26rem] grid-cols-2 gap-2">
-                          <span className="inline-flex min-h-[2.25rem] items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-[11px] font-semibold text-white/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-                            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#00B4FF]/10 ring-1 ring-[#00B4FF]/20">
-                              <span className="text-[12px] leading-none">👥</span>
+                    <div className="mt-3 grid w-full grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+                      {[
+                        {
+                          tone: "bg-[#FF1E2E]/10 ring-[#FF1E2E]/22",
+                          icon: "🏆",
+                          value: nominationCount,
+                          label: "Nominací",
+                        },
+                        {
+                          tone: "bg-[#00B4FF]/10 ring-[#00B4FF]/20",
+                          icon: "👥",
+                          value: communityUsersCount,
+                          label: "V komunitě",
+                        },
+                        {
+                          tone: "bg-[#00E5FF]/10 ring-[#00E5FF]/22",
+                          icon: "🏒",
+                          value: pickemCount,
+                          label: "Pick’emů",
+                        },
+                        {
+                          tone: "bg-white/[0.06] ring-white/12",
+                          icon: "⏳",
+                          value: cd ? cd.d : null,
+                          label: "Dní do MS",
+                        },
+                      ].map((x) => (
+                        <div
+                          key={x.label}
+                          className="flex min-h-[4.1rem] flex-col justify-center rounded-2xl border border-white/10 bg-white/[0.06] px-3 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className={`flex h-7 w-7 items-center justify-center rounded-xl ring-1 ${x.tone}`}>
+                              <span className="text-[13px] leading-none">{x.icon}</span>
                             </span>
-                            {communityUsersCount !== null ? (
-                              <>
-                                <span className="font-black tabular-nums text-white">{formatCs(communityUsersCount)}</span>
-                                <span className="text-white/70">v komunitě</span>
-                              </>
-                            ) : (
-                              <span className="text-white/55">… v komunitě</span>
-                            )}
-                          </span>
-                          <span className="inline-flex min-h-[2.25rem] items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-[11px] font-semibold text-white/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-                            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#FF1E2E]/10 ring-1 ring-[#FF1E2E]/22">
-                              <span className="text-[12px] leading-none">🏒</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">
+                              {x.label}
                             </span>
-                            {pickemCount !== null ? (
-                              <>
-                                <span className="font-black tabular-nums text-white">{formatCs(pickemCount)}</span>
-                                <span className="text-white/70">Pick’emů odesláno</span>
-                              </>
-                            ) : (
-                              <span className="text-white/55">… Pick’emů</span>
-                            )}
-                          </span>
+                          </div>
+                          <div className="mt-1.5 font-display text-2xl font-black tabular-nums text-white">
+                            {x.value === null ? "—" : formatCs(x.value)}
+                          </div>
                         </div>
-                      </>
-                    ) : (
-                      <p className="mt-2 text-sm text-slate-400">Načítám statistiky komunity…</p>
-                    )}
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
