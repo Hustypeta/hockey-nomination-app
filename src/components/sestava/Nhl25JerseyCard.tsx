@@ -49,6 +49,8 @@ export interface Nhl25JerseyCardProps {
   size?: Nhl25JerseySize;
   /** `poster` = číslo jen na zádech, příjmení pod siluetou u vlajky (sdílecí plakát). */
   nameplateVariant?: "card" | "poster";
+  /** Zvětšení jména+čísla na dresu (např. IG promo). */
+  typographyScale?: number;
   isCaptain?: boolean;
   isAssistant?: boolean;
   isSelected?: boolean;
@@ -66,6 +68,7 @@ export function Nhl25JerseyCard({
   className = "",
   disableMotion = false,
   nameplateVariant = "card",
+  typographyScale = 1,
 }: Nhl25JerseyCardProps) {
   const empty = !player;
   const kind: "skater" | "goalie" =
@@ -80,6 +83,27 @@ export function Nhl25JerseyCard({
     !empty && nameplateVariant !== "poster" ? jerseyNameplateNameProps(ln, npVar) : null;
   const hemLines =
     !empty && nameplateVariant === "poster" && ln ? splitNameplateLines(ln) : [];
+
+  const scaledNameplateStyle =
+    namePlate && typographyScale !== 1
+      ? {
+          ...namePlate.style,
+          fontSize: namePlate.style?.fontSize
+            ? `calc(${namePlate.style.fontSize} * ${typographyScale})`
+            : undefined,
+        }
+      : namePlate?.style;
+
+  const scaledNumberStyle =
+    typographyScale !== 1
+      ? {
+          ...jerseyNumberStyle(ln, npVar),
+          fontSize:
+            jerseyNumberStyle(ln, npVar)?.fontSize !== undefined
+              ? `calc(${String(jerseyNumberStyle(ln, npVar).fontSize)} * ${typographyScale})`
+              : undefined,
+        }
+      : jerseyNumberStyle(ln, npVar);
 
   const motionCls = disableMotion
     ? ""
@@ -216,17 +240,14 @@ export function Nhl25JerseyCard({
                     {namePlate && namePlate.lines.length > 0 ? (
                       <span className="flex w-full min-w-0 flex-col items-center gap-[0.08em] max-w-full">
                         {namePlate.lines.map((line, idx) => (
-                          <span key={idx} className={namePlate.className} style={namePlate.style}>
+                          <span key={idx} className={namePlate.className} style={scaledNameplateStyle}>
                             {line}
                           </span>
                         ))}
                       </span>
                     ) : null}
                     {numStr ? (
-                      <span
-                        className={`mt-px ${numCls}`}
-                        style={jerseyNumberStyle(ln, npVar)}
-                      >
+                      <span className={`mt-px ${numCls}`} style={scaledNumberStyle}>
                         {numStr}
                       </span>
                     ) : null}

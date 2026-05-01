@@ -37,7 +37,7 @@ const formatCsDate = (d: Date) =>
 /** Dres má vždy stejnou vizuální velikost (nesmí se „nafukovat“ podle počtu sloupců). */
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-w-0 w-full justify-center">{children}</div>
+    <div className="flex min-w-0 w-full justify-center overflow-hidden">{children}</div>
   );
 }
 
@@ -145,7 +145,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   {lineup.forwardLines.map((line, i) => (
                     <div
                       key={i}
-                      className={`flex min-w-0 flex-col gap-1 rounded-lg border px-1.5 py-1.5 sm:gap-1.5 sm:px-2 sm:py-2 ${lineBox}`}
+                      className={`flex min-w-0 flex-col gap-1 overflow-hidden rounded-lg border px-1.5 py-1.5 sm:gap-1.5 sm:px-2 sm:py-2 ${lineBox}`}
                     >
                       <span className={`shrink-0 font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
                         {i + 1}. lajna
