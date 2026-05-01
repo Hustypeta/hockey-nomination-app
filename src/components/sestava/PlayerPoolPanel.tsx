@@ -184,12 +184,9 @@ function DraggableCard({
               />
             </div>
             <div className="min-w-0 flex-1 pt-0.5">
-              <div className="flex items-start justify-between gap-2">
-                <p className="line-clamp-2 break-words text-pretty text-sm font-bold leading-snug text-white sm:text-[15px]">
-                  {player.name}
-                </p>
-                <PickRateBadge rate={rate} />
-              </div>
+              <p className="line-clamp-2 break-words text-pretty text-sm font-bold leading-snug text-white sm:text-[15px]">
+                {player.name}
+              </p>
               <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95">
                 <span className="text-slate-100">{player.club}</span>
                 {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}
@@ -200,6 +197,7 @@ function DraggableCard({
             <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95 sm:text-xs">
               {cur}/{lim} v nominaci
             </span>
+            <PickRateBadge rate={rate} />
             {canInteract ? (
               <span className="text-[10px] font-medium leading-tight text-sky-200/75 sm:hidden">
                 Přetáhni → soupiska
