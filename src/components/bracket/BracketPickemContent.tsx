@@ -7,7 +7,7 @@ import { signIn, useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Link2, Trash2, Trophy } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragOverlay, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
@@ -35,6 +35,9 @@ const selectCls =
 const inputCls =
   "mt-1 w-full rounded-lg border border-white/14 bg-white/[0.07] px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] placeholder:text-white/40 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
 
+/** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
+const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
+
 function useIsMobile(breakpointPx = 720) {
   const [mobile, setMobile] = useState(false);
   useEffect(() => {
@@ -45,6 +48,34 @@ function useIsMobile(breakpointPx = 720) {
     return () => mq.removeEventListener?.("change", apply);
   }, [breakpointPx]);
   return mobile;
+}
+
+function useCountdown(target: Date) {
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    setNow(Date.now());
+    const t = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  return useMemo(() => {
+    if (now === null) return null;
+    const diff = Math.max(0, target.getTime() - now);
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    return { d, h, m, s, ended: diff <= 0 };
+  }, [now, target]);
+}
+
+function formatCsDate(d: Date) {
+  return d.toLocaleString("cs-CZ", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function clonePicks(p: BracketPickemPayload): BracketPickemPayload {
@@ -145,25 +176,41 @@ function SortableTeamRow({
   id,
   rank,
   name,
+  isOverlay,
 }: {
   id: string;
   rank: number;
   name: string;
+  isOverlay?: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const rankCls =
+    rank === 1
+      ? "bg-gradient-to-r from-amber-400/22 to-[#FF1E2E]/16 text-amber-200 ring-1 ring-amber-300/22"
+      : rank === 2
+        ? "bg-[#00E5FF]/12 text-[#67E8F9] ring-1 ring-[#00E5FF]/22"
+        : rank === 3
+          ? "bg-orange-400/14 text-orange-200 ring-1 ring-orange-300/18"
+          : "bg-white/[0.06] text-white/70 ring-1 ring-white/10";
   return (
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`flex items-center gap-3 rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${
-        isDragging ? "opacity-80 ring-2 ring-[#f1c40f]/35" : ""
-      }`}
-      {...attributes}
-      {...listeners}
+      className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition ${
+        isOverlay
+          ? "border-[#00E5FF]/30 bg-[#0A0E17]/75 shadow-[0_18px_56px_rgba(0,0,0,0.55),0_0_0_1px_rgba(0,229,255,0.10),0_0_36px_rgba(0,229,255,0.14),0_0_34px_rgba(255,30,46,0.10)]"
+          : "border-white/12 bg-white/[0.06] hover:border-white/18"
+      } ${isDragging ? "opacity-75 ring-2 ring-[#00E5FF]/30" : ""}`}
+      {...(isOverlay ? {} : attributes)}
+      {...(isOverlay ? {} : listeners)}
     >
-      <span className="w-6 shrink-0 text-center font-display text-sm font-black text-white/65">{rank}</span>
+      <span
+        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-display text-sm font-black ${rankCls}`}
+      >
+        {rank}
+      </span>
       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/[0.06] ring-1 ring-white/10">
-        <FlagIcon id={id} className="h-[18px] w-[18px]" />
+        <FlagIcon id={id} className="h-[20px] w-[20px]" />
       </span>
       <span className="min-w-0 flex-1 truncate font-display text-sm font-bold text-white">{name}</span>
       <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">{id}</span>
@@ -185,6 +232,9 @@ function GroupOrderDnd({
   onChange: (next: string[]) => void;
 }) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const activeIndex = activeId ? order.indexOf(activeId) : -1;
+  const activeTeam = activeId ? teamById.get(activeId) : null;
   return (
     <div>
       <div className="flex items-start justify-between gap-3">
@@ -207,14 +257,17 @@ function GroupOrderDnd({
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={(e) => setActiveId(String(e.active.id))}
           onDragEnd={(e) => {
             const { active, over } = e;
+            setActiveId(null);
             if (!over || active.id === over.id) return;
             const oldIndex = order.indexOf(String(active.id));
             const newIndex = order.indexOf(String(over.id));
             if (oldIndex < 0 || newIndex < 0) return;
             onChange(arrayMove(order, oldIndex, newIndex));
           }}
+          onDragCancel={() => setActiveId(null)}
         >
           <SortableContext items={order} strategy={verticalListSortingStrategy}>
             <div className="space-y-2">
@@ -226,6 +279,18 @@ function GroupOrderDnd({
               })}
             </div>
           </SortableContext>
+          <DragOverlay>
+            {activeId ? (
+              <SortableTeamRow
+                id={activeId}
+                rank={(activeIndex >= 0 ? activeIndex : 0) + 1}
+                name={activeTeam?.name ?? activeId}
+                isOverlay
+              />
+            ) : (
+              <div />
+            )}
+          </DragOverlay>
         </DndContext>
       </div>
       <p className="mt-3 text-[11px] leading-relaxed text-white/45">
@@ -323,7 +388,7 @@ function GroupOrderTap({
 }
 
 function teamLabel(teamById: Map<string, BracketTeam>, id: string | null) {
-  if (!id) return "—";
+  if (!id) return "Čeká se na tým";
   return teamById.get(id)?.name ?? id;
 }
 
@@ -352,7 +417,7 @@ function BracketNode({
       whileTap={reduceMotion ? undefined : { scale: 0.995 }}
       className={`group relative flex h-12 w-full items-center justify-between gap-3 overflow-hidden rounded-xl border px-3 text-left transition ${
         selected
-          ? "border-sky-300/55 bg-sky-300/[0.10] text-sky-100 shadow-[0_0_0_1px_rgba(125,211,252,0.14),0_0_28px_rgba(125,211,252,0.16)]"
+          ? "border-[#FF1E2E]/55 bg-[#FF1E2E]/[0.10] text-white shadow-[0_0_0_1px_rgba(255,30,46,0.18),0_0_34px_rgba(255,30,46,0.16)]"
           : "border-white/12 bg-white/[0.06] text-white/85 hover:border-white/22"
       } ${dimmed ? "opacity-55" : ""} ${disabled ? "opacity-65" : ""}`}
     >
@@ -361,7 +426,7 @@ function BracketNode({
           className="pointer-events-none absolute inset-0 opacity-70"
           style={{
             background:
-              "radial-gradient(ellipse 80% 140% at 15% 50%, rgba(125,211,252,0.22), rgba(0,0,0,0) 60%)",
+              "radial-gradient(ellipse 80% 140% at 15% 50%, rgba(255,30,46,0.20), rgba(0,0,0,0) 60%)",
           }}
           aria-hidden
         />
@@ -369,10 +434,10 @@ function BracketNode({
       <span className="relative z-10 flex min-w-0 items-center gap-2.5">
         <span
           className={`flex h-8 w-8 items-center justify-center rounded-full ring-1 ${
-            selected ? "bg-sky-200/10 ring-sky-300/30" : "bg-white/[0.06] ring-white/10"
+            selected ? "bg-[#FF1E2E]/10 ring-[#FF1E2E]/35" : "bg-white/[0.06] ring-white/10"
           }`}
         >
-          {id ? <FlagIcon id={id} className="h-[18px] w-[18px]" /> : <span className="text-sm">🏒</span>}
+          {id ? <FlagIcon id={id} className="h-[20px] w-[20px]" /> : <span className="text-sm">🏒</span>}
         </span>
         <span className="min-w-0 truncate font-display text-sm font-black tracking-wide">{name}</span>
       </span>
@@ -479,8 +544,8 @@ function ConnectorSvg({
     { qf: 3, sf: 1 },
   ];
 
-  const winnerGlow = "#7dd3fc";
-  const baseStroke = "rgba(255,255,255,0.12)";
+  const winnerGlow = "#00E5FF";
+  const baseStroke = "rgba(203,213,225,0.14)";
 
   const highlightFor = (qfIdx: number, sfIdx: number) => {
     const w = qfWinnerId(qfIdx);
@@ -517,7 +582,7 @@ function ConnectorSvg({
           key={`b-${m.qf}-${m.sf}`}
           d={path(xQf, yQf[m.qf], xSf, ySf[m.sf])}
           stroke={baseStroke}
-          strokeWidth="2"
+          strokeWidth="3.5"
           fill="none"
         />
       ))}
@@ -527,7 +592,7 @@ function ConnectorSvg({
           key={`sf-base-${sf}`}
           d={path(xSf, ySf[sf], xFinal, yFinal)}
           stroke={baseStroke}
-          strokeWidth="2"
+          strokeWidth="3.5"
           fill="none"
         />
       ))}
@@ -541,7 +606,7 @@ function ConnectorSvg({
             d={path(xQf, yQf[m.qf], xSf, ySf[m.sf])}
             stroke={winnerGlow}
             strokeOpacity="0.75"
-            strokeWidth="2.5"
+            strokeWidth="4.5"
             fill="none"
             filter="url(#glow)"
           />
@@ -554,11 +619,17 @@ function ConnectorSvg({
             d={path(xSf, ySf[sf], xFinal, yFinal)}
             stroke={winnerGlow}
             strokeOpacity="0.75"
-            strokeWidth="2.5"
+            strokeWidth="4.5"
             fill="none"
             filter="url(#glow)"
           />
         ))}
+
+      {/* Junction dots */}
+      {ySf.map((y, i) => (
+        <circle key={`dot-sf-${i}`} cx={xSf} cy={y} r="5" fill="rgba(0,229,255,0.12)" />
+      ))}
+      <circle cx={xFinal} cy={yFinal} r="6" fill="rgba(0,229,255,0.12)" />
     </svg>
   );
 }
@@ -892,6 +963,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
 
   const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
   const isMobile = useIsMobile(900);
+  const cd = useCountdown(MS_2026_KICKOFF);
   const [picker, setPicker] = useState<null | { field: "topCzechGoalScorerId" | "topCzechPointsLeaderId" | "mostPenalizedCzechPlayerId"; title: string }>(null);
 
   const ensureDefaults = useCallback((p: BracketPickemPayload): BracketPickemPayload => {
@@ -1309,6 +1381,49 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         align="center"
       />
 
+      <div className="pickem-panel mt-6 overflow-hidden rounded-3xl p-5 ring-1 ring-sky-400/15 shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-6">
+        <div
+          className="pointer-events-none absolute inset-x-0 -mt-5 h-20 bg-[radial-gradient(ellipse_at_30%_0%,rgba(56,189,248,0.22),transparent_60%)]"
+          aria-hidden
+        />
+        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/25 via-sky-500/10 to-[#003087]/40 ring-1 ring-sky-300/20">
+              <FlagIcon id="CZE" className="h-7 w-7" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-[0.26em] text-sky-200/75">MS v hokeji 2026</p>
+              <p className="mt-1 text-sm font-semibold text-white/85">
+                Start: <span className="font-black text-white">{formatCsDate(MS_2026_KICKOFF)}</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center">
+            <p className="text-[10px] font-black uppercase tracking-[0.26em] text-white/50">Odpočet</p>
+            {!cd ? (
+              <p className="mt-2 text-sm text-white/45">Načítám…</p>
+            ) : cd.ended ? (
+              <p className="mt-2 font-display text-lg font-black text-white">MS je tady</p>
+            ) : (
+              <div className="mt-2 grid grid-cols-4 gap-2">
+                {[
+                  { v: cd.d, l: "dní" },
+                  { v: cd.h, l: "hod" },
+                  { v: cd.m, l: "min" },
+                  { v: cd.s, l: "sek" },
+                ].map((x) => (
+                  <div key={x.l} className="rounded-xl border border-white/10 bg-black/25 px-2 py-2">
+                    <div className="font-display text-lg font-black tabular-nums text-white">{x.v}</div>
+                    <div className="text-[9px] font-semibold uppercase tracking-[0.22em] text-sky-200/70">{x.l}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {authStatus !== "authenticated" ? (
         <div className="pickem-panel mt-6 rounded-2xl p-5 text-center ring-1 ring-[#003087]/25">
           <p className="text-sm text-white/75">
@@ -1494,27 +1609,33 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-xs font-medium text-white/65">
               Počet gólů českého týmu
-              <input
-                type="text"
-                inputMode="numeric"
-                className={inputCls}
+              <select
+                className={selectCls}
                 value={picks.bonus.czechTeamGoals}
-                onChange={(e) => setBonus("czechTeamGoals", e.target.value.replace(/[^\d]/g, ""))}
-                placeholder="např. 22"
-                autoComplete="off"
-              />
+                onChange={(e) => setBonus("czechTeamGoals", e.target.value)}
+              >
+                <option value="">—</option>
+                {Array.from({ length: 61 }, (_, i) => String(i)).map((v) => (
+                  <option key={`g-${v}`} value={v}>
+                    {v}
+                  </option>
+                ))}
+              </select>
             </label>
             <label className="block text-xs font-medium text-white/65">
               Počet trestných minut českého týmu
-              <input
-                type="text"
-                inputMode="numeric"
-                className={inputCls}
+              <select
+                className={selectCls}
                 value={picks.bonus.czechTeamPim}
-                onChange={(e) => setBonus("czechTeamPim", e.target.value.replace(/[^\d]/g, ""))}
-                placeholder="např. 48"
-                autoComplete="off"
-              />
+                onChange={(e) => setBonus("czechTeamPim", e.target.value)}
+              >
+                <option value="">—</option>
+                {Array.from({ length: 101 }, (_, i) => String(i * 2)).map((v) => (
+                  <option key={`p-${v}`} value={v}>
+                    {v}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </Section>
@@ -1540,8 +1661,8 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         onClose={() => setPicker(null)}
       />
 
-      <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#f1c40f]/22 shadow-[0_0_48px_rgba(241,196,15,0.06)]">
-        <Trophy className="h-8 w-8 text-[#f1c40f]/90" aria-hidden />
+      <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#00E5FF]/18 shadow-[0_0_48px_rgba(0,229,255,0.06)]">
+        <Trophy className="h-8 w-8 text-[#00E5FF]/85" aria-hidden />
         <p className="text-sm text-white/78">
           Hotovo? Ulož si koncept k účtu nebo tipy odešli do soutěže.
         </p>
@@ -1561,7 +1682,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
             type="button"
             onClick={submitPickem}
             disabled={submitting}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#f1c40f] px-5 py-3 font-display text-sm font-black text-slate-900 shadow-[0_12px_40px_rgba(241,196,15,0.22)] transition hover:brightness-105 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF1E2E] px-6 py-3.5 font-display text-sm font-black uppercase tracking-[0.08em] text-white shadow-[0_14px_44px_rgba(255,30,46,0.26)] transition hover:brightness-110 disabled:opacity-60"
           >
             {submitting ? "Ukládám…" : "Uložit koncept"}
           </button>
@@ -1569,14 +1690,14 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
             type="button"
             onClick={submitPickemToContest}
             disabled={submitting}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07] disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#00E5FF]/35 bg-white/[0.04] px-5 py-3.5 text-sm font-semibold text-white/90 shadow-[0_0_0_1px_rgba(0,229,255,0.10)] transition hover:bg-white/[0.07] hover:border-[#00E5FF]/55 disabled:opacity-60"
           >
             {submitting ? "Odesílám…" : "Odeslat do soutěže"}
           </button>
           <button
             type="button"
             onClick={copyLink}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#00E5FF]/30 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/90 shadow-[0_0_0_1px_rgba(0,229,255,0.08)] transition hover:bg-white/[0.07] hover:border-[#00E5FF]/50"
           >
             <Link2 className="h-4 w-4" aria-hidden />
             Zkopírovat odkaz s tipy
@@ -1584,7 +1705,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
           <button
             type="button"
             onClick={resetAll}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#FF1E2E]/40 hover:bg-[#FF1E2E]/[0.07]"
           >
             <Trash2 className="h-4 w-4" aria-hidden />
             Vymazat

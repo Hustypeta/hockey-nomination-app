@@ -201,24 +201,28 @@ export function LandingContent() {
                                 ? "fanoušci už poslali nominaci do soutěže"
                                 : "fanoušků už poslalo nominaci do soutěže"}
                         </p>
-                        <div className="mt-3 flex flex-wrap items-center gap-2">
-                          <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-white/80">
-                            <span className="text-sky-200/80">👥</span>
+                        <div className="mt-3 grid w-full max-w-[26rem] grid-cols-2 gap-2">
+                          <span className="inline-flex min-h-[2.25rem] items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-[11px] font-semibold text-white/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#00B4FF]/10 ring-1 ring-[#00B4FF]/20">
+                              <span className="text-[12px] leading-none">👥</span>
+                            </span>
                             {communityUsersCount !== null ? (
                               <>
-                                <span className="font-black tabular-nums text-white">{formatCs(communityUsersCount)}</span>{" "}
-                                v komunitě
+                                <span className="font-black tabular-nums text-white">{formatCs(communityUsersCount)}</span>
+                                <span className="text-white/70">v komunitě</span>
                               </>
                             ) : (
                               <span className="text-white/55">… v komunitě</span>
                             )}
                           </span>
-                          <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-white/80">
-                            <span className="text-amber-200/85">🏒</span>
+                          <span className="inline-flex min-h-[2.25rem] items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-[11px] font-semibold text-white/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#FF1E2E]/10 ring-1 ring-[#FF1E2E]/22">
+                              <span className="text-[12px] leading-none">🏒</span>
+                            </span>
                             {pickemCount !== null ? (
                               <>
-                                <span className="font-black tabular-nums text-white">{formatCs(pickemCount)}</span>{" "}
-                                Pick’emů odesláno
+                                <span className="font-black tabular-nums text-white">{formatCs(pickemCount)}</span>
+                                <span className="text-white/70">Pick’emů odesláno</span>
                               </>
                             ) : (
                               <span className="text-white/55">… Pick’emů</span>

@@ -6,7 +6,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-white/[0.06] py-8 text-center text-xs text-white/40">
       <p>
-        {SITE_BRAND} · Neoficiální fanouškovský nástroj · Česká trikolora inspirována reprezentací
+        {SITE_BRAND} · Neoficiální fanouškovský nástroj
       </p>
       <div className="mt-5">
         <SocialSiteIcons />
@@ -24,21 +24,6 @@ export function SiteFooter() {
         <Link href="/pravidla-souteze" className="underline-offset-4 hover:text-white/75 hover:underline">
           Pravidla soutěže
         </Link>
-        {SITE_INSTAGRAM_PAGE_URL ? (
-          <>
-            <span aria-hidden className="text-white/25">
-              ·
-            </span>
-            <a
-              href={SITE_INSTAGRAM_PAGE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline-offset-4 hover:text-white/75 hover:underline"
-            >
-              Instagram
-            </a>
-          </>
-        ) : null}
       </nav>
     </footer>
   );
