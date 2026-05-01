@@ -881,7 +881,7 @@ function PickemPlayerPicker({
   );
 }
 
-export function BracketPickemContent() {
+export function BracketPickemContent({ initialPayload }: { initialPayload?: BracketPickemPayload }) {
   const searchParams = useSearchParams();
   const { status: authStatus } = useSession();
   const [picks, setPicks] = useState<BracketPickemPayload>(() => ({ ...EMPTY_BRACKET_PICKEM }));
@@ -954,6 +954,13 @@ export function BracketPickemContent() {
   }, []);
 
   useEffect(() => {
+    if (initialPayload) {
+      queueMicrotask(() => {
+        setPicks(ensureDefaults(initialPayload));
+        setHydrated(true);
+      });
+      return;
+    }
     const z = searchParams.get("z");
     if (z) {
       const decoded = decodeBracketPayload(z);
@@ -979,7 +986,7 @@ export function BracketPickemContent() {
       /* ignore */
     }
     queueMicrotask(() => setHydrated(true));
-  }, [searchParams, ensureDefaults]);
+  }, [searchParams, ensureDefaults, initialPayload]);
 
   // Načíst koncept z účtu (z /ucet/pickem nebo přímý link /bracket?loadAccount=1)
   useEffect(() => {
@@ -1156,14 +1163,38 @@ export function BracketPickemContent() {
   const playerNameById = useMemo(() => new Map(czPlayers.map((p) => [p.id, p.name] as const)), [czPlayers]);
 
   const copyLink = useCallback(() => {
-    const z = encodeBracketPayload(picks);
-    const url = `${typeof window !== "undefined" ? window.location.origin : ""}/bracket?z=${z}`;
-    navigator.clipboard.writeText(url).then(
-      () => toast.success("Odkaz zkopírován — pošli ho sobě nebo kamarádům."),
-      () => toast.error("Schránka nedostupná — zkopíruj URL ručně z adresního řádku po kliknutí sem.", {
-        duration: 5000,
+    fetch("/api/pickem/share-links", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(picks),
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("share failed"))))
+      .then((d: { url?: unknown; path?: unknown; code?: unknown }) => {
+        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        const url =
+          typeof d.url === "string"
+            ? d.url
+            : typeof d.path === "string"
+              ? `${origin}${d.path}`
+              : typeof d.code === "string"
+                ? `${origin}/p/${encodeURIComponent(d.code)}`
+                : "";
+        if (!url) throw new Error("no url");
+        return navigator.clipboard.writeText(url).then(() => url);
       })
-    );
+      .then(() => toast.success("Krátký odkaz zkopírován — pošli ho sobě nebo kamarádům."))
+      .catch(() => {
+        // fallback: dlouhý link
+        const z = encodeBracketPayload(picks);
+        const url = `${typeof window !== "undefined" ? window.location.origin : ""}/bracket?z=${z}`;
+        navigator.clipboard.writeText(url).then(
+          () => toast.success("Odkaz zkopírován (fallback) — pošli ho sobě nebo kamarádům."),
+          () =>
+            toast.error("Schránka nedostupná — zkopíruj URL ručně z adresního řádku po kliknutí sem.", {
+              duration: 5000,
+            })
+        );
+      });
   }, [picks]);
 
   const submitPickem = useCallback(async () => {
