@@ -4,12 +4,16 @@ import { useCallback, useEffect, useState } from "react";
 
 export type ContestStats = {
   nominationCount: number | null;
+  communityUsersCount: number | null;
+  pickemCount: number | null;
   contestTimeBonusPercent: number;
   contestSubmissionOpen: boolean;
 };
 
 const DEFAULT_STATS: ContestStats = {
   nominationCount: null,
+  communityUsersCount: null,
+  pickemCount: null,
   contestTimeBonusPercent: 0,
   contestSubmissionOpen: true,
 };
@@ -32,12 +36,17 @@ export function useContestStats() {
         .then(
           (d: {
             nominationCount?: number | null;
+            communityUsersCount?: number | null;
+            pickemCount?: number | null;
             contestTimeBonusPercent?: number;
             contestSubmissionOpen?: boolean;
           }) => {
             if (cancelled) return;
             setStats({
               nominationCount: typeof d.nominationCount === "number" ? d.nominationCount : null,
+              communityUsersCount:
+                typeof d.communityUsersCount === "number" ? d.communityUsersCount : null,
+              pickemCount: typeof d.pickemCount === "number" ? d.pickemCount : null,
               contestTimeBonusPercent:
                 typeof d.contestTimeBonusPercent === "number" ? d.contestTimeBonusPercent : 0,
               contestSubmissionOpen: d.contestSubmissionOpen !== false,

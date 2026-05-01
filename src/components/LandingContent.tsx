@@ -55,6 +55,8 @@ export function LandingContent() {
   const showGuestLoginPitch = !session?.user;
   const contestStats = useContestStats();
   const nominationCount = contestStats.nominationCount;
+  const communityUsersCount = contestStats.communityUsersCount;
+  const pickemCount = contestStats.pickemCount;
   const cd = useCountdown(MS_2026_KICKOFF);
   const bonusPercent = [0, 10, 25, 40].includes(contestStats.contestTimeBonusPercent)
     ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
@@ -199,6 +201,30 @@ export function LandingContent() {
                                 ? "fanoušci už poslali nominaci do soutěže"
                                 : "fanoušků už poslalo nominaci do soutěže"}
                         </p>
+                        <div className="mt-3 flex flex-wrap items-center gap-2">
+                          <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-white/80">
+                            <span className="text-sky-200/80">👥</span>
+                            {communityUsersCount !== null ? (
+                              <>
+                                <span className="font-black tabular-nums text-white">{formatCs(communityUsersCount)}</span>{" "}
+                                v komunitě
+                              </>
+                            ) : (
+                              <span className="text-white/55">… v komunitě</span>
+                            )}
+                          </span>
+                          <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-white/80">
+                            <span className="text-amber-200/85">🏒</span>
+                            {pickemCount !== null ? (
+                              <>
+                                <span className="font-black tabular-nums text-white">{formatCs(pickemCount)}</span>{" "}
+                                Pick’emů odesláno
+                              </>
+                            ) : (
+                              <span className="text-white/55">… Pick’emů</span>
+                            )}
+                          </span>
+                        </div>
                       </>
                     ) : (
                       <p className="mt-2 text-sm text-slate-400">Načítám statistiky komunity…</p>
