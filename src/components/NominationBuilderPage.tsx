@@ -134,6 +134,8 @@ export function NominationBuilderPage() {
     })
   );
 
+  const enableDnd = !isNarrowLayout;
+
   const selectedPlayers = lineupToPlayers(lineup, players);
   const usedIds = new Set(selectedPlayers.map((p) => p.id));
   const isComplete = isLineupComplete(lineup);
@@ -822,6 +824,7 @@ export function NominationBuilderPage() {
                     counts={counts}
                     onAddPlayer={handleAddFromPool}
                     onPreview={setPreviewPlayer}
+                    enableDnd={enableDnd}
                     forcedPosition={forcedPoolPosition}
                     assignableFilter={selectedSlot ? canAssignPlayer : undefined}
                     slotHint={
@@ -856,7 +859,7 @@ export function NominationBuilderPage() {
                       onCaptainChange={setCaptainId}
                       selectedSlot={selectedSlot}
                       onSelectSlot={setSelectedSlot}
-                      enableDnd
+                      enableDnd={enableDnd}
                       layoutVariant="nhl25"
                     />
                   </div>
@@ -900,6 +903,7 @@ export function NominationBuilderPage() {
                     counts={counts}
                     onAddPlayer={handleAddFromPool}
                     onPreview={setPreviewPlayer}
+                    enableDnd={enableDnd}
                     forcedPosition={forcedPoolPosition}
                     assignableFilter={canAssignPlayer}
                     slotHint={

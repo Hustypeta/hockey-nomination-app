@@ -101,6 +101,7 @@ function DraggableCard({
   onAdd,
   onInfo,
   counts,
+  enableDnd,
 }: {
   player: Player;
   disabled: boolean;
@@ -110,10 +111,11 @@ function DraggableCard({
   onAdd: () => void;
   onInfo: () => void;
   counts: { G: number; D: number; F: number };
+  enableDnd?: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `drag-player-${player.id}`,
-    disabled: disabled || slotBlocks || inRoster,
+    disabled: !enableDnd || disabled || slotBlocks || inRoster,
     data: { player },
   });
   const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined;
@@ -160,20 +162,24 @@ function DraggableCard({
           className={`
             flex min-w-0 flex-1 touch-pan-y flex-col gap-1.5 rounded-lg px-0.5 py-0.5
             ${
-              canInteract
+              canInteract && enableDnd
                 ? "cursor-grab active:cursor-grabbing"
                 : "cursor-default"
             }
           `}
-          {...listeners}
-          {...attributes}
+          {...(enableDnd ? listeners : {})}
+          {...(enableDnd ? attributes : {})}
           onClick={() => canInteract && onAdd()}
         >
           <div className="flex items-start gap-2">
-            <GripVertical
-              className={`mt-1 h-4 w-4 shrink-0 sm:h-4 sm:w-4 ${canInteract ? "text-[#f1c40f]/80" : "text-slate-600"}`}
-              aria-hidden
-            />
+            {enableDnd ? (
+              <GripVertical
+                className={`mt-1 h-4 w-4 shrink-0 sm:h-4 sm:w-4 ${canInteract ? "text-[#f1c40f]/80" : "text-slate-600"}`}
+                aria-hidden
+              />
+            ) : (
+              <span className="mt-1 h-4 w-4 shrink-0" aria-hidden />
+            )}
             <div className="shrink-0">
               <PlayerAvatar
                 name={player.name}
@@ -200,7 +206,7 @@ function DraggableCard({
             <PickRateBadge rate={rate} />
             {canInteract ? (
               <span className="text-[10px] font-medium leading-tight text-sky-200/75 sm:hidden">
-                Přetáhni → soupiska
+                {enableDnd ? "Přetáhni → soupiska" : "Klepni → přidat"}
               </span>
             ) : null}
           </div>
@@ -235,6 +241,8 @@ interface PlayerPoolPanelProps {
   counts: { G: number; D: number; F: number };
   onAddPlayer: (player: Player) => void;
   onPreview: (player: Player) => void;
+  /** Desktop: drag&drop; mobile: často lepší tap-only. */
+  enableDnd?: boolean;
   /** Když je ve sestavě vybraný slot — zúží výběr na danou pozici. */
   forcedPosition?: Position | null;
   /** Při vybraném slotu — kdo může na něj (např. náhr. D jen po 7. bekovi). Ostatní karty se ztmaví. */
@@ -249,6 +257,7 @@ export function PlayerPoolPanel({
   counts,
   onAddPlayer,
   onPreview,
+  enableDnd = true,
   forcedPosition = null,
   assignableFilter,
   slotHint,
@@ -399,6 +408,7 @@ export function PlayerPoolPanel({
                 slotBlocks={slotBlocks}
                 inRoster={inRoster}
                 counts={counts}
+                enableDnd={enableDnd}
                 onAdd={() => onAddPlayer(player)}
                 onInfo={() => onPreview(player)}
               />
