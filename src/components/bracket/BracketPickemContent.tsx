@@ -981,6 +981,33 @@ export function BracketPickemContent() {
     queueMicrotask(() => setHydrated(true));
   }, [searchParams, ensureDefaults]);
 
+  // Načíst koncept z účtu (z /ucet/pickem nebo přímý link /bracket?loadAccount=1)
+  useEffect(() => {
+    const want = searchParams.get("loadAccount") === "1";
+    if (!want) return;
+    if (authStatus !== "authenticated") return;
+    let cancelled = false;
+    fetch("/api/pickem/me")
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("pickem me fetch failed"))))
+      .then((d: { payload?: unknown }) => {
+        if (cancelled) return;
+        const p = d.payload;
+        if (p && typeof p === "object") {
+          setPicks(ensureDefaults(p as BracketPickemPayload));
+          setHydrated(true);
+          toast.success("Pick’em koncept načten z účtu.");
+        } else {
+          toast.message("V účtu není uložený Pick’em koncept.");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) toast.error("Nepodařilo se načíst Pick’em z účtu.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams, authStatus, ensureDefaults]);
+
   useEffect(() => {
     if (!hydrated) return;
     try {
@@ -1141,7 +1168,7 @@ export function BracketPickemContent() {
 
   const submitPickem = useCallback(async () => {
     if (authStatus !== "authenticated") {
-      toast.error("Pro odeslání Pick’emu se musíš přihlásit.");
+      toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.");
       return;
     }
     if (submitting) return;
@@ -1169,35 +1196,40 @@ export function BracketPickemContent() {
     }
   }, [authStatus, picks, submitting]);
 
+  const submitPickemToContest = useCallback(async () => {
+    if (authStatus !== "authenticated") {
+      toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.");
+      return;
+    }
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const r = await fetch("/api/pickem/contest-submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(picks),
+      });
+      const data: unknown = await r.json().catch(() => null);
+      const apiError =
+        data && typeof data === "object" && "error" in data && typeof (data as { error?: unknown }).error === "string"
+          ? (data as { error: string }).error
+          : null;
+      if (!r.ok) {
+        toast.error(apiError ?? "Odeslání do soutěže se nepovedlo.");
+        return;
+      }
+      toast.success("Pick’em odeslán do soutěže.");
+    } catch {
+      toast.error("Odeslání do soutěže se nepovedlo.");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [authStatus, picks, submitting]);
+
   const resetAll = () => {
     setPicks(clonePicks(EMPTY_BRACKET_PICKEM));
     toast.message("Formulář vyprázdněn.");
   };
-
-  if (authStatus !== "authenticated") {
-    return (
-      <main className="relative z-10 mx-auto max-w-3xl px-4 pb-14 pt-6 sm:px-6 sm:pb-20">
-        <SitePageHero
-          kicker="Pick’em"
-          title="Bracket Pick’em"
-          subtitle="Pro odeslání tipů a vyhodnocení se musíš přihlásit. Po přihlášení se ti tipy uloží k účtu."
-          align="center"
-        />
-        <div className="pickem-panel mx-auto mt-8 max-w-xl rounded-2xl p-6 text-center shadow-[0_20px_56px_rgba(0,0,0,0.30)]">
-          <p className="text-sm text-white/75">
-            Přihlášení je nutné, aby šlo Pick’em jednoznačně přiřadit k účtu a později vyhodnotit.
-          </p>
-          <button
-            type="button"
-            onClick={() => signIn(undefined, { callbackUrl: "/bracket" })}
-            className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] via-[#002a5c] to-[#c8102e] px-6 py-3 font-display text-sm font-bold text-white shadow-[0_12px_40px_rgba(0,48,135,0.35),0_0_32px_rgba(200,16,46,0.15)] transition hover:brightness-110"
-          >
-            Přihlásit se
-          </button>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
@@ -1206,6 +1238,21 @@ export function BracketPickemContent() {
         subtitle="Vítejte v Pick'emu pro MS v hokeji 2026. Zde si můžete tipnout pořadí skupin, výsledky play off a také vyzkoušet bonusové tipy. Žebříček nejlepších tiperů bude zveřejněn na našem webu."
         align="center"
       />
+
+      {authStatus !== "authenticated" ? (
+        <div className="pickem-panel mt-6 rounded-2xl p-5 text-center ring-1 ring-[#003087]/25">
+          <p className="text-sm text-white/75">
+            Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.
+          </p>
+          <button
+            type="button"
+            onClick={() => signIn(undefined, { callbackUrl: "/bracket" })}
+            className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] via-[#002a5c] to-[#c8102e] px-6 py-3 font-display text-sm font-bold text-white shadow-[0_12px_40px_rgba(0,48,135,0.35),0_0_32px_rgba(200,16,46,0.15)] transition hover:brightness-110"
+          >
+            Přihlásit se
+          </button>
+        </div>
+      ) : null}
 
       <div className="space-y-8">
         <Section
@@ -1426,7 +1473,7 @@ export function BracketPickemContent() {
       <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#f1c40f]/22 shadow-[0_0_48px_rgba(241,196,15,0.06)]">
         <Trophy className="h-8 w-8 text-[#f1c40f]/90" aria-hidden />
         <p className="text-sm text-white/78">
-          Hotovo? Klikni na <strong className="text-white">Odeslat Pick’em</strong> a tipy se uloží k tvému účtu.
+          Hotovo? Ulož si koncept k účtu nebo tipy odešli do soutěže.
         </p>
         <div className="flex flex-col gap-2 sm:flex-row">
           <button
@@ -1435,7 +1482,15 @@ export function BracketPickemContent() {
             disabled={submitting}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#f1c40f] px-5 py-3 font-display text-sm font-black text-slate-900 shadow-[0_12px_40px_rgba(241,196,15,0.22)] transition hover:brightness-105 disabled:opacity-60"
           >
-            {submitting ? "Odesílám…" : "Odeslat Pick’em"}
+            {submitting ? "Ukládám…" : "Uložit koncept"}
+          </button>
+          <button
+            type="button"
+            onClick={submitPickemToContest}
+            disabled={submitting}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#f1c40f]/35 hover:bg-[#f1c40f]/[0.07] disabled:opacity-60"
+          >
+            {submitting ? "Odesílám…" : "Odeslat do soutěže"}
           </button>
           <button
             type="button"

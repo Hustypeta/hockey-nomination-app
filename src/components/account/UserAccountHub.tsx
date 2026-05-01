@@ -2,7 +2,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import { ClipboardList, Sparkles } from "lucide-react";
+import { ClipboardList, Sparkles, Trophy } from "lucide-react";
 
 export type NominationListItem = {
   id: string;
@@ -85,6 +85,17 @@ export function UserAccountHub() {
           <span className="text-lg font-bold text-white">Moje nominace</span>
           <span className="max-w-[14rem] text-xs font-normal leading-snug text-slate-400">
             Uložené sestavy u tvého účtu
+          </span>
+        </Link>
+
+        <Link
+          href="/ucet/pickem"
+          className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-white/12 bg-[#0f172a]/85 px-6 py-10 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-[#f1c40f]/35 hover:bg-[#0f172a]"
+        >
+          <Trophy className="h-9 w-9 text-[#f1c40f]/90" aria-hidden />
+          <span className="text-lg font-bold text-white">Koncepty Pick’em</span>
+          <span className="max-w-[14rem] text-xs font-normal leading-snug text-slate-400">
+            Uložené tipy pavouka u tvého účtu
           </span>
         </Link>
       </div>
