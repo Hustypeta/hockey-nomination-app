@@ -20,6 +20,12 @@ export async function POST(request: NextRequest) {
     if (!body || typeof body !== "object") {
       return NextResponse.json({ error: "Chybí payload Pick’em." }, { status: 400 });
     }
+    const b = body as Record<string, unknown>;
+    const payload = b.payload;
+    if (!payload || typeof payload !== "object") {
+      return NextResponse.json({ error: "Chybí payload Pick’em." }, { status: 400 });
+    }
+    const title = typeof b.title === "string" && b.title.trim() ? b.title.trim().slice(0, 80) : "Pick’em";
 
     let code = genShareCode(10);
     for (let attempt = 0; attempt < 8; attempt++) {
@@ -33,8 +39,8 @@ export async function POST(request: NextRequest) {
         code,
         slug: null,
         captainId: null,
-        lineupStructure: body as object,
-        title: "Pick’em",
+        lineupStructure: payload as object,
+        title,
       },
     });
 

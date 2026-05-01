@@ -888,6 +888,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
   const [hydrated, setHydrated] = useState(false);
   const [czPlayers, setCzPlayers] = useState<Player[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [pickemTitle, setPickemTitle] = useState("");
 
   const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
   const isMobile = useIsMobile(900);
@@ -1162,11 +1163,47 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
 
   const playerNameById = useMemo(() => new Map(czPlayers.map((p) => [p.id, p.name] as const)), [czPlayers]);
 
+  const isPickemComplete = useMemo(() => {
+    const qfOk = picks.quarterfinals.every((m) => Boolean(m.winner));
+    const sfOk = picks.semifinals.every((m) => Boolean(m.winner));
+    const finOk = Boolean(picks.final.winner);
+    const bronzOk = Boolean(picks.bronze.winner);
+    return qfOk && sfOk && finOk && bronzOk;
+  }, [picks]);
+
+  const ensurePickemTitle = useCallback((): string | null => {
+    const t = pickemTitle.trim();
+    if (t) return t;
+    const ok = window.confirm("Přejete si pokračovat bez vyplnění jména?");
+    if (!ok) return null;
+    try {
+      const key = "lineup:autoTitle:pickem";
+      const raw = window.localStorage.getItem(key);
+      const n = Math.max(0, Number.parseInt(raw ?? "0", 10) || 0) + 1;
+      window.localStorage.setItem(key, String(n));
+      const generated = `Pickem ${n}`;
+      setPickemTitle(generated);
+      return generated;
+    } catch {
+      const generated = "Pickem";
+      setPickemTitle(generated);
+      return generated;
+    }
+  }, [pickemTitle]);
+
+  const confirmIfIncomplete = useCallback(() => {
+    if (isPickemComplete) return true;
+    return window.confirm("Pick’em není hotový. Přejete si skutečně pokračovat?");
+  }, [isPickemComplete]);
+
   const copyLink = useCallback(() => {
+    if (!confirmIfIncomplete()) return;
+    const title = ensurePickemTitle();
+    if (!title) return;
     fetch("/api/pickem/share-links", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(picks),
+      body: JSON.stringify({ title, payload: picks }),
     })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("share failed"))))
       .then((d: { url?: unknown; path?: unknown; code?: unknown }) => {
@@ -1195,13 +1232,14 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
             })
         );
       });
-  }, [picks]);
+  }, [picks, confirmIfIncomplete, ensurePickemTitle]);
 
   const submitPickem = useCallback(async () => {
     if (authStatus !== "authenticated") {
       toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.");
       return;
     }
+    if (!confirmIfIncomplete()) return;
     if (submitting) return;
     setSubmitting(true);
     try {
@@ -1232,6 +1270,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
       toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.");
       return;
     }
+    if (!confirmIfIncomplete()) return;
     if (submitting) return;
     setSubmitting(true);
     try {
@@ -1506,6 +1545,17 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         <p className="text-sm text-white/78">
           Hotovo? Ulož si koncept k účtu nebo tipy odešli do soutěže.
         </p>
+        <label className="w-full max-w-xl text-left text-xs font-medium text-white/65">
+          Název Pick’em <span className="font-normal text-white/35">(volitelné)</span>
+          <input
+            className={inputCls}
+            value={pickemTitle}
+            onChange={(e) => setPickemTitle(e.target.value)}
+            maxLength={80}
+            placeholder="např. Konzervativní varianta"
+            autoComplete="off"
+          />
+        </label>
         <div className="flex flex-col gap-2 sm:flex-row">
           <button
             type="button"

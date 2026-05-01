@@ -558,6 +558,23 @@ export function NominationBuilderPage() {
     setSaving(true);
     try {
       const updating = !!editingNominationId;
+      const rawTitle = opts && "title" in opts ? opts.title : shareNominationTitle;
+      const normalizedTitle = (rawTitle ?? "").trim();
+      let titleToUse = normalizedTitle;
+      if (!titleToUse) {
+        const ok = window.confirm("Přejete si pokračovat bez vyplnění jména?");
+        if (!ok) return null;
+        try {
+          const key = "lineup:autoTitle:sestava";
+          const raw = window.localStorage.getItem(key);
+          const n = Math.max(0, Number.parseInt(raw ?? "0", 10) || 0) + 1;
+          window.localStorage.setItem(key, String(n));
+          titleToUse = `Sestava ${n}`;
+        } catch {
+          titleToUse = "Sestava";
+        }
+        setShareNominationTitle(titleToUse);
+      }
       const res = await fetch(
         updating ? `/api/nominations/${editingNominationId}` : "/api/nominations",
         {
@@ -567,7 +584,7 @@ export function NominationBuilderPage() {
             selectedPlayerIds: selectedPlayers.map((p) => p.id),
             captainId,
             lineupStructure: lineup,
-            title: opts && "title" in opts ? opts.title : shareNominationTitle.trim(),
+            title: titleToUse,
           }),
         }
       );
@@ -615,9 +632,20 @@ export function NominationBuilderPage() {
       );
       if (!ok) return;
     }
-    if (!shareNominationTitle.trim()) {
-      toast.error("Vyplň název nominace.");
-      return;
+    let titleToUse = shareNominationTitle.trim();
+    if (!titleToUse) {
+      const ok = window.confirm("Přejete si pokračovat bez vyplnění jména?");
+      if (!ok) return;
+      try {
+        const key = "lineup:autoTitle:sestava";
+        const raw = window.localStorage.getItem(key);
+        const n = Math.max(0, Number.parseInt(raw ?? "0", 10) || 0) + 1;
+        window.localStorage.setItem(key, String(n));
+        titleToUse = `Sestava ${n}`;
+      } catch {
+        titleToUse = "Sestava";
+      }
+      setShareNominationTitle(titleToUse);
     }
     if (!contestSubmissionOpen) {
       toast.error("Uzávěrka odeslání do soutěže už proběhla.");
@@ -633,7 +661,7 @@ export function NominationBuilderPage() {
           selectedPlayerIds: selectedPlayers.map((p) => p.id),
           captainId,
           lineupStructure: lineup,
-          title: shareNominationTitle.trim(),
+          title: titleToUse,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -684,8 +712,9 @@ export function NominationBuilderPage() {
       if (!ok) return;
     }
     if (!shareNominationTitle.trim()) {
-      toast.error("Vyplň název nominace (např. v modalu Dokončit nominaci).");
-      return;
+      const ok = window.confirm("Přejete si pokračovat bez vyplnění jména?");
+      if (!ok) return;
+      // Název se vygeneruje až při samotném odeslání (handleSubmitToContest / handleSave).
     }
     if (!contestSubmissionOpen) {
       toast.error("Uzávěrka odeslání do soutěže už proběhla.");
