@@ -21,6 +21,7 @@ export function MyPickemPage() {
   const { status } = useSession();
   const [payload, setPayload] = useState<BracketPickemPayload | null>(null);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
+  const [contestSubmittedAt, setContestSubmittedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -34,11 +35,14 @@ export function MyPickemPage() {
         if (!r.ok) throw new Error("fetch");
         return r.json();
       })
-      .then((d: { payload?: unknown; updatedAt?: string }) => {
+      .then((d: { payload?: unknown; updatedAt?: string; contestSubmittedAt?: unknown }) => {
         const p = d.payload;
         if (p && typeof p === "object") setPayload(p as BracketPickemPayload);
         else setPayload(null);
         setUpdatedAt(typeof d.updatedAt === "string" ? d.updatedAt : null);
+        setContestSubmittedAt(
+          typeof d.contestSubmittedAt === "string" && d.contestSubmittedAt.length > 0 ? d.contestSubmittedAt : null
+        );
       })
       .catch(() => setLoadError("Nepodařilo se načíst Pick’em koncept."))
       .finally(() => setLoading(false));
@@ -101,6 +105,11 @@ export function MyPickemPage() {
             <div>
               <p className="text-sm font-semibold text-white">Uložený koncept</p>
               {updatedAt ? <p className="mt-1 text-xs text-slate-400">Upraveno: {formatWhen(updatedAt)}</p> : null}
+              {contestSubmittedAt ? (
+                <p className="mt-3 rounded-xl border border-emerald-400/25 bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-100">
+                  Pick’em odeslaný do soutěže {formatWhen(contestSubmittedAt)} — úpravy už na serveru nejdou.
+                </p>
+              ) : null}
             </div>
             <div className="flex flex-col gap-2 sm:flex-row">
               <Link

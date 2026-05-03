@@ -14,15 +14,16 @@ export async function GET() {
 
   const entry = await prisma.pickemEntry.findUnique({
     where: { userId: session.user.id },
-    select: { payload: true, updatedAt: true, createdAt: true },
+    select: { payload: true, updatedAt: true, createdAt: true, contestSubmittedAt: true },
   });
 
-  if (!entry) return NextResponse.json({ ok: true, payload: null });
+  if (!entry) return NextResponse.json({ ok: true, payload: null, contestSubmittedAt: null });
   return NextResponse.json({
     ok: true,
     payload: entry.payload,
     updatedAt: entry.updatedAt.toISOString(),
     createdAt: entry.createdAt.toISOString(),
+    contestSubmittedAt: entry.contestSubmittedAt?.toISOString() ?? null,
   });
 }
 

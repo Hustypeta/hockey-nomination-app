@@ -163,7 +163,7 @@ export function LandingContent() {
 
             {/* Sociální důkaz + časový bonus — vedle sebe od většího breakpointu */}
             <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-5 sm:mt-12 lg:flex-row lg:items-stretch lg:gap-6">
-              <div className="group relative flex min-h-0 min-w-0 flex-1 overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)] sm:min-h-[8.5rem]">
+              <div className="group relative flex min-h-0 min-w-0 flex-1 overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)]">
                 <div
                   className="pointer-events-none absolute -left-1/4 top-0 h-[140%] w-[70%] bg-[radial-gradient(ellipse_at_30%_0%,rgba(56,189,248,0.22),transparent_58%)]"
                   aria-hidden
@@ -176,64 +176,68 @@ export function LandingContent() {
                   className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/35 to-transparent opacity-80"
                   aria-hidden
                 />
-                <div className="relative z-10 flex w-full items-center gap-4 px-5 py-5 sm:gap-5 sm:px-7 sm:py-6">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/25 via-sky-500/10 to-[#003087]/40 shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_8px_32px_rgba(56,189,248,0.22),inset_0_1px_0_rgba(255,255,255,0.12)] ring-1 ring-sky-300/20 sm:h-16 sm:w-16">
-                    <Users
-                      className="h-7 w-7 text-sky-100 drop-shadow-[0_0_12px_rgba(56,189,248,0.5)] sm:h-8 sm:w-8"
-                      aria-hidden
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1 text-left">
-                    <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-sky-200/70">
-                      Komunita
-                    </p>
-                    <div className="mt-3 grid w-full min-w-0 grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
-                      {[
-                        {
-                          tone: "bg-[#FF1E2E]/10 ring-[#FF1E2E]/22",
-                          icon: "🏆",
-                          value: nominationCount,
-                          label: "Nominací",
-                        },
-                        {
-                          tone: "bg-[#00B4FF]/10 ring-[#00B4FF]/20",
-                          icon: "👥",
-                          value: communityUsersCount,
-                          label: "V komunitě",
-                        },
-                        {
-                          tone: "bg-[#00E5FF]/10 ring-[#00E5FF]/22",
-                          icon: "🏒",
-                          value: pickemCount,
-                          label: "Pick’emů",
-                        },
-                        {
-                          tone: "bg-white/[0.06] ring-white/12",
-                          icon: "⏳",
-                          value: cd ? cd.d : null,
-                          label: "Dní do MS",
-                        },
-                      ].map((x) => (
-                        <div
-                          key={x.label}
-                          className="flex min-h-[4.25rem] min-w-0 flex-col justify-between gap-1 rounded-2xl border border-white/10 bg-white/[0.06] px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:min-h-[4.4rem] sm:px-2.5 sm:py-2"
-                        >
-                          <div className="flex min-w-0 items-center justify-between gap-1.5">
-                            <span
-                              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl ring-1 ${x.tone}`}
-                            >
-                              <span className="text-[13px] leading-none">{x.icon}</span>
-                            </span>
-                            <span className="min-w-0 truncate text-right font-display text-xl font-black tabular-nums leading-none text-white sm:text-2xl">
-                              {x.value === null ? "—" : formatCs(x.value)}
-                            </span>
-                          </div>
-                          <p className="min-w-0 text-center text-[9px] font-black uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-[10px] sm:tracking-[0.18em]">
-                            {x.label}
-                          </p>
-                        </div>
-                      ))}
+                <div className="relative z-10 flex w-full flex-col gap-5 px-5 py-6 sm:gap-6 sm:px-7 sm:py-7">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400/25 via-sky-500/10 to-[#003087]/40 shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_8px_32px_rgba(56,189,248,0.22),inset_0_1px_0_rgba(255,255,255,0.12)] ring-1 ring-sky-300/20 sm:h-14 sm:w-14">
+                      <Users
+                        className="h-6 w-6 text-sky-100 drop-shadow-[0_0_12px_rgba(56,189,248,0.5)] sm:h-7 sm:w-7"
+                        aria-hidden
+                      />
                     </div>
+                    <div className="min-w-0">
+                      <p className="font-display text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/80 sm:text-xs sm:tracking-[0.2em]">
+                        Komunita
+                      </p>
+                      <p className="mt-1 text-[13px] leading-snug text-white/45 sm:text-sm">
+                        Živá čísla z Lineupu — nominace, lidé v komunitě, Pick’em a odpočet.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid w-full min-w-0 grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+                    {[
+                      {
+                        tone: "bg-[#FF1E2E]/10 ring-[#FF1E2E]/22",
+                        icon: "🏆",
+                        value: nominationCount,
+                        label: "Nominací",
+                      },
+                      {
+                        tone: "bg-[#00B4FF]/10 ring-[#00B4FF]/20",
+                        icon: "👥",
+                        value: communityUsersCount,
+                        label: "V komunitě",
+                      },
+                      {
+                        tone: "bg-[#00E5FF]/10 ring-[#00E5FF]/22",
+                        icon: "🏒",
+                        value: pickemCount,
+                        label: "Pick’emů",
+                      },
+                      {
+                        tone: "bg-white/[0.06] ring-white/12",
+                        icon: "⏳",
+                        value: cd ? cd.d : null,
+                        label: "Dní do MS",
+                      },
+                    ].map((x) => (
+                      <div
+                        key={x.label}
+                        className="flex min-h-[6.25rem] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-white/12 bg-white/[0.05] px-2 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:min-h-[6.5rem] sm:px-3 sm:py-4"
+                      >
+                        <span
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ring-1 ${x.tone}`}
+                        >
+                          <span className="text-[15px] leading-none">{x.icon}</span>
+                        </span>
+                        <span className="font-display text-[1.65rem] font-black tabular-nums leading-none tracking-tight text-white sm:text-[1.85rem]">
+                          {x.value === null ? "—" : formatCs(Number(x.value))}
+                        </span>
+                        <p className="max-w-[12rem] text-center text-[10px] font-black uppercase leading-snug tracking-[0.12em] text-white/60">
+                          {x.label}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

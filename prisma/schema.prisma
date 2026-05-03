@@ -46,6 +46,8 @@ model PickemEntry {
   userId    String   @unique
   /** Uložené tipy (celý payload Pick’em). */
   payload   Json
+  /// Jednorázové odeslání Pick’emu do soutěže — po nastavení už uživatel nemůže měnit uložený payload ani znovu soutěžně odeslat.
+  contestSubmittedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

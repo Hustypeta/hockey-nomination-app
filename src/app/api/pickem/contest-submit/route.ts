@@ -25,19 +25,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Chybí payload Pick’em." }, { status: 400 });
     }
 
+    const existing = await prisma.pickemEntry.findUnique({
+      where: { userId: session.user.id },
+      select: { contestSubmittedAt: true },
+    });
+    if (existing?.contestSubmittedAt) {
+      return NextResponse.json(
+        {
+          error:
+            "Do soutěže už máš Pick’em jednou odeslaný — změna ani další odeslání není možné.",
+        },
+        { status: 409 }
+      );
+    }
+
+    const submittedAt = new Date();
     const entry = await prisma.pickemEntry.upsert({
       where: { userId: session.user.id },
       create: {
         userId: session.user.id,
         payload: body as object,
+        contestSubmittedAt: submittedAt,
       },
       update: {
         payload: body as object,
+        contestSubmittedAt: submittedAt,
       },
       select: { id: true, updatedAt: true },
     });
 
-    return NextResponse.json({ ok: true, id: entry.id, updatedAt: entry.updatedAt.toISOString() });
+    return NextResponse.json({
+      ok: true,
+      id: entry.id,
+      updatedAt: entry.updatedAt.toISOString(),
+      contestSubmittedAt: submittedAt.toISOString(),
+    });
   } catch (e) {
     console.error("POST /api/pickem/contest-submit:", e);
     if (e instanceof Prisma.PrismaClientKnownRequestError) {

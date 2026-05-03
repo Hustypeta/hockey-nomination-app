@@ -960,6 +960,8 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
   const [czPlayers, setCzPlayers] = useState<Player[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [pickemTitle, setPickemTitle] = useState("");
+  /** Po jednorázovém „Odeslat do soutěže“ je payload na serveru zamčený. */
+  const [contestLocked, setContestLocked] = useState(false);
 
   const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
   const isMobile = useIsMobile(900);
@@ -983,6 +985,26 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
       },
     };
   }, []);
+
+  useEffect(() => {
+    if (authStatus !== "authenticated") {
+      setContestLocked(false);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/pickem/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { contestSubmittedAt?: unknown } | null) => {
+        if (cancelled || !d) return;
+        setContestLocked(typeof d.contestSubmittedAt === "string" && d.contestSubmittedAt.length > 0);
+      })
+      .catch(() => {
+        if (!cancelled) setContestLocked(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [authStatus]);
 
   // CZ hráči pro bonus tipy (výběr z DB kandidátů).
   useEffect(() => {
@@ -1069,8 +1091,9 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
     let cancelled = false;
     fetch("/api/pickem/me")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("pickem me fetch failed"))))
-      .then((d: { payload?: unknown }) => {
+      .then((d: { payload?: unknown; contestSubmittedAt?: unknown }) => {
         if (cancelled) return;
+        setContestLocked(typeof d.contestSubmittedAt === "string" && d.contestSubmittedAt.length > 0);
         const p = d.payload;
         if (p && typeof p === "object") {
           setPicks(ensureDefaults(p as BracketPickemPayload));
@@ -1236,11 +1259,21 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
   const playerNameById = useMemo(() => new Map(czPlayers.map((p) => [p.id, p.name] as const)), [czPlayers]);
 
   const isPickemComplete = useMemo(() => {
+    const groupsOk =
+      picks.groupAOrder.length === MS2026_GROUP_A_TEAMS.length &&
+      picks.groupBOrder.length === MS2026_GROUP_B_TEAMS.length;
     const qfOk = picks.quarterfinals.every((m) => Boolean(m.winner));
     const sfOk = picks.semifinals.every((m) => Boolean(m.winner));
     const finOk = Boolean(picks.final.winner);
     const bronzOk = Boolean(picks.bronze.winner);
-    return qfOk && sfOk && finOk && bronzOk;
+    const b = picks.bonus;
+    const bonusOk =
+      Boolean(b.topCzechGoalScorerId?.trim()) &&
+      Boolean(b.topCzechPointsLeaderId?.trim()) &&
+      Boolean(b.mostPenalizedCzechPlayerId?.trim()) &&
+      b.czechTeamGoals.trim() !== "" &&
+      b.czechTeamPim.trim() !== "";
+    return groupsOk && qfOk && sfOk && finOk && bronzOk && bonusOk;
   }, [picks]);
 
   const ensurePickemTitle = useCallback((): string | null => {
@@ -1265,7 +1298,9 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
 
   const confirmIfIncomplete = useCallback(() => {
     if (isPickemComplete) return true;
-    return window.confirm("Pick’em není hotový. Přejete si skutečně pokračovat?");
+    return window.confirm(
+      "Pick’em nemá vyplněné všechny části (pořadí ve skupinách, vyřazovací pavouk nebo bonusové tipy). Opravdu chcete pokračovat?"
+    );
   }, [isPickemComplete]);
 
   const copyLink = useCallback(() => {
@@ -1311,6 +1346,10 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
       toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.");
       return;
     }
+    if (contestLocked) {
+      toast.error("Pick’em už máte v soutěži — uložený koncept na serveru už nejde měnit.");
+      return;
+    }
     if (!confirmIfIncomplete()) return;
     if (submitting) return;
     setSubmitting(true);
@@ -1335,11 +1374,15 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
     } finally {
       setSubmitting(false);
     }
-  }, [authStatus, picks, submitting]);
+  }, [authStatus, picks, submitting, confirmIfIncomplete, contestLocked]);
 
   const submitPickemToContest = useCallback(async () => {
     if (authStatus !== "authenticated") {
       toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.");
+      return;
+    }
+    if (contestLocked) {
+      toast.error("Do soutěže už máte Pick’em jednou odeslaný.");
       return;
     }
     if (!confirmIfIncomplete()) return;
@@ -1360,15 +1403,20 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         toast.error(apiError ?? "Odeslání do soutěže se nepovedlo.");
         return;
       }
+      setContestLocked(true);
       toast.success("Pick’em odeslán do soutěže.");
     } catch {
       toast.error("Odeslání do soutěže se nepovedlo.");
     } finally {
       setSubmitting(false);
     }
-  }, [authStatus, picks, submitting]);
+  }, [authStatus, picks, submitting, confirmIfIncomplete, contestLocked]);
 
   const resetAll = () => {
+    if (contestLocked) {
+      toast.error("Po odeslání do soutěže už tipy z účtu nelze v tomto rozhraní vymazat.");
+      return;
+    }
     setPicks(clonePicks(EMPTY_BRACKET_PICKEM));
     toast.message("Formulář vyprázdněn.");
   };
@@ -1661,6 +1709,21 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         onClose={() => setPicker(null)}
       />
 
+      {authStatus === "authenticated" && contestLocked ? (
+        <div
+          className="pickem-panel mt-10 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.07] p-5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-6"
+          role="status"
+        >
+          <p className="text-sm font-semibold text-emerald-100">
+            Pick’em máte jednou odeslaný do soutěže — uložený tip na serveru je finální a nelze ho měnit ani znovu
+            odeslat.
+          </p>
+          <p className="mt-2 text-xs text-emerald-100/75">
+            Stále si můžeš zkopírovat odkaz s aktuálním stavem tipů v prohlížeči (nemění uložený soutěžní tip).
+          </p>
+        </div>
+      ) : null}
+
       <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#00E5FF]/18 shadow-[0_0_48px_rgba(0,229,255,0.06)]">
         <Trophy className="h-8 w-8 text-[#00E5FF]/85" aria-hidden />
         <p className="text-sm text-white/78">
@@ -1681,18 +1744,18 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
           <button
             type="button"
             onClick={submitPickem}
-            disabled={submitting}
+            disabled={submitting || contestLocked}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF1E2E] px-6 py-3.5 font-display text-sm font-black uppercase tracking-[0.08em] text-white shadow-[0_14px_44px_rgba(255,30,46,0.26)] transition hover:brightness-110 disabled:opacity-60"
           >
-            {submitting ? "Ukládám…" : "Uložit koncept"}
+            {submitting ? "Ukládám…" : contestLocked ? "Koncept uzamčen" : "Uložit koncept"}
           </button>
           <button
             type="button"
             onClick={submitPickemToContest}
-            disabled={submitting}
+            disabled={submitting || contestLocked}
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#00E5FF]/35 bg-white/[0.04] px-5 py-3.5 text-sm font-semibold text-white/90 shadow-[0_0_0_1px_rgba(0,229,255,0.10)] transition hover:bg-white/[0.07] hover:border-[#00E5FF]/55 disabled:opacity-60"
           >
-            {submitting ? "Odesílám…" : "Odeslat do soutěže"}
+            {submitting ? "Odesílám…" : contestLocked ? "V soutěži odesláno" : "Odeslat do soutěže"}
           </button>
           <button
             type="button"
@@ -1705,7 +1768,8 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
           <button
             type="button"
             onClick={resetAll}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#FF1E2E]/40 hover:bg-[#FF1E2E]/[0.07]"
+            disabled={contestLocked}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/88 transition hover:border-[#FF1E2E]/40 hover:bg-[#FF1E2E]/[0.07] disabled:opacity-50"
           >
             <Trash2 className="h-4 w-4" aria-hidden />
             Vymazat

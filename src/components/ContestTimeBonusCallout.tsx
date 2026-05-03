@@ -66,21 +66,23 @@ export function ContestTimeBonusCallout({
           />
         </>
       ) : null}
-      <div className={`flex items-start gap-3 ${!isLanding ? "text-left" : ""} ${isLanding ? "relative z-10 p-5 sm:p-6" : ""}`}>
+      <div
+        className={`${!isLanding ? "flex items-start gap-3 text-left" : ""} ${isLanding ? "relative z-10 flex flex-col gap-5 p-6 sm:flex-row sm:items-start sm:gap-6 sm:p-7" : ""}`}
+      >
         <div
           className={
             isLanding
-              ? "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-300/35 via-sky-500/15 to-[#003087]/40 text-sky-50 shadow-[0_0_0_1px_rgba(125,211,252,0.35),0_10px_36px_rgba(56,189,248,0.32),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-sky-300/28 sm:h-14 sm:w-14"
+              ? "mx-auto flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-300/35 via-sky-500/15 to-[#003087]/40 text-sky-50 shadow-[0_0_0_1px_rgba(125,211,252,0.35),0_10px_36px_rgba(56,189,248,0.32),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-sky-300/28 sm:mx-0 sm:h-[4.5rem] sm:w-[4.5rem]"
               : "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-400/20 text-sky-200 ring-1 ring-sky-400/35"
           }
         >
-          <Zap className={isLanding ? "h-6 w-6 drop-shadow-[0_0_10px_rgba(56,189,248,0.55)] sm:h-7 sm:w-7" : "h-4 w-4"} aria-hidden />
+          <Zap className={isLanding ? "h-7 w-7 drop-shadow-[0_0_10px_rgba(56,189,248,0.55)] sm:h-8 sm:w-8" : "h-4 w-4"} aria-hidden />
         </div>
-        <div className={`min-w-0 flex-1 ${!isLanding ? "text-left" : ""}`}>
+        <div className={`min-w-0 flex-1 ${!isLanding ? "text-left" : "text-center sm:text-left"}`}>
           <p
             className={
               isLanding
-                ? "font-display text-[10px] font-bold uppercase tracking-[0.26em] text-sky-200/85"
+                ? "font-display text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/90 sm:text-xs sm:tracking-[0.2em]"
                 : "text-xs font-semibold tracking-wide text-sky-300/95"
             }
           >
@@ -88,13 +90,16 @@ export function ContestTimeBonusCallout({
           </p>
           {isLanding ? (
             <>
-              <p className="mt-2 font-display text-[clamp(1.75rem,5vw,2.35rem)] font-bold leading-[1.05] tracking-tight">
+              <p className="mt-3 font-display text-[clamp(1.85rem,4.2vw,2.5rem)] font-bold leading-[1.08] tracking-tight">
                 {bonusPercent > 0 ? (
                   <>
                     <span className="bg-gradient-to-br from-sky-50 via-sky-200 to-sky-400/95 bg-clip-text text-transparent drop-shadow-[0_2px_20px_rgba(56,189,248,0.35)]">
                       +{bonusPercent} %
                     </span>
-                    <span className="text-[0.62em] font-semibold uppercase tracking-[0.12em] text-white/75"> k bodům</span>
+                    <span className="text-[0.58em] font-semibold uppercase tracking-[0.14em] text-white/78">
+                      {" "}
+                      k bodům
+                    </span>
                   </>
                 ) : (
                   <span className="text-white/90">Právě bez časového bonusu</span>
@@ -108,12 +113,12 @@ export function ContestTimeBonusCallout({
                   více v pravidlech soutěže
                 </Link>
               </p>
-              <div className="mt-4 rounded-2xl border border-white/[0.07] bg-black/25 px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-4">
-                <div className="flex gap-2.5">
-                  <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-sky-200/55" aria-hidden />
-                  <p className="text-[11px] leading-relaxed text-white/50 sm:text-xs">
-                    <span className="block font-medium text-white/65">Uzávěrka odeslání</span>
-                    <span className="mt-0.5 block text-white/80">{CONTEST_DEADLINE_CS}</span>
+              <div className="mt-5 rounded-2xl border border-white/[0.08] bg-black/30 px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:py-4">
+                <div className="flex gap-3">
+                  <CalendarClock className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 text-sky-300/70" aria-hidden />
+                  <p className="text-xs leading-relaxed text-white/55">
+                    <span className="block font-semibold text-white/72">Uzávěrka odeslání</span>
+                    <span className="mt-1 block text-[13px] text-white/88">{CONTEST_DEADLINE_CS}</span>
                     {!submissionOpen ? (
                       <span className="mt-2 block font-semibold text-rose-300/95">
                         Soutěž už nepřijímá nové nominace k vyhodnocení.

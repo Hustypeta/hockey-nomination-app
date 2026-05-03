@@ -26,6 +26,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Chybí payload Pick’em." }, { status: 400 });
     }
 
+    const locked = await prisma.pickemEntry.findUnique({
+      where: { userId: session.user.id },
+      select: { contestSubmittedAt: true },
+    });
+    if (locked?.contestSubmittedAt) {
+      return NextResponse.json(
+        {
+          error:
+            "Pick’em už máš odeslaný do soutěže — uložený koncept na serveru už nejde měnit.",
+        },
+        { status: 409 }
+      );
+    }
+
     const entry = await prisma.pickemEntry.upsert({
       where: { userId: session.user.id },
       create: {
