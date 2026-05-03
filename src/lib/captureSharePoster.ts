@@ -1,5 +1,8 @@
 import { getFontEmbedCSS, toCanvas } from "html-to-image";
-import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
+import {
+  SHARE_POSTER_CAPTURE_PIXEL_RATIO,
+  SHARE_POSTER_MAX_CANVAS_EDGE_PX,
+} from "@/lib/sharePosterLayout";
 
 /** Balíček `html-to-image` exportuje `Options` jen interně — typ bereme z `toCanvas`. */
 export type HtmlToImageOptions = NonNullable<Parameters<typeof toCanvas>[1]>;
@@ -10,6 +13,22 @@ export type HtmlToImageOptions = NonNullable<Parameters<typeof toCanvas>[1]>;
  *   aby se při serializaci do SVG/canvas nepoužilo rozmazané systémové písmo.
  * – `skipFonts: false` vynutí embed Google Fonts z odkazů v dokumentu.
  */
+/** Bezpečný pixelRatio — canvas ≈ (w×pr) × (h×pr) musí vejít do limitů WebKit (mobil). */
+export function safePosterCapturePixelRatio(
+  element: HTMLElement,
+  desired: number = SHARE_POSTER_CAPTURE_PIXEL_RATIO
+): number {
+  const w = Math.max(1, Math.ceil(element.offsetWidth));
+  const h = Math.max(1, Math.ceil(element.scrollHeight || element.offsetHeight));
+  const maxE = SHARE_POSTER_MAX_CANVAS_EDGE_PX;
+  const byEdge = Math.min(maxE / w, maxE / h);
+  const maxArea = maxE * maxE;
+  const byArea = Math.sqrt(maxArea / (w * h));
+  const raw = Math.min(desired, byEdge, byArea);
+  const rounded = Math.floor(raw * 1000) / 1000;
+  return Math.max(0.6, Math.min(desired, rounded));
+}
+
 export async function buildHtmlToImageOptions(
   element: HTMLElement,
   partial: HtmlToImageOptions
@@ -37,7 +56,8 @@ export async function captureElementToCanvas(
   element: HTMLElement,
   options?: { scale?: number; backgroundColor?: string | null }
 ): Promise<HTMLCanvasElement> {
-  const pixelRatio = options?.scale ?? SHARE_POSTER_CAPTURE_PIXEL_RATIO;
+  const desired = options?.scale ?? SHARE_POSTER_CAPTURE_PIXEL_RATIO;
+  const pixelRatio = safePosterCapturePixelRatio(element, desired);
   const opts = await buildHtmlToImageOptions(element, {
     pixelRatio,
     backgroundColor: options?.backgroundColor ?? "#e8ecf2",

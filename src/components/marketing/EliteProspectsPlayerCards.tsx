@@ -65,6 +65,12 @@ function IgJerseyHero({ player }: { player: Player }) {
   const ln = jerseyNameOnJersey(player.name);
   const lines = splitNameplateLines(ln);
   const num = jerseyNumberForPlayer(player);
+  const longestLine = Math.max(1, ...lines.map((t) => [...t].length));
+  /** Kratší horní hranice = delší jména zůstanou na červeném těle dresu, ne na rukávech. */
+  const nameMaxPx = Math.round(Math.min(46, Math.max(22, 300 / longestLine)));
+  const numMaxPx = Math.round(Math.min(64, Math.max(34, nameMaxPx * 1.38)));
+  const nameStroke = nameMaxPx >= 34 ? "1.75px" : "1.35px";
+  const numStroke = numMaxPx >= 52 ? "2px" : "1.5px";
   return (
     <div className="relative mx-auto w-[560px] max-w-[560px] overflow-hidden rounded-[22px] border border-white/14 bg-white/[0.06] shadow-[0_28px_90px_rgba(0,0,0,0.55)]">
       <div className="relative aspect-[100/120] w-full bg-gradient-to-b from-white/8 to-black/15">
@@ -77,19 +83,33 @@ function IgJerseyHero({ player }: { player: Player }) {
           decoding="async"
           className={`${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_14px_40px_rgba(0,0,0,0.55)]`}
         />
-        {/* Text overlay – bigger + no clipping */}
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center pt-[38%]">
-          <div className="flex w-full flex-col items-center px-10">
+        {/* Větší vlajka než tisk na assetu — sedí na bílý yok (stín překryje případný malý motiv pod ní). */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-[14.5%] z-[1] -translate-x-1/2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]"
+          aria-hidden
+        >
+          <svg
+            viewBox="0 0 3 2"
+            className="block h-[42px] w-[63px] rounded-[3px] ring-1 ring-black/25 sm:h-[48px] sm:w-[72px]"
+            aria-hidden
+          >
+            <rect fill="#ffffff" width="3" height="2" />
+            <rect fill="#d7141a" y="1" width="3" height="1" />
+            <polygon fill="#11457e" points="0,0 1.5,1 0,2" />
+          </svg>
+        </div>
+        <div className="pointer-events-none absolute inset-0 z-[2] flex flex-col items-center pt-[38%]">
+          <div className="flex w-full max-w-[68%] flex-col items-center px-1">
             {lines.map((t, i) => (
               <div
                 key={i}
-                className="font-display font-black uppercase tracking-[0.1em] text-white"
+                className="w-full text-center font-display font-black uppercase tracking-[0.045em] text-white"
                 style={{
-                  fontSize: "clamp(40px, 4.8vw, 58px)",
+                  fontSize: `clamp(20px, 3.6vw, ${nameMaxPx}px)`,
                   lineHeight: 1.02,
                   textShadow:
                     "0 2px 0 rgba(0,0,0,0.55), 0 0 12px rgba(0,0,0,0.38)",
-                  WebkitTextStroke: "2px rgba(0,45,84,0.9)",
+                  WebkitTextStroke: `${nameStroke} rgba(0,45,84,0.88)`,
                 }}
               >
                 {t}
@@ -97,12 +117,12 @@ function IgJerseyHero({ player }: { player: Player }) {
             ))}
           </div>
           <div
-            className="mt-2 font-display font-black tabular-nums text-white"
+            className="mt-1.5 font-display font-black tabular-nums text-white"
             style={{
-              fontSize: "clamp(52px, 6.0vw, 76px)",
+              fontSize: `clamp(30px, 4.5vw, ${numMaxPx}px)`,
               lineHeight: 0.95,
               textShadow: "0 2px 0 rgba(0,0,0,0.55), 0 0 14px rgba(0,0,0,0.35)",
-              WebkitTextStroke: "2px rgba(0,45,84,0.9)",
+              WebkitTextStroke: `${numStroke} rgba(0,45,84,0.88)`,
             }}
           >
             {num}
@@ -111,9 +131,9 @@ function IgJerseyHero({ player }: { player: Player }) {
           <img
             src={SITE_LOGO_URL}
             alt=""
-            width={200}
-            height={56}
-            className="mt-5 h-11 w-auto max-w-[200px] object-contain opacity-95 drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]"
+            width={1000}
+            height={280}
+            className="mt-3 h-[252px] w-full max-w-[520px] object-contain opacity-95 drop-shadow-[0_2px_14px_rgba(0,0,0,0.55)] sm:mt-4 sm:h-[296px] sm:max-w-[540px]"
           />
         </div>
       </div>
@@ -187,7 +207,7 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
       />
 
       <div className="relative z-10 flex h-full min-h-0 flex-col px-14 pb-12 pt-10">
-        <div className="flex items-end justify-between">
+        <div className="flex items-end">
           <div className="min-w-0">
             <p className="font-display text-[76px] font-black leading-[1.02] tracking-[0.02em] text-white">
               {m.player.name}
@@ -196,9 +216,6 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
               {m.player.club} · {m.player.league}
             </p>
           </div>
-          <span className="shrink-0 rounded-full border border-white/14 bg-black/30 px-5 py-3 text-[16px] font-black uppercase tracking-[0.18em] text-white/75">
-            {s?.seasonLabel ?? "—"}
-          </span>
         </div>
 
         <div className="mt-6 flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -536,7 +553,9 @@ export function EliteProspectsPlayerCards() {
     setPngBusy(true);
     try {
       await document.fonts.ready.catch(() => undefined);
-      await new Promise<void>((r) => requestAnimationFrame(() => r()));
+      await new Promise<void>((r) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => r()))
+      );
       const canvas = await captureElementToCanvas(el, {
         scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
         backgroundColor: "#05080f",

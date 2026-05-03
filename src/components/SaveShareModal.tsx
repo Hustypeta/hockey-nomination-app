@@ -47,7 +47,6 @@ interface SaveShareModalProps {
 
 const SHARE_TITLE = "MS 2026 – nominace";
 const SHARE_TEXT = "Moje nominace na MS v hokeji 2026 🇨🇿";
-/** Produktové pravidlo: plakát nikdy nesmí oříznout hráče — vždy zachovej celý obsah (contain). */
 
 export function SaveShareModal({
   isOpen,
@@ -124,7 +123,7 @@ export function SaveShareModal({
     }
     const map = { "1x1": [1080, 1080], "9x16": [1080, 1920], "16x9": [1920, 1080] } as const;
     const [w, h] = map[previewFrame];
-    // Záměrně: žádný crop. Když budeš chtít "vyplnit", musí to být nová explicitní volba.
+    /* Všechny poměry letterbox = celý plakát (žádný ořez hráčů). */
     const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
     setFramedPreviewUrl(canvasToPngDataUrl(out));
   }, [previewDataUrl, previewFrame, exportLetterboxTheme]);
@@ -138,7 +137,10 @@ export function SaveShareModal({
       flushSync(() => {
         onBeforeCapture?.();
       });
-      await new Promise<void>((r) => requestAnimationFrame(() => r()));
+      /* Dvojité rAF: po zobrazení capture DOMu musí WebKit spočítat výšku (scrollHeight) před měřením pro canvas. */
+      await new Promise<void>((r) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => r()))
+      );
       const el = captureRef.current;
       if (!el) {
         setShareHint("Plakát se nepodařilo najít. Zkus stránku obnovit.");
@@ -163,7 +165,9 @@ export function SaveShareModal({
       setPreviewFrame("original");
     } catch (err) {
       console.error(err);
-      setShareHint("Generování obrázku se nepovedlo. Zkus to znovu.");
+      setShareHint(
+        "Generování obrázku se nepovedlo. Zkus to znovu za chvíli; na mobilu často pomůže obnovit stránku nebo zavřít jiné karty."
+      );
     } finally {
       setShareBusy(false);
       onAfterCapture?.();
@@ -193,7 +197,9 @@ export function SaveShareModal({
         "Obrázek je ve schránce — na Instagramu ho vlož (Ctrl+V) nebo ho nahraj ze složky Stažené."
       );
     } else if (!result.ok && result.reason !== "cancelled") {
-      setShareHint("Systémové sdílení tady nejde — stáhni PNG níže nebo zkopíruj odkaz.");
+      setShareHint(
+        "Systémové sdílení obrázku tady nejde — použij „Stáhnout PNG“ níže, nebo zkopíruj odkaz. Na iPhonu jde obrázek často jen uložit do Fotek a odtud sdílet."
+      );
     }
   };
 
@@ -423,6 +429,15 @@ export function SaveShareModal({
                       key={id}
                       type="button"
                       onClick={() => setPreviewFrame(id)}
+                      title={
+                        id === "1x1"
+                          ? "Celá soupiska v čtverci — žádný ořez hráčů; u vysokého plakátu zůstanou úzké pruhy po stranách."
+                          : id === "9x16"
+                            ? "Celý plakát ve formátu na mobil — všichni hráči."
+                            : id === "16x9"
+                              ? "Celý plakát na šířku — všichni hráči."
+                              : "Původní poměr exportu."
+                      }
                       className={`rounded-lg py-2 text-center text-[10px] font-bold uppercase tracking-wide sm:text-[11px] ${
                         previewFrame === id
                           ? "bg-[#003087] text-white ring-1 ring-sky-400/50"
@@ -433,6 +448,10 @@ export function SaveShareModal({
                     </button>
                   ))}
                 </div>
+                <p className="mt-2 text-center text-[11px] leading-snug text-white/50">
+                  Export je celý plakát bez ořezu hráčů. Plakát je zhuštěný kvůli čtverci 1 : 1 — na výšku často
+                  vyhoví <strong className="font-semibold text-white/70">9 : 16</strong>.
+                </p>
               </div>
 
               <div className="overflow-hidden rounded-2xl border border-white/12 bg-black/30 p-2 shadow-inner">
@@ -448,6 +467,7 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={() => downloadAspect(1080, 1920, "stories-9x16")}
+                  title="Celá soupiska — všichni hráči; na telefonu větší než čtverec."
                   className="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors hover:bg-white/[0.14]"
                 >
                   <Download className="h-4 w-4" aria-hidden />
@@ -456,6 +476,7 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={() => downloadAspect(1080, 1080, "feed-1x1")}
+                  title="1080×1080 — celá soupiska bez ořezu; boční pruhy kvůli vysokému plakátu."
                   className="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors hover:bg-white/[0.14]"
                 >
                   <Download className="h-4 w-4" aria-hidden />

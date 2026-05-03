@@ -10,3 +10,9 @@ export const SHARE_POSTER_WIDTH_PX = 1120;
  * 3–4 stačí pro výstupy s cover cropem až ~1920 px kraťajší strany.
  */
 export const SHARE_POSTER_CAPTURE_PIXEL_RATIO = 3;
+
+/**
+ * WebKit na iOS padá / hází při `toDataURL`, když canvas překročí ~4096 px na stranu nebo velkou plochu.
+ * {@link captureElementToCanvas} výsledný ratio automaticky sníží podle rozměrů DOMu.
+ */
+export const SHARE_POSTER_MAX_CANVAS_EDGE_PX = 4096;

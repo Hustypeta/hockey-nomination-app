@@ -11,6 +11,18 @@ function dataUrlToBlob(dataUrl: string): Promise<Blob> {
   return fetch(dataUrl).then((r) => r.blob());
 }
 
+/**
+ * Safari / WebKit na iOS často odmítne `share({ files, url, text, title })` — funguje jen `{ files }`.
+ * iPadOS v „desktop“ režimu hlásí Macintosh + touch.
+ */
+export function prefersFilesOnlyNativeShare(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  if (/iP(hone|ad|od)/i.test(ua)) return true;
+  if (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1) return true;
+  return false;
+}
+
 /** Zda prohlížeč umí sdílet soubory (typicky mobil Safari / Chrome). */
 export function canSharePngFile(): boolean {
   if (typeof navigator === "undefined" || typeof File === "undefined") return false;
@@ -47,20 +59,29 @@ export async function sharePngDataUrl(
 
   const file = new File([blob], meta.filename, { type: "image/png" });
 
-  if (navigator.share && navigator.canShare?.({ files: [file] })) {
-    try {
-      await navigator.share({
-        files: [file],
-        title: meta.title ?? "MS 2026 – nominace",
-        text: meta.text ?? "",
-        url: meta.url,
-      });
-      return { ok: true, method: "native" };
-    } catch (e) {
-      if (e instanceof Error && e.name === "AbortError") {
-        return { ok: false, reason: "cancelled" };
+  if (navigator.share) {
+    const title = meta.title ?? "MS 2026 – nominace";
+    const text = meta.text ?? "";
+    const payloads: ShareData[] = (() => {
+      if (prefersFilesOnlyNativeShare()) return [{ files: [file] }];
+      const out: ShareData[] = [];
+      if (meta.url) out.push({ files: [file], title, text, url: meta.url });
+      out.push({ files: [file], title, text });
+      out.push({ files: [file] });
+      return out;
+    })();
+
+    for (const data of payloads) {
+      if (typeof navigator.canShare === "function" && !navigator.canShare(data)) continue;
+      try {
+        await navigator.share(data);
+        return { ok: true, method: "native" };
+      } catch (e) {
+        if (e instanceof Error && e.name === "AbortError") {
+          return { ok: false, reason: "cancelled" };
+        }
+        /* další varianta payloadu nebo schránka */
       }
-      /* pokračuj na schránku */
     }
   }
 

@@ -188,9 +188,6 @@ export function LandingContent() {
                       <p className="font-display text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/80 sm:text-xs sm:tracking-[0.2em]">
                         Komunita
                       </p>
-                      <p className="mt-1 text-[13px] leading-snug text-white/45 sm:text-sm">
-                        Živá čísla z Lineupu — nominace, lidé v komunitě, Pick’em a odpočet.
-                      </p>
                     </div>
                   </div>
 
