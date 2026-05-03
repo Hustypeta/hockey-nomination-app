@@ -187,7 +187,7 @@ export function LandingContent() {
                     <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-sky-200/70">
                       Komunita
                     </p>
-                    <div className="mt-3 grid w-full grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+                    <div className="mt-3 grid w-full min-w-0 grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
                       {[
                         {
                           tone: "bg-[#FF1E2E]/10 ring-[#FF1E2E]/22",
@@ -216,19 +216,21 @@ export function LandingContent() {
                       ].map((x) => (
                         <div
                           key={x.label}
-                          className="flex min-h-[4.1rem] flex-col justify-center rounded-2xl border border-white/10 bg-white/[0.06] px-3 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                          className="flex min-h-[4.25rem] min-w-0 flex-col justify-between gap-1 rounded-2xl border border-white/10 bg-white/[0.06] px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:min-h-[4.4rem] sm:px-2.5 sm:py-2"
                         >
-                          <div className="flex items-center gap-2">
-                            <span className={`flex h-7 w-7 items-center justify-center rounded-xl ring-1 ${x.tone}`}>
+                          <div className="flex min-w-0 items-center justify-between gap-1.5">
+                            <span
+                              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl ring-1 ${x.tone}`}
+                            >
                               <span className="text-[13px] leading-none">{x.icon}</span>
                             </span>
-                            <span className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">
-                              {x.label}
+                            <span className="min-w-0 truncate text-right font-display text-xl font-black tabular-nums leading-none text-white sm:text-2xl">
+                              {x.value === null ? "—" : formatCs(x.value)}
                             </span>
                           </div>
-                          <div className="mt-1.5 font-display text-2xl font-black tabular-nums text-white">
-                            {x.value === null ? "—" : formatCs(x.value)}
-                          </div>
+                          <p className="min-w-0 text-center text-[9px] font-black uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-[10px] sm:tracking-[0.18em]">
+                            {x.label}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -339,14 +341,14 @@ export function LandingContent() {
                   <LayoutGrid className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
-                  V průběhu šampionátu bude také zpřístupněna Pick’em play-off soutěž, kde si můžeš tipnout výsledek
-                  play-off pavouka, nebo kdo vyhraje kanadské bodování šampionátu.
+                  Svoje predikční schopnosti si můžeš ověřit také v Pick’emu na MS 2026, kde lze tipovat výsledky
+                  skupin, play off pavouka nebo nejlepšího českého střelce turnaje.
                 </p>
                 <Link
                   href="/bracket"
                   className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-slate-400 transition hover:text-slate-200"
                 >
-                  Pick’em — připravujeme
+                  Pick’em
                   <ChevronRight className="h-4 w-4 opacity-70" aria-hidden />
                 </Link>
               </div>

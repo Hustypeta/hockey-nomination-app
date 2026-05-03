@@ -35,8 +35,7 @@ export function AuthorBriefTeaser() {
             Vždycky mě bavilo sledovat české hokejisty a v hlavě si skládat nominace na hokejové turnaje. Tímhle
             projektem chci svoji zálibu rozšířit i mezi další hokejové nadšence, kterých je podle mého v naší
             hokejové zemičce nespočítaně. Ne nadarmo se totiž říká: „Co Čech, to hokejový trenér.“ Pojď se přidat
-            a pomoz mi vybudovat komunitu lidí, kteří hokejem žijí stejně jako já. Víc o projektu a o mně brzy
-            doplníme.
+            a pomoz mi vybudovat komunitu lidí, kteří hokejem žijí stejně jako já.
           </p>
         </div>
       </div>
