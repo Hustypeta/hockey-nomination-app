@@ -169,7 +169,8 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
   );
 }
 
-const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function PlayerIgCard({ m }, ref) {
+const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function PlayerIgCard(props, ref) {
+  const { m } = props;
   const s = m.stats;
   return (
     <div
@@ -220,7 +221,7 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
             href="https://hokejlineup.cz"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-display text-xl font-bold tracking-[0.06em] text-white/45 underline-offset-4 transition hover:text-[#67E8F9] hover:underline sm:text-2xl"
+            className="font-display text-xl font-bold tracking-[0.06em] text-white/45 underline-offset-4 transition hover:text-cyan-300 hover:underline sm:text-2xl"
           >
             hokejlineup.cz
           </Link>
@@ -229,6 +230,8 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
     </div>
   );
 });
+
+PlayerIgCard.displayName = "PlayerIgCard";
 
 const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
   // Vyplníš mi hodnoty a já je sem doplním 1:1 (GP, G, A, PTS, +/-, PIM + tým/ligu/season).
