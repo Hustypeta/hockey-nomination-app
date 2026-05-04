@@ -35,11 +35,15 @@ type PlayerCardModel = {
   stats?: EliteProspectsStats;
 };
 
-/** Tmavě modrá + jemný světlý „halo“ stín — čitelné na černém PNG pozadí. */
+/** Tmavě modrá + silnější „halo“ — čitelné i přes fotku v pozadí. */
 const IG_PROMO_TEXT =
-  "text-[#002d54] [text-shadow:0_1px_0_rgba(255,255,255,0.78),0_2px_18px_rgba(96,165,250,0.55)]";
+  "text-[#001f3d] [text-shadow:0_2px_0_rgba(255,255,255,0.92),0_0_1px_rgba(255,255,255,0.95),0_4px_22px_rgba(147,197,253,0.65)]";
 const IG_PROMO_TEXT_SOFT =
-  "text-[#003875] [text-shadow:0_1px_0_rgba(255,255,255,0.65),0_2px_14px_rgba(96,165,250,0.45)]";
+  "text-[#002d54] [text-shadow:0_1px_0_rgba(255,255,255,0.88),0_3px_16px_rgba(147,197,253,0.55)]";
+
+const IG_OUTLINE =
+  "rounded-[28px] border-[5px] border-neutral-950 bg-black/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_14px_44px_rgba(0,0,0,0.58)] ring-2 ring-white/40";
+const IG_FRAME_INNER = "overflow-hidden rounded-[18px] ring-2 ring-neutral-950/80";
 
 function fmt(v: number | null | undefined) {
   return v === null || v === undefined ? "—" : String(v);
@@ -49,43 +53,47 @@ function statRowBadge(s: { team: string; league: string; phase?: "RS" | "PO" }) 
   const phase =
     s.phase === "PO" ? (
       <span
-        className={`rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[13px] font-black uppercase tracking-[0.16em] ${IG_PROMO_TEXT}`}
+        className={`rounded-full border-[3px] border-neutral-950 bg-black/30 px-3 py-1.5 text-[14px] font-black uppercase tracking-[0.14em] ${IG_PROMO_TEXT}`}
       >
         PO
       </span>
     ) : (
       <span
-        className={`rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[13px] font-black uppercase tracking-[0.16em] ${IG_PROMO_TEXT}`}
+        className={`rounded-full border-[3px] border-neutral-950 bg-black/30 px-3 py-1.5 text-[14px] font-black uppercase tracking-[0.14em] ${IG_PROMO_TEXT}`}
       >
         RS
       </span>
     );
   return (
-    <div className={`flex min-w-0 flex-wrap items-center gap-2 text-[18px] font-semibold ${IG_PROMO_TEXT}`}>
+    <div className={`flex min-w-0 flex-wrap items-center gap-2 text-[20px] font-bold ${IG_PROMO_TEXT}`}>
       {phase}
       <span className="truncate">{s.league ? `${s.team} · ${s.league}` : s.team}</span>
     </div>
   );
 }
 
-/** Čistý podklad dresu — bez potisku jména/čísla/loga (PNG s průhledným pozadím kolem). */
+/**
+ * Dres v kompletním rámu (horní + spodní okraj) — menší šířka, ať se rámy s statistikami nepřekrývají na PNG.
+ */
 function IgJerseyHero({ player, size = "normal" }: { player: Player; size?: "normal" | "compact" }) {
-  const w = size === "compact" ? "w-[500px] max-w-[500px]" : "w-[560px] max-w-[560px]";
+  const w = size === "compact" ? "w-[420px] max-w-[420px]" : "w-[470px] max-w-[470px]";
   return (
     <div
-      className={`relative mx-auto ${w} overflow-hidden rounded-[22px] border border-black/80 bg-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]`}
+      className={`relative mx-auto w-fit max-w-full ${IG_OUTLINE} p-4`}
       aria-label={player.name}
     >
-      <div className="relative aspect-[100/120] w-full bg-transparent">
-        {/* eslint-disable-next-line @next/next/no-img-element -- static jersey */}
-        <img
-          src={CZ_JERSEY_BACK_BLANK_SRC}
-          alt=""
-          width={560}
-          height={672}
-          decoding="async"
-          className={`${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_10px_28px_rgba(0,0,0,0.35)]`}
-        />
+      <div className={`relative mx-auto ${w} ${IG_FRAME_INNER}`}>
+        <div className="relative aspect-[100/120] w-full bg-black/20">
+          {/* eslint-disable-next-line @next/next/no-img-element -- static jersey */}
+          <img
+            src={CZ_JERSEY_BACK_BLANK_SRC}
+            alt=""
+            width={560}
+            height={672}
+            decoding="async"
+            className={`${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_8px_22px_rgba(0,0,0,0.45)]`}
+          />
+        </div>
       </div>
     </div>
   );
@@ -94,32 +102,32 @@ function IgJerseyHero({ player, size = "normal" }: { player: Player; size?: "nor
 function StatsTable({ s }: { s: EliteProspectsStats }) {
   const headers = ["GP", "G", "A", "TP", "PIM", "+/-"] as const;
   return (
-    <div className="w-full rounded-[34px] border border-black/80 bg-black/10 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+    <div className={`w-full ${IG_OUTLINE} p-5 sm:p-6`}>
       <div className="flex items-center justify-between gap-4">
-        <div className={`text-[34px] font-black uppercase tracking-[0.14em] ${IG_PROMO_TEXT}`}>Statistiky</div>
+        <div className={`text-[40px] font-black uppercase tracking-[0.1em] ${IG_PROMO_TEXT}`}>Statistiky</div>
         <div
-          className={`rounded-full border border-black/70 bg-transparent px-7 py-3.5 text-[28px] font-black tracking-[0.05em] ${IG_PROMO_TEXT}`}
+          className={`rounded-full border-[3px] border-neutral-950 bg-black/25 px-7 py-3.5 text-[32px] font-black tracking-[0.04em] ring-1 ring-white/30 ${IG_PROMO_TEXT}`}
         >
-          <span className={`font-semibold normal-case ${IG_PROMO_TEXT_SOFT}`}>Sezóna </span>
-          <span className={`font-black uppercase tracking-[0.18em] ${IG_PROMO_TEXT}`}>{s.seasonLabel}</span>
+          <span className={`font-bold normal-case ${IG_PROMO_TEXT_SOFT}`}>Sezóna </span>
+          <span className={`font-black uppercase tracking-[0.12em] ${IG_PROMO_TEXT}`}>{s.seasonLabel}</span>
         </div>
       </div>
 
-      <div className="mt-4 space-y-4">
+      <div className="mt-5 space-y-5">
         {s.rows.map((r, idx) => (
-          <div key={idx} className="space-y-2">
+          <div key={idx} className="space-y-2.5">
             {statRowBadge(r)}
-            <div className="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-6 gap-2.5">
               {headers.map((h) => (
                 <div
                   key={h}
-                  className="rounded-2xl border border-black/70 bg-transparent px-3 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+                  className="rounded-2xl border-[3px] border-neutral-950 bg-black/15 px-2 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] ring-1 ring-white/20"
                 >
-                  <div className={`text-[18px] font-black uppercase tracking-[0.14em] ${IG_PROMO_TEXT_SOFT}`}>
+                  <div className={`text-[20px] font-black uppercase tracking-[0.1em] ${IG_PROMO_TEXT_SOFT}`}>
                     {h}
                   </div>
                   <div
-                    className={`mt-2 font-display text-[44px] font-black tabular-nums leading-none ${IG_PROMO_TEXT}`}
+                    className={`mt-2 font-display text-[50px] font-black tabular-nums leading-none tracking-tight ${IG_PROMO_TEXT}`}
                   >
                     {h === "GP"
                       ? fmt(r.gp)
@@ -146,7 +154,8 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
 const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function PlayerIgCard(props, ref) {
   const { m } = props;
   const s = m.stats;
-  const denseStats = (s?.rows.length ?? 0) >= 3;
+  /** Od 2 řádků statistik už zmenšit dres — jinak se rámy s tabulkou vizuálně „lepí“. */
+  const denseStats = (s?.rows.length ?? 0) >= 2;
   return (
     <div
       ref={ref}
@@ -156,26 +165,26 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
         <div className="flex items-end">
           <div className="min-w-0">
             <p
-              className={`font-display text-[76px] font-black leading-[1.02] tracking-[0.02em] ${IG_PROMO_TEXT}`}
+              className={`font-display text-[88px] font-black leading-[0.98] tracking-[0.01em] ${IG_PROMO_TEXT}`}
             >
               {m.player.name}
             </p>
-            <p className={`mt-3 text-[36px] font-semibold ${IG_PROMO_TEXT}`}>
+            <p className={`mt-3 text-[40px] font-bold ${IG_PROMO_TEXT}`}>
               {m.player.club} · {m.player.league}
             </p>
           </div>
         </div>
 
-        <div className="mt-6 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div className="flex min-h-0 min-w-0 flex-1 items-center justify-center py-1">
+        <div className="mt-5 flex min-h-0 flex-1 flex-col overflow-hidden">
+          <div className="flex min-h-0 min-w-0 flex-1 items-center justify-center py-2">
             <IgJerseyHero player={m.player} size={denseStats ? "compact" : "normal"} />
           </div>
-          <div className={`w-full shrink-0 ${denseStats ? "pt-6" : "pt-10"}`}>
+          <div className={`w-full shrink-0 ${denseStats ? "mt-10 pt-2" : "mt-12 pt-2"}`}>
             {s ? (
               <StatsTable s={s} />
             ) : (
               <div
-                className={`w-full rounded-[34px] border border-black/80 bg-black/10 p-10 text-center text-[26px] font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${IG_PROMO_TEXT}`}
+                className={`w-full p-10 text-center text-[28px] font-bold ${IG_OUTLINE} ${IG_PROMO_TEXT}`}
               >
                 Doplňte statistiky…
               </div>
@@ -188,7 +197,7 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
             href="https://hokejlineup.cz"
             target="_blank"
             rel="noopener noreferrer"
-            className={`font-display text-[32px] font-extrabold tracking-[0.06em] underline-offset-4 transition hover:text-[#0050a8] hover:underline ${IG_PROMO_TEXT}`}
+            className={`font-display text-[36px] font-black tracking-[0.05em] underline underline-offset-[8px] decoration-2 decoration-neutral-950/50 transition hover:decoration-[#0050a8] ${IG_PROMO_TEXT}`}
           >
             hokejlineup.cz
           </a>
