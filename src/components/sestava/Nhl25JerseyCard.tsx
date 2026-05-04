@@ -54,8 +54,6 @@ export interface Nhl25JerseyCardProps {
   size?: Nhl25JerseySize;
   /** `poster` = číslo jen na zádech, příjmení pod siluetou u vlajky (sdílecí plakát). */
   nameplateVariant?: "card" | "poster";
-  /** Barva příjmení pod dresem na plakátu (tmavé plátno = bílý text, světlé = modrá). */
-  posterHemOnDark?: boolean;
   /** Zvětšení jména+čísla na dresu (např. IG promo). */
   typographyScale?: number;
   isCaptain?: boolean;
@@ -75,7 +73,6 @@ export function Nhl25JerseyCard({
   className = "",
   disableMotion = false,
   nameplateVariant = "card",
-  posterHemOnDark = true,
   typographyScale = 1,
 }: Nhl25JerseyCardProps) {
   const empty = !player;
@@ -163,9 +160,7 @@ export function Nhl25JerseyCard({
             : `nhl25-jersey-card-frame nhl25-jersey-card-frame--filled flex flex-col gap-1 rounded-[11px] p-[5px]`
         }
       >
-        <div
-          className={`flex min-h-[1rem] shrink-0 px-0.5 ${nameplateVariant === "poster" ? "items-center justify-start" : "items-center justify-center"}`}
-        >
+        <div className="flex min-h-[1rem] shrink-0 items-center justify-center px-0.5">
           <span
             className={`
               rounded border border-[#11457e]/45 bg-[#11457e] font-display font-bold uppercase tracking-[0.14em] text-white shadow-sm
@@ -209,16 +204,12 @@ export function Nhl25JerseyCard({
               </div>
             </div>
             {hemLines.length > 0 ? (
-              <div className="pointer-events-none flex w-full min-w-0 items-center justify-between gap-2 pt-1">
-                <span className="nhl25-poster-jersey-hem-name flex min-w-0 flex-1 flex-col items-start justify-center gap-0.5 text-left leading-snug">
+              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center gap-1.5 pt-1">
+                <span className="nhl25-poster-jersey-hem-name flex min-w-0 max-w-full flex-col items-center justify-center gap-0.5 text-center leading-snug">
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
-                      className={`block w-full font-display text-[11px] font-black uppercase leading-[1.1] [overflow-wrap:anywhere] sm:text-[11.5px] ${
-                        posterHemOnDark
-                          ? "text-white/92 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
-                          : "text-[#003087] drop-shadow-[0_1px_0_rgba(255,255,255,0.55)]"
-                      }`}
+                      className="block w-full text-center font-display text-[11px] font-black uppercase leading-[1.1] [overflow-wrap:anywhere] sm:text-[11.5px]"
                     >
                       {line}
                     </span>
@@ -227,7 +218,7 @@ export function Nhl25JerseyCard({
                 <JerseyFlagCzInline
                   width={22}
                   height={14}
-                  className={`shrink-0 opacity-95 ${posterHemOnDark ? "drop-shadow-[0_1px_3px_rgba(0,0,0,0.65)]" : "drop-shadow-sm"}`}
+                  className="shrink-0 self-center opacity-95 drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)]"
                 />
               </div>
             ) : null}

@@ -86,6 +86,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
     return (
       <div
         ref={ref}
+        data-poster-surface={dark ? "dark" : "light"}
         className={`nhl25-share-poster-capture relative shrink-0 overflow-hidden rounded-2xl border antialiased subpixel-antialiased [text-rendering:optimizeLegibility] ${shell}`}
         style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
       >
@@ -126,7 +127,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                           player={getPlayer(gid)}
                           positionLabel="G"
                           size="compact"
-                          nameplateVariant="poster" posterHemOnDark={dark}
+                          nameplateVariant="poster"
                           isCaptain={gid ? captainId === gid : false}
                           isAssistant={gid ? aids.includes(gid) : false}
                           disableMotion
@@ -156,7 +157,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             player={getPlayer(line.lw)}
                             positionLabel="LW"
                             size="compact"
-                            nameplateVariant="poster" posterHemOnDark={dark}
+                            nameplateVariant="poster"
                             isCaptain={line.lw ? captainId === line.lw : false}
                             isAssistant={line.lw ? aids.includes(line.lw) : false}
                             disableMotion
@@ -167,7 +168,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             player={getPlayer(line.c)}
                             positionLabel="C"
                             size="compact"
-                            nameplateVariant="poster" posterHemOnDark={dark}
+                            nameplateVariant="poster"
                             isCaptain={line.c ? captainId === line.c : false}
                             isAssistant={line.c ? aids.includes(line.c) : false}
                             disableMotion
@@ -178,7 +179,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             player={getPlayer(line.rw)}
                             positionLabel="RW"
                             size="compact"
-                            nameplateVariant="poster" posterHemOnDark={dark}
+                            nameplateVariant="poster"
                             isCaptain={line.rw ? captainId === line.rw : false}
                             isAssistant={line.rw ? aids.includes(line.rw) : false}
                             disableMotion
@@ -208,7 +209,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             player={getPlayer(pair.lb)}
                             positionLabel="LD"
                             size="compact"
-                            nameplateVariant="poster" posterHemOnDark={dark}
+                            nameplateVariant="poster"
                             isCaptain={pair.lb ? captainId === pair.lb : false}
                             isAssistant={pair.lb ? aids.includes(pair.lb) : false}
                             disableMotion
@@ -219,7 +220,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             player={getPlayer(pair.rb)}
                             positionLabel="RD"
                             size="compact"
-                            nameplateVariant="poster" posterHemOnDark={dark}
+                            nameplateVariant="poster"
                             isCaptain={pair.rb ? captainId === pair.rb : false}
                             isAssistant={pair.rb ? aids.includes(pair.rb) : false}
                             disableMotion
@@ -238,7 +239,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                           player={getPlayer(seventhDefenseId)}
                           positionLabel="D"
                           size="compact"
-                          nameplateVariant="poster" posterHemOnDark={dark}
+                          nameplateVariant="poster"
                           isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
                           isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
                           disableMotion
@@ -270,7 +271,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                         player={getPlayer(lineup.forwardLines[3].x)}
                         positionLabel="X"
                         size="compact"
-                        nameplateVariant="poster" posterHemOnDark={dark}
+                        nameplateVariant="poster"
                         isCaptain={
                           lineup.forwardLines[3].x ? captainId === lineup.forwardLines[3].x : false
                         }
@@ -290,7 +291,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                         player={getPlayer(lineup.extraForwards[0] ?? null)}
                         positionLabel="F"
                         size="compact"
-                        nameplateVariant="poster" posterHemOnDark={dark}
+                        nameplateVariant="poster"
                         isCaptain={
                           lineup.extraForwards[0] ? captainId === lineup.extraForwards[0] : false
                         }
@@ -311,7 +312,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                           player={getPlayer(extraD)}
                           positionLabel="D"
                           size="compact"
-                          nameplateVariant="poster" posterHemOnDark={dark}
+                          nameplateVariant="poster"
                           isCaptain={captainId === extraD}
                           isAssistant={aids.includes(extraD)}
                           disableMotion

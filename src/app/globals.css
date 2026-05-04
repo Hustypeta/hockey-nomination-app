@@ -164,17 +164,26 @@ body {
     0 2px 7px rgba(0, 0, 0, 0.32);
 }
 
-/** Plakát — příjmení pod siluetou vedle vlajky (hem), čitelné, bez ořezu (wrap). */
-.nhl25-share-poster-capture .nhl25-poster-jersey-hem-name span {
-  color: #003087;
-  /* Příjmení pod dresy na exportním plakátu — výrazně větší než dřív. */
-  font-size: clamp(1.05rem, 3.4vw, 1.5rem);
-  font-weight: 900;
-  letter-spacing: 0.024em;
-  line-height: 1.08;
+/**
+ * Plakát — příjmení pod siluetou (hem). Velikost řídí Tailwind na spanu;
+ * barvu drží data-poster-surface, ať globální pravidlo nepřebije tmavý motiv modrou #003087.
+ */
+.nhl25-share-poster-capture[data-poster-surface="dark"] .nhl25-poster-jersey-hem-name span {
+  color: #e0f2fe;
+  letter-spacing: 0.03em;
+  line-height: 1.12;
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.55),
-    0 0 1px rgba(255, 255, 255, 0.35);
+    0 1px 2px rgba(0, 0, 0, 0.92),
+    0 0 14px rgba(0, 0, 0, 0.55);
+}
+
+.nhl25-share-poster-capture[data-poster-surface="light"] .nhl25-poster-jersey-hem-name span {
+  color: #002651;
+  letter-spacing: 0.024em;
+  line-height: 1.12;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.65),
+    0 0 1px rgba(255, 255, 255, 0.45);
 }
 
 /**
