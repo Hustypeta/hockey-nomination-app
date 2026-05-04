@@ -58,9 +58,12 @@ export async function captureElementToCanvas(
 ): Promise<HTMLCanvasElement> {
   const desired = options?.scale ?? SHARE_POSTER_CAPTURE_PIXEL_RATIO;
   const pixelRatio = safePosterCapturePixelRatio(element, desired);
+  const rawBg = options?.backgroundColor;
+  const backgroundColor =
+    rawBg === undefined ? "#e8ecf2" : rawBg === null ? "rgba(0,0,0,0)" : rawBg;
   const opts = await buildHtmlToImageOptions(element, {
     pixelRatio,
-    backgroundColor: options?.backgroundColor ?? "#e8ecf2",
+    backgroundColor,
   });
   return toCanvas(element, opts);
 }

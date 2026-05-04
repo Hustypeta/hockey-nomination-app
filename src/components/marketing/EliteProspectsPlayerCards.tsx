@@ -5,9 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Download } from "lucide-react";
-import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
-import { splitNameplateLines } from "@/lib/jerseyNameplate";
-import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 import {
   captureElementToCanvas,
@@ -15,7 +12,6 @@ import {
   downloadDataUrl,
 } from "@/lib/captureSharePoster";
 import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
-import { SITE_LOGO_URL } from "@/lib/siteBranding";
 import type { Player } from "@/types";
 
 type EliteProspectsStats = {
@@ -45,11 +41,11 @@ function fmt(v: number | null | undefined) {
 function statRowBadge(s: { team: string; league: string; phase?: "RS" | "PO" }) {
   const phase =
     s.phase === "PO" ? (
-      <span className="rounded-full border border-[#FF1E2E]/25 bg-[#FF1E2E]/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-white/85">
+      <span className="rounded-full border border-[#FF1E2E]/40 bg-transparent px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-white/85">
         PO
       </span>
     ) : (
-      <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-white/70">
+      <span className="rounded-full border border-white/25 bg-transparent px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-white/70">
         RS
       </span>
     );
@@ -61,19 +57,14 @@ function statRowBadge(s: { team: string; league: string; phase?: "RS" | "PO" }) 
   );
 }
 
+/** Čistý podklad dresu — bez potisku jména/čísla/loga (PNG s průhledným pozadím kolem). */
 function IgJerseyHero({ player }: { player: Player }) {
-  const ln = jerseyNameOnJersey(player.name);
-  const lines = splitNameplateLines(ln);
-  const num = jerseyNumberForPlayer(player);
-  const longestLine = Math.max(1, ...lines.map((t) => [...t].length));
-  /** Kratší horní hranice = delší jména zůstanou na červeném těle dresu, ne na rukávech. */
-  const nameMaxPx = Math.round(Math.min(46, Math.max(22, 300 / longestLine)));
-  const numMaxPx = Math.round(Math.min(64, Math.max(34, nameMaxPx * 1.38)));
-  const nameStroke = nameMaxPx >= 34 ? "1.75px" : "1.35px";
-  const numStroke = numMaxPx >= 52 ? "2px" : "1.5px";
   return (
-    <div className="relative mx-auto w-[560px] max-w-[560px] overflow-hidden rounded-[22px] border border-white/14 bg-white/[0.06] shadow-[0_28px_90px_rgba(0,0,0,0.55)]">
-      <div className="relative aspect-[100/120] w-full bg-gradient-to-b from-white/8 to-black/15">
+    <div
+      className="relative mx-auto w-[560px] max-w-[560px] overflow-hidden rounded-[22px] border border-white/18 bg-transparent"
+      aria-label={player.name}
+    >
+      <div className="relative aspect-[100/120] w-full bg-transparent">
         {/* eslint-disable-next-line @next/next/no-img-element -- static jersey */}
         <img
           src={CZ_JERSEY_BACK_BLANK_SRC}
@@ -81,61 +72,8 @@ function IgJerseyHero({ player }: { player: Player }) {
           width={560}
           height={672}
           decoding="async"
-          className={`${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_14px_40px_rgba(0,0,0,0.55)]`}
+          className={`${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_10px_28px_rgba(0,0,0,0.35)]`}
         />
-        {/* Větší vlajka než tisk na assetu — sedí na bílý yok (stín překryje případný malý motiv pod ní). */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-[14.5%] z-[1] -translate-x-1/2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]"
-          aria-hidden
-        >
-          <svg
-            viewBox="0 0 3 2"
-            className="block h-[42px] w-[63px] rounded-[3px] ring-1 ring-black/25 sm:h-[48px] sm:w-[72px]"
-            aria-hidden
-          >
-            <rect fill="#ffffff" width="3" height="2" />
-            <rect fill="#d7141a" y="1" width="3" height="1" />
-            <polygon fill="#11457e" points="0,0 1.5,1 0,2" />
-          </svg>
-        </div>
-        <div className="pointer-events-none absolute inset-0 z-[2] flex flex-col items-center pt-[38%]">
-          <div className="flex w-full max-w-[68%] flex-col items-center px-1">
-            {lines.map((t, i) => (
-              <div
-                key={i}
-                className="w-full text-center font-display font-black uppercase tracking-[0.045em] text-white"
-                style={{
-                  fontSize: `clamp(20px, 3.6vw, ${nameMaxPx}px)`,
-                  lineHeight: 1.02,
-                  textShadow:
-                    "0 2px 0 rgba(0,0,0,0.55), 0 0 12px rgba(0,0,0,0.38)",
-                  WebkitTextStroke: `${nameStroke} rgba(0,45,84,0.88)`,
-                }}
-              >
-                {t}
-              </div>
-            ))}
-          </div>
-          <div
-            className="mt-1.5 font-display font-black tabular-nums text-white"
-            style={{
-              fontSize: `clamp(30px, 4.5vw, ${numMaxPx}px)`,
-              lineHeight: 0.95,
-              textShadow: "0 2px 0 rgba(0,0,0,0.55), 0 0 14px rgba(0,0,0,0.35)",
-              WebkitTextStroke: `${numStroke} rgba(0,45,84,0.88)`,
-            }}
-          >
-            {num}
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element -- export přes html-to-image */}
-          <img
-            src={SITE_LOGO_URL}
-            alt=""
-            width={1000}
-            height={280}
-            className="mt-3 h-[252px] w-full max-w-[520px] object-contain opacity-95 drop-shadow-[0_2px_14px_rgba(0,0,0,0.55)] sm:mt-4 sm:h-[296px] sm:max-w-[540px]"
-          />
-        </div>
       </div>
     </div>
   );
@@ -144,10 +82,10 @@ function IgJerseyHero({ player }: { player: Player }) {
 function StatsTable({ s }: { s: EliteProspectsStats }) {
   const headers = ["GP", "G", "A", "TP", "PIM", "+/-"] as const;
   return (
-    <div className="w-full rounded-[34px] border border-white/12 bg-white/[0.06] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+    <div className="w-full rounded-[34px] border border-white/18 bg-transparent p-6 shadow-none">
       <div className="flex items-center justify-between gap-4">
         <div className="text-[16px] font-black uppercase tracking-[0.18em] text-white/75">Statistiky</div>
-        <div className="rounded-full border border-white/14 bg-black/30 px-5 py-2.5 text-[16px] font-black tracking-[0.06em] text-white/75">
+        <div className="rounded-full border border-white/22 bg-transparent px-5 py-2.5 text-[16px] font-black tracking-[0.06em] text-white/75">
           <span className="font-semibold normal-case text-white/55">Sezóna </span>
           <span className="font-black uppercase tracking-[0.18em]">{s.seasonLabel}</span>
         </div>
@@ -161,7 +99,7 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
               {headers.map((h) => (
                 <div
                   key={h}
-                  className="rounded-2xl border border-white/12 bg-black/20 px-3 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
+                  className="rounded-2xl border border-white/18 bg-transparent px-3 py-2.5 text-center shadow-none"
                 >
                   <div className="text-[10px] font-black uppercase tracking-[0.22em] text-white/65">
                     {h}
@@ -195,17 +133,8 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
   return (
     <div
       ref={ref}
-      className="relative h-[1350px] w-[1080px] overflow-hidden rounded-[44px] border border-white/12 bg-[radial-gradient(ellipse_at_20%_-10%,rgba(0,229,255,0.14),transparent_55%),radial-gradient(ellipse_at_80%_-10%,rgba(255,30,46,0.14),transparent_55%),linear-gradient(180deg,#0A0E17_0%,#05080f_100%)] shadow-[0_40px_140px_rgba(0,0,0,0.65)]"
+      className="relative h-[1350px] w-[1080px] overflow-hidden rounded-[44px] border border-white/15 bg-transparent shadow-none"
     >
-      <div
-        className="pointer-events-none absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full bg-[#00E5FF]/14 blur-[110px]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -right-48 -top-44 h-[520px] w-[520px] rounded-full bg-[#FF1E2E]/14 blur-[110px]"
-        aria-hidden
-      />
-
       <div className="relative z-10 flex h-full min-h-0 flex-col px-14 pb-12 pt-10">
         <div className="flex items-end">
           <div className="min-w-0">
@@ -226,7 +155,7 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
             {s ? (
               <StatsTable s={s} />
             ) : (
-              <div className="w-full rounded-[34px] border border-white/12 bg-white/[0.06] p-10 text-center text-white/60">
+              <div className="w-full rounded-[34px] border border-white/18 bg-transparent p-10 text-center text-white/60 shadow-none">
                 Doplňte statistiky…
               </div>
             )}
@@ -558,7 +487,7 @@ export function EliteProspectsPlayerCards() {
       );
       const canvas = await captureElementToCanvas(el, {
         scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
-        backgroundColor: "#05080f",
+        backgroundColor: null,
       });
       const slug = selected?.player.id ?? "hrac";
       downloadDataUrl(canvasToPngDataUrl(canvas), `ms2026-promo-hrac-${slug}.png`);

@@ -34,7 +34,7 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Číslo na exportním plakátu — jedna velikost (bez sm:), capture nemusí trefit breakpointy. */
 const POSTER_EXPORT_NUMBER =
-  "jersey-back-number-text jersey-back-number-text--woven text-[2.55rem] max-w-[92%] text-center leading-none";
+  "jersey-back-number-text jersey-back-number-text--woven text-[2.85rem] max-w-[92%] text-center leading-none";
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
@@ -153,7 +153,7 @@ export function Nhl25JerseyCard({
           <span
             className={`
               rounded border border-[#11457e]/45 bg-[#11457e] font-display font-bold uppercase tracking-[0.14em] text-white shadow-sm
-              ${nameplateVariant === "poster" ? "px-2 py-0.5 text-[10px]" : "px-2 py-0.5 text-[10px]"}
+              ${nameplateVariant === "poster" ? "px-2.5 py-0.5 text-[12px]" : "px-2 py-0.5 text-[10px]"}
             `}
           >
             {positionLabel}
@@ -197,18 +197,18 @@ export function Nhl25JerseyCard({
               </div>
             </div>
             {hemLines.length > 0 ? (
-              <div className="pointer-events-none flex min-h-[2.45rem] w-full min-w-0 items-center justify-end gap-1.5 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-1.5 py-1.5 pb-2 rounded-b-[8px]">
+              <div className="pointer-events-none flex min-h-[3.1rem] w-full min-w-0 items-center justify-end gap-1.5 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-2 py-2 pb-2.5 rounded-b-[8px]">
                 <span className="nhl25-poster-jersey-hem-name flex min-w-0 flex-1 flex-col items-end justify-center gap-0.5 leading-snug">
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
-                      className="block w-full text-right font-display text-[14px] font-black uppercase leading-[1.05] text-[#003087] [overflow-wrap:anywhere]"
+                      className="block w-full text-right font-display text-[18px] font-black uppercase leading-[1.07] text-[#003087] [overflow-wrap:anywhere]"
                     >
                       {line}
                     </span>
                   ))}
                 </span>
-                <JerseyFlagCzInline width={22} height={15} className="shrink-0 translate-y-[1px]" />
+                <JerseyFlagCzInline width={28} height={18} className="shrink-0 translate-y-[1px]" />
               </div>
             ) : null}
           </div>

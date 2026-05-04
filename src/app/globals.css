@@ -157,7 +157,7 @@ body {
 
 .nhl25-share-poster-capture .jersey-back-number-text,
 .nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven {
-  font-size: 2.55rem;
+  font-size: 2.85rem;
   -webkit-text-stroke-width: clamp(1.2px, 0.09em, 2.85px);
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.62),
@@ -167,9 +167,11 @@ body {
 /** Plakát — příjmení pod siluetou vedle vlajky (hem), čitelné, bez ořezu (wrap). */
 .nhl25-share-poster-capture .nhl25-poster-jersey-hem-name span {
   color: #003087;
-  font-size: clamp(0.82rem, 2.2vw, 1.02rem);
+  /* Příjmení pod dresy na exportním plakátu — výrazně větší než dřív. */
+  font-size: clamp(1.05rem, 3.4vw, 1.5rem);
   font-weight: 900;
-  letter-spacing: 0.032em;
+  letter-spacing: 0.024em;
+  line-height: 1.08;
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.55),
     0 0 1px rgba(255, 255, 255, 0.35);
@@ -320,7 +322,7 @@ body {
  */
 .nhl25-share-poster-capture .nhl25-jersey-card-root {
   width: 100%;
-  max-width: 10.15rem;
+  max-width: 10.85rem;
   margin-inline: auto;
 }
 
