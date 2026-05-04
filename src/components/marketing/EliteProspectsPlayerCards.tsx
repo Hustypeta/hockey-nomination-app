@@ -49,19 +49,19 @@ function statRowBadge(s: { team: string; league: string; phase?: "RS" | "PO" }) 
   const phase =
     s.phase === "PO" ? (
       <span
-        className={`rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] ${IG_PROMO_TEXT}`}
+        className={`rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[13px] font-black uppercase tracking-[0.16em] ${IG_PROMO_TEXT}`}
       >
         PO
       </span>
     ) : (
       <span
-        className={`rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] ${IG_PROMO_TEXT}`}
+        className={`rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[13px] font-black uppercase tracking-[0.16em] ${IG_PROMO_TEXT}`}
       >
         RS
       </span>
     );
   return (
-    <div className={`flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-semibold ${IG_PROMO_TEXT}`}>
+    <div className={`flex min-w-0 flex-wrap items-center gap-2 text-[18px] font-semibold ${IG_PROMO_TEXT}`}>
       {phase}
       <span className="truncate">{s.league ? `${s.team} · ${s.league}` : s.team}</span>
     </div>
@@ -96,9 +96,9 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
   return (
     <div className="w-full rounded-[34px] border border-black/80 bg-black/10 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
       <div className="flex items-center justify-between gap-4">
-        <div className={`text-[24px] font-black uppercase tracking-[0.18em] ${IG_PROMO_TEXT}`}>Statistiky</div>
+        <div className={`text-[34px] font-black uppercase tracking-[0.14em] ${IG_PROMO_TEXT}`}>Statistiky</div>
         <div
-          className={`rounded-full border border-black/70 bg-transparent px-6 py-3 text-[22px] font-black tracking-[0.06em] ${IG_PROMO_TEXT}`}
+          className={`rounded-full border border-black/70 bg-transparent px-7 py-3.5 text-[28px] font-black tracking-[0.05em] ${IG_PROMO_TEXT}`}
         >
           <span className={`font-semibold normal-case ${IG_PROMO_TEXT_SOFT}`}>Sezóna </span>
           <span className={`font-black uppercase tracking-[0.18em] ${IG_PROMO_TEXT}`}>{s.seasonLabel}</span>
@@ -115,7 +115,7 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
                   key={h}
                   className="rounded-2xl border border-black/70 bg-transparent px-3 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
                 >
-                  <div className={`text-[13px] font-black uppercase tracking-[0.22em] ${IG_PROMO_TEXT_SOFT}`}>
+                  <div className={`text-[18px] font-black uppercase tracking-[0.14em] ${IG_PROMO_TEXT_SOFT}`}>
                     {h}
                   </div>
                   <div
