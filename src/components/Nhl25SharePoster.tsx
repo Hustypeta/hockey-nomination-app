@@ -34,10 +34,14 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-/** Dres má vždy stejnou vizuální velikost (nesmí se „nafukovat“ podle počtu sloupců). */
+/**
+ * Centrování karty v buňce mřížky. Bez `overflow-hidden` — ten ořezával příjmení pod siluetou
+ * (řádek hem + vlajka je širší než samotný dres), např. „MANDÁT“ → „MANDÁ“.
+ * Ořez siluety řeší vnitřní wrapper v `Nhl25JerseyCard` (`nameplateVariant="poster"`).
+ */
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-w-0 w-full justify-center overflow-hidden">{children}</div>
+    <div className="flex min-w-0 w-full justify-center overflow-visible">{children}</div>
   );
 }
 

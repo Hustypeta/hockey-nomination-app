@@ -1,16 +1,10 @@
 "use client";
 
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
 import { Download } from "lucide-react";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
-import {
-  captureElementToCanvas,
-  canvasToPngDataUrl,
-  downloadDataUrl,
-} from "@/lib/captureSharePoster";
 import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 import type { Player } from "@/types";
 
@@ -163,14 +157,14 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
         </div>
 
         <div className="mt-6 flex items-center justify-between">
-          <Link
+          <a
             href="https://hokejlineup.cz"
             target="_blank"
             rel="noopener noreferrer"
             className="font-display text-xl font-bold tracking-[0.06em] text-white/45 underline-offset-4 transition hover:text-cyan-300 hover:underline sm:text-2xl"
           >
             hokejlineup.cz
-          </Link>
+          </a>
         </div>
       </div>
     </div>
@@ -443,19 +437,25 @@ function useScaleToFit(targetW: number, targetH: number) {
 }
 
 function normName(s: string) {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  try {
+    return String(s ?? "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  } catch {
+    return String(s ?? "")
+      .toLowerCase()
+      .trim();
+  }
 }
 
-export function EliteProspectsPlayerCards() {
+function EliteProspectsPlayerCardsContent() {
   const cardCaptureRef = useRef<HTMLDivElement>(null);
   const [pngBusy, setPngBusy] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "/promo/hraci";
   const sp = useSearchParams();
   const idParam = (sp.get("p") ?? "").trim();
   const scale = useScaleToFit(1080, 1350);
@@ -481,6 +481,9 @@ export function EliteProspectsPlayerCards() {
     if (!el) return;
     setPngBusy(true);
     try {
+      const { captureElementToCanvas, canvasToPngDataUrl, downloadDataUrl } = await import(
+        "@/lib/captureSharePoster"
+      );
       await document.fonts.ready.catch(() => undefined);
       await new Promise<void>((r) =>
         requestAnimationFrame(() => requestAnimationFrame(() => r()))
@@ -504,31 +507,39 @@ export function EliteProspectsPlayerCards() {
   useEffect(() => {
     let cancelled = false;
     async function run() {
-      if (dbPlayers !== null) return;
-      const r = await fetch("/api/players", { cache: "no-store" });
-      if (!r.ok) return;
-      const data: unknown = await r.json();
-      if (cancelled) return;
-      if (!Array.isArray(data)) return;
-      const parsed: Player[] = [];
-      for (const row of data) {
-        if (!row || typeof row !== "object") continue;
-        const x = row as any;
-        if (typeof x.id !== "string") continue;
-        if (typeof x.name !== "string") continue;
-        if (typeof x.position !== "string") continue;
-        if (typeof x.club !== "string") continue;
-        if (typeof x.league !== "string") continue;
-        parsed.push(x as Player);
+      try {
+        const r = await fetch("/api/players", { cache: "no-store" });
+        if (!r.ok) {
+          if (!cancelled) setDbPlayers([]);
+          return;
+        }
+        const data: unknown = await r.json();
+        if (cancelled) return;
+        if (!Array.isArray(data)) {
+          if (!cancelled) setDbPlayers([]);
+          return;
+        }
+        const parsed: Player[] = [];
+        for (const row of data) {
+          if (!row || typeof row !== "object") continue;
+          const x = row as any;
+          if (typeof x.id !== "string") continue;
+          if (typeof x.name !== "string") continue;
+          if (typeof x.position !== "string") continue;
+          if (typeof x.club !== "string") continue;
+          if (typeof x.league !== "string") continue;
+          parsed.push(x as Player);
+        }
+        if (!cancelled) setDbPlayers(parsed);
+      } catch {
+        if (!cancelled) setDbPlayers([]);
       }
-      setDbPlayers(parsed);
     }
-    run();
+    void run();
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch once per selected
-  }, [selected?.player.id]);
+  }, []);
 
   if (!selected) return null;
 
@@ -648,3 +659,12 @@ export function EliteProspectsPlayerCards() {
   );
 }
 
+export function EliteProspectsPlayerCards() {
+  return (
+    <Suspense
+      fallback={<div className="mx-auto max-w-6xl px-4 py-16 text-center text-white/60">Načítám…</div>}
+    >
+      <EliteProspectsPlayerCardsContent />
+    </Suspense>
+  );
+}
