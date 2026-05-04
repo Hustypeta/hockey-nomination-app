@@ -20,9 +20,9 @@ const NHL25_CARD_UNIFIED = {
     "jersey-back-number-text text-[1.28rem] sm:text-[1.42rem] lg:text-[1.52rem] max-w-[92%] text-center",
 } as const;
 
-/** Plakát soupisky — o něco kompaktnější než editor, aby se vešlo „trochu“ víc vzduchu. */
+/** Plakát soupisky — bez bílého rámu kolem dresu lze siluetu výrazně zvětšit. */
 const NHL25_POSTER_CARD = {
-  width: "max-w-[8.25rem] sm:max-w-[8.65rem] lg:max-w-[9.1rem]",
+  width: "max-w-[10.25rem] sm:max-w-[10.85rem] lg:max-w-[11.35rem]",
 } as const;
 
 const widthClass: Record<Nhl25JerseySize, string> = {
@@ -39,7 +39,7 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Číslo na exportním plakátu — jedna velikost (bez sm:), capture nemusí trefit breakpointy. */
 const POSTER_EXPORT_NUMBER =
-  "jersey-back-number-text jersey-back-number-text--woven text-[2.45rem] max-w-[92%] text-center leading-none";
+  "jersey-back-number-text jersey-back-number-text--woven text-[2.72rem] max-w-[92%] text-center leading-none";
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
@@ -54,6 +54,8 @@ export interface Nhl25JerseyCardProps {
   size?: Nhl25JerseySize;
   /** `poster` = číslo jen na zádech, příjmení pod siluetou u vlajky (sdílecí plakát). */
   nameplateVariant?: "card" | "poster";
+  /** Barva příjmení pod dresem na plakátu (tmavé plátno = bílý text, světlé = modrá). */
+  posterHemOnDark?: boolean;
   /** Zvětšení jména+čísla na dresu (např. IG promo). */
   typographyScale?: number;
   isCaptain?: boolean;
@@ -73,6 +75,7 @@ export function Nhl25JerseyCard({
   className = "",
   disableMotion = false,
   nameplateVariant = "card",
+  posterHemOnDark = true,
   typographyScale = 1,
 }: Nhl25JerseyCardProps) {
   const empty = !player;
@@ -154,30 +157,32 @@ export function Nhl25JerseyCard({
       )}
 
       <div
-        className={`nhl25-jersey-card-frame nhl25-jersey-card-frame--filled flex flex-col gap-1 rounded-[11px] ${nameplateVariant === "poster" ? "p-[4px] gap-0.5" : "p-[5px]"}`}
+        className={
+          nameplateVariant === "poster"
+            ? "flex flex-col gap-1 bg-transparent p-0 shadow-none ring-0 border-0"
+            : `nhl25-jersey-card-frame nhl25-jersey-card-frame--filled flex flex-col gap-1 rounded-[11px] p-[5px]`
+        }
       >
-        <div className="flex min-h-[1rem] shrink-0 items-center justify-center px-0.5">
+        <div
+          className={`flex min-h-[1rem] shrink-0 px-0.5 ${nameplateVariant === "poster" ? "items-center justify-start" : "items-center justify-center"}`}
+        >
           <span
             className={`
               rounded border border-[#11457e]/45 bg-[#11457e] font-display font-bold uppercase tracking-[0.14em] text-white shadow-sm
-              ${nameplateVariant === "poster" ? "px-2 py-0.5 text-[11px]" : "px-2 py-0.5 text-[10px]"}
+              ${nameplateVariant === "poster" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-[10px]"}
             `}
           >
             {positionLabel}
           </span>
         </div>
 
-        {nameplateVariant === "poster" && !empty ? (
-          <div className="squad-ice-surface-light relative w-full rounded-[8px] shadow-inner">
+        {nameplateVariant === "poster" ? (
+          <div className="relative w-full bg-transparent">
             <div
-              className={
-                hemLines.length > 0
-                  ? "overflow-hidden rounded-t-[8px]"
-                  : "overflow-hidden rounded-[8px]"
-              }
+              className={`relative w-full overflow-hidden rounded-md bg-transparent ${hemLines.length > 0 ? "rounded-b-none" : ""}`}
             >
               <div
-                className={`squad-ice-surface-light relative aspect-[100/120] w-full ${empty ? "ring-1 ring-inset ring-slate-300/50" : ""}`}
+                className={`relative aspect-[100/120] w-full bg-transparent ${empty ? "ring-1 ring-inset ring-white/20" : ""}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
                 <img
@@ -188,8 +193,8 @@ export function Nhl25JerseyCard({
                   decoding="async"
                   data-jersey-kind={kind}
                   className={`
-                ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]
-                ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
+                ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
+                ${empty ? "opacity-[0.55] saturate-[0.85]" : ""}
               `}
                 />
                 <div
@@ -204,18 +209,26 @@ export function Nhl25JerseyCard({
               </div>
             </div>
             {hemLines.length > 0 ? (
-              <div className="pointer-events-none flex min-h-[2.75rem] w-full min-w-0 items-center justify-end gap-1 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-1.5 py-1.5 pb-2 rounded-b-[8px]">
-                <span className="nhl25-poster-jersey-hem-name flex min-w-0 flex-1 flex-col items-end justify-center gap-0.5 leading-snug">
+              <div className="pointer-events-none flex w-full min-w-0 items-center justify-between gap-2 pt-1">
+                <span className="nhl25-poster-jersey-hem-name flex min-w-0 flex-1 flex-col items-start justify-center gap-0.5 text-left leading-snug">
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
-                      className="block w-full text-right font-display text-[15px] font-black uppercase leading-[1.07] text-[#003087] [overflow-wrap:anywhere]"
+                      className={`block w-full font-display text-[11px] font-black uppercase leading-[1.1] [overflow-wrap:anywhere] sm:text-[11.5px] ${
+                        posterHemOnDark
+                          ? "text-white/92 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
+                          : "text-[#003087] drop-shadow-[0_1px_0_rgba(255,255,255,0.55)]"
+                      }`}
                     >
                       {line}
                     </span>
                   ))}
                 </span>
-                <JerseyFlagCzInline width={24} height={16} className="shrink-0 translate-y-[1px]" />
+                <JerseyFlagCzInline
+                  width={22}
+                  height={14}
+                  className={`shrink-0 opacity-95 ${posterHemOnDark ? "drop-shadow-[0_1px_3px_rgba(0,0,0,0.65)]" : "drop-shadow-sm"}`}
+                />
               </div>
             ) : null}
           </div>

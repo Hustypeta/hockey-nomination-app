@@ -318,11 +318,11 @@ body {
 }
 
 /**
- * Sdílecí plakát: menší siluety dresů = nižší celková výška ⇒ v 1:1 letterboxu větší měřítko, všichni hráči pořád na plakátu.
+ * Sdílecí plakát: dresy bez bílého rámu — větší max šířka siluety v mřížce.
  */
 .nhl25-share-poster-capture .nhl25-jersey-card-root {
   width: 100%;
-  max-width: 10.85rem;
+  max-width: 11.75rem;
   margin-inline: auto;
 }
 
