@@ -42,16 +42,16 @@ function fmt(v: number | null | undefined) {
 function statRowBadge(s: { team: string; league: string; phase?: "RS" | "PO" }) {
   const phase =
     s.phase === "PO" ? (
-      <span className="rounded-full border border-[#FF1E2E]/40 bg-transparent px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-white/85">
+      <span className="rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-sky-200/85">
         PO
       </span>
     ) : (
-      <span className="rounded-full border border-white/25 bg-transparent px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-white/70">
+      <span className="rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-sky-200/85">
         RS
       </span>
     );
   return (
-    <div className="flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-semibold text-white/80">
+    <div className="flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-semibold text-sky-200/85">
       {phase}
       <span className="truncate">{s.league ? `${s.team} · ${s.league}` : s.team}</span>
     </div>
@@ -59,10 +59,11 @@ function statRowBadge(s: { team: string; league: string; phase?: "RS" | "PO" }) 
 }
 
 /** Čistý podklad dresu — bez potisku jména/čísla/loga (PNG s průhledným pozadím kolem). */
-function IgJerseyHero({ player }: { player: Player }) {
+function IgJerseyHero({ player, size = "normal" }: { player: Player; size?: "normal" | "compact" }) {
+  const w = size === "compact" ? "w-[500px] max-w-[500px]" : "w-[560px] max-w-[560px]";
   return (
     <div
-      className="relative mx-auto w-[560px] max-w-[560px] overflow-hidden rounded-[22px] border border-white/18 bg-transparent"
+      className={`relative mx-auto ${w} overflow-hidden rounded-[22px] border border-black/80 bg-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]`}
       aria-label={player.name}
     >
       <div className="relative aspect-[100/120] w-full bg-transparent">
@@ -83,12 +84,14 @@ function IgJerseyHero({ player }: { player: Player }) {
 function StatsTable({ s }: { s: EliteProspectsStats }) {
   const headers = ["GP", "G", "A", "TP", "PIM", "+/-"] as const;
   return (
-    <div className="w-full rounded-[34px] border border-white/18 bg-transparent p-6 shadow-none">
+    <div className="w-full rounded-[34px] border border-black/80 bg-black/10 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
       <div className="flex items-center justify-between gap-4">
-        <div className="text-[16px] font-black uppercase tracking-[0.18em] text-white/75">Statistiky</div>
-        <div className="rounded-full border border-white/22 bg-transparent px-5 py-2.5 text-[16px] font-black tracking-[0.06em] text-white/75">
-          <span className="font-semibold normal-case text-white/55">Sezóna </span>
-          <span className="font-black uppercase tracking-[0.18em]">{s.seasonLabel}</span>
+        <div className="text-[24px] font-black uppercase tracking-[0.18em] text-sky-200/85">
+          Statistiky
+        </div>
+        <div className="rounded-full border border-black/70 bg-transparent px-6 py-3 text-[22px] font-black tracking-[0.06em] text-sky-200/85">
+          <span className="font-semibold normal-case opacity-85">Sezóna </span>
+          <span className="font-black uppercase tracking-[0.18em] text-sky-200/85">{s.seasonLabel}</span>
         </div>
       </div>
 
@@ -100,12 +103,12 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
               {headers.map((h) => (
                 <div
                   key={h}
-                  className="rounded-2xl border border-white/18 bg-transparent px-3 py-2.5 text-center shadow-none"
+                  className="rounded-2xl border border-black/70 bg-transparent px-3 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
                 >
-                  <div className="text-[10px] font-black uppercase tracking-[0.22em] text-white/65">
+                  <div className="text-[13px] font-black uppercase tracking-[0.22em] text-sky-200/70">
                     {h}
                   </div>
-                  <div className="mt-1 font-display text-[28px] font-black tabular-nums leading-none text-white">
+                  <div className="mt-2 font-display text-[44px] font-black tabular-nums leading-none text-sky-200/85">
                     {h === "GP"
                       ? fmt(r.gp)
                       : h === "G"
@@ -131,6 +134,7 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
 const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function PlayerIgCard(props, ref) {
   const { m } = props;
   const s = m.stats;
+  const denseStats = (s?.rows.length ?? 0) >= 3;
   return (
     <div
       ref={ref}
@@ -139,10 +143,10 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
       <div className="relative z-10 flex h-full min-h-0 flex-col px-14 pb-12 pt-10">
         <div className="flex items-end">
           <div className="min-w-0">
-            <p className="font-display text-[76px] font-black leading-[1.02] tracking-[0.02em] text-white">
+            <p className="font-display text-[76px] font-black leading-[1.02] tracking-[0.02em] text-sky-200/85">
               {m.player.name}
             </p>
-            <p className="mt-2 text-[24px] font-semibold text-white/70">
+            <p className="mt-3 text-[36px] font-semibold text-sky-200/85">
               {m.player.club} · {m.player.league}
             </p>
           </div>
@@ -150,13 +154,13 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
 
         <div className="mt-6 flex min-h-0 flex-1 flex-col overflow-hidden">
           <div className="flex min-h-0 min-w-0 flex-1 items-center justify-center py-1">
-            <IgJerseyHero player={m.player} />
+            <IgJerseyHero player={m.player} size={denseStats ? "compact" : "normal"} />
           </div>
-          <div className="w-full shrink-0 pt-5">
+          <div className={`w-full shrink-0 ${denseStats ? "pt-6" : "pt-10"}`}>
             {s ? (
               <StatsTable s={s} />
             ) : (
-              <div className="w-full rounded-[34px] border border-white/18 bg-transparent p-10 text-center text-white/60 shadow-none">
+              <div className="w-full rounded-[34px] border border-black/80 bg-black/10 p-10 text-center text-[26px] font-semibold text-sky-200/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
                 Doplňte statistiky…
               </div>
             )}
@@ -168,7 +172,7 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
             href="https://hokejlineup.cz"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-display text-xl font-bold tracking-[0.06em] text-white/45 underline-offset-4 transition hover:text-cyan-300 hover:underline sm:text-2xl"
+            className="font-display text-[32px] font-bold tracking-[0.06em] text-sky-300 underline-offset-4 transition hover:text-cyan-300 hover:underline"
           >
             hokejlineup.cz
           </a>
@@ -615,24 +619,24 @@ function EliteProspectsPlayerCardsContent({ initialPlayerId }: { initialPlayerId
             <button
               type="button"
               onClick={() => setPlayerId(ids[(activeIdx - 1 + ids.length) % ids.length] ?? ids[0] ?? "")}
-              className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/85 hover:bg-white/[0.08]"
+              className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-sky-200/85 hover:bg-white/[0.08]"
             >
               ← Předchozí
             </button>
             <button
               type="button"
               onClick={() => setPlayerId(ids[(activeIdx + 1) % ids.length] ?? ids[0] ?? "")}
-              className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/85 hover:bg-white/[0.08]"
+              className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-sky-200/85 hover:bg-white/[0.08]"
             >
               Další →
             </button>
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="flex min-w-0 flex-1 items-center gap-2 text-xs font-semibold text-white/60 sm:hidden">
+            <label className="flex min-w-0 flex-1 items-center gap-2 text-xs font-semibold text-sky-200/70 sm:hidden">
               Hráč
               <select
-                className="min-w-0 flex-1 rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/90"
+                className="min-w-0 flex-1 rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-sky-200/85"
                 value={selected.player.id}
                 onChange={(e) => setPlayerId(e.target.value)}
               >
@@ -655,7 +659,7 @@ function EliteProspectsPlayerCardsContent({ initialPlayerId }: { initialPlayerId
                     className={`rounded-full border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] transition ${
                       on
                         ? "border-[#00E5FF]/35 bg-[#00E5FF]/10 text-[#67E8F9]"
-                        : "border-white/10 bg-white/[0.04] text-white/60 hover:bg-white/[0.07]"
+                        : "border-white/10 bg-white/[0.04] text-sky-200/70 hover:bg-white/[0.07]"
                     }`}
                     title={x.player.name}
                   >

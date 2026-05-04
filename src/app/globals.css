@@ -169,7 +169,7 @@ body {
  * barva podle data-poster-surface.
  */
 .nhl25-share-poster-capture[data-poster-surface="dark"] .nhl25-poster-jersey-hem-name span {
-  color: #e0f2fe;
+  color: #003087;
   font-size: clamp(16px, 2.15vw, 20px);
   letter-spacing: 0.024em;
   line-height: 1.18;
@@ -179,7 +179,7 @@ body {
 }
 
 .nhl25-share-poster-capture[data-poster-surface="light"] .nhl25-poster-jersey-hem-name span {
-  color: #002651;
+  color: #003087;
   font-size: clamp(16px, 2.15vw, 20px);
   letter-spacing: 0.018em;
   line-height: 1.18;
