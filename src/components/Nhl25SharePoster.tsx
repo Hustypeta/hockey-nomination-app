@@ -72,8 +72,8 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
     const wm = watermarkUserLabel?.trim() ?? "";
 
     const shell = dark
-      ? "border-white/10 bg-gradient-to-b from-[#0f141c] via-[#0a0d12] to-[#050608] shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
-      : "border-slate-300/90 bg-gradient-to-b from-white via-[#f4f6f9] to-[#e8ecf2] shadow-[0_20px_50px_rgba(15,23,42,0.12)]";
+      ? "border-0 bg-gradient-to-b from-[#0f141c] via-[#0a0d12] to-[#050608] shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
+      : "border-0 bg-gradient-to-b from-white via-[#f4f6f9] to-[#e8ecf2] shadow-[0_20px_50px_rgba(15,23,42,0.12)]";
     /** Bez velkého „bílého rámečku“ — jen siluety, více místa pro dresy (export / IG). */
     const innerChrome =
       dark ? "border-0 bg-transparent shadow-none" : "border-0 bg-transparent shadow-none";
@@ -87,7 +87,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
       <div
         ref={ref}
         data-poster-surface={dark ? "dark" : "light"}
-        className={`nhl25-share-poster-capture relative shrink-0 overflow-hidden rounded-2xl border antialiased subpixel-antialiased [text-rendering:optimizeLegibility] ${shell}`}
+        className={`nhl25-share-poster-capture relative shrink-0 overflow-hidden rounded-none border-0 antialiased subpixel-antialiased [text-rendering:optimizeLegibility] ${shell}`}
         style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
       >
         <div className="nhl25-moje-sestava-accent mx-2 mt-1.5 rounded-full sm:mx-2 sm:mt-2" aria-hidden />
@@ -110,13 +110,13 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
         </header>
 
         <div className={`relative mx-0 mb-1 mt-0.5 px-2 py-0 sm:mb-1.5 sm:px-2 ${innerChrome}`}>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-2 sm:gap-x-4 sm:gap-y-2.5">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:gap-x-5 sm:gap-y-3">
             <div className="min-w-0 space-y-2 sm:space-y-2.5">
               <section>
                 <h2 className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}>
                   Brankáři
                 </h2>
-                <div className="grid min-w-0 grid-cols-3 gap-x-2.5 gap-y-1 sm:gap-x-3 sm:gap-y-1">
+                <div className="grid min-w-0 grid-cols-3 gap-x-3.5 gap-y-1 sm:gap-x-4 sm:gap-y-1">
                   {lineup.goalies.map((gid, i) => (
                     <div key={`g-${i}`} className="flex min-w-0 flex-col gap-0.5">
                       <span className={`shrink-0 text-center font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
@@ -151,7 +151,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       <span className={`shrink-0 font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
                         {i + 1}. lajna
                       </span>
-                      <div className="grid min-w-0 w-full grid-cols-3 gap-x-2.5 gap-y-0 sm:gap-x-3">
+                      <div className="grid min-w-0 w-full grid-cols-3 gap-x-3.5 gap-y-0 sm:gap-x-4">
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(line.lw)}
@@ -203,7 +203,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       <p className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}>
                         {i + 1}. pár
                       </p>
-                      <div className="grid min-w-0 w-full grid-cols-2 gap-x-2.5 gap-y-0 sm:gap-x-3">
+                      <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(pair.lb)}
@@ -261,7 +261,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                 <p className={`mb-0.5 text-center font-display text-[13px] font-bold uppercase tracking-wider sm:text-[14.5px] ${subheading}`}>
                   13. útok · náhradníci
                 </p>
-                <div className={`grid min-w-0 gap-x-2.5 gap-y-1 sm:gap-x-3 sm:gap-y-1 ${extraD ? "grid-cols-3" : "grid-cols-2"}`}>
+                <div className={`grid min-w-0 gap-x-3.5 gap-y-1 sm:gap-x-4 sm:gap-y-1 ${extraD ? "grid-cols-3" : "grid-cols-2"}`}>
                   <div className="min-w-0">
                     <p className={`mb-0.5 text-center font-display text-[13px] font-bold uppercase tracking-wider sm:text-[14.5px] ${subheading}`}>
                       X

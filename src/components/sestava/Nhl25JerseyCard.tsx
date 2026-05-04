@@ -20,9 +20,9 @@ const NHL25_CARD_UNIFIED = {
     "jersey-back-number-text text-[1.28rem] sm:text-[1.42rem] lg:text-[1.52rem] max-w-[92%] text-center",
 } as const;
 
-/** Plakát soupisky — šířka až po okraj mřížky (plakát ~1120px, minimální px). */
+/** Plakát soupisky — silueta zůstane pod šířku buňky i při větších gap-x v mřížce. */
 const NHL25_POSTER_CARD = {
-  width: "max-w-[9.75rem] sm:max-w-[10.5rem] lg:max-w-[11.25rem]",
+  width: "max-w-[8.85rem] sm:max-w-[9.5rem] lg:max-w-[10.1rem]",
 } as const;
 
 const widthClass: Record<Nhl25JerseySize, string> = {
@@ -204,20 +204,20 @@ export function Nhl25JerseyCard({
               </div>
             </div>
             {hemLines.length > 0 ? (
-              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center gap-2 pt-2">
+              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center gap-2.5 pt-2.5">
                 <span className="nhl25-poster-jersey-hem-name flex min-w-0 max-w-full flex-col items-center justify-center gap-0.5 text-center leading-snug">
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
-                      className="block w-full text-center font-display text-[14px] font-black uppercase leading-[1.14] [overflow-wrap:anywhere] sm:text-[16px]"
+                      className="block w-full text-center font-display text-[16px] font-black uppercase leading-[1.15] [overflow-wrap:anywhere] sm:text-[19px]"
                     >
                       {line}
                     </span>
                   ))}
                 </span>
                 <JerseyFlagCzInline
-                  width={26}
-                  height={16}
+                  width={28}
+                  height={17}
                   className="shrink-0 self-center opacity-95 drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)]"
                 />
               </div>

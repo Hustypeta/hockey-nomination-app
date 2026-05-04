@@ -58,7 +58,7 @@ export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePos
     return (
       <div
         ref={ref}
-        className="names-only-share-poster relative shrink-0 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]"
+        className="names-only-share-poster relative shrink-0 overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]"
         style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
       >
         {/* Dekorativní blok v barvách webu — podobný princip jako Livesport */}

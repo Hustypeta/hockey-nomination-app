@@ -431,7 +431,7 @@ export function SaveShareModal({
                       onClick={() => setPreviewFrame(id)}
                       title={
                         id === "1x1"
-                          ? "Celá soupiska v čtverci — žádný ořez hráčů; u vysokého plakátu zůstanou úzké pruhy po stranách."
+                          ? "Celá soupiska v čtverci — žádný ořez hráčů; po stranách letterbox (šedý/tmavý pruh), protože plakát je vyšší než široký."
                           : id === "9x16"
                             ? "Celý plakát ve formátu na mobil — všichni hráči."
                             : id === "16x9"
@@ -449,17 +449,18 @@ export function SaveShareModal({
                   ))}
                 </div>
                 <p className="mt-2 text-center text-[11px] leading-snug text-white/50">
-                  Export je celý plakát bez ořezu hráčů. Plakát je zhuštěný kvůli čtverci 1 : 1 — na výšku často
-                  vyhoví <strong className="font-semibold text-white/70">9 : 16</strong>.
+                  Export je celý plakát bez ořezu hráčů. U poměru <strong className="font-semibold text-white/70">1 : 1</strong>{" "}
+                  je plakát užší než čtverec — po stranách jsou automaticky doplněné pruhy (letterbox), aby se vešla celá
+                  soupiska. To není chyba rozvržení. Na mobil často lépe sedí <strong className="font-semibold text-white/70">9 : 16</strong>.
                 </p>
               </div>
 
-              <div className="overflow-hidden rounded-2xl border border-white/12 bg-black/30 p-2 shadow-inner">
+              <div className="overflow-hidden rounded-lg bg-black/20 p-0 shadow-inner ring-1 ring-white/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={framedPreviewUrl ?? previewDataUrl ?? undefined}
                   alt="Náhled plakátu nominace"
-                  className="mx-auto max-h-[min(72vh,720px)] w-full max-w-full rounded-lg object-contain"
+                  className="mx-auto max-h-[min(72vh,720px)] w-full max-w-full rounded-md object-contain"
                 />
               </div>
 
@@ -476,7 +477,7 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={() => downloadAspect(1080, 1080, "feed-1x1")}
-                  title="1080×1080 — celá soupiska bez ořezu; boční pruhy kvůli vysokému plakátu."
+                  title="1080×1080 — celá soupiska bez ořezu; boční letterbox, plakát je užší než čtverec."
                   className="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors hover:bg-white/[0.14]"
                 >
                   <Download className="h-4 w-4" aria-hidden />
