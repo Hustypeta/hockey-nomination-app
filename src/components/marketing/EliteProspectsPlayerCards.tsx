@@ -1,7 +1,14 @@
 "use client";
 
-import { forwardRef, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Download } from "lucide-react";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
@@ -451,14 +458,28 @@ function normName(s: string) {
   }
 }
 
-function EliteProspectsPlayerCardsContent() {
+function EliteProspectsPlayerCardsContent({ initialPlayerId }: { initialPlayerId: string }) {
   const cardCaptureRef = useRef<HTMLDivElement>(null);
   const [pngBusy, setPngBusy] = useState(false);
   const router = useRouter();
   const pathname = usePathname() || "/promo/hraci";
-  const sp = useSearchParams();
-  const idParam = (sp.get("p") ?? "").trim();
+  const [idParam, setIdParam] = useState(() => initialPlayerId.trim());
   const scale = useScaleToFit(1080, 1350);
+
+  /** Statický shell nemusí mít správné `?p=` — před prvním malováním sjednotit s adresní řádkem. */
+  useLayoutEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get("p")?.trim() ?? "";
+    if (fromUrl) setIdParam(fromUrl);
+  }, []);
+
+  useEffect(() => {
+    const onPop = () => {
+      const p = new URLSearchParams(window.location.search).get("p")?.trim() ?? "";
+      setIdParam(p);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   const base = useMemo(() => PLAYERS, []);
   const selected = useMemo(() => {
@@ -468,13 +489,18 @@ function EliteProspectsPlayerCardsContent() {
 
   const ids = useMemo(() => base.map((x) => x.player.id), [base]);
   const activeIdx = selected ? Math.max(0, ids.indexOf(selected.player.id)) : 0;
-  const setPlayerId = (id: string) => {
-    const q = new URLSearchParams(sp.toString());
-    if (id) q.set("p", id);
-    else q.delete("p");
-    const next = q.toString();
-    router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
-  };
+  const setPlayerId = useCallback(
+    (id: string) => {
+      const nextId = id.trim();
+      setIdParam(nextId);
+      const q = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+      if (nextId) q.set("p", nextId);
+      else q.delete("p");
+      const next = q.toString();
+      router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
+    },
+    [pathname, router]
+  );
 
   const handleDownloadPng = useCallback(async () => {
     const el = cardCaptureRef.current;
@@ -659,12 +685,6 @@ function EliteProspectsPlayerCardsContent() {
   );
 }
 
-export function EliteProspectsPlayerCards() {
-  return (
-    <Suspense
-      fallback={<div className="mx-auto max-w-6xl px-4 py-16 text-center text-white/60">Načítám…</div>}
-    >
-      <EliteProspectsPlayerCardsContent />
-    </Suspense>
-  );
+export function EliteProspectsPlayerCards({ initialPlayerId = "" }: { initialPlayerId?: string }) {
+  return <EliteProspectsPlayerCardsContent initialPlayerId={initialPlayerId} />;
 }

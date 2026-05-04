@@ -131,7 +131,7 @@ export function jerseyNameplateNameProps(
       woven,
       posterClamp,
       "box-border min-w-0 shrink px-0.5",
-      "block w-full max-w-full text-center [overflow-wrap:anywhere] hyphens-none",
+      "block w-full max-w-full whitespace-nowrap text-center hyphens-none",
     ]
       .filter(Boolean)
       .join(" "),

@@ -209,7 +209,7 @@ export function Nhl25JerseyCard({
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
-                      className="block w-full text-center font-display text-[16px] font-black uppercase leading-[1.15] [overflow-wrap:anywhere] sm:text-[19px]"
+                      className="block w-full whitespace-nowrap text-center font-display text-[16px] font-black uppercase leading-[1.15] sm:text-[19px]"
                     >
                       {line}
                     </span>
