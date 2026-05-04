@@ -20,9 +20,9 @@ const NHL25_CARD_UNIFIED = {
     "jersey-back-number-text text-[1.28rem] sm:text-[1.42rem] lg:text-[1.52rem] max-w-[92%] text-center",
 } as const;
 
-/** Plakát soupisky — bez bílého rámu kolem dresu lze siluetu výrazně zvětšit. */
+/** Plakát soupisky — šířka až po okraj mřížky (plakát ~1120px, minimální px). */
 const NHL25_POSTER_CARD = {
-  width: "max-w-[10.25rem] sm:max-w-[10.85rem] lg:max-w-[11.35rem]",
+  width: "max-w-[9.75rem] sm:max-w-[10.5rem] lg:max-w-[11.25rem]",
 } as const;
 
 const widthClass: Record<Nhl25JerseySize, string> = {
@@ -39,7 +39,7 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Číslo na exportním plakátu — jedna velikost (bez sm:), capture nemusí trefit breakpointy. */
 const POSTER_EXPORT_NUMBER =
-  "jersey-back-number-text jersey-back-number-text--woven text-[2.72rem] max-w-[92%] text-center leading-none";
+  "jersey-back-number-text jersey-back-number-text--woven text-[2.48rem] max-w-[92%] text-center leading-none";
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
@@ -204,20 +204,20 @@ export function Nhl25JerseyCard({
               </div>
             </div>
             {hemLines.length > 0 ? (
-              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center gap-1.5 pt-1">
+              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center gap-2 pt-2">
                 <span className="nhl25-poster-jersey-hem-name flex min-w-0 max-w-full flex-col items-center justify-center gap-0.5 text-center leading-snug">
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
-                      className="block w-full text-center font-display text-[11px] font-black uppercase leading-[1.1] [overflow-wrap:anywhere] sm:text-[11.5px]"
+                      className="block w-full text-center font-display text-[14px] font-black uppercase leading-[1.14] [overflow-wrap:anywhere] sm:text-[16px]"
                     >
                       {line}
                     </span>
                   ))}
                 </span>
                 <JerseyFlagCzInline
-                  width={22}
-                  height={14}
+                  width={26}
+                  height={16}
                   className="shrink-0 self-center opacity-95 drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)]"
                 />
               </div>
