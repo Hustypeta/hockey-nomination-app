@@ -35,6 +35,12 @@ type PlayerCardModel = {
   stats?: EliteProspectsStats;
 };
 
+/** Tmavě modrá + jemný světlý „halo“ stín — čitelné na černém PNG pozadí. */
+const IG_PROMO_TEXT =
+  "text-[#002d54] [text-shadow:0_1px_0_rgba(255,255,255,0.78),0_2px_18px_rgba(96,165,250,0.55)]";
+const IG_PROMO_TEXT_SOFT =
+  "text-[#003875] [text-shadow:0_1px_0_rgba(255,255,255,0.65),0_2px_14px_rgba(96,165,250,0.45)]";
+
 function fmt(v: number | null | undefined) {
   return v === null || v === undefined ? "—" : String(v);
 }
@@ -42,16 +48,20 @@ function fmt(v: number | null | undefined) {
 function statRowBadge(s: { team: string; league: string; phase?: "RS" | "PO" }) {
   const phase =
     s.phase === "PO" ? (
-      <span className="rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-sky-200/85">
+      <span
+        className={`rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] ${IG_PROMO_TEXT}`}
+      >
         PO
       </span>
     ) : (
-      <span className="rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] text-sky-200/85">
+      <span
+        className={`rounded-full border border-black/70 bg-black/10 px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.2em] ${IG_PROMO_TEXT}`}
+      >
         RS
       </span>
     );
   return (
-    <div className="flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-semibold text-sky-200/85">
+    <div className={`flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-semibold ${IG_PROMO_TEXT}`}>
       {phase}
       <span className="truncate">{s.league ? `${s.team} · ${s.league}` : s.team}</span>
     </div>
@@ -86,12 +96,12 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
   return (
     <div className="w-full rounded-[34px] border border-black/80 bg-black/10 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
       <div className="flex items-center justify-between gap-4">
-        <div className="text-[24px] font-black uppercase tracking-[0.18em] text-sky-200/85">
-          Statistiky
-        </div>
-        <div className="rounded-full border border-black/70 bg-transparent px-6 py-3 text-[22px] font-black tracking-[0.06em] text-sky-200/85">
-          <span className="font-semibold normal-case opacity-85">Sezóna </span>
-          <span className="font-black uppercase tracking-[0.18em] text-sky-200/85">{s.seasonLabel}</span>
+        <div className={`text-[24px] font-black uppercase tracking-[0.18em] ${IG_PROMO_TEXT}`}>Statistiky</div>
+        <div
+          className={`rounded-full border border-black/70 bg-transparent px-6 py-3 text-[22px] font-black tracking-[0.06em] ${IG_PROMO_TEXT}`}
+        >
+          <span className={`font-semibold normal-case ${IG_PROMO_TEXT_SOFT}`}>Sezóna </span>
+          <span className={`font-black uppercase tracking-[0.18em] ${IG_PROMO_TEXT}`}>{s.seasonLabel}</span>
         </div>
       </div>
 
@@ -105,10 +115,12 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
                   key={h}
                   className="rounded-2xl border border-black/70 bg-transparent px-3 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
                 >
-                  <div className="text-[13px] font-black uppercase tracking-[0.22em] text-sky-200/70">
+                  <div className={`text-[13px] font-black uppercase tracking-[0.22em] ${IG_PROMO_TEXT_SOFT}`}>
                     {h}
                   </div>
-                  <div className="mt-2 font-display text-[44px] font-black tabular-nums leading-none text-sky-200/85">
+                  <div
+                    className={`mt-2 font-display text-[44px] font-black tabular-nums leading-none ${IG_PROMO_TEXT}`}
+                  >
                     {h === "GP"
                       ? fmt(r.gp)
                       : h === "G"
@@ -143,10 +155,12 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
       <div className="relative z-10 flex h-full min-h-0 flex-col px-14 pb-12 pt-10">
         <div className="flex items-end">
           <div className="min-w-0">
-            <p className="font-display text-[76px] font-black leading-[1.02] tracking-[0.02em] text-sky-200/85">
+            <p
+              className={`font-display text-[76px] font-black leading-[1.02] tracking-[0.02em] ${IG_PROMO_TEXT}`}
+            >
               {m.player.name}
             </p>
-            <p className="mt-3 text-[36px] font-semibold text-sky-200/85">
+            <p className={`mt-3 text-[36px] font-semibold ${IG_PROMO_TEXT}`}>
               {m.player.club} · {m.player.league}
             </p>
           </div>
@@ -160,19 +174,21 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
             {s ? (
               <StatsTable s={s} />
             ) : (
-              <div className="w-full rounded-[34px] border border-black/80 bg-black/10 p-10 text-center text-[26px] font-semibold text-sky-200/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+              <div
+                className={`w-full rounded-[34px] border border-black/80 bg-black/10 p-10 text-center text-[26px] font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${IG_PROMO_TEXT}`}
+              >
                 Doplňte statistiky…
               </div>
             )}
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-between">
+        <div className="mt-6 flex w-full items-center justify-end pr-2 sm:pr-6">
           <a
             href="https://hokejlineup.cz"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-display text-[32px] font-bold tracking-[0.06em] text-sky-300 underline-offset-4 transition hover:text-cyan-300 hover:underline"
+            className={`font-display text-[32px] font-extrabold tracking-[0.06em] underline-offset-4 transition hover:text-[#0050a8] hover:underline ${IG_PROMO_TEXT}`}
           >
             hokejlineup.cz
           </a>
@@ -619,24 +635,26 @@ function EliteProspectsPlayerCardsContent({ initialPlayerId }: { initialPlayerId
             <button
               type="button"
               onClick={() => setPlayerId(ids[(activeIdx - 1 + ids.length) % ids.length] ?? ids[0] ?? "")}
-              className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-sky-200/85 hover:bg-white/[0.08]"
+              className={`inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold hover:bg-white/[0.08] ${IG_PROMO_TEXT}`}
             >
               ← Předchozí
             </button>
             <button
               type="button"
               onClick={() => setPlayerId(ids[(activeIdx + 1) % ids.length] ?? ids[0] ?? "")}
-              className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-sky-200/85 hover:bg-white/[0.08]"
+              className={`inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold hover:bg-white/[0.08] ${IG_PROMO_TEXT}`}
             >
               Další →
             </button>
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="flex min-w-0 flex-1 items-center gap-2 text-xs font-semibold text-sky-200/70 sm:hidden">
+            <label
+              className={`flex min-w-0 flex-1 items-center gap-2 text-xs font-semibold sm:hidden ${IG_PROMO_TEXT_SOFT}`}
+            >
               Hráč
               <select
-                className="min-w-0 flex-1 rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-sky-200/85"
+                className={`min-w-0 flex-1 rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2 text-sm font-semibold ${IG_PROMO_TEXT}`}
                 value={selected.player.id}
                 onChange={(e) => setPlayerId(e.target.value)}
               >
@@ -659,7 +677,7 @@ function EliteProspectsPlayerCardsContent({ initialPlayerId }: { initialPlayerId
                     className={`rounded-full border px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] transition ${
                       on
                         ? "border-[#00E5FF]/35 bg-[#00E5FF]/10 text-[#67E8F9]"
-                        : "border-white/10 bg-white/[0.04] text-sky-200/70 hover:bg-white/[0.07]"
+                        : `border-white/10 bg-white/[0.04] hover:bg-white/[0.07] ${IG_PROMO_TEXT_SOFT}`
                     }`}
                     title={x.player.name}
                   >
