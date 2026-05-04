@@ -3,7 +3,10 @@ import type { NextConfig } from "next";
 /** Aby se po nasazení nového PNG nestahovala stará verze z cache (stejná cesta). */
 const assetVersion =
   process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 10) ||
-  (process.env.NODE_ENV === "development" ? `dev-${Date.now()}` : "1");
+  process.env.RAILWAY_GIT_COMMIT_SHA?.slice(0, 10) ||
+  (process.env.NODE_ENV === "development"
+    ? (process.env.NEXT_PUBLIC_DEV_ASSET_VERSION?.trim() || "dev")
+    : "1");
 
 const nextConfig: NextConfig = {
   env: {

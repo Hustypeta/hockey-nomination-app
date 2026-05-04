@@ -20,6 +20,11 @@ const NHL25_CARD_UNIFIED = {
     "jersey-back-number-text text-[1.28rem] sm:text-[1.42rem] lg:text-[1.52rem] max-w-[92%] text-center",
 } as const;
 
+/** Plakát soupisky — o něco kompaktnější než editor, aby se vešlo „trochu“ víc vzduchu. */
+const NHL25_POSTER_CARD = {
+  width: "max-w-[8.25rem] sm:max-w-[8.65rem] lg:max-w-[9.1rem]",
+} as const;
+
 const widthClass: Record<Nhl25JerseySize, string> = {
   compact: NHL25_CARD_UNIFIED.width,
   skater: NHL25_CARD_UNIFIED.width,
@@ -34,7 +39,7 @@ const numberClass: Record<Nhl25JerseySize, string> = {
 
 /** Číslo na exportním plakátu — jedna velikost (bez sm:), capture nemusí trefit breakpointy. */
 const POSTER_EXPORT_NUMBER =
-  "jersey-back-number-text jersey-back-number-text--woven text-[2.85rem] max-w-[92%] text-center leading-none";
+  "jersey-back-number-text jersey-back-number-text--woven text-[2.45rem] max-w-[92%] text-center leading-none";
 
 /** Potisk pod horním okrajem — štítek pozice je nad fotkou, ne přes ni. */
 const overlayTopClass: Record<Nhl25JerseySize, string> = {
@@ -74,7 +79,7 @@ export function Nhl25JerseyCard({
   const kind: "skater" | "goalie" =
     empty ? (size === "goalie" ? "goalie" : "skater") : player.position === "G" ? "goalie" : "skater";
   const showAssistant = isAssistant && !empty && !isCaptain;
-  const w = widthClass[size];
+  const w = nameplateVariant === "poster" ? NHL25_POSTER_CARD.width : widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = nameplateVariant === "poster" ? POSTER_EXPORT_NUMBER : numberClass[size];
   const ln = !empty ? jerseyNameOnJersey(player.name) : "";
@@ -148,12 +153,14 @@ export function Nhl25JerseyCard({
         </span>
       )}
 
-      <div className="nhl25-jersey-card-frame nhl25-jersey-card-frame--filled flex flex-col gap-1 rounded-[11px] p-[5px]">
+      <div
+        className={`nhl25-jersey-card-frame nhl25-jersey-card-frame--filled flex flex-col gap-1 rounded-[11px] ${nameplateVariant === "poster" ? "p-[4px] gap-0.5" : "p-[5px]"}`}
+      >
         <div className="flex min-h-[1rem] shrink-0 items-center justify-center px-0.5">
           <span
             className={`
               rounded border border-[#11457e]/45 bg-[#11457e] font-display font-bold uppercase tracking-[0.14em] text-white shadow-sm
-              ${nameplateVariant === "poster" ? "px-2.5 py-0.5 text-[12px]" : "px-2 py-0.5 text-[10px]"}
+              ${nameplateVariant === "poster" ? "px-2 py-0.5 text-[11px]" : "px-2 py-0.5 text-[10px]"}
             `}
           >
             {positionLabel}
@@ -197,18 +204,18 @@ export function Nhl25JerseyCard({
               </div>
             </div>
             {hemLines.length > 0 ? (
-              <div className="pointer-events-none flex min-h-[3.1rem] w-full min-w-0 items-center justify-end gap-1.5 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-2 py-2 pb-2.5 rounded-b-[8px]">
+              <div className="pointer-events-none flex min-h-[2.75rem] w-full min-w-0 items-center justify-end gap-1 border-t border-slate-400/45 bg-gradient-to-r from-[#f1f5f9]/95 to-[#e8eef5]/98 px-1.5 py-1.5 pb-2 rounded-b-[8px]">
                 <span className="nhl25-poster-jersey-hem-name flex min-w-0 flex-1 flex-col items-end justify-center gap-0.5 leading-snug">
                   {hemLines.map((line, idx) => (
                     <span
                       key={idx}
-                      className="block w-full text-right font-display text-[18px] font-black uppercase leading-[1.07] text-[#003087] [overflow-wrap:anywhere]"
+                      className="block w-full text-right font-display text-[15px] font-black uppercase leading-[1.07] text-[#003087] [overflow-wrap:anywhere]"
                     >
                       {line}
                     </span>
                   ))}
                 </span>
-                <JerseyFlagCzInline width={28} height={18} className="shrink-0 translate-y-[1px]" />
+                <JerseyFlagCzInline width={24} height={16} className="shrink-0 translate-y-[1px]" />
               </div>
             ) : null}
           </div>
