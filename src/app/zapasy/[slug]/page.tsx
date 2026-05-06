@@ -4,6 +4,7 @@ import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 import type { LineupStructure } from "@/types";
 import { LineBuilder } from "@/components/LineBuilder";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
+import { MatchRatingShareControls } from "@/components/match/MatchRatingShareControls";
 
 // Railway build: do not prerender at build-time (needs DB at runtime).
 export const dynamic = "force-dynamic";
@@ -65,6 +66,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
           <section>
             <h2 className="font-display text-lg font-black">Hodnocení hráčů (1–10)</h2>
             <p className="mt-1 text-sm text-white/60">Klikni na číslo u hráče — můžeš hlas kdykoliv přepsat.</p>
+            <MatchRatingShareControls matchSlug={match.slug} defaultTitle={`Hodnocení — ${match.title}`} />
             <div className="mt-4">
               <MatchRatingClient
                 slug={match.slug}
