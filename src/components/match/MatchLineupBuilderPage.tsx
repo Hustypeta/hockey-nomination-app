@@ -42,14 +42,14 @@ export function MatchLineupBuilderPage() {
   const [loading, setLoading] = useState(true);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
   const enableDnd = !isNarrowLayout;
-  const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
-  /** Na úzkém layoutu schovat pool, dokud se nevybere slot (pool je ve fullscreen sheetu). */
-  const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
 
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<{ type: string; lineIndex?: number; role?: string } | null>(null);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
+  const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
+  /** Na úzkém layoutu schovat pool, dokud se nevybere slot (pool je ve fullscreen sheetu). */
+  const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
 
   const [defenseCount, setDefenseCount] = useState<6 | 7 | 8>(8);
   const [allowExtraForward, setAllowExtraForward] = useState(false);
