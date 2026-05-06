@@ -1,20 +1,7 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { randomCode } from "@/lib/randomCode";
-
-const ANON_COOKIE = "match_rater";
-
-type CookieStore = Awaited<ReturnType<typeof cookies>>;
-
-function getOrSetAnonRaterKey(cookieStore: CookieStore): { raterKey: string; setCookie?: string } {
-  const c = cookieStore.get(ANON_COOKIE)?.value?.trim();
-  if (c && c.length >= 8) return { raterKey: `a:${c}` };
-  const next = randomCode(18);
-  return { raterKey: `a:${next}`, setCookie: next };
-}
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -25,7 +12,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     const session = await getServerSession(authOptions);
-    const cookieStore = await cookies();
+    const userId = session?.user?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Musíte být přihlášení." }, { status: 401 });
+    }
     const body: unknown = await request.json().catch(() => ({}));
     const b = (body ?? {}) as Record<string, unknown>;
     const playerId = typeof b.playerId === "string" ? b.playerId.trim() : "";
@@ -36,15 +26,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: "Hodnocení musí být 1–10." }, { status: 400 });
     }
 
-    const userId = session?.user?.id;
-    let anon: { raterKey: string; setCookie?: string } | null = null;
-    let raterKey: string;
-    if (userId) {
-      raterKey = `u:${userId}`;
-    } else {
-      anon = getOrSetAnonRaterKey(cookieStore);
-      raterKey = anon.raterKey;
-    }
+    const raterKey = `u:${userId}`;
 
     await prisma.matchRating.upsert({
       where: { matchId_playerId_raterKey: { matchId: match.id, playerId, raterKey } },
@@ -52,17 +34,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       update: { rating },
     });
 
-    const res = NextResponse.json({ ok: true });
-    if (anon?.setCookie) {
-      res.cookies.set(ANON_COOKIE, anon.setCookie, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 180 * 24 * 3600,
-        path: "/",
-      });
-    }
-    return res;
+    return NextResponse.json({ ok: true });
   } catch (e) {
     console.error("POST /api/matches/[slug]/rate:", e);
     return NextResponse.json({ error: "Chyba." }, { status: 500 });

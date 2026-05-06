@@ -2,12 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { allocateShareLinkSlug } from "@/lib/allocateNominationSlug";
 import { validateMatchShareBody } from "@/lib/validateMatchShareBody";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ code: string }> }
 ) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Musíte být přihlášení." }, { status: 401 });
+    }
     const { code } = await params;
     const existing = await prisma.matchShareLink.findUnique({
       where: { code },

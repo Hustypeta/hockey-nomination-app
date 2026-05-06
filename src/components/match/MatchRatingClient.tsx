@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
 
@@ -49,6 +50,11 @@ export function MatchRatingClient({
       const data: unknown = await r.json().catch(() => ({}));
       const err = (data as { error?: unknown } | null)?.error;
       if (!r.ok) {
+        if (r.status === 401) {
+          toast.error("Pro hodnocení se musíte přihlásit.");
+          void signIn("google", { callbackUrl: `/zapasy/${encodeURIComponent(slug)}` });
+          return;
+        }
         toast.error(typeof err === "string" ? err : "Hodnocení se nepovedlo.");
         return;
       }

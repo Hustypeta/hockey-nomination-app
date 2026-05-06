@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { allocateShareLinkSlug } from "@/lib/allocateNominationSlug";
 import { validateMatchShareBody } from "@/lib/validateMatchShareBody";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 function genShareCode(len = 10) {
   const chars = "abcdefghijkmnpqrstuvwxyz23456789";
@@ -14,6 +16,10 @@ function genShareCode(len = 10) {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Musíte být přihlášení." }, { status: 401 });
+    }
     const body = await request.json();
     const parsed = validateMatchShareBody(body);
     if (!parsed.ok) {

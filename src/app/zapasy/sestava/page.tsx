@@ -1,10 +1,17 @@
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { MatchLineupBuilderPage } from "@/components/match/MatchLineupBuilderPage";
 
 export const metadata = {
   title: "Tvorba sestavy na zápas",
 };
 
-export default function MatchLineupBuilderRoute() {
+export default async function MatchLineupBuilderRoute() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    redirect("/auth/signin?callbackUrl=/zapasy/sestava");
+  }
   return <MatchLineupBuilderPage />;
 }
 
