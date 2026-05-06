@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import type { LineupStructure } from "@/types";
 import { LineBuilder } from "@/components/LineBuilder";
+import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 
 export const metadata = {
   title: "Sdílená sestava (zápas)",
@@ -14,6 +15,7 @@ export default async function MatchShareViewPage({ params }: { params: Promise<{
   if (!row) notFound();
 
   const lineup = row.lineupStructure as unknown as LineupStructure;
+  const players = loadMs2026Candidates();
   return (
     <main className="min-h-screen bg-[#05080f] text-white">
       <div className="mx-auto max-w-5xl px-4 py-10">
@@ -24,7 +26,7 @@ export default async function MatchShareViewPage({ params }: { params: Promise<{
             mode="match"
             layoutVariant="classic"
             lineup={lineup}
-            players={[]}
+            players={players}
             captainId={row.captainId ?? null}
             onLineupChange={() => undefined}
             onCaptainChange={() => undefined}

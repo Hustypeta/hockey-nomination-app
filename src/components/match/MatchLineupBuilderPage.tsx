@@ -178,16 +178,20 @@ export function MatchLineupBuilderPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = (await r.json().catch(() => ({}))) as any;
+      const data: unknown = await r.json().catch(() => ({}));
+      const err = (data as { error?: unknown } | null)?.error;
       if (!r.ok) {
-        toast.error(typeof data.error === "string" ? data.error : "Uložení odkazu selhalo.");
+        toast.error(typeof err === "string" ? err : "Uložení odkazu selhalo.");
         return;
       }
-      setShareCode(data.code ?? shareCode);
-      setShareSlug(data.slug ?? shareSlug);
+      const nextCode = (data as { code?: unknown } | null)?.code;
+      const nextSlug = (data as { slug?: unknown } | null)?.slug;
+      const nextUrl = (data as { url?: unknown } | null)?.url;
+      setShareCode(typeof nextCode === "string" ? nextCode : shareCode);
+      setShareSlug(typeof nextSlug === "string" ? nextSlug : shareSlug);
       toast.success("Odkaz uložen.");
-      if (data.url) {
-        await navigator.clipboard.writeText(String(data.url)).catch(() => undefined);
+      if (typeof nextUrl === "string" && nextUrl) {
+        await navigator.clipboard.writeText(nextUrl).catch(() => undefined);
       }
     } finally {
       setSaving(false);
