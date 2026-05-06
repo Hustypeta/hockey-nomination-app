@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "Rady k nominaci",
   description:
     "Článek: Rady k nominaci — tipy k sestavení nominace českého týmu na MS 2026 ve Švýcarsku.",
+  alternates: { canonical: "/clanky/rady-k-nominaci" },
+  openGraph: { url: "/clanky/rady-k-nominaci" },
 };
 
 export default function ArticleNominationTipsPage() {

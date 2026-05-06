@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "Kurzy a analýza: Kdo ovládne MS v hokeji 2026?",
   description:
     "Kurzy a analýza MS 2026 — srovnání kurzů na vítěze a rozbor hlavních favoritů.",
+  alternates: { canonical: "/clanky/kurzy-a-analyza-ms-2026" },
+  openGraph: { url: "/clanky/kurzy-a-analyza-ms-2026" },
 };
 
 const TABLE = [
