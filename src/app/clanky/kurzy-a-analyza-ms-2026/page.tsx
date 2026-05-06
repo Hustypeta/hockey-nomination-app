@@ -41,15 +41,15 @@ export default function ArticleOddsAnalysisPage() {
               Hokejový šampionát ve Švýcarsku startuje 15. května 2026. Pohled na sázkové kurzy i vyjádření expertů naznačují jasné favority, turnajová historie však pravidelně ukazuje, že o výsledku rozhodují detaily v klíčových momentech. Následující přehled vychází z průměrných hodnot českých i zahraničních sázkových kanceláří k 6. květnu.
             </p>
 
-            <h2 className="pt-2 font-display text-xl font-black text-white">
+            <h2 className="pt-3 font-display text-2xl font-black text-white sm:text-3xl">
               Srovnání kurzů na celkového vítěze MS 2026
             </h2>
             <p className="text-white/70">(Průměrné hodnoty k 6. 5. 2026)</p>
 
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
               <div className="overflow-x-auto">
                 <table className="min-w-full text-left text-sm">
-                  <thead className="bg-white/[0.06] text-[11px] font-black uppercase tracking-[0.18em] text-white/70">
+                  <thead className="sticky top-0 bg-[#0b1220] text-[11px] font-black uppercase tracking-[0.18em] text-white/70">
                     <tr>
                       <th className="px-4 py-3">Tým</th>
                       <th className="px-4 py-3">Kurz na vítězství</th>
@@ -57,11 +57,14 @@ export default function ArticleOddsAnalysisPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/10">
-                    {TABLE.map((r) => (
-                      <tr key={r.team} className="hover:bg-white/[0.03]">
-                        <td className="px-4 py-3 font-bold text-white">{r.team}</td>
-                        <td className="px-4 py-3 font-semibold text-white/85">{r.odds}</td>
-                        <td className="px-4 py-3 text-white/75">{r.position}</td>
+                    {TABLE.map((r, idx) => (
+                      <tr
+                        key={r.team}
+                        className={`${idx % 2 === 0 ? "bg-white/[0.02]" : ""} hover:bg-white/[0.04]`}
+                      >
+                        <td className="whitespace-nowrap px-4 py-3 font-bold text-white">{r.team}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-semibold text-white/90">{r.odds}</td>
+                        <td className="min-w-[14rem] px-4 py-3 text-white/75">{r.position}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -69,7 +72,7 @@ export default function ArticleOddsAnalysisPage() {
               </div>
             </div>
 
-            <h2 className="pt-2 font-display text-xl font-black text-white">
+            <h2 className="pt-3 font-display text-2xl font-black text-white sm:text-3xl">
               Analýza hlavních favoritů
             </h2>
 
@@ -89,7 +92,7 @@ export default function ArticleOddsAnalysisPage() {
               5. Švédsko a FinskoOba severští soupeři sázejí na odlišné zbraně. Švédsko disponuje vyváženou sestavou s vynikající organizací hry, zatímco Finsko tradičně sází na propracovaný systém a schopnost ničit ofenzivní snahy favoritů.
             </p>
 
-            <h2 className="pt-2 font-display text-xl font-black text-white">
+            <h2 className="pt-3 font-display text-2xl font-black text-white sm:text-3xl">
               Shrnutí a tip redakce
             </h2>
             <p>
@@ -99,9 +102,6 @@ export default function ArticleOddsAnalysisPage() {
               Poznámka: Kurzy se mohou měnit v závislosti na konečných soupiskách a výsledcích posledních přípravných zápasů.
             </p>
 
-            <p>
-              Tenhle článek tam dej taky, odkaz v pickemu. Stejně jako předtím instrukce. Je tam tabulka tak ji nějak hezky udělej. šup a push
-            </p>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">

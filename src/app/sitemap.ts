@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 
 const site = "https://hokejlineup.cz";
 
+// Keep sitemap stable and cacheable (and never 500).
+export const revalidate = 3600;
+
 const staticRoutes = [
   "/",
   "/sestava",
@@ -18,12 +21,17 @@ const staticRoutes = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-  return staticRoutes.map((path) => ({
-    url: `${site}${path}`,
-    lastModified: now,
-    changeFrequency: path === "/" ? "daily" : "weekly",
-    priority: path === "/" ? 1 : path === "/sestava" ? 0.9 : 0.7,
-  }));
+  try {
+    const nowIso = new Date().toISOString();
+    return staticRoutes.map((path) => ({
+      url: `${site}${path}`,
+      lastModified: nowIso,
+      changeFrequency: path === "/" ? "daily" : "weekly",
+      priority: path === "/" ? 1 : path === "/sestava" ? 0.9 : 0.7,
+    }));
+  } catch {
+    // Absolute fallback: minimal sitemap.
+    return [{ url: `${site}/`, lastModified: "2026-01-01T00:00:00.000Z" }];
+  }
 }
 

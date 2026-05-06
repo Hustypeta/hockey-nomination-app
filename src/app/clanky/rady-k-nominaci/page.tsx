@@ -37,26 +37,24 @@ export default function ArticleNominationTipsPage() {
 
             <ul className="space-y-3">
               <li>
-                •	Filip Hronek (Vancouver Canucks): Pokud bude zdravotně v pořádku, jde o jasného lídra obrany. Jeho předností je elitní rozehrávka a tvrdá hra do těla.
+                <strong className="font-semibold text-white">Filip Hronek (Vancouver Canucks)</strong>: Pokud bude zdravotně v pořádku, jde o jasného lídra obrany. Jeho předností je elitní rozehrávka a tvrdá hra do těla.
               </li>
               <li>
-                •	Adam Klapka (Calgary Flames) &amp; Jaroslav Chmelař (NY Rangers): Typičtí „power forwardi“. Na širokém evropském kluzišti budou klíčoví pro důraz před brankou a hru proti fyzicky silným výběrům Kanady a USA.
+                <strong className="font-semibold text-white">Adam Klapka (Calgary Flames) &amp; Jaroslav Chmelař (NY Rangers)</strong>: Typičtí „power forwardi“. Na širokém evropském kluzišti budou klíčoví pro důraz před brankou a hru proti fyzicky silným výběrům Kanady a USA.
               </li>
               <li>
-                •	Hvězdy NHL: V ply-off NHL skončili David Pastrňák, Pavel Zacha a Tomáš Hertl. Hvězda Bostonu David Pastrňák se sice zatím ke svému příjezdu zatím vyjádřil spíše negativně, třeba ho však přemluví Roman Červenka, který již svou účast přislíbil. Bizarní situace panuje kolem Pastrňákova spoluhráče Pavla Zachy, se kterým se podle generálního manažera Jiřího Šlégra nelze telefonicky spojit. Ohledně Tomáše Hertl, jenž se v dresu Vegas v závěru sezony viditelně trápil, zatím media i vedení reprezentace mlčí. 
+                <strong className="font-semibold text-white">Hvězdy NHL</strong>: V ply-off NHL skončili David Pastrňák, Pavel Zacha a Tomáš Hertl. Hvězda Bostonu David Pastrňák se sice zatím ke svému příjezdu zatím vyjádřil spíše negativně, třeba ho však přemluví Roman Červenka, který již svou účast přislíbil. Bizarní situace panuje kolem Pastrňákova spoluhráče Pavla Zachy, se kterým se podle generálního manažera Jiřího Šlégra nelze telefonicky spojit. Ohledně Tomáše Hertl, jenž se v dresu Vegas v závěru sezony viditelně trápil, zatím media i vedení reprezentace mlčí.
               </li>
               <li>
-                •	Mladá krev z AHL: Hráči jako Melovský, Kunc, Hovorka nebo Alsher bojují o svou šanci a do týmu mohou vnést dravost a rychlost, která v moderním hokeji rozhoduje. V play-off AHL sice čerstvě skončili hráči jako Matyáš Šapovaliv nebo Jakub Brabenec (Henderson Silver Knights), jejich příjezd je však vzhledem k pokročilé fázi přípravy a náročné logistice v podstatě vyloučen. Trenérský štáb se raději soustředí na hráče, kteří s týmem absolvovali celý kemp.
+                <strong className="font-semibold text-white">Mladá krev z AHL</strong>: Hráči jako Melovský, Kunc, Hovorka nebo Alsher bojují o svou šanci a do týmu mohou vnést dravost a rychlost, která v moderním hokeji rozhoduje. V play-off AHL sice čerstvě skončili hráči jako Matyáš Šapovaliv nebo Jakub Brabenec (Henderson Silver Knights), jejich příjezd je však vzhledem k pokročilé fázi přípravy a náročné logistice v podstatě vyloučen. Trenérský štáb se raději soustředí na hráče, kteří s týmem absolvovali celý kemp.
               </li>
               <li>
-                •	Brankářská otázka: Brankářská otázka: Situace v brankovišti zůstává pro letošní šampionát velmi otevřená. Po vypadnutí Utahu z bojů o Stanley Cup jsou sice k dispozici Karel Vejmelka i Vítek Vaněček, ale jejich konečné zapojení do týmu je zatím v řešení. Kolem Davida Ritticha panuje informační šum a jeho příjezd do Švýcarska je nejistý. Vedení reprezentace pravděpodobně vyčkává i na další vývoj v zámoří, konkrétně na dostupnost Lukáše Dostála nebo Jakuba Dobeše. Stále však existuje varianta, že trenéři nakonec vsadí na aktuální trojici, která v týmu figuruje nyní a absolvovala převážnou část přípravy.
+                <strong className="font-semibold text-white">Brankářská otázka</strong>: Brankářská otázka: Situace v brankovišti zůstává pro letošní šampionát velmi otevřená. Po vypadnutí Utahu z bojů o Stanley Cup jsou sice k dispozici Karel Vejmelka i Vítek Vaněček, ale jejich konečné zapojení do týmu je zatím v řešení. Kolem Davida Ritticha panuje informační šum a jeho příjezd do Švýcarska je nejistý. Vedení reprezentace pravděpodobně vyčkává i na další vývoj v zámoří, konkrétně na dostupnost Lukáše Dostála nebo Jakuba Dobeše. Stále však existuje varianta, že trenéři nakonec vsadí na aktuální trojici, která v týmu figuruje nyní a absolvovala převážnou část přípravy.
               </li>
               <li>
-                •	Ostatní hráči: Mimo sledované posily z NHL má trenér Rulík k dispozici několik dalších variant, i když prostor pro změny v sestavě se zužuje. Hlavním otazníkem zůstává Lukáš Sedlák, který po náročném finále extraligy doléčuje šrámy a o jeho startu rozhodne aktuální zdravotní stav. U dalších finalistů, jako jsou Jan Koštálek, Daniel Gazda, Ondřej Kovařčík nebo Tomáš Kundrátek, je dodatečná nominace po začátku Beijer Hockey Games už málo pravděpodobná. Jisté je, že tým letos neposílí Matěj Stránský ani Filip Zadina, kteří se z rodinných a zdravotních důvodů omluvili. Malá teoretická šance na dopsání zůstává u krajánků ze severu – Luboše Horkého (Rögle), Lukáše Jaška nebo Radka Kučeříka (Ilves) – ovšem jejich zapojení realizační tým momentálně spíše neplánuje.
+                <strong className="font-semibold text-white">Ostatní hráči</strong>: Mimo sledované posily z NHL má trenér Rulík k dispozici několik dalších variant, i když prostor pro změny v sestavě se zužuje. Hlavním otazníkem zůstává Lukáš Sedlák, který po náročném finále extraligy doléčuje šrámy a o jeho startu rozhodne aktuální zdravotní stav. U dalších finalistů, jako jsou Jan Koštálek, Daniel Gazda, Ondřej Kovařčík nebo Tomáš Kundrátek, je dodatečná nominace po začátku Beijer Hockey Games už málo pravděpodobná. Jisté je, že tým letos neposílí Matěj Stránský ani Filip Zadina, kteří se z rodinných a zdravotních důvodů omluvili. Malá teoretická šance na dopsání zůstává u krajánků ze severu – Luboše Horkého (Rögle), Lukáše Jaška nebo Radka Kučeříka (Ilves) – ovšem jejich zapojení realizační tým momentálně spíše neplánuje.
               </li>
             </ul>
-
-            <p>Na web přidej ještě tento článek a odkaz na něj dej viditelně do editoru nominace. Graficky ve stylu normálně webu, klidně si s tím pohraj ale neměň ten text jasné?</p>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
