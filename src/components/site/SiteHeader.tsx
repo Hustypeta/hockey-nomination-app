@@ -104,7 +104,7 @@ export function SiteHeader() {
           {/* Brand */}
           <Link
             href="/"
-            className="group/brand flex min-w-0 flex-1 shrink-0 items-center gap-2 sm:gap-3 lg:max-w-none lg:flex-none lg:gap-3 xl:min-w-0 xl:max-w-[min(38%,20rem)]"
+            className="group/brand flex min-w-0 flex-1 shrink-0 items-center gap-2 sm:gap-3 lg:hidden"
             aria-label={SITE_BRAND}
           >
             <div className="relative shrink-0">
@@ -170,7 +170,20 @@ export function SiteHeader() {
                     ${active ? "text-white" : "text-slate-400"}
                   `}
                     >
-                      <span className="relative z-10">
+                      <span className="relative z-10 inline-flex items-center gap-2">
+                        {href === "/" ? (
+                          <span className="relative -ml-0.5 mr-0.5 inline-flex items-center">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={SITE_LOGO_URL}
+                              alt=""
+                              width={120}
+                              height={36}
+                              decoding="async"
+                              className="h-6 w-auto object-contain object-left opacity-95"
+                            />
+                          </span>
+                        ) : null}
                         <DesktopNavLabel item={item} />
                       </span>
                       {active ? (
