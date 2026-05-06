@@ -7,8 +7,10 @@ import { randomCode } from "@/lib/randomCode";
 
 const ANON_COOKIE = "match_rater";
 
-function getOrSetAnonRaterKey(): { raterKey: string; setCookie?: string } {
-  const c = cookies().get(ANON_COOKIE)?.value?.trim();
+type CookieStore = Awaited<ReturnType<typeof cookies>>;
+
+function getOrSetAnonRaterKey(cookieStore: CookieStore): { raterKey: string; setCookie?: string } {
+  const c = cookieStore.get(ANON_COOKIE)?.value?.trim();
   if (c && c.length >= 8) return { raterKey: `a:${c}` };
   const next = randomCode(18);
   return { raterKey: `a:${next}`, setCookie: next };
@@ -23,6 +25,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     const session = await getServerSession(authOptions);
+    const cookieStore = await cookies();
     const body: unknown = await request.json().catch(() => ({}));
     const b = (body ?? {}) as Record<string, unknown>;
     const playerId = typeof b.playerId === "string" ? b.playerId.trim() : "";
@@ -33,8 +36,15 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: "Hodnocení musí být 1–10." }, { status: 400 });
     }
 
-    const anon = session?.user?.id ? null : getOrSetAnonRaterKey();
-    const raterKey = session?.user?.id ? `u:${session.user.id}` : anon.raterKey;
+    const userId = session?.user?.id;
+    let anon: { raterKey: string; setCookie?: string } | null = null;
+    let raterKey: string;
+    if (userId) {
+      raterKey = `u:${userId}`;
+    } else {
+      anon = getOrSetAnonRaterKey(cookieStore);
+      raterKey = anon.raterKey;
+    }
 
     await prisma.matchRating.upsert({
       where: { matchId_playerId_raterKey: { matchId: match.id, playerId, raterKey } },

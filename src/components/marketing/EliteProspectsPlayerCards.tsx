@@ -161,8 +161,9 @@ function formatClubLeague(player: Player): string {
   return club || league || "";
 }
 
-const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function PlayerIgCard(props, ref) {
-  const { m, variant = "clean" } = props as { m: PlayerCardModel; variant?: PlayerCardVariant };
+const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: PlayerCardVariant }>(
+  function PlayerIgCard(props, ref) {
+    const { m, variant = "clean" } = props;
   const s = m.stats;
   /** Od 2 řádků statistik už zmenšit dres — jinak se rámy s tabulkou vizuálně „lepí“. */
   const denseStats = (s?.rows.length ?? 0) >= 2;
@@ -177,7 +178,7 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
     nameLen >= 16 ? "text-[84px]" : nameLen >= 13 ? "text-[90px]" : "text-[96px]";
   const clubLen = clubLeague.length;
   const clubFont = clubLen >= 30 ? "text-[38px]" : clubLen >= 22 ? "text-[42px]" : "text-[44px]";
-  return (
+    return (
     <div
       ref={ref}
       className={`relative h-[1350px] w-[1080px] overflow-hidden rounded-[44px] border-[6px] border-neutral-950 shadow-[0_28px_90px_rgba(0,0,0,0.18)] ring-1 ring-black/10 ${
@@ -253,8 +254,9 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel }>(function
         </div>
       </div>
     </div>
-  );
-});
+    );
+  }
+);
 
 PlayerIgCard.displayName = "PlayerIgCard";
 
