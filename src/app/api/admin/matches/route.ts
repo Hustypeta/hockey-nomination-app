@@ -7,6 +7,10 @@ function readString(v: unknown): string | null {
   return typeof v === "string" ? v : null;
 }
 
+function readCategory(v: unknown): "beijir" | "ms2026" {
+  return v === "ms2026" ? "ms2026" : "beijir";
+}
+
 export async function GET() {
   try {
     await requireAdminOrThrow();
@@ -31,6 +35,9 @@ export async function POST(request: NextRequest) {
     if (!title) return NextResponse.json({ error: "Chybí název zápasu." }, { status: 400 });
     const opponent = (readString(b.opponent) ?? "").trim() || null;
     const venue = (readString(b.venue) ?? "").trim() || null;
+    const category = readCategory(b.category);
+    const homeCode = (readString(b.homeCode) ?? "").trim().toUpperCase() || null;
+    const awayCode = (readString(b.awayCode) ?? "").trim().toUpperCase() || null;
     const startsAt =
       typeof b.startsAt === "string" && b.startsAt.trim()
         ? new Date(b.startsAt)
@@ -43,7 +50,7 @@ export async function POST(request: NextRequest) {
     });
 
     const created = await prisma.match.create({
-      data: { title, slug, opponent, venue, startsAt, published },
+      data: { title, slug, opponent, venue, startsAt, published, category, homeCode, awayCode },
     });
     return NextResponse.json({ ok: true, match: created });
   } catch (e: unknown) {

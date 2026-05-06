@@ -17,6 +17,9 @@ type MatchRow = {
   id: string;
   slug: string;
   title: string;
+  category?: string | null;
+  homeCode?: string | null;
+  awayCode?: string | null;
   opponent: string | null;
   startsAt: string | null;
   venue: string | null;
@@ -36,6 +39,9 @@ export function MatchesAdminPage() {
   const [newOpponent, setNewOpponent] = useState("");
   const [newStartsAt, setNewStartsAt] = useState("");
   const [newVenue, setNewVenue] = useState("");
+  const [newCategory, setNewCategory] = useState<"beijir" | "ms2026">("beijir");
+  const [newHome, setNewHome] = useState("CZE");
+  const [newAway, setNewAway] = useState("");
 
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
@@ -92,6 +98,9 @@ export function MatchesAdminPage() {
         id: m.id,
         slug: m.slug,
         title: m.title,
+        category: m.category ?? null,
+        homeCode: m.homeCode ?? null,
+        awayCode: m.awayCode ?? null,
         opponent: m.opponent ?? null,
         startsAt: m.startsAt ? new Date(m.startsAt).toISOString() : null,
         venue: m.venue ?? null,
@@ -142,8 +151,9 @@ export function MatchesAdminPage() {
   }, [activeId]);
 
   const createMatch = async () => {
-    if (!newTitle.trim()) {
-      toast.error("Doplň název zápasu.");
+    const title = newTitle.trim() || (newHome.trim() && newAway.trim() ? `${newHome.trim().toUpperCase()} - ${newAway.trim().toUpperCase()}` : "");
+    if (!title) {
+      toast.error("Doplň název zápasu nebo vyplň týmy.");
       return;
     }
     setCreating(true);
@@ -153,10 +163,13 @@ export function MatchesAdminPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: newTitle.trim(),
+          title,
           opponent: newOpponent.trim() || null,
           startsAt: newStartsAt.trim() || null,
           venue: newVenue.trim() || null,
+          category: newCategory,
+          homeCode: newHome.trim() || null,
+          awayCode: newAway.trim() || null,
           published: false,
         }),
       });
@@ -170,6 +183,7 @@ export function MatchesAdminPage() {
       setNewOpponent("");
       setNewStartsAt("");
       setNewVenue("");
+      setNewAway("");
       await reloadMatches();
       if (data.match?.id) setActiveId(String(data.match.id));
     } finally {
@@ -243,11 +257,36 @@ export function MatchesAdminPage() {
               <div className="mt-2 rounded-xl border border-white/10 bg-black/20 p-3">
                 <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Nový zápas</p>
                 <div className="mt-2 grid gap-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <select
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value === "ms2026" ? "ms2026" : "beijir")}
+                      className="rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm font-semibold text-white"
+                      aria-label="Kategorie"
+                    >
+                      <option value="beijir">Beijir hockey games</option>
+                      <option value="ms2026">MS 2026</option>
+                    </select>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        value={newHome}
+                        onChange={(e) => setNewHome(e.target.value)}
+                        className="rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm font-semibold text-white"
+                        placeholder="HOME (CZE)"
+                      />
+                      <input
+                        value={newAway}
+                        onChange={(e) => setNewAway(e.target.value)}
+                        className="rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm font-semibold text-white"
+                        placeholder="AWAY (SWE)"
+                      />
+                    </div>
+                  </div>
                   <input
                     value={newTitle}
                     onChange={(e) => setNewTitle(e.target.value)}
                     className="rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-white"
-                    placeholder="Název (např. Česko vs Kanada)"
+                    placeholder="Název (volitelné, jinak HOME - AWAY)"
                   />
                   <input
                     value={newOpponent}

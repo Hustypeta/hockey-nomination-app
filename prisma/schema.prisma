@@ -157,6 +157,11 @@ model Match {
   id        String   @id @default(cuid())
   slug      String   @unique
   title     String
+  /// "beijir" | "ms2026" — filtr pro /zapasy
+  category  String   @default("beijir")
+  /// Volitelné kódy týmů pro hezký list (CZE, SWE, FIN, USA…)
+  homeCode  String?
+  awayCode  String?
   opponent  String?
   startsAt  DateTime?
   venue     String?

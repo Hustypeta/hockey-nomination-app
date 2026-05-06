@@ -1,15 +1,21 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const category = url.searchParams.get("category");
+    const whereCategory = category === "ms2026" ? "ms2026" : category === "beijir" ? "beijir" : null;
     const matches = await prisma.match.findMany({
-      where: { published: true },
+      where: { published: true, ...(whereCategory ? { category: whereCategory } : {}) },
       orderBy: [{ startsAt: "desc" }, { createdAt: "desc" }],
       select: {
         id: true,
         slug: true,
         title: true,
+        category: true,
+        homeCode: true,
+        awayCode: true,
         opponent: true,
         startsAt: true,
         venue: true,
