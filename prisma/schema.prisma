@@ -171,6 +171,7 @@ model Match {
 
   officialLineup MatchOfficialLineup?
   ratings        MatchRating[]
+  ratingExports  MatchRatingShareLink[]
 
   @@map("matches")
 }
