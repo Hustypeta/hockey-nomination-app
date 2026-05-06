@@ -5,6 +5,11 @@ const site = "https://hokejlineup.cz";
 const staticRoutes = [
   "/",
   "/sestava",
+  "/zapasy",
+  "/zapasy/beijir",
+  "/zapasy/ms-2026",
+  "/clanky/rady-k-nominaci",
+  "/clanky/kurzy-a-analyza-ms-2026",
   "/pravidla-souteze",
   "/zebricek",
   "/bracket",

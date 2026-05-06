@@ -1,10 +1,21 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { FlagMark } from "@/components/flags/FlagMark";
 
-export const metadata = {
-  title: "Zápasy — Beijir hockey games — MS 2026",
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  const category = sp.category === "ms2026" ? "ms2026" : "beijir";
+  const canonical = category === "ms2026" ? "/zapasy/ms-2026" : "/zapasy/beijir";
+  return {
+    title: "Zápasy — Beijir hockey games — MS 2026",
+    alternates: { canonical },
+  };
+}
 
 // Railway build: do not prerender at build-time (needs DB at runtime).
 export const dynamic = "force-dynamic";
