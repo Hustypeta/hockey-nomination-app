@@ -5,6 +5,10 @@ export const metadata = {
   title: "Zápasy — Beijir hockey games — MS 2026",
 };
 
+// Railway build: do not prerender at build-time (needs DB at runtime).
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function MatchesIndexPage() {
   const matches = await prisma.match.findMany({
     where: { published: true, officialLineup: { isNot: null } },

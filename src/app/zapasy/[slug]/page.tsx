@@ -5,6 +5,10 @@ import type { LineupStructure } from "@/types";
 import { LineBuilder } from "@/components/LineBuilder";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
 
+// Railway build: do not prerender at build-time (needs DB at runtime).
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function MatchDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const match = await prisma.match.findUnique({
