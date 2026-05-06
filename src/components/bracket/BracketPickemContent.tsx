@@ -1343,7 +1343,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
 
   const submitPickem = useCallback(async () => {
     if (authStatus !== "authenticated") {
-      toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.");
+      toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept, musíte se přihlásit.");
       return;
     }
     if (contestLocked) {
@@ -1378,7 +1378,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
 
   const submitPickemToContest = useCallback(async () => {
     if (authStatus !== "authenticated") {
-      toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.");
+      toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept, musíte se přihlásit.");
       return;
     }
     if (contestLocked) {
@@ -1475,7 +1475,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
       {authStatus !== "authenticated" ? (
         <div className="pickem-panel mt-6 rounded-2xl p-5 text-center ring-1 ring-[#003087]/25">
           <p className="text-sm text-white/75">
-            Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept do nominace, musíte se přihlásit.
+            Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept, musíte se přihlásit.
           </p>
           <button
             type="button"

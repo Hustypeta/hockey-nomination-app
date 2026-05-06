@@ -136,8 +136,8 @@ export function NominationBuilderPage() {
 
   const enableDnd = !isNarrowLayout;
 
-  const selectedPlayers = lineupToPlayers(lineup, players);
-  const usedIds = new Set(selectedPlayers.map((p) => p.id));
+  const selectedPlayers = useMemo(() => lineupToPlayers(lineup, players), [lineup, players]);
+  const usedIds = useMemo(() => new Set(selectedPlayers.map((p) => p.id)), [selectedPlayers]);
   const isComplete = isLineupComplete(lineup);
   const leadershipOk = useMemo(() => isLeadershipComplete(lineup, captainId), [lineup, captainId]);
   const canOpenShareModal = isComplete;
@@ -751,7 +751,8 @@ export function NominationBuilderPage() {
       onDragCancel={handleDragCancel}
     >
       <div className="sestava-page-ambient min-h-screen pb-[10.75rem] text-white sm:pb-44 lg:pb-36">
-        <SestavaAmbientBackground />
+        {/* Mobile scroll perf: background layers off on narrow layouts */}
+        {!isNarrowLayout ? <SestavaAmbientBackground /> : null}
 
         <div className="sticky top-0 z-40">
           <SiteHeader />
@@ -804,7 +805,11 @@ export function NominationBuilderPage() {
           <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
             {showDesktopPoolColumn ? (
               <section className="min-w-0 hidden lg:block">
-                <div className="sestava-premium-panel-dark rounded-2xl p-3.5 backdrop-blur-sm sm:p-5">
+                <div
+                  className={`sestava-premium-panel-dark rounded-2xl p-3.5 sm:p-5 ${
+                    isNarrowLayout ? "" : "backdrop-blur-sm"
+                  }`}
+                >
                   <div className="mb-4">
                     <div>
                       <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
@@ -893,7 +898,11 @@ export function NominationBuilderPage() {
                 <span className="w-[5.5rem] shrink-0" aria-hidden />
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-4 sm:px-4">
-                <div className="sestava-premium-panel-dark rounded-2xl p-3.5 backdrop-blur-sm sm:p-4">
+                <div
+                  className={`sestava-premium-panel-dark rounded-2xl p-3.5 sm:p-4 ${
+                    isNarrowLayout ? "" : "backdrop-blur-sm"
+                  }`}
+                >
                   <p className="mb-3 text-[11px] leading-snug text-white/55">
                     Klepni na hráče — doplní se vybraný slot. Můžeš i přetáhnout na dres.
                   </p>

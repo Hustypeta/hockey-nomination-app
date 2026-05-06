@@ -151,3 +151,66 @@ model OfficialLineup {
 
   @@map("official_lineup")
 }
+
+/// Zápasy (Beijir hockey games) — oficiální sestava + hodnocení hráčů.
+model Match {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  opponent  String?
+  startsAt  DateTime?
+  venue     String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  officialLineup MatchOfficialLineup?
+  ratings        MatchRating[]
+
+  @@map("matches")
+}
+
+model MatchOfficialLineup {
+  matchId           String  @id
+  lineupStructure   Json
+  captainId         String?
+  defenseCount      Int     @default(8) // 8 / 7 / 6
+  allowExtraForward Boolean @default(false) // 13. útočník
+  updatedAt         DateTime @updatedAt
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@map("match_official_lineups")
+}
+
+/// Jedno hodnocení hráče v konkrétním zápase od jednoho hodnotitele.
+/// raterKey = "u:{userId}" nebo "a:{anonCookie}".
+model MatchRating {
+  id        String   @id @default(cuid())
+  matchId   String
+  playerId  String
+  rating    Int
+  raterKey  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, playerId, raterKey])
+  @@index([matchId, playerId])
+  @@map("match_ratings")
+}
+
+/// Hostovské sdílení fanouškovské sestavy na zápas (nezávislé na zápase).
+model MatchShareLink {
+  code              String   @id @db.VarChar(12)
+  slug              String?  @unique
+  captainId         String?
+  lineupStructure   Json
+  title             String?
+  defenseCount      Int      @default(8)
+  allowExtraForward Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  @@map("match_share_links")
+}

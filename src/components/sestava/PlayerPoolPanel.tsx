@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { Search, Filter, Info, GripVertical } from "lucide-react";
@@ -235,6 +235,93 @@ function DraggableCard({
   );
 }
 
+const TapCard = memo(function TapCard({
+  player,
+  disabled,
+  slotBlocks,
+  inRoster,
+  onAdd,
+  onInfo,
+  counts,
+}: {
+  player: Player;
+  disabled: boolean;
+  slotBlocks: boolean;
+  inRoster: boolean;
+  onAdd: () => void;
+  onInfo: () => void;
+  counts: { G: number; D: number; F: number };
+}) {
+  const lim = POSITION_LIMITS[player.position];
+  const cur = counts[player.position];
+  const rate = Number.isFinite(player.pick_rate) ? Math.max(0, Math.min(100, player.pick_rate)) : 0;
+  const canInteract = !disabled && !slotBlocks && !inRoster;
+
+  return (
+    <div
+      className={`
+        relative flex flex-col gap-2 rounded-xl border p-3
+        ${inRoster ? "border-white/[0.07] bg-[#05080f]/45 opacity-60" : "border-white/[0.12] bg-[#0a1428]/75"}
+        ${disabled || slotBlocks ? "opacity-55" : "opacity-100"}
+      `}
+    >
+      <button
+        type="button"
+        className="flex min-w-0 flex-1 touch-pan-y flex-col gap-1.5 rounded-lg px-0.5 py-0.5 text-left"
+        onClick={() => canInteract && onAdd()}
+        disabled={!canInteract}
+      >
+        <div className="flex items-start gap-2">
+          <div className="shrink-0">
+            <PlayerAvatar
+              name={player.name}
+              position={player.position}
+              role={player.role}
+              imageUrl={player.imageUrl}
+              size="md"
+            />
+          </div>
+          <div className="min-w-0 flex-1 pt-0.5">
+            <p className="line-clamp-2 break-words text-pretty text-sm font-bold leading-snug text-white">
+              {player.name}
+            </p>
+            <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95">
+              <span className="text-slate-100">{player.club}</span>
+              {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5 pl-0.5">
+          <span className="rounded-lg border border-[#003087]/35 bg-[#003087]/15 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95">
+            {cur}/{lim}
+          </span>
+          <PickRateBadge rate={rate} />
+        </div>
+      </button>
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onInfo();
+        }}
+        className="absolute right-2 top-2 rounded-lg p-2 text-slate-500 transition-colors hover:bg-white/10 hover:text-[#f1c40f]"
+        aria-label="Detail hráče"
+      >
+        <Info className="h-4 w-4" />
+      </button>
+
+      <div className="mt-1 h-[2px] w-full overflow-hidden rounded-full bg-white/10">
+        <div
+          className="h-full rounded-full bg-sky-300/70"
+          style={{ width: `${Math.round(clamp01(rate / 100) * 100)}%` }}
+          aria-hidden
+        />
+      </div>
+    </div>
+  );
+});
+
 interface PlayerPoolPanelProps {
   players: Player[];
   usedIds: Set<string>;
@@ -326,7 +413,11 @@ export function PlayerPoolPanel({
           ) : null}
         </div>
       )}
-      <div className="flex flex-wrap gap-2 rounded-2xl border border-white/[0.1] bg-[#0a1428]/60 p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_32px_rgba(0,48,135,0.15)] backdrop-blur-md">
+      <div
+        className={`flex flex-wrap gap-2 rounded-2xl border border-white/[0.1] bg-[#0a1428]/60 p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_32px_rgba(0,48,135,0.15)] ${
+          enableDnd ? "backdrop-blur-md" : ""
+        }`}
+      >
         {(
           [
             ["all", "Všichni"],
@@ -397,18 +488,18 @@ export function PlayerPoolPanel({
           const inRoster = usedIds.has(player.id);
           const disabled = !canAdd(player);
           const slotBlocks = assignableFilter ? !assignableFilter(player) : false;
+          const Card = enableDnd ? DraggableCard : TapCard;
           return (
             <div
               key={player.id}
               className="[content-visibility:auto] [contain-intrinsic-size:168px]"
             >
-              <DraggableCard
+              <Card
                 player={player}
                 disabled={disabled}
                 slotBlocks={slotBlocks}
                 inRoster={inRoster}
                 counts={counts}
-                enableDnd={enableDnd}
                 onAdd={() => onAddPlayer(player)}
                 onInfo={() => onPreview(player)}
               />

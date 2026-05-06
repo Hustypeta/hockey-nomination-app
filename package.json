@@ -20,6 +20,8 @@
     "promo:capture-squad": "node scripts/capture-promo-squad.cjs",
     "og:pad-top": "node scripts/pad-og-top.mjs",
     "email:broadcast": "node scripts/resend-broadcast.mjs",
+    "verify:scoring": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/verify-contest-scoring.ts",
+    "preview:leaderboard": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/preview-contest-leaderboard.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -56,6 +58,7 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5"
   }
 }
