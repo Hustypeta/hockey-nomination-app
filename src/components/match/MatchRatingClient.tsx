@@ -29,6 +29,7 @@ export function MatchRatingClient({
 }) {
   const [ratings, setRatings] = useState<RatingMap>(initialRatings);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [draftById, setDraftById] = useState<Record<string, number>>({});
 
   useEffect(() => setRatings(initialRatings), [initialRatings]);
 
@@ -76,6 +77,7 @@ export function MatchRatingClient({
         const p = byId.get(pid);
         if (!p) return null;
         const r = ratings[pid] ?? { avg: 0, count: 0 };
+        const draft = draftById[pid] ?? 7;
         return (
           <div key={pid} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <div className="flex items-start justify-between gap-3">
@@ -93,18 +95,40 @@ export function MatchRatingClient({
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              {Array.from({ length: 10 }, (_, i) => i + 1).map((v) => (
-                <button
-                  key={v}
-                  type="button"
+            <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+              <div className="min-w-0">
+                <div className="flex items-center justify-between text-xs text-white/60">
+                  <span>1</span>
+                  <span className="font-bold text-white">
+                    Vybráno: <span className="tabular-nums">{draft}</span>
+                  </span>
+                  <span>10</span>
+                </div>
+                <input
+                  aria-label={`Hodnocení ${p.name}`}
+                  type="range"
+                  min={1}
+                  max={10}
+                  step={1}
+                  value={draft}
                   disabled={busyId === pid}
-                  onClick={() => void submit(pid, v)}
-                  className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-xs font-bold text-white/90 hover:bg-white/[0.06] disabled:opacity-50"
-                >
-                  {v}
-                </button>
-              ))}
+                  onChange={(e) => {
+                    const v = clampInt(Number(e.target.value), 1, 10);
+                    setDraftById((m) => ({ ...m, [pid]: v }));
+                  }}
+                  onMouseUp={() => void submit(pid, draft)}
+                  onTouchEnd={() => void submit(pid, draft)}
+                  className="mt-2 w-full accent-[#00B4FF] disabled:opacity-50"
+                />
+              </div>
+              <button
+                type="button"
+                disabled={busyId === pid}
+                onClick={() => void submit(pid, draft)}
+                className="rounded-xl border border-white/10 bg-black/20 px-4 py-2 text-sm font-black text-white/90 hover:bg-white/[0.06] disabled:opacity-50"
+              >
+                {busyId === pid ? "…" : "Uložit"}
+              </button>
             </div>
           </div>
         );
