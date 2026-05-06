@@ -12,7 +12,7 @@ const homeOgDesc = "Editor sestavy, pick'en, hodnocení hráčů a komunita fano
 
 const homeMetadata: Metadata = {
   title: {
-    absolute: "Lineup",
+    absolute: "Lineup – hokejový editor sestavy",
   },
   description: homeOgDesc,
   alternates: {
@@ -24,7 +24,7 @@ const homeMetadata: Metadata = {
     locale: "cs_CZ",
     url: "/",
     siteName: "Lineup",
-    title: "Lineup · MS 2026",
+    title: "Lineup – hokejový editor sestavy",
     description: homeOgDesc,
     images: [
       {
@@ -37,7 +37,7 @@ const homeMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lineup · MS 2026",
+    title: "Lineup – hokejový editor sestavy",
     description: homeOgDesc,
     images: [SITE_OG_DEFAULT_IMAGE_URL],
   },

@@ -31,10 +31,11 @@ function metadataBaseUrl(): URL {
 export async function generateMetadata(): Promise<Metadata> {
   const facebookAppId = resolveFacebookAppId();
   const previewText = "Editor sestavy, pick'en, hodnocení hráčů a komunita fanoušků.";
+  const defaultTitle = "Lineup – hokejový editor sestavy";
   return {
     metadataBase: metadataBaseUrl(),
     title: {
-      default: "Lineup",
+      default: defaultTitle,
       template: "%s | Lineup",
     },
     description: previewText,
