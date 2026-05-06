@@ -21,7 +21,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       { source: "/logo.png", destination: "/images/logo.png", permanent: false },
-      { source: "/icon.png", destination: "/images/icon.png", permanent: false },
     ];
   },
 };
