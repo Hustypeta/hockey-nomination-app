@@ -36,8 +36,15 @@ function DesktopNavLabel({ item }: { item: NavItem }) {
 const ICE = "#00B4FF";
 const ICE_DIM = "#0090cc";
 
-function isActive(pathname: string, href: string) {
+function isHrefMatch(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function activeHrefForPath(pathname: string): string {
+  // Ensure only one nav item is marked active (pick the most specific / longest match).
+  // Example: "/zapasy/sestava" should activate "/zapasy/sestava" (not also "/zapasy").
+  const matches = NAV.filter((i) => isHrefMatch(pathname, i.href)).sort((a, b) => b.href.length - a.href.length);
+  return matches[0]?.href ?? "/";
 }
 
 function userInitials(user: { name?: string | null; email?: string | null }) {
@@ -173,7 +180,7 @@ export function SiteHeader() {
               <div className="flex flex-wrap items-center gap-x-0 gap-y-2 lg:flex-nowrap lg:justify-end">
                 {NAV.map((item) => {
                   const { href } = item;
-                  const active = isActive(pathname, href);
+                  const active = href === activeHrefForPath(pathname);
                   return (
                     <Link
                       key={href}
@@ -323,7 +330,7 @@ export function SiteHeader() {
           <nav className="min-h-0 flex-1 overflow-y-auto px-2 py-3" aria-label="Hlavní navigace">
             <ul className="flex flex-col gap-1">
               {NAV.map(({ href, label }) => {
-                const active = isActive(pathname, href);
+                const active = href === activeHrefForPath(pathname);
                 return (
                   <li key={href}>
                     <Link
