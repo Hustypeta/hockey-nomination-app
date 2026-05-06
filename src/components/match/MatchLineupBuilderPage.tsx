@@ -42,6 +42,9 @@ export function MatchLineupBuilderPage() {
   const [loading, setLoading] = useState(true);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
   const enableDnd = !isNarrowLayout;
+  const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
+  /** Na úzkém layoutu schovat pool, dokud se nevybere slot (pool je ve fullscreen sheetu). */
+  const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
 
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
@@ -102,6 +105,15 @@ export function MatchLineupBuilderPage() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!mobilePlayerSheetOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobilePlayerSheetOpen]);
 
   const onAddFromPool = (player: Player) => {
     if (selectedSlot) {
@@ -255,19 +267,25 @@ export function MatchLineupBuilderPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7">
-          <section className="min-w-0">
-            <div className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${isNarrowLayout ? "" : "backdrop-blur-sm"}`}>
-              <PlayerPoolPanel
-                players={players}
-                usedIds={usedIds}
-                counts={counts}
-                onAddPlayer={onAddFromPool}
-                onPreview={setPreviewPlayer}
-                enableDnd={enableDnd}
-                forcedPosition={forcedPoolPosition}
-              />
-            </div>
-          </section>
+          {showDesktopPoolColumn ? (
+            <section className="min-w-0 hidden lg:block">
+              <div
+                className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
+                  isNarrowLayout ? "" : "backdrop-blur-sm"
+                }`}
+              >
+                <PlayerPoolPanel
+                  players={players}
+                  usedIds={usedIds}
+                  counts={counts}
+                  onAddPlayer={onAddFromPool}
+                  onPreview={setPreviewPlayer}
+                  enableDnd={enableDnd}
+                  forcedPosition={forcedPoolPosition}
+                />
+              </div>
+            </section>
+          ) : null}
 
           <section className="min-w-0">
             <div className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${isNarrowLayout ? "" : "backdrop-blur-sm"}`}>
@@ -309,6 +327,39 @@ export function MatchLineupBuilderPage() {
       ) : null}
 
       <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
+
+      {/* Mobile fullscreen pool sheet */}
+      {mobilePlayerSheetOpen ? (
+        <div className="fixed inset-0 z-[90] lg:hidden">
+          <div className="absolute inset-0 bg-[#010208]/80 backdrop-blur-md" aria-hidden />
+          <div className="absolute inset-x-0 bottom-0 top-[calc(0.5rem+env(safe-area-inset-top))] mx-2 overflow-hidden rounded-2xl border border-white/[0.12] bg-gradient-to-b from-[#0b1220]/98 to-[#03050a]/98 shadow-[0_24px_80px_rgba(0,0,0,0.65),0_0_0_1px_rgba(0,180,255,0.12)]">
+            <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3">
+              <div className="min-w-0">
+                <p className="text-[10px] font-black uppercase tracking-[0.26em] text-white/50">Výběr hráčů</p>
+                <p className="mt-1 truncate text-sm font-semibold text-white/85">Klepni na hráče</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedSlot(null)}
+                className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-black uppercase tracking-[0.14em] text-white"
+              >
+                Zpět do sestavy
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+              <PlayerPoolPanel
+                players={players}
+                usedIds={usedIds}
+                counts={counts}
+                onAddPlayer={onAddFromPool}
+                onPreview={setPreviewPlayer}
+                enableDnd={false}
+                forcedPosition={forcedPoolPosition}
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 
