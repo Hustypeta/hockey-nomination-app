@@ -1429,6 +1429,28 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         align="center"
       />
 
+      <div className="mt-6 rounded-2xl border border-white/10 bg-gradient-to-r from-[#003087]/18 via-white/[0.03] to-[#c8102e]/14 p-4 shadow-[0_0_34px_rgba(0,48,135,0.14)] sm:p-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Článek</p>
+            <p className="mt-1 font-display text-lg font-black text-white sm:text-xl">
+              Kurzy a analýza: Kdo ovládne MS v hokeji 2026?
+            </p>
+            <p className="mt-1 text-[11px] leading-snug text-white/70 sm:text-sm">
+              Přehled kurzů (k 6. 5. 2026) + rozbor favoritů a tip redakce.
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <Link
+              href="/clanky/kurzy-a-analyza-ms-2026"
+              className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2.5 text-sm font-black text-white shadow-[0_16px_44px_rgba(0,0,0,0.22)] ring-1 ring-white/15 hover:brightness-110"
+            >
+              Číst článek
+            </Link>
+          </div>
+        </div>
+      </div>
+
       <div className="pickem-panel mt-6 overflow-hidden rounded-3xl p-5 ring-1 ring-sky-400/15 shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-6">
         <div
           className="pointer-events-none absolute inset-x-0 -mt-5 h-20 bg-[radial-gradient(ellipse_at_30%_0%,rgba(56,189,248,0.22),transparent_60%)]"
