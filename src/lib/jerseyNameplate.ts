@@ -90,7 +90,7 @@ export function jerseyNameplateNameProps(
   const multilineEase = lineCount > 1 ? 1.09 : 1;
   /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = plakát — vyšší měřítko kvůli čitelnosti exportu. */
   const scale =
-    variant === "premium" ? 1.12 : variant === "poster" ? 1.72 : 1.38;
+    variant === "premium" ? 1.12 : variant === "poster" ? 1.72 : 1.24;
 
   /** Na exportním PNG je yoke úzký — nižší strop + nižší podlaha, aby dlouhá jména zůstala uvnitř siluety. */
   const minFs =

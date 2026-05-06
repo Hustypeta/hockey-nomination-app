@@ -10,8 +10,9 @@ export type LineupJerseySize = "compact" | "skater" | "goalie";
 
 /** Jednotná šířka karty — hráči, brankáři i náhradníci. Jméno řeší `jerseyNameplateNameProps`. */
 const LINEUP_CARD_UNIFIED = {
-  width: "max-w-[7.1rem] sm:max-w-[7.1rem]",
-  number: "jersey-back-number-text text-[1.55rem] sm:text-[1.75rem] max-w-[92%] text-center",
+  // Slightly larger so jerseys read better on desktop/mobile.
+  width: "max-w-[8.1rem] sm:max-w-[8.25rem]",
+  number: "jersey-back-number-text text-[1.65rem] sm:text-[1.85rem] max-w-[92%] text-center",
   overlayTop: "justify-start px-1.5 pt-[25%]",
 } as const;
 
