@@ -8,8 +8,7 @@ import {
   SITE_OG_DEFAULT_IMAGE_WIDTH,
 } from "@/lib/siteBranding";
 
-const homeOgDesc =
-  "Časový bonus, editor sestavy, plakát a Pick’em play-off. Soutěž pro fanoušky.";
+const homeOgDesc = "Editor sestavy, pick'en, hodnocení hráčů a komunita fanoušků.";
 
 const homeMetadata: Metadata = {
   title: {

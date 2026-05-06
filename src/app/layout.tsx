@@ -31,13 +31,14 @@ function metadataBaseUrl(): URL {
 /** fb:app_id — `metadata.facebook.appId` (správné `property=`) + env `FACEBOOK_APP_ID` (viz {@link resolveFacebookAppId}). */
 export async function generateMetadata(): Promise<Metadata> {
   const facebookAppId = resolveFacebookAppId();
+  const previewText = "Editor sestavy, pick'en, hodnocení hráčů a komunita fanoušků.";
   return {
     metadataBase: metadataBaseUrl(),
     title: {
       default: "Lineup",
       template: "%s | Lineup",
     },
-    description: "Fanouškovský editor sestavy, soutěž a sdílení.",
+    description: previewText,
     icons: {
       icon: SITE_ICON_URL,
       apple: SITE_ICON_URL,
@@ -49,6 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "cs_CZ",
       siteName: "Lineup",
+      description: previewText,
       images: [
         {
           url: SITE_OG_DEFAULT_IMAGE_URL,
@@ -60,6 +62,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
+      description: previewText,
       images: [SITE_OG_DEFAULT_IMAGE_URL],
     },
   };
@@ -75,7 +78,7 @@ export default function RootLayout({
     "@type": "WebSite",
     name: "Lineup",
     url: SITE_URL,
-    description: "Fanouškovský editor sestavy, soutěž a sdílení.",
+    description: "Editor sestavy, pick'en, hodnocení hráčů a komunita fanoušků.",
   } as const;
 
   return (
