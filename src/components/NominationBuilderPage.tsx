@@ -135,7 +135,8 @@ export function NominationBuilderPage() {
     })
   );
 
-  const enableDnd = !isNarrowLayout;
+  /** Drag & drop z poolu na sloty — zapnuto i na tabletu/úzkém okně (chování „původního“ editoru). */
+  const enableDnd = true;
 
   const selectedPlayers = useMemo(() => lineupToPlayers(lineup, players), [lineup, players]);
   const usedIds = useMemo(() => new Set(selectedPlayers.map((p) => p.id)), [selectedPlayers]);
