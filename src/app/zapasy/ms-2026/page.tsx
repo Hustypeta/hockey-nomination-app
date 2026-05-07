@@ -38,9 +38,11 @@ export default async function ZapasyMs2026Page() {
     },
   });
 
+  const tz = "Europe/Prague";
   const formatDate = (d: Date) =>
-    d.toLocaleDateString("cs-CZ", { day: "2-digit", month: "2-digit", year: "numeric" });
-  const formatTime = (d: Date) => d.toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" });
+    d.toLocaleDateString("cs-CZ", { timeZone: tz, day: "2-digit", month: "2-digit", year: "numeric" });
+  const formatTime = (d: Date) =>
+    d.toLocaleTimeString("cs-CZ", { timeZone: tz, hour: "2-digit", minute: "2-digit" });
 
   return (
     <main className="min-h-screen bg-[#05080f] text-white">

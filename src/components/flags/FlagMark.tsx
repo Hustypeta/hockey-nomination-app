@@ -64,6 +64,15 @@ export function FlagMark({ code, className = "" }: { code: string; className?: s
       </Svg>
     );
   }
+  if (c === "SUI") {
+    return (
+      <Svg className={className} title="Švýcarsko">
+        <rect width="30" height="20" fill="#d52b1e" />
+        <rect x="12.25" y="4.25" width="5.5" height="11.5" fill="#ffffff" />
+        <rect x="9.25" y="7.25" width="11.5" height="5.5" fill="#ffffff" />
+      </Svg>
+    );
+  }
   if (c === "USA") {
     return (
       <Svg className={className} title="USA">

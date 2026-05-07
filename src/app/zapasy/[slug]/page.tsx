@@ -56,7 +56,7 @@ function matchRatingOpen(startsAt: Date | null): { open: boolean; reason?: strin
   // Simple heuristic: open ratings after (start + 3h).
   const openAt = startsAt.getTime() + 3 * 60 * 60 * 1000;
   if (Date.now() < openAt) {
-    return { open: false, reason: "Hodnocení se otevře až po skončení zápasu." };
+    return { open: false, reason: "Hodnocení bude dostupné po skončení zápasu." };
   }
   return { open: true };
 }
@@ -78,6 +78,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
     : null;
   const startsAt = preview ? preview.startsAt : match?.startsAt ?? null;
   const ratingGate = matchRatingOpen(startsAt);
+  const tz = "Europe/Prague";
 
   const ratings = preview
     ? ({} as Record<string, { avg: number; count: number }>)
@@ -109,7 +110,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
                     </div>
                     <div className="text-center">
                       <div className="text-xs font-semibold text-slate-500">
-                        {startsAt ? new Date(startsAt).toLocaleString("cs-CZ") : "—"}
+                        {startsAt ? new Date(startsAt).toLocaleString("cs-CZ", { timeZone: tz }) : "—"}
                       </div>
                       <div className="mt-2 font-display text-3xl font-black text-slate-900 sm:text-4xl">-</div>
                     </div>
@@ -163,9 +164,6 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
 
           <section>
             <h2 className="font-display text-lg font-black">Hodnocení hráčů (1–10)</h2>
-            <p className="mt-1 text-sm text-white/60">
-              Hodnocení je možné až po skončení zápasu.
-            </p>
             {ratingGate.open && !preview ? (
               <MatchRatingShareControls matchSlug={match!.slug} defaultTitle={`Hodnocení — ${match!.title}`} />
             ) : (
