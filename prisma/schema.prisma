@@ -214,7 +214,7 @@ model MatchRating {
 model MatchShareLink {
   code              String   @id @db.VarChar(12)
   slug              String?  @unique
-  userId            String
+  userId            String?
   captainId         String?
   lineupStructure   Json
   title             String?
@@ -222,7 +222,7 @@ model MatchShareLink {
   allowExtraForward Boolean  @default(false)
   createdAt         DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
   @@map("match_share_links")

@@ -22,7 +22,8 @@ export async function PATCH(
     if (!existing) {
       return NextResponse.json({ error: "Odkaz nenalezen." }, { status: 404 });
     }
-    if (existing.userId !== session.user.id) {
+    // Legacy rows (before account saving): allow first authenticated user to "claim" by setting userId.
+    if (existing.userId && existing.userId !== session.user.id) {
       return NextResponse.json({ error: "Nemáte přístup k tomuto odkazu." }, { status: 403 });
     }
 
@@ -39,6 +40,7 @@ export async function PATCH(
       where: { code },
       data: {
         slug,
+        userId: existing.userId ?? session.user.id,
         captainId,
         lineupStructure: lineupStructure as object,
         title,
