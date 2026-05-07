@@ -2,12 +2,12 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
 
-const SUBJECT = "Lineup — poslední den 25 % bonusu";
+const SUBJECT = "Lineup — poslední den 25% bonusu do soutěže";
 const TEXT =
-  "Velice Vám děkuji za Váš zájem o platformu Lineup.\n\nNezapomeňte, že dnes je poslední den pro odeslání nominace do soutěže s 25 % bonusem.\n\nNezapomeňte že soutěž končí před zahájením nominační tiskové konference před MS 2026 která proběhne v neděli 10. května v 19:30.\n\nTaké na webu připravujeme možnost stavět si sestavu na zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.\n\nV neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.\n\nDěkuji a přeji krásný den.\n\nOtevřít editor: https://hokejlineup.cz/sestava\n";
+  "Velice Vám děkuji za Váš zájem o platformu Lineup.\n\nDnes je poslední den pro odeslání nominace do soutěže s 25% bonusem.\n\nNezapomeňte, že soutěž končí před zahájením nominační tiskové konference před MS 2026, která proběhne v neděli 10. května v 19:30.\n\nTaké Vás chci informovat, že na webu připravujeme možnost stavět si sestavu přímo na konkrétní zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.\n\nV neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.\n\nPokud se Vám platforma Lineup líbí, budeme rádi za jakékoliv sdílení.\n\nDěkuji a přeji krásný den.\n\nOtevřít editor: https://hokejlineup.cz/sestava\n";
 
 const CTA_URL = "https://hokejlineup.cz/sestava";
-const PREHEADER = "Dnes končí 25 % bonus — odešli nominaci včas.";
+const PREHEADER = "Dnes končí 25% bonus — odešli nominaci včas.";
 const LOGO_URL = "https://hokejlineup.cz/images/logo.png";
 
 const HTML = `<!doctype html>
@@ -77,6 +77,9 @@ const HTML = `<!doctype html>
                           </p>
                           <p style="margin:0 0 10px 0;">
                             V neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.
+                          </p>
+                          <p style="margin:0 0 10px 0;">
+                            Pokud se Vám platforma Lineup líbí, budeme rádi za jakékoliv sdílení.
                           </p>
                           <p style="margin:0 0 10px 0;">
                             Děkuji a přeji krásný den.
