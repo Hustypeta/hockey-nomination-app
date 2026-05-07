@@ -30,6 +30,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  /// Veřejné jméno v žebříčku (volitelné). Když není, zobrazí se anonymní "Hráč #XXXX".
+  leaderboardNickname String?
   accounts      Account[]
   sessions      Session[]
   nominations   Nomination[] @relation("NominationOwner")

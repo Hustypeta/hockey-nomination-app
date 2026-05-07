@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
 import { isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
 import type { LineupStructure } from "@/types";
+import { publicLeaderboardDisplayName } from "@/lib/publicUserLabel";
 
 const OFFICIAL_ID = "official";
 
@@ -60,7 +61,7 @@ export async function GET(_request: NextRequest) {
         contestEntryForUser: { isNot: null },
       },
       include: {
-        user: { select: { name: true, email: true, image: true } },
+        user: { select: { id: true, leaderboardNickname: true, image: true } },
       },
       orderBy: { createdAt: "asc" },
     });
@@ -94,10 +95,10 @@ export async function GET(_request: NextRequest) {
         n.timeBonusPercent
       );
 
-      const displayName =
-        n.user.name?.trim() ||
-        n.user.email?.split("@")[0]?.trim() ||
-        "Hráč";
+      const displayName = publicLeaderboardDisplayName({
+        userId: n.userId,
+        nickname: n.user.leaderboardNickname,
+      });
 
       rows.push({
         nominationId: n.id,

@@ -3,6 +3,8 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { ClipboardList, Sparkles, Trophy } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export type NominationListItem = {
   id: string;
@@ -16,6 +18,25 @@ export type NominationListItem = {
 
 export function UserAccountHub() {
   const { data: session, status } = useSession();
+  const [nickname, setNickname] = useState("");
+  const [loadedNickname, setLoadedNickname] = useState(false);
+  const [savingNick, setSavingNick] = useState(false);
+  const [effectiveDisplayName, setEffectiveDisplayName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status !== "authenticated" || loadedNickname) return;
+    fetch("/api/account/leaderboard-nickname")
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("load failed"))))
+      .then((d: { nickname?: unknown; displayName?: unknown }) => {
+        const n = typeof d.nickname === "string" ? d.nickname : "";
+        setNickname(n);
+        setLoadedNickname(true);
+        setEffectiveDisplayName(typeof d.displayName === "string" ? d.displayName : null);
+      })
+      .catch(() => {
+        setLoadedNickname(true);
+      });
+  }, [status, loadedNickname]);
 
   if (status === "loading") {
     return (
@@ -63,6 +84,62 @@ export function UserAccountHub() {
         >
           Odhlásit
         </button>
+      </div>
+
+      <div className="mt-8 rounded-2xl border border-white/12 bg-[#0f172a]/85 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Veřejný žebříček</p>
+        <h2 className="mt-1 font-display text-lg font-black text-white">Zobrazované jméno</h2>
+        <p className="mt-2 text-sm leading-relaxed text-white/65">
+          Veřejně nezobrazujeme e‑mail ani jméno. V žebříčku se ukáže tvoje přezdívka — nebo automaticky{" "}
+          <span className="font-semibold text-white">Hráč #XXXX</span>.
+        </p>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+          <label className="block text-xs font-semibold text-white/70">
+            Přezdívka (2–24 znaků)
+            <input
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="např. PetrH"
+              maxLength={24}
+              className="mt-2 w-full rounded-xl border border-white/14 bg-black/25 px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-[#00B4FF]/45 focus:outline-none focus:ring-2 focus:ring-[#00B4FF]/15"
+              autoComplete="off"
+            />
+          </label>
+          <button
+            type="button"
+            disabled={savingNick}
+            onClick={() => {
+              if (savingNick) return;
+              setSavingNick(true);
+              fetch("/api/account/leaderboard-nickname", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nickname }),
+              })
+                .then(async (r) => {
+                  const d = (await r.json().catch(() => ({}))) as { error?: unknown; displayName?: unknown; nickname?: unknown };
+                  if (!r.ok) throw new Error(typeof d.error === "string" ? d.error : "Uložení se nepovedlo.");
+                  setEffectiveDisplayName(typeof d.displayName === "string" ? d.displayName : null);
+                  setNickname(typeof d.nickname === "string" ? d.nickname : "");
+                  toast.success("Přezdívka uložena.");
+                })
+                .catch((e: unknown) => {
+                  toast.error(e instanceof Error ? e.message : "Uložení se nepovedlo.");
+                })
+                .finally(() => setSavingNick(false));
+            }}
+            className="rounded-xl bg-gradient-to-r from-[#0090cc] to-[#00B4FF] px-5 py-3 text-sm font-black text-[#03050a] shadow-[0_0_24px_rgba(0,180,255,0.26)] ring-1 ring-white/15 disabled:opacity-50"
+          >
+            {savingNick ? "Ukládám…" : "Uložit"}
+          </button>
+        </div>
+
+        {effectiveDisplayName ? (
+          <p className="mt-3 text-xs text-white/55">
+            Aktuálně v žebříčku: <span className="font-semibold text-white">{effectiveDisplayName}</span>
+          </p>
+        ) : null}
       </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
