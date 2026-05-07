@@ -152,7 +152,6 @@ export function NominationBuilderPage() {
         .slice(0, 3)
         .reduce((s, p) => s + (p.lb ? 1 : 0) + (p.rb ? 1 : 0), 0) +
       (lineup.defensePairs[3].lb ? 1 : 0) +
-      (lineup.defensePairs[3].rb ? 1 : 0) +
       lineup.extraDefensemen.length,
     F:
       lineup.forwardLines.reduce(

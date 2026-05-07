@@ -1,6 +1,7 @@
 import type { LineupStructure } from "@/types";
 import type { Player } from "@/types";
 import { POSITION_LIMITS } from "@/types";
+import { normalizeLineupStructure } from "@/lib/lineupUtils";
 
 function cloneLineup(l: LineupStructure): LineupStructure {
   return {
@@ -81,13 +82,14 @@ export function removePlayerFromLineup(lineup: LineupStructure, playerId: string
 
 /** První volný slot pro pozici (klik z poolu bez výběru slotu). */
 export function tryAutoAssignPlayer(lineup: LineupStructure, player: Player): LineupStructure | null {
-  const used = lineupPlayerIds(lineup);
+  const base = normalizeLineupStructure(lineup);
+  const used = lineupPlayerIds(base);
   if (used.has(player.id)) return null;
-  const counts = positionCounts(lineup);
+  const counts = positionCounts(base);
   const lim = POSITION_LIMITS[player.position];
   if (counts[player.position] >= lim) return null;
 
-  const next = cloneLineup(lineup);
+  const next = cloneLineup(base);
 
   if (player.position === "G") {
     const i = next.goalies.findIndex((g) => g === null);
@@ -159,8 +161,9 @@ export function assignPlayerToTarget(
   player: Player,
   target: DropTarget
 ): LineupStructure | null {
-  const used = lineupPlayerIds(lineup);
-  let next = used.has(player.id) ? stripPlayerFromLineup(lineup, player.id) : cloneLineup(lineup);
+  const base = normalizeLineupStructure(lineup);
+  const used = lineupPlayerIds(base);
+  let next = used.has(player.id) ? stripPlayerFromLineup(base, player.id) : cloneLineup(base);
 
   if (target.type === "goalie") {
     if (player.position !== "G") return null;
