@@ -53,6 +53,8 @@ export interface LineupJerseyCardProps {
   showRoleBadge?: boolean;
   /** Posun overlay (jméno+číslo) na dresu. */
   overlayVariant?: "default" | "lower";
+  /** Jemné zmenšení/ zvětšení písma jmenovky. */
+  nameplateScale?: number;
 }
 
 export function LineupJerseyCard({
@@ -68,6 +70,7 @@ export function LineupJerseyCard({
   showPositionBadge = true,
   showRoleBadge = true,
   overlayVariant = "default",
+  nameplateScale = 1,
 }: LineupJerseyCardProps) {
   const empty = !player;
   const emptyUnfocused = empty && !isSelected;
@@ -84,6 +87,16 @@ export function LineupJerseyCard({
   const ln = !empty ? jerseyNameOnJersey(player.name) : "";
   const namePlate =
     !empty && nameOnJersey ? jerseyNameplateNameProps(ln) : { lines: [] as string[], className: "", style: {} };
+  const namePlateStyle =
+    nameOnJersey && namePlate.lines.length > 0 && Number.isFinite(nameplateScale) && nameplateScale !== 1
+      ? {
+          ...namePlate.style,
+          fontSize:
+            typeof namePlate.style.fontSize === "string"
+              ? `calc(${namePlate.style.fontSize} * ${Math.max(0.85, Math.min(1.05, nameplateScale))})`
+              : namePlate.style.fontSize,
+        }
+      : namePlate.style;
 
   const motionCls = disableMotion
     ? ""
@@ -178,7 +191,7 @@ export function LineupJerseyCard({
                 {nameOnJersey && namePlate.lines.length > 0 ? (
                   <span className="flex w-full max-w-full flex-col items-center gap-[0.1em]">
                     {namePlate.lines.map((line, idx) => (
-                      <span key={idx} className={namePlate.className} style={namePlate.style}>
+                      <span key={idx} className={namePlate.className} style={namePlateStyle}>
                         {line}
                       </span>
                     ))}

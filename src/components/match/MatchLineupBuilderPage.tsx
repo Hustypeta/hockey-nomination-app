@@ -16,6 +16,7 @@ import { parseDroppableId } from "@/lib/dndSlotIds";
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 
 function isMatchLineupValid(
   lineup: LineupStructure,
@@ -96,7 +97,9 @@ export function MatchLineupBuilderPage() {
         const r = await fetch("/api/players");
         const data = (await r.json()) as unknown;
         if (cancelled) return;
-        setPlayers(Array.isArray(data) ? (data as Player[]) : []);
+        const list = Array.isArray(data) ? (data as Player[]) : [];
+        setPlayers(list);
+        initJerseyNameDisambiguation(list);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -251,6 +254,17 @@ export function MatchLineupBuilderPage() {
               />
               <button
                 type="button"
+                onClick={() => {
+                  setShareCode(null);
+                  setShareSlug(null);
+                  toast.message("Nový odkaz — uloží se jako nová sestava.");
+                }}
+                className="rounded-xl border border-white/15 bg-white/[0.03] px-4 py-2 text-sm font-bold text-white/85 hover:bg-white/[0.06]"
+              >
+                Nový odkaz
+              </button>
+              <button
+                type="button"
                 onClick={() => void saveShare()}
                 disabled={saving}
                 className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2 text-sm font-bold text-white disabled:opacity-50"
@@ -288,28 +302,34 @@ export function MatchLineupBuilderPage() {
           ) : null}
 
           <section className="min-w-0">
-            <div className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${isNarrowLayout ? "" : "backdrop-blur-sm"}`}>
-              <LineBuilder
-                mode="match"
-                lineup={lineup}
-                players={players}
-                captainId={captainId}
-                onLineupChange={setLineup}
-                onCaptainChange={setCaptainId}
-                selectedSlot={selectedSlot}
-                onSelectSlot={setSelectedSlot}
-                enableDnd={enableDnd}
-                layoutVariant="classic"
-                matchDefenseCount={defenseCount}
-                matchAllowExtraForward={allowExtraForward}
-                onMatchDefenseCountChange={setDefenseCount}
-                onMatchAllowExtraForwardChange={setAllowExtraForward}
-              />
-              <div className="mt-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-white/70">
-                Stav:{" "}
-                <span className={valid ? "text-emerald-300" : "text-amber-200"}>
-                  {valid ? "OK (kompletní)" : "Není kompletní"}
-                </span>
+            <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
+              <div
+                className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
+                  isNarrowLayout ? "" : "backdrop-blur-sm"
+                }`}
+              >
+                <LineBuilder
+                  mode="match"
+                  lineup={lineup}
+                  players={players}
+                  captainId={captainId}
+                  onLineupChange={setLineup}
+                  onCaptainChange={setCaptainId}
+                  selectedSlot={selectedSlot}
+                  onSelectSlot={setSelectedSlot}
+                  enableDnd={enableDnd}
+                  layoutVariant="classic"
+                  matchDefenseCount={defenseCount}
+                  matchAllowExtraForward={allowExtraForward}
+                  onMatchDefenseCountChange={setDefenseCount}
+                  onMatchAllowExtraForwardChange={setAllowExtraForward}
+                />
+                <div className="mt-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-white/70">
+                  Stav:{" "}
+                  <span className={valid ? "text-emerald-300" : "text-amber-200"}>
+                    {valid ? "OK (kompletní)" : "Není kompletní"}
+                  </span>
+                </div>
               </div>
             </div>
           </section>
@@ -346,7 +366,7 @@ export function MatchLineupBuilderPage() {
                 Zpět do sestavy
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
               <PlayerPoolPanel
                 players={players}
                 usedIds={usedIds}

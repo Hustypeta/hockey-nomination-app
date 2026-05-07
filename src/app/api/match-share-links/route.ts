@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
       data: {
         code,
         slug,
+        userId: session.user.id,
         captainId,
         lineupStructure: lineupStructure as object,
         title,

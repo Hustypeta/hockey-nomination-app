@@ -21,7 +21,8 @@ export function parseDroppableId(id: string): DropTarget | null {
     const pairIndex = Number(m[1]);
     const role = m[2] as "lb" | "rb";
     if (pairIndex >= 0 && pairIndex <= 2) return { type: "defense", pairIndex, role };
-    if (pairIndex === 3 && role === "lb") return { type: "defense", pairIndex: 3, role: "lb" };
+    // 4. pár / 7. bek: v nominaci se používá jen `lb`, v zápasu může být i `rb` (8D).
+    if (pairIndex === 3) return { type: "defense", pairIndex: 3, role };
     return null;
   }
   if (id.startsWith("slot-fwd-")) {

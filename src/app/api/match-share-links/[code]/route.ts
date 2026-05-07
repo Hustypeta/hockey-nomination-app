@@ -17,10 +17,13 @@ export async function PATCH(
     const { code } = await params;
     const existing = await prisma.matchShareLink.findUnique({
       where: { code },
-      select: { code: true, slug: true },
+      select: { code: true, slug: true, userId: true },
     });
     if (!existing) {
       return NextResponse.json({ error: "Odkaz nenalezen." }, { status: 404 });
+    }
+    if (existing.userId !== session.user.id) {
+      return NextResponse.json({ error: "Nemáte přístup k tomuto odkazu." }, { status: 403 });
     }
 
     const body = await request.json();

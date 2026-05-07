@@ -275,6 +275,7 @@ export function LineBuilder({
               showPositionBadge={mode !== "match"}
               showRoleBadge={mode !== "match"}
               overlayVariant={mode === "match" ? "lower" : "default"}
+              nameplateScale={mode === "match" ? 0.92 : 1}
             />
           )}
         </div>

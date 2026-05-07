@@ -36,6 +36,7 @@ model User {
   sessions      Session[]
   nominations   Nomination[] @relation("NominationOwner")
   pickemEntry   PickemEntry?
+  matchShareLinks MatchShareLink[]
   /// Jedna nominace na uživatele započítaná do soutěže (odeslání do soutěže).
   contestEntryNominationId String? @unique
   contestEntryNomination   Nomination? @relation("ContestEntry", fields: [contestEntryNominationId], references: [id], onDelete: SetNull)
@@ -213,6 +214,7 @@ model MatchRating {
 model MatchShareLink {
   code              String   @id @db.VarChar(12)
   slug              String?  @unique
+  userId            String
   captainId         String?
   lineupStructure   Json
   title             String?
@@ -220,6 +222,9 @@ model MatchShareLink {
   allowExtraForward Boolean  @default(false)
   createdAt         DateTime @default(now())
 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
   @@map("match_share_links")
 }
 
