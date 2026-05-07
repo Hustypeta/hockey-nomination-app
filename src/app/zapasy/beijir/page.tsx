@@ -13,12 +13,30 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const PREVIEW_BEIJIR = [
-  { title: "SUI - FIN", homeCode: "SUI", awayCode: "FIN", startsAt: "2026-05-07T15:00:00+02:00", venue: null as string | null },
-  { title: "CZE - SWE", homeCode: "CZE", awayCode: "SWE", startsAt: "2026-05-07T19:00:00+02:00", venue: null as string | null },
-  { title: "FIN - CZE", homeCode: "FIN", awayCode: "CZE", startsAt: "2026-05-09T12:00:00+02:00", venue: null as string | null },
-  { title: "SWE - SUI", homeCode: "SWE", awayCode: "SUI", startsAt: "2026-05-09T16:00:00+02:00", venue: null as string | null },
-  { title: "SUI - CZE", homeCode: "SUI", awayCode: "CZE", startsAt: "2026-05-10T12:00:00+02:00", venue: null as string | null },
-  { title: "SWE - FIN", homeCode: "SWE", awayCode: "FIN", startsAt: "2026-05-10T16:00:00+02:00", venue: null as string | null },
+  {
+    slug: "beijir-cze-swe-2026-05-07-1900",
+    title: "CZE - SWE",
+    homeCode: "CZE",
+    awayCode: "SWE",
+    startsAt: "2026-05-07T19:00:00+02:00",
+    venue: null as string | null,
+  },
+  {
+    slug: "beijir-fin-cze-2026-05-09-1200",
+    title: "FIN - CZE",
+    homeCode: "FIN",
+    awayCode: "CZE",
+    startsAt: "2026-05-09T12:00:00+02:00",
+    venue: null as string | null,
+  },
+  {
+    slug: "beijir-sui-cze-2026-05-10-1200",
+    title: "SUI - CZE",
+    homeCode: "SUI",
+    awayCode: "CZE",
+    startsAt: "2026-05-10T12:00:00+02:00",
+    venue: null as string | null,
+  },
 ] as const;
 
 function splitTeams(m: { homeCode?: string | null; awayCode?: string | null; title: string }) {
@@ -63,15 +81,15 @@ export default async function ZapasyBeijirPage() {
           hasOfficial: Boolean(m.officialLineup),
           clickable: true as const,
         }))
-      : PREVIEW_BEIJIR.map((m, idx) => ({
-          slug: `preview-${idx}`,
+      : PREVIEW_BEIJIR.map((m) => ({
+          slug: m.slug,
           title: m.title,
           venue: m.venue,
           startsAt: new Date(m.startsAt),
           homeCode: m.homeCode,
           awayCode: m.awayCode,
           hasOfficial: false,
-          clickable: false as const,
+          clickable: true as const,
         }));
 
   return (
@@ -94,12 +112,6 @@ export default async function ZapasyBeijirPage() {
         </div>
 
         <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-white shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
-          {matches.length === 0 ? (
-            <div className="border-b border-black/10 bg-amber-50 px-4 py-3 text-[11px] text-amber-900">
-              Zatím jsou to jen <strong>náhledové</strong> zápasy. V adminu je jedním tlačítkem založíš do databáze a pak
-              půjde doplnit oficiální sestava a hodnocení.
-            </div>
-          ) : null}
           {list.map((m) => {
             const Row = (
               <div className="grid grid-cols-[4.25rem_1fr_auto] items-center gap-3 sm:grid-cols-[5.5rem_1fr_auto]">
@@ -145,7 +157,7 @@ export default async function ZapasyBeijirPage() {
               </div>
             );
 
-            return m.clickable ? (
+            return (
               <Link
                 key={m.slug}
                 href={`/zapasy/${encodeURIComponent(m.slug)}`}
@@ -153,13 +165,6 @@ export default async function ZapasyBeijirPage() {
               >
                 {Row}
               </Link>
-            ) : (
-              <div
-                key={m.slug}
-                className="block border-b border-black/10 px-4 py-3 text-slate-900 opacity-90 last:border-b-0"
-              >
-                {Row}
-              </div>
             );
           })}
         </div>
