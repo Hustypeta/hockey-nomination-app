@@ -10,7 +10,7 @@ import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 
 type NavItem = { href: string; label: string; shortLabel?: string };
 
-/** shortLabel = kratší text na úzkém desktopu (pod 2xl), aby se vešly všechny položky bez skrytého scrollu */
+/** shortLabel = kratší text na úzkém desktopu (pod xl), aby se vešly všechny položky bez skrytého scrollu */
 const NAV: NavItem[] = [
   { href: "/", label: "Úvod" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
@@ -22,6 +22,16 @@ const NAV: NavItem[] = [
   { href: "/zebricek", label: "Žebříček" },
   { href: "/pravidla-souteze", label: "Pravidla" },
 ];
+
+function DesktopNavLabel({ item }: { item: NavItem }) {
+  if (!item.shortLabel) return <>{item.label}</>;
+  return (
+    <>
+      <span className="hidden xl:inline">{item.label}</span>
+      <span className="xl:hidden">{item.shortLabel}</span>
+    </>
+  );
+}
 
 const ICE = "#00B4FF";
 const ICE_DIM = "#0090cc";
@@ -96,62 +106,191 @@ export function SiteHeader() {
           aria-hidden
         />
 
-        <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:px-5 sm:py-4 lg:px-4 lg:py-4 xl:px-5">
-          {/* Brand (always visible, big) */}
-          <Link
-            href="/"
-            className="group/brand flex min-w-0 flex-1 items-center gap-3"
-            aria-label={SITE_BRAND}
-          >
-            <div className="relative min-w-0">
-              <div
-                className="pointer-events-none absolute -inset-3 rounded-2xl bg-gradient-to-br from-[#00B4FF]/25 via-transparent to-[#c8102e]/15 opacity-0 blur-xl transition-opacity duration-300 group-hover/brand:opacity-100"
-                aria-hidden
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={SITE_LOGO_URL}
-                alt=""
-                width={920}
-                height={280}
-                decoding="async"
-                fetchPriority="high"
-                className="relative h-[4.75rem] w-auto max-w-[min(88vw,42rem)] object-contain object-left transition duration-300 group-hover/brand:scale-[1.03] sm:h-[5.75rem] md:h-[6.5rem] lg:h-[6.25rem] xl:h-[6.75rem] 2xl:h-[7.25rem]"
-              />
-            </div>
-          </Link>
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-3 sm:px-5 sm:py-4 md:flex-row md:items-center md:gap-3 md:px-4 md:py-3.5 xl:px-5 xl:gap-4 2xl:gap-5">
+          {/* Mobil / úzké okno: logo + hamburger (od md výše schováno — tam je řádek s odkazy) */}
+          <div className="flex w-full min-w-0 items-center justify-between gap-3 md:hidden">
+            <Link
+              href="/"
+              className="group/brand flex min-w-0 flex-1 shrink-0 items-center gap-2 sm:gap-3"
+              aria-label={SITE_BRAND}
+            >
+              <div className="relative shrink-0">
+                <div
+                  className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-[#00B4FF]/25 via-transparent to-[#c8102e]/15 opacity-0 blur-xl transition-opacity duration-300 group-hover/brand:opacity-100"
+                  aria-hidden
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={SITE_LOGO_URL}
+                  alt=""
+                  width={560}
+                  height={168}
+                  decoding="async"
+                  fetchPriority="high"
+                  className="relative h-[5rem] w-auto max-h-[min(46vh,15rem)] max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[6.5rem]"
+                />
+              </div>
+            </Link>
 
-          {/* Menu toggle (always visible) */}
-          <button
-            type="button"
-            className={`
-              flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/[0.12] bg-white/[0.05] text-white
+            <button
+              type="button"
+              className={`
+              flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.05] text-white
               transition duration-200 hover:scale-105 hover:border-[#00B4FF]/40 hover:bg-[#00B4FF]/10
               ${mobileNavOpen ? "border-[#00B4FF]/50 bg-[#00B4FF]/15 text-[#00B4FF]" : ""}
             `}
-            aria-expanded={mobileNavOpen}
-            aria-controls="site-header-mobile-nav"
-            onClick={() => setMobileNavOpen((o) => !o)}
-          >
-            <span className="relative block h-6 w-6">
-              <Menu
-                className={`absolute inset-0 h-6 w-6 transition-all duration-300 ${mobileNavOpen ? "scale-50 rotate-90 opacity-0" : "scale-100 rotate-0 opacity-100"}`}
-                aria-hidden
-              />
-              <X
-                className={`absolute inset-0 h-6 w-6 transition-all duration-300 ${mobileNavOpen ? "scale-100 rotate-0 opacity-100" : "scale-50 -rotate-90 opacity-0"}`}
-                aria-hidden
-              />
-            </span>
-            <span className="sr-only">{mobileNavOpen ? "Zavřít menu" : "Otevřít menu"}</span>
-          </button>
+              aria-expanded={mobileNavOpen}
+              aria-controls="site-header-mobile-nav"
+              onClick={() => setMobileNavOpen((o) => !o)}
+            >
+              <span className="relative block h-5 w-5">
+                <Menu
+                  className={`absolute inset-0 h-5 w-5 transition-all duration-300 ${mobileNavOpen ? "scale-50 rotate-90 opacity-0" : "scale-100 rotate-0 opacity-100"}`}
+                  aria-hidden
+                />
+                <X
+                  className={`absolute inset-0 h-5 w-5 transition-all duration-300 ${mobileNavOpen ? "scale-100 rotate-0 opacity-100" : "scale-50 -rotate-90 opacity-0"}`}
+                  aria-hidden
+                />
+              </span>
+              <span className="sr-only">{mobileNavOpen ? "Zavřít menu" : "Otevřít menu"}</span>
+            </button>
+          </div>
+
+          {/* Desktop / tablet šířka: horizontální odkazy + CTA */}
+          <div className="hidden min-w-0 flex-1 flex-row flex-wrap items-center gap-x-2 gap-y-2 md:flex md:justify-end xl:flex-nowrap xl:gap-x-3">
+            <nav className="isolate min-w-0 flex-1 md:min-w-[12rem]" aria-label="Hlavní navigace">
+              <div className="flex flex-wrap items-center justify-end gap-x-0.5 gap-y-1">
+                {NAV.map((item) => {
+                  const { href } = item;
+                  const active = href === activeHrefForPath(pathname);
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      className={`
+                    group/nav relative shrink-0 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-[0.8125rem] font-semibold leading-tight tracking-wide sm:px-2 sm:text-[0.875rem] md:px-1.5 md:text-[0.8125rem] xl:px-2 xl:text-[0.875rem] 2xl:px-2 2xl:text-[0.9375rem]
+                    transition-colors duration-200 ease-out
+                    hover:text-white
+                    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
+                    ${active ? "text-white" : "text-slate-400"}
+                  `}
+                    >
+                      <span className="relative z-10 inline-flex items-center gap-1.5">
+                        {href === "/" ? (
+                          <span className="inline-flex items-center pr-0.5">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={SITE_LOGO_URL}
+                              alt=""
+                              width={120}
+                              height={36}
+                              decoding="async"
+                              className="h-5 w-auto object-contain object-left opacity-95"
+                            />
+                          </span>
+                        ) : null}
+                        <DesktopNavLabel item={item} />
+                      </span>
+                      {active ? (
+                        <span
+                          className="absolute inset-x-2 bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-[#00B4FF] via-cyan-300 to-[#00B4FF] shadow-[0_0_12px_rgba(0,180,255,0.65)]"
+                          aria-hidden
+                        />
+                      ) : (
+                        <span
+                          className="absolute inset-x-2 bottom-0.5 h-0.5 scale-x-0 rounded-full bg-gradient-to-r from-[#00B4FF] to-cyan-200 opacity-0 transition-all duration-200 group-hover/nav:scale-x-100 group-hover/nav:opacity-100"
+                          aria-hidden
+                        />
+                      )}
+                      {!active ? (
+                        <span
+                          className="absolute inset-0 -z-0 rounded-xl bg-white/[0.04] opacity-0 transition-opacity duration-200 group-hover/nav:opacity-100"
+                          aria-hidden
+                        />
+                      ) : null}
+                    </Link>
+                  );
+                })}
+              </div>
+            </nav>
+
+            <div className="flex w-full shrink-0 flex-none flex-wrap items-center justify-end gap-2 border-white/[0.08] sm:gap-2.5 md:w-auto md:border-l md:pl-3 xl:pl-4">
+              {status === "authenticated" && user ? (
+                <div className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
+                  <Link
+                    href="/ucet"
+                    className="group/avatar flex min-w-0 items-center gap-2 rounded-full py-1 pl-1 pr-1 transition-all duration-200 hover:bg-white/[0.06]"
+                    title={user.email ?? ""}
+                  >
+                    {user.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={user.image}
+                        alt=""
+                        width={36}
+                        height={36}
+                        className="h-9 w-9 rounded-full object-cover ring-2 ring-[#00B4FF]/35 transition duration-200 group-hover/avatar:ring-[#00B4FF]/70"
+                      />
+                    ) : (
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-slate-600 to-slate-900 text-xs font-bold text-white ring-2 ring-[#00B4FF]/40">
+                        {userInitials(user)}
+                      </span>
+                    )}
+                  </Link>
+                  <Link
+                    href="/sestava"
+                    style={{ "--ice": ICE, "--ice-dim": ICE_DIM } as CSSProperties}
+                    className={`
+                    inline-flex shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-[var(--ice-dim)] to-[var(--ice)]
+                    px-2.5 py-2 font-display text-[0.625rem] font-bold uppercase tracking-[0.08em] text-[#03050a] sm:text-[0.6875rem] xl:px-3 xl:text-xs xl:tracking-[0.1em]
+                    shadow-[0_0_28px_rgba(0,180,255,0.45),0_6px_20px_rgba(0,0,0,0.35)]
+                    ring-1 ring-white/20 transition duration-200
+                    hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)] md:hover:scale-100 hover:scale-[1.03]
+                    active:scale-[0.98]
+                  `}
+                  >
+                    Do editoru sestavy
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => signIn("google", { callbackUrl: "/sestava" })}
+                    className={`
+                    rounded-lg border border-white/[0.14] bg-white/[0.04] px-3 py-2 text-xs font-semibold text-slate-200 md:text-[0.8125rem]
+                    transition duration-200 hover:scale-[1.03] hover:border-[#00B4FF]/45 hover:bg-[#00B4FF]/10 hover:text-white
+                    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/60
+                  `}
+                  >
+                    Přihlásit
+                  </button>
+                  <Link
+                    href="/sestava"
+                    style={{ "--ice": ICE, "--ice-dim": ICE_DIM } as CSSProperties}
+                    className={`
+                    inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[var(--ice-dim)] to-[var(--ice)]
+                    px-3 py-2 font-display text-xs font-bold uppercase tracking-[0.1em] text-[#03050a] md:text-[0.8125rem] md:tracking-[0.11em]
+                    shadow-[0_0_28px_rgba(0,180,255,0.45),0_6px_20px_rgba(0,0,0,0.35)]
+                    ring-1 ring-white/20 transition duration-200
+                    hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)] md:hover:scale-100 hover:scale-[1.03]
+                    active:scale-[0.98]
+                  `}
+                  >
+                    Začít
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* Overlay + panel (same UX on desktop and mobile) */}
+      {/* Mobile overlay + panel */}
       <div
         className={`
-          fixed inset-0 z-[100]
+          fixed inset-0 z-[100] md:hidden
           transition-[opacity,visibility] duration-300
           ${mobileNavOpen ? "visible opacity-100" : "invisible opacity-0 pointer-events-none"}
         `}
@@ -166,36 +305,15 @@ export function SiteHeader() {
         <div
           id="site-header-mobile-nav"
           className={`
-            site-nav-mobile-panel absolute z-[101] flex flex-col overflow-hidden border border-white/[0.12]
+            site-nav-mobile-panel absolute left-2 right-2 top-[calc(0.5rem+env(safe-area-inset-top))] z-[101] max-h-[min(88dvh,640px)]
+            flex flex-col overflow-hidden rounded-2xl border border-white/[0.12]
             bg-gradient-to-b from-[#0b1220]/98 to-[#03050a]/98 shadow-[0_24px_80px_rgba(0,0,0,0.65),0_0_0_1px_rgba(0,180,255,0.12)]
             backdrop-blur-2xl
-            transition-transform duration-300 ease-out
-            ${mobileNavOpen ? "translate-x-0" : "translate-x-[105%]"}
-            left-2 right-2 top-[calc(0.5rem+env(safe-area-inset-top))] max-h-[min(88dvh,640px)] rounded-2xl
-            lg:left-auto lg:right-0 lg:top-0 lg:bottom-0 lg:max-h-none lg:w-[24rem] lg:rounded-none lg:border-y-0 lg:border-r-0
             ${mobileNavOpen ? "" : "pointer-events-none"}
           `}
         >
-          <div className="flex items-center justify-between gap-3 border-b border-white/[0.08] px-4 py-3">
-            <div className="min-w-0">
-              <p className="text-[10px] font-black uppercase tracking-[0.26em] text-white/50">Menu</p>
-              <Link
-                href="/"
-                onClick={() => setMobileNavOpen(false)}
-                className="mt-2 block"
-                aria-label={SITE_BRAND}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={SITE_LOGO_URL}
-                  alt=""
-                  width={560}
-                  height={168}
-                  decoding="async"
-                  className="h-10 w-auto max-w-full object-contain object-left opacity-95"
-                />
-              </Link>
-            </div>
+          <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3">
+            <span className="font-site-wordmark text-sm font-bold tracking-tight text-white">Menu</span>
             <button
               type="button"
               className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.06] text-white transition hover:bg-white/10"

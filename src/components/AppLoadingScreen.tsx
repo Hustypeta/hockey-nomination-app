@@ -35,6 +35,9 @@ function InstagramMark({ className = "" }: { className?: string }) {
 const DEFAULT_INTRO =
   "Staň se na chvíli trenérem národního týmu České hokejové reprezentace. Sestav si svojí vlastní nominaci a soutěž o zajímavé ceny.";
 
+/** Když není v env, pořád zobrazíme odkaz na sdílený IG (loading screen). */
+const LOADING_INSTAGRAM_FALLBACK = "https://www.instagram.com/svet_hokeje/";
+
 type AppLoadingScreenProps = {
   /** Stav načítání pod úvodním textem (např. „Načítám hráče…“). */
   message?: string;
@@ -55,6 +58,9 @@ export function AppLoadingScreen({
   showSignInCta = false,
 }: AppLoadingScreenProps) {
   const introText = intro === undefined ? DEFAULT_INTRO : intro;
+  const instagramHref = SITE_INSTAGRAM_PAGE_URL?.trim() || LOADING_INSTAGRAM_FALLBACK;
+  const instagramLabel =
+    instagramHref === LOADING_INSTAGRAM_FALLBACK ? "Instagram (@svet_hokeje)" : "Instagram";
 
   const handleSignIn = () => {
     const cb =
@@ -73,15 +79,6 @@ export function AppLoadingScreen({
       />
       <div className="relative flex min-h-screen flex-col items-center justify-center px-6 py-10">
         <div className="flex w-full max-w-4xl flex-col items-center rounded-2xl border border-[#2a3142] bg-[#151922]/90 px-6 py-10 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:px-8 sm:py-12">
-          <div
-            className="relative mb-10 flex aspect-square w-[min(40.5rem,calc(100vw-2.5rem))] items-center justify-center rounded-full border-[10px] border-[#003f87]/45 bg-[#003f87]/[0.08] shadow-[inset_0_0_48px_rgba(0,63,135,0.15)] sm:mb-12"
-            aria-hidden
-          >
-            <div className="absolute inset-0 rounded-full border-[10px] border-transparent border-t-[#c41e3a]/90 border-r-[#003f87]/50 animate-spin [animation-duration:1.15s]" />
-            <span className="relative z-10 font-display text-6xl tracking-[0.18em] text-[#003f87]/90 sm:text-7xl md:text-8xl">
-              ČR
-            </span>
-          </div>
           <h1 className="font-display text-3xl tracking-[0.14em] text-white md:text-4xl">{SITE_BRAND}</h1>
           <p className="mt-1 font-display text-sm tracking-[0.18em] text-[#c41e3a]/90">MS 2026 · nominace</p>
           {introText ? (
@@ -89,16 +86,12 @@ export function AppLoadingScreen({
               {introText}
             </p>
           ) : null}
-          <div className="mt-8 flex items-center gap-3 text-white/55">
-            <span
-              className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[#003f87] animate-pulse"
-              aria-hidden
-            />
-            <span className="text-sm tracking-wide">{message}</span>
-          </div>
 
-          <div className="mt-8 w-full rounded-2xl border border-white/[0.1] bg-black/20 p-4 sm:p-5">
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Články</p>
+          <div className="mt-6 w-full rounded-2xl border border-[#f1c40f]/25 bg-gradient-to-br from-[#003087]/20 via-black/30 to-[#c8102e]/15 p-4 ring-1 ring-white/[0.06] sm:mt-8 sm:p-5">
+            <p className="text-center text-[10px] font-black uppercase tracking-[0.26em] text-[#f1c40f]/90">
+              Zatím se načítáme — mezitím
+            </p>
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Články na webu</p>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <Link
                 href="/clanky/rady-k-nominaci"
@@ -109,7 +102,7 @@ export function AppLoadingScreen({
                   Tipy pro sestavení nominace (brankáři, posily, AHL…)
                 </p>
                 <p className="mt-3 text-xs font-semibold text-sky-300/95 group-hover:underline underline-offset-4">
-                  Otevřít článek
+                  Otevřít článek →
                 </p>
               </Link>
               <Link
@@ -123,10 +116,43 @@ export function AppLoadingScreen({
                   Přehled kurzů + rychlá analýza favoritů.
                 </p>
                 <p className="mt-3 text-xs font-semibold text-amber-200/95 group-hover:underline underline-offset-4">
-                  Otevřít článek
+                  Otevřít článek →
                 </p>
               </Link>
             </div>
+
+            <div className="mt-5 border-t border-white/10 pt-4 text-center">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
+                Více novinek ze světa hokeje na
+              </p>
+              <a
+                href={instagramHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-sky-200/95 transition hover:border-[#00B4FF]/35 hover:bg-[#00B4FF]/10 hover:text-white"
+              >
+                <InstagramMark className="h-4 w-4" />
+                {instagramLabel}
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-8 flex items-center gap-3 text-white/55">
+            <span
+              className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[#003f87] animate-pulse"
+              aria-hidden
+            />
+            <span className="text-sm tracking-wide">{message}</span>
+          </div>
+
+          <div
+            className="relative mt-6 flex aspect-square w-[min(22rem,calc(100vw-3rem))] items-center justify-center rounded-full border-[10px] border-[#003f87]/45 bg-[#003f87]/[0.08] shadow-[inset_0_0_48px_rgba(0,63,135,0.15)] sm:mt-8 sm:w-[min(28rem,calc(100vw-2.5rem))]"
+            aria-hidden
+          >
+            <div className="absolute inset-0 rounded-full border-[10px] border-transparent border-t-[#c41e3a]/90 border-r-[#003f87]/50 animate-spin [animation-duration:1.15s]" />
+            <span className="relative z-10 font-display text-5xl tracking-[0.18em] text-[#003f87]/90 sm:text-6xl md:text-7xl">
+              ČR
+            </span>
           </div>
 
           {showSignInCta ? (
@@ -162,23 +188,6 @@ export function AppLoadingScreen({
                   </li>
                 </ul>
               </div>
-            </div>
-          ) : null}
-
-          {SITE_INSTAGRAM_PAGE_URL ? (
-            <div className={`text-center ${showSignInCta ? "mt-7" : "mt-8"}`}>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
-                Více novinek ze světa hokeje na
-              </p>
-              <a
-                href={SITE_INSTAGRAM_PAGE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-sky-200/95 transition hover:border-[#00B4FF]/35 hover:bg-[#00B4FF]/10 hover:text-white"
-              >
-                <InstagramMark className="h-4 w-4" />
-                Instagram
-              </a>
             </div>
           ) : null}
         </div>
