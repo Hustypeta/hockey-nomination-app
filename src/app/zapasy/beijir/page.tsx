@@ -148,7 +148,7 @@ export default async function ZapasyBeijirPage() {
                     {m.hasOfficial ? (
                       <span className="font-semibold text-emerald-700">Sestava</span>
                     ) : (
-                      <span className="font-semibold text-slate-400">Bez sestavy</span>
+                      <span className="font-semibold text-slate-400">Sestava neozn.</span>
                     )}
                   </div>
                 </div>

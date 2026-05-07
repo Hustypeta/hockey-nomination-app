@@ -155,7 +155,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
                 />
               ) : (
                 <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-white/65">
-                  Oficiální sestava zatím není vložená. Jakmile ji admin doplní, zobrazí se tady.
+                  Oficiální sestava zatím nebyla oznámena. Jakmile ji admin doplní, zobrazí se tady.
                 </div>
               )}
             </div>
@@ -187,7 +187,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
                 />
               ) : (
                 <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-white/65">
-                  Hodnocení bude dostupné po vložení oficiální sestavy a po skončení zápasu.
+                  Hodnocení bude dostupné po oznámení oficiální sestavy a po skončení zápasu.
                 </div>
               )}
             </div>
