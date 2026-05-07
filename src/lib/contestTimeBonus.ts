@@ -4,8 +4,8 @@
 
 export const CONTEST_TIMEZONE = "Europe/Prague";
 
-/** Uzávěrka odeslání nominace do soutěže (včetně tohoto dne). */
-const SUBMISSION_LAST_YMD = "2026-05-10";
+/** Uzávěrka odeslání nominace do soutěže (Praha). */
+const SUBMISSION_DEADLINE_YMDHM = "2026-05-10T19:30";
 
 /** Hranice bonusů (včetně uvedeného dne): do 30. 4. → 40 %, do 7. 5. → 25 %, do 10. 5. → 10 %, poté 0 %. */
 const BONUS_40_UNTIL = "2026-04-30";
@@ -29,6 +29,26 @@ export function getPragueCalendarYmd(instant: Date): string {
   return `${y}-${m}-${d}`;
 }
 
+/** YYYY-MM-DDTHH:MM v kalendáři Praha pro daný okamžik (UTC Date). */
+export function getPragueCalendarYmdHm(instant: Date): string {
+  const fmt = new Intl.DateTimeFormat("en-CA", {
+    timeZone: CONTEST_TIMEZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  const parts = fmt.formatToParts(instant);
+  const y = parts.find((p) => p.type === "year")?.value ?? "1970";
+  const m = parts.find((p) => p.type === "month")?.value ?? "01";
+  const d = parts.find((p) => p.type === "day")?.value ?? "01";
+  const hh = parts.find((p) => p.type === "hour")?.value ?? "00";
+  const mm = parts.find((p) => p.type === "minute")?.value ?? "00";
+  return `${y}-${m}-${d}T${hh}:${mm}`;
+}
+
 export function getTimeBonusPercentForInstant(instant: Date): ContestTimeBonusPercent {
   const ymd = getPragueCalendarYmd(instant);
   if (ymd <= BONUS_40_UNTIL) return 40;
@@ -38,7 +58,7 @@ export function getTimeBonusPercentForInstant(instant: Date): ContestTimeBonusPe
 }
 
 export function isNominationSubmissionOpen(instant: Date): boolean {
-  return getPragueCalendarYmd(instant) <= SUBMISSION_LAST_YMD;
+  return getPragueCalendarYmdHm(instant) <= SUBMISSION_DEADLINE_YMDHM;
 }
 
 export function formatContestBonusLabel(percent: ContestTimeBonusPercent): string {
@@ -56,9 +76,9 @@ export function getLandingBonusHeadline(percent: ContestTimeBonusPercent): strin
     case 10:
       return "Do 10. 5. 2026 máš +10 % k bodům";
     default:
-      return "Časový bonus už neplatí — nominace do soutěže do 10. 5. 2026";
+      return "Časový bonus už neplatí — nominace do soutěže do 10. 5. 2026 19:30";
   }
 }
 
 export const CONTEST_DEADLINE_CS =
-  "10. května 2026, 23:59 (čas ČR, středoevropský)";
+  "10. května 2026, 19:30 (čas ČR)";
