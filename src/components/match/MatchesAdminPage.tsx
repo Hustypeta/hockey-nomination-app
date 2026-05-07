@@ -42,6 +42,7 @@ export function MatchesAdminPage() {
   const [newCategory, setNewCategory] = useState<"beijir" | "ms2026">("beijir");
   const [newHome, setNewHome] = useState("CZE");
   const [newAway, setNewAway] = useState("");
+  const [seeding, setSeeding] = useState(false);
 
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
@@ -191,6 +192,53 @@ export function MatchesAdminPage() {
     }
   };
 
+  const seedBeijir = async () => {
+    setSeeding(true);
+    try {
+      // Beijer Hockey Games (May 2026) – Czech games + the other 2 BHG matches.
+      const seed: Array<{
+        title: string;
+        homeCode: string;
+        awayCode: string;
+        startsAt: string;
+        venue: string | null;
+      }> = [
+        { title: "SUI - FIN", homeCode: "SUI", awayCode: "FIN", startsAt: "2026-05-07T15:00:00+02:00", venue: null },
+        { title: "CZE - SWE", homeCode: "CZE", awayCode: "SWE", startsAt: "2026-05-07T19:00:00+02:00", venue: null },
+        { title: "FIN - CZE", homeCode: "FIN", awayCode: "CZE", startsAt: "2026-05-09T12:00:00+02:00", venue: null },
+        { title: "SWE - SUI", homeCode: "SWE", awayCode: "SUI", startsAt: "2026-05-09T16:00:00+02:00", venue: null },
+        { title: "SUI - CZE", homeCode: "SUI", awayCode: "CZE", startsAt: "2026-05-10T12:00:00+02:00", venue: null },
+        { title: "SWE - FIN", homeCode: "SWE", awayCode: "FIN", startsAt: "2026-05-10T16:00:00+02:00", venue: null },
+      ];
+
+      let created = 0;
+      for (const m of seed) {
+        const r = await fetch("/api/admin/matches", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: m.title,
+            opponent: null,
+            startsAt: m.startsAt,
+            venue: m.venue,
+            category: "beijir",
+            homeCode: m.homeCode,
+            awayCode: m.awayCode,
+            published: true,
+          }),
+        });
+        if (r.ok) created++;
+      }
+      await reloadMatches();
+      toast.success(created > 0 ? `Zápasy přidány (${created}).` : "Zápasy už pravděpodobně existují.");
+    } catch {
+      toast.error("Seed selhal.");
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   const saveOfficial = async () => {
     if (!activeId) return;
     setSaving(true);
@@ -315,6 +363,21 @@ export function MatchesAdminPage() {
                     {creating ? "…" : "Vytvořit"}
                   </button>
                 </div>
+              </div>
+
+              <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-3">
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Rychlé přidání</p>
+                <button
+                  type="button"
+                  disabled={seeding}
+                  onClick={() => void seedBeijir()}
+                  className="mt-2 w-full rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2.5 text-sm font-black text-white/90 hover:bg-white/[0.1] disabled:opacity-50"
+                >
+                  {seeding ? "Přidávám…" : "Přidat Beijer Hockey Games (květen 2026)"}
+                </button>
+                <p className="mt-2 text-[11px] leading-snug text-white/50">
+                  Vytvoří a publikuje zápasy. Oficiální sestavu pak doplníš vpravo.
+                </p>
               </div>
             </div>
           </section>

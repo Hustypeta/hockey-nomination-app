@@ -19,6 +19,8 @@ export function MatchRatingClient({
   defenseCount,
   allowExtraForward,
   initialRatings,
+  canRate = true,
+  lockedReason,
 }: {
   slug: string;
   players: Player[];
@@ -26,6 +28,8 @@ export function MatchRatingClient({
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
   initialRatings: RatingMap;
+  canRate?: boolean;
+  lockedReason?: string;
 }) {
   const [ratings, setRatings] = useState<RatingMap>(initialRatings);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -40,6 +44,10 @@ export function MatchRatingClient({
   );
 
   const submit = async (playerId: string, value: number) => {
+    if (!canRate) {
+      toast.error(lockedReason || "Hodnocení zatím není otevřené.");
+      return;
+    }
     const rating = clampInt(value, 1, 10);
     setBusyId(playerId);
     try {
@@ -73,6 +81,11 @@ export function MatchRatingClient({
 
   return (
     <div className="space-y-3">
+      {!canRate ? (
+        <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/70">
+          {lockedReason || "Hodnocení se otevře po skončení zápasu."}
+        </div>
+      ) : null}
       {ids.map((pid) => {
         const p = byId.get(pid);
         if (!p) return null;
@@ -111,7 +124,7 @@ export function MatchRatingClient({
                   max={10}
                   step={1}
                   value={draft}
-                  disabled={busyId === pid}
+                  disabled={!canRate || busyId === pid}
                   onChange={(e) => {
                     const v = clampInt(Number(e.target.value), 1, 10);
                     setDraftById((m) => ({ ...m, [pid]: v }));
@@ -123,7 +136,7 @@ export function MatchRatingClient({
               </div>
               <button
                 type="button"
-                disabled={busyId === pid}
+                disabled={!canRate || busyId === pid}
                 onClick={() => void submit(pid, draft)}
                 className="rounded-xl border border-white/10 bg-black/20 px-4 py-2 text-sm font-black text-white/90 hover:bg-white/[0.06] disabled:opacity-50"
               >

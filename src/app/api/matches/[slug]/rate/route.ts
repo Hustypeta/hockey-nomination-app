@@ -10,6 +10,15 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!match || !match.published || !match.officialLineup) {
       return NextResponse.json({ error: "Zápas nenalezen." }, { status: 404 });
     }
+    if (match.startsAt) {
+      // Open ratings only after match end (heuristic: start + 3 hours).
+      const openAt = match.startsAt.getTime() + 3 * 60 * 60 * 1000;
+      if (Date.now() < openAt) {
+        return NextResponse.json({ error: "Hodnocení je dostupné až po skončení zápasu." }, { status: 403 });
+      }
+    } else {
+      return NextResponse.json({ error: "Hodnocení ještě není otevřené." }, { status: 403 });
+    }
 
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;

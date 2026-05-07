@@ -24,10 +24,23 @@ function splitTeams(m: { homeCode?: string | null; awayCode?: string | null; tit
 
 export default async function ZapasyBeijirPage() {
   const matches = await prisma.match.findMany({
-    where: { published: true, category: "beijir", officialLineup: { isNot: null } },
-    orderBy: [{ startsAt: "desc" }, { createdAt: "desc" }],
-    select: { slug: true, title: true, opponent: true, startsAt: true, venue: true, homeCode: true, awayCode: true },
+    where: { published: true, category: "beijir" },
+    orderBy: [{ startsAt: "asc" }, { createdAt: "asc" }],
+    select: {
+      slug: true,
+      title: true,
+      opponent: true,
+      startsAt: true,
+      venue: true,
+      homeCode: true,
+      awayCode: true,
+      officialLineup: { select: { updatedAt: true } },
+    },
   });
+
+  const formatDate = (d: Date) =>
+    d.toLocaleDateString("cs-CZ", { day: "2-digit", month: "2-digit", year: "numeric" });
+  const formatTime = (d: Date) => d.toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" });
 
   return (
     <main className="min-h-screen bg-[#05080f] text-white">
@@ -48,44 +61,58 @@ export default async function ZapasyBeijirPage() {
           </Link>
         </div>
 
-        <div className="mt-8 space-y-3">
+        <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-white shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
           {matches.map((m) => (
             <Link
               key={m.slug}
               href={`/zapasy/${encodeURIComponent(m.slug)}`}
-              className="block rounded-2xl border border-white/10 bg-white/[0.03] p-4 hover:bg-white/[0.05]"
+              className="block border-b border-black/10 px-4 py-3 text-slate-900 hover:bg-slate-50 last:border-b-0"
             >
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-3">
-                    {(() => {
-                      const teams = splitTeams(m);
-                      if (!teams) return null;
-                      return (
-                        <div className="flex items-center gap-2">
-                          <FlagMark code={teams.a} />
-                          <div className="font-display text-xl font-black">
-                            {teams.a} <span className="text-white/60">–</span> {teams.b}
-                          </div>
-                          <FlagMark code={teams.b} />
+              <div className="grid grid-cols-[4.25rem_1fr_auto] items-center gap-3 sm:grid-cols-[5.5rem_1fr_auto]">
+                <div className="text-[11px] font-semibold tabular-nums text-slate-500">
+                  {m.startsAt ? (
+                    <>
+                      <div>{formatDate(new Date(m.startsAt))}</div>
+                      <div className="text-slate-700">{formatTime(new Date(m.startsAt))}</div>
+                    </>
+                  ) : (
+                    <div>—</div>
+                  )}
+                </div>
+
+                <div className="min-w-0">
+                  {(() => {
+                    const teams = splitTeams(m);
+                    if (!teams) {
+                      return <div className="truncate font-display text-base font-black">{m.title}</div>;
+                    }
+                    return (
+                      <div className="flex min-w-0 items-center gap-2">
+                        <FlagMark code={teams.a} className="h-5 w-7" />
+                        <div className="min-w-0 truncate font-display text-base font-black sm:text-lg">
+                          {teams.a} <span className="text-slate-400">-</span> {teams.b}
                         </div>
-                      );
-                    })()}
-                    {!splitTeams(m) ? <div className="font-display text-xl font-black">{m.title}</div> : null}
-                  </div>
-                  <div className="mt-1 text-xs text-white/60">
-                    {m.opponent ? <>Soupeř: <span className="text-white/80">{m.opponent}</span></> : null}
-                    {m.venue ? <> · {m.venue}</> : null}
+                        <FlagMark code={teams.b} className="h-5 w-7" />
+                      </div>
+                    );
+                  })()}
+                  <div className="mt-0.5 text-[11px] text-slate-500">
+                    {m.venue ? <>{m.venue}</> : null}
+                    {m.venue && m.officialLineup ? <span className="text-slate-300"> · </span> : null}
+                    {m.officialLineup ? (
+                      <span className="font-semibold text-emerald-700">Sestava</span>
+                    ) : (
+                      <span className="font-semibold text-slate-400">Bez sestavy</span>
+                    )}
                   </div>
                 </div>
-                <div className="text-xs text-white/55">
-                  {m.startsAt ? new Date(m.startsAt).toLocaleString("cs-CZ") : "—"}
-                </div>
+
+                <div className="text-sm font-black text-slate-400">-</div>
               </div>
             </Link>
           ))}
           {matches.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-sm text-white/60">
+            <div className="p-6 text-sm text-slate-600">
               Zatím žádné publikované zápasy.
             </div>
           ) : null}
