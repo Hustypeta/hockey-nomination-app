@@ -47,6 +47,12 @@ export interface LineupJerseyCardProps {
   disableMotion?: boolean;
   /** Zda kreslit příjmení (a roli F / štítek G) na dresu; `false` = jen číslo (+ C/A). */
   nameOnJersey?: boolean;
+  /** Horní štítek pozice (LW/C/RW/LD/…) nad dresem. */
+  showPositionBadge?: boolean;
+  /** Doplňkové badge na dresu (role u F / písmeno G). */
+  showRoleBadge?: boolean;
+  /** Posun overlay (jméno+číslo) na dresu. */
+  overlayVariant?: "default" | "lower";
 }
 
 export function LineupJerseyCard({
@@ -59,6 +65,9 @@ export function LineupJerseyCard({
   className = "",
   disableMotion = false,
   nameOnJersey = true,
+  showPositionBadge = true,
+  showRoleBadge = true,
+  overlayVariant = "default",
 }: LineupJerseyCardProps) {
   const empty = !player;
   const emptyUnfocused = empty && !isSelected;
@@ -68,7 +77,10 @@ export function LineupJerseyCard({
   const w = widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = numberClass[size];
-  const topOverlay = overlayTopClass[size];
+  const topOverlay =
+    overlayVariant === "lower"
+      ? overlayTopClass[size].replace("pt-[25%]", "pt-[34%]")
+      : overlayTopClass[size];
   const ln = !empty ? jerseyNameOnJersey(player.name) : "";
   const namePlate =
     !empty && nameOnJersey ? jerseyNameplateNameProps(ln) : { lines: [] as string[], className: "", style: {} };
@@ -124,17 +136,21 @@ export function LineupJerseyCard({
         `}
       >
         <div className="flex min-h-[1rem] shrink-0 items-center justify-center px-0.5">
-          <span
-            className={`
-              relative rounded border border-[#003087]/40 bg-[#0a0508]/95 px-2 py-0.5 font-display text-[10px] font-bold
-              uppercase tracking-[0.18em] text-white/90 shadow-[0_0_12px_rgba(0,0,0,0.85)]
-              before:absolute before:inset-y-0 before:left-0 before:w-[2px] before:rounded-l before:bg-[#c8102e]
-              before:content-['']
-              ${emptyUnfocused ? "opacity-50" : ""}
-            `}
-          >
-            {positionLabel}
-          </span>
+          {showPositionBadge ? (
+            <span
+              className={`
+                relative rounded border border-[#003087]/40 bg-[#0a0508]/95 px-2 py-0.5 font-display text-[10px] font-bold
+                uppercase tracking-[0.18em] text-white/90 shadow-[0_0_12px_rgba(0,0,0,0.85)]
+                before:absolute before:inset-y-0 before:left-0 before:w-[2px] before:rounded-l before:bg-[#c8102e]
+                before:content-['']
+                ${emptyUnfocused ? "opacity-50" : ""}
+              `}
+            >
+              {positionLabel}
+            </span>
+          ) : (
+            <span className="h-[1px] w-full" aria-hidden />
+          )}
         </div>
 
         <div className="relative overflow-hidden rounded-[8px]">
@@ -176,14 +192,14 @@ export function LineupJerseyCard({
                     {numStr}
                   </span>
                 ) : null}
-                {nameOnJersey && player.position === "F" && player.role ? (
+                {showRoleBadge && nameOnJersey && player.position === "F" && player.role ? (
                   <span
                     className="mt-1 rounded border border-white/25 bg-black/55 px-1.5 py-0.5 font-display text-[9px] font-bold uppercase tracking-wider text-white"
                   >
                     {player.role}
                   </span>
                 ) : null}
-                {nameOnJersey && player.position === "G" ? (
+                {showRoleBadge && nameOnJersey && player.position === "G" ? (
                   <span
                     className="mt-1 font-display text-[10px] font-bold uppercase tracking-[0.12em] text-sky-100"
                     style={{ textShadow: "0 1px 2px rgba(0,0,0,0.85)" }}

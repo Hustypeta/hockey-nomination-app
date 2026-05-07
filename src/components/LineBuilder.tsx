@@ -272,6 +272,9 @@ export function LineBuilder({
               isCaptain={player ? captainId === player.id : false}
               isAssistant={isAsst}
               isSelected={selected}
+              showPositionBadge={mode !== "match"}
+              showRoleBadge={mode !== "match"}
+              overlayVariant={mode === "match" ? "lower" : "default"}
             />
           )}
         </div>
