@@ -160,22 +160,6 @@ export function SiteHeader() {
 
           {/* Desktop: zalamovaná navigace — všechny položky vidět bez skrytého scrollu */}
           <div className="hidden min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-center lg:flex lg:flex-row lg:items-center lg:gap-6 xl:gap-8 2xl:gap-10">
-            {/* Desktop brand (bigger + more left) */}
-            <Link
-              href="/"
-              className="group/brand hidden shrink-0 items-center gap-3 lg:flex"
-              aria-label={SITE_BRAND}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={SITE_LOGO_URL}
-                alt=""
-                width={180}
-                height={54}
-                decoding="async"
-                className="h-8 w-auto object-contain object-left opacity-95 transition duration-200 group-hover/brand:opacity-100 xl:h-9 2xl:h-10"
-              />
-            </Link>
             <nav className="isolate min-w-0 flex-1 lg:min-w-0" aria-label="Hlavní navigace">
               <div className="flex flex-wrap items-center gap-x-0 gap-y-2 lg:flex-nowrap lg:justify-end">
                 {NAV.map((item) => {
@@ -194,6 +178,19 @@ export function SiteHeader() {
                   `}
                     >
                       <span className="relative z-10 inline-flex items-center gap-2">
+                        {href === "/" ? (
+                          <span className="inline-flex items-center pr-1">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={SITE_LOGO_URL}
+                              alt=""
+                              width={120}
+                              height={36}
+                              decoding="async"
+                              className="h-6 w-auto object-contain object-left opacity-95"
+                            />
+                          </span>
+                        ) : null}
                         <DesktopNavLabel item={item} />
                       </span>
                       {active ? (

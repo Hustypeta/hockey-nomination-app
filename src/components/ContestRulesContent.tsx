@@ -74,10 +74,6 @@ export function ContestRulesContent() {
                 konkrétně oficiální soupiska (25 hráčů) a zápis o utkání.
               </li>
               <li>Rozhodující je rozestavení hráčů v zápisu o utkání (formace, obranné páry, pozice brankářů).</li>
-              <li>
-                Přesné mapování uživatelských slotů v aplikaci na řádky v oficiálním zápisu bude specifikováno v plném
-                znění pravidel před startem soutěže.
-              </li>
             </ul>
           </section>
 
