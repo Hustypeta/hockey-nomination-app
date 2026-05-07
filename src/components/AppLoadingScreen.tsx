@@ -1,7 +1,36 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { SITE_BRAND, SITE_INSTAGRAM_PAGE_URL } from "@/lib/siteBranding";
+
+function InstagramMark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M7.6 2h8.8A5.6 5.6 0 0 1 22 7.6v8.8A5.6 5.6 0 0 1 16.4 22H7.6A5.6 5.6 0 0 1 2 16.4V7.6A5.6 5.6 0 0 1 7.6 2Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M12 16.3A4.3 4.3 0 1 0 12 7.7a4.3 4.3 0 0 0 0 8.6Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M17.5 6.7h.01"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 const DEFAULT_INTRO =
   "Staň se na chvíli trenérem národního týmu České hokejové reprezentace. Sestav si svojí vlastní nominaci a soutěž o zajímavé ceny.";
@@ -68,6 +97,38 @@ export function AppLoadingScreen({
             <span className="text-sm tracking-wide">{message}</span>
           </div>
 
+          <div className="mt-8 w-full rounded-2xl border border-white/[0.1] bg-black/20 p-4 sm:p-5">
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Články</p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <Link
+                href="/clanky/rady-k-nominaci"
+                className="group rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-[#00B4FF]/30 hover:bg-white/[0.05]"
+              >
+                <p className="font-display text-base font-black text-white">Rady k nominaci</p>
+                <p className="mt-1 text-xs leading-snug text-white/60">
+                  Tipy pro sestavení nominace (brankáři, posily, AHL…)
+                </p>
+                <p className="mt-3 text-xs font-semibold text-sky-300/95 group-hover:underline underline-offset-4">
+                  Otevřít článek
+                </p>
+              </Link>
+              <Link
+                href="/clanky/kurzy-a-analyza-ms-2026"
+                className="group rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-[#f1c40f]/30 hover:bg-white/[0.05]"
+              >
+                <p className="font-display text-base font-black text-white">
+                  Kurzy a analýza: Kdo ovládne MS v hokeji 2026?
+                </p>
+                <p className="mt-1 text-xs leading-snug text-white/60">
+                  Přehled kurzů + rychlá analýza favoritů.
+                </p>
+                <p className="mt-3 text-xs font-semibold text-amber-200/95 group-hover:underline underline-offset-4">
+                  Otevřít článek
+                </p>
+              </Link>
+            </div>
+          </div>
+
           {showSignInCta ? (
             <div className="mt-8 w-full border-t border-white/[0.08] pt-8">
               <button
@@ -105,16 +166,20 @@ export function AppLoadingScreen({
           ) : null}
 
           {SITE_INSTAGRAM_PAGE_URL ? (
-            <p className={`text-center ${showSignInCta ? "mt-7" : "mt-8"}`}>
+            <div className={`text-center ${showSignInCta ? "mt-7" : "mt-8"}`}>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
+                Více novinek ze světa hokeje na
+              </p>
               <a
                 href={SITE_INSTAGRAM_PAGE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-medium text-sky-300/95 underline-offset-4 transition hover:text-sky-200 hover:underline"
+                className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-sky-200/95 transition hover:border-[#00B4FF]/35 hover:bg-[#00B4FF]/10 hover:text-white"
               >
+                <InstagramMark className="h-4 w-4" />
                 Instagram
               </a>
-            </p>
+            </div>
           ) : null}
         </div>
       </div>
