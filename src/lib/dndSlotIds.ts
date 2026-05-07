@@ -8,6 +8,41 @@ export function droppableIdForSlot(target: DropTarget): string {
   return `slot-xf-${target.slotIndex}`;
 }
 
+/** Opačný směr k {@link parseDroppableId} — z výběru slotu ve stavu editoru. */
+export function droppableIdFromSelectedSlot(slot: {
+  type: string;
+  lineIndex?: number;
+  role?: string;
+}): string | null {
+  const { type, lineIndex, role } = slot;
+  if (type === "goalie" && lineIndex !== undefined && lineIndex >= 0 && lineIndex <= 2) {
+    return `slot-goalie-${lineIndex}`;
+  }
+  if (
+    type === "forward" &&
+    lineIndex !== undefined &&
+    lineIndex >= 0 &&
+    lineIndex <= 3 &&
+    role &&
+    (role === "lw" || role === "c" || role === "rw" || role === "x")
+  ) {
+    return `slot-fwd-${lineIndex}-${role}`;
+  }
+  if (
+    type === "defense" &&
+    lineIndex !== undefined &&
+    lineIndex >= 0 &&
+    lineIndex <= 3 &&
+    role &&
+    (role === "lb" || role === "rb")
+  ) {
+    return `slot-def-${lineIndex}-${role}`;
+  }
+  if (type === "extraForward") return "slot-xf-0";
+  if (type === "extraDefenseman") return "slot-xd-0";
+  return null;
+}
+
 export function parseDroppableId(id: string): DropTarget | null {
   if (id.startsWith("slot-goalie-")) {
     const index = Number(id.slice("slot-goalie-".length));
