@@ -23,18 +23,18 @@ const PREVIEW_MATCHES: Record<
     venue: null,
     opponent: null,
   },
-  "beijir-fin-cze-2026-05-09-1200": {
-    title: "FIN - CZE",
-    homeCode: "FIN",
-    awayCode: "CZE",
+  "beijir-cze-fin-2026-05-09-1200": {
+    title: "CZE - FIN",
+    homeCode: "CZE",
+    awayCode: "FIN",
     startsAt: new Date("2026-05-09T12:00:00+02:00"),
     venue: null,
     opponent: null,
   },
-  "beijir-sui-cze-2026-05-10-1200": {
-    title: "SUI - CZE",
-    homeCode: "SUI",
-    awayCode: "CZE",
+  "beijir-cze-sui-2026-05-10-1200": {
+    title: "CZE - SUI",
+    homeCode: "CZE",
+    awayCode: "SUI",
     startsAt: new Date("2026-05-10T12:00:00+02:00"),
     venue: null,
     opponent: null,
