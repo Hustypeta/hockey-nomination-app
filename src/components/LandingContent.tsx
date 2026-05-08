@@ -90,13 +90,7 @@ export function LandingContent() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
-          <div className="flex flex-col gap-10 lg:grid lg:grid-cols-12 lg:items-start lg:gap-10 xl:gap-12">
-            <aside className="order-2 text-left lg:order-1 lg:col-span-3 xl:col-span-3">
-              <LoadingScreenUsefulLinks />
-            </aside>
-
-            <div className="order-1 lg:order-2 lg:col-span-9">
-              <div className="mx-auto max-w-4xl text-center lg:max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
                 <h1 className="mx-auto max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
                   Sestav si nominaci na{" "}
                   <span className="bg-gradient-to-r from-white via-white to-sky-100 bg-clip-text text-transparent">
@@ -147,17 +141,37 @@ export function LandingContent() {
                     <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
                   </Link>
 
+                  <p className="mx-auto mt-8 max-w-xl text-pretty text-left text-sm leading-relaxed text-slate-200 sm:text-[15px] lg:text-center">
+                    Informace k nominaci na MS 2026 a analýze hlavních favoritů turnaje najdeš v článcích{" "}
+                    <Link
+                      href="/clanky/rady-k-nominaci"
+                      className="font-semibold text-sky-300 underline decoration-sky-400/55 underline-offset-2 hover:text-white"
+                    >
+                      Rady k nominaci
+                    </Link>{" "}
+                    a{" "}
+                    <Link
+                      href="/clanky/kurzy-a-analyza-ms-2026"
+                      className="font-semibold text-amber-200/95 underline decoration-amber-400/45 underline-offset-2 hover:text-white"
+                    >
+                      Kurzy a analýza MS 2026
+                    </Link>
+                    . Novinky ze světa hokeje jsou hlavně na Instagramu (velké tlačítko níže); oficiální Facebook a TikTok
+                    Lineup máš jako ikony pod dalším textem.
+                  </p>
+
+                  <div className="mx-auto mt-6 flex w-full max-w-xl justify-center">
+                    <LoadingScreenUsefulLinks />
+                  </div>
+
                   <p className="mt-8 text-pretty text-sm leading-relaxed text-slate-200/95 sm:text-[15px]">
-                    Můžete nás také sledovat na sociálních sítích, konkrétně na Facebooku, Instagramu a TikToku.
+                    Lineup na Facebooku a TikToku:
                   </p>
                   <div className="mt-4 flex justify-center">
                     <SocialSiteIcons size="lg" />
                   </div>
                 </div>
               </div>
-            </div>
-
-          </div>
 
             {/* Proč se přihlásit — hosté, výš na stránce (dřív bylo až pod dlouhým blokem „Proč to zkusit“). */}
             {showGuestLoginPitch ? (

@@ -24,25 +24,20 @@ export type LoadingScreenUsefulLinksProps = {
   className?: string;
 };
 
-/** Rámeček s odkazem na Instagram (stejný vizuál jako dřív spodní část staršího bloku). */
+/** Proklik na Instagram (Svět Hokeje) — kompaktní tlačítko bez vnějšího rámu. */
 export function LoadingScreenUsefulLinks({ className = "" }: LoadingScreenUsefulLinksProps) {
   const instagramHref = SITE_INSTAGRAM_PAGE_URL?.trim() || LOADING_INSTAGRAM_FALLBACK;
-  const instagramLabel =
-    instagramHref === LOADING_INSTAGRAM_FALLBACK ? "Instagram Svět_hokeje" : "Instagram";
 
   return (
-    <div
-      className={`flex w-full justify-center rounded-2xl border-2 border-[#f1c40f]/40 bg-gradient-to-br from-[#003087]/35 via-black/55 to-[#c8102e]/25 p-4 shadow-[0_12px_48px_rgba(0,0,0,0.55)] ring-2 ring-white/[0.08] sm:p-6 ${className}`}
+    <a
+      href={instagramHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Svět Hokeje na Instagramu"
+      className={`inline-flex items-center justify-center gap-2 rounded-xl border border-[#f1c40f]/50 bg-gradient-to-r from-[#833ab4]/30 via-[#fd1d1d]/20 to-[#fcb045]/25 px-3.5 py-2 text-[13px] font-black tracking-tight text-white shadow-[0_6px_22px_rgba(0,0,0,0.35)] transition hover:border-[#f1c40f] hover:brightness-110 sm:px-4 sm:text-sm ${className}`}
     >
-      <a
-        href={instagramHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex w-full max-w-sm items-center justify-center gap-2.5 rounded-xl border-2 border-[#f1c40f]/50 bg-gradient-to-r from-[#833ab4]/30 via-[#fd1d1d]/20 to-[#fcb045]/25 px-5 py-3.5 text-[15px] font-black text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition hover:border-[#f1c40f] hover:brightness-110 sm:w-auto"
-      >
-        <InstagramMark className="h-6 w-6 shrink-0 text-white" />
-        <span>{instagramLabel}</span>
-      </a>
-    </div>
+      <InstagramMark className="h-4 w-4 shrink-0 text-white sm:h-[1.125rem] sm:w-[1.125rem]" />
+      <span>Svět Hokeje</span>
+    </a>
   );
 }

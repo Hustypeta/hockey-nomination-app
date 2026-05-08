@@ -157,11 +157,11 @@ export function SiteHeader() {
             </button>
           </div>
 
-          {/* Desktop / tablet: značka (logo + „Lineup“) vlevo — odděleně od položky „Úvod“ v menu */}
+          {/* Desktop / tablet: logo vlevo — odděleně od položky „Úvod“ v menu */}
           <div className="hidden w-full min-w-0 items-center gap-6 md:flex xl:gap-10">
             <Link
               href="/"
-              className="group/brand flex shrink-0 items-center gap-2.5 pr-1 xl:gap-3.5"
+              className="group/brand flex shrink-0 items-center pr-1"
               aria-label={`${SITE_BRAND} — úvod`}
             >
               <div className="relative shrink-0">
@@ -180,9 +180,6 @@ export function SiteHeader() {
                   className="relative h-12 w-auto object-contain object-left transition duration-300 group-hover/brand:scale-[1.03] md:h-14 xl:h-[4rem] 2xl:h-[4.75rem]"
                 />
               </div>
-              <span className="font-site-wordmark text-lg font-bold tracking-tight text-white xl:text-xl">
-                {SITE_BRAND}
-              </span>
             </Link>
 
             <div className="flex min-w-0 flex-1 flex-row flex-wrap items-center gap-x-2 gap-y-2 md:justify-end xl:flex-nowrap xl:gap-x-3">
