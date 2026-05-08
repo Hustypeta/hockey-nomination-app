@@ -42,7 +42,7 @@ export default function BracketPage() {
       <Suspense
         fallback={
           <div className="relative z-10 mx-auto max-w-4xl px-4 py-10 sm:py-14">
-            <LoadingScreenUsefulLinks eyebrow="Načítá se Pick’em — mezitím" subtitle="Články na webu" />
+            <LoadingScreenUsefulLinks />
             <div className="mt-10 flex flex-col items-center justify-center gap-3 text-white/75">
               <span
                 className="inline-block h-2 w-2 animate-pulse rounded-full bg-sky-400"

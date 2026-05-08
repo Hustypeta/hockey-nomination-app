@@ -23,7 +23,6 @@ import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
-import { SITE_INSTAGRAM_PAGE_URL } from "@/lib/siteBranding";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
@@ -69,9 +68,6 @@ export function LandingContent() {
     ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
     : (0 as ContestTimeBonusPercent);
 
-  const instagramHref =
-    SITE_INSTAGRAM_PAGE_URL?.trim() || "https://www.instagram.com/svet_hokeje/";
-
   return (
     <main>
       {/* ——— Hero ——— */}
@@ -96,38 +92,10 @@ export function LandingContent() {
         <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="flex flex-col gap-10 lg:grid lg:grid-cols-12 lg:items-start lg:gap-10 xl:gap-12">
             <aside className="order-2 text-left lg:order-1 lg:col-span-3 xl:col-span-3">
-              <p className="text-pretty text-sm leading-relaxed text-slate-200 sm:text-[15px]">
-                Informace k situaci ohledně nominace na MS 2026 a analýzu hlavních favoritů turnaje naleznete v článcích{" "}
-                <Link
-                  href="/clanky/rady-k-nominaci"
-                  className="font-semibold text-sky-300 underline decoration-sky-400/55 underline-offset-2 hover:text-white"
-                >
-                  Rady k nominaci
-                </Link>{" "}
-                a{" "}
-                <Link
-                  href="/clanky/kurzy-a-analyza-ms-2026"
-                  className="font-semibold text-amber-200/95 underline decoration-amber-400/45 underline-offset-2 hover:text-white"
-                >
-                  Kurzy a analýza MS 2026
-                </Link>
-                . Pro novinky a mnohem více ze světa hokeje můžete také navštívit{" "}
-                <a
-                  href={instagramHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-fuchsia-200 underline decoration-fuchsia-400/45 underline-offset-2 hover:text-white"
-                >
-                  Instagram Svět_hokeje
-                </a>
-                .
-              </p>
-              <div className="mt-6">
-                <LoadingScreenUsefulLinks hideIntro />
-              </div>
+              <LoadingScreenUsefulLinks />
             </aside>
 
-            <div className="order-1 lg:order-2 lg:col-span-6 xl:col-span-6">
+            <div className="order-1 lg:order-2 lg:col-span-9">
               <div className="mx-auto max-w-4xl text-center lg:max-w-2xl">
                 <h1 className="mx-auto max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
                   Sestav si nominaci na{" "}
@@ -164,7 +132,7 @@ export function LandingContent() {
                   </div>
                 ) : null}
 
-                {/* Hlavní CTA — velké, červené, glow */}
+                {/* Hlavní CTA + sociální sítě hned pod ním */}
                 <div className="mx-auto mt-10 max-w-xl sm:mt-12">
                   <Link
                     href="/sestava"
@@ -178,19 +146,17 @@ export function LandingContent() {
                     <span className="relative">Sestavit nominaci</span>
                     <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
                   </Link>
+
+                  <p className="mt-8 text-pretty text-sm leading-relaxed text-slate-200/95 sm:text-[15px]">
+                    Můžete nás také sledovat na sociálních sítích, konkrétně na Facebooku, Instagramu a TikToku.
+                  </p>
+                  <div className="mt-4 flex justify-center">
+                    <SocialSiteIcons size="lg" />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <aside className="order-3 text-center lg:col-span-3 lg:text-right xl:col-span-3">
-              <p className="text-pretty text-sm leading-relaxed text-slate-200 sm:text-[15px]">
-                Můžete nás také sledovat na sociálních sítích, konkrétně na Facebooku, Instagramu a TikToku —
-                odkazy stejné jako úplně dole v patičce:
-              </p>
-              <div className="mt-5 flex w-full justify-center lg:justify-end">
-                <SocialSiteIcons />
-              </div>
-            </aside>
           </div>
 
             {/* Proč se přihlásit — hosté, výš na stránce (dřív bylo až pod dlouhým blokem „Proč to zkusit“). */}

@@ -33,11 +33,13 @@ function SocialIconLink({
   href,
   label,
   title,
+  circleClassName,
   children,
 }: {
   href: string;
   label: string;
   title: string;
+  circleClassName: string;
   children: ReactNode;
 }) {
   return (
@@ -47,7 +49,7 @@ function SocialIconLink({
       rel="noopener noreferrer"
       title={title}
       aria-label={label}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.05] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-white/25 hover:bg-white/[0.1] hover:text-white"
+      className={`flex shrink-0 items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.05] text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-white/25 hover:bg-white/[0.1] hover:text-white ${circleClassName}`}
     >
       {children}
     </a>
@@ -57,56 +59,68 @@ function SocialIconLink({
 function SocialIconPlaceholder({
   label,
   networkName,
+  circleClassName,
   children,
 }: {
   label: string;
   networkName: string;
+  circleClassName: string;
   children: ReactNode;
 }) {
   return (
     <span
       aria-label={label}
       title={`${networkName} — již brzy`}
-      className="flex h-10 w-10 cursor-not-allowed items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.02] text-white/28"
+      className={`flex shrink-0 cursor-not-allowed items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.02] text-white/28 ${circleClassName}`}
     >
       {children}
     </span>
   );
 }
 
-export function SocialSiteIcons() {
+export type SocialSiteIconsProps = {
+  /** Větší kruhy — např. hero (odkazové bloky jako u brand Instagramu). Patička ponechává výchozí. */
+  size?: "default" | "lg";
+};
+
+export function SocialSiteIcons({ size = "default" }: SocialSiteIconsProps) {
   const fb = SITE_FACEBOOK_PAGE_URL.trim();
   const ig = SITE_INSTAGRAM_PAGE_URL.trim();
   const tt = SITE_TIKTOK_PAGE_URL.trim();
 
-  const iconCls = "h-[1.125rem] w-[1.125rem]";
+  const lg = size === "lg";
+  const circleClassName = lg
+    ? "h-14 w-14 border-[1.5px] sm:h-[4.25rem] sm:w-[4.25rem]"
+    : "h-10 w-10";
+  const iconCls = lg ? "h-7 w-7 sm:h-8 sm:w-8" : "h-[1.125rem] w-[1.125rem]";
+  const navGap = lg ? "gap-4 sm:gap-6" : "gap-3";
 
   return (
-    <nav aria-label="Sociální sítě" className="flex justify-center gap-3">
+    <nav aria-label="Sociální sítě" className={`flex justify-center ${navGap}`}>
       {fb ? (
-        <SocialIconLink href={fb} label="Facebook — Lineup na Facebooku" title="Facebook">
+        <SocialIconLink href={fb} label="Facebook — Lineup na Facebooku" title="Facebook" circleClassName={circleClassName}>
           <IconFacebook className={iconCls} />
         </SocialIconLink>
       ) : (
-        <SocialIconPlaceholder label="Facebook zatím bez odkazu" networkName="Facebook">
+        <SocialIconPlaceholder label="Facebook zatím bez odkazu" networkName="Facebook" circleClassName={circleClassName}>
           <IconFacebook className={iconCls} />
         </SocialIconPlaceholder>
       )}
       {ig ? (
-        <SocialIconLink href={ig} label="Instagram" title="Instagram">
+        <SocialIconLink href={ig} label="Instagram" title="Instagram" circleClassName={circleClassName}>
           <IconInstagram className={iconCls} />
         </SocialIconLink>
       ) : (
-        <SocialIconPlaceholder label="Instagram — již brzy" networkName="Instagram">
+        <SocialIconPlaceholder label="Instagram — již brzy" networkName="Instagram" circleClassName={circleClassName}>
           <IconInstagram className={iconCls} />
         </SocialIconPlaceholder>
       )}
       {tt ? (
-        <SocialIconLink href={tt} label="TikTok" title="TikTok">
+        <SocialIconLink href={tt} label="TikTok" title="TikTok" circleClassName={circleClassName}>
           <IconTikTok className={iconCls} />
         </SocialIconLink>
       ) : (
-        <SocialIconPlaceholder label="TikTok — již brzy" networkName="TikTok">
+        <SocialIconPlaceholder label="TikTok — již brzy" networkName="TikTok" circleClassName={circleClassName}>
           <IconTikTok className={iconCls} />
         </SocialIconPlaceholder>
       )}
