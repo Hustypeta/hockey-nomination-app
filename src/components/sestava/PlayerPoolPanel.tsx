@@ -160,12 +160,22 @@ function DraggableCard({
       />
       <div className="relative flex gap-2">
         <div
+          data-dnd-card={dndOn ? "1" : "0"}
+          data-player={player.id}
           className={`
             flex min-w-0 flex-1 flex-col gap-1.5 rounded-lg px-0.5 py-0.5
             ${dndOn ? "touch-none cursor-grab active:cursor-grabbing" : "touch-pan-y cursor-default"}
           `}
           {...(dndOn ? listeners : {})}
           {...(dndOn ? attributes : {})}
+          onPointerDownCapture={(e) => {
+            if (typeof window !== "undefined")
+              console.info("[dnd-card] pointer-down", {
+                playerId: player.id,
+                dndOn,
+                pointerType: e.pointerType,
+              });
+          }}
           onClick={() => canInteract && onAdd()}
         >
           <div className="flex items-start gap-2">
