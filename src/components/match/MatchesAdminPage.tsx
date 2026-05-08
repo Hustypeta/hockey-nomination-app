@@ -330,8 +330,8 @@ export function MatchesAdminPage() {
           <p className="mt-1 text-sm text-white/60">Vytvoř zápas, naklikej oficiální sestavu a publikuj.</p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,8fr)_minmax(0,12fr)]">
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,8fr)_minmax(0,12fr)] lg:items-start">
+          <section className="min-h-0 min-w-0 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <h2 className="font-display text-lg font-black">Zápasy</h2>
             <p className="mt-2 text-[11px] leading-snug text-white/45">
               V horním výběru přepínáš <span className="text-white/60">už vytvořený zápas</span>. Úprava oficiální sestavy je v{" "}
@@ -449,7 +449,7 @@ export function MatchesAdminPage() {
             </div>
           </section>
 
-          <section className="space-y-6">
+          <section className="min-h-0 min-w-0 space-y-6">
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="font-display text-lg font-black">Oficiální sestava</h2>
@@ -462,8 +462,8 @@ export function MatchesAdminPage() {
                   Publikovat
                 </label>
               </div>
-              <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+              <div className="mt-4 grid gap-4 lg:grid-cols-2 lg:items-start">
+                <div className="min-h-0 min-w-0 rounded-2xl border border-white/10 bg-black/20 p-3 lg:max-h-[calc(100dvh-11.5rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
                   <PlayerPoolPanel
                     players={players}
                     usedIds={usedIds}
@@ -492,7 +492,7 @@ export function MatchesAdminPage() {
                     forcedPosition={forcedPoolPosition}
                   />
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+                <div className="min-h-0 min-w-0 rounded-2xl border border-white/10 bg-black/20 p-3 lg:max-h-[calc(100dvh-11.5rem)] lg:overflow-y-auto lg:overscroll-contain lg:pl-1">
                   <LineBuilder
                     mode="match"
                     lineup={lineup}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { FlagMark } from "@/components/flags/FlagMark";
+import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
   title: "Zápasy — Beijir hockey games",
@@ -95,7 +96,8 @@ export default async function ZapasyBeijirPage() {
         }));
 
   return (
-    <main className="min-h-screen bg-[#05080f] text-white">
+    <SiteShell>
+      <main>
       <div className="mx-auto max-w-5xl px-4 py-10">
         <h1 className="font-display text-3xl font-black">Zápasy</h1>
         <div className="mt-4 flex flex-wrap gap-2">
@@ -171,7 +173,8 @@ export default async function ZapasyBeijirPage() {
           })}
         </div>
       </div>
-    </main>
+      </main>
+    </SiteShell>
   );
 }
 

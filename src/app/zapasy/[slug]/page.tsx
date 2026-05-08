@@ -6,6 +6,7 @@ import { LineBuilder } from "@/components/LineBuilder";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
 import { MatchRatingShareControls } from "@/components/match/MatchRatingShareControls";
 import { FlagMark } from "@/components/flags/FlagMark";
+import { SiteShell } from "@/components/site/SiteShell";
 
 // Railway build: do not prerender at build-time (needs DB at runtime).
 export const dynamic = "force-dynamic";
@@ -92,7 +93,8 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
       )) as Record<string, { avg: number; count: number }>);
 
   return (
-    <main className="min-h-screen bg-[#05080f] text-white">
+    <SiteShell>
+      <main>
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="overflow-hidden rounded-3xl border border-white/10 bg-white text-slate-900 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
           <div className="px-4 py-4 sm:px-6 sm:py-6">
@@ -192,7 +194,8 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
           </section>
         </div>
       </div>
-    </main>
+      </main>
+    </SiteShell>
   );
 }
 

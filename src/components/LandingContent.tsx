@@ -18,9 +18,12 @@ import {
 import { signIn } from "next-auth/react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
 import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
+import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
+import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
+import { SITE_INSTAGRAM_PAGE_URL } from "@/lib/siteBranding";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
@@ -66,6 +69,9 @@ export function LandingContent() {
     ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
     : (0 as ContestTimeBonusPercent);
 
+  const instagramHref =
+    SITE_INSTAGRAM_PAGE_URL?.trim() || "https://www.instagram.com/svet_hokeje/";
+
   return (
     <main>
       {/* ——— Hero ——— */}
@@ -87,58 +93,105 @@ export function LandingContent() {
           <LandingHeroVisual className="h-full w-full" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
-          <div className="mx-auto max-w-4xl text-center lg:max-w-5xl">
-            <h1 className="mx-auto max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
-              Sestav si nominaci na{" "}
-              <span className="bg-gradient-to-r from-white via-white to-sky-100 bg-clip-text text-transparent">
-                MS 2026
-              </span>{" "}
-              a{" "}
-              <span className="bg-gradient-to-r from-[#bae6fd] via-[#7dd3fc] to-[#38bdf8] bg-clip-text text-transparent">
-                vyhraj dres
-              </span>
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg font-medium leading-relaxed text-slate-200/95 sm:text-xl">
-              Staň se na chvíli trenérem českého národního týmu. Využij naplno výběr z více než 130 hráčů,
-              poskládej si formace podle sebe a sdílej svou sestavu pro hokejové MS ve Švýcarsku s ostatními.
-            </p>
-
-            {session?.user ? (
-              <div className="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row sm:justify-center">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
+          <div className="flex flex-col gap-10 lg:grid lg:grid-cols-12 lg:items-start lg:gap-10 xl:gap-12">
+            <aside className="order-2 text-left lg:order-1 lg:col-span-3 xl:col-span-3">
+              <p className="text-pretty text-sm leading-relaxed text-slate-200 sm:text-[15px]">
+                Informace k situaci ohledně nominace na MS 2026 a analýzu hlavních favoritů turnaje naleznete v článcích{" "}
                 <Link
-                  href="/sestava"
-                  className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-[#c8102e]/50 bg-[#c8102e]/15 px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-[#00B4FF]/45 hover:bg-[#c8102e]/25"
+                  href="/clanky/rady-k-nominaci"
+                  className="font-semibold text-sky-300 underline decoration-sky-400/55 underline-offset-2 hover:text-white"
                 >
-                  <Sparkles className="h-5 w-5 shrink-0 text-sky-300" aria-hidden />
-                  Nová nominace
-                </Link>
+                  Rady k nominaci
+                </Link>{" "}
+                a{" "}
                 <Link
-                  href="/ucet/nominace"
-                  className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-sky-400/40 hover:bg-white/[0.1]"
+                  href="/clanky/kurzy-a-analyza-ms-2026"
+                  className="font-semibold text-amber-200/95 underline decoration-amber-400/45 underline-offset-2 hover:text-white"
                 >
-                  <ClipboardList className="h-5 w-5 shrink-0 text-sky-300" aria-hidden />
-                  Moje nominace
+                  Kurzy a analýza MS 2026
                 </Link>
+                . Pro novinky a mnohem více ze světa hokeje můžete také navštívit{" "}
+                <a
+                  href={instagramHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-fuchsia-200 underline decoration-fuchsia-400/45 underline-offset-2 hover:text-white"
+                >
+                  Instagram Svět_hokeje
+                </a>
+                .
+              </p>
+              <div className="mt-6">
+                <LoadingScreenUsefulLinks hideIntro />
               </div>
-            ) : null}
+            </aside>
 
-            {/* Hlavní CTA — velké, červené, glow */}
-            <div className="mx-auto mt-10 max-w-xl sm:mt-12">
-              <Link
-                href="/sestava"
-                className="landing-cta-pulse group relative flex min-h-[4.25rem] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#e01e3c] to-[#9e0c24] px-6 py-5 text-center font-display text-xl font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(125,211,252,0.45),0_12px_56px_rgba(200,16,46,0.55),0_0_80px_rgba(200,16,46,0.35),0_0_48px_rgba(0,180,255,0.2)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(125,211,252,0.55),0_16px_64px_rgba(200,16,46,0.65),0_0_56px_rgba(0,180,255,0.28)] active:scale-[0.99] sm:min-h-[4.75rem] sm:text-2xl"
-              >
-                <span
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-60"
-                  aria-hidden
-                />
-                <Sparkles className="relative h-7 w-7 shrink-0 text-sky-200" aria-hidden />
-                <span className="relative">Sestavit nominaci</span>
-                <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
-              </Link>
+            <div className="order-1 lg:order-2 lg:col-span-6 xl:col-span-6">
+              <div className="mx-auto max-w-4xl text-center lg:max-w-2xl">
+                <h1 className="mx-auto max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
+                  Sestav si nominaci na{" "}
+                  <span className="bg-gradient-to-r from-white via-white to-sky-100 bg-clip-text text-transparent">
+                    MS 2026
+                  </span>{" "}
+                  a{" "}
+                  <span className="bg-gradient-to-r from-[#bae6fd] via-[#7dd3fc] to-[#38bdf8] bg-clip-text text-transparent">
+                    vyhraj dres
+                  </span>
+                </h1>
+
+                <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg font-medium leading-relaxed text-slate-200/95 sm:text-xl">
+                  Staň se na chvíli trenérem českého národního týmu. Využij naplno výběr z více než 130 hráčů,
+                  poskládej si formace podle sebe a sdílej svou sestavu pro hokejové MS ve Švýcarsku s ostatními.
+                </p>
+
+                {session?.user ? (
+                  <div className="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row sm:justify-center">
+                    <Link
+                      href="/sestava"
+                      className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-[#c8102e]/50 bg-[#c8102e]/15 px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-[#00B4FF]/45 hover:bg-[#c8102e]/25"
+                    >
+                      <Sparkles className="h-5 w-5 shrink-0 text-sky-300" aria-hidden />
+                      Nová nominace
+                    </Link>
+                    <Link
+                      href="/ucet/nominace"
+                      className="inline-flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-3 text-center font-display text-sm font-bold uppercase tracking-wide text-white transition hover:border-sky-400/40 hover:bg-white/[0.1]"
+                    >
+                      <ClipboardList className="h-5 w-5 shrink-0 text-sky-300" aria-hidden />
+                      Moje nominace
+                    </Link>
+                  </div>
+                ) : null}
+
+                {/* Hlavní CTA — velké, červené, glow */}
+                <div className="mx-auto mt-10 max-w-xl sm:mt-12">
+                  <Link
+                    href="/sestava"
+                    className="landing-cta-pulse group relative flex min-h-[4.25rem] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#e01e3c] to-[#9e0c24] px-6 py-5 text-center font-display text-xl font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(125,211,252,0.45),0_12px_56px_rgba(200,16,46,0.55),0_0_80px_rgba(200,16,46,0.35),0_0_48px_rgba(0,180,255,0.2)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(125,211,252,0.55),0_16px_64px_rgba(200,16,46,0.65),0_0_56px_rgba(0,180,255,0.28)] active:scale-[0.99] sm:min-h-[4.75rem] sm:text-2xl"
+                  >
+                    <span
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-60"
+                      aria-hidden
+                    />
+                    <Sparkles className="relative h-7 w-7 shrink-0 text-sky-200" aria-hidden />
+                    <span className="relative">Sestavit nominaci</span>
+                    <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
+                  </Link>
+                </div>
+              </div>
             </div>
+
+            <aside className="order-3 text-center lg:col-span-3 lg:text-right xl:col-span-3">
+              <p className="text-pretty text-sm leading-relaxed text-slate-200 sm:text-[15px]">
+                Můžete nás také sledovat na sociálních sítích, konkrétně na Facebooku, Instagramu a TikToku —
+                odkazy stejné jako úplně dole v patičce:
+              </p>
+              <div className="mt-5 flex w-full justify-center lg:justify-end">
+                <SocialSiteIcons />
+              </div>
+            </aside>
+          </div>
 
             {/* Proč se přihlásit — hosté, výš na stránce (dřív bylo až pod dlouhým blokem „Proč to zkusit“). */}
             {showGuestLoginPitch ? (
@@ -251,7 +304,6 @@ export function LandingContent() {
                 />
               </div>
             </div>
-          </div>
 
           {/* Odpočet — národní barvy */}
           <div className="mx-auto mt-12 max-w-2xl sm:mt-14">

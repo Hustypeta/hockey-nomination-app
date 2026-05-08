@@ -25,6 +25,8 @@ export type LoadingScreenUsefulLinksProps = {
   className?: string;
   eyebrow?: string;
   subtitle?: string;
+  /** Bez horních řádků eyebrow/subtitle (vlastní text nad komponentou, např. homepage). */
+  hideIntro?: boolean;
 };
 
 /**
@@ -35,6 +37,7 @@ export function LoadingScreenUsefulLinks({
   className = "",
   eyebrow = "Čeká se na načtení — mezitím",
   subtitle = "Články na webu",
+  hideIntro = false,
 }: LoadingScreenUsefulLinksProps) {
   const instagramHref = SITE_INSTAGRAM_PAGE_URL?.trim() || LOADING_INSTAGRAM_FALLBACK;
   const instagramLabel =
@@ -44,14 +47,18 @@ export function LoadingScreenUsefulLinks({
     <div
       className={`w-full rounded-2xl border-2 border-[#f1c40f]/40 bg-gradient-to-br from-[#003087]/35 via-black/55 to-[#c8102e]/25 p-4 shadow-[0_12px_48px_rgba(0,0,0,0.55)] ring-2 ring-white/[0.08] sm:p-6 ${className}`}
     >
-      <p className="text-center text-[11px] font-black uppercase tracking-[0.24em] text-[#f1c40f]">
-        {eyebrow}
-      </p>
-      <p className="mt-2 text-center text-[10px] font-black uppercase tracking-[0.22em] text-white/80">
-        {subtitle}
-      </p>
+      {!hideIntro ? (
+        <>
+          <p className="text-center text-[11px] font-black uppercase tracking-[0.24em] text-[#f1c40f]">
+            {eyebrow}
+          </p>
+          <p className="mt-2 text-center text-[10px] font-black uppercase tracking-[0.22em] text-white/80">
+            {subtitle}
+          </p>
+        </>
+      ) : null}
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className={`grid gap-3 sm:grid-cols-2 ${hideIntro ? "" : "mt-4"}`}>
         <Link
           href="/clanky/rady-k-nominaci"
           className="group block rounded-xl border-2 border-white/20 bg-black/55 p-4 shadow-lg transition hover:border-[#00B4FF]/60 hover:bg-[#082040]/95"
