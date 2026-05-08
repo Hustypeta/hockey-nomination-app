@@ -168,6 +168,7 @@ function DraggableCard({
           `}
           {...(dndOn ? listeners : {})}
           {...(dndOn ? attributes : {})}
+          onDragStart={(e) => e.preventDefault()}
           onPointerDownCapture={(e) => {
             if (typeof window !== "undefined")
               console.info("[dnd-card] pointer-down", {

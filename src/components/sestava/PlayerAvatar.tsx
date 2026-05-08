@@ -70,7 +70,12 @@ export function PlayerAvatar({
         className={`relative shrink-0 overflow-hidden rounded-xl bg-[#0a0e17] shadow-[0_4px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/15 ${szBox}`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageUrl} alt={name} className="h-full w-full object-cover object-top" />
+        <img
+          src={imageUrl}
+          alt={name}
+          draggable={false}
+          className="h-full w-full select-none object-cover object-top [-webkit-user-drag:none]"
+        />
         <div
           className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
           aria-hidden
