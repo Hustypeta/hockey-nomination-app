@@ -149,6 +149,7 @@ export function MatchLineupBuilderPage() {
 
   const handleDragStart = (e: DragStartEvent) => {
     const id = e.active.id.toString();
+    if (typeof window !== "undefined") console.info("[dnd:match-builder] start", { activeId: id });
     if (!id.startsWith("drag-player-")) return;
     const pid = id.replace("drag-player-", "");
     setPoolDragPlayer(players.find((p) => p.id === pid) ?? null);
@@ -157,6 +158,7 @@ export function MatchLineupBuilderPage() {
     setPoolDragPlayer(null);
     const overId = e.over?.id?.toString();
     const activeId = e.active.id.toString();
+    if (typeof window !== "undefined") console.info("[dnd:match-builder] end", { activeId, overId });
     if (!overId || !activeId.startsWith("drag-player-")) return;
     const pid = activeId.replace("drag-player-", "");
     const player = players.find((p) => p.id === pid);

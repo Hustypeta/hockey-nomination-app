@@ -141,6 +141,7 @@ export function MatchesAdminPage() {
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const aid = event.active.id.toString();
+    if (typeof window !== "undefined") console.info("[dnd:match-admin] start", { activeId: aid });
     if (!aid.startsWith("drag-player-")) {
       setPoolDragPlayer(null);
       return;
@@ -154,6 +155,7 @@ export function MatchesAdminPage() {
       setPoolDragPlayer(null);
       const overId = event.over?.id?.toString();
       const activeIdStr = event.active.id.toString();
+      if (typeof window !== "undefined") console.info("[dnd:match-admin] end", { activeId: activeIdStr, overId });
       if (!overId || !activeIdStr.startsWith("drag-player-")) return;
       const pid = activeIdStr.replace("drag-player-", "");
       const player = players.find((p) => p.id === pid);

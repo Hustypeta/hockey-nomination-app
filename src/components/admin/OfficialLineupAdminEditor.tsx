@@ -212,6 +212,7 @@ export function OfficialLineupAdminEditor() {
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
       const activeId = event.active.id.toString();
+      if (typeof window !== "undefined") console.info("[dnd:official-admin] start", { activeId });
       if (!activeId.startsWith("drag-player-")) {
         setPoolDragPlayer(null);
         return;
@@ -227,6 +228,7 @@ export function OfficialLineupAdminEditor() {
       setPoolDragPlayer(null);
       const overId = event.over?.id?.toString();
       const activeId = event.active.id.toString();
+      if (typeof window !== "undefined") console.info("[dnd:official-admin] end", { activeId, overId });
       if (!overId || !activeId.startsWith("drag-player-")) return;
       const pid = activeId.replace("drag-player-", "");
       const player = players.find((p) => p.id === pid);

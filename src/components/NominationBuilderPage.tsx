@@ -463,6 +463,7 @@ export function NominationBuilderPage() {
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const activeId = event.active.id.toString();
+    if (typeof window !== "undefined") console.info("[dnd] start", { activeId });
     if (!activeId.startsWith("drag-player-")) {
       setPoolDragPlayer(null);
       return;
@@ -476,6 +477,7 @@ export function NominationBuilderPage() {
       setPoolDragPlayer(null);
       const overId = event.over?.id?.toString();
       const activeId = event.active.id.toString();
+      if (typeof window !== "undefined") console.info("[dnd] end", { activeId, overId });
       if (!overId || !activeId.startsWith("drag-player-")) return;
       const pid = activeId.replace("drag-player-", "");
       const player = players.find((p) => p.id === pid);
