@@ -156,8 +156,7 @@ export function LandingContent() {
                     >
                       Kurzy a analýza MS 2026
                     </Link>
-                    . Novinky ze světa hokeje jsou hlavně na Instagramu (velké tlačítko níže); oficiální Facebook a TikTok
-                    Lineup máš jako ikony pod dalším textem.
+                    . Pro novinky ze světa hokeje a mnohem více koukněte na instagram Svět Hokeje.
                   </p>
 
                   <div className="mx-auto mt-6 flex w-full max-w-xl justify-center">
@@ -165,7 +164,7 @@ export function LandingContent() {
                   </div>
 
                   <p className="mt-8 text-pretty text-sm leading-relaxed text-slate-200/95 sm:text-[15px]">
-                    Lineup na Facebooku a TikToku:
+                    Sledujte Lineup také na Facebooku, Instagramu a TikToku.
                   </p>
                   <div className="mt-4 flex justify-center">
                     <SocialSiteIcons size="lg" />
