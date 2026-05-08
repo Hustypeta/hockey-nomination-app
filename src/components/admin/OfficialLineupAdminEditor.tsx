@@ -11,6 +11,7 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
+import { poolToSlotCollision } from "@/lib/dndCollision";
 import Link from "next/link";
 import { toast } from "sonner";
 import { LineBuilder } from "@/components/LineBuilder";
@@ -58,8 +59,8 @@ export function OfficialLineupAdminEditor() {
   const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 120, tolerance: 8 } })
   );
 
   const selectedPlayers = useMemo(() => lineupToPlayers(lineup, players), [lineup, players]);
@@ -484,35 +485,37 @@ export function OfficialLineupAdminEditor() {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7">
           {showDesktopPoolColumn ? (
-            <section className="min-w-0 hidden lg:block">
-              <div
-                className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
-                  isNarrowLayout ? "" : "backdrop-blur-sm"
-                }`}
-              >
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Hráči</p>
-                <p className="mt-1 text-sm font-semibold text-white/85">Vyber ze seznamu nebo táhni na slot →</p>
-                <PlayerPoolPanel
-                  players={players}
-                  usedIds={usedIds}
-                  counts={counts}
-                  onAddPlayer={handleAddFromPool}
-                  onPreview={setPreviewPlayer}
-                  enableDnd={enableDnd}
-                  forcedPosition={forcedPoolPosition}
-                  assignableFilter={selectedSlot ? canAssignPlayer : undefined}
-                  slotHint={
-                    selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
-                      ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
-                      : null
-                  }
-                />
+            <section className="min-h-0 min-w-0 hidden lg:block">
+              <div className="lg:sticky lg:top-[11.5rem] lg:max-h-[calc(100vh-12rem)] lg:overflow-y-auto lg:overscroll-contain lg:pb-2 lg:pr-0.5 lg:self-start xl:top-[12rem] xl:max-h-[calc(100vh-12.5rem)]">
+                <div
+                  className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
+                    isNarrowLayout ? "" : "backdrop-blur-sm"
+                  }`}
+                >
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Hráči</p>
+                  <p className="mt-1 text-sm font-semibold text-white/85">Vyber ze seznamu nebo táhni na slot →</p>
+                  <PlayerPoolPanel
+                    players={players}
+                    usedIds={usedIds}
+                    counts={counts}
+                    onAddPlayer={handleAddFromPool}
+                    onPreview={setPreviewPlayer}
+                    enableDnd={enableDnd}
+                    forcedPosition={forcedPoolPosition}
+                    assignableFilter={selectedSlot ? canAssignPlayer : undefined}
+                    slotHint={
+                      selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
+                        ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
+                        : null
+                    }
+                  />
+                </div>
               </div>
             </section>
           ) : null}
 
-          <section className="min-w-0">
-            <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
+          <section className="min-h-0 min-w-0">
+            <div className="lg:sticky lg:top-[11.5rem] lg:max-h-[calc(100vh-12rem)] lg:overflow-y-auto lg:overscroll-contain lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[12rem] xl:max-h-[calc(100vh-12.5rem)]">
               <div
                 className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
                   isNarrowLayout ? "" : "backdrop-blur-sm"
@@ -602,7 +605,13 @@ export function OfficialLineupAdminEditor() {
   );
 
   return enableDnd ? (
-    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragCancel={handleDragCancel}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={poolToSlotCollision}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
       {content}
     </DndContext>
   ) : (

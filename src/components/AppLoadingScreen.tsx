@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { SITE_BRAND } from "@/lib/siteBranding";
 import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
 
@@ -52,6 +53,15 @@ export function AppLoadingScreen({
             {SITE_BRAND}
           </h1>
           <p className="mt-1 font-display text-sm tracking-[0.18em] text-[#c41e3a]/90">{tagline}</p>
+
+          <p className="mt-4 text-center">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 font-display text-sm font-bold uppercase tracking-[0.14em] text-[#00B4FF] underline decoration-[#00B4FF]/50 underline-offset-4 transition hover:text-cyan-200 hover:decoration-cyan-200"
+            >
+              ← Úvod
+            </Link>
+          </p>
 
           <div className="mt-6 w-full sm:mt-8">
             <LoadingScreenUsefulLinks />

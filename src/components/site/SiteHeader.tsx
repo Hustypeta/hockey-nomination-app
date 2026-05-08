@@ -106,8 +106,8 @@ export function SiteHeader() {
           aria-hidden
         />
 
-        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-3 sm:px-5 sm:py-4 md:flex-row md:items-center md:gap-3 md:px-4 md:py-3.5 xl:px-5 xl:gap-4 2xl:gap-5">
-          {/* Mobil / úzké okno: logo + hamburger (od md výše schováno — tam je řádek s odkazy) */}
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-3 px-3 py-3 sm:px-5 sm:py-4 md:px-4 md:py-3.5 xl:px-5">
+          {/* Mobil / úzké okno: logo + hamburger */}
           <div className="flex w-full min-w-0 items-center justify-between gap-3 md:hidden">
             <Link
               href="/"
@@ -157,8 +157,32 @@ export function SiteHeader() {
             </button>
           </div>
 
-          {/* Desktop / tablet šířka: horizontální odkazy + CTA */}
-          <div className="hidden min-w-0 flex-1 flex-row flex-wrap items-center gap-x-2 gap-y-2 md:flex md:justify-end xl:flex-nowrap xl:gap-x-3">
+          {/* Desktop / tablet: logo vlevo, navigace + CTA napravo (logo není součástí „Úvod“) */}
+          <div className="hidden w-full min-w-0 items-center gap-5 md:flex xl:gap-8">
+            <Link
+              href="/"
+              className="group/brand shrink-0 pr-2"
+              aria-label={`${SITE_BRAND} — úvod`}
+            >
+              <div className="relative">
+                <div
+                  className="absolute -inset-3 rounded-2xl bg-gradient-to-br from-[#00B4FF]/22 via-transparent to-[#c8102e]/12 opacity-0 blur-xl transition-opacity duration-300 group-hover/brand:opacity-100"
+                  aria-hidden
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={SITE_LOGO_URL}
+                  alt=""
+                  width={560}
+                  height={168}
+                  decoding="async"
+                  fetchPriority="high"
+                  className="relative h-11 w-auto object-contain object-left transition duration-300 group-hover/brand:scale-[1.03] xl:h-14 2xl:h-[3.75rem]"
+                />
+              </div>
+            </Link>
+
+            <div className="flex min-w-0 flex-1 flex-row flex-wrap items-center gap-x-2 gap-y-2 md:justify-end xl:flex-nowrap xl:gap-x-3">
             <nav className="isolate min-w-0 flex-1 md:min-w-[12rem]" aria-label="Hlavní navigace">
               <div className="flex flex-wrap items-center justify-end gap-x-0.5 gap-y-1">
                 {NAV.map((item) => {
@@ -176,20 +200,7 @@ export function SiteHeader() {
                     ${active ? "text-white" : "text-slate-400"}
                   `}
                     >
-                      <span className="relative z-10 inline-flex items-center gap-1.5">
-                        {href === "/" ? (
-                          <span className="inline-flex items-center pr-0.5">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={SITE_LOGO_URL}
-                              alt=""
-                              width={120}
-                              height={36}
-                              decoding="async"
-                              className="h-5 w-auto object-contain object-left opacity-95"
-                            />
-                          </span>
-                        ) : null}
+                      <span className="relative z-10 inline-flex items-center">
                         <DesktopNavLabel item={item} />
                       </span>
                       {active ? (
@@ -283,6 +294,7 @@ export function SiteHeader() {
                 </div>
               )}
             </div>
+          </div>
           </div>
         </div>
       </header>

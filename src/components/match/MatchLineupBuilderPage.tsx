@@ -15,6 +15,7 @@ import { tryAutoAssignPlayer, assignPlayerToTarget } from "@/lib/lineupAssign";
 import { parseDroppableId } from "@/lib/dndSlotIds";
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import { poolToSlotCollision } from "@/lib/dndCollision";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
@@ -43,7 +44,8 @@ export function MatchLineupBuilderPage() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
-  const enableDnd = !isNarrowLayout;
+  /** Tažení z poolu jen ve viditelném levém sloupci (lg+). Na úzkém layoutu je výběr přes sheet (klepnutí). */
+  const poolDragEnabled = !isNarrowLayout;
 
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
@@ -61,8 +63,8 @@ export function MatchLineupBuilderPage() {
   const [saving, setSaving] = useState(false);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 120, tolerance: 8 } })
   );
 
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
@@ -163,6 +165,8 @@ export function MatchLineupBuilderPage() {
     const next = assignPlayerToTarget(lineup, player, target);
     if (next) setLineup(next);
   };
+
+  const handleDragCancel = () => setPoolDragPlayer(null);
 
   const valid = isMatchLineupValid(lineup, { defenseCount, allowExtraForward });
 
@@ -301,7 +305,7 @@ export function MatchLineupBuilderPage() {
                   counts={counts}
                   onAddPlayer={onAddFromPool}
                   onPreview={setPreviewPlayer}
-                  enableDnd={enableDnd}
+                  enableDnd={poolDragEnabled}
                   forcedPosition={forcedPoolPosition}
                 />
               </div>
@@ -324,7 +328,7 @@ export function MatchLineupBuilderPage() {
                   onCaptainChange={setCaptainId}
                   selectedSlot={selectedSlot}
                   onSelectSlot={setSelectedSlot}
-                  enableDnd={enableDnd}
+                  enableDnd
                   layoutVariant="classic"
                   matchDefenseCount={defenseCount}
                   matchAllowExtraForward={allowExtraForward}
@@ -343,15 +347,13 @@ export function MatchLineupBuilderPage() {
         </div>
       </main>
 
-      {enableDnd ? (
-        <DragOverlay dropAnimation={null}>
-          {poolDragPlayer ? (
-            <div className="pointer-events-none flex max-w-[20rem] items-center gap-3 rounded-2xl border border-white/15 bg-black/80 px-4 py-3">
-              <span className="font-bold">{poolDragPlayer.name}</span>
-            </div>
-          ) : null}
-        </DragOverlay>
-      ) : null}
+      <DragOverlay dropAnimation={null}>
+        {poolDragPlayer ? (
+          <div className="pointer-events-none flex max-w-[20rem] items-center gap-3 rounded-2xl border border-white/15 bg-black/80 px-4 py-3">
+            <span className="font-bold">{poolDragPlayer.name}</span>
+          </div>
+        ) : null}
+      </DragOverlay>
 
       <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
 
@@ -390,12 +392,16 @@ export function MatchLineupBuilderPage() {
     </div>
   );
 
-  return enableDnd ? (
-    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={poolToSlotCollision}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
       {content}
     </DndContext>
-  ) : (
-    content
   );
 }
 

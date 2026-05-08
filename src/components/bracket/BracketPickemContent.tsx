@@ -7,7 +7,7 @@ import { signIn, useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Link2, Trash2, Trophy } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { DndContext, DragOverlay, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragOverlay, PointerSensor, TouchSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
@@ -200,7 +200,7 @@ function SortableTeamRow({
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition ${
+      className={`flex touch-none items-center gap-3 rounded-xl border px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition ${
         isOverlay
           ? "border-[#00E5FF]/30 bg-[#0A0E17]/75 shadow-[0_18px_56px_rgba(0,0,0,0.55),0_0_0_1px_rgba(0,229,255,0.10),0_0_36px_rgba(0,229,255,0.14),0_0_34px_rgba(255,30,46,0.10)]"
           : "border-white/12 bg-white/[0.06] hover:border-white/18"
@@ -235,7 +235,10 @@ function GroupOrderDnd({
   teamById: Map<string, BracketTeam>;
   onChange: (next: string[]) => void;
 }) {
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 120, tolerance: 8 } })
+  );
   const [activeId, setActiveId] = useState<string | null>(null);
   const activeIndex = activeId ? order.indexOf(activeId) : -1;
   const activeTeam = activeId ? teamById.get(activeId) : null;

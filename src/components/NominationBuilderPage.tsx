@@ -15,6 +15,7 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
+import { poolToSlotCollision } from "@/lib/dndCollision";
 import confetti from "canvas-confetti";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -128,10 +129,10 @@ export function NominationBuilderPage() {
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 8 },
+      activationConstraint: { distance: 6 },
     }),
     useSensor(TouchSensor, {
-      activationConstraint: { delay: 200, tolerance: 6 },
+      activationConstraint: { delay: 120, tolerance: 8 },
     })
   );
 
@@ -747,6 +748,7 @@ export function NominationBuilderPage() {
   return (
     <DndContext
       sensors={sensors}
+      collisionDetection={poolToSlotCollision}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
