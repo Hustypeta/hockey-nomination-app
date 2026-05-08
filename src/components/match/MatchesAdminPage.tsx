@@ -36,7 +36,33 @@ type MatchRow = {
   startsAt: string | null;
   venue: string | null;
   published: boolean;
+  ratingsOpen: boolean;
+  hasOfficialLineup: boolean;
 };
+
+/** Řádky pro seed: české zápasy na BHG 2026 (jen Česko). */
+const CZE_BHG_2026: Array<{ title: string; homeCode: string; awayCode: string; startsAt: string }> = [
+  { title: "CZE - SWE", homeCode: "CZE", awayCode: "SWE", startsAt: "2026-05-07T17:00:00+02:00" },
+  { title: "FIN - CZE", homeCode: "FIN", awayCode: "CZE", startsAt: "2026-05-09T12:00:00+02:00" },
+  { title: "SUI - CZE", homeCode: "SUI", awayCode: "CZE", startsAt: "2026-05-10T12:00:00+02:00" },
+];
+
+/** Řádky pro seed: 7 zápasů Česka v základní skupině MS 2026 (Fribourg, skupina B). */
+const CZE_MS2026: Array<{
+  title: string;
+  homeCode: string;
+  awayCode: string;
+  startsAt: string;
+  venue: string;
+}> = [
+  { title: "CZE - DEN", homeCode: "CZE", awayCode: "DEN", startsAt: "2026-05-15T20:20:00+02:00", venue: "Fribourg" },
+  { title: "CZE - SLO", homeCode: "CZE", awayCode: "SLO", startsAt: "2026-05-16T20:20:00+02:00", venue: "Fribourg" },
+  { title: "SWE - CZE", homeCode: "SWE", awayCode: "CZE", startsAt: "2026-05-18T20:20:00+02:00", venue: "Fribourg" },
+  { title: "ITA - CZE", homeCode: "ITA", awayCode: "CZE", startsAt: "2026-05-20T16:20:00+02:00", venue: "Fribourg" },
+  { title: "CZE - SVK", homeCode: "CZE", awayCode: "SVK", startsAt: "2026-05-23T16:20:00+02:00", venue: "Fribourg" },
+  { title: "NOR - CZE", homeCode: "NOR", awayCode: "CZE", startsAt: "2026-05-25T16:20:00+02:00", venue: "Fribourg" },
+  { title: "CAN - CZE", homeCode: "CAN", awayCode: "CZE", startsAt: "2026-05-26T20:20:00+02:00", venue: "Fribourg" },
+];
 
 function readAdminJsonError(data: unknown): string | undefined {
   if (typeof data !== "object" || data === null) return undefined;
@@ -71,6 +97,9 @@ function parseMatchRowsFromPayload(data: unknown): MatchRow[] {
           : null,
       venue: typeof o.venue === "string" ? o.venue : null,
       published: Boolean(o.published),
+      ratingsOpen: Boolean(o.ratingsOpen),
+      hasOfficialLineup:
+        typeof o.officialLineup === "object" && o.officialLineup !== null,
     });
   }
   return rows;
@@ -100,6 +129,8 @@ export function MatchesAdminPage() {
   const [defenseCount, setDefenseCount] = useState<6 | 7 | 8>(8);
   const [allowExtraForward, setAllowExtraForward] = useState(false);
   const [published, setPublished] = useState(false);
+  const [ratingsOpen, setRatingsOpen] = useState(false);
+  const [togglingRatings, setTogglingRatings] = useState(false);
   const [saving, setSaving] = useState(false);
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
 
@@ -210,6 +241,7 @@ export function MatchesAdminPage() {
     if (typeof mRaw !== "object" || mRaw === null) return;
     const m = mRaw as Record<string, unknown>;
     setPublished(Boolean(m.published));
+    setRatingsOpen(Boolean(m.ratingsOpen));
     const offRaw = m.officialLineup;
     if (typeof offRaw === "object" && offRaw !== null) {
       const off = offRaw as Record<string, unknown>;
@@ -293,27 +325,28 @@ export function MatchesAdminPage() {
     }
   };
 
-  const seedBeijir = async () => {
+  const seedSet = async (
+    label: string,
+    category: "beijir" | "ms2026",
+    rows: Array<{ title: string; homeCode: string; awayCode: string; startsAt: string; venue?: string | null }>
+  ) => {
     setSeeding(true);
     try {
-      // Beijer Hockey Games (May 2026) – Czech games + the other 2 BHG matches.
-      const seed: Array<{
-        title: string;
-        homeCode: string;
-        awayCode: string;
-        startsAt: string;
-        venue: string | null;
-      }> = [
-        { title: "SUI - FIN", homeCode: "SUI", awayCode: "FIN", startsAt: "2026-05-07T15:00:00+02:00", venue: null },
-        { title: "CZE - SWE", homeCode: "CZE", awayCode: "SWE", startsAt: "2026-05-07T19:00:00+02:00", venue: null },
-        { title: "FIN - CZE", homeCode: "FIN", awayCode: "CZE", startsAt: "2026-05-09T12:00:00+02:00", venue: null },
-        { title: "SWE - SUI", homeCode: "SWE", awayCode: "SUI", startsAt: "2026-05-09T16:00:00+02:00", venue: null },
-        { title: "SUI - CZE", homeCode: "SUI", awayCode: "CZE", startsAt: "2026-05-10T12:00:00+02:00", venue: null },
-        { title: "SWE - FIN", homeCode: "SWE", awayCode: "FIN", startsAt: "2026-05-10T16:00:00+02:00", venue: null },
-      ];
-
       let created = 0;
-      for (const m of seed) {
+      let skipped = 0;
+      for (const m of rows) {
+        const exists = matches.some(
+          (x) =>
+            x.category === category &&
+            (x.homeCode ?? "") === m.homeCode &&
+            (x.awayCode ?? "") === m.awayCode &&
+            x.startsAt &&
+            new Date(x.startsAt).toISOString() === new Date(m.startsAt).toISOString()
+        );
+        if (exists) {
+          skipped++;
+          continue;
+        }
         const r = await fetch("/api/admin/matches", {
           method: "POST",
           credentials: "include",
@@ -322,8 +355,8 @@ export function MatchesAdminPage() {
             title: m.title,
             opponent: null,
             startsAt: m.startsAt,
-            venue: m.venue,
-            category: "beijir",
+            venue: m.venue ?? null,
+            category,
             homeCode: m.homeCode,
             awayCode: m.awayCode,
             published: true,
@@ -332,11 +365,76 @@ export function MatchesAdminPage() {
         if (r.ok) created++;
       }
       await reloadMatches();
-      toast.success(created > 0 ? `Zápasy přidány (${created}).` : "Zápasy už pravděpodobně existují.");
+      if (created === 0 && skipped > 0) toast.message(`${label}: všechny zápasy už existují.`);
+      else toast.success(`${label}: přidáno ${created}${skipped ? `, přeskočeno ${skipped}` : ""}.`);
     } catch {
       toast.error("Seed selhal.");
     } finally {
       setSeeding(false);
+    }
+  };
+
+  const seedCzeBhg = () => void seedSet("BHG (Česko)", "beijir", CZE_BHG_2026);
+  const seedCzeMs2026 = () => void seedSet("MS 2026 (Česko)", "ms2026", CZE_MS2026);
+
+  const cleanupNonCzeBhg = async () => {
+    if (!window.confirm("Smazat všechny BHG zápasy, kde nehraje Česko?")) return;
+    try {
+      const r = await fetch("/api/admin/matches/bulk-delete", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "non-czech", category: "beijir" }),
+      });
+      const data: unknown = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        toast.error(readAdminJsonError(data) ?? "Mazání selhalo.");
+        return;
+      }
+      const deleted = (data as { deleted?: number }).deleted ?? 0;
+      toast.success(deleted > 0 ? `Smazáno: ${deleted}.` : "Žádné nečeské BHG zápasy.");
+      await reloadMatches();
+    } catch {
+      toast.error("Mazání selhalo.");
+    }
+  };
+
+  const deleteActiveMatch = async () => {
+    if (!activeId || !active) return;
+    if (!window.confirm(`Opravdu smazat zápas „${active.title}“? Smaže i sestavu a hodnocení.`)) return;
+    const r = await fetch(`/api/admin/matches/${encodeURIComponent(activeId)}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data: unknown = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      toast.error(readAdminJsonError(data) ?? "Mazání selhalo.");
+      return;
+    }
+    toast.success("Zápas smazán.");
+    await reloadMatches();
+  };
+
+  const toggleRatingsOpen = async (next: boolean) => {
+    if (!activeId) return;
+    setTogglingRatings(true);
+    try {
+      const r = await fetch(`/api/admin/matches/${encodeURIComponent(activeId)}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ratingsOpen: next }),
+      });
+      const data: unknown = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        toast.error(readAdminJsonError(data) ?? "Změna selhala.");
+        return;
+      }
+      setRatingsOpen(next);
+      toast.success(next ? "Hodnocení spuštěno." : "Hodnocení zastaveno.");
+      await reloadMatches();
+    } finally {
+      setTogglingRatings(false);
     }
   };
 
@@ -405,18 +503,51 @@ export function MatchesAdminPage() {
                 className="w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {matches.length === 0 ? (
-                  <option value="">Žádný zápas — založ ho níže</option>
+                  <option value="">Žádný zápas — naplň seznam níže</option>
                 ) : null}
-                {matches.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.title} {m.published ? "• public" : ""}
-                  </option>
-                ))}
+                {matches.map((m) => {
+                  const cat = m.category === "ms2026" ? "MS 2026" : "BHG";
+                  const date = m.startsAt
+                    ? new Date(m.startsAt).toLocaleDateString("cs-CZ", {
+                        day: "2-digit",
+                        month: "2-digit",
+                      })
+                    : "—";
+                  const flags = [
+                    m.published ? "public" : "skryto",
+                    m.hasOfficialLineup ? "sestava" : null,
+                    m.ratingsOpen ? "★ HODNOCENÍ" : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" • ");
+                  return (
+                    <option key={m.id} value={m.id}>
+                      [{cat}] {date} · {m.title} — {flags}
+                    </option>
+                  );
+                })}
               </select>
 
               {active ? (
-                <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-xs text-white/70">
-                  Slug: <span className="font-mono text-white/90">{active.slug}</span>
+                <div className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-black/20 p-3 text-xs text-white/70">
+                  <div className="min-w-0">
+                    <div>
+                      Slug: <span className="font-mono text-white/90">{active.slug}</span>
+                    </div>
+                    <div className="mt-1 text-white/55">
+                      Kategorie:{" "}
+                      <span className="font-semibold text-white/80">
+                        {active.category === "ms2026" ? "MS 2026" : "Beijer Hockey Games"}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void deleteActiveMatch()}
+                    className="shrink-0 rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-1.5 text-xs font-bold text-red-200 hover:bg-red-500/20"
+                  >
+                    Smazat zápas
+                  </button>
                 </div>
               ) : null}
 
@@ -491,17 +622,34 @@ export function MatchesAdminPage() {
 
               <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-3">
                 <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Rychlé přidání</p>
-                <button
-                  type="button"
-                  disabled={seeding}
-                  onClick={() => void seedBeijir()}
-                  className="mt-2 w-full rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2.5 text-sm font-black text-white/90 hover:bg-white/[0.1] disabled:opacity-50"
-                >
-                  {seeding ? "Přidávám…" : "Přidat Beijer Hockey Games (květen 2026)"}
-                </button>
+                <div className="mt-2 grid gap-2">
+                  <button
+                    type="button"
+                    disabled={seeding}
+                    onClick={seedCzeBhg}
+                    className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2.5 text-sm font-black text-white/90 hover:bg-white/[0.1] disabled:opacity-50"
+                  >
+                    {seeding ? "Přidávám…" : "Naplnit BHG — Česko (3 zápasy, 7.–10. 5. 2026)"}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={seeding}
+                    onClick={seedCzeMs2026}
+                    className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2.5 text-sm font-black text-white/90 hover:bg-white/[0.1] disabled:opacity-50"
+                  >
+                    {seeding ? "Přidávám…" : "Naplnit MS 2026 — Česko (7 zápasů, Fribourg, sk. B)"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void cleanupNonCzeBhg()}
+                    className="rounded-xl border border-amber-500/35 bg-amber-500/10 px-4 py-2 text-xs font-bold text-amber-100/95 hover:bg-amber-500/15"
+                  >
+                    Smazat BHG zápasy bez Česka (uklidí starý seed)
+                  </button>
+                </div>
                 <p className="mt-2 text-[11px] leading-snug text-white/50">
-                  Vytvoří a publikuje přednastavený balík zápasů BHG. Oficiální soupisku pak vyplníš v pravém sloupci (editor
-                  sestavy).
+                  Tlačítka jen vytvoří/přidají zápasy v DB. Oficiální soupisku nakliknu v pravém sloupci a hodnocení
+                  spustím tlačítkem „Spustit hodnocení“ až po zápase (nebo kdykoli si řeknu).
                 </p>
               </div>
             </div>
@@ -509,16 +657,43 @@ export function MatchesAdminPage() {
 
           <section className="min-h-0 min-w-0 space-y-6">
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="font-display text-lg font-black">Oficiální sestava</h2>
-                <label className="flex items-center gap-2 text-sm text-white/70">
-                  <input
-                    type="checkbox"
-                    checked={published}
-                    onChange={(e) => setPublished(e.target.checked)}
-                  />
-                  Publikovat
-                </label>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="font-display text-lg font-black">
+                    Oficiální sestava
+                    {active ? <span className="ml-2 text-sm font-semibold text-white/55">— {active.title}</span> : null}
+                  </h2>
+                  <p className="mt-0.5 text-[11px] text-white/45">
+                    Stav hodnocení:{" "}
+                    {ratingsOpen ? (
+                      <span className="font-bold text-emerald-300">otevřené pro uživatele</span>
+                    ) : (
+                      <span className="font-bold text-white/55">zavřené</span>
+                    )}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2 text-sm text-white/70">
+                    <input
+                      type="checkbox"
+                      checked={published}
+                      onChange={(e) => setPublished(e.target.checked)}
+                    />
+                    Publikovat
+                  </label>
+                  <button
+                    type="button"
+                    disabled={!activeId || togglingRatings}
+                    onClick={() => void toggleRatingsOpen(!ratingsOpen)}
+                    className={`rounded-xl px-3 py-2 text-xs font-black uppercase tracking-wide transition disabled:opacity-50 ${
+                      ratingsOpen
+                        ? "border border-amber-400/40 bg-amber-400/15 text-amber-100 hover:bg-amber-400/25"
+                        : "border border-emerald-400/40 bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25"
+                    }`}
+                  >
+                    {togglingRatings ? "…" : ratingsOpen ? "Zastavit hodnocení" : "Spustit hodnocení"}
+                  </button>
+                </div>
               </div>
               <div className="mt-4 grid gap-4 lg:grid-cols-2 lg:items-start">
                 <div className="min-h-0 min-w-0 rounded-2xl border border-white/10 bg-black/20 p-3 lg:max-h-[calc(100dvh-11.5rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">

@@ -169,6 +169,8 @@ model Match {
   startsAt  DateTime?
   venue     String?
   published Boolean  @default(false)
+  /// Pokud true, hodnocení (1–10) je otevřené pro uživatele bez ohledu na čas zápasu (admin tlačítko „Spustit hodnocení“).
+  ratingsOpen Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

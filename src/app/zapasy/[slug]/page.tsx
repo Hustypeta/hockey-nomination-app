@@ -16,26 +16,26 @@ const PREVIEW_MATCHES: Record<
   string,
   { title: string; homeCode: string; awayCode: string; startsAt: Date; venue: string | null; opponent: string | null }
 > = {
-  "beijir-cze-swe-2026-05-07-1900": {
+  "beijir-cze-swe-2026-05-07-1700": {
     title: "CZE - SWE",
     homeCode: "CZE",
     awayCode: "SWE",
-    startsAt: new Date("2026-05-07T19:00:00+02:00"),
+    startsAt: new Date("2026-05-07T17:00:00+02:00"),
     venue: null,
     opponent: null,
   },
-  "beijir-cze-fin-2026-05-09-1200": {
-    title: "CZE - FIN",
-    homeCode: "CZE",
-    awayCode: "FIN",
+  "beijir-fin-cze-2026-05-09-1200": {
+    title: "FIN - CZE",
+    homeCode: "FIN",
+    awayCode: "CZE",
     startsAt: new Date("2026-05-09T12:00:00+02:00"),
     venue: null,
     opponent: null,
   },
-  "beijir-cze-sui-2026-05-10-1200": {
-    title: "CZE - SUI",
-    homeCode: "CZE",
-    awayCode: "SUI",
+  "beijir-sui-cze-2026-05-10-1200": {
+    title: "SUI - CZE",
+    homeCode: "SUI",
+    awayCode: "CZE",
     startsAt: new Date("2026-05-10T12:00:00+02:00"),
     venue: null,
     opponent: null,
@@ -52,14 +52,16 @@ function splitTeams(m: { homeCode?: string | null; awayCode?: string | null; tit
   return null;
 }
 
-function matchRatingOpen(startsAt: Date | null): { open: boolean; reason?: string } {
-  if (!startsAt) return { open: false, reason: "Hodnocení bude dostupné po skončení zápasu." };
-  // Simple heuristic: open ratings after (start + 3h).
-  const openAt = startsAt.getTime() + 3 * 60 * 60 * 1000;
-  if (Date.now() < openAt) {
-    return { open: false, reason: "Hodnocení bude dostupné po skončení zápasu." };
-  }
-  return { open: true };
+function matchRatingGate(opts: {
+  ratingsOpen: boolean;
+  startsAt: Date | null;
+}): { open: boolean; reason?: string } {
+  if (opts.ratingsOpen) return { open: true };
+  if (!opts.startsAt) return { open: false, reason: "Hodnocení zatím nebylo spuštěno administrátorem." };
+  return {
+    open: false,
+    reason: "Hodnocení bude spuštěno po zápase — ohlášeno administrátorem.",
+  };
 }
 
 export default async function MatchDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -78,7 +80,10 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
     ? (match.officialLineup.lineupStructure as unknown as LineupStructure)
     : null;
   const startsAt = preview ? preview.startsAt : match?.startsAt ?? null;
-  const ratingGate = matchRatingOpen(startsAt);
+  const ratingGate = matchRatingGate({
+    ratingsOpen: !preview && Boolean(match?.ratingsOpen),
+    startsAt,
+  });
   const tz = "Europe/Prague";
 
   const ratings = preview
