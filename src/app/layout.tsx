@@ -5,6 +5,7 @@ import { CompleteRegistrationTracker } from "@/components/CompleteRegistrationTr
 import { MetaPixel } from "@/components/MetaPixel";
 import { Toaster } from "sonner";
 import {
+  SITE_ICON_URL,
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
   SITE_OG_DEFAULT_IMAGE_WIDTH,
@@ -42,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: [
         { url: "/icon", type: "image/svg+xml" },
-        { url: "/icon.png", type: "image/png" },
+        { url: SITE_ICON_URL, type: "image/png" },
       ],
       apple: [{ url: "/apple-icon", type: "image/svg+xml" }],
     },
