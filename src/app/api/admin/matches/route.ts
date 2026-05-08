@@ -21,7 +21,16 @@ export async function GET() {
     return NextResponse.json({ matches });
   } catch (e: unknown) {
     const status = getThrownStatus(e) ?? 500;
-    return NextResponse.json({ error: status === 401 ? "Neautorizováno." : "Chyba." }, { status });
+    if (status >= 500) {
+      console.error("GET /api/admin/matches:", e);
+    }
+    const message =
+      status === 401
+        ? "Neautorizováno."
+        : e instanceof Error
+          ? `Chyba: ${e.message}`
+          : "Chyba.";
+    return NextResponse.json({ error: message }, { status });
   }
 }
 

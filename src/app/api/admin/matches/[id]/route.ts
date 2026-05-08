@@ -13,7 +13,13 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   } catch (e: unknown) {
     const status = getThrownStatus(e) ?? 500;
     console.error("DELETE /api/admin/matches/[id]:", e);
-    return NextResponse.json({ error: status === 401 ? "Neautorizováno." : "Chyba." }, { status });
+    const message =
+      status === 401
+        ? "Neautorizováno."
+        : e instanceof Error
+          ? `Chyba: ${e.message}`
+          : "Chyba.";
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
@@ -58,6 +64,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   } catch (e: unknown) {
     const status = getThrownStatus(e) ?? 500;
     console.error("PATCH /api/admin/matches/[id]:", e);
-    return NextResponse.json({ error: status === 401 ? "Neautorizováno." : "Chyba." }, { status });
+    const message =
+      status === 401
+        ? "Neautorizováno."
+        : e instanceof Error
+          ? `Chyba: ${e.message}`
+          : "Chyba.";
+    return NextResponse.json({ error: message }, { status });
   }
 }
