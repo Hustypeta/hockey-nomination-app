@@ -161,7 +161,7 @@ export function MatchesAdminPage() {
       const player = players.find((p) => p.id === pid);
       const target = parseDroppableId(overId);
       if (!player || !target) return;
-      const next = assignPlayerToTarget(lineup, player, target);
+      const next = assignPlayerToTarget(lineup, player, target, { mode: "match" });
       if (!next) {
         toast.error("Sem tohohle hráče nelze dát.");
         return;
@@ -714,12 +714,12 @@ export function MatchesAdminPage() {
                                 ? `slot-def-${selectedSlot.lineIndex ?? 0}-${selectedSlot.role ?? "lb"}`
                                 : `slot-fwd-${selectedSlot.lineIndex ?? 0}-${selectedSlot.role ?? "lw"}`;
                         const target = parseDroppableId(overId);
-                        const next = target ? assignPlayerToTarget(lineup, p, target) : null;
+                        const next = target ? assignPlayerToTarget(lineup, p, target, { mode: "match" }) : null;
                         if (next) setLineup(next);
                         setSelectedSlot(null);
                         return;
                       }
-                      const next = tryAutoAssignPlayer(lineup, p);
+                      const next = tryAutoAssignPlayer(lineup, p, { mode: "match" });
                       if (next) setLineup(next);
                     }}
                     onPreview={setPreviewPlayer}

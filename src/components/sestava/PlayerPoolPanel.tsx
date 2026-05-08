@@ -496,21 +496,33 @@ export function PlayerPoolPanel({
           const inRoster = usedIds.has(player.id);
           const disabled = !canAdd(player);
           const slotBlocks = assignableFilter ? !assignableFilter(player) : false;
-          const Card = enableDnd ? DraggableCard : TapCard;
           return (
             <div
               key={player.id}
               className="[content-visibility:auto] [contain-intrinsic-size:168px]"
             >
-              <Card
-                player={player}
-                disabled={disabled}
-                slotBlocks={slotBlocks}
-                inRoster={inRoster}
-                counts={counts}
-                onAdd={() => onAddPlayer(player)}
-                onInfo={() => onPreview(player)}
-              />
+              {enableDnd ? (
+                <DraggableCard
+                  player={player}
+                  disabled={disabled}
+                  slotBlocks={slotBlocks}
+                  inRoster={inRoster}
+                  counts={counts}
+                  enableDnd
+                  onAdd={() => onAddPlayer(player)}
+                  onInfo={() => onPreview(player)}
+                />
+              ) : (
+                <TapCard
+                  player={player}
+                  disabled={disabled}
+                  slotBlocks={slotBlocks}
+                  inRoster={inRoster}
+                  counts={counts}
+                  onAdd={() => onAddPlayer(player)}
+                  onInfo={() => onPreview(player)}
+                />
+              )}
             </div>
           );
         })}

@@ -24,7 +24,7 @@ function isMatchLineupValid(
   lineup: LineupStructure,
   opts: { defenseCount: 6 | 7 | 8; allowExtraForward: boolean }
 ): boolean {
-  const ls = normalizeLineupStructure(lineup);
+  const ls = normalizeLineupStructure(lineup, { mode: "match" });
   const fBase =
     ls.forwardLines.reduce((s, l) => s + (l.lw ? 1 : 0) + (l.c ? 1 : 0) + (l.rw ? 1 : 0), 0) +
     (opts.allowExtraForward && ls.extraForwards[0] ? 1 : 0);
@@ -133,13 +133,13 @@ export function MatchLineupBuilderPage() {
               : `slot-fwd-${selectedSlot.lineIndex ?? 0}-${selectedSlot.role ?? "lw"}`
       );
       if (target) {
-        const next = assignPlayerToTarget(lineup, player, target);
+        const next = assignPlayerToTarget(lineup, player, target, { mode: "match" });
         if (next) setLineup(next);
       }
       setSelectedSlot(null);
       return;
     }
-    const next = tryAutoAssignPlayer(lineup, player);
+    const next = tryAutoAssignPlayer(lineup, player, { mode: "match" });
     if (!next) {
       toast.error("Už není volné místo pro tuto pozici, nebo je hráč už v sestavě.");
       return;
@@ -164,7 +164,7 @@ export function MatchLineupBuilderPage() {
     const player = players.find((p) => p.id === pid);
     const target = parseDroppableId(overId);
     if (!player || !target) return;
-    const next = assignPlayerToTarget(lineup, player, target);
+    const next = assignPlayerToTarget(lineup, player, target, { mode: "match" });
     if (next) setLineup(next);
   };
 

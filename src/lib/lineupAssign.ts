@@ -81,8 +81,13 @@ export function removePlayerFromLineup(lineup: LineupStructure, playerId: string
 }
 
 /** První volný slot pro pozici (klik z poolu bez výběru slotu). */
-export function tryAutoAssignPlayer(lineup: LineupStructure, player: Player): LineupStructure | null {
-  const base = normalizeLineupStructure(lineup);
+export function tryAutoAssignPlayer(
+  lineup: LineupStructure,
+  player: Player,
+  opts?: { mode?: "nomination" | "match" }
+): LineupStructure | null {
+  const mode = opts?.mode ?? "nomination";
+  const base = normalizeLineupStructure(lineup, { mode });
   const used = lineupPlayerIds(base);
   if (used.has(player.id)) return null;
   const counts = positionCounts(base);
@@ -112,10 +117,14 @@ export function tryAutoAssignPlayer(lineup: LineupStructure, player: Player): Li
     }
     const p3 = next.defensePairs[3];
     if (!p3.lb) {
-      next.defensePairs[3] = { lb: player.id, rb: null };
+      next.defensePairs[3] = { lb: player.id, rb: p3.rb ?? null };
       return next;
     }
-    if (!next.extraDefensemen[0]) {
+    if (mode === "match" && !p3.rb) {
+      next.defensePairs[3] = { lb: p3.lb, rb: player.id };
+      return next;
+    }
+    if (mode === "nomination" && !next.extraDefensemen[0]) {
       next.extraDefensemen = [player.id];
       return next;
     }
@@ -159,9 +168,11 @@ export type DropTarget =
 export function assignPlayerToTarget(
   lineup: LineupStructure,
   player: Player,
-  target: DropTarget
+  target: DropTarget,
+  opts?: { mode?: "nomination" | "match" }
 ): LineupStructure | null {
-  const base = normalizeLineupStructure(lineup);
+  const mode = opts?.mode ?? "nomination";
+  const base = normalizeLineupStructure(lineup, { mode });
   const used = lineupPlayerIds(base);
   const next = used.has(player.id) ? stripPlayerFromLineup(base, player.id) : cloneLineup(base);
 
@@ -179,9 +190,16 @@ export function assignPlayerToTarget(
     const p = target.pairIndex;
     if (p < 0 || p > 3) return null;
     if (p === 3) {
-      if (target.role !== "lb") return null;
+      // V nominaci je 4. pár jen LB (7. bek), RD je extraDefenseman.
+      // V zápasové sestavě je 4. pár LB + RB (až 8 obránců).
+      if (mode === "nomination" && target.role !== "lb") return null;
       next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
-      next.defensePairs[3] = { lb: player.id, rb: null };
+      const cur = next.defensePairs[3];
+      if (target.role === "lb") {
+        next.defensePairs[3] = { lb: player.id, rb: mode === "match" ? cur.rb ?? null : null };
+      } else {
+        next.defensePairs[3] = { lb: cur.lb ?? null, rb: player.id };
+      }
       return next;
     }
     const pair = { ...next.defensePairs[p] };
