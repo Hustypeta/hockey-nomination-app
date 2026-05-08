@@ -1,6 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import { poolToSlotCollision } from "@/lib/dndCollision";
 import { toast } from "sonner";
 import type { LineupStructure, Player } from "@/types";
 import { EMPTY_LINEUP } from "@/types";
@@ -9,6 +20,7 @@ import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
+import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 import type { Position } from "@/types";
 import { assignPlayerToTarget, tryAutoAssignPlayer } from "@/lib/lineupAssign";
 import { parseDroppableId } from "@/lib/dndSlotIds";
@@ -89,6 +101,45 @@ export function MatchesAdminPage() {
   const [allowExtraForward, setAllowExtraForward] = useState(false);
   const [published, setPublished] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 120, tolerance: 8 } })
+  );
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const aid = event.active.id.toString();
+    if (!aid.startsWith("drag-player-")) {
+      setPoolDragPlayer(null);
+      return;
+    }
+    const pid = aid.replace("drag-player-", "");
+    setPoolDragPlayer(players.find((p) => p.id === pid) ?? null);
+  }, [players]);
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      setPoolDragPlayer(null);
+      const overId = event.over?.id?.toString();
+      const activeIdStr = event.active.id.toString();
+      if (!overId || !activeIdStr.startsWith("drag-player-")) return;
+      const pid = activeIdStr.replace("drag-player-", "");
+      const player = players.find((p) => p.id === pid);
+      const target = parseDroppableId(overId);
+      if (!player || !target) return;
+      const next = assignPlayerToTarget(lineup, player, target);
+      if (!next) {
+        toast.error("Sem tohohle hráče nelze dát.");
+        return;
+      }
+      setLineup(next);
+      toast.success(`${player.name} → slot`);
+    },
+    [lineup, players]
+  );
+
+  const handleDragCancel = useCallback(() => setPoolDragPlayer(null), []);
 
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"
@@ -318,13 +369,20 @@ export function MatchesAdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#05080f] text-white">
-      <SestavaAmbientBackground />
-      <div className="sticky top-0 z-40">
-        <SiteHeader />
-      </div>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={poolToSlotCollision}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
+      <div className="min-h-screen bg-[#05080f] text-white">
+        <SestavaAmbientBackground />
+        <div className="sticky top-0 z-40">
+          <SiteHeader />
+        </div>
 
-      <main className="relative z-10 mx-auto max-w-[90rem] px-4 py-6">
+        <main className="relative z-10 mx-auto max-w-[90rem] px-4 py-6">
         <div className="mb-5 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
           <h1 className="font-display text-2xl font-black">Admin — zápasy</h1>
           <p className="mt-1 text-sm text-white/60">Vytvoř zápas, naklikej oficiální sestavu a publikuj.</p>
@@ -488,7 +546,7 @@ export function MatchesAdminPage() {
                       if (next) setLineup(next);
                     }}
                     onPreview={setPreviewPlayer}
-                    enableDnd={false}
+                    enableDnd
                     forcedPosition={forcedPoolPosition}
                   />
                 </div>
@@ -524,10 +582,26 @@ export function MatchesAdminPage() {
             </div>
           </section>
         </div>
-      </main>
+        </main>
 
-      <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
-    </div>
+        <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
+      </div>
+
+      <DragOverlay dropAnimation={null}>
+        {poolDragPlayer ? (
+          <div className="pointer-events-none flex max-w-[min(100vw-2rem,18rem)] items-center gap-2 rounded-xl border border-[#f1c40f]/60 bg-black/85 px-3 py-2.5 shadow-xl">
+            <PlayerAvatar
+              name={poolDragPlayer.name}
+              position={poolDragPlayer.position}
+              role={poolDragPlayer.role}
+              imageUrl={poolDragPlayer.imageUrl}
+              size="md"
+            />
+            <span className="truncate text-sm font-bold text-white">{poolDragPlayer.name}</span>
+          </div>
+        ) : null}
+      </DragOverlay>
+    </DndContext>
   );
 }
 

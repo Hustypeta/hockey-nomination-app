@@ -277,37 +277,6 @@ export function NominationBuilderPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Simulace API fetch pro pick_rate: doplní oblíbenost s krátkým delayem.
-  useEffect(() => {
-    if (!players.length) return;
-    let cancelled = false;
-    const t = window.setTimeout(() => {
-      if (cancelled) return;
-      const hash01 = (s: string) => {
-        let h = 2166136261;
-        for (let i = 0; i < s.length; i++) {
-          h ^= s.charCodeAt(i);
-          h = Math.imul(h, 16777619);
-        }
-        // 0..1
-        return (h >>> 0) / 4294967295;
-      };
-      setPlayers((prev) =>
-        prev.map((p) => {
-          // deterministic “real-ish” distribution
-          const r = hash01(p.id);
-          const skewed = Math.pow(r, 0.55); // více “populárních” hodnot
-          const rate = Math.round(skewed * 100);
-          return { ...p, pick_rate: rate };
-        })
-      );
-    }, 420);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(t);
-    };
-  }, [players.length]);
-
   useEffect(() => {
     const raw = searchParams.get("nominace") ?? searchParams.get("nomination");
     const openShareAfterLoad = searchParams.get("sdilet") === "1";

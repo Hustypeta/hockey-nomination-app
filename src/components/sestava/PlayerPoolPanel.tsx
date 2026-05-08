@@ -125,10 +125,15 @@ function DraggableCard({
 
   const canInteract = !disabled && !slotBlocks && !inRoster;
 
+  const dndHooks = enableDnd && canInteract ? listeners : undefined;
+  const dndAttrs = enableDnd && canInteract ? attributes : undefined;
+
   return (
     <div
       ref={setNodeRef}
       style={style}
+      {...(dndHooks ?? {})}
+      {...(dndAttrs ?? {})}
       className={`
         group/pool relative flex flex-col gap-2 rounded-xl border p-3 sm:p-3.5
         transition-[opacity,box-shadow,border-color,transform] duration-200 ease-out
@@ -151,6 +156,7 @@ function DraggableCard({
                 ? "opacity-50"
                 : "opacity-100"
         }
+        ${enableDnd && canInteract ? "touch-none" : ""}
       `}
     >
       <div
@@ -158,23 +164,15 @@ function DraggableCard({
         aria-hidden
       />
       <div className="relative flex gap-2">
-        <button
-          type="button"
-          disabled={!enableDnd || disabled || slotBlocks || inRoster || !canInteract}
-          aria-label="Chytni a přetáhni hráče do slotu ve sestavě"
+        <div
           className={`
-            mt-0.5 shrink-0 touch-none select-none rounded-lg p-1 outline-none transition-colors
-            disabled:cursor-not-allowed disabled:opacity-35
-            ${canInteract && enableDnd ? "cursor-grab active:cursor-grabbing" : "cursor-default"}
+            mt-0.5 shrink-0 select-none rounded-lg p-1
+            ${canInteract && enableDnd ? "pointer-events-none cursor-grab text-[#f1c40f] active:cursor-grabbing" : "cursor-default text-slate-600 opacity-35"}
           `}
-          {...(enableDnd && canInteract ? listeners : {})}
-          {...(enableDnd && canInteract ? attributes : {})}
+          aria-hidden
         >
-          <GripVertical
-            className={`block h-[18px] w-[18px] sm:h-5 sm:w-5 ${canInteract && enableDnd ? "text-[#f1c40f]" : "text-slate-600"}`}
-            aria-hidden
-          />
-        </button>
+          <GripVertical className="block h-[18px] w-[18px] sm:h-5 sm:w-5" aria-hidden />
+        </div>
         <div
           className="flex min-w-0 flex-1 touch-manipulation flex-col gap-1.5 rounded-lg px-0.5 py-0.5"
           onClick={() => canInteract && onAdd()}
