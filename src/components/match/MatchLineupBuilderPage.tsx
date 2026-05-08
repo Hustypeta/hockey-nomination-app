@@ -17,6 +17,7 @@ import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSens
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
+import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 
 function isMatchLineupValid(
   lineup: LineupStructure,
@@ -217,7 +218,13 @@ export function MatchLineupBuilderPage() {
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-[#05080f] text-white" />;
+    return (
+      <AppLoadingScreen
+        tagline="Tvorba sestavy na zápas"
+        message="Načítám editor zápasové sestavy…"
+        intro={null}
+      />
+    );
   }
 
   const forcedPoolPosition: Position | null = selectedSlot

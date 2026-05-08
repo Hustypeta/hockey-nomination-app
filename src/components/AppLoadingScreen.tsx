@@ -1,44 +1,15 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import Link from "next/link";
-import { SITE_BRAND, SITE_INSTAGRAM_PAGE_URL } from "@/lib/siteBranding";
-
-function InstagramMark({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-      className={className}
-    >
-      <path
-        d="M7.6 2h8.8A5.6 5.6 0 0 1 22 7.6v8.8A5.6 5.6 0 0 1 16.4 22H7.6A5.6 5.6 0 0 1 2 16.4V7.6A5.6 5.6 0 0 1 7.6 2Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M12 16.3A4.3 4.3 0 1 0 12 7.7a4.3 4.3 0 0 0 0 8.6Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M17.5 6.7h.01"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+import { SITE_BRAND } from "@/lib/siteBranding";
+import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
 
 const DEFAULT_INTRO =
   "Staň se na chvíli trenérem národního týmu České hokejové reprezentace. Sestav si svojí vlastní nominaci a soutěž o zajímavé ceny.";
 
-/** Když není v env, pořád zobrazíme odkaz na sdílený IG (loading screen). */
-const LOADING_INSTAGRAM_FALLBACK = "https://www.instagram.com/svet_hokeje/";
-
 type AppLoadingScreenProps = {
+  /** Řádek pod logem (např. kontext stránky). */
+  tagline?: string;
   /** Stav načítání pod úvodním textem (např. „Načítám hráče…“). */
   message?: string;
   /**
@@ -50,17 +21,15 @@ type AppLoadingScreenProps = {
 };
 
 /**
- * Jednotná celostránková obrazovka při načítání dat — sladěná s hlavičkou editoru sestavy.
+ * Jednotná celostránková obrazovka při načítání dat — odkazy nahoře, aby byly vidět bez rolování.
  */
 export function AppLoadingScreen({
+  tagline = "MS 2026 · nominace",
   message = "Načítám…",
   intro,
   showSignInCta = false,
 }: AppLoadingScreenProps) {
   const introText = intro === undefined ? DEFAULT_INTRO : intro;
-  const instagramHref = SITE_INSTAGRAM_PAGE_URL?.trim() || LOADING_INSTAGRAM_FALLBACK;
-  const instagramLabel =
-    instagramHref === LOADING_INSTAGRAM_FALLBACK ? "Instagram (@svet_hokeje)" : "Instagram";
 
   const handleSignIn = () => {
     const cb =
@@ -69,87 +38,44 @@ export function AppLoadingScreen({
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0c0e12]">
+    <div className="relative min-h-screen overflow-y-auto bg-[#0c0e12]">
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        className="pointer-events-none fixed inset-0 opacity-[0.12]"
         style={{
           backgroundImage:
             "radial-gradient(ellipse 80% 50% at 50% -20%, #003f87 0%, transparent 55%)",
         }}
       />
-      <div className="relative flex min-h-screen flex-col items-center justify-center px-6 py-10">
-        <div className="flex w-full max-w-4xl flex-col items-center rounded-2xl border border-[#2a3142] bg-[#151922]/90 px-6 py-10 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:px-8 sm:py-12">
-          <h1 className="font-display text-3xl tracking-[0.14em] text-white md:text-4xl">{SITE_BRAND}</h1>
-          <p className="mt-1 font-display text-sm tracking-[0.18em] text-[#c41e3a]/90">MS 2026 · nominace</p>
+      <div className="relative flex min-h-screen flex-col items-center justify-start px-4 py-6 sm:justify-center sm:px-6 sm:py-10">
+        <div className="flex w-full max-w-4xl flex-col items-center rounded-2xl border border-[#2a3142] bg-[#151922]/92 px-4 py-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:px-8 sm:py-10">
+          <h1 className="font-display text-2xl tracking-[0.14em] text-white sm:text-3xl md:text-4xl">
+            {SITE_BRAND}
+          </h1>
+          <p className="mt-1 font-display text-sm tracking-[0.18em] text-[#c41e3a]/90">{tagline}</p>
+
+          <div className="mt-6 w-full sm:mt-8">
+            <LoadingScreenUsefulLinks />
+          </div>
+
           {introText ? (
-            <p className="mt-6 text-center text-sm leading-relaxed text-white/80 sm:text-[15px]">
+            <p className="mt-6 text-center text-sm leading-relaxed text-white/82 sm:text-[15px] sm:mt-8">
               {introText}
             </p>
           ) : null}
 
-          <div className="mt-6 w-full rounded-2xl border border-[#f1c40f]/25 bg-gradient-to-br from-[#003087]/20 via-black/30 to-[#c8102e]/15 p-4 ring-1 ring-white/[0.06] sm:mt-8 sm:p-5">
-            <p className="text-center text-[10px] font-black uppercase tracking-[0.26em] text-[#f1c40f]/90">
-              Zatím se načítáme — mezitím
-            </p>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Články na webu</p>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              <Link
-                href="/clanky/rady-k-nominaci"
-                className="group rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-[#00B4FF]/30 hover:bg-white/[0.05]"
-              >
-                <p className="font-display text-base font-black text-white">Rady k nominaci</p>
-                <p className="mt-1 text-xs leading-snug text-white/60">
-                  Tipy pro sestavení nominace (brankáři, posily, AHL…)
-                </p>
-                <p className="mt-3 text-xs font-semibold text-sky-300/95 group-hover:underline underline-offset-4">
-                  Otevřít článek →
-                </p>
-              </Link>
-              <Link
-                href="/clanky/kurzy-a-analyza-ms-2026"
-                className="group rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-[#f1c40f]/30 hover:bg-white/[0.05]"
-              >
-                <p className="font-display text-base font-black text-white">
-                  Kurzy a analýza: Kdo ovládne MS v hokeji 2026?
-                </p>
-                <p className="mt-1 text-xs leading-snug text-white/60">
-                  Přehled kurzů + rychlá analýza favoritů.
-                </p>
-                <p className="mt-3 text-xs font-semibold text-amber-200/95 group-hover:underline underline-offset-4">
-                  Otevřít článek →
-                </p>
-              </Link>
-            </div>
-
-            <div className="mt-5 border-t border-white/10 pt-4 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
-                Více novinek ze světa hokeje na
-              </p>
-              <a
-                href={instagramHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-sky-200/95 transition hover:border-[#00B4FF]/35 hover:bg-[#00B4FF]/10 hover:text-white"
-              >
-                <InstagramMark className="h-4 w-4" />
-                {instagramLabel}
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-8 flex items-center gap-3 text-white/55">
+          <div className="mt-6 flex items-center gap-3 text-white/70">
             <span
-              className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[#003f87] animate-pulse"
+              className="inline-block h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-[#003f87]"
               aria-hidden
             />
-            <span className="text-sm tracking-wide">{message}</span>
+            <span className="text-sm font-medium tracking-wide">{message}</span>
           </div>
 
           <div
-            className="relative mt-6 flex aspect-square w-[min(22rem,calc(100vw-3rem))] items-center justify-center rounded-full border-[10px] border-[#003f87]/45 bg-[#003f87]/[0.08] shadow-[inset_0_0_48px_rgba(0,63,135,0.15)] sm:mt-8 sm:w-[min(28rem,calc(100vw-2.5rem))]"
+            className="relative mt-5 flex aspect-square w-[min(18rem,calc(100vw-2rem))] shrink-0 items-center justify-center rounded-full border-[8px] border-[#003f87]/55 bg-[#003f87]/[0.09] shadow-[inset_0_0_48px_rgba(0,63,135,0.18)] sm:mt-6 sm:w-[min(22rem,calc(100vw-2.5rem))] sm:border-[10px]"
             aria-hidden
           >
-            <div className="absolute inset-0 rounded-full border-[10px] border-transparent border-t-[#c41e3a]/90 border-r-[#003f87]/50 animate-spin [animation-duration:1.15s]" />
+            <div className="absolute inset-0 rounded-full border-[8px] border-transparent border-t-[#c41e3a]/90 border-r-[#003f87]/50 animate-spin [animation-duration:1.15s] sm:border-[10px]" />
             <span className="relative z-10 font-display text-5xl tracking-[0.18em] text-[#003f87]/90 sm:text-6xl md:text-7xl">
               ČR
             </span>

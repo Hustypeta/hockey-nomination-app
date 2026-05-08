@@ -7,6 +7,7 @@ import {
   SITE_OG_DEFAULT_IMAGE_URL,
   SITE_OG_DEFAULT_IMAGE_WIDTH,
 } from "@/lib/siteBranding";
+import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
 
 export const metadata: Metadata = {
   title: "Pick’em",
@@ -40,12 +41,19 @@ export default function BracketPage() {
     <SiteShell>
       <Suspense
         fallback={
-          <div className="relative z-10 mx-auto max-w-3xl px-4 py-24 text-center">
-            <p className="font-display text-sm tracking-wide text-white/55">Načítám bracket…</p>
-            <div
-              className="nhl25-moje-sestava-accent mx-auto mt-5 h-0.5 w-32 max-w-full rounded-full opacity-70"
-              aria-hidden
-            />
+          <div className="relative z-10 mx-auto max-w-4xl px-4 py-10 sm:py-14">
+            <LoadingScreenUsefulLinks eyebrow="Načítá se Pick’em — mezitím" subtitle="Články na webu" />
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 text-white/75">
+              <span
+                className="inline-block h-2 w-2 animate-pulse rounded-full bg-sky-400"
+                aria-hidden
+              />
+              <p className="font-display text-sm font-semibold tracking-wide">Načítám bracket…</p>
+              <div
+                className="nhl25-moje-sestava-accent mx-auto mt-2 h-0.5 w-40 max-w-full rounded-full opacity-70"
+                aria-hidden
+              />
+            </div>
           </div>
         }
       >
