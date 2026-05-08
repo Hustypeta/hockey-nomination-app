@@ -59,7 +59,45 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: "Nic ke změně." }, { status: 400 });
     }
 
-    const updated = await prisma.match.update({ where: { id }, data });
+    /**
+     * `ratingsOpen` je nový sloupec; pokud prod DB ještě nemá migraci, fallback přes raw `ALTER TABLE`
+     * + `UPDATE`. Pak ostatní pole zapíšeme standardně přes Prisma update.
+     */
+    const { ratingsOpen, ...rest } = data;
+
+    if (typeof ratingsOpen === "boolean") {
+      try {
+        await prisma.match.update({ where: { id }, data: { ratingsOpen } });
+      } catch (err) {
+        console.warn("PATCH /api/admin/matches/[id] ratingsOpen update fell back to raw:", err);
+        await prisma.$executeRaw`
+          ALTER TABLE "Match" ADD COLUMN IF NOT EXISTS "ratingsOpen" BOOLEAN NOT NULL DEFAULT false
+        `;
+        await prisma.$executeRaw`
+          UPDATE "Match" SET "ratingsOpen" = ${ratingsOpen} WHERE id = ${id}
+        `;
+      }
+    }
+
+    const matchSelect = {
+      id: true,
+      slug: true,
+      title: true,
+      category: true,
+      homeCode: true,
+      awayCode: true,
+      opponent: true,
+      startsAt: true,
+      venue: true,
+      published: true,
+      createdAt: true,
+      updatedAt: true,
+    } as const;
+
+    const updated =
+      Object.keys(rest).length > 0
+        ? await prisma.match.update({ where: { id }, data: rest, select: matchSelect })
+        : await prisma.match.findUnique({ where: { id }, select: matchSelect });
     return NextResponse.json({ ok: true, match: updated });
   } catch (e: unknown) {
     const status = getThrownStatus(e) ?? 500;

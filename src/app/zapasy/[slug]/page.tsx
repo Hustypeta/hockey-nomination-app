@@ -64,16 +64,46 @@ function matchRatingGate(opts: {
   };
 }
 
+/** Rezistentní načtení flagu, který byl přidán nově — tolerujeme produkční DB bez migrace. */
+async function loadRatingsOpenFlag(matchId: string): Promise<boolean> {
+  try {
+    const rows = await prisma.$queryRaw<Array<{ ratingsOpen: boolean | null }>>`
+      SELECT "ratingsOpen" FROM "Match" WHERE id = ${matchId}
+    `;
+    return Boolean(rows[0]?.ratingsOpen);
+  } catch {
+    return false;
+  }
+}
+
 export default async function MatchDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const preview = PREVIEW_MATCHES[slug] ?? null;
+  /**
+   * `select` (s explicitním seznamem polí) má dva důvody:
+   *  1) izolovat dotaz od nově přidaných sloupců, které prod DB nemusí ještě mít (např. `ratingsOpen`),
+   *  2) tahat jen to, co stránka potřebuje.
+   */
   const match = preview
     ? null
     : await prisma.match.findUnique({
         where: { slug },
-        include: { officialLineup: true },
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          homeCode: true,
+          awayCode: true,
+          venue: true,
+          opponent: true,
+          startsAt: true,
+          published: true,
+          officialLineup: true,
+        },
       });
   if (!preview && (!match || !match.published)) notFound();
+
+  const ratingsOpenFlag = !preview && match ? await loadRatingsOpenFlag(match.id) : false;
 
   const players = loadMs2026Candidates();
   const lineup = match?.officialLineup?.lineupStructure
@@ -81,7 +111,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
     : null;
   const startsAt = preview ? preview.startsAt : match?.startsAt ?? null;
   const ratingGate = matchRatingGate({
-    ratingsOpen: !preview && Boolean(match?.ratingsOpen),
+    ratingsOpen: ratingsOpenFlag,
     startsAt,
   });
   const tz = "Europe/Prague";

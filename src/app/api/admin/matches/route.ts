@@ -14,11 +14,44 @@ function readCategory(v: unknown): "beijir" | "ms2026" {
 export async function GET() {
   try {
     await requireAdminOrThrow();
+    /**
+     * `select` se vyhýbá sloupcům, které prod DB nemusí mít po novém schématu (např. `ratingsOpen`).
+     * Tu hodnotu pak doplňujeme raw query níže s tolerancí chybějícího sloupce.
+     */
     const matches = await prisma.match.findMany({
       orderBy: [{ startsAt: "desc" }, { createdAt: "desc" }],
-      include: { officialLineup: { select: { updatedAt: true } } },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        category: true,
+        homeCode: true,
+        awayCode: true,
+        opponent: true,
+        startsAt: true,
+        venue: true,
+        published: true,
+        createdAt: true,
+        updatedAt: true,
+        officialLineup: { select: { updatedAt: true } },
+      },
     });
-    return NextResponse.json({ matches });
+
+    let ratingsMap = new Map<string, boolean>();
+    try {
+      const rows = await prisma.$queryRaw<Array<{ id: string; ratingsOpen: boolean | null }>>`
+        SELECT id, "ratingsOpen" FROM "Match"
+      `;
+      ratingsMap = new Map(rows.map((r) => [r.id, Boolean(r.ratingsOpen)]));
+    } catch {
+      // Stará produkční DB bez `ratingsOpen` — defaultně false, ať se admin nerozbije.
+    }
+
+    const enriched = matches.map((m) => ({
+      ...m,
+      ratingsOpen: ratingsMap.get(m.id) ?? false,
+    }));
+    return NextResponse.json({ matches: enriched });
   } catch (e: unknown) {
     const status = getThrownStatus(e) ?? 500;
     if (status >= 500) {
@@ -60,6 +93,20 @@ export async function POST(request: NextRequest) {
 
     const created = await prisma.match.create({
       data: { title, slug, opponent, venue, startsAt, published, category, homeCode, awayCode },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        category: true,
+        homeCode: true,
+        awayCode: true,
+        opponent: true,
+        startsAt: true,
+        venue: true,
+        published: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
     return NextResponse.json({ ok: true, match: created });
   } catch (e: unknown) {
