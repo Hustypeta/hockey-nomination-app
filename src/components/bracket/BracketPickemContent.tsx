@@ -53,9 +53,13 @@ function useIsMobile(breakpointPx = 720) {
 function useCountdown(target: Date) {
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
-    setNow(Date.now());
+    let raf = 0;
+    raf = requestAnimationFrame(() => setNow(Date.now()));
     const t = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(t);
+    };
   }, []);
   return useMemo(() => {
     if (now === null) return null;
@@ -850,7 +854,7 @@ function PickemPlayerPicker({
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (!open) setQ("");
+    if (!open) queueMicrotask(() => setQ(""));
   }, [open]);
 
   const filtered = useMemo(() => {

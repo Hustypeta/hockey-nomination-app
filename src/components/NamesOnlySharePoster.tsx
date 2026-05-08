@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
+import { forwardRef, useMemo, useState, type ReactNode } from "react";
 import type { Player, LineupStructure } from "@/types";
 import { buildNamesOnlyRoster } from "@/lib/namesOnlyRoster";
 import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
@@ -41,10 +41,7 @@ export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePos
     { players, lineup, nominationTitle = null, siteUrl = "", footerInstantIso = null },
     ref
   ) {
-    const [mountedDateLabel, setMountedDateLabel] = useState("");
-    useLayoutEffect(() => {
-      setMountedDateLabel(formatCsDate(new Date()));
-    }, []);
+    const [mountedDateLabel] = useState(() => formatCsDate(new Date()));
 
     const dateLabel = footerInstantIso ? formatCsDate(new Date(footerInstantIso)) : mountedDateLabel;
     const host = siteUrl.replace(/^https?:\/\//, "");

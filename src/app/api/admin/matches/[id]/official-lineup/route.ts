@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdminOrThrow } from "@/lib/matchAdmin";
+import { getThrownStatus, requireAdminOrThrow } from "@/lib/matchAdmin";
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 import type { LineupStructure } from "@/types";
 import { collectMatchLineupIds, isMatchLineupComplete } from "@/lib/matchLineupValidation";
@@ -34,7 +34,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     if (!match) return NextResponse.json({ error: "Zápas nenalezen." }, { status: 404 });
     return NextResponse.json({ match });
   } catch (e: unknown) {
-    const status = typeof (e as { status?: unknown })?.status === "number" ? (e as any).status : 500;
+    const status = getThrownStatus(e) ?? 500;
     return NextResponse.json({ error: status === 401 ? "Neautorizováno." : "Chyba." }, { status });
   }
 }
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     return NextResponse.json({ ok: true });
   } catch (e: unknown) {
-    const status = typeof (e as { status?: unknown })?.status === "number" ? (e as any).status : 500;
+    const status = getThrownStatus(e) ?? 500;
     console.error("POST /api/admin/matches/[id]/official-lineup:", e);
     return NextResponse.json({ error: status === 401 ? "Neautorizováno." : "Chyba." }, { status });
   }

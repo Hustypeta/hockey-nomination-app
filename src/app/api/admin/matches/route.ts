@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdminOrThrow } from "@/lib/matchAdmin";
+import { getThrownStatus, requireAdminOrThrow } from "@/lib/matchAdmin";
 import { uniqueSlug } from "@/lib/slug";
 
 function readString(v: unknown): string | null {
@@ -20,7 +20,7 @@ export async function GET() {
     });
     return NextResponse.json({ matches });
   } catch (e: unknown) {
-    const status = typeof (e as { status?: unknown })?.status === "number" ? (e as any).status : 500;
+    const status = getThrownStatus(e) ?? 500;
     return NextResponse.json({ error: status === 401 ? "Neautorizováno." : "Chyba." }, { status });
   }
 }
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     });
     return NextResponse.json({ ok: true, match: created });
   } catch (e: unknown) {
-    const status = typeof (e as { status?: unknown })?.status === "number" ? (e as any).status : 500;
+    const status = getThrownStatus(e) ?? 500;
     console.error("POST /api/admin/matches:", e);
     return NextResponse.json({ error: status === 401 ? "Neautorizováno." : "Chyba." }, { status });
   }

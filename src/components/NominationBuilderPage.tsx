@@ -446,6 +446,7 @@ export function NominationBuilderPage() {
     [selectedSlot, lineup]
   );
 
+  const thirdPairLb = lineup.defensePairs[3]?.lb;
   const canAssignPlayer = useCallback(
     (player: Player): boolean => {
       if (!selectedSlot || usedIds.has(player.id)) return false;
@@ -462,11 +463,10 @@ export function NominationBuilderPage() {
       if (type === "defense" && (role === "lb" || role === "rb"))
         return player.position === "D" && lineIndex !== undefined && lineIndex < 3;
       if (type === "extraForward") return player.position === "F";
-      if (type === "extraDefenseman")
-        return player.position === "D" && !!lineup.defensePairs[3].lb;
+      if (type === "extraDefenseman") return player.position === "D" && !!thirdPairLb;
       return false;
     },
-    [selectedSlot, usedIds]
+    [selectedSlot, usedIds, thirdPairLb]
   );
 
   const handleAddFromPool = useCallback(

@@ -49,7 +49,6 @@ export function NationalJersey({
   jerseyShape = "skater",
   isCaptain = false,
   isAssistant = false,
-  isSelected: _isSelected = false,
   className = "",
 }: NationalJerseyProps) {
   const empty = !player;

@@ -163,7 +163,7 @@ export function assignPlayerToTarget(
 ): LineupStructure | null {
   const base = normalizeLineupStructure(lineup);
   const used = lineupPlayerIds(base);
-  let next = used.has(player.id) ? stripPlayerFromLineup(base, player.id) : cloneLineup(base);
+  const next = used.has(player.id) ? stripPlayerFromLineup(base, player.id) : cloneLineup(base);
 
   if (target.type === "goalie") {
     if (player.position !== "G") return null;

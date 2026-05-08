@@ -285,14 +285,19 @@ export async function POST(req: NextRequest) {
       });
       sent++;
       if (throttleMs > 0) await sleep(throttleMs);
-    } catch (e: any) {
+    } catch (e: unknown) {
       failed++;
-      errors.push({ to, error: String(e?.message ?? e) });
+      errors.push({ to, error: String(e instanceof Error ? e.message : e) });
       try {
         await prisma.emailBroadcastSend.upsert({
           where: { campaignId_email: { campaignId, email: to } },
-          create: { campaignId, email: to, status: "failed", error: String(e?.message ?? e) },
-          update: { status: "failed", error: String(e?.message ?? e) },
+          create: {
+            campaignId,
+            email: to,
+            status: "failed",
+            error: String(e instanceof Error ? e.message : e),
+          },
+          update: { status: "failed", error: String(e instanceof Error ? e.message : e) },
         });
       } catch {
         /* ignore */

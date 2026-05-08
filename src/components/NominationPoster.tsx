@@ -256,7 +256,7 @@ export const NominationPoster = forwardRef<HTMLDivElement, NominationPosterProps
                           Náhradníci
                         </p>
                         <div className="flex flex-wrap justify-center gap-1">
-                          {displayLineup.extraForwards.map((id, i) => {
+                          {displayLineup.extraForwards.map((id) => {
                             if (!id) return null;
                             const p = getPlayer(id);
                             return p ? (

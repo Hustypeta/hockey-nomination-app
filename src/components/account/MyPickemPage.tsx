@@ -27,25 +27,27 @@ export function MyPickemPage() {
 
   useEffect(() => {
     if (status !== "authenticated") return;
-    setLoading(true);
-    setLoadError(null);
-    fetch("/api/pickem/me")
-      .then((r) => {
-        if (r.status === 401) return { ok: true, payload: null as BracketPickemPayload | null };
-        if (!r.ok) throw new Error("fetch");
-        return r.json();
-      })
-      .then((d: { payload?: unknown; updatedAt?: string; contestSubmittedAt?: unknown }) => {
-        const p = d.payload;
-        if (p && typeof p === "object") setPayload(p as BracketPickemPayload);
-        else setPayload(null);
-        setUpdatedAt(typeof d.updatedAt === "string" ? d.updatedAt : null);
-        setContestSubmittedAt(
-          typeof d.contestSubmittedAt === "string" && d.contestSubmittedAt.length > 0 ? d.contestSubmittedAt : null
-        );
-      })
-      .catch(() => setLoadError("Nepodařilo se načíst Pick’em koncept."))
-      .finally(() => setLoading(false));
+    queueMicrotask(() => {
+      setLoading(true);
+      setLoadError(null);
+      fetch("/api/pickem/me")
+        .then((r) => {
+          if (r.status === 401) return { ok: true, payload: null as BracketPickemPayload | null };
+          if (!r.ok) throw new Error("fetch");
+          return r.json();
+        })
+        .then((d: { payload?: unknown; updatedAt?: string; contestSubmittedAt?: unknown }) => {
+          const p = d.payload;
+          if (p && typeof p === "object") setPayload(p as BracketPickemPayload);
+          else setPayload(null);
+          setUpdatedAt(typeof d.updatedAt === "string" ? d.updatedAt : null);
+          setContestSubmittedAt(
+            typeof d.contestSubmittedAt === "string" && d.contestSubmittedAt.length > 0 ? d.contestSubmittedAt : null
+          );
+        })
+        .catch(() => setLoadError("Nepodařilo se načíst Pick’em koncept."))
+        .finally(() => setLoading(false));
+    });
   }, [status]);
 
   const openUrl = useMemo(() => {

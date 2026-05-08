@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site/SiteHeader";
@@ -10,7 +10,7 @@ import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { LineBuilder } from "@/components/LineBuilder";
 import type { LineupStructure, Player, Position } from "@/types";
 import { EMPTY_LINEUP } from "@/types";
-import { isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
+import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { tryAutoAssignPlayer, assignPlayerToTarget } from "@/lib/lineupAssign";
 import { parseDroppableId } from "@/lib/dndSlotIds";
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";

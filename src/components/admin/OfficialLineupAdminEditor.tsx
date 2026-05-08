@@ -11,6 +11,7 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
+import Link from "next/link";
 import { toast } from "sonner";
 import { LineBuilder } from "@/components/LineBuilder";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
@@ -412,9 +413,9 @@ export function OfficialLineupAdminEditor() {
               </h1>
               <p className="mt-1 text-xs text-white/55">
                 Rozložení a ovládání jako u{' '}
-                <a href="/zapasy/sestava" className="font-semibold text-[#f1c40f] underline-offset-4 hover:underline">
+                <Link href="/zapasy/sestava" className="font-semibold text-[#f1c40f] underline-offset-4 hover:underline">
                   tvorby sestavy na zápas
-                </a>
+                </Link>
                 — kompletní nominace{' '}
                 <span className="font-mono tabular-nums">{TOTAL_PLAYERS}</span> hráčů podle soutěže.
               </p>

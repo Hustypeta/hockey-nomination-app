@@ -69,8 +69,11 @@ function parseLatestRow(markdownLike: string): EpStats | null {
 export async function POST(req: Request) {
   try {
     const body: unknown = await req.json();
-    const url = (body as any)?.url;
-    if (typeof url !== "string" || !url.startsWith("https://www.eliteprospects.com/")) {
+    const url =
+      typeof body === "object" && body !== null && "url" in body && typeof (body as { url: unknown }).url === "string"
+        ? (body as { url: string }).url
+        : undefined;
+    if (!url || !url.startsWith("https://www.eliteprospects.com/")) {
       return NextResponse.json({ error: "Invalid url" }, { status: 400 });
     }
 
@@ -91,8 +94,11 @@ export async function POST(req: Request) {
     const parsed = parseLatestRow(text);
     if (!parsed) return NextResponse.json({ error: "No stats parsed" }, { status: 404 });
     return NextResponse.json(parsed);
-  } catch (e: any) {
-    return NextResponse.json({ error: String(e?.message ?? e) }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: String(e instanceof Error ? e.message : e) },
+      { status: 500 },
+    );
   }
 }
 

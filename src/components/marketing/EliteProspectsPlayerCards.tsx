@@ -37,10 +37,6 @@ type PlayerCardModel = {
 
 type PlayerCardVariant = "clean" | "promo";
 
-const IG_OUTLINE =
-  "rounded-[28px] border-[5px] border-neutral-950 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_14px_44px_rgba(0,0,0,0.12)] ring-2 ring-black/10";
-const IG_FRAME_INNER = "overflow-hidden rounded-[18px] ring-2 ring-neutral-950/90";
-
 function fmt(v: number | null | undefined) {
   return v === null || v === undefined ? "—" : String(v);
 }
@@ -171,7 +167,6 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: 
     variant === "promo"
       ? "text-white [text-shadow:0_3px_0_rgba(0,0,0,0.80),0_14px_40px_rgba(0,0,0,0.35)]"
       : "text-black";
-  const topTextSoft = variant === "promo" ? "text-white/90" : "text-neutral-900";
   const clubLeague = formatClubLeague(m.player);
   const nameLen = prettyText(m.player.name).length;
   const nameFont =

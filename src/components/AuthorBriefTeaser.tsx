@@ -1,5 +1,3 @@
-import { UserRound } from "lucide-react";
-
 /** Stručné „okénko“ na úvodní stránce. */
 export function AuthorBriefTeaser() {
   return (

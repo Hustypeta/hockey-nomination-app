@@ -26,6 +26,44 @@ type MatchRow = {
   published: boolean;
 };
 
+function readAdminJsonError(data: unknown): string | undefined {
+  if (typeof data !== "object" || data === null) return undefined;
+  const e = (data as { error?: unknown }).error;
+  return typeof e === "string" ? e : undefined;
+}
+
+function parseMatchRowsFromPayload(data: unknown): MatchRow[] {
+  const list =
+    typeof data === "object" &&
+    data !== null &&
+    "matches" in data &&
+    Array.isArray((data as { matches: unknown }).matches)
+      ? (data as { matches: unknown[] }).matches
+      : [];
+  const rows: MatchRow[] = [];
+  for (const m of list) {
+    if (typeof m !== "object" || m === null) continue;
+    const o = m as Record<string, unknown>;
+    if (typeof o.id !== "string" || typeof o.slug !== "string" || typeof o.title !== "string") continue;
+    rows.push({
+      id: o.id,
+      slug: o.slug,
+      title: o.title,
+      category: typeof o.category === "string" ? o.category : null,
+      homeCode: typeof o.homeCode === "string" ? o.homeCode : null,
+      awayCode: typeof o.awayCode === "string" ? o.awayCode : null,
+      opponent: typeof o.opponent === "string" ? o.opponent : null,
+      startsAt:
+        typeof o.startsAt === "string" || typeof o.startsAt === "number"
+          ? new Date(o.startsAt).toISOString()
+          : null,
+      venue: typeof o.venue === "string" ? o.venue : null,
+      published: Boolean(o.published),
+    });
+  }
+  return rows;
+}
+
 export function MatchesAdminPage() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
@@ -88,67 +126,73 @@ export function MatchesAdminPage() {
 
   async function reloadMatches() {
     const r = await fetch("/api/admin/matches", { credentials: "include", cache: "no-store" });
-    const data = (await r.json().catch(() => ({}))) as any;
+    const data: unknown = await r.json().catch(() => ({}));
     if (!r.ok) {
-      toast.error(typeof data.error === "string" ? data.error : "Nelze načíst zápasy.");
+      toast.error(readAdminJsonError(data) ?? "Nelze načíst zápasy.");
       return;
     }
-    const list = Array.isArray(data.matches) ? (data.matches as any[]) : [];
-    setMatches(
-      list.map((m) => ({
-        id: m.id,
-        slug: m.slug,
-        title: m.title,
-        category: m.category ?? null,
-        homeCode: m.homeCode ?? null,
-        awayCode: m.awayCode ?? null,
-        opponent: m.opponent ?? null,
-        startsAt: m.startsAt ? new Date(m.startsAt).toISOString() : null,
-        venue: m.venue ?? null,
-        published: Boolean(m.published),
-      }))
-    );
-    if (!activeId && list[0]?.id) setActiveId(String(list[0].id));
+    const list = parseMatchRowsFromPayload(data);
+    setMatches(list);
   }
+
+  /** Drží `activeId` v souladu s načteným seznamem — jinak je řízený <select> „prázdný“ a nedá se přepínat. */
+  useEffect(() => {
+    setActiveId((cur) => {
+      if (matches.length === 0) return "";
+      if (cur && matches.some((m) => m.id === cur)) return cur;
+      return matches[0]!.id;
+    });
+  }, [matches]);
 
   async function loadMatch(id: string) {
     const r = await fetch(`/api/admin/matches/${encodeURIComponent(id)}/official-lineup`, {
       credentials: "include",
       cache: "no-store",
     });
-    const data = (await r.json().catch(() => ({}))) as any;
+    const data: unknown = await r.json().catch(() => ({}));
     if (!r.ok) {
-      toast.error(typeof data.error === "string" ? data.error : "Nelze načíst zápas.");
+      toast.error(readAdminJsonError(data) ?? "Nelze načíst zápas.");
       return;
     }
-    const m = data.match;
+    if (typeof data !== "object" || data === null || !("match" in data)) return;
+    const mRaw = (data as { match: unknown }).match;
+    if (typeof mRaw !== "object" || mRaw === null) return;
+    const m = mRaw as Record<string, unknown>;
     setPublished(Boolean(m.published));
-    const off = m.officialLineup;
-    if (off?.lineupStructure) setLineup(off.lineupStructure as LineupStructure);
-    else setLineup(EMPTY_LINEUP);
-    setCaptainId(typeof off?.captainId === "string" ? off.captainId : null);
-    setDefenseCount((off?.defenseCount as 6 | 7 | 8) ?? 8);
-    setAllowExtraForward(Boolean(off?.allowExtraForward));
+    const offRaw = m.officialLineup;
+    if (typeof offRaw === "object" && offRaw !== null) {
+      const off = offRaw as Record<string, unknown>;
+      if (off.lineupStructure != null && typeof off.lineupStructure === "object")
+        setLineup(off.lineupStructure as LineupStructure);
+      else setLineup(EMPTY_LINEUP);
+      setCaptainId(typeof off.captainId === "string" ? off.captainId : null);
+      const dc = off.defenseCount;
+      setDefenseCount(dc === 6 || dc === 7 || dc === 8 ? dc : 8);
+      setAllowExtraForward(Boolean(off.allowExtraForward));
+    } else {
+      setLineup(EMPTY_LINEUP);
+      setCaptainId(null);
+      setDefenseCount(8);
+      setAllowExtraForward(false);
+    }
   }
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const r = await fetch("/api/players");
-      const data = (await r.json().catch(() => [])) as any;
+      const data: unknown = await r.json().catch(() => []);
       if (!cancelled) setPlayers(Array.isArray(data) ? (data as Player[]) : []);
       await reloadMatches();
     })();
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!activeId) return;
     void loadMatch(activeId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
 
   const createMatch = async () => {
@@ -174,9 +218,9 @@ export function MatchesAdminPage() {
           published: false,
         }),
       });
-      const data = (await r.json().catch(() => ({}))) as any;
+      const data: unknown = await r.json().catch(() => ({}));
       if (!r.ok) {
-        toast.error(typeof data.error === "string" ? data.error : "Vytvoření selhalo.");
+        toast.error(readAdminJsonError(data) ?? "Vytvoření selhalo.");
         return;
       }
       toast.success("Zápas vytvořen.");
@@ -186,7 +230,13 @@ export function MatchesAdminPage() {
       setNewVenue("");
       setNewAway("");
       await reloadMatches();
-      if (data.match?.id) setActiveId(String(data.match.id));
+      if (typeof data === "object" && data !== null) {
+        const match = (data as { match?: unknown }).match;
+        if (typeof match === "object" && match !== null && "id" in match) {
+          const id = (match as { id?: unknown }).id;
+          if (typeof id === "string") setActiveId(id);
+        }
+      }
     } finally {
       setCreating(false);
     }
@@ -255,9 +305,9 @@ export function MatchesAdminPage() {
           published,
         }),
       });
-      const data = (await r.json().catch(() => ({}))) as any;
+      const data: unknown = await r.json().catch(() => ({}));
       if (!r.ok) {
-        toast.error(typeof data.error === "string" ? data.error : "Uložení selhalo.");
+        toast.error(readAdminJsonError(data) ?? "Uložení selhalo.");
         return;
       }
       toast.success("Uloženo.");
@@ -283,12 +333,22 @@ export function MatchesAdminPage() {
         <div className="grid gap-6 lg:grid-cols-[minmax(0,8fr)_minmax(0,12fr)]">
           <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <h2 className="font-display text-lg font-black">Zápasy</h2>
+            <p className="mt-2 text-[11px] leading-snug text-white/45">
+              V horním výběru přepínáš <span className="text-white/60">už vytvořený zápas</span>. Úprava oficiální sestavy je v{" "}
+              <span className="text-white/60">pravém sloupci</span> (nad webem vedle této kartičky). Formulář „Nový zápas“ jen
+              přidá další řádek do databáze.
+            </p>
             <div className="mt-3 flex flex-col gap-2">
               <select
                 value={activeId}
                 onChange={(e) => setActiveId(e.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-white"
+                aria-label="Vybraný zápas"
+                disabled={matches.length === 0}
+                className="w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
+                {matches.length === 0 ? (
+                  <option value="">Žádný zápas — založ ho níže</option>
+                ) : null}
                 {matches.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.title} {m.published ? "• public" : ""}
@@ -304,6 +364,12 @@ export function MatchesAdminPage() {
 
               <div className="mt-2 rounded-xl border border-white/10 bg-black/20 p-3">
                 <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Nový zápas</p>
+                <p className="mt-1.5 text-[11px] leading-snug text-white/45">
+                  <span className="text-white/55">HOME / AWAY</span> — trojpísmenné kódy pro vlajky a přehled (CZE, SWE…).
+                  Bez vyplněného názvu se použije automaticky styl „HOME — AWAY“.
+                  <span className="text-white/55"> Soupeř</span> je volitelný text pod datumem na veřejné stránce (vedle „Místo“);{" "}
+                  <em>není</em> to náhrada za pole AWAY. Čas zadej v ISO se zónou (+02:00), nebo ho nechte prázdný.
+                </p>
                 <div className="mt-2 grid gap-2">
                   <div className="grid grid-cols-2 gap-2">
                     <select
@@ -312,7 +378,7 @@ export function MatchesAdminPage() {
                       className="rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm font-semibold text-white"
                       aria-label="Kategorie"
                     >
-                      <option value="beijir">Beijir hockey games</option>
+                      <option value="beijir">Beijer Hockey Games</option>
                       <option value="ms2026">MS 2026</option>
                     </select>
                     <div className="grid grid-cols-2 gap-2">
@@ -340,7 +406,7 @@ export function MatchesAdminPage() {
                     value={newOpponent}
                     onChange={(e) => setNewOpponent(e.target.value)}
                     className="rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-white"
-                    placeholder="Soupeř (volitelné)"
+                    placeholder="Doplňující text „soupeř“ na webu (volitelné)"
                   />
                   <input
                     value={newVenue}
@@ -376,7 +442,8 @@ export function MatchesAdminPage() {
                   {seeding ? "Přidávám…" : "Přidat Beijer Hockey Games (květen 2026)"}
                 </button>
                 <p className="mt-2 text-[11px] leading-snug text-white/50">
-                  Vytvoří a publikuje zápasy. Oficiální sestavu pak doplníš vpravo.
+                  Vytvoří a publikuje přednastavený balík zápasů BHG. Oficiální soupisku pak vyplníš v pravém sloupci (editor
+                  sestavy).
                 </p>
               </div>
             </div>

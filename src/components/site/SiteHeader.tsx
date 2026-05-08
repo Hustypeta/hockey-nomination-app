@@ -68,7 +68,7 @@ export function SiteHeader() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
-    setMobileNavOpen(false);
+    queueMicrotask(() => setMobileNavOpen(false));
   }, [pathname]);
 
   useEffect(() => {

@@ -10,7 +10,7 @@ export const FACEBOOK_APP_ID_FALLBACK = "";
 
 function normalizeFacebookAppId(raw: string | undefined): string | undefined {
   if (raw == null) return undefined;
-  let t = String(raw)
+  const t = String(raw)
     .trim()
     .replace(/^["']|["']$/g, "")
     .replace(/\s/g, "");

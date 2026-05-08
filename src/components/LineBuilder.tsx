@@ -1,5 +1,8 @@
 "use client";
 
+/* eslint-disable react-hooks/static-components --
+ * Vnitřní <Slot /> zavírá nad většinou props LineBuilder; vytažení ven by znamenalo desítky props bez zisku.
+ */
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import type { Player, LineupStructure } from "@/types";

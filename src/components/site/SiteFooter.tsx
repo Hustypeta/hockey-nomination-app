@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SITE_BRAND, SITE_INSTAGRAM_PAGE_URL } from "@/lib/siteBranding";
+import { SITE_BRAND } from "@/lib/siteBranding";
 import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 
 export function SiteFooter() {

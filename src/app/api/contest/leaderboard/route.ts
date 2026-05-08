@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { scoreNominationAgainstOfficial } from "@/lib/contestScoring";
 import { prisma } from "@/lib/prisma";
 import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
@@ -18,7 +18,7 @@ function leaderboardIsPublic(): boolean {
   return process.env.CONTEST_LEADERBOARD_PUBLIC?.trim().toLowerCase() === "true";
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     if (!leaderboardIsPublic() && !(await isAdmin())) {
       return NextResponse.json({

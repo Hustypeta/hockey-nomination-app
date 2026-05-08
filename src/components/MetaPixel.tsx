@@ -32,13 +32,15 @@ export function metaTrack(action: "track" | "trackCustom", eventName: string, pa
 
 export function MetaPixel() {
   const id = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
-  if (!id) return null;
-
   const pathname = usePathname();
+
   useEffect(() => {
+    if (!id) return;
     // App Router: PageView i při client-side navigaci
     metaTrack("track", "PageView");
-  }, [pathname]);
+  }, [pathname, id]);
+
+  if (!id) return null;
 
   return (
     <>
