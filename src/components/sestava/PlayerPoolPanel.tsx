@@ -124,16 +124,12 @@ function DraggableCard({
   const rate = Number.isFinite(player.pick_rate) ? Math.max(0, Math.min(100, player.pick_rate)) : 0;
 
   const canInteract = !disabled && !slotBlocks && !inRoster;
-
-  const dndHooks = enableDnd && canInteract ? listeners : undefined;
-  const dndAttrs = enableDnd && canInteract ? attributes : undefined;
+  const dndOn = enableDnd && canInteract;
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      {...(dndHooks ?? {})}
-      {...(dndAttrs ?? {})}
       className={`
         group/pool relative flex flex-col gap-2 rounded-xl border p-3 sm:p-3.5
         transition-[opacity,box-shadow,border-color,transform] duration-200 ease-out
@@ -156,7 +152,6 @@ function DraggableCard({
                 ? "opacity-50"
                 : "opacity-100"
         }
-        ${enableDnd && canInteract ? "touch-none" : ""}
       `}
     >
       <div
@@ -166,18 +161,22 @@ function DraggableCard({
       <div className="relative flex gap-2">
         <div
           className={`
-            mt-0.5 shrink-0 select-none rounded-lg p-1
-            ${canInteract && enableDnd ? "pointer-events-none cursor-grab text-[#f1c40f] active:cursor-grabbing" : "cursor-default text-slate-600 opacity-35"}
+            flex min-w-0 flex-1 flex-col gap-1.5 rounded-lg px-0.5 py-0.5
+            ${dndOn ? "touch-none cursor-grab active:cursor-grabbing" : "touch-pan-y cursor-default"}
           `}
-          aria-hidden
-        >
-          <GripVertical className="block h-[18px] w-[18px] sm:h-5 sm:w-5" aria-hidden />
-        </div>
-        <div
-          className="flex min-w-0 flex-1 touch-manipulation flex-col gap-1.5 rounded-lg px-0.5 py-0.5"
+          {...(dndOn ? listeners : {})}
+          {...(dndOn ? attributes : {})}
           onClick={() => canInteract && onAdd()}
         >
           <div className="flex items-start gap-2">
+            {enableDnd ? (
+              <GripVertical
+                className={`mt-1 h-4 w-4 shrink-0 sm:h-4 sm:w-4 ${canInteract ? "text-[#f1c40f]/80" : "text-slate-600"}`}
+                aria-hidden
+              />
+            ) : (
+              <span className="mt-1 h-4 w-4 shrink-0" aria-hidden />
+            )}
             <div className="shrink-0">
               <PlayerAvatar
                 name={player.name}
@@ -197,14 +196,14 @@ function DraggableCard({
               </p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-1.5 pl-0">
+          <div className="flex flex-wrap items-center gap-1.5 pl-6 sm:pl-7">
             <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95 sm:text-xs">
               {cur}/{lim} v nominaci
             </span>
             <PickRateBadge rate={rate} />
             {canInteract ? (
               <span className="text-[10px] font-medium leading-tight text-sky-200/75 sm:hidden">
-                {enableDnd ? "⋮⋮ drž a táhni do slotu, nebo klepni pro auto" : "Klepni → přidat"}
+                {enableDnd ? "Přetáhni → soupiska" : "Klepni → přidat"}
               </span>
             ) : null}
           </div>
