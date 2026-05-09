@@ -17,8 +17,10 @@ type FlagCode =
   | "POL"
   | "ITA";
 
-function norm(code: string) {
-  return code.trim().toUpperCase();
+function norm(code: string | undefined | null) {
+  if (code == null) return "";
+  const s = String(code).trim();
+  return s ? s.toUpperCase() : "";
 }
 
 function Svg({ children, className = "", title }: { children: React.ReactNode; className?: string; title: string }) {
@@ -35,8 +37,19 @@ function Svg({ children, className = "", title }: { children: React.ReactNode; c
   );
 }
 
-export function FlagMark({ code, className = "" }: { code: string; className?: string }) {
+export function FlagMark({ code, className = "" }: { code: string | undefined | null; className?: string }) {
   const c = norm(code) as FlagCode;
+  if (!c) {
+    return (
+      <span
+        className={`inline-flex h-5 w-7 items-center justify-center rounded-[3px] bg-white/10 text-sm ring-1 ring-white/15 ${className}`}
+        aria-hidden
+        title="Vlajka — bez kódu"
+      >
+        🏒
+      </span>
+    );
+  }
   if (c === "CZE") {
     return (
       <Svg className={className} title="Česko">

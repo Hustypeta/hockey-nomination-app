@@ -41,27 +41,30 @@ function fmt(v: number | null | undefined) {
   return v === null || v === undefined ? "—" : String(v);
 }
 
-function statRowBadge(s: { team: string; league: string; phase?: "RS" | "PO" }) {
-  const phase =
-    s.phase === "PO" ? (
-      <span
-        className="rounded-full border-[3px] border-neutral-950 bg-white px-3 py-1.5 text-[16px] font-black uppercase tracking-[0.14em] text-black"
-      >
-        PO
-      </span>
-    ) : (
-      <span
-        className="rounded-full border-[3px] border-neutral-950 bg-white px-3 py-1.5 text-[16px] font-black uppercase tracking-[0.14em] text-black"
-      >
-        RS
-      </span>
-    );
+/** +/- pro IG — kladné s „+“, záporné i nula bez zbytečných mezer */
+function fmtPlusMinus(v: number | null | undefined) {
+  if (v === null || v === undefined) return "—";
+  if (!Number.isFinite(v)) return "—";
+  if (v > 0) return `+${v}`;
+  return String(v);
+}
+
+/** Jednotné české popisky fáze — vizuálně oddělené od řádku tým · liga (bez překryvu). */
+function StatPhaseBanner(s: { team: string; league: string; phase?: "RS" | "PO"; dense?: boolean }) {
+  const phaseLabel = s.phase === "PO" ? "Play off" : "Základní část";
+  const subtitle = s.league?.trim() ? `${s.team.trim()} · ${s.league.trim()}` : s.team.trim();
+  const pillText = s.dense ? "text-[15px] tracking-[0.12em]" : "text-[17px] tracking-[0.14em]";
+  const subtitleText = s.dense ? "text-[21px] leading-snug" : "text-[24px] leading-snug";
+  const pillPad = s.dense ? "px-3 py-1.5" : "px-4 py-2";
+  const phaseWrap =
+    s.phase === "PO"
+      ? `rounded-full border-[3px] border-neutral-950 bg-gradient-to-r from-[#fff7d6] via-[#ffeaa7] to-[#fcd34d] ${pillPad} font-black uppercase text-neutral-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]`
+      : `rounded-full border-[3px] border-neutral-950 bg-gradient-to-r from-[#dbeafe] via-[#bfdbfe] to-[#93c5fd] ${pillPad} font-black uppercase text-neutral-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]`;
+
   return (
-    <div className="flex min-w-0 flex-wrap items-center gap-2 text-[26px] font-black text-black">
-      {phase}
-      <span className="min-w-0 whitespace-normal break-words leading-snug">
-        {s.league ? `${s.team} · ${s.league}` : s.team}
-      </span>
+    <div className="flex min-w-0 flex-col gap-2">
+      <span className={`inline-flex w-fit ${phaseWrap} ${pillText}`}>{phaseLabel}</span>
+      <p className={`min-w-0 break-words font-black tracking-tight text-neutral-950 ${subtitleText}`}>{subtitle}</p>
     </div>
   );
 }
@@ -92,34 +95,48 @@ function IgJerseyHero({ player, size = "normal" }: { player: Player; size?: "nor
 }
 
 function StatsTable({ s }: { s: EliteProspectsStats }) {
-  const headers = ["GP", "G", "A", "TP", "PIM", "+/-"] as const;
+  /** Více řádků (RS+PO / více klubů) = menší typografie, aby se nic neťalo přes okraje na 1080px. */
+  const dense = s.rows.length >= 2;
+  const headers = ["GP", "G", "A", "B", "PIM", "+/-"] as const;
+  const headSz = dense ? "text-[22px]" : "text-[26px]";
+  const numSz = dense ? "text-[52px] mt-1.5" : "text-[62px] mt-2";
+  const panelPad = dense ? "p-5" : "p-6";
+  const blockGap = dense ? "space-y-4" : "space-y-5";
+  const rowGap = dense ? "gap-2" : "gap-2.5";
+
   return (
-    <div className="w-full rounded-[28px] border-[5px] border-neutral-950 bg-white p-5 shadow-[0_16px_44px_rgba(0,0,0,0.10)] sm:p-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="text-[52px] font-black uppercase tracking-[0.1em] text-black">Statistiky</div>
+    <div
+      className={`w-full rounded-[32px] border-[5px] border-neutral-950 bg-gradient-to-b from-white via-white to-neutral-50 ${panelPad} shadow-[0_20px_56px_rgba(0,0,0,0.14),inset_0_1px_0_rgba(255,255,255,0.9)]`}
+    >
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div
-          className="rounded-full border-[3px] border-neutral-950 bg-white px-7 py-3.5 text-[40px] font-black tracking-[0.04em] text-black"
+          className={`font-black uppercase tracking-[0.12em] text-neutral-950 ${dense ? "text-[40px] leading-none" : "text-[48px] leading-none"}`}
         >
-          <span className="font-bold normal-case text-neutral-800">Sezóna </span>
-          <span className="font-black uppercase tracking-[0.12em] text-black">{s.seasonLabel}</span>
+          Statistiky
+        </div>
+        <div
+          className={`shrink-0 rounded-full border-[3px] border-neutral-950 bg-gradient-to-r from-neutral-900 to-neutral-950 px-5 py-2.5 text-white shadow-[0_12px_28px_rgba(0,0,0,0.28)] sm:px-7 sm:py-3 ${
+            dense ? "text-[28px]" : "text-[34px]"
+          } font-black tracking-[0.06em]`}
+        >
+          <span className="font-semibold normal-case text-white/85">Sezóna </span>
+          <span className="uppercase tracking-[0.14em]">{s.seasonLabel}</span>
         </div>
       </div>
 
-      <div className="mt-5 space-y-5">
+      <div className={`mt-5 ${blockGap}`}>
         {s.rows.map((r, idx) => (
-          <div key={idx} className="space-y-2.5">
-            {statRowBadge(r)}
-            <div className="grid grid-cols-6 gap-2.5">
+          <div key={idx} className="space-y-3">
+            <StatPhaseBanner team={r.team} league={r.league} phase={r.phase} dense={dense} />
+            <div className={`grid grid-cols-6 ${rowGap}`}>
               {headers.map((h) => (
                 <div
                   key={h}
-                  className="rounded-2xl border-[3px] border-neutral-950 bg-white px-2 py-2.5 text-center shadow-[inset_0_1px_0_rgba(0,0,0,0.04)]"
+                  className="flex min-h-[118px] flex-col justify-between rounded-2xl border-[3px] border-neutral-950 bg-white px-1.5 py-2 text-center shadow-[inset_0_2px_0_rgba(255,255,255,0.85),0_4px_0_rgba(0,0,0,0.06)] sm:min-h-[128px] sm:px-2 sm:py-2.5"
                 >
-                  <div className="text-[30px] font-black uppercase tracking-[0.1em] text-neutral-800">
-                    {h}
-                  </div>
+                  <div className={`font-black uppercase tracking-[0.14em] text-neutral-600 ${headSz}`}>{h}</div>
                   <div
-                    className="mt-2 font-display text-[66px] font-black tabular-nums leading-none tracking-tight text-black"
+                    className={`font-display font-black tabular-nums leading-none tracking-tight text-neutral-950 drop-shadow-[0_1px_0_rgba(255,255,255,0.8)] ${numSz}`}
                   >
                     {h === "GP"
                       ? fmt(r.gp)
@@ -127,11 +144,11 @@ function StatsTable({ s }: { s: EliteProspectsStats }) {
                         ? fmt(r.g)
                         : h === "A"
                           ? fmt(r.a)
-                          : h === "TP"
+                          : h === "B"
                             ? fmt(r.pts)
                             : h === "PIM"
                               ? fmt(r.pim)
-                              : fmt(r.plusMinus)}
+                              : fmtPlusMinus(r.plusMinus)}
                   </div>
                 </div>
               ))}
@@ -172,7 +189,8 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: 
   const nameFont =
     nameLen >= 16 ? "text-[84px]" : nameLen >= 13 ? "text-[90px]" : "text-[96px]";
   const clubLen = clubLeague.length;
-  const clubFont = clubLen >= 30 ? "text-[38px]" : clubLen >= 22 ? "text-[42px]" : "text-[44px]";
+  const clubFont =
+    clubLen >= 42 ? "text-[30px] leading-tight" : clubLen >= 30 ? "text-[34px] leading-tight" : clubLen >= 22 ? "text-[38px] leading-tight" : "text-[40px] leading-tight";
     return (
     <div
       ref={ref}
@@ -191,36 +209,37 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: 
         className="pointer-events-none absolute inset-0 rounded-[40px] ring-2 ring-white/65"
         aria-hidden
       />
-      <div className="relative z-10 flex h-full min-h-0 flex-col px-14 pb-12 pt-10">
+      <div className="relative z-10 flex h-full min-h-0 flex-col px-11 pb-10 pt-9 sm:px-12">
         <div className="flex items-end">
-          <div className="min-w-0">
+          <div className="min-w-0 pr-2">
             <p
-              className={`font-display ${nameFont} font-black leading-[0.96] tracking-[0.01em] ${topText}`}
+              className={`font-display ${nameFont} font-black leading-[0.98] tracking-[0.01em] hyphens-auto [overflow-wrap:anywhere] ${topText}`}
             >
               {m.player.name}
             </p>
-            {/* Club/league is rendered below the jersey as a "card strip" to keep layout consistent. */}
           </div>
         </div>
 
-        <div className="mt-8 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div className="flex min-h-0 min-w-0 flex-1 items-center justify-center pb-12 pt-6">
+        <div className="mt-6 flex min-h-0 flex-1 flex-col overflow-visible">
+          <div
+            className={`flex min-h-0 min-w-0 flex-1 items-center justify-center ${denseStats ? "pb-6 pt-4" : "pb-10 pt-6"}`}
+          >
             <IgJerseyHero player={m.player} size={denseStats ? "compact" : "normal"} />
           </div>
           {clubLeague ? (
-            <div className="mt-2 mb-6 flex w-full items-center justify-center px-6">
+            <div className={`flex w-full items-center justify-center px-4 ${denseStats ? "mb-4 mt-1" : "mb-5 mt-2"}`}>
               <div
-                className={`max-w-full rounded-full border-[3px] border-neutral-950 px-6 py-3 text-center font-display ${clubFont} font-black leading-none tracking-tight whitespace-normal ${
+                className={`max-w-[min(100%,940px)] rounded-full border-[3px] border-neutral-950 px-5 py-2.5 text-center font-display ${clubFont} font-black tracking-tight ${
                   variant === "promo"
-                    ? "bg-white/12 text-white [text-shadow:0_3px_0_rgba(0,0,0,0.80)]"
-                    : "bg-white text-neutral-950"
+                    ? "bg-white/14 text-white shadow-[0_10px_28px_rgba(0,0,0,0.35)] [text-shadow:0_2px_0_rgba(0,0,0,0.75)]"
+                    : "bg-white text-neutral-950 shadow-[0_8px_22px_rgba(0,0,0,0.08)]"
                 }`}
               >
                 {clubLeague}
               </div>
             </div>
           ) : null}
-          <div className={`w-full shrink-0 ${denseStats ? "mt-8 pt-2" : "mt-10 pt-2"}`}>
+          <div className={`w-full shrink-0 pb-1 ${denseStats ? "mt-2" : "mt-4"}`}>
             {s ? (
               <StatsTable s={s} />
             ) : (
@@ -233,15 +252,15 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: 
           </div>
         </div>
 
-        <div className="mt-6 flex w-full items-center justify-end pr-2 sm:pr-6">
+        <div className="mt-auto flex w-full items-center justify-end pr-1 pt-3 sm:pr-4">
           <a
             href="https://hokejlineup.cz"
             target="_blank"
             rel="noopener noreferrer"
-            className={`font-display text-[36px] font-black tracking-[0.05em] underline underline-offset-[8px] decoration-2 transition hover:decoration-[#0050a8] ${
+            className={`font-display text-[32px] font-black tracking-[0.06em] underline underline-offset-[10px] decoration-[3px] transition hover:opacity-95 sm:text-[34px] ${
               variant === "promo"
-                ? "text-white decoration-white/60 [text-shadow:0_3px_0_rgba(0,0,0,0.80)]"
-                : "text-black decoration-neutral-950/50"
+                ? "text-white decoration-white/55 [text-shadow:0_3px_0_rgba(0,0,0,0.82)]"
+                : "text-neutral-950 decoration-neutral-950/45"
             }`}
           >
             hokejlineup.cz
@@ -256,13 +275,40 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: 
 PlayerIgCard.displayName = "PlayerIgCard";
 
 const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
-  // Vyplníš mi hodnoty a já je sem doplním 1:1 (GP, G, A, PTS, +/-, PIM + tým/ligu/season).
+  /** Promo karty — řádky mají jen klub + ligu; fáze je vždy „Základní část“ / „Play off“. */
+  "cervenka-roman": {
+    seasonLabel: "2025-26",
+    rows: [
+      {
+        team: "HC Dynamo Pardubice",
+        league: "Czechia",
+        phase: "RS",
+        gp: 43,
+        g: 19,
+        a: 41,
+        pts: 60,
+        pim: 28,
+        plusMinus: 26,
+      },
+      {
+        team: "HC Dynamo Pardubice",
+        league: "Czechia",
+        phase: "PO",
+        gp: 17,
+        g: 14,
+        a: 11,
+        pts: 25,
+        pim: 4,
+        plusMinus: 10,
+      },
+    ],
+  },
   "sedlak-lukas": {
     seasonLabel: "2025-26",
     rows: [
       {
-        team: "HC Dynamo Pardubice - základní část",
-        league: "",
+        team: "HC Dynamo Pardubice",
+        league: "Czechia",
         phase: "RS",
         gp: 49,
         g: 17,
@@ -272,8 +318,8 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
         pim: 31,
       },
       {
-        team: "HC Dynamo Pardubice - Play off",
-        league: "",
+        team: "HC Dynamo Pardubice",
+        league: "Czechia",
         phase: "PO",
         gp: 17,
         g: 8,
@@ -364,9 +410,145 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
       { team: "Dallas Stars", league: "NHL", phase: "PO", gp: 6, g: 0, a: 0, pts: 0, pim: 4, plusMinus: -3 },
     ],
   },
+  "klapka-adam": {
+    seasonLabel: "2025-26",
+    rows: [
+      {
+        team: "Calgary Flames",
+        league: "NHL",
+        phase: "RS",
+        gp: 79,
+        g: 6,
+        a: 12,
+        pts: 18,
+        pim: 112,
+        plusMinus: -12,
+      },
+    ],
+  },
+  "vozenilek-daniel": {
+    seasonLabel: "2025-26",
+    rows: [
+      {
+        team: "EV Zug",
+        league: "NL",
+        phase: "RS",
+        gp: 36,
+        g: 4,
+        a: 9,
+        pts: 13,
+        pim: 51,
+        plusMinus: -5,
+      },
+      {
+        team: "EV Zug",
+        league: "NL",
+        phase: "PO",
+        gp: 5,
+        g: 0,
+        a: 2,
+        pts: 2,
+        pim: 4,
+        plusMinus: 2,
+      },
+    ],
+  },
+  "blumel-matej": {
+    seasonLabel: "2025-26",
+    rows: [
+      {
+        team: "Providence Bruins",
+        league: "AHL",
+        phase: "RS",
+        gp: 58,
+        g: 21,
+        a: 31,
+        pts: 52,
+        pim: 20,
+        plusMinus: 23,
+      },
+      {
+        team: "Providence Bruins",
+        league: "AHL",
+        phase: "PO",
+        gp: 4,
+        g: 2,
+        a: 0,
+        pts: 2,
+        pim: 0,
+        plusMinus: -1,
+      },
+    ],
+  },
+  "beranek-ondrej": {
+    seasonLabel: "2025-26",
+    rows: [
+      {
+        team: "HC Energie Karlovy Vary",
+        league: "Czechia",
+        phase: "RS",
+        gp: 45,
+        g: 18,
+        a: 14,
+        pts: 32,
+        pim: 22,
+        plusMinus: -5,
+      },
+      {
+        team: "HC Energie Karlovy Vary",
+        league: "Czechia",
+        phase: "PO",
+        gp: 9,
+        g: 4,
+        a: 2,
+        pts: 6,
+        pim: 0,
+        plusMinus: -1,
+      },
+    ],
+  },
+  "kubalik-dominik": {
+    seasonLabel: "2025-26",
+    rows: [
+      {
+        team: "EV Zug",
+        league: "NL",
+        phase: "RS",
+        gp: 49,
+        g: 22,
+        a: 17,
+        pts: 39,
+        pim: 22,
+        plusMinus: -7,
+      },
+      {
+        team: "EV Zug",
+        league: "NL",
+        phase: "PO",
+        gp: 4,
+        g: 1,
+        a: 0,
+        pts: 1,
+        pim: 0,
+        plusMinus: -3,
+      },
+    ],
+  },
 };
 
 const PLAYERS: Array<{ player: Player }> = [
+  {
+    player: {
+      id: "cervenka-roman",
+      name: "Roman Červenka",
+      position: "F",
+      role: "RW",
+      club: "—",
+      league: "—",
+      jerseyNumber: 10,
+      pick_rate: 0,
+    },
+  },
   {
     player: {
       id: "sedlak-lukas",
@@ -496,6 +678,66 @@ const PLAYERS: Array<{ player: Player }> = [
       club: "Dallas Stars",
       league: "NHL",
       jerseyNumber: 12,
+      pick_rate: 0,
+    },
+  },
+  {
+    player: {
+      id: "klapka-adam",
+      name: "Adam Klapka",
+      position: "F",
+      role: "RW",
+      club: "—",
+      league: "—",
+      jerseyNumber: 43,
+      pick_rate: 0,
+    },
+  },
+  {
+    player: {
+      id: "vozenilek-daniel",
+      name: "Daniel Voženílek",
+      position: "F",
+      role: "RW",
+      club: "—",
+      league: "—",
+      jerseyNumber: 95,
+      pick_rate: 0,
+    },
+  },
+  {
+    player: {
+      id: "blumel-matej",
+      name: "Matěj Blümel",
+      position: "F",
+      role: "LW",
+      club: "—",
+      league: "—",
+      jerseyNumber: 95,
+      pick_rate: 0,
+    },
+  },
+  {
+    player: {
+      id: "beranek-ondrej",
+      name: "Ondřej Beránek",
+      position: "F",
+      role: "RW",
+      club: "—",
+      league: "—",
+      jerseyNumber: 8,
+      pick_rate: 0,
+    },
+  },
+  {
+    player: {
+      id: "kubalik-dominik",
+      name: "Dominik Kubalík",
+      position: "F",
+      role: "LW",
+      club: "—",
+      league: "—",
+      jerseyNumber: 81,
       pick_rate: 0,
     },
   },
