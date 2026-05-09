@@ -205,29 +205,84 @@ function pickFiniteNumber(v: unknown): number | undefined {
   return undefined;
 }
 
-/** PowerShell `ConvertTo-Json` často pošle PascalCase klíče (`CampaignId`). */
+/** Sjednocení klíčů: PascalCase, snake_case apod. (PowerShell proxy apod.). */
+function canonicalKey(k: string) {
+  return k.toLowerCase().replace(/_/g, "");
+}
+
+function pickFlexible(o: Record<string, unknown>, camelName: string): unknown {
+  const want = canonicalKey(camelName);
+  for (const [k, v] of Object.entries(o)) {
+    if (canonicalKey(k) === want) return v;
+  }
+  return undefined;
+}
+
+/** PowerShell `ConvertTo-Json` + různé klíče v těle. */
 function normalizeBroadcastBody(raw: unknown): BroadcastBody {
   if (!raw || typeof raw !== "object") return {};
   const o = raw as Record<string, unknown>;
   const out: BroadcastBody = {};
 
-  const modeRaw = o.mode ?? o.Mode;
+  const modeRaw = pickFlexible(o, "mode");
   if (modeRaw === "send") out.mode = "send";
   else if (modeRaw === "dry-run") out.mode = "dry-run";
 
-  const cid = o.campaignId ?? o.CampaignId;
+  const cid = pickFlexible(o, "campaignId");
   if (typeof cid === "string" && cid.trim()) out.campaignId = cid.trim();
 
-  const lim = pickFiniteNumber(o.limit ?? o.Limit);
+  const lim = pickFiniteNumber(pickFlexible(o, "limit"));
   if (lim !== undefined) out.limit = lim;
 
-  const off = pickFiniteNumber(o.offset ?? o.Offset);
+  const off = pickFiniteNumber(pickFlexible(o, "offset"));
   if (off !== undefined) out.offset = off;
 
-  const thr = pickFiniteNumber(o.throttleMs ?? o.ThrottleMs);
+  const thr = pickFiniteNumber(pickFlexible(o, "throttleMs"));
   if (thr !== undefined) out.throttleMs = thr;
 
-  if (Boolean(o.retryFailed ?? o.RetryFailed)) out.retryFailed = true;
+  if (Boolean(pickFlexible(o, "retryFailed"))) out.retryFailed = true;
+
+  return out;
+}
+
+function qpFirst(req: NextRequest, ...keys: string[]): string | undefined {
+  const sp = req.nextUrl.searchParams;
+  for (const k of keys) {
+    const v = sp.get(k);
+    const t = typeof v === "string" ? v.trim() : "";
+    if (t) return t;
+  }
+  return undefined;
+}
+
+/** Když tělo/JSON nesedí, stačí hodnoty v URL (bez závislosti na `-Body`). */
+function mergeBroadcastQuery(req: NextRequest, body: BroadcastBody): BroadcastBody {
+  const out: BroadcastBody = { ...body };
+
+  if (!out.campaignId?.trim()) {
+    const c = qpFirst(req, "campaignId", "CampaignId");
+    if (c) out.campaignId = c;
+  }
+
+  if (!out.mode) {
+    const m = qpFirst(req, "mode", "Mode");
+    if (m === "send") out.mode = "send";
+    else if (m === "dry-run") out.mode = "dry-run";
+  }
+
+  const qLimit = pickFiniteNumber(qpFirst(req, "limit", "Limit"));
+  if (out.limit === undefined && qLimit !== undefined) out.limit = qLimit;
+
+  const qOff = pickFiniteNumber(qpFirst(req, "offset", "Offset"));
+  if (out.offset === undefined && qOff !== undefined) out.offset = qOff;
+
+  const qThr = pickFiniteNumber(qpFirst(req, "throttleMs", "ThrottleMs"));
+  if (out.throttleMs === undefined && qThr !== undefined) out.throttleMs = qThr;
+
+  if (!out.retryFailed) {
+    const r = qpFirst(req, "retryFailed", "RetryFailed")?.toLowerCase();
+    if (r === "1" || r === "true" || r === "yes") out.retryFailed = true;
+  }
 
   return out;
 }
@@ -239,10 +294,11 @@ export async function POST(req: NextRequest) {
 
   let body: BroadcastBody = {};
   try {
-    body = normalizeBroadcastBody(await req.json());
+    body = normalizeBroadcastBody(await req.json().catch(() => ({})));
   } catch {
     body = {};
   }
+  body = mergeBroadcastQuery(req, body);
 
   const mode = body.mode === "send" ? "send" : "dry-run";
   const campaignId = typeof body.campaignId === "string" ? body.campaignId.trim() : "";

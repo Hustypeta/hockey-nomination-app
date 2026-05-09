@@ -192,8 +192,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json().catch(() => ({}));
-    const to = typeof body?.to === "string" ? body.to.trim() : "";
+    const body = await req.json().catch(() => ({})) as Record<string, unknown>;
+    const fromJson =
+      (typeof body.to === "string" && body.to.trim()) ||
+      (typeof body.To === "string" && String(body.To).trim()) ||
+      "";
+    const fromQuery = req.nextUrl.searchParams.get("to")?.trim() ?? "";
+    const to = fromJson || fromQuery;
     if (!to || !to.includes("@")) {
       return NextResponse.json({ error: "Chybí 'to' (email)." }, { status: 400 });
     }
