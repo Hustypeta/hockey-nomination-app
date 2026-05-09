@@ -10,7 +10,7 @@ import {
 } from "@/lib/matchLineupPosterSegments";
 import { rosterLastDisplay } from "@/lib/namesOnlyRoster";
 
-const FULL_SECTIONS: MatchLineupPosterGroup[] = ["goalies", "defense", "forwards-12", "forwards-34"];
+const RATING_SECTIONS: MatchLineupPosterGroup[] = ["goalies", "defense", "forwards-12", "forwards-34"];
 
 const formatCsDate = (d: Date) =>
   new Intl.DateTimeFormat("cs-CZ", {
@@ -81,12 +81,21 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
     const host = siteUrl.replace(/^https?:\/\//, "");
     const titleLine = headline.trim();
 
-    const sections = useMemo(() => {
-      return FULL_SECTIONS.map((group) => {
-        const ids = pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward);
-        const names = ids.map((id) => rosterLastDisplay(players, id));
-        return { group, names };
-      });
+    const goalies = useMemo(() => {
+      const ids = pickMatchLineupSegmentPlayerIds(lineup, "goalies", defenseCount, allowExtraForward);
+      return ids.map((id) => rosterLastDisplay(players, id));
+    }, [lineup, players, defenseCount, allowExtraForward]);
+
+    const defense = useMemo(() => {
+      const ids = pickMatchLineupSegmentPlayerIds(lineup, "defense", defenseCount, allowExtraForward);
+      return ids.map((id) => rosterLastDisplay(players, id));
+    }, [lineup, players, defenseCount, allowExtraForward]);
+
+    const forwards = useMemo(() => {
+      const ids12 = pickMatchLineupSegmentPlayerIds(lineup, "forwards-12", defenseCount, allowExtraForward);
+      const ids34 = pickMatchLineupSegmentPlayerIds(lineup, "forwards-34", defenseCount, allowExtraForward);
+      const ids = [...ids12, ...ids34];
+      return ids.map((id) => rosterLastDisplay(players, id));
     }, [lineup, players, defenseCount, allowExtraForward]);
 
     return (
@@ -96,16 +105,32 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
           <PosterHeader eyebrow="MS 2026 · zápas" titleLine={titleLine} subline={subline} kicker="Český nároďák · soupiska · jen jména (komplet)" />
 
           <div className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-12">
-            {sections.map(({ group, names }) => (
-              <section key={group}>
-                <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE[group]}</SectionTitle>
-                <div className={`mx-auto grid max-w-3xl gap-2.5 ${gridColsFor(group)} sm:gap-3`}>
-                  {names.map((n, i) => (
-                    <NameOnlyPill key={`${group}-${i}`}>{n}</NameOnlyPill>
-                  ))}
-                </div>
-              </section>
-            ))}
+            <section>
+              <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionTitle>
+              <div className="mx-auto grid max-w-3xl grid-cols-3 gap-2.5 sm:gap-3">
+                {goalies.map((n, i) => (
+                  <NameOnlyPill key={`goalies-${i}`}>{n}</NameOnlyPill>
+                ))}
+              </div>
+            </section>
+
+            <section>
+              <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionTitle>
+              <div className="mx-auto grid max-w-3xl grid-cols-2 gap-2.5 sm:gap-3">
+                {defense.map((n, i) => (
+                  <NameOnlyPill key={`defense-${i}`}>{n}</NameOnlyPill>
+                ))}
+              </div>
+            </section>
+
+            <section>
+              <SectionTitle>Útočníci</SectionTitle>
+              <div className="mx-auto grid max-w-3xl grid-cols-3 gap-2.5 sm:gap-3">
+                {forwards.map((n, i) => (
+                  <NameOnlyPill key={`forwards-${i}`}>{n}</NameOnlyPill>
+                ))}
+              </div>
+            </section>
           </div>
         </div>
 
@@ -128,7 +153,7 @@ export const MatchRatingNamesFullPoster = forwardRef<
   const titleLine = headline.trim();
 
   const sections = useMemo(() => {
-    return FULL_SECTIONS.map((group) => {
+    return RATING_SECTIONS.map((group) => {
       const ids = pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward);
       const rows = ids.map((id) => {
         const agg = ratings[id];
@@ -165,7 +190,7 @@ export const MatchRatingNamesFullPoster = forwardRef<
 });
 
 function gridColsFor(group: MatchLineupPosterGroup) {
-  return group === "goalies" ? "grid-cols-3" : group === "defense" ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-3";
+  return group === "goalies" ? "grid-cols-3" : group === "defense" ? "grid-cols-2" : "grid-cols-3";
 }
 
 function DecorativeBg() {
