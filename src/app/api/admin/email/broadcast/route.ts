@@ -196,6 +196,42 @@ type BroadcastBody = {
   retryFailed?: boolean;
 };
 
+function pickFiniteNumber(v: unknown): number | undefined {
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  if (typeof v === "string" && v.trim() !== "") {
+    const n = Number(v);
+    if (Number.isFinite(n)) return n;
+  }
+  return undefined;
+}
+
+/** PowerShell `ConvertTo-Json` často pošle PascalCase klíče (`CampaignId`). */
+function normalizeBroadcastBody(raw: unknown): BroadcastBody {
+  if (!raw || typeof raw !== "object") return {};
+  const o = raw as Record<string, unknown>;
+  const out: BroadcastBody = {};
+
+  const modeRaw = o.mode ?? o.Mode;
+  if (modeRaw === "send") out.mode = "send";
+  else if (modeRaw === "dry-run") out.mode = "dry-run";
+
+  const cid = o.campaignId ?? o.CampaignId;
+  if (typeof cid === "string" && cid.trim()) out.campaignId = cid.trim();
+
+  const lim = pickFiniteNumber(o.limit ?? o.Limit);
+  if (lim !== undefined) out.limit = lim;
+
+  const off = pickFiniteNumber(o.offset ?? o.Offset);
+  if (off !== undefined) out.offset = off;
+
+  const thr = pickFiniteNumber(o.throttleMs ?? o.ThrottleMs);
+  if (thr !== undefined) out.throttleMs = thr;
+
+  if (Boolean(o.retryFailed ?? o.RetryFailed)) out.retryFailed = true;
+
+  return out;
+}
+
 export async function POST(req: NextRequest) {
   if (!(await requireAdmin()) && !secretOk(req)) {
     return NextResponse.json({ error: "Neautorizováno." }, { status: 401 });
@@ -203,7 +239,7 @@ export async function POST(req: NextRequest) {
 
   let body: BroadcastBody = {};
   try {
-    body = (await req.json()) as BroadcastBody;
+    body = normalizeBroadcastBody(await req.json());
   } catch {
     body = {};
   }
