@@ -76,11 +76,8 @@ const HTML = `<!doctype html>
                           <p style="margin:0 0 10px 0;">
                             Pokud se Vám platforma Lineup líbí, budeme rádi za jakékoliv sdílení.
                           </p>
-                          <p style="margin:0 0 10px 0;">
-                            Děkuji a přeji krásný den.
-                          </p>
                           <p style="margin:0;">
-                            <strong style="color:#ffffff;">Risk je zisk!</strong>
+                            Děkuji a přeji krásný den.
                           </p>
                         </div>
 

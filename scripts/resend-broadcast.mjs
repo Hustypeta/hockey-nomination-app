@@ -31,14 +31,13 @@ function requireEnv(name) {
 const SUBJECT =
   "Lineup — poslední den 40 % bonusu";
 const TEXT =
-  "Velice Vám děkuji za Váš zájem o platformu Lineup.\n\nNezapomeňte, že se dnes blíží poslední den pro odeslání nominace do soutěže s 40 % bonusem.\n\nRisk je zisk!\n";
+  "Velice Vám děkuji za Váš zájem o platformu Lineup.\n\nNezapomeňte, že se dnes blíží poslední den pro odeslání nominace do soutěže s 40 % bonusem.\n";
 const HTML = `
 <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.5; color: #0f172a;">
   <p>Velice Vám děkuji za Váš zájem o platformu <strong>Lineup</strong>.</p>
   <p>
     Nezapomeňte, že se dnes blíží poslední den pro odeslání nominace do soutěže s <strong>40&nbsp;% bonusem</strong>.
   </p>
-  <p><strong>Risk je zisk!</strong></p>
 </div>
 `.trim();
 
