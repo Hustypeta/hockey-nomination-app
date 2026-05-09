@@ -104,3 +104,35 @@ export async function allocateShareLinkSlug(
     }
   }
 }
+
+/**
+ * Slug pro match-share-link (`/m/{slug}`) — kontroluje kolize ve vlastní tabulce
+ * `match_share_links` i v `nominations` (jiná URL, ale slug zůstává unikátní napříč).
+ */
+export async function allocateMatchShareLinkSlug(
+  prisma: PrismaClient,
+  title: string,
+  excludeCode: string | null
+): Promise<string> {
+  let base = slugifyNominationTitle(title);
+  if (!base || base.length < 2) {
+    base = `sestava-zapas-${randomSlugSuffix(8)}`;
+  }
+
+  let candidate = base;
+  let n = 0;
+  for (;;) {
+    const [nomClash, matchLinkRow] = await Promise.all([
+      prisma.nomination.findFirst({ where: { slug: candidate }, select: { id: true } }),
+      prisma.matchShareLink.findFirst({ where: { slug: candidate }, select: { code: true } }),
+    ]);
+    const matchClash =
+      matchLinkRow && (!excludeCode || matchLinkRow.code !== excludeCode) ? matchLinkRow : null;
+    if (!nomClash && !matchClash) return candidate;
+    n += 1;
+    candidate = `${base}-${n}`;
+    if (n > 200) {
+      return `${base}-${randomSlugSuffix(6)}`;
+    }
+  }
+}

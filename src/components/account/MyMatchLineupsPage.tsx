@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Loader2, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { Loader2, Plus, Share2 } from "lucide-react";
 
 type MatchShareLinkRow = {
   code: string;
@@ -22,6 +23,24 @@ function formatWhen(iso: string) {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+async function shareLink(title: string, url: string) {
+  const nav = typeof navigator !== "undefined" ? navigator : null;
+  if (nav && typeof nav.share === "function") {
+    try {
+      await nav.share({ title, text: title, url });
+      return;
+    } catch {
+      /** uživatel zrušil — fallne na clipboard. */
+    }
+  }
+  try {
+    await nav?.clipboard?.writeText(url);
+    toast.success("Odkaz zkopírován do schránky.");
+  } catch {
+    toast.error("Nepodařilo se zkopírovat odkaz.");
+  }
 }
 
 export function MyMatchLineupsPage() {
@@ -119,7 +138,7 @@ export function MyMatchLineupsPage() {
       {empty ? (
         <p className="mt-8 rounded-2xl border border-white/10 bg-black/25 p-8 text-center text-slate-400">
           Zatím nemáš uloženou žádnou zápasovou sestavu. Otevři{" "}
-          <strong className="text-white">Tvorba sestavy na zápas</strong>, slož ji a dej <strong className="text-white">Uložit &amp; sdílet</strong>.
+          <strong className="text-white">Tvorba sestavy na zápas</strong>, slož ji a dej <strong className="text-white">Uložit</strong>.
         </p>
       ) : null}
 
@@ -135,20 +154,36 @@ export function MyMatchLineupsPage() {
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
-                  {l.slug ? (
-                    <Link
-                      href={`/m/${encodeURIComponent(l.slug)}`}
-                      className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[#c8102e] to-[#9e0c24] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#c8102e]/20 transition hover:brightness-110"
-                    >
-                      Otevřít
-                    </Link>
-                  ) : null}
                   <Link
-                    href="/zapasy/sestava"
-                    className="inline-flex items-center justify-center rounded-lg border border-white/15 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-[#f1c40f]/35 hover:text-white"
+                    href={`/zapasy/sestava?kod=${encodeURIComponent(l.code)}`}
+                    className="inline-flex items-center justify-center rounded-lg border border-sky-400/40 bg-sky-500/15 px-3 py-2 text-sm font-semibold text-sky-100 transition hover:border-sky-300/55 hover:bg-sky-500/25"
                   >
-                    Otevřít editor
+                    Upravit sestavu
                   </Link>
+                  {l.slug ? (
+                    <>
+                      <Link
+                        href={`/m/${encodeURIComponent(l.slug)}`}
+                        className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[#c8102e] to-[#9e0c24] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#c8102e]/20 transition hover:brightness-110"
+                      >
+                        Otevřít
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url =
+                            typeof window !== "undefined"
+                              ? `${window.location.origin}/m/${encodeURIComponent(l.slug!)}`
+                              : `/m/${encodeURIComponent(l.slug!)}`;
+                          void shareLink(l.title?.trim() || "Sestava na zápas", url);
+                        }}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#f1c40f]/40 bg-gradient-to-b from-[#f1c40f]/15 to-[#f1c40f]/5 px-3 py-2 text-sm font-semibold text-[#f1e6a8] transition hover:from-[#f1c40f]/25 hover:to-[#f1c40f]/10"
+                      >
+                        <Share2 className="h-4 w-4" aria-hidden />
+                        Sdílet
+                      </button>
+                    </>
+                  ) : null}
                 </div>
               </div>
               <p className="mt-3 font-mono text-[10px] text-slate-600">{l.code}</p>

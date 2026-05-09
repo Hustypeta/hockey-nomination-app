@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { allocateShareLinkSlug } from "@/lib/allocateNominationSlug";
+import { allocateMatchShareLinkSlug } from "@/lib/allocateNominationSlug";
 import { validateMatchShareBody } from "@/lib/validateMatchShareBody";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
@@ -20,6 +20,13 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Musíte být přihlášení." }, { status: 401 });
     }
+    /** Existující User v DB? Pokud ne, ukládáme anonymně (userId = null), jinak FK selže. */
+    const userExists = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { id: true },
+    });
+    const ownerUserId = userExists ? session.user.id : null;
+
     const body = await request.json();
     const parsed = validateMatchShareBody(body);
     if (!parsed.ok) {
@@ -27,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
     const { title, captainId, lineupStructure, defenseCount, allowExtraForward } = parsed;
 
-    const slug = await allocateShareLinkSlug(prisma, title, null);
+    const slug = await allocateMatchShareLinkSlug(prisma, title, null);
 
     let code = genShareCode(10);
     for (let attempt = 0; attempt < 8; attempt++) {
@@ -40,7 +47,7 @@ export async function POST(request: NextRequest) {
       data: {
         code,
         slug,
-        userId: session.user.id,
+        userId: ownerUserId,
         captainId,
         lineupStructure: lineupStructure as object,
         title,
@@ -58,8 +65,12 @@ export async function POST(request: NextRequest) {
       url: `${origin}${path}`,
     });
   } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
     console.error("POST /api/match-share-links", e);
-    return NextResponse.json({ error: "Nepodařilo se vytvořit odkaz." }, { status: 500 });
+    return NextResponse.json(
+      { error: `Nepodařilo se vytvořit odkaz. ${msg}` },
+      { status: 500 }
+    );
   }
 }
 

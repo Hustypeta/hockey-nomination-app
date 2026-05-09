@@ -286,6 +286,55 @@ export function buildRandomLineup(players: Player[]): LineupStructure | null {
   };
 }
 
+/**
+ * Náhodná zápasová sestava (mode "match"): 6/7/8 D + 12/13 F + 2 G.
+ * Liší se od `buildRandomLineup` — bez extraDefensemen / extraForwards a se 2 brankáři.
+ */
+export function buildRandomMatchLineup(
+  players: Player[],
+  opts: { defenseCount: 6 | 7 | 8; allowExtraForward: boolean }
+): LineupStructure | null {
+  const gs = shuffle(players.filter((p) => p.position === "G"));
+  const ds = shuffle(players.filter((p) => p.position === "D"));
+  const fs = shuffle(players.filter((p) => p.position === "F"));
+  const fNeeded = 12 + (opts.allowExtraForward ? 1 : 0);
+  if (gs.length < 2 || ds.length < opts.defenseCount || fs.length < fNeeded) return null;
+
+  let fi = 0;
+  const forwardLines: LineupStructure["forwardLines"] = [
+    { lw: fs[fi++]!.id, c: fs[fi++]!.id, rw: fs[fi++]!.id, x: null },
+    { lw: fs[fi++]!.id, c: fs[fi++]!.id, rw: fs[fi++]!.id, x: null },
+    { lw: fs[fi++]!.id, c: fs[fi++]!.id, rw: fs[fi++]!.id, x: null },
+    {
+      lw: fs[fi++]!.id,
+      c: fs[fi++]!.id,
+      rw: fs[fi++]!.id,
+      x: opts.allowExtraForward ? fs[fi++]!.id : null,
+    },
+  ];
+
+  const defensePairs: LineupStructure["defensePairs"] = [
+    { lb: ds[0]!.id, rb: ds[1]!.id },
+    { lb: ds[2]!.id, rb: ds[3]!.id },
+    { lb: ds[4]!.id, rb: ds[5]!.id },
+    {
+      lb: opts.defenseCount >= 7 ? ds[6]!.id : null,
+      rb: opts.defenseCount === 8 ? ds[7]!.id : null,
+    },
+  ];
+
+  const goalies: LineupStructure["goalies"] = [gs[0]!.id, gs[1]!.id, null];
+
+  return {
+    forwardLines,
+    defensePairs,
+    goalies,
+    extraForwards: [null],
+    extraDefensemen: [],
+    assistantIds: [],
+  };
+}
+
 export function clearPositionGroup(
   lineup: LineupStructure,
   pos: "G" | "D" | "F"

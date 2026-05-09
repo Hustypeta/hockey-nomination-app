@@ -17,9 +17,49 @@ const GROUP_TITLE: Record<MatchRatingPosterGroup, string> = {
 type RatingMap = Record<string, { avg: number; count: number } | undefined>;
 type MyMap = Record<string, number | undefined>;
 
-function fmtRating(n: number | undefined): string {
+function fmtRating(n: number | null | undefined): string {
   if (typeof n !== "number" || !Number.isFinite(n) || n <= 0) return "–";
   return n.toFixed(1).replace(".", ",");
+}
+
+/** Barva pro velký rating "score" — od červené (1) přes oranžovou až po zelenou (10). */
+function ratingHue(n: number | null): { bg: string; ring: string; text: string } {
+  if (n == null || n <= 0) {
+    return {
+      bg: "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%)",
+      ring: "rgba(255,255,255,0.25)",
+      text: "rgba(255,255,255,0.6)",
+    };
+  }
+  if (n >= 8.5)
+    return {
+      bg: "linear-gradient(180deg, #34d399 0%, #047857 100%)",
+      ring: "rgba(52, 211, 153, 0.55)",
+      text: "white",
+    };
+  if (n >= 7)
+    return {
+      bg: "linear-gradient(180deg, #a3e635 0%, #4d7c0f 100%)",
+      ring: "rgba(163, 230, 53, 0.55)",
+      text: "#0b1a05",
+    };
+  if (n >= 5)
+    return {
+      bg: "linear-gradient(180deg, #fde68a 0%, #d97706 100%)",
+      ring: "rgba(253, 230, 138, 0.55)",
+      text: "#1a1208",
+    };
+  if (n >= 3.5)
+    return {
+      bg: "linear-gradient(180deg, #fb923c 0%, #b45309 100%)",
+      ring: "rgba(251, 146, 60, 0.55)",
+      text: "white",
+    };
+  return {
+    bg: "linear-gradient(180deg, #f87171 0%, #991b1b 100%)",
+    ring: "rgba(248, 113, 113, 0.55)",
+    text: "white",
+  };
 }
 
 function pickIds(
@@ -77,7 +117,8 @@ interface MatchRatingPosterProps {
 }
 
 /**
- * Off-screen plakát pro export hodnocení do PNG. Layout je 3 sloupce na desktopu / 2 na mobilu.
+ * Off-screen plakát pro export hodnocení do PNG. Layout je 2 sloupce, velké číslo hodnocení vpravo,
+ * vlevo dres se jménem a klubem. Cílem je čitelnost na Instagramu / mobilu.
  */
 export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterProps>(
   function MatchRatingPoster(
@@ -100,7 +141,8 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
       () => pickIds(lineup, group, defenseCount, allowExtraForward),
       [lineup, group, defenseCount, allowExtraForward]
     );
-    const cols = ids.length <= 2 ? 2 : 3;
+    /** Goalies výrazně větší (jen 2), zbytek 2-sloupcová mřížka. */
+    const cols = group === "goalies" && ids.length <= 2 ? 2 : 2;
 
     return (
       <div
@@ -113,22 +155,23 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
           background:
             "linear-gradient(135deg, #050a18 0%, #0a1428 32%, #121c34 65%, #050a18 100%)",
           color: "white",
+          boxSizing: "border-box",
         }}
       >
         <div
           style={{
             display: "flex",
-            alignItems: "baseline",
+            alignItems: "flex-start",
             justifyContent: "space-between",
             gap: 16,
-            paddingBottom: 18,
-            borderBottom: "2px solid rgba(241, 196, 15, 0.55)",
+            paddingBottom: 22,
+            borderBottom: "3px solid rgba(241, 196, 15, 0.6)",
           }}
         >
-          <div>
+          <div style={{ minWidth: 0 }}>
             <div
               style={{
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: 800,
                 letterSpacing: "0.32em",
                 textTransform: "uppercase",
@@ -139,34 +182,41 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
             </div>
             <div
               style={{
-                marginTop: 6,
-                fontSize: 36,
+                marginTop: 8,
+                fontSize: 44,
                 fontWeight: 900,
-                lineHeight: 1.1,
+                lineHeight: 1.05,
                 color: "white",
               }}
             >
               {matchTitle}
             </div>
             {startsAtLabel ? (
-              <div style={{ marginTop: 4, fontSize: 14, color: "rgba(255,255,255,0.55)" }}>
+              <div style={{ marginTop: 6, fontSize: 16, color: "rgba(255,255,255,0.6)" }}>
                 {startsAtLabel}
               </div>
             ) : null}
           </div>
-          <div style={{ textAlign: "right" }}>
+          <div style={{ textAlign: "right", flexShrink: 0 }}>
             <div
               style={{
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.2em",
+                fontSize: 14,
+                fontWeight: 800,
+                letterSpacing: "0.22em",
                 textTransform: "uppercase",
-                color: "rgba(255,255,255,0.5)",
+                color: "rgba(255,255,255,0.55)",
               }}
             >
               {GROUP_TITLE[group]}
             </div>
-            <div style={{ marginTop: 4, fontSize: 18, color: "rgba(255,255,255,0.7)" }}>
+            <div
+              style={{
+                marginTop: 6,
+                fontSize: 22,
+                fontWeight: 700,
+                color: preferMine ? "#34d399" : "#f1c40f",
+              }}
+            >
               {preferMine ? "Moje známky" : "Průměry komunity"}
             </div>
           </div>
@@ -176,7 +226,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${cols}, 1fr)`,
-            gap: 28,
+            gap: 22,
             marginTop: 28,
           }}
         >
@@ -193,24 +243,36 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                 : typeof mine === "number"
                   ? mine
                   : null;
+            const hue = ratingHue(display);
             const displayName = player ? jerseyNameOnJersey(player.name) : "";
             return (
               <div
                 key={pid}
                 style={{
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
                   alignItems: "center",
-                  gap: 10,
-                  padding: 16,
-                  borderRadius: 18,
+                  gap: 18,
+                  padding: 18,
+                  borderRadius: 22,
                   background:
-                    "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                    "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
+                  boxShadow:
+                    "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  minHeight: 180,
                 }}
               >
-                <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
+                {/* Levá strana: dres + jméno + klub */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 8,
+                    flexShrink: 0,
+                  }}
+                >
                   <PremiumJerseySlotCard
                     player={player}
                     positionLabel={
@@ -225,84 +287,127 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                     disableMotion
                     lightRinkSurface={false}
                   />
-                  {display != null ? (
+                </div>
+
+                {/* Střední část: jméno + klub + (volitelně přečtené iniciály) */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontSize: 26,
+                      fontWeight: 900,
+                      color: "white",
+                      lineHeight: 1.05,
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    {player ? player.name : "—"}
+                  </div>
+                  {player ? (
                     <div
                       style={{
-                        position: "absolute",
-                        top: -8,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        padding: "4px 10px",
-                        borderRadius: 999,
-                        background:
-                          preferMine
-                            ? "linear-gradient(180deg, #34d399 0%, #047857 100%)"
-                            : "linear-gradient(180deg, #fde68a 0%, #d97706 100%)",
-                        color: preferMine ? "white" : "#1a1208",
-                        fontWeight: 900,
-                        fontSize: 16,
-                        letterSpacing: "0.02em",
-                        boxShadow: "0 6px 18px rgba(0,0,0,0.45)",
-                        border: "2px solid rgba(255,255,255,0.95)",
+                        marginTop: 6,
+                        fontSize: 14,
+                        color: "rgba(255,255,255,0.7)",
+                        lineHeight: 1.25,
                       }}
                     >
-                      {fmtRating(display)}
+                      <span style={{ color: "white", fontWeight: 600 }}>{player.club}</span>
+                      {player.league ? (
+                        <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  {player && player.name !== displayName ? (
+                    <div
+                      style={{
+                        marginTop: 4,
+                        fontSize: 11,
+                        color: "rgba(255,255,255,0.4)",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      Na dresu: <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
+                    </div>
+                  ) : null}
+                  {!preferMine && aggregate && aggregate.count > 0 ? (
+                    <div
+                      style={{
+                        marginTop: 8,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "3px 10px",
+                        borderRadius: 999,
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: "rgba(255,255,255,0.7)",
+                        background: "rgba(255,255,255,0.07)",
+                        border: "1px solid rgba(255,255,255,0.12)",
+                      }}
+                    >
+                      {aggregate.count} {aggregate.count === 1 ? "hlas" : aggregate.count < 5 ? "hlasy" : "hlasů"}
+                    </div>
+                  ) : null}
+                  {preferMine && typeof mine === "number" ? (
+                    <div
+                      style={{
+                        marginTop: 8,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "3px 10px",
+                        borderRadius: 999,
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: "#34d399",
+                        background: "rgba(52, 211, 153, 0.12)",
+                        border: "1px solid rgba(52, 211, 153, 0.35)",
+                      }}
+                    >
+                      Tvoje známka
                     </div>
                   ) : null}
                 </div>
+
+                {/* Pravá strana: VELKÉ číslo hodnocení */}
                 <div
                   style={{
-                    marginTop: 6,
-                    fontSize: 18,
-                    fontWeight: 800,
-                    color: "white",
-                    textAlign: "center",
-                    lineHeight: 1.1,
+                    flexShrink: 0,
+                    width: 130,
+                    height: 130,
+                    borderRadius: 24,
+                    background: hue.bg,
+                    boxShadow: `0 12px 32px ${hue.ring}, 0 0 0 3px rgba(255,255,255,0.95) inset`,
+                    border: `3px solid rgba(255,255,255,0.95)`,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: hue.text,
                   }}
                 >
-                  {player ? player.name : "—"}
+                  <div
+                    style={{
+                      fontSize: 64,
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      letterSpacing: "-0.04em",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {fmtRating(display)}
+                  </div>
+                  <div
+                    style={{
+                      marginTop: 4,
+                      fontSize: 10,
+                      fontWeight: 800,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      opacity: 0.8,
+                    }}
+                  >
+                    / 10
+                  </div>
                 </div>
-                {player ? (
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: "rgba(255,255,255,0.55)",
-                      textAlign: "center",
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {player.club}
-                    {player.league ? ` · ${player.league}` : ""}
-                  </div>
-                ) : null}
-                {!preferMine && aggregate ? (
-                  <div
-                    style={{
-                      marginTop: 2,
-                      fontSize: 11,
-                      color: "rgba(255,255,255,0.45)",
-                    }}
-                  >
-                    {aggregate.count} hlasů
-                  </div>
-                ) : null}
-                {preferMine && typeof mine === "number" ? (
-                  <div
-                    style={{
-                      marginTop: 2,
-                      fontSize: 11,
-                      color: "rgba(255,255,255,0.45)",
-                    }}
-                  >
-                    Tvoje známka
-                  </div>
-                ) : null}
-                {/* Jméno na dresu (disambiguated) jako reference, jen menší. */}
-                {player && player.name !== displayName ? (
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>
-                    Na dresu: {displayName}
-                  </div>
-                ) : null}
               </div>
             );
           })}
@@ -311,14 +416,33 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
         <div
           style={{
             marginTop: 36,
-            textAlign: "center",
-            fontSize: 12,
-            color: "rgba(255,255,255,0.4)",
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingTop: 18,
+            borderTop: "1px solid rgba(255,255,255,0.1)",
           }}
         >
-          hokejlineup.cz
+          <div
+            style={{
+              fontSize: 12,
+              color: "rgba(255,255,255,0.5)",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              fontWeight: 700,
+            }}
+          >
+            hokejlineup.cz
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              color: "rgba(255,255,255,0.4)",
+              letterSpacing: "0.04em",
+            }}
+          >
+            Hodnoť svoje hráče po každém zápase
+          </div>
         </div>
       </div>
     );

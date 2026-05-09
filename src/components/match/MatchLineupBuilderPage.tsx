@@ -2,21 +2,29 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
+import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
 import { LineBuilder } from "@/components/LineBuilder";
 import type { LineupStructure, Player, Position } from "@/types";
 import { EMPTY_LINEUP } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
-import { tryAutoAssignPlayer, assignPlayerToTarget } from "@/lib/lineupAssign";
+import {
+  tryAutoAssignPlayer,
+  assignPlayerToTarget,
+  buildRandomMatchLineup,
+} from "@/lib/lineupAssign";
 import { parseDroppableId } from "@/lib/dndSlotIds";
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { poolToSlotCollision } from "@/lib/dndCollision";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useUndoableState } from "@/hooks/useUndoableState";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 
@@ -40,14 +48,30 @@ function isMatchLineupValid(
 }
 
 export function MatchLineupBuilderPage() {
+  const searchParams = useSearchParams();
+  const loadEditCode = useMemo(() => {
+    const k = searchParams.get("kod") ?? searchParams.get("code");
+    const t = k?.trim();
+    return t && t.length > 0 ? t : null;
+  }, [searchParams]);
+
   const { status: authStatus } = useSession();
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
+  /** Dokud není načten draft z ?kod=, neukazovat editor (žádný „flash“ prázdné sestavy). */
+  const needDraftImport = Boolean(loadEditCode);
+  const [draftImportReady, setDraftImportReady] = useState(!needDraftImport);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
-  /** Tažení z poolu jen ve viditelném levém sloupci (lg+). Na úzkém layoutu je výběr přes sheet (klepnutí). */
-  const poolDragEnabled = !isNarrowLayout;
+  /** Drag & drop z poolu na sloty — zapnuto i na tabletu/úzkém okně (chování „původního“ editoru nominace). */
+  const enableDnd = true;
 
-  const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
+  const {
+    state: lineup,
+    set: setLineup,
+    undo: undoLineup,
+    replace: replaceLineup,
+    canUndo,
+  } = useUndoableState<LineupStructure>(EMPTY_LINEUP);
   const [captainId, setCaptainId] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<{ type: string; lineIndex?: number; role?: string } | null>(null);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
@@ -112,6 +136,63 @@ export function MatchLineupBuilderPage() {
     };
   }, []);
 
+  /** Načtení existující uložené sestavy z účtu (?kod=…) po načtení hráčů. */
+  useEffect(() => {
+    if (!needDraftImport) {
+      setDraftImportReady(true);
+      return;
+    }
+    if (loading) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const r = await fetch(`/api/match-share-links/${encodeURIComponent(loadEditCode!)}`);
+        const data = (await r.json().catch(() => ({}))) as {
+          error?: string;
+          lineupStructure?: unknown;
+          title?: string | null;
+          captainId?: string | null;
+          code?: string;
+          slug?: string | null;
+          defenseCount?: number;
+          allowExtraForward?: boolean;
+        };
+        if (cancelled) return;
+        if (!r.ok) {
+          toast.error(data.error ?? "Nepodařilo se načíst uloženou sestavu.");
+          return;
+        }
+        if (data.lineupStructure && typeof data.lineupStructure === "object") {
+          const normalized = normalizeLineupStructure(data.lineupStructure as LineupStructure, {
+            mode: "match",
+          });
+          replaceLineup(normalized);
+        }
+        if (typeof data.captainId === "string" || data.captainId === null) {
+          setCaptainId(typeof data.captainId === "string" ? data.captainId : null);
+        }
+        if (data.defenseCount === 6 || data.defenseCount === 7 || data.defenseCount === 8) {
+          setDefenseCount(data.defenseCount);
+        }
+        setAllowExtraForward(Boolean(data.allowExtraForward));
+        if (typeof data.title === "string" && data.title.trim()) {
+          setShareTitle(data.title.trim());
+        }
+        if (typeof data.code === "string") setShareCode(data.code);
+        if (typeof data.slug === "string" && data.slug.length > 0) setShareSlug(data.slug);
+        toast.success("Sestava načtena — můžeš ji upravit.");
+      } finally {
+        if (!cancelled) setDraftImportReady(true);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [needDraftImport, loadEditCode, loading, replaceLineup]);
+
   useEffect(() => {
     if (!mobilePlayerSheetOpen) return;
     const prev = document.body.style.overflow;
@@ -120,6 +201,30 @@ export function MatchLineupBuilderPage() {
       document.body.style.overflow = prev;
     };
   }, [mobilePlayerSheetOpen]);
+
+  const handleRandom = () => {
+    const next = buildRandomMatchLineup(players, { defenseCount, allowExtraForward });
+    if (!next) {
+      toast.error("V databázi není dost hráčů pro náhodnou sestavu.");
+      return;
+    }
+    setLineup(next);
+    setCaptainId(null);
+    setSelectedSlot(null);
+    toast.success("Náhodná sestava je hotová — uprav si ji.");
+  };
+
+  const handleReset = () => {
+    setLineup(EMPTY_LINEUP);
+    setCaptainId(null);
+    setSelectedSlot(null);
+  };
+
+  const handleUndo = () => {
+    if (!canUndo) return;
+    undoLineup();
+    setSelectedSlot(null);
+  };
 
   const onAddFromPool = (player: Player) => {
     if (selectedSlot) {
@@ -178,14 +283,18 @@ export function MatchLineupBuilderPage() {
     return `${window.location.origin}/m/${shareSlug}`;
   }, [shareSlug]);
 
-  const saveShare = async () => {
+  /**
+   * Uloží sestavu a vrátí finální URL (pokud je vše OK). Volá se z tlačítka „Uložit"
+   * i jako interní krok ze „Sdílet" (pokud nic není ještě uložené).
+   */
+  const saveShare = async (): Promise<string | null> => {
     if (!shareTitle.trim()) {
       toast.error("Doplň název sestavy.");
-      return;
+      return null;
     }
     if (!valid) {
       toast.error("Sestava není kompletní podle zvolených pravidel.");
-      return;
+      return null;
     }
     setSaving(true);
     try {
@@ -206,28 +315,66 @@ export function MatchLineupBuilderPage() {
       const data: unknown = await r.json().catch(() => ({}));
       const err = (data as { error?: unknown } | null)?.error;
       if (!r.ok) {
-        toast.error(typeof err === "string" ? err : "Uložení odkazu selhalo.");
-        return;
+        toast.error(typeof err === "string" ? err : "Uložení selhalo.");
+        return null;
       }
       const nextCode = (data as { code?: unknown } | null)?.code;
       const nextSlug = (data as { slug?: unknown } | null)?.slug;
       const nextUrl = (data as { url?: unknown } | null)?.url;
-      setShareCode(typeof nextCode === "string" ? nextCode : shareCode);
-      setShareSlug(typeof nextSlug === "string" ? nextSlug : shareSlug);
-      toast.success("Odkaz uložen.");
-      if (typeof nextUrl === "string" && nextUrl) {
-        await navigator.clipboard.writeText(nextUrl).catch(() => undefined);
+      const finalCode = typeof nextCode === "string" ? nextCode : shareCode;
+      const finalSlug = typeof nextSlug === "string" ? nextSlug : shareSlug;
+      setShareCode(finalCode);
+      setShareSlug(finalSlug);
+      toast.success("Sestava uložena.");
+      if (typeof nextUrl === "string" && nextUrl) return nextUrl;
+      if (finalSlug && typeof window !== "undefined") {
+        return `${window.location.origin}/m/${finalSlug}`;
       }
+      return null;
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) {
+  /** Zkopíruje URL do schránky (nebo otevře native share API). Pokud sestava ještě
+   *  není uložená, nejdřív ji uloží. */
+  const handleShare = async () => {
+    let url: string | null = shareUrl || null;
+    if (!url) {
+      url = await saveShare();
+      if (!url) return;
+    }
+    /** Native Web Share API (mobile) je preferovaný — desktop fallne na clipboard. */
+    const nav = typeof navigator !== "undefined" ? navigator : null;
+    if (nav && typeof nav.share === "function") {
+      try {
+        await nav.share({
+          title: shareTitle.trim() || "Sestava na zápas",
+          text: shareTitle.trim() || "Moje sestava na zápas",
+          url,
+        });
+        return;
+      } catch {
+        /** uživatel sdílení zrušil — zkusíme aspoň clipboard. */
+      }
+    }
+    try {
+      await nav?.clipboard?.writeText(url);
+      toast.success("Odkaz zkopírován do schránky.");
+    } catch {
+      toast.error("Nepodařilo se zkopírovat. Zkopíruj ho ručně níže.");
+    }
+  };
+
+  if (loading || (needDraftImport && !draftImportReady)) {
     return (
       <AppLoadingScreen
         tagline="Tvorba sestavy na zápas"
-        message="Načítám editor zápasové sestavy…"
+        message={
+          loading
+            ? "Načítám editor zápasové sestavy…"
+            : "Načítám uloženou sestavu…"
+        }
         intro={null}
       />
     );
@@ -242,7 +389,7 @@ export function MatchLineupBuilderPage() {
     : null;
 
   const content = (
-    <div className="sestava-page-ambient min-h-screen pb-28 text-white">
+    <div className="sestava-page-ambient min-h-screen pb-[10.75rem] text-white sm:pb-44 lg:pb-36">
       {/* Mobile scroll perf: background layers off on narrow layouts */}
       {!isNarrowLayout ? <SestavaAmbientBackground /> : null}
       <div className="sticky top-0 z-40">
@@ -267,22 +414,19 @@ export function MatchLineupBuilderPage() {
               />
               <button
                 type="button"
-                onClick={() => {
-                  setShareCode(null);
-                  setShareSlug(null);
-                  toast.message("Nový odkaz — uloží se jako nová sestava.");
-                }}
-                className="rounded-xl border border-white/15 bg-white/[0.03] px-4 py-2 text-sm font-bold text-white/85 hover:bg-white/[0.06]"
-              >
-                Nový odkaz
-              </button>
-              <button
-                type="button"
                 onClick={() => void saveShare()}
                 disabled={saving}
                 className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2 text-sm font-bold text-white disabled:opacity-50"
               >
-                {saving ? "Ukládám…" : "Uložit & sdílet"}
+                {saving ? "Ukládám…" : "Uložit"}
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleShare()}
+                disabled={saving || !valid}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#f1c40f]/40 bg-gradient-to-b from-[#f1c40f]/15 to-[#f1c40f]/5 px-4 py-2 text-sm font-bold text-[#f1e6a8] hover:from-[#f1c40f]/25 hover:to-[#f1c40f]/10 disabled:opacity-50"
+              >
+                Sdílet
               </button>
             </div>
           </div>
@@ -307,7 +451,7 @@ export function MatchLineupBuilderPage() {
                   counts={counts}
                   onAddPlayer={onAddFromPool}
                   onPreview={setPreviewPlayer}
-                  enableDnd={poolDragEnabled}
+                  enableDnd={enableDnd}
                   forcedPosition={forcedPoolPosition}
                 />
               </div>
@@ -330,7 +474,7 @@ export function MatchLineupBuilderPage() {
                   onCaptainChange={setCaptainId}
                   selectedSlot={selectedSlot}
                   onSelectSlot={setSelectedSlot}
-                  enableDnd
+                  enableDnd={enableDnd}
                   layoutVariant="classic"
                   matchDefenseCount={defenseCount}
                   matchAllowExtraForward={allowExtraForward}
@@ -347,6 +491,67 @@ export function MatchLineupBuilderPage() {
             </div>
           </section>
         </div>
+
+        {/* Mobile fullscreen pool sheet — stejný princip jako v editoru nominace
+            (fullscreen flex sloupec, ne částečně visící panel — iOS Safari má pak spolehlivý scroll). */}
+        {mobilePlayerSheetOpen ? (
+          <div
+            className="fixed inset-0 z-[52] flex flex-col bg-[#05080f] lg:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-match-pool-title"
+          >
+            <div className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+              <button
+                type="button"
+                onClick={() => setSelectedSlot(null)}
+                className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/[0.1]"
+              >
+                <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+                Zpět k sestavě
+              </button>
+              <h2
+                id="mobile-match-pool-title"
+                className="min-w-0 flex-1 truncate text-center font-sans text-base font-bold text-white"
+              >
+                Výběr hráče
+              </h2>
+              <span className="w-[5.5rem] shrink-0" aria-hidden />
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-4 sm:px-4">
+              <div
+                className={`rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 sm:p-4 ${
+                  isNarrowLayout ? "" : "backdrop-blur-sm"
+                }`}
+              >
+                <p className="mb-3 text-[11px] leading-snug text-white/55">
+                  Klepni na hráče — doplní se vybraný slot.
+                </p>
+                {/* Tap-only varianta: na mobile sheetu vypneme drag, jinak by celá karta
+                    dostala `touch-action: none` a uvnitř by nešlo scrollovat. */}
+                <PlayerPoolPanel
+                  players={players}
+                  usedIds={usedIds}
+                  counts={counts}
+                  onAddPlayer={onAddFromPool}
+                  onPreview={setPreviewPlayer}
+                  enableDnd={false}
+                  forcedPosition={forcedPoolPosition}
+                />
+              </div>
+            </div>
+            <div className="relative z-[1] flex shrink-0 justify-center border-t border-white/[0.1] bg-[#05080f]/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+              <button
+                type="button"
+                onClick={() => setSelectedSlot(null)}
+                className="flex w-full max-w-md min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3 text-sm font-bold text-white shadow-lg shadow-black/40 touch-manipulation active:scale-[0.99]"
+              >
+                <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
+                Hotovo — zpět do sestavy
+              </button>
+            </div>
+          </div>
+        ) : null}
       </main>
 
       <DragOverlay dropAnimation={null}>
@@ -359,38 +564,16 @@ export function MatchLineupBuilderPage() {
 
       <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
 
-      {/* Mobile fullscreen pool sheet */}
-      {mobilePlayerSheetOpen ? (
-        <div className="fixed inset-0 z-[90] lg:hidden">
-          <div className="absolute inset-0 bg-[#010208]/80 backdrop-blur-md" aria-hidden />
-          <div className="absolute inset-x-0 bottom-0 top-[calc(0.5rem+env(safe-area-inset-top))] mx-2 overflow-hidden rounded-2xl border border-white/[0.12] bg-gradient-to-b from-[#0b1220]/98 to-[#03050a]/98 shadow-[0_24px_80px_rgba(0,0,0,0.65),0_0_0_1px_rgba(0,180,255,0.12)]">
-            <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3">
-              <div className="min-w-0">
-                <p className="text-[10px] font-black uppercase tracking-[0.26em] text-white/50">Výběr hráčů</p>
-                <p className="mt-1 truncate text-sm font-semibold text-white/85">Klepni na hráče</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedSlot(null)}
-                className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-black uppercase tracking-[0.14em] text-white"
-              >
-                Zpět do sestavy
-              </button>
-            </div>
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
-              <PlayerPoolPanel
-                players={players}
-                usedIds={usedIds}
-                counts={counts}
-                onAddPlayer={onAddFromPool}
-                onPreview={setPreviewPlayer}
-                enableDnd={false}
-                forcedPosition={forcedPoolPosition}
-              />
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <FloatingSestavaBar
+        onShare={() => void handleShare()}
+        onRandom={handleRandom}
+        onReset={handleReset}
+        onUndo={handleUndo}
+        undoDisabled={!canUndo}
+        shareDisabled={saving || !valid}
+        shareLabel={saving ? "Ukládám…" : shareUrl ? "Sdílet" : "Uložit & sdílet"}
+        className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+      />
     </div>
   );
 

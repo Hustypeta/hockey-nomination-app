@@ -1,11 +1,13 @@
 "use client";
 
-import { Share2, Shuffle, RotateCcw, Trophy } from "lucide-react";
+import { Share2, Shuffle, RotateCcw, Trophy, Undo2 } from "lucide-react";
 
 export function FloatingSestavaBar({
   onShare,
   onRandom,
   onReset,
+  onUndo,
+  undoDisabled,
   shareDisabled,
   shareLabel,
   onContestSubmit,
@@ -17,6 +19,10 @@ export function FloatingSestavaBar({
   onShare: () => void;
   onRandom: () => void;
   onReset: () => void;
+  /** Volitelné — když chybí, tlačítko „Vrátit zpět“ se vůbec nevykreslí. */
+  onUndo?: () => void;
+  /** Šedý stav „nelze vrátit“. */
+  undoDisabled?: boolean;
   shareDisabled: boolean;
   shareLabel: string;
   /** Odeslání do soutěže (jednou na účet). */
@@ -83,7 +89,30 @@ export function FloatingSestavaBar({
             </button>
           ) : null}
         </div>
-        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-none sm:gap-2">
+        <div
+          className={`grid w-full gap-2 sm:flex sm:w-auto sm:flex-none sm:gap-2 ${
+            onUndo ? "grid-cols-3" : "grid-cols-2"
+          }`}
+        >
+          {onUndo ? (
+            <button
+              type="button"
+              onClick={onUndo}
+              disabled={undoDisabled}
+              aria-label="Vrátit zpět"
+              className={`flex min-h-[2.65rem] items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-[11px] font-semibold leading-tight transition-all sm:min-h-0 sm:gap-2 sm:px-4 sm:py-3 sm:text-sm ${
+                undoDisabled
+                  ? "cursor-not-allowed border border-white/10 bg-white/[0.02] text-white/30"
+                  : "border border-amber-400/45 bg-amber-400/10 text-amber-100 hover:border-amber-300/60 hover:bg-amber-400/20 hover:shadow-[0_0_24px_rgba(245,158,11,0.18)] active:scale-[0.98]"
+              }`}
+            >
+              <Undo2 className="h-3.5 w-3.5 shrink-0 opacity-90 sm:h-4 sm:w-4" />
+              <span className="text-center">
+                <span className="max-sm:block sm:hidden">Zpět</span>
+                <span className="max-sm:hidden">Vrátit zpět</span>
+              </span>
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={onRandom}
