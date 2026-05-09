@@ -40,7 +40,7 @@ export async function GET() {
     let ratingsMap = new Map<string, boolean>();
     try {
       const rows = await prisma.$queryRaw<Array<{ id: string; ratingsOpen: boolean | null }>>`
-        SELECT id, "ratingsOpen" FROM "Match"
+        SELECT id, "ratingsOpen" FROM "matches"
       `;
       ratingsMap = new Map(rows.map((r) => [r.id, Boolean(r.ratingsOpen)]));
     } catch {

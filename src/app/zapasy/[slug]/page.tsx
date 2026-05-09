@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 import type { LineupStructure } from "@/types";
-import { LineBuilder } from "@/components/LineBuilder";
+import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
 import { MatchRatingShareControls } from "@/components/match/MatchRatingShareControls";
 import { FlagMark } from "@/components/flags/FlagMark";
@@ -68,7 +68,7 @@ function matchRatingGate(opts: {
 async function loadRatingsOpenFlag(matchId: string): Promise<boolean> {
   try {
     const rows = await prisma.$queryRaw<Array<{ ratingsOpen: boolean | null }>>`
-      SELECT "ratingsOpen" FROM "Match" WHERE id = ${matchId}
+      SELECT "ratingsOpen" FROM "matches" WHERE id = ${matchId}
     `;
     return Boolean(rows[0]?.ratingsOpen);
   } catch {
@@ -176,18 +176,10 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
             <h2 className="font-display text-lg font-black">Oficiální sestava</h2>
             <div className="mt-4">
               {lineup && match?.officialLineup ? (
-                <LineBuilder
-                  mode="match"
-                  layoutVariant="classic"
+                <MatchOfficialLineupView
                   lineup={lineup}
                   players={players}
                   captainId={match.officialLineup.captainId ?? null}
-                  onLineupChange={() => undefined}
-                  onCaptainChange={() => undefined}
-                  selectedSlot={null}
-                  onSelectSlot={() => undefined}
-                  enableDnd={false}
-                  readOnly
                   matchDefenseCount={(match.officialLineup.defenseCount as 6 | 7 | 8) ?? 8}
                   matchAllowExtraForward={Boolean(match.officialLineup.allowExtraForward)}
                 />

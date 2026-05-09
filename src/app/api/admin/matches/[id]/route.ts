@@ -71,10 +71,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       } catch (err) {
         console.warn("PATCH /api/admin/matches/[id] ratingsOpen update fell back to raw:", err);
         await prisma.$executeRaw`
-          ALTER TABLE "Match" ADD COLUMN IF NOT EXISTS "ratingsOpen" BOOLEAN NOT NULL DEFAULT false
+          ALTER TABLE "matches" ADD COLUMN IF NOT EXISTS "ratingsOpen" BOOLEAN NOT NULL DEFAULT false
         `;
         await prisma.$executeRaw`
-          UPDATE "Match" SET "ratingsOpen" = ${ratingsOpen} WHERE id = ${id}
+          UPDATE "matches" SET "ratingsOpen" = ${ratingsOpen} WHERE id = ${id}
         `;
       }
     }
