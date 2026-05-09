@@ -139,11 +139,7 @@ export function MatchRatingClient({
                   <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300">
                     Tvoje uložené: {formatRating(mine)}
                   </div>
-                ) : (
-                  <div className="mt-2 text-[11px] text-white/45">
-                    Nejprve vidíš průměr fanoušků; posun slidery a ulož si vlastní hodnocení.
-                  </div>
-                )}
+                ) : null}
               </div>
               <div className="shrink-0 rounded-xl border border-amber-400/30 bg-amber-400/[0.08] px-3 py-2 text-right sm:text-right">
                 <div className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
