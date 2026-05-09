@@ -5,14 +5,14 @@ import type { LineupStructure, Player } from "@/types";
 import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
 
-export type MatchRatingPosterGroup = "goalies" | "defense" | "forwards-12" | "forwards-34";
+import {
+  MATCH_LINEUP_POSTER_GROUP_TITLE,
+  pickMatchLineupSegmentPlayerIds,
+  type MatchLineupPosterGroup,
+} from "@/lib/matchLineupPosterSegments";
 
-const GROUP_TITLE: Record<MatchRatingPosterGroup, string> = {
-  goalies: "Brankáři",
-  defense: "Obrana",
-  "forwards-12": "Útok – 1. a 2. lajna",
-  "forwards-34": "Útok – 3. a 4. lajna",
-};
+/** @deprecated importuj z @/lib/matchLineupPosterSegments jako MatchLineupPosterGroup */
+export type MatchRatingPosterGroup = MatchLineupPosterGroup;
 
 type RatingMap = Record<string, { avg: number; count: number } | undefined>;
 type MyMap = Record<string, number | undefined>;
@@ -62,50 +62,10 @@ function ratingHue(n: number | null): { bg: string; ring: string; text: string }
   };
 }
 
-function pickIds(
-  lineup: LineupStructure,
-  group: MatchRatingPosterGroup,
-  defenseCount: 6 | 7 | 8,
-  allowExtraForward: boolean
-): string[] {
-  if (group === "goalies") {
-    return [lineup.goalies[0], lineup.goalies[1]].filter(Boolean) as string[];
-  }
-  if (group === "defense") {
-    const ids: string[] = [];
-    for (let i = 0; i < 3; i++) {
-      const p = lineup.defensePairs[i];
-      if (p.lb) ids.push(p.lb);
-      if (p.rb) ids.push(p.rb);
-    }
-    if (defenseCount === 8) {
-      const p = lineup.defensePairs[3];
-      if (p.lb) ids.push(p.lb);
-      if (p.rb) ids.push(p.rb);
-    } else if (defenseCount === 7) {
-      const p = lineup.defensePairs[3];
-      if (p.lb) ids.push(p.lb);
-    }
-    return ids;
-  }
-  const lineRange = group === "forwards-12" ? [0, 1] : [2, 3];
-  const ids: string[] = [];
-  for (const li of lineRange) {
-    const l = lineup.forwardLines[li];
-    if (l.lw) ids.push(l.lw);
-    if (l.c) ids.push(l.c);
-    if (l.rw) ids.push(l.rw);
-  }
-  if (group === "forwards-34" && allowExtraForward && lineup.extraForwards[0]) {
-    ids.push(lineup.extraForwards[0]);
-  }
-  return ids;
-}
-
 interface MatchRatingPosterProps {
   matchTitle: string;
   startsAtLabel?: string;
-  group: MatchRatingPosterGroup;
+  group: MatchLineupPosterGroup;
   players: Player[];
   lineup: LineupStructure;
   defenseCount: 6 | 7 | 8;
@@ -138,7 +98,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
   ) {
     const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
     const ids = useMemo(
-      () => pickIds(lineup, group, defenseCount, allowExtraForward),
+      () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
       [lineup, group, defenseCount, allowExtraForward]
     );
     /** Goalies výrazně větší (jen 2), zbytek 2-sloupcová mřížka. */
@@ -207,7 +167,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                 color: "rgba(255,255,255,0.55)",
               }}
             >
-              {GROUP_TITLE[group]}
+              {MATCH_LINEUP_POSTER_GROUP_TITLE[group]}
             </div>
             <div
               style={{

@@ -6,6 +6,7 @@
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import type { Player, LineupStructure } from "@/types";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/LineupJerseyCard";
 import { PremiumJerseySlotCard, type PremiumJerseySize } from "@/components/sestava/PremiumJerseySlotCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
@@ -105,6 +106,8 @@ export function LineBuilder({
   onPlayerClick,
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
+  /** Ve veřejném hodnocení na úzkém displeji zmenšit jména na dresu (dlouhá příjmení). */
+  const isMatchRatingNarrow = useMediaQuery("(max-width: 1023px)");
 
   /** Lehce sjednocený formát hodnocení (1.0–10.0, vždy 1 desetina, čárka místo tečky). */
   const formatRating = (n: number) => n.toFixed(1).replace(".", ",");
@@ -319,7 +322,9 @@ export function LineBuilder({
               showPositionBadge={mode !== "match"}
               showRoleBadge={mode !== "match"}
               overlayVariant={mode === "match" ? "lower" : "default"}
-              nameplateScale={mode === "match" ? 0.92 : 1}
+              nameplateScale={
+                mode === "match" ? (readOnly && isMatchRatingNarrow ? 0.76 : 0.92) : 1
+              }
             />
           )}
           {player ? <RatingBadge playerId={player.id} /> : null}

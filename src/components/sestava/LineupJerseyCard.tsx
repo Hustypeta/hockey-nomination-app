@@ -93,7 +93,7 @@ export function LineupJerseyCard({
           ...namePlate.style,
           fontSize:
             typeof namePlate.style.fontSize === "string"
-              ? `calc(${namePlate.style.fontSize} * ${Math.max(0.85, Math.min(1.05, nameplateScale))})`
+              ? `calc(${namePlate.style.fontSize} * ${Math.max(0.68, Math.min(1.05, nameplateScale))})`
               : namePlate.style.fontSize,
         }
       : namePlate.style;

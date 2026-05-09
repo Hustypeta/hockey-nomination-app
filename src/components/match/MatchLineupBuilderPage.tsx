@@ -27,6 +27,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useUndoableState } from "@/hooks/useUndoableState";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
+import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 
 function isMatchLineupValid(
   lineup: LineupStructure,
@@ -85,6 +86,7 @@ export function MatchLineupBuilderPage() {
   const [shareCode, setShareCode] = useState<string | null>(null);
   const [shareSlug, setShareSlug] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [siteOrigin, setSiteOrigin] = useState("");
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -134,6 +136,10 @@ export function MatchLineupBuilderPage() {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  useEffect(() => {
+    setSiteOrigin(typeof window !== "undefined" ? window.location.origin : "");
   }, []);
 
   /** Načtení existující uložené sestavy z účtu (?kod=…) po načtení hráčů. */
@@ -435,6 +441,26 @@ export function MatchLineupBuilderPage() {
               Odkaz: <span className="select-all font-mono text-white">{shareUrl}</span>
             </p>
           ) : null}
+          <div className="mt-4 border-t border-white/[0.08] pt-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45">
+              Export obrázků (Instagram)
+            </p>
+            <p className="mt-1 text-xs text-white/50">
+              Čtyři snímky po skupinách — s dresy nebo jen příjmení jako u nominace. Platí až pro kompletní sestavu.
+            </p>
+            <div className="mt-3">
+              <MatchLineupImageExportButton
+                shareTitle={shareTitle}
+                lineup={lineup}
+                players={players}
+                defenseCount={defenseCount}
+                allowExtraForward={allowExtraForward}
+                shareSlug={shareSlug}
+                siteOrigin={siteOrigin}
+                disabled={!valid}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7">

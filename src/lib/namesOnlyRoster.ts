@@ -7,6 +7,7 @@ function lastUpper(name: string) {
   return raw.toUpperCase();
 }
 
+/** Příjmení velkými písmeny (stejné jako export nominace). */
 export function rosterLastDisplay(players: Player[], id: string | null): string {
   if (!id) return "—";
   const p = players.find((x) => x.id === id);
