@@ -67,13 +67,10 @@ const HTML = `<!doctype html>
                             Velice Vám děkuji za Váš zájem o platformu <strong style="color:#ffffff;">Lineup</strong>.
                           </p>
                           <p style="margin:0 0 10px 0;">
-                            Dnes je poslední den pro odeslání nominace do soutěže s <strong style="color:#ffffff;">25&nbsp;% bonusem</strong>.
+                            Nezapomeňte, že soutěž končí před zahájením nominační tiskové konference před MS 2026, která proběhne v neděli <strong style="color:#ffffff;">10.&nbsp;května v&nbsp;19:30</strong>.
                           </p>
                           <p style="margin:0 0 10px 0;">
-                            Nezapomeňte že soutěž končí před zahájením nominační tiskové konference před MS 2026 která proběhne v neděli <strong style="color:#ffffff;">10.&nbsp;května v&nbsp;19:30</strong>.
-                          </p>
-                          <p style="margin:0 0 10px 0;">
-                            Také na webu připravujeme možnost stavět si sestavu na zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.
+                            Také Vás chci informovat, že na webu připravujeme možnost stavět si sestavu přímo na konkrétní zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.
                           </p>
                           <p style="margin:0 0 10px 0;">
                             V neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.

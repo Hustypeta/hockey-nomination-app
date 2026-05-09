@@ -179,6 +179,20 @@ function formatClubLeague(player: Player): string {
   return club || league || "";
 }
 
+/** Jméno vždy na jeden řádek (IG 1080px) — podle délky zmenšíme písmo, aby se nic nelámalo ani neořezávalo. */
+function promoCardNameFontClass(fullName: string): string {
+  const n = prettyText(fullName).length;
+  if (n >= 32) return "text-[36px]";
+  if (n >= 28) return "text-[42px]";
+  if (n >= 24) return "text-[48px]";
+  if (n >= 21) return "text-[54px]";
+  if (n >= 18) return "text-[60px]";
+  if (n >= 16) return "text-[68px]";
+  if (n >= 14) return "text-[76px]";
+  if (n >= 12) return "text-[84px]";
+  return "text-[92px]";
+}
+
 const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: PlayerCardVariant }>(
   function PlayerIgCard(props, ref) {
     const { m, variant = "clean" } = props;
@@ -190,9 +204,7 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: 
       ? "text-white [text-shadow:0_3px_0_rgba(0,0,0,0.80),0_14px_40px_rgba(0,0,0,0.35)]"
       : "text-black";
   const clubLeague = formatClubLeague(m.player);
-  const nameLen = prettyText(m.player.name).length;
-  const nameFont =
-    nameLen >= 16 ? "text-[84px]" : nameLen >= 13 ? "text-[90px]" : "text-[96px]";
+  const nameFont = promoCardNameFontClass(m.player.name);
   const clubLen = clubLeague.length;
   const clubFont =
     clubLen >= 42 ? "text-[30px] leading-tight" : clubLen >= 30 ? "text-[34px] leading-tight" : clubLen >= 22 ? "text-[38px] leading-tight" : "text-[40px] leading-tight";
@@ -216,9 +228,10 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: 
       />
       <div className="relative z-10 flex h-full min-h-0 flex-col px-11 pb-10 pt-9 sm:px-12">
         <div className="flex items-end">
-          <div className="min-w-0 pr-2">
+          <div className="min-w-0 max-w-full flex-1 overflow-hidden pr-2">
             <p
-              className={`font-display ${nameFont} font-black leading-[0.98] tracking-[0.01em] hyphens-auto [overflow-wrap:anywhere] ${topText}`}
+              className={`font-display ${nameFont} max-w-full font-black leading-none tracking-tight whitespace-nowrap text-left ${topText}`}
+              title={prettyText(m.player.name)}
             >
               {m.player.name}
             </p>

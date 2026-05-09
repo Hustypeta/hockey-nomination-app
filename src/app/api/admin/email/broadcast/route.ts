@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
 
-// Reuse the same subject/body as the single-send endpoint:
-const SUBJECT = "Lineup — poslední den 25 % bonusu";
+// Stejné znění jako jednorázový test (`/api/admin/email/test`).
+const SUBJECT = "Lineup — poslední dva dny soutěže";
 const TEXT =
-  "Velice Vám děkuji za Váš zájem o platformu Lineup.\n\nNezapomeňte, že dnes je poslední den pro odeslání nominace do soutěže s 25 % bonusem.\n\nNezapomeňte že soutěž končí před zahájením nominační tiskové konference před MS 2026 která proběhne v neděli 10. května v 19:30.\n\nTaké na webu připravujeme možnost stavět si sestavu na zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.\n\nV neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.\n\nPokud se Vám platforma Lineup líbí, budeme rádi za jakékoliv sdílení.\n\nDěkuji a přeji krásný den.\n\nOtevřít editor: https://hokejlineup.cz/sestava\n";
+  "Velice Vám děkuji za Váš zájem o platformu Lineup.\n\nNezapomeňte, že soutěž končí před zahájením nominační tiskové konference před MS 2026, která proběhne v neděli 10. května v 19:30.\n\nTaké Vás chci informovat, že na webu připravujeme možnost stavět si sestavu přímo na konkrétní zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.\n\nV neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.\n\nPokud se Vám platforma Lineup líbí, budeme rádi za jakékoliv sdílení.\n\nDěkuji a přeji krásný den.\n\nOtevřít editor: https://hokejlineup.cz/sestava\n";
 
 const CTA_URL = "https://hokejlineup.cz/sestava";
-const PREHEADER = "Dnes končí 25 % bonus — odešli nominaci včas.";
+const PREHEADER = "Poslední 2 dny soutěže — odešli nominaci včas.";
 const LOGO_URL = "https://hokejlineup.cz/images/logo.png";
 
 const HTML = `<!doctype html>
@@ -65,13 +65,10 @@ const HTML = `<!doctype html>
                             Velice Vám děkuji za Váš zájem o platformu <strong style="color:#ffffff;">Lineup</strong>.
                           </p>
                           <p style="margin:0 0 10px 0;">
-                            Dnes je poslední den pro odeslání nominace do soutěže s <strong style="color:#ffffff;">25&nbsp;% bonusem</strong>.
+                            Nezapomeňte, že soutěž končí před zahájením nominační tiskové konference před MS 2026, která proběhne v neděli <strong style="color:#ffffff;">10.&nbsp;května v&nbsp;19:30</strong>.
                           </p>
                           <p style="margin:0 0 10px 0;">
-                            Nezapomeňte že soutěž končí před zahájením nominační tiskové konference před MS 2026 která proběhne v neděli <strong style="color:#ffffff;">10.&nbsp;května v&nbsp;19:30</strong>.
-                          </p>
-                          <p style="margin:0 0 10px 0;">
-                            Také na webu připravujeme možnost stavět si sestavu na zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.
+                            Také Vás chci informovat, že na webu připravujeme možnost stavět si sestavu přímo na konkrétní zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.
                           </p>
                           <p style="margin:0 0 10px 0;">
                             V neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.
