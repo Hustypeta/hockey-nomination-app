@@ -2,7 +2,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import { ClipboardList, Sparkles, Trophy, Users } from "lucide-react";
+import { ClipboardList, Sparkles, Star, Trophy, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -184,6 +184,17 @@ export function UserAccountHub() {
           <span className="text-lg font-bold text-white">Zápasové sestavy</span>
           <span className="max-w-[14rem] text-xs font-normal leading-snug text-slate-400">
             Uložené odkazy na sestavy na zápas
+          </span>
+        </Link>
+
+        <Link
+          href="/ucet/hodnoceni"
+          className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-white/12 bg-[#0f172a]/85 px-6 py-10 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-emerald-400/35 hover:bg-[#0f172a]"
+        >
+          <Star className="h-9 w-9 text-emerald-300/90" aria-hidden />
+          <span className="text-lg font-bold text-white">Hodnocení hráčů</span>
+          <span className="max-w-[14rem] text-xs font-normal leading-snug text-slate-400">
+            Tvoje známky hráčů v jednotlivých zápasech
           </span>
         </Link>
       </div>

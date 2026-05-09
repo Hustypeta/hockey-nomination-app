@@ -5,11 +5,22 @@ import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
+import { initJerseyNameDisambiguation, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 
 type RatingMap = Record<string, { avg: number; count: number }>;
 
-function clampInt(n: number, lo: number, hi: number) {
-  return Math.max(lo, Math.min(hi, Math.round(n)));
+function clamp(n: number, lo: number, hi: number) {
+  return Math.max(lo, Math.min(hi, n));
+}
+
+/** Zaokrouhlíme na desetinu (1.0 – 10.0). */
+function roundDeci(n: number): number {
+  return Math.round(clamp(n, 1, 10) * 10) / 10;
+}
+
+function formatRating(n: number): string {
+  if (!Number.isFinite(n) || n <= 0) return "–";
+  return n.toFixed(1).replace(".", ",");
 }
 
 export function MatchRatingClient({
@@ -19,8 +30,11 @@ export function MatchRatingClient({
   defenseCount,
   allowExtraForward,
   initialRatings,
+  initialMyRatings = {},
   canRate = true,
   lockedReason,
+  onRatingsChange,
+  onMyRatingsChange,
 }: {
   slug: string;
   players: Player[];
@@ -28,14 +42,28 @@ export function MatchRatingClient({
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
   initialRatings: RatingMap;
+  /** Předvyplněné moje hodnocení (z `/api/matches/[slug]/my-ratings`). Zatím volitelné. */
+  initialMyRatings?: Record<string, number>;
   canRate?: boolean;
   lockedReason?: string;
+  onRatingsChange?: (ratings: RatingMap) => void;
+  onMyRatingsChange?: (mine: Record<string, number>) => void;
 }) {
   const [ratings, setRatings] = useState<RatingMap>(initialRatings);
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [draftById, setDraftById] = useState<Record<string, number>>({});
+  const [draftById, setDraftById] = useState<Record<string, number>>(initialMyRatings);
+  const [myRatings, setMyRatings] = useState<Record<string, number>>(initialMyRatings);
 
   useEffect(() => setRatings(initialRatings), [initialRatings]);
+  useEffect(() => {
+    setDraftById(initialMyRatings);
+    setMyRatings(initialMyRatings);
+  }, [initialMyRatings]);
+
+  /** Disambiguace pro jméno na dresu / panelu (T. Galvas vs ostatní). */
+  useEffect(() => {
+    if (players.length > 0) initJerseyNameDisambiguation(players);
+  }, [players]);
 
   const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
   const ids = useMemo(
@@ -48,7 +76,7 @@ export function MatchRatingClient({
       toast.error(lockedReason || "Hodnocení zatím není otevřené.");
       return;
     }
-    const rating = clampInt(value, 1, 10);
+    const rating = roundDeci(value);
     setBusyId(playerId);
     try {
       const r = await fetch(`/api/matches/${encodeURIComponent(slug)}/rate`, {
@@ -67,13 +95,19 @@ export function MatchRatingClient({
         toast.error(typeof err === "string" ? err : "Hodnocení se nepovedlo.");
         return;
       }
-      toast.success("Uloženo.");
+      toast.success(`Uloženo ${formatRating(rating)} / 10`);
+      const nextMine = { ...myRatings, [playerId]: rating };
+      setMyRatings(nextMine);
+      onMyRatingsChange?.(nextMine);
 
-      // Refresh aggregates (lightweight)
       const rr = await fetch(`/api/matches/${encodeURIComponent(slug)}`, { cache: "no-store" });
       const dd: unknown = await rr.json().catch(() => null);
       const nextRatings = (dd as { ratings?: unknown } | null)?.ratings;
-      if (rr.ok && nextRatings && typeof nextRatings === "object") setRatings(nextRatings as RatingMap);
+      if (rr.ok && nextRatings && typeof nextRatings === "object") {
+        const map = nextRatings as RatingMap;
+        setRatings(map);
+        onRatingsChange?.(map);
+      }
     } finally {
       setBusyId(null);
     }
@@ -90,19 +124,27 @@ export function MatchRatingClient({
         const p = byId.get(pid);
         if (!p) return null;
         const r = ratings[pid] ?? { avg: 0, count: 0 };
-        const draft = draftById[pid] ?? 7;
+        const mine = myRatings[pid];
+        const draft = draftById[pid] ?? mine ?? 7;
+        const displayName = jerseyNameOnJersey(p.name);
+        const fullName = p.name === displayName ? p.name : `${p.name} (${displayName})`;
         return (
           <div key={pid} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <div className="truncate font-bold text-white">{p.name}</div>
+                <div className="truncate font-bold text-white">{fullName}</div>
                 <div className="mt-1 text-xs text-white/60">
                   {p.club} · {p.league}
                 </div>
+                {typeof mine === "number" ? (
+                  <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300">
+                    Tvoje: {formatRating(mine)}
+                  </div>
+                ) : null}
               </div>
               <div className="shrink-0 text-right text-xs text-white/60">
                 <div>
-                  <span className="font-bold text-white">{r.avg.toFixed(2)}</span> / 10
+                  <span className="font-bold text-white">{formatRating(r.avg)}</span> / 10
                 </div>
                 <div>{r.count} hlasů</div>
               </div>
@@ -111,26 +153,24 @@ export function MatchRatingClient({
             <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
               <div className="min-w-0">
                 <div className="flex items-center justify-between text-xs text-white/60">
-                  <span>1</span>
+                  <span>1,0</span>
                   <span className="font-bold text-white">
-                    Vybráno: <span className="tabular-nums">{draft}</span>
+                    Vybráno: <span className="tabular-nums">{formatRating(draft)}</span>
                   </span>
-                  <span>10</span>
+                  <span>10,0</span>
                 </div>
                 <input
                   aria-label={`Hodnocení ${p.name}`}
                   type="range"
                   min={1}
                   max={10}
-                  step={1}
+                  step={0.1}
                   value={draft}
                   disabled={!canRate || busyId === pid}
                   onChange={(e) => {
-                    const v = clampInt(Number(e.target.value), 1, 10);
+                    const v = roundDeci(Number(e.target.value));
                     setDraftById((m) => ({ ...m, [pid]: v }));
                   }}
-                  onMouseUp={() => void submit(pid, draft)}
-                  onTouchEnd={() => void submit(pid, draft)}
                   className="mt-2 w-full accent-[#00B4FF] disabled:opacity-50"
                 />
               </div>
@@ -149,4 +189,3 @@ export function MatchRatingClient({
     </div>
   );
 }
-

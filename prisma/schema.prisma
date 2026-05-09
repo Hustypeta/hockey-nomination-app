@@ -196,11 +196,12 @@ model MatchOfficialLineup {
 
 /// Jedno hodnocení hráče v konkrétním zápase od jednoho hodnotitele.
 /// raterKey = "u:{userId}" nebo "a:{anonCookie}".
+/// `rating` je Float (1.0–10.0 s krokem 0.1), aby šly oznámkovat i poloviny / desetiny.
 model MatchRating {
   id        String   @id @default(cuid())
   matchId   String
   playerId  String
-  rating    Int
+  rating    Float
   raterKey  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

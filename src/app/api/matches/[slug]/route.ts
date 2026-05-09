@@ -7,7 +7,16 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
     const { slug } = await params;
     const match = await prisma.match.findUnique({
       where: { slug },
-      include: { officialLineup: true },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        opponent: true,
+        startsAt: true,
+        venue: true,
+        published: true,
+        officialLineup: true,
+      },
     });
     if (!match || !match.published || !match.officialLineup) {
       return NextResponse.json({ error: "Zápas nenalezen." }, { status: 404 });

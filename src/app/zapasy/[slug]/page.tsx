@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 import type { LineupStructure } from "@/types";
-import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
-import { MatchRatingClient } from "@/components/match/MatchRatingClient";
+import { MatchRatingExperience } from "@/components/match/MatchRatingExperience";
 import { MatchRatingShareControls } from "@/components/match/MatchRatingShareControls";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { SiteShell } from "@/components/site/SiteShell";
@@ -127,6 +128,21 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
         Object.fromEntries(grouped.map((r) => [r.playerId, { avg: r._avg.rating ?? 0, count: r._count.rating }]))
       )) as Record<string, { avg: number; count: number }>);
 
+  /** Moje (pokud přihlášený) hodnocení — předáváme do experience, aby se hned zobrazila zelená kolečka. */
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id ?? null;
+  const myRatings: Record<string, number> =
+    !preview && match && userId
+      ? Object.fromEntries(
+          (
+            await prisma.matchRating.findMany({
+              where: { matchId: match.id, raterKey: `u:${userId}` },
+              select: { playerId: true, rating: true },
+            })
+          ).map((r) => [r.playerId, r.rating])
+        )
+      : {};
+
   return (
     <SiteShell>
       <main>
@@ -171,55 +187,36 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
           </div>
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <h2 className="font-display text-lg font-black">Oficiální sestava</h2>
-            <div className="mt-4">
-              {lineup && match?.officialLineup ? (
-                <MatchOfficialLineupView
-                  lineup={lineup}
-                  players={players}
-                  captainId={match.officialLineup.captainId ?? null}
-                  matchDefenseCount={(match.officialLineup.defenseCount as 6 | 7 | 8) ?? 8}
-                  matchAllowExtraForward={Boolean(match.officialLineup.allowExtraForward)}
-                />
-              ) : (
-                <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-white/65">
-                  Oficiální sestava zatím nebyla oznámena. Jakmile ji admin doplní, zobrazí se tady.
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section>
-            <h2 className="font-display text-lg font-black">Hodnocení hráčů (1–10)</h2>
+        {lineup && match?.officialLineup ? (
+          <div className="mt-8 space-y-6">
             {ratingGate.open && !preview ? (
-              <MatchRatingShareControls matchSlug={match!.slug} defaultTitle={`Hodnocení — ${match!.title}`} />
-            ) : (
-              <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-white/65">
-                {ratingGate.reason}
-              </div>
-            )}
-            <div className="mt-4">
-              {lineup && match?.officialLineup ? (
-                <MatchRatingClient
-                  slug={match.slug}
-                  players={players}
-                  lineup={lineup}
-                  defenseCount={(match.officialLineup.defenseCount as 6 | 7 | 8) ?? 8}
-                  allowExtraForward={Boolean(match.officialLineup.allowExtraForward)}
-                  initialRatings={ratings}
-                  canRate={ratingGate.open}
-                  lockedReason={ratingGate.reason}
-                />
-              ) : (
-                <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-white/65">
-                  Hodnocení bude dostupné po oznámení oficiální sestavy a po skončení zápasu.
-                </div>
-              )}
+              <MatchRatingShareControls
+                matchSlug={match!.slug}
+                defaultTitle={`Hodnocení — ${match!.title}`}
+              />
+            ) : null}
+            <MatchRatingExperience
+              slug={match!.slug}
+              matchTitle={match!.title}
+              lineup={lineup}
+              players={players}
+              captainId={match.officialLineup.captainId ?? null}
+              defenseCount={(match.officialLineup.defenseCount as 6 | 7 | 8) ?? 8}
+              allowExtraForward={Boolean(match.officialLineup.allowExtraForward)}
+              initialRatings={ratings}
+              initialMyRatings={myRatings}
+              canRate={ratingGate.open}
+              lockedReason={ratingGate.reason}
+            />
+          </div>
+        ) : (
+          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <h2 className="font-display text-lg font-black">Oficiální sestava</h2>
+            <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-white/65">
+              Oficiální sestava zatím nebyla oznámena. Jakmile ji admin doplní, zobrazí se tady.
             </div>
-          </section>
-        </div>
+          </div>
+        )}
       </div>
       </main>
     </SiteShell>

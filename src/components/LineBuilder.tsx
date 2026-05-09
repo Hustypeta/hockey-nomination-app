@@ -36,6 +36,12 @@ interface LineBuilderProps {
   /** Callbacky pro UI přepínače v `mode="match"`. */
   onMatchDefenseCountChange?: (next: 6 | 7 | 8) => void;
   onMatchAllowExtraForwardChange?: (next: boolean) => void;
+  /** Zápasové hodnocení hráčů (průměr 1–10 + počet hlasů). Když je vyplněné, ukáže se badge na dresu. */
+  ratingByPlayerId?: Record<string, { avg: number; count: number } | undefined>;
+  /** Moje hodnocení po uložení (1–10). Má přednost před průměrem (zelený badge). */
+  myRatingByPlayerId?: Record<string, number | undefined>;
+  /** Klik na dres (jen v `mode="match"` / readOnly) — využíváme pro mobilní rating sheet. */
+  onPlayerClick?: (playerId: string) => void;
 }
 
 /** Jemný akcent u nadpisu lajny – červená (repre), žádná „pruhovaná vlajka“. */
@@ -94,8 +100,40 @@ export function LineBuilder({
   matchAllowExtraForward = false,
   onMatchDefenseCountChange,
   onMatchAllowExtraForwardChange,
+  ratingByPlayerId,
+  myRatingByPlayerId,
+  onPlayerClick,
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
+
+  /** Lehce sjednocený formát hodnocení (1.0–10.0, vždy 1 desetina, čárka místo tečky). */
+  const formatRating = (n: number) => n.toFixed(1).replace(".", ",");
+
+  function RatingBadge({ playerId }: { playerId: string }) {
+    const mine = myRatingByPlayerId?.[playerId];
+    const aggregate = ratingByPlayerId?.[playerId];
+    if (typeof mine === "number" && Number.isFinite(mine)) {
+      return (
+        <span
+          className="absolute -top-1.5 left-1/2 z-30 -translate-x-1/2 rounded-full border-2 border-white/95 bg-gradient-to-b from-emerald-400 to-emerald-600 px-2 py-0.5 font-display text-[11px] font-black tabular-nums text-white shadow-[0_4px_14px_rgba(0,0,0,0.45)]"
+          aria-label="Tvoje hodnocení"
+        >
+          {formatRating(mine)}
+        </span>
+      );
+    }
+    if (aggregate && Number.isFinite(aggregate.avg) && aggregate.avg > 0) {
+      return (
+        <span
+          className="absolute -top-1.5 left-1/2 z-30 -translate-x-1/2 rounded-full border-2 border-white/95 bg-gradient-to-b from-amber-300 to-amber-500 px-2 py-0.5 font-display text-[11px] font-black tabular-nums text-[#1a1208] shadow-[0_4px_14px_rgba(0,0,0,0.45)]"
+          aria-label={`Průměrné hodnocení (${aggregate.count} hlasů)`}
+        >
+          {formatRating(aggregate.avg)}
+        </span>
+      );
+    }
+    return null;
+  }
   const assistantIds = lineup.assistantIds ?? [];
   const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) : null);
 
@@ -220,7 +258,10 @@ export function LineBuilder({
     const renderSlotBody = (isDragOver: boolean) => (
       <div
         onClick={() => {
-          if (readOnly) return;
+          if (readOnly) {
+            if (player && onPlayerClick) onPlayerClick(player.id);
+            return;
+          }
           onSelectSlot(selected ? null : { type, lineIndex: lineIndex ?? 0, role });
         }}
         className={`
@@ -281,6 +322,7 @@ export function LineBuilder({
               nameplateScale={mode === "match" ? 0.92 : 1}
             />
           )}
+          {player ? <RatingBadge playerId={player.id} /> : null}
         </div>
 
         {player && !readOnly ? (
