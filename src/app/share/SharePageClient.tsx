@@ -53,7 +53,7 @@ function ShareContentInner({
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#0c0e12] px-4">
         <p className="mb-4 font-display text-xl text-white">Odkaz je neplatný nebo poškozený.</p>
         <Link href="/sestava" className="text-[#c41e3a] hover:underline">
-          ← Zpět na editor sestavy
+          ← Zpět na editor nominace
         </Link>
       </div>
     );
@@ -67,7 +67,7 @@ function ShareContentInner({
           V odkazu chybí data hráčů nebo je sestava nekompletní.
         </p>
         <Link href="/sestava" className="text-[#c41e3a] hover:underline">
-          ← Zpět na editor sestavy
+          ← Zpět na editor nominace
         </Link>
       </div>
     );

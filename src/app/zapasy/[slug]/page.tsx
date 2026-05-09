@@ -207,6 +207,15 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
               initialMyRatings={myRatings}
               canRate={ratingGate.open}
               lockedReason={ratingGate.reason}
+              startsAtLabel={
+                startsAt
+                  ? new Date(startsAt).toLocaleString("cs-CZ", {
+                      timeZone: tz,
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })
+                  : undefined
+              }
             />
           </div>
         ) : (

@@ -63,6 +63,7 @@ export function MatchLineupBuilderPage() {
   const needDraftImport = Boolean(loadEditCode);
   const [draftImportReady, setDraftImportReady] = useState(!needDraftImport);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
+  const [lineupPosterModalOpen, setLineupPosterModalOpen] = useState(false);
   /** Drag & drop z poolu na sloty — zapnuto i na tabletu/úzkém okně (chování „původního“ editoru nominace). */
   const enableDnd = true;
 
@@ -443,13 +444,17 @@ export function MatchLineupBuilderPage() {
           ) : null}
           <div className="mt-4 border-t border-white/[0.08] pt-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45">
-              Export obrázků (Instagram)
+              Export grafiky (Instagram)
             </p>
             <p className="mt-1 text-xs text-white/50">
-              Čtyři snímky po skupinách — s dresy nebo jen příjmení jako u nominace. Platí až pro kompletní sestavu.
+              Stejná nabídka jako u hodnocení zápasu: celý tým jen jména (jako grafika nominace), pak řezy s dresy —
+              brankáři, obrana, 1.+2. a 3.+4. řada na útok. Na mobilu ji najdeš také jako <strong className="text-white/80">Generovat plakát</strong>{" "}
+              ve spodní liště (ikona stažení).
             </p>
             <div className="mt-3">
               <MatchLineupImageExportButton
+                modalOpen={lineupPosterModalOpen}
+                onModalOpenChange={setLineupPosterModalOpen}
                 shareTitle={shareTitle}
                 lineup={lineup}
                 players={players}
@@ -598,6 +603,8 @@ export function MatchLineupBuilderPage() {
         undoDisabled={!canUndo}
         shareDisabled={saving || !valid}
         shareLabel={saving ? "Ukládám…" : shareUrl ? "Sdílet" : "Uložit & sdílet"}
+        onPosterExport={() => valid && setLineupPosterModalOpen(true)}
+        posterExportDisabled={!valid}
         className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
       />
     </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { ImageDown } from "lucide-react";
+import { Share2 } from "lucide-react";
 import {
   buildHtmlToImageOptions,
   canvasToPngDataUrl,
@@ -11,15 +11,11 @@ import {
 import { toCanvas } from "html-to-image";
 import type { LineupStructure, Player } from "@/types";
 import { MatchLineupJerseyExportPoster } from "@/components/match/MatchLineupJerseyExportPoster";
-import { MatchLineupNamesSegmentPoster } from "@/components/match/MatchLineupNamesSegmentPoster";
+import { MatchLineupNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
+import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 import type { MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
 
-const GROUPS: Array<{ id: MatchLineupPosterGroup; suffix: string }> = [
-  { id: "goalies", suffix: "1-brankari" },
-  { id: "defense", suffix: "2-obrana" },
-  { id: "forwards-12", suffix: "3-utok-1-2" },
-  { id: "forwards-34", suffix: "4-utok-3-4" },
-];
+const SEGMENTS: MatchLineupPosterGroup[] = ["goalies", "defense", "forwards-12", "forwards-34"];
 
 function slugifyForFile(raw: string): string {
   const s = raw
@@ -33,6 +29,18 @@ function slugifyForFile(raw: string): string {
   return s.length >= 2 ? s : "sestava-zapas";
 }
 
+function filenameLineupSlot(slot: string, baseSlug: string): string {
+  if (slot === "cele-jmena") return `sestava-zapas-jmena-${baseSlug}-komplet.png`;
+  const map: Record<string, string> = {
+    goalies: "1-brankari",
+    defense: "2-obrana",
+    "forwards-12": "3-utok-1-2",
+    "forwards-34": "4-utok-3-4",
+  };
+  const suf = map[slot] ?? slot;
+  return `sestava-zapas-dresy-${baseSlug}-${suf}.png`;
+}
+
 export function MatchLineupImageExportButton({
   shareTitle,
   lineup,
@@ -42,6 +50,10 @@ export function MatchLineupImageExportButton({
   shareSlug,
   siteOrigin,
   disabled,
+  /** Řízené otevření modalu (např. ze spodní lišty). */
+  modalOpen: modalOpenControlled,
+  onModalOpenChange,
+  showTriggerButton = true,
 }: {
   shareTitle: string;
   lineup: LineupStructure;
@@ -51,101 +63,122 @@ export function MatchLineupImageExportButton({
   shareSlug?: string | null;
   siteOrigin: string;
   disabled?: boolean;
+  modalOpen?: boolean;
+  onModalOpenChange?: (open: boolean) => void;
+  showTriggerButton?: boolean;
 }) {
-  const jerseyStageRef = useRef<HTMLDivElement | null>(null);
-  const namesStageRef = useRef<HTMLDivElement | null>(null);
-  const [busyJersey, setBusyJersey] = useState(false);
-  const [busyNames, setBusyNames] = useState(false);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const [busyKey, setBusyKey] = useState<string | null>(null);
+  const [modalOpenInternal, setModalOpenInternal] = useState(false);
+  const controlled = typeof modalOpenControlled === "boolean" && typeof onModalOpenChange === "function";
+  const modalOpen = controlled ? modalOpenControlled : modalOpenInternal;
+  const setModalOpen = controlled ? onModalOpenChange! : setModalOpenInternal;
 
   const titleLine = shareTitle.trim() || "Moje sestava na zápas";
-  const baseSlug = useMemo(
-    () => slugifyForFile(shareSlug ?? shareTitle),
-    [shareSlug, shareTitle]
+  const baseSlug = useMemo(() => slugifyForFile(shareSlug ?? shareTitle), [shareSlug, shareTitle]);
+
+  const footerIso = useMemo(() => new Date().toISOString(), []);
+
+  useEffect(() => {
+    if (disabled) setModalOpen(false);
+  }, [disabled, setModalOpen]);
+
+  const choices = useMemo(
+    () => [
+      {
+        key: "cele-jmena",
+        title: "Celá sestava — jen jména",
+        hint: "Jako grafika „jen jména“ v editoru nominace (tmavý plakát, celá soupiska).",
+      },
+      {
+        key: "goalies",
+        title: "Dresy — brankáři",
+        hint: "",
+      },
+      {
+        key: "defense",
+        title: "Dresy — obrana",
+        hint: "",
+      },
+      {
+        key: "forwards-12",
+        title: "Dresy — 1. a 2. útoková řada",
+        hint: "Odpovídá skupinovému exportu u hodnocení.",
+      },
+      {
+        key: "forwards-34",
+        title: "Dresy — 3. a 4. útoková řada",
+        hint: "Včetně případného 13. útočníka, pokud je v sestavě povolen.",
+      },
+    ],
+    []
   );
 
-  const exportSegmented = async (
-    stage: HTMLDivElement | null,
-    className: string,
-    filePrefix: string,
-    backgroundColor: string,
-    setBusy: (v: boolean) => void,
-    okMessage: string
-  ) => {
-    if (!stage) return;
-    setBusy(true);
-    try {
-      const targets = stage.querySelectorAll<HTMLDivElement>(`.${className}`);
-      if (targets.length !== GROUPS.length) {
-        toast.error("Export se nepřipravil. Zkus to ještě jednou.");
+  const runExport = useCallback(
+    async (slot: string) => {
+      const stage = stageRef.current;
+      if (!stage) {
+        toast.error("Export nelze najít.");
         return;
       }
-      for (let i = 0; i < targets.length; i++) {
-        const node = targets[i]!;
+      setBusyKey(slot);
+      try {
+        const bg = slot === "cele-jmena" ? "#060b14" : "#05080f";
+        const selector =
+          slot === "cele-jmena"
+            ? "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
+            : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
+        const node = stage.querySelector<HTMLElement>(selector);
+        if (!node) {
+          toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
+          return;
+        }
         const opts = await buildHtmlToImageOptions(node, {
-          backgroundColor,
+          backgroundColor: bg,
           pixelRatio: 2,
         });
         const canvas = await toCanvas(node, opts);
-        const dataUrl = canvasToPngDataUrl(canvas);
-        const filename = `${filePrefix}-${baseSlug}-${GROUPS[i]!.suffix}.png`;
-        downloadDataUrl(dataUrl, filename);
-        await new Promise((r) => setTimeout(r, 450));
+        downloadDataUrl(canvasToPngDataUrl(canvas), filenameLineupSlot(slot, baseSlug));
+        toast.success("Staženo 1 PNG.");
+      } catch (e) {
+        console.error("export match lineup:", e);
+        toast.error("Export se nepovedl.");
+      } finally {
+        setBusyKey(null);
       }
-      toast.success(okMessage);
-    } catch (e) {
-      console.error("export match lineup:", e);
-      toast.error("Export se nepovedl.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const busy = busyJersey || busyNames;
-  const footerIso = useMemo(() => new Date().toISOString(), []);
+    },
+    [baseSlug]
+  );
 
   return (
     <>
-      <div className="flex flex-wrap gap-2">
+      {showTriggerButton ? (
         <button
           type="button"
-          disabled={disabled || busy}
-          onClick={() =>
-            void exportSegmented(
-              jerseyStageRef.current,
-              "match-lineup-jersey-export-poster",
-              "sestava-zapas-dresy",
-              "#05080f",
-              setBusyJersey,
-              "Staženo 4 fotek s dresy."
-            )
-          }
-          className="inline-flex items-center gap-2 rounded-xl border border-sky-400/35 bg-sky-500/10 px-3 py-2 text-sm font-bold text-sky-100 hover:bg-sky-500/20 disabled:opacity-50"
+          disabled={disabled}
+          onClick={() => !disabled && setModalOpen(true)}
+          className="inline-flex items-center gap-2 rounded-xl border border-sky-400/45 bg-sky-500/12 px-4 py-2 text-sm font-bold text-sky-50 hover:bg-sky-500/22 disabled:opacity-50"
         >
-          <ImageDown className="h-4 w-4 shrink-0" aria-hidden />
-          {busyJersey ? "Exportuji…" : "Fotky s dresy (4×)"}
+          <Share2 className="h-4 w-4 shrink-0" aria-hidden />
+          Plakáty / grafika
         </button>
-        <button
-          type="button"
-          disabled={disabled || busy}
-          onClick={() =>
-            void exportSegmented(
-              namesStageRef.current,
-              "match-lineup-names-segment-poster",
-              "sestava-zapas-jmena",
-              "#060b14",
-              setBusyNames,
-              "Staženo 4 fotek jen s jmény."
-            )
-          }
-          className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2 text-sm font-bold text-white/90 hover:bg-white/[0.1] disabled:opacity-50"
-        >
-          <ImageDown className="h-4 w-4 shrink-0" aria-hidden />
-          {busyNames ? "Exportuji…" : "Jen jména (4×)"}
-        </button>
-      </div>
+      ) : null}
+
+      <MatchPosterExportChoicesModal
+        open={modalOpen && !disabled}
+        onClose={() => setModalOpen(false)}
+        eyebrow="Sestava na zápas"
+        title="Generovat plakát"
+        description="Stejný princip jako u hodnocení zápasu: nejdřív celá soupiska jen jména, pak řezy po skupinách (G, D, útok). Vždy jedna PNG."
+        busyKey={busyKey}
+        choices={choices}
+        onPick={async (key) => {
+          await runExport(key);
+        }}
+      />
 
       <div
-        ref={jerseyStageRef}
+        ref={stageRef}
         aria-hidden
         style={{
           position: "fixed",
@@ -155,41 +188,24 @@ export function MatchLineupImageExportButton({
           opacity: 0,
         }}
       >
-        {GROUPS.map((g) => (
+        <MatchLineupNamesFullPoster
+          headline={titleLine}
+          lineup={lineup}
+          players={players}
+          defenseCount={defenseCount}
+          allowExtraForward={allowExtraForward}
+          siteUrl={siteOrigin}
+          footerInstantIso={footerIso}
+        />
+        {SEGMENTS.map((g) => (
           <MatchLineupJerseyExportPoster
-            key={`j-${g.id}`}
+            key={g}
             lineupTitle={titleLine}
-            group={g.id}
+            group={g}
             players={players}
             lineup={lineup}
             defenseCount={defenseCount}
             allowExtraForward={allowExtraForward}
-          />
-        ))}
-      </div>
-
-      <div
-        ref={namesStageRef}
-        aria-hidden
-        style={{
-          position: "fixed",
-          top: -100000,
-          left: -100000,
-          pointerEvents: "none",
-          opacity: 0,
-        }}
-      >
-        {GROUPS.map((g) => (
-          <MatchLineupNamesSegmentPoster
-            key={`n-${g.id}`}
-            lineupTitle={titleLine}
-            group={g.id}
-            players={players}
-            lineup={lineup}
-            defenseCount={defenseCount}
-            allowExtraForward={allowExtraForward}
-            siteUrl={siteOrigin}
-            footerInstantIso={footerIso}
           />
         ))}
       </div>

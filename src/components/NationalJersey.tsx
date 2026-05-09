@@ -8,6 +8,8 @@ import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 export interface NationalJerseyProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   player?: Player | null;
+  /** Odlišení jmenovců („M. Kovařčík“) — viz `getAmbiguousLastNameKeys`. */
+  ambiguousJerseyLastKeys?: ReadonlySet<string> | null;
   placeholderLabel?: string;
   jerseyShape?: "skater" | "goalie";
   isCaptain?: boolean;
@@ -49,7 +51,9 @@ export function NationalJersey({
   jerseyShape = "skater",
   isCaptain = false,
   isAssistant = false,
+  isSelected: _isSelected = false,
   className = "",
+  ambiguousJerseyLastKeys,
 }: NationalJerseyProps) {
   const empty = !player;
   const w = sizeWidths[size];
@@ -125,7 +129,7 @@ export function NationalJersey({
                 className={`max-w-[98%] truncate font-display font-semibold uppercase leading-tight text-white ${nameCls}`}
                 style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9), 0 0 14px rgba(0,0,0,0.45)" }}
               >
-                {jerseyNameOnJersey(player.name)}
+                {jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys)}
               </div>
               {player.position !== "G" && player.role && (
                 <div

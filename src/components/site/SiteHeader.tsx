@@ -14,7 +14,7 @@ type NavItem = { href: string; label: string; shortLabel?: string };
 const NAV: NavItem[] = [
   { href: "/", label: "Úvod" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
-  { href: "/sestava", label: "Editor sestavy", shortLabel: "Editor" },
+  { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
   { href: "/zapasy/sestava", label: "Tvorba sestavy na zápas", shortLabel: "Sestava zápas" },
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
   { href: "/bracket", label: "Pick’em" },

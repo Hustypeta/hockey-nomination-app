@@ -106,7 +106,7 @@ export function NominationView({
               href="/sestava"
               className="rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-5 py-3 text-center text-sm font-semibold text-cyan-100 transition hover:border-cyan-300/45 hover:bg-cyan-500/15"
             >
-              Otevřít editor sestavy
+              Otevřít editor nominace
             </Link>
           </div>
 

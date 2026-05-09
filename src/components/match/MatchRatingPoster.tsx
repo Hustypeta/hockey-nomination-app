@@ -2,7 +2,7 @@
 
 import { forwardRef, useMemo } from "react";
 import type { LineupStructure, Player } from "@/types";
-import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
 
 import {
@@ -97,6 +97,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
     ref
   ) {
     const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
+    const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
     const ids = useMemo(
       () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
       [lineup, group, defenseCount, allowExtraForward]
@@ -107,6 +108,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
     return (
       <div
         ref={ref}
+        data-export-slot={group}
         className="match-rating-poster"
         style={{
           width: 1080,
@@ -204,7 +206,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                   ? mine
                   : null;
             const hue = ratingHue(display);
-            const displayName = player ? jerseyNameOnJersey(player.name) : "";
+            const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
             return (
               <div
                 key={pid}
@@ -246,6 +248,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                     size="skater"
                     disableMotion
                     lightRinkSurface={false}
+                    ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                   />
                 </div>
 

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
-import { initJerseyNameDisambiguation, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 
 type RatingMap = Record<string, { avg: number; count: number }>;
 
@@ -60,10 +60,7 @@ export function MatchRatingClient({
     setMyRatings(initialMyRatings);
   }, [initialMyRatings]);
 
-  /** Disambiguace pro jméno na dresu / panelu (T. Galvas vs ostatní). */
-  useEffect(() => {
-    if (players.length > 0) initJerseyNameDisambiguation(players);
-  }, [players]);
+  const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
 
   const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
   const ids = useMemo(
@@ -125,28 +122,36 @@ export function MatchRatingClient({
         if (!p) return null;
         const r = ratings[pid] ?? { avg: 0, count: 0 };
         const mine = myRatings[pid];
-        const draft = draftById[pid] ?? mine ?? 7;
-        const displayName = jerseyNameOnJersey(p.name);
+        const defaultFromFans =
+          r.count > 0 && Number.isFinite(r.avg) && r.avg > 0 && r.avg <= 10 ? roundDeci(r.avg) : 7;
+        const draft = draftById[pid] ?? mine ?? defaultFromFans;
+        const displayName = jerseyNameOnJersey(p.name, ambiguousJerseyLastKeys);
         const fullName = p.name === displayName ? p.name : `${p.name} (${displayName})`;
         return (
           <div key={pid} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0 flex-1">
                 <div className="truncate font-bold text-white">{fullName}</div>
                 <div className="mt-1 text-xs text-white/60">
                   {p.club} · {p.league}
                 </div>
                 {typeof mine === "number" ? (
-                  <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300">
-                    Tvoje: {formatRating(mine)}
+                  <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300">
+                    Tvoje uložené: {formatRating(mine)}
                   </div>
-                ) : null}
+                ) : (
+                  <div className="mt-2 text-[11px] text-white/45">
+                    Nejprve vidíš průměr fanoušků; posun slidery a ulož si vlastní hodnocení.
+                  </div>
+                )}
               </div>
-              <div className="shrink-0 text-right text-xs text-white/60">
-                <div>
-                  <span className="font-bold text-white">{formatRating(r.avg)}</span> / 10
+              <div className="shrink-0 rounded-xl border border-amber-400/30 bg-amber-400/[0.08] px-3 py-2 text-right sm:text-right">
+                <div className="text-[10px] font-semibold uppercase tracking-wide text-amber-200/90">
+                  Průměr · {r.count} hlasů
                 </div>
-                <div>{r.count} hlasů</div>
+                <div className="font-display text-xl font-black tabular-nums text-amber-200">
+                  {formatRating(r.avg)} / 10
+                </div>
               </div>
             </div>
 

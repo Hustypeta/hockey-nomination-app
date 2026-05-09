@@ -50,6 +50,8 @@ export interface PremiumJerseySlotCardProps {
   disableMotion?: boolean;
   /** NHL25 světlý panel — světlý led za dres místo tmavého `.squad-ice-fill`. */
   lightRinkSurface?: boolean;
+  /** Duplicitní příjmení v soupisce → iniciála („M. Kovařčík“). */
+  ambiguousJerseyLastKeys?: ReadonlySet<string> | null;
 }
 
 /**
@@ -69,6 +71,7 @@ export function PremiumJerseySlotCard({
   className = "",
   disableMotion = false,
   lightRinkSurface = false,
+  ambiguousJerseyLastKeys,
 }: PremiumJerseySlotCardProps) {
   const sz = SIZE_STYLES[size];
   const iceFill = lightRinkSurface ? "squad-ice-surface-light" : "squad-ice-fill";
@@ -77,7 +80,7 @@ export function PremiumJerseySlotCard({
   /** Prázdný slot bez výběru — výrazně vybledlý oproti vybranému / obsazenému. */
   const emptyUnfocused = empty && !isSelected;
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
-  const ln = !empty ? jerseyNameOnJersey(player.name) : "";
+  const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
   const namePlate = !empty ? jerseyNameplateNameProps(ln, "premium") : null;
   const emptyCenterLabel = (emptyPlaceholder ?? positionLabel).trim() || "?";
   const showClear = !empty && typeof onClear === "function";

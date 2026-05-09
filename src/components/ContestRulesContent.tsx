@@ -36,7 +36,7 @@ export function ContestRulesContent() {
                 nejpozději do{" "}
                 <strong className="text-white">10. května 2026, 23:59 (středoevropský čas)</strong>.
               </li>
-              <li>Editor sestavy lze využívat k soukromým účelům i bez odeslání do soutěže.</li>
+              <li>Editor nominace lze využívat k soukromým účelům i bez odeslání do soutěže.</li>
             </ul>
           </section>
 
@@ -237,7 +237,7 @@ export function ContestRulesContent() {
             href="/sestava"
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition hover:border-cyan-300/45 hover:bg-cyan-500/15"
           >
-            Otevřít editor sestavy
+            Otevřít editor nominace
           </Link>
         </p>
         <p className="mt-4 text-center">

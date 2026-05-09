@@ -60,7 +60,7 @@ export function UserAccountHub() {
         </button>
         <p className="mt-6 text-sm text-slate-500">
           <Link href="/sestava" className="text-sky-300/90 underline-offset-2 hover:underline">
-            Editor sestavy
+            Editor nominace
           </Link>{" "}
           můžeš zkoušet i bez účtu — uložení do soutěže vyžaduje přihlášení.
         </p>

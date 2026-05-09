@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
 import { LineBuilder } from "@/components/LineBuilder";
-import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import type { LineupStructure, Player } from "@/types";
 
 /**
@@ -17,6 +15,7 @@ export function MatchOfficialLineupView({
   matchAllowExtraForward,
   ratingByPlayerId,
   myRatingByPlayerId,
+  jerseyBadgesPreferFanAverage = false,
   onPlayerClick,
 }: {
   lineup: LineupStructure;
@@ -26,15 +25,13 @@ export function MatchOfficialLineupView({
   matchAllowExtraForward: boolean;
   /** Průměrné hodnocení 1–10 + počet hlasů (z DB). */
   ratingByPlayerId?: Record<string, { avg: number; count: number } | undefined>;
-  /** Moje hodnocení po uložení (1–10) — vykreslí se přednostně. */
+  /** Moje uložené hodnocení (slider v dialogu); na dres jen pokud `jerseyBadgesPreferFanAverage` je false. */
   myRatingByPlayerId?: Record<string, number | undefined>;
+  /** Na dresu vždy průměr fanoušků (hodnocení zápasu). */
+  jerseyBadgesPreferFanAverage?: boolean;
   /** Mobilní rating sheet — klik na dres otevře formulář s slidrem. */
   onPlayerClick?: (playerId: string) => void;
 }) {
-  useEffect(() => {
-    if (players.length > 0) initJerseyNameDisambiguation(players);
-  }, [players]);
-
   return (
     <LineBuilder
       mode="match"
@@ -52,6 +49,7 @@ export function MatchOfficialLineupView({
       matchAllowExtraForward={matchAllowExtraForward}
       ratingByPlayerId={ratingByPlayerId}
       myRatingByPlayerId={myRatingByPlayerId}
+      jerseyBadgesPreferFanAverage={jerseyBadgesPreferFanAverage}
       onPlayerClick={onPlayerClick}
     />
   );

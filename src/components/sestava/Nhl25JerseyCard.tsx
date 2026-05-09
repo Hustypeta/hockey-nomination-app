@@ -61,6 +61,8 @@ export interface Nhl25JerseyCardProps {
   isSelected?: boolean;
   className?: string;
   disableMotion?: boolean;
+  /** Duplicitní příjmení v soupisce → iniciála („M. Kovařčík“). */
+  ambiguousJerseyLastKeys?: ReadonlySet<string> | null;
 }
 
 export function Nhl25JerseyCard({
@@ -74,6 +76,7 @@ export function Nhl25JerseyCard({
   disableMotion = false,
   nameplateVariant = "card",
   typographyScale = 1,
+  ambiguousJerseyLastKeys,
 }: Nhl25JerseyCardProps) {
   const empty = !player;
   const kind: "skater" | "goalie" =
@@ -82,7 +85,7 @@ export function Nhl25JerseyCard({
   const w = nameplateVariant === "poster" ? NHL25_POSTER_CARD.width : widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = nameplateVariant === "poster" ? POSTER_EXPORT_NUMBER : numberClass[size];
-  const ln = !empty ? jerseyNameOnJersey(player.name) : "";
+  const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
   const npVar = nameplateVariant === "poster" ? "poster" : "card";
   const namePlate =
     !empty && nameplateVariant !== "poster" ? jerseyNameplateNameProps(ln, npVar) : null;

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
-import { initJerseyNameDisambiguation, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
 import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
@@ -23,6 +23,15 @@ function formatRating(n: number): string {
   return n.toFixed(1).replace(".", ",");
 }
 
+function draftFromMineOrAggregate(
+  mine: number | undefined,
+  aggregate: { avg: number; count: number }
+): number {
+  if (typeof mine === "number" && Number.isFinite(mine)) return roundDeci(mine);
+  if (aggregate.count > 0 && aggregate.avg > 0 && aggregate.avg <= 10) return roundDeci(aggregate.avg);
+  return 7;
+}
+
 interface MatchRatingExperienceProps {
   slug: string;
   matchTitle: string;
@@ -35,6 +44,8 @@ interface MatchRatingExperienceProps {
   initialMyRatings: Record<string, number>;
   canRate: boolean;
   lockedReason?: string;
+  /** Datum / čas zápasu na exportní plakát. */
+  startsAtLabel?: string;
 }
 
 /**
@@ -53,14 +64,13 @@ export function MatchRatingExperience({
   initialMyRatings,
   canRate,
   lockedReason,
+  startsAtLabel,
 }: MatchRatingExperienceProps) {
   const [ratings, setRatings] = useState<RatingMap>(initialRatings);
   const [myRatings, setMyRatings] = useState<Record<string, number>>(initialMyRatings);
   const [sheetPlayerId, setSheetPlayerId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (players.length > 0) initJerseyNameDisambiguation(players);
-  }, [players]);
+  const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
 
   const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
 
@@ -87,6 +97,7 @@ export function MatchRatingExperience({
           ratings={ratings}
           myRatings={myRatings}
           preferMine={false}
+          startsAtLabel={startsAtLabel}
         />
       </div>
 
@@ -110,6 +121,7 @@ export function MatchRatingExperience({
               matchAllowExtraForward={allowExtraForward}
               ratingByPlayerId={ratingByPlayerId}
               myRatingByPlayerId={myRatingByPlayerId}
+              jerseyBadgesPreferFanAverage
               onPlayerClick={(pid) => setSheetPlayerId(pid)}
             />
           </div>
@@ -154,7 +166,8 @@ export function MatchRatingExperience({
           </div>
 
           <div className="lg:hidden rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-sm text-white/70">
-            Klepni na hráče v sestavě a oboduj ho 1,0–10,0. Po uložení se hodnota zobrazí přímo na dresu.
+            Klepni na hráče v sestavě a oboduj ho 1,0–10,0. Na drese vidíš vždy průměr fanoušků; svoji známku
+            najdeš v tomto okně a ve svém účtu v Moje hodnocení.
           </div>
         </section>
       </div>
@@ -167,6 +180,7 @@ export function MatchRatingExperience({
           player={sheetPlayer}
           aggregate={ratings[sheetPlayer.id] ?? { avg: 0, count: 0 }}
           mine={myRatings[sheetPlayer.id]}
+          ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
           canRate={canRate}
           lockedReason={lockedReason}
           onClose={() => setSheetPlayerId(null)}
@@ -185,6 +199,7 @@ function RatingSheet({
   player,
   aggregate,
   mine,
+  ambiguousJerseyLastKeys,
   canRate,
   lockedReason,
   onClose,
@@ -194,18 +209,19 @@ function RatingSheet({
   player: Player;
   aggregate: { avg: number; count: number };
   mine: number | undefined;
+  ambiguousJerseyLastKeys: ReadonlySet<string>;
   canRate: boolean;
   lockedReason?: string;
   onClose: () => void;
   onSaved: (newMine: number, newRatings?: RatingMap) => void;
 }) {
-  const [draft, setDraft] = useState<number>(typeof mine === "number" ? mine : 7);
+  const [draft, setDraft] = useState(() => draftFromMineOrAggregate(mine, aggregate));
   const [saving, setSaving] = useState(false);
 
   /** Po otevření sheetu pro nového hráče zresetujeme draft z props, ne z předchozího sheetu. */
   useEffect(() => {
-    setDraft(typeof mine === "number" ? mine : 7);
-  }, [mine, player.id]);
+    setDraft(draftFromMineOrAggregate(mine, aggregate));
+  }, [mine, player.id, aggregate.avg, aggregate.count]);
 
   const submit = async () => {
     if (!canRate) {
@@ -243,7 +259,7 @@ function RatingSheet({
     }
   };
 
-  const displayName = jerseyNameOnJersey(player.name);
+  const displayName = jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys);
 
   return (
     <div
@@ -277,15 +293,15 @@ function RatingSheet({
 
         <div className="grid grid-cols-2 gap-3 border-b border-white/10 bg-black/20 px-5 py-3 text-xs">
           <div>
-            <div className="text-white/45">Tvoje hodnocení</div>
-            <div className="font-display text-2xl font-black tabular-nums text-emerald-300">
-              {typeof mine === "number" ? formatRating(mine) : "–"}
+            <div className="text-white/45">Průměr fanoušků ({aggregate.count})</div>
+            <div className="font-display text-2xl font-black tabular-nums text-amber-300">
+              {formatRating(aggregate.avg)}
             </div>
           </div>
           <div className="text-right">
-            <div className="text-white/45">Průměr ({aggregate.count})</div>
-            <div className="font-display text-2xl font-black tabular-nums text-amber-300">
-              {formatRating(aggregate.avg)}
+            <div className="text-white/45">Tvoje uložené</div>
+            <div className="font-display text-2xl font-black tabular-nums text-emerald-300">
+              {typeof mine === "number" ? formatRating(mine) : "–"}
             </div>
           </div>
         </div>

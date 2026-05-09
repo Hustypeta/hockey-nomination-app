@@ -55,6 +55,8 @@ export interface LineupJerseyCardProps {
   overlayVariant?: "default" | "lower";
   /** Jemné zmenšení/ zvětšení písma jmenovky. */
   nameplateScale?: number;
+  /** Duplicitní příjmení v soupisce → iniciála („M. Kovařčík“). */
+  ambiguousJerseyLastKeys?: ReadonlySet<string> | null;
 }
 
 export function LineupJerseyCard({
@@ -71,6 +73,7 @@ export function LineupJerseyCard({
   showRoleBadge = true,
   overlayVariant = "default",
   nameplateScale = 1,
+  ambiguousJerseyLastKeys,
 }: LineupJerseyCardProps) {
   const empty = !player;
   const emptyUnfocused = empty && !isSelected;
@@ -84,7 +87,7 @@ export function LineupJerseyCard({
     overlayVariant === "lower"
       ? overlayTopClass[size].replace("pt-[25%]", "pt-[34%]")
       : overlayTopClass[size];
-  const ln = !empty ? jerseyNameOnJersey(player.name) : "";
+  const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
   const namePlate =
     !empty && nameOnJersey ? jerseyNameplateNameProps(ln) : { lines: [] as string[], className: "", style: {} };
   const namePlateStyle =

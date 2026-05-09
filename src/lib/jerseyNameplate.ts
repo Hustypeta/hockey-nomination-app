@@ -7,7 +7,8 @@ export function nameplateWidthScore(lastName: string): number {
   let score = 0;
   for (const ch of lastName.trim()) {
     const c = ch.toUpperCase();
-    if ("MWŽŠČŘÝÁÍÉÚŮĎŤŇÓÖÄÜ".includes(c)) score += 1.38;
+    if (c === ".") score += 0.55;
+    else if ("MWŽŠČŘÝÁÍÉÚŮĎŤŇÓÖÄÜ".includes(c)) score += 1.38;
     else if (c === " ") score += 0.35;
     else score += 1;
   }

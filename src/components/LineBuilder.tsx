@@ -4,12 +4,14 @@
  * Vnitřní <Slot /> zavírá nad většinou props LineBuilder; vytažení ven by znamenalo desítky props bez zisku.
  */
 import type { ReactNode } from "react";
+import { useMemo } from "react";
 import { toast } from "sonner";
 import type { Player, LineupStructure } from "@/types";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/LineupJerseyCard";
 import { PremiumJerseySlotCard, type PremiumJerseySize } from "@/components/sestava/PremiumJerseySlotCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
+import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 
 interface LineBuilderProps {
   lineup: LineupStructure;
@@ -39,8 +41,12 @@ interface LineBuilderProps {
   onMatchAllowExtraForwardChange?: (next: boolean) => void;
   /** Zápasové hodnocení hráčů (průměr 1–10 + počet hlasů). Když je vyplněné, ukáže se badge na dresu. */
   ratingByPlayerId?: Record<string, { avg: number; count: number } | undefined>;
-  /** Moje hodnocení po uložení (1–10). Má přednost před průměrem (zelený badge). */
+  /** Moje uložené hodnocení — pro formuláře; na dres použito jen když `jerseyBadgesPreferFanAverage` je false. */
   myRatingByPlayerId?: Record<string, number | undefined>;
+  /**
+   * Když true, badge na dresu ukazuje vždy průměr fanoušků — vlastní známka ne (ta zůstane jen v UI / účtu).
+   */
+  jerseyBadgesPreferFanAverage?: boolean;
   /** Klik na dres (jen v `mode="match"` / readOnly) — využíváme pro mobilní rating sheet. */
   onPlayerClick?: (playerId: string) => void;
 }
@@ -103,11 +109,13 @@ export function LineBuilder({
   onMatchAllowExtraForwardChange,
   ratingByPlayerId,
   myRatingByPlayerId,
+  jerseyBadgesPreferFanAverage = false,
   onPlayerClick,
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
   /** Ve veřejném hodnocení na úzkém displeji zmenšit jména na dresu (dlouhá příjmení). */
   const isMatchRatingNarrow = useMediaQuery("(max-width: 1023px)");
+  const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
 
   /** Lehce sjednocený formát hodnocení (1.0–10.0, vždy 1 desetina, čárka místo tečky). */
   const formatRating = (n: number) => n.toFixed(1).replace(".", ",");
@@ -115,7 +123,11 @@ export function LineBuilder({
   function RatingBadge({ playerId }: { playerId: string }) {
     const mine = myRatingByPlayerId?.[playerId];
     const aggregate = ratingByPlayerId?.[playerId];
-    if (typeof mine === "number" && Number.isFinite(mine)) {
+    if (
+      !jerseyBadgesPreferFanAverage &&
+      typeof mine === "number" &&
+      Number.isFinite(mine)
+    ) {
       return (
         <span
           className="absolute -top-1.5 left-1/2 z-30 -translate-x-1/2 rounded-full border-2 border-white/95 bg-gradient-to-b from-emerald-400 to-emerald-600 px-2 py-0.5 font-display text-[11px] font-black tabular-nums text-white shadow-[0_4px_14px_rgba(0,0,0,0.45)]"
@@ -309,6 +321,7 @@ export function LineBuilder({
               isDragOver={isDragOver}
               onClear={onClear}
               lightRinkSurface
+              ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
           ) : (
             <LineupJerseyCard
@@ -323,8 +336,9 @@ export function LineBuilder({
               showRoleBadge={mode !== "match"}
               overlayVariant={mode === "match" ? "lower" : "default"}
               nameplateScale={
-                mode === "match" ? (readOnly && isMatchRatingNarrow ? 0.76 : 0.92) : 1
+                mode === "match" ? (readOnly && isMatchRatingNarrow ? 0.68 : 0.92) : 1
               }
+              ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
           )}
           {player ? <RatingBadge playerId={player.id} /> : null}

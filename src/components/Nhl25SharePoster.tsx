@@ -5,6 +5,7 @@ import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
+import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
 
 export interface Nhl25SharePosterProps {
@@ -62,6 +63,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
   ) {
     const dark = posterTheme === "dark";
     const lineup = useMemo(() => normalizeLineupStructure(lineupProp), [lineupProp]);
+    const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
     const aids = assistantIds.length ? assistantIds : (lineup.assistantIds ?? []);
     const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) ?? null : null);
 
@@ -134,6 +136,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                           nameplateVariant="poster"
                           isCaptain={gid ? captainId === gid : false}
                           isAssistant={gid ? aids.includes(gid) : false}
+                          ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                           disableMotion
                         />
                       </PosterJerseyWrap>
@@ -164,6 +167,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             nameplateVariant="poster"
                             isCaptain={line.lw ? captainId === line.lw : false}
                             isAssistant={line.lw ? aids.includes(line.lw) : false}
+                            ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                             disableMotion
                           />
                         </PosterJerseyWrap>
@@ -175,6 +179,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             nameplateVariant="poster"
                             isCaptain={line.c ? captainId === line.c : false}
                             isAssistant={line.c ? aids.includes(line.c) : false}
+                            ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                             disableMotion
                           />
                         </PosterJerseyWrap>
@@ -186,6 +191,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             nameplateVariant="poster"
                             isCaptain={line.rw ? captainId === line.rw : false}
                             isAssistant={line.rw ? aids.includes(line.rw) : false}
+                            ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                             disableMotion
                           />
                         </PosterJerseyWrap>
@@ -216,6 +222,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             nameplateVariant="poster"
                             isCaptain={pair.lb ? captainId === pair.lb : false}
                             isAssistant={pair.lb ? aids.includes(pair.lb) : false}
+                            ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                             disableMotion
                           />
                         </PosterJerseyWrap>
@@ -227,6 +234,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                             nameplateVariant="poster"
                             isCaptain={pair.rb ? captainId === pair.rb : false}
                             isAssistant={pair.rb ? aids.includes(pair.rb) : false}
+                            ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                             disableMotion
                           />
                         </PosterJerseyWrap>
@@ -246,6 +254,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                           nameplateVariant="poster"
                           isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
                           isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
+                          ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                           disableMotion
                         />
                       </PosterJerseyWrap>
@@ -282,6 +291,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                         isAssistant={
                           lineup.forwardLines[3].x ? aids.includes(lineup.forwardLines[3].x) : false
                         }
+                        ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                         disableMotion
                       />
                     </PosterJerseyWrap>
@@ -302,6 +312,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                         isAssistant={
                           lineup.extraForwards[0] ? aids.includes(lineup.extraForwards[0]) : false
                         }
+                        ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                         disableMotion
                       />
                     </PosterJerseyWrap>
@@ -319,6 +330,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                           nameplateVariant="poster"
                           isCaptain={captainId === extraD}
                           isAssistant={aids.includes(extraD)}
+                          ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                           disableMotion
                         />
                       </PosterJerseyWrap>

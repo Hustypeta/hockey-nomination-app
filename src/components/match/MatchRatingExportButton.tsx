@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { ImageDown } from "lucide-react";
+import { Share2 } from "lucide-react";
 import {
   buildHtmlToImageOptions,
   canvasToPngDataUrl,
@@ -10,14 +10,24 @@ import {
 } from "@/lib/captureSharePoster";
 import { toCanvas } from "html-to-image";
 import type { LineupStructure, Player } from "@/types";
-import { MatchRatingPoster, type MatchRatingPosterGroup } from "@/components/match/MatchRatingPoster";
+import { MATCH_LINEUP_POSTER_GROUP_TITLE, type MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
+import { MatchRatingPoster } from "@/components/match/MatchRatingPoster";
+import { MatchRatingNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
+import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 
-const GROUPS: Array<{ id: MatchRatingPosterGroup; suffix: string }> = [
-  { id: "goalies", suffix: "1-brankari" },
-  { id: "defense", suffix: "2-obrana" },
-  { id: "forwards-12", suffix: "3-utok-1-2" },
-  { id: "forwards-34", suffix: "4-utok-3-4" },
-];
+const SEGMENTS: MatchLineupPosterGroup[] = ["goalies", "defense", "forwards-12", "forwards-34"];
+
+function filenameForRatingSlot(slot: string, matchSlug: string): string {
+  if (slot === "cele-jmena") return `hodnoceni-${matchSlug}-cele-jmena.png`;
+  const map: Record<string, string> = {
+    goalies: "1-brankari",
+    defense: "2-obrana",
+    "forwards-12": "3-utok-1-2",
+    "forwards-34": "4-utok-3-4",
+  };
+  const suf = map[slot] ?? slot;
+  return `hodnoceni-${matchSlug}-${suf}.png`;
+}
 
 type RatingMap = Record<string, { avg: number; count: number } | undefined>;
 type MyMap = Record<string, number | undefined>;
@@ -46,56 +56,97 @@ export function MatchRatingExportButton({
   preferMine?: boolean;
 }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [busyKey, setBusyKey] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [siteOrigin, setSiteOrigin] = useState("");
 
-  const exportAll = async () => {
-    if (busy) return;
-    const stage = stageRef.current;
-    if (!stage) return;
-    setBusy(true);
-    try {
-      const targets = stage.querySelectorAll<HTMLDivElement>(".match-rating-poster");
-      if (targets.length !== GROUPS.length) {
-        toast.error("Plakát se nepřipravil. Zkus to ještě jednou.");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setSiteOrigin(window.location.host);
+  }, []);
+
+  const footerIso = useMemo(() => new Date().toISOString(), []);
+
+  const choices = useMemo(
+    () => [
+      {
+        key: "cele-jmena",
+        title: "Jen jména a průměry fanoušků",
+        hint: "Celá soupiska najednou (stejný grafický styl jako „jen jména“ u nominace).",
+      },
+      ...SEGMENTS.map((g) => ({
+        key: g,
+        title: `Dresy a hodnocení — ${MATCH_LINEUP_POSTER_GROUP_TITLE[g]}`,
+        hint:
+          g === "forwards-12"
+            ? "Zahrnuje 1. a 2. útokovou řadu."
+            : g === "forwards-34"
+              ? "Zahrnuje 3. a 4. útokovou řadu (případný náhradní útočník podle nastavení sestavy)."
+              : undefined,
+      })),
+    ],
+    []
+  );
+
+  const runExport = useCallback(
+    async (slot: string) => {
+      const stage = stageRef.current;
+      if (!stage) {
+        toast.error("Export nelze najít.");
         return;
       }
-      for (let i = 0; i < targets.length; i++) {
-        const node = targets[i]!;
+      setBusyKey(slot);
+      try {
+        const selector =
+          slot === "cele-jmena"
+            ? "[data-export-slot=\"cele-jmena\"].match-rating-names-full-poster"
+            : `[data-export-slot="${slot}"].match-rating-poster`;
+        const node = stage.querySelector<HTMLElement>(selector);
+        if (!node) {
+          toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
+          return;
+        }
         const opts = await buildHtmlToImageOptions(node, {
           backgroundColor: "#05080f",
           pixelRatio: 2,
         });
         const canvas = await toCanvas(node, opts);
-        const dataUrl = canvasToPngDataUrl(canvas);
-        const filename = `hodnoceni-${matchSlug}-${GROUPS[i]!.suffix}.png`;
-        downloadDataUrl(dataUrl, filename);
-        await new Promise((r) => setTimeout(r, 450));
+        downloadDataUrl(canvasToPngDataUrl(canvas), filenameForRatingSlot(slot, matchSlug));
+        toast.success("Staženo 1 PNG.");
+      } catch (e) {
+        console.error("export hodnocení:", e);
+        toast.error("Export se nepovedl.");
+      } finally {
+        setBusyKey(null);
       }
-      toast.success("Staženo 4 obrázků.");
-    } catch (e) {
-      console.error("export hodnocení:", e);
-      toast.error("Export se nepovedl.");
-    } finally {
-      setBusy(false);
-    }
-  };
+    },
+    [matchSlug]
+  );
 
   return (
     <>
       <button
         type="button"
-        disabled={busy}
-        onClick={() => void exportAll()}
-        className="inline-flex items-center gap-2 rounded-xl border border-[#f1c40f]/40 bg-gradient-to-b from-[#f1c40f]/15 to-[#f1c40f]/5 px-4 py-2 font-display text-sm font-black uppercase tracking-wide text-[#f1e6a8] hover:from-[#f1c40f]/25 hover:to-[#f1c40f]/10 disabled:opacity-50"
+        onClick={() => setModalOpen(true)}
+        className="inline-flex items-center gap-2 rounded-xl border border-[#f1c40f]/40 bg-gradient-to-b from-[#f1c40f]/15 to-[#f1c40f]/5 px-4 py-2 font-display text-sm font-black uppercase tracking-wide text-[#f1e6a8] hover:from-[#f1c40f]/25 hover:to-[#f1c40f]/10"
       >
-        <ImageDown className="h-4 w-4" aria-hidden />
-        {busy ? "Exportuji…" : "Stáhnout fotky (4×)"}
+        <Share2 className="h-4 w-4" aria-hidden />
+        Export grafiky
       </button>
 
-      {/**
-       * Off-screen stage — pozičně mimo viewport, ale měřitelná pro html-to-image.
-       * Necháme ji v DOM trvale, aby capture nemusel čekat na re-render.
-       */}
+      <MatchPosterExportChoicesModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        eyebrow="Hodnocení zápasu"
+        title="Stáhnout grafiku hodnocení"
+        description="Vždy jen jedna fotka najednou — v přehledné nabídce (stejný princip jako u editoru nominace)."
+        busyKey={busyKey}
+        choices={choices}
+        onPick={async (key) => {
+          await runExport(key);
+        }}
+      />
+
       <div
         ref={stageRef}
         aria-hidden
@@ -107,12 +158,23 @@ export function MatchRatingExportButton({
           opacity: 0,
         }}
       >
-        {GROUPS.map((g) => (
+        <MatchRatingNamesFullPoster
+          headline={matchTitle}
+          subline={startsAtLabel}
+          lineup={lineup}
+          players={players}
+          defenseCount={defenseCount}
+          allowExtraForward={allowExtraForward}
+          ratings={ratings}
+          siteUrl={siteOrigin}
+          footerInstantIso={footerIso}
+        />
+        {SEGMENTS.map((g) => (
           <MatchRatingPoster
-            key={g.id}
+            key={g}
             matchTitle={matchTitle}
             startsAtLabel={startsAtLabel}
-            group={g.id}
+            group={g}
             players={players}
             lineup={lineup}
             defenseCount={defenseCount}
