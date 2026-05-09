@@ -182,9 +182,9 @@ export function SiteHeader() {
               </div>
             </Link>
 
-            <div className="flex min-w-0 flex-1 flex-row flex-wrap items-center gap-x-2 gap-y-2 md:justify-end xl:flex-nowrap xl:gap-x-3">
-            <nav className="isolate min-w-0 flex-1 md:min-w-[12rem]" aria-label="Hlavní navigace">
-              <div className="flex flex-wrap items-center justify-end gap-x-0.5 gap-y-1">
+            <div className="flex min-w-0 flex-1 flex-row flex-nowrap items-center gap-x-2 md:justify-end xl:gap-x-3">
+            <nav className="isolate min-w-0 flex-1 overflow-x-auto md:min-w-[12rem]" aria-label="Hlavní navigace">
+              <div className="flex flex-nowrap items-center justify-end gap-x-0.5">
                 {NAV.map((item) => {
                   const { href } = item;
                   const active = href === activeHrefForPath(pathname);

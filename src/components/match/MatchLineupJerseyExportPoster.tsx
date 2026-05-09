@@ -10,6 +10,16 @@ import {
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
 
+function roleForPlayerId(lineup: LineupStructure, playerId: string): { kind: "goalie" | "skater"; label: "G" | "D" | "F" } {
+  if (lineup.goalies[0] === playerId || lineup.goalies[1] === playerId) {
+    return { kind: "goalie", label: "G" };
+  }
+  for (const p of lineup.defensePairs) {
+    if (p.lb === playerId || p.rb === playerId) return { kind: "skater", label: "D" };
+  }
+  return { kind: "skater", label: "F" };
+}
+
 interface MatchLineupJerseyExportPosterProps {
   lineupTitle: string;
   group: MatchLineupPosterGroup;
@@ -110,6 +120,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
           {ids.map((pid) => {
             const player = byId.get(pid) ?? null;
             const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
+            const role = roleForPlayerId(lineup, pid);
             return (
               <div
                 key={pid}
@@ -139,8 +150,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                 >
                   <PremiumJerseySlotCard
                     player={player}
-                    positionLabel={group === "goalies" ? "G" : group === "defense" ? "D" : "F"}
-                    kind={group === "goalies" ? "goalie" : "skater"}
+                      positionLabel={role.label}
+                      kind={role.kind}
                     size="skater"
                     disableMotion
                     lightRinkSurface={false}

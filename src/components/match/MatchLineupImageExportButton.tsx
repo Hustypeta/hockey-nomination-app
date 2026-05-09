@@ -15,7 +15,7 @@ import { MatchLineupNamesFullPoster } from "@/components/match/MatchFixtureNames
 import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 import type { MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
 
-const SEGMENTS: MatchLineupPosterGroup[] = ["goalies", "defense", "forwards-12", "forwards-34"];
+const SEGMENTS: MatchLineupPosterGroup[] = ["line-1", "line-2", "line-3", "line-4"];
 
 function slugifyForFile(raw: string): string {
   const s = raw
@@ -32,10 +32,10 @@ function slugifyForFile(raw: string): string {
 function filenameLineupSlot(slot: string, baseSlug: string): string {
   if (slot === "cele-jmena") return `sestava-zapas-jmena-${baseSlug}-komplet.png`;
   const map: Record<string, string> = {
-    goalies: "1-brankari",
-    defense: "2-obrana",
-    "forwards-12": "3-utok-1-2",
-    "forwards-34": "4-utok-3-4",
+    "line-1": "1-lajna",
+    "line-2": "2-lajna",
+    "line-3": "3-lajna",
+    "line-4": "4-lajna",
   };
   const suf = map[slot] ?? slot;
   return `sestava-zapas-dresy-${baseSlug}-${suf}.png`;
@@ -91,24 +91,24 @@ export function MatchLineupImageExportButton({
         hint: "Jako grafika „jen jména“ v editoru nominace (tmavý plakát, celá soupiska).",
       },
       {
-        key: "goalies",
-        title: "Dresy — brankáři",
-        hint: "",
+        key: "line-1",
+        title: "Dresy — 1. lajna",
+        hint: "3× útočník + 2× obránce + 1. gólman.",
       },
       {
-        key: "defense",
-        title: "Dresy — obrana",
-        hint: "",
+        key: "line-2",
+        title: "Dresy — 2. lajna",
+        hint: "3× útočník + 2× obránce.",
       },
       {
-        key: "forwards-12",
-        title: "Dresy — 1. a 2. útoková řada",
-        hint: "Odpovídá skupinovému exportu u hodnocení.",
+        key: "line-3",
+        title: "Dresy — 3. lajna",
+        hint: "3× útočník + 2× obránce.",
       },
       {
-        key: "forwards-34",
-        title: "Dresy — 3. a 4. útoková řada",
-        hint: "Včetně případného 13. útočníka, pokud je v sestavě povolen.",
+        key: "line-4",
+        title: "Dresy — 4. lajna",
+        hint: "3× útočník + 2× obránce + 13. útočník (pokud je povolen) + 2. gólman.",
       },
     ],
     []
