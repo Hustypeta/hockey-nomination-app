@@ -181,8 +181,8 @@ export function LandingContent() {
                 <div className="mt-6 rounded-2xl border border-sky-400/25 bg-gradient-to-b from-[#0c182e]/95 via-[#080f1a]/98 to-[#05080f]/95 p-6 shadow-[0_0_48px_rgba(56,189,248,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8">
                   <div className="mx-auto max-w-3xl text-center">
                     <p className="text-pretty text-base leading-relaxed text-slate-200 sm:text-lg">
-                      Přihlaš se a získej možnost ukládat nominace a přístup do soutěže o dres. Pick’em play-off a
-                      komunitní fórum zatím připravujeme — brzy doplníme.
+                      Přihlaš se a získej možnost ukládat nominace a přístup do soutěže o dres, Pick&apos;emu,
+                      tvorby sestav a hodnocení hráčů!
                     </p>
                     <button
                       type="button"
