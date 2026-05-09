@@ -64,7 +64,12 @@ function StatPhaseBanner(s: { team: string; league: string; phase?: "RS" | "PO";
   return (
     <div className="flex min-w-0 flex-col gap-2">
       <span className={`inline-flex w-fit ${phaseWrap} ${pillText}`}>{phaseLabel}</span>
-      <p className={`min-w-0 break-words font-black tracking-tight text-neutral-950 ${subtitleText}`}>{subtitle}</p>
+      <p
+        className={`min-w-0 whitespace-nowrap font-black tracking-tight text-neutral-950 ${subtitleText}`}
+        title={subtitle}
+      >
+        {subtitle}
+      </p>
     </div>
   );
 }
@@ -229,11 +234,12 @@ const PlayerIgCard = forwardRef<HTMLDivElement, { m: PlayerCardModel; variant?: 
           {clubLeague ? (
             <div className={`flex w-full items-center justify-center px-4 ${denseStats ? "mb-4 mt-1" : "mb-5 mt-2"}`}>
               <div
-                className={`max-w-[min(100%,940px)] rounded-full border-[3px] border-neutral-950 px-5 py-2.5 text-center font-display ${clubFont} font-black tracking-tight ${
+                className={`max-w-[min(100%,940px)] rounded-full border-[3px] border-neutral-950 px-5 py-2.5 text-center font-display ${clubFont} font-black tracking-tight whitespace-nowrap ${
                   variant === "promo"
                     ? "bg-white/14 text-white shadow-[0_10px_28px_rgba(0,0,0,0.35)] [text-shadow:0_2px_0_rgba(0,0,0,0.75)]"
                     : "bg-white text-neutral-950 shadow-[0_8px_22px_rgba(0,0,0,0.08)]"
                 }`}
+                title={clubLeague}
               >
                 {clubLeague}
               </div>
@@ -281,7 +287,7 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
     rows: [
       {
         team: "HC Dynamo Pardubice",
-        league: "Czechia",
+        league: "Extraliga",
         phase: "RS",
         gp: 43,
         g: 19,
@@ -292,7 +298,7 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
       },
       {
         team: "HC Dynamo Pardubice",
-        league: "Czechia",
+        league: "Extraliga",
         phase: "PO",
         gp: 17,
         g: 14,
@@ -308,7 +314,7 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
     rows: [
       {
         team: "HC Dynamo Pardubice",
-        league: "Czechia",
+        league: "Extraliga",
         phase: "RS",
         gp: 49,
         g: 17,
@@ -319,7 +325,7 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
       },
       {
         team: "HC Dynamo Pardubice",
-        league: "Czechia",
+        league: "Extraliga",
         phase: "PO",
         gp: 17,
         g: 8,
@@ -335,7 +341,7 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
     rows: [
       {
         team: "HC Oceláři Třinec",
-        league: "Czechia",
+        league: "Extraliga",
         phase: "RS",
         gp: 24,
         g: 3,
@@ -346,7 +352,7 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
       },
       {
         team: "HC Oceláři Třinec",
-        league: "Czechia",
+        league: "Extraliga",
         phase: "PO",
         gp: 10,
         g: 1,
@@ -371,8 +377,8 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
   cernoch: {
     seasonLabel: "2025-26",
     rows: [
-      { team: "HC Energie Karlovy Vary", league: "Czechia", phase: "RS", gp: 52, g: 15, a: 25, pts: 40, pim: 57, plusMinus: -2 },
-      { team: "HC Energie Karlovy Vary", league: "Czechia", phase: "PO", gp: 15, g: 3, a: 6, pts: 9, pim: 10, plusMinus: -3 },
+      { team: "HC Energie Karlovy Vary", league: "Extraliga", phase: "RS", gp: 52, g: 15, a: 25, pts: 40, pim: 57, plusMinus: -2 },
+      { team: "HC Energie Karlovy Vary", league: "Extraliga", phase: "PO", gp: 15, g: 3, a: 6, pts: 9, pim: 10, plusMinus: -3 },
     ],
   },
   jasek: {
@@ -385,8 +391,8 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
   "kovarcik-michal": {
     seasonLabel: "2025-26",
     rows: [
-      { team: "HC Oceláři Třinec", league: "Czechia", phase: "RS", gp: 52, g: 12, a: 19, pts: 31, pim: 14, plusMinus: 16 },
-      { team: "HC Oceláři Třinec", league: "Czechia", phase: "PO", gp: 19, g: 5, a: 12, pts: 17, pim: 12, plusMinus: 8 },
+      { team: "HC Oceláři Třinec", league: "Extraliga", phase: "RS", gp: 52, g: 12, a: 19, pts: 31, pim: 14, plusMinus: 16 },
+      { team: "HC Oceláři Třinec", league: "Extraliga", phase: "PO", gp: 19, g: 5, a: 12, pts: 17, pim: 12, plusMinus: 8 },
     ],
   },
   zacha: {
@@ -485,7 +491,7 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
     rows: [
       {
         team: "HC Energie Karlovy Vary",
-        league: "Czechia",
+        league: "Extraliga",
         phase: "RS",
         gp: 45,
         g: 18,
@@ -496,7 +502,7 @@ const MANUAL_STATS_BY_ID: Partial<Record<string, EliteProspectsStats>> = {
       },
       {
         team: "HC Energie Karlovy Vary",
-        league: "Czechia",
+        league: "Extraliga",
         phase: "PO",
         gp: 9,
         g: 4,
