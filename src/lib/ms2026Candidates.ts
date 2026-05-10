@@ -40,6 +40,19 @@ export function stableCandidatePlayerId(
   return `cand_${h.slice(0, 24)}`;
 }
 
+/**
+ * Pouze pravopis jména může být jiný než řetězec z hashování — ID nesmí skočit při opravách diakritiky.
+ * Klíč = aktuální zobrazení v JSON/UI, hodnota = řetězec, ze kterého se historicky počítalo `stableCandidatePlayerId`.
+ */
+const LEGACY_NAME_FOR_STABLE_ID = new Map<string, string>([
+  ["Jaroslav Chmelař", "Jaroslav Chmelář"],
+]);
+
+function legacyNameForStableCandidateId(displayName: string): string {
+  const d = displayName.trim();
+  return LEGACY_NAME_FOR_STABLE_ID.get(d) ?? d;
+}
+
 function rowToPlayer(p: JsonRow): Player {
   const pos = p.position as Player["position"];
   const idKey = p.role?.trim() || p.position;
@@ -49,7 +62,7 @@ function rowToPlayer(p: JsonRow): Player {
   const club = overriddenClub(p.name, p.club);
   const jerseyNumber = parseStoredJerseyNumber(p.jerseyNumber);
   return {
-    id: stableCandidatePlayerId(p.name, idClub, idKey),
+    id: stableCandidatePlayerId(legacyNameForStableCandidateId(p.name), idClub, idKey),
     name: p.name.trim(),
     position: pos,
     role: pos === "G" ? "G" : roleNorm,

@@ -25,7 +25,7 @@ const OTHER_LEAGUES = [
   { name: "David Špaček", position: "D", role: "RB", club: "Minnesota Wild" },
   { name: "David Jiříček", position: "D", role: "RB", club: "Minnesota Wild" },
   { name: "Ondřej Palát", position: "F", role: "LW", club: "New York Islanders" },
-  { name: "Jaroslav Chmelář", position: "F", role: "RW", club: "New York Rangers" },
+  { name: "Jaroslav Chmelař", position: "F", role: "RW", club: "New York Rangers" },
   { name: "Filip Hronek", position: "D", role: "RB", club: "Vancouver Canucks" },
   { name: "David Kämpf", position: "F", role: "C", club: "Washington Capitals" },
   { name: "Filip Chytil", position: "F", role: "C", club: "Vancouver Canucks" },
