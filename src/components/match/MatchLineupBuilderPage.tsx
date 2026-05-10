@@ -64,8 +64,8 @@ export function MatchLineupBuilderPage() {
   const [draftImportReady, setDraftImportReady] = useState(!needDraftImport);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
   const [lineupPosterModalOpen, setLineupPosterModalOpen] = useState(false);
-  /** Drag & drop z poolu na sloty — zapnuto i na tabletu/úzkém okně (chování „původního“ editoru nominace). */
-  const enableDnd = true;
+  /** Drag & drop z poolu jen od `lg` výš — na mobilu jen klepnutí (sheet / slot). */
+  const enableDnd = !isNarrowLayout;
 
   const {
     state: lineup,
@@ -567,7 +567,7 @@ export function MatchLineupBuilderPage() {
                   counts={counts}
                   onAddPlayer={onAddFromPool}
                   onPreview={setPreviewPlayer}
-                  enableDnd={false}
+                  enableDnd={enableDnd}
                   forcedPosition={forcedPoolPosition}
                 />
               </div>

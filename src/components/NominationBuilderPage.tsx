@@ -137,8 +137,8 @@ export function NominationBuilderPage() {
     })
   );
 
-  /** Drag & drop z poolu na sloty — zapnuto i na tabletu/úzkém okně (chování „původního“ editoru). */
-  const enableDnd = true;
+  /** Drag & drop z poolu jen od `lg` výš — na mobilu kvůli UI a Safari scrollu jen klepnutí. */
+  const enableDnd = !isNarrowLayout;
 
   const selectedPlayers = useMemo(() => lineupToPlayers(lineup, players), [lineup, players]);
   const usedIds = useMemo(() => new Set(selectedPlayers.map((p) => p.id)), [selectedPlayers]);
@@ -912,7 +912,7 @@ export function NominationBuilderPage() {
                     counts={counts}
                     onAddPlayer={handleAddFromPool}
                     onPreview={setPreviewPlayer}
-                    enableDnd={false}
+                    enableDnd={enableDnd}
                     forcedPosition={forcedPoolPosition}
                     assignableFilter={canAssignPlayer}
                     slotHint={

@@ -53,8 +53,8 @@ export function OfficialLineupAdminEditor() {
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
 
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
-  /** Stejné chování jako editor „Sestava na zápas“ — DnD i na tabletu. */
-  const enableDnd = true;
+  /** Stejné jako veřejný editor — DnD jen od `lg` výš. */
+  const enableDnd = !isNarrowLayout;
   const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
   const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
 
@@ -577,7 +577,7 @@ export function OfficialLineupAdminEditor() {
                   counts={counts}
                   onAddPlayer={handleAddFromPool}
                   onPreview={setPreviewPlayer}
-                  enableDnd={false}
+                  enableDnd={enableDnd}
                   forcedPosition={forcedPoolPosition}
                   assignableFilter={selectedSlot ? canAssignPlayer : undefined}
                   slotHint={
