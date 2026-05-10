@@ -6,11 +6,13 @@ import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 import { buildNominationWebStyleRoster, type NominationWebStyleRow } from "@/lib/nominationWebStyleRoster";
 
-/** Paleta vlajky ČR (červená · modrá · bílá); červená #c8102e jako v editoru. */
-const CZ_RED = "#c8102e";
-const CZ_BLUE = "#003087";
-const CZ_NAVY_BG = "#0a1633";
-const CZ_CRIMSON_FIELD = "#400a16";
+/** Světlejší modrá / červená ve smyslu vlajky ČR (bez ostrého bílého panelu). */
+const FLAG_BLUE = "#4788cf";
+const FLAG_BLUE_SOFT = "#6aaee6";
+const FLAG_RED_SOFT = "#e56b78";
+const FLAG_RED_BRIGHT = "#f0808c";
+const CZ_NAVY_LINE = "#0a2a52";
+const CZ_NAVY_CAPS = "#041c3f";
 
 export interface NominationWebStyleSharePosterProps {
   players: Player[];
@@ -32,16 +34,17 @@ function BannerLabel({ children }: { children: string }) {
     <div
       style={{
         display: "inline-block",
-        marginBottom: 16,
-        background: "#ffffff",
-        borderLeft: `6px solid ${CZ_RED}`,
-        boxShadow: `0 0 0 2px ${CZ_BLUE}, 0 12px 28px rgba(0,0,0,0.35)`,
-        color: CZ_BLUE,
+        marginBottom: 22,
+        background: `linear-gradient(90deg, ${CZ_NAVY_LINE} 0%, #174a82 100%)`,
+        borderLeft: "6px solid #d4243a",
+        boxShadow:
+          "0 4px 18px rgba(4,28,63,0.45), inset 0 1px 0 rgba(255,255,255,0.22)",
+        color: "#f0f9ff",
         fontWeight: 800,
-        fontSize: 15,
-        letterSpacing: "0.13em",
+        fontSize: 22,
+        letterSpacing: "0.14em",
         textTransform: "uppercase",
-        padding: "9px 44px 9px 14px",
+        padding: "12px 52px 12px 18px",
         borderRadius: "0 999px 999px 0",
       }}
     >
@@ -54,26 +57,27 @@ function PlayerLine({ row }: { row: NominationWebStyleRow }) {
   return (
     <p
       style={{
-        margin: "0 0 10px 0",
-        lineHeight: 1.32,
-        fontSize: 27,
+        margin: "0 0 14px 0",
+        lineHeight: 1.28,
+        fontSize: 44,
       }}
     >
       <span
         style={{
-          fontWeight: 800,
+          fontWeight: 900,
           color: "#ffffff",
-          letterSpacing: "0.05em",
+          letterSpacing: "0.065em",
           textTransform: "uppercase",
-          textShadow: `0 1px 14px rgba(0,0,0,0.35), 0 0 24px ${CZ_BLUE}`,
+          textShadow:
+            "0 2px 0 rgba(12,74,148,0.55), 0 3px 12px rgba(180,35,52,0.45), 0 1px 2px rgba(0,0,0,0.35)",
         }}
       >
         {row.name}
       </span>
-      <span style={{ color: "#bfdbfe", padding: "0 0.32em", fontWeight: 700 }} aria-hidden>
+      <span style={{ color: "#fff7ed", padding: "0 0.28em", fontWeight: 800 }} aria-hidden>
         —
       </span>
-      <em style={{ fontStyle: "italic", color: "#e8efff", fontSize: 19, fontWeight: 600 }}>
+      <em style={{ fontStyle: "italic", color: "#f1f7ff", fontSize: 28, fontWeight: 650 }}>
         {row.club}
       </em>
     </p>
@@ -109,19 +113,21 @@ export const NominationWebStyleSharePoster = forwardRef<
   const origin = siteUrl.replace(/\/$/, "");
   const logoSrc = origin.length > 0 ? `${origin}${SITE_LOGO_URL}` : SITE_LOGO_URL;
 
+  /** Diagonála světle modrá → červená jako zjednodušená vlajka (bez „bílého pruhu"). */
   const bgLayers = `
-    radial-gradient(ellipse 80% 70% at 8% 10%, rgba(200,16,46,0.55) 0%, transparent 50%),
-    radial-gradient(circle at 94% 18%, rgba(255,255,255,0.14) 0%, transparent 28%),
-    radial-gradient(circle at 2% 100%, rgba(0,48,135,0.85) 0%, transparent 48%),
+    linear-gradient(121deg,
+      ${FLAG_BLUE} 0%,
+      ${FLAG_BLUE_SOFT} 34%,
+      ${FLAG_RED_SOFT} 35%,
+      ${FLAG_RED_BRIGHT} 72%,
+      ${FLAG_BLUE_SOFT} 100%),
+    radial-gradient(circle at 92% -8%, rgba(255,248,246,0.28) 0%, transparent 45%),
+    radial-gradient(circle at 8% 100%, rgba(20,74,148,0.35) 0%, transparent 55%),
     repeating-linear-gradient(115deg,
-      rgba(255,255,255,0.03) 0px,
-      rgba(255,255,255,0.03) 1px,
+      rgba(255,255,255,0.035) 0px,
+      rgba(255,255,255,0.035) 1px,
       transparent 1px,
-      transparent 10px),
-    repeating-linear-gradient(-25deg,
-      rgba(0,0,0,0.075) 0px,
-      transparent 2px,
-      transparent 22px)`;
+      transparent 11px)`;
 
   return (
     <div
@@ -133,9 +139,9 @@ export const NominationWebStyleSharePoster = forwardRef<
         maxWidth: SHARE_POSTER_WIDTH_PX,
         flexShrink: 0,
         overflow: "hidden",
-        backgroundColor: CZ_CRIMSON_FIELD,
+        backgroundColor: FLAG_BLUE,
         backgroundImage: bgLayers,
-        color: "#f8fafc",
+        color: "#fdfefe",
         textRendering: "geometricPrecision",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
@@ -143,26 +149,7 @@ export const NominationWebStyleSharePoster = forwardRef<
           '"Segoe UI", ui-sans-serif, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif',
       }}
     >
-      {/* Bílý dekorativní tah vpravo (částečný „Y“, zjednodušeně nakloněný blok). */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          pointerEvents: "none",
-          width: "48%",
-          height: "158%",
-          right: "-10%",
-          top: "-28%",
-          background:
-            "linear-gradient(145deg, #ffffff 0%, #eef2fc 54%, #f9fafb 100%)",
-          transform: "rotate(17deg)",
-          borderRadius: 6,
-          boxShadow:
-            "-36px 0 90px rgba(200,16,46,0.45), -10px 0 50px rgba(0,48,135,0.28), inset -2px 0 0 rgba(255,255,255,0.75)",
-          zIndex: 0,
-        }}
-      />
-      {/* Jemné černení vpravo, aby byl kontrast fotky/masky (bez konkrétního PNG hráče). */}
+      {/* Bez bílé plochy: jen slabý vignette pro hloubku */}
       <div
         aria-hidden
         style={{
@@ -170,60 +157,62 @@ export const NominationWebStyleSharePoster = forwardRef<
           pointerEvents: "none",
           inset: 0,
           background:
-            "linear-gradient(90deg, rgba(0,0,0,0) 40%, rgba(0,48,135,0.15) 78%, rgba(200,16,46,0.08) 100%)",
+            "radial-gradient(ellipse 116% 90% at 50% -6%, transparent 54%, rgba(6,38,94,0.18) 100%)",
           zIndex: 0,
         }}
       />
 
-      <div style={{ position: "relative", zIndex: 1, padding: "36px 40px 32px 36px" }}>
+      <div style={{ position: "relative", zIndex: 1, padding: "40px 44px 36px 40px" }}>
         <header
           style={{
             display: "flex",
             alignItems: "stretch",
             justifyContent: "space-between",
-            gap: 16,
-            marginBottom: 28,
-            maxWidth: "82%",
+            gap: 20,
+            marginBottom: 32,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={logoSrc}
               alt=""
               decoding="async"
               style={{
-                height: 56,
+                height: 112,
                 width: "auto",
                 objectFit: "contain",
                 display: "block",
-                filter: "drop-shadow(0 10px 18px rgba(0,0,0,0.35))",
+                filter:
+                  "drop-shadow(3px 4px 0 rgba(212,36,58,0.35)) drop-shadow(-2px -2px 0 rgba(4,74,148,0.45)) drop-shadow(0 12px 28px rgba(0,0,0,0.35))",
               }}
             />
             <div
               aria-hidden
               style={{
-                width: 3,
+                width: 5,
                 alignSelf: "stretch",
-                minHeight: 52,
-                background: `linear-gradient(180deg, #ffffff 0%, #dbe7ff 100%)`,
-                boxShadow: `0 0 0 1px rgba(255,255,255,0.35), 0 10px 28px rgba(0,48,135,0.25)`,
-                borderRadius: 1,
+                minHeight: 100,
+                background: `linear-gradient(180deg, ${CZ_NAVY_LINE} 0%, #d4243a 52%, ${FLAG_BLUE_SOFT} 100%)`,
+                borderRadius: 2,
+                boxShadow:
+                  "0 0 0 2px rgba(255,248,246,0.35), inset 0 1px 0 rgba(255,255,255,0.55)",
               }}
             />
           </div>
-          <div style={{ flex: 1, minWidth: 0, textAlign: "right", paddingLeft: 8 }}>
+          <div style={{ flex: 1, minWidth: 0, textAlign: "right", paddingLeft: 10 }}>
             <p
               style={{
                 margin: 0,
-                fontSize: 44,
-                lineHeight: 1.03,
+                fontSize: 58,
+                lineHeight: 1.02,
                 fontWeight: 900,
-                letterSpacing: "0.02em",
+                letterSpacing: "0.03em",
                 textTransform: "uppercase",
-                color: CZ_NAVY_BG,
+                color: CZ_NAVY_CAPS,
                 wordBreak: "break-word",
-                textShadow: "0 1px 0 rgba(255,255,255,0.85), 0 0 32px rgba(255,255,255,0.55)",
+                textShadow:
+                  "0 3px 0 rgba(244,237,239,0.55), -1px -1px 0 rgba(218,239,254,0.45), 0 6px 20px rgba(0,46,118,0.25)",
               }}
             >
               NOMINACE MS 2026
@@ -231,15 +220,16 @@ export const NominationWebStyleSharePoster = forwardRef<
             {titleLine ? (
               <p
                 style={{
-                  margin: "12px 0 0",
-                  fontSize: 17,
-                  fontWeight: 600,
-                  color: CZ_BLUE,
+                  margin: "14px 0 0",
+                  fontSize: 26,
+                  fontWeight: 800,
+                  color: CZ_NAVY_LINE,
                   lineHeight: 1.35,
                   textAlign: "right",
-                  maxWidth: 440,
                   marginLeft: "auto",
                   wordBreak: "break-word",
+                  textShadow:
+                    "0 1px 0 rgba(253,246,246,0.35), 0 0 18px rgba(255,255,255,0.25)",
                 }}
               >
                 {titleLine}
@@ -248,18 +238,18 @@ export const NominationWebStyleSharePoster = forwardRef<
           </div>
         </header>
 
-        <div style={{ maxWidth: "62%" }}>
-          <section style={{ marginBottom: 22 }}>
+        <div style={{ maxWidth: "94%" }}>
+          <section style={{ marginBottom: 26 }}>
             <BannerLabel>BRANKÁŘI</BannerLabel>
             <div>{goalies.map((row, i) => <PlayerLine key={`g-${i}`} row={row} />)}</div>
           </section>
 
-          <section style={{ marginBottom: 22 }}>
+          <section style={{ marginBottom: 26 }}>
             <BannerLabel>OBRÁNCI</BannerLabel>
             <div>{defense.map((row, i) => <PlayerLine key={`d-${i}`} row={row} />)}</div>
           </section>
 
-          <section style={{ marginBottom: 10 }}>
+          <section style={{ marginBottom: 12 }}>
             <BannerLabel>ÚTOČNÍCI</BannerLabel>
             <div>{forwards.map((row, i) => <PlayerLine key={`f-${i}`} row={row} />)}</div>
           </section>
@@ -267,30 +257,31 @@ export const NominationWebStyleSharePoster = forwardRef<
 
         <footer
           style={{
-            marginTop: 18,
-            paddingTop: 14,
-            borderTop: "1px solid rgba(255,255,255,0.35)",
-            maxWidth: "72%",
+            marginTop: 22,
+            paddingTop: 16,
+            borderTop: "2px solid rgba(4,40,94,0.35)",
+            maxWidth: "92%",
           }}
         >
           <p
             style={{
               margin: 0,
-              fontSize: 12,
+              fontSize: 18,
               fontWeight: 800,
-              letterSpacing: "0.2em",
+              letterSpacing: "0.18em",
               textTransform: "uppercase",
-              color: CZ_RED,
+              color: CZ_NAVY_LINE,
+              textShadow: "0 1px 0 rgba(253,246,246,0.6)",
             }}
           >
             {SITE_BRAND}
           </p>
-          <p style={{ margin: "6px 0 0", fontSize: 12, color: "rgba(248,250,252,0.82)" }}>
+          <p style={{ margin: "8px 0 0", fontSize: 20, fontWeight: 600, color: CZ_NAVY_LINE }}>
             Sestaveno {dateLabel}
             {host ? (
               <>
                 {" "}
-                · <span style={{ color: "#93c5fd", fontWeight: 700 }}>{host}</span>
+                · <span style={{ color: "#fffaf0", fontWeight: 800 }}>{host}</span>
               </>
             ) : null}
           </p>

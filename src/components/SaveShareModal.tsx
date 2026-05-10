@@ -150,7 +150,7 @@ export function SaveShareModal({
         posterVariant === "names"
           ? "#060b14"
           : posterVariant === "names-web"
-            ? "#140a12"
+            ? "#4a7ab5"
             : posterTheme === "dark"
               ? "#0b0e14"
               : "#e8ecf2";
@@ -160,11 +160,13 @@ export function SaveShareModal({
       });
       baseCanvasRef.current = canvas;
       setExportLetterboxTheme(
-        posterVariant === "names" || posterVariant === "names-web"
+        posterVariant === "names"
           ? "dark"
-          : posterTheme === "dark"
-            ? "dark"
-            : "light"
+          : posterVariant === "names-web"
+            ? "light"
+            : posterTheme === "dark"
+              ? "dark"
+              : "light"
       );
       const raw = canvasToPngDataUrl(canvas);
       setPreviewDataUrl(raw);
