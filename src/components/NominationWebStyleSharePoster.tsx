@@ -8,7 +8,18 @@ import { buildNominationWebStyleRoster, type NominationWebStyleRow } from "@/lib
 
 const CZ_NAVY = "#082552";
 const CZ_RED_CORE = "#c8102e";
-const CZ_BLUE_SKY = "#4a98e8";
+/** Základ plakátu — sytější než pastelový `#4a98e8`, aby grafika držela na Instagramu. */
+const CZ_BLUE_SKY = "#2878d4";
+
+/** Pozadí: hlubší modrá → sytá národní červená, méně bílé praní přes radialy. */
+const SURFACE_BG = `
+    linear-gradient(165deg,
+      #143d80 0%,
+      #1b64c4 34%,
+      #c91832 58%,
+      #8f0f22 90%),
+    radial-gradient(circle at 118% -12%, rgba(90,160,255,0.36) 0%, transparent 50%),
+    radial-gradient(circle at -28% 108%, rgba(3,18,58,0.78) 0%, transparent 58%)`;
 
 /** Cílová typografie soupisky; výšku dorovnává `rosterScale` (bez ořezu). */
 const ROSTER_NAME_PX = 36;
@@ -33,7 +44,7 @@ function SectionRibbon({ children }: { children: string }) {
         marginBottom: 11,
         padding: "7px 20px 7px 15px",
         borderRadius: "999px",
-        background: `linear-gradient(90deg, ${CZ_NAVY}ee 0%, #0c3d7aee 72%, ${CZ_RED_CORE}dd 100%)`,
+        background: `linear-gradient(90deg, ${CZ_NAVY} 0%, #0a4a9c 70%, ${CZ_RED_CORE} 100%)`,
         boxShadow:
           "0 0 0 1px rgba(255,255,255,0.2), inset 0 2px 0 rgba(255,255,255,0.22), 0 10px 24px rgba(0,28,74,0.35)",
       }}
@@ -71,9 +82,9 @@ function PlayerChip({ row }: { row: NominationWebStyleRow }) {
         padding: "11px 13px",
         borderRadius: 14,
         background:
-          "linear-gradient(145deg, rgba(255,255,255,0.16) 0%, rgba(8,39,94,0.28) 100%)",
+          "linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(6,28,72,0.42) 100%)",
         boxShadow:
-          "0 0 0 1px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.12), 0 8px 20px rgba(0,28,74,0.25)",
+          "0 0 0 1px rgba(255,255,255,0.14), inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 22px rgba(0,12,40,0.45)",
       }}
     >
       <div
@@ -190,15 +201,8 @@ export const NominationWebStyleSharePoster = forwardRef<
   const origin = siteUrl.replace(/\/$/, "");
   const logoSrc = origin.length > 0 ? `${origin}${SITE_LOGO_URL}` : SITE_LOGO_URL;
 
-  /** Plátno vyplněné po celé ploše 3:4 — modrý klín + korálově červené pole (náznak ČR bez bílé plochy). */
-  const surface = `
-    linear-gradient(165deg,
-      ${CZ_BLUE_SKY} 0%,
-      #5faaec 38%,
-      #e05868 62%,
-      #f07784 85%),
-    radial-gradient(circle at 118% -12%, rgba(255,253,251,0.45) 0%, transparent 46%),
-    radial-gradient(circle at -28% 108%, rgba(8,41,118,0.55) 0%, transparent 55%)`;
+  /** Plátno vyplněné po celé ploše 3:4 — sytá modrá + červená, bez bledého „praní“. */
+  const surface = SURFACE_BG;
 
   return (
     <div
@@ -231,7 +235,7 @@ export const NominationWebStyleSharePoster = forwardRef<
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(ellipse 104% 90% at 50% -4%, transparent 54%, rgba(6,34,92,0.22) 100%)",
+            "radial-gradient(ellipse 104% 90% at 50% -4%, transparent 50%, rgba(3,20,58,0.38) 100%)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -245,7 +249,7 @@ export const NominationWebStyleSharePoster = forwardRef<
           left: 32,
           right: 32,
           height: 4,
-          background: `linear-gradient(90deg, ${CZ_NAVY} 0%, #fbbf24aa 52%, ${CZ_RED_CORE}dd 100%)`,
+          background: `linear-gradient(90deg, ${CZ_NAVY} 0%, #f59e0bcc 52%, ${CZ_RED_CORE} 100%)`,
           opacity: 0.95,
           borderRadius: 2,
           zIndex: 1,
@@ -272,7 +276,7 @@ export const NominationWebStyleSharePoster = forwardRef<
               justifyContent: "space-between",
               gap: 14,
               paddingBottom: 12,
-              borderBottom: "2px solid rgba(8,37,82,0.22)",
+              borderBottom: "2px solid rgba(6,24,58,0.38)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -411,7 +415,7 @@ export const NominationWebStyleSharePoster = forwardRef<
             flexShrink: 0,
             marginTop: 10,
             paddingTop: 10,
-            borderTop: "2px solid rgba(8,37,82,0.35)",
+            borderTop: "2px solid rgba(6,24,58,0.42)",
           }}
         >
           <p
