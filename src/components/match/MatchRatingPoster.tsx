@@ -6,6 +6,7 @@ import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDispla
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
 
 import {
+  jerseyPosterExportRowMeta,
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
   type MatchLineupPosterGroup,
@@ -77,8 +78,8 @@ interface MatchRatingPosterProps {
 }
 
 /**
- * Off-screen plakát pro export hodnocení do PNG. Layout je 2 sloupce, velké číslo hodnocení vpravo,
- * vlevo dres se jménem a klubem. Cílem je čitelnost na Instagramu / mobilu.
+ * Off-screen plakát pro export hodnocení do PNG. Layout je 2 sloupce na kartu hráče, velké číslo hodnocení vpravo,
+ * vlevo dres se jménem a klubem. Segmentace po lajnách (viz `pickMatchLineupSegmentPlayerIds` line-* ).
  */
 export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterProps>(
   function MatchRatingPoster(
@@ -102,8 +103,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
       () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
       [lineup, group, defenseCount, allowExtraForward]
     );
-    /** Goalies výrazně větší (jen 2), zbytek 2-sloupcová mřížka. */
-    const cols = group === "goalies" && ids.length <= 2 ? 2 : 2;
+    const cols = 2;
 
     return (
       <div
@@ -193,6 +193,13 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
           }}
         >
           {ids.map((pid) => {
+            const rowMeta = jerseyPosterExportRowMeta(
+              lineup,
+              group,
+              pid,
+              defenseCount,
+              allowExtraForward
+            );
             const player = byId.get(pid) ?? null;
             const aggregate = ratings[pid];
             const mine = myRatings[pid];
@@ -237,14 +244,8 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                 >
                   <PremiumJerseySlotCard
                     player={player}
-                    positionLabel={
-                      group === "goalies"
-                        ? "G"
-                        : group === "defense"
-                          ? "D"
-                          : "F"
-                    }
-                    kind={group === "goalies" ? "goalie" : "skater"}
+                    positionLabel={rowMeta.positionLabel}
+                    kind={rowMeta.jerseyKind === "goalie" ? "goalie" : "skater"}
                     size="skater"
                     disableMotion
                     lightRinkSurface={false}

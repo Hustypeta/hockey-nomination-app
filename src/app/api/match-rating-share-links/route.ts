@@ -26,15 +26,62 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Zápas nenalezen." }, { status: 404 });
     }
 
-    const grouped = await prisma.matchRating.groupBy({
-      by: ["playerId"],
-      where: { matchId: match.id },
-      _avg: { rating: true },
-      _count: { rating: true },
-    });
-    const ratings = Object.fromEntries(
-      grouped.map((r) => [r.playerId, { avg: r._avg.rating ?? 0, count: r._count.rating }])
-    );
+    const snapshotModeRaw = typeof b.snapshotMode === "string" ? b.snapshotMode.trim() : "";
+    const snapshotMode: "personal" | "community" =
+      snapshotModeRaw === "community" ? "community" : "personal";
+
+    const matchMeta = {
+      slug: match.slug,
+      title: match.title,
+      opponent: match.opponent,
+      startsAt: match.startsAt?.toISOString() ?? null,
+      venue: match.venue,
+      category: match.category,
+      homeCode: match.homeCode,
+      awayCode: match.awayCode,
+    };
+
+    const createdAt = new Date().toISOString();
+
+    let snapshot: object;
+
+    if (snapshotMode === "community") {
+      const grouped = await prisma.matchRating.groupBy({
+        by: ["playerId"],
+        where: { matchId: match.id },
+        _avg: { rating: true },
+        _count: { rating: true },
+      });
+      const ratings = Object.fromEntries(
+        grouped.map((r) => [r.playerId, { avg: r._avg.rating ?? 0, count: r._count.rating }])
+      );
+      snapshot = {
+        snapshotVersion: 2 as const,
+        kind: "community" as const,
+        match: matchMeta,
+        ratings,
+        createdAt,
+      };
+    } else {
+      const mineRows = await prisma.matchRating.findMany({
+        where: { matchId: match.id, raterKey: `u:${session.user.id}` },
+        select: { playerId: true, rating: true },
+      });
+      const myRatings = Object.fromEntries(mineRows.map((r) => [r.playerId, r.rating]));
+      if (mineRows.length === 0) {
+        return NextResponse.json(
+          { error: "Nemáš u tohoto zápasu uložené žádné známky — nejdřív si je ulož na stránce zápasu." },
+          { status: 400 }
+        );
+      }
+      snapshot = {
+        snapshotVersion: 2 as const,
+        kind: "personal" as const,
+        match: matchMeta,
+        myRatings,
+        createdAt,
+      };
+    }
 
     const slug = await uniqueSlug(title || `hodnoceni-${match.title}`, async (s) => {
       const hit = await prisma.matchRatingShareLink.findUnique({ where: { slug: s }, select: { code: true } });
@@ -47,21 +94,6 @@ export async function POST(request: NextRequest) {
       if (!clash) break;
       code = randomCode(12);
     }
-
-    const snapshot = {
-      match: {
-        slug: match.slug,
-        title: match.title,
-        opponent: match.opponent,
-        startsAt: match.startsAt?.toISOString() ?? null,
-        venue: match.venue,
-        category: match.category,
-        homeCode: match.homeCode,
-        awayCode: match.awayCode,
-      },
-      ratings,
-      createdAt: new Date().toISOString(),
-    };
 
     await prisma.matchRatingShareLink.create({
       data: {
@@ -81,4 +113,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Nepodařilo se vytvořit export." }, { status: 500 });
   }
 }
-

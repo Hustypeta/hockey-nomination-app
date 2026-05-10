@@ -15,15 +15,15 @@ import { MatchRatingPoster } from "@/components/match/MatchRatingPoster";
 import { MatchRatingNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
 import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 
-const SEGMENTS: MatchLineupPosterGroup[] = ["goalies", "defense", "forwards-12", "forwards-34"];
+const SEGMENTS: MatchLineupPosterGroup[] = ["line-1", "line-2", "line-3", "line-4"];
 
 function filenameForRatingSlot(slot: string, matchSlug: string): string {
   if (slot === "cele-jmena") return `hodnoceni-${matchSlug}-cele-jmena.png`;
   const map: Record<string, string> = {
-    goalies: "1-brankari",
-    defense: "2-obrana",
-    "forwards-12": "3-utok-1-2",
-    "forwards-34": "4-utok-3-4",
+    "line-1": "1-lajna",
+    "line-2": "2-lajna",
+    "line-3": "3-lajna",
+    "line-4": "4-lajna",
   };
   const suf = map[slot] ?? slot;
   return `hodnoceni-${matchSlug}-${suf}.png`;
@@ -78,11 +78,11 @@ export function MatchRatingExportButton({
         key: g,
         title: `Dresy a hodnocení — ${MATCH_LINEUP_POSTER_GROUP_TITLE[g]}`,
         hint:
-          g === "forwards-12"
-            ? "Zahrnuje 1. a 2. útokovou řadu."
-            : g === "forwards-34"
-              ? "Zahrnuje 3. a 4. útokovou řadu (případný náhradní útočník podle nastavení sestavy)."
-              : undefined,
+          g === "line-1"
+            ? "3× útočník + 2× obránce + 1. gólman (stejný řez jako sestava na zápas)."
+            : g === "line-4"
+              ? "3× útočník + 2× obránce + 13. útočník (pokud je povolen) + 2. gólman."
+              : "3× útočník + 2× obránce.",
       })),
     ],
     []
@@ -139,7 +139,7 @@ export function MatchRatingExportButton({
         onClose={() => setModalOpen(false)}
         eyebrow="Hodnocení zápasu"
         title="Stáhnout grafiku hodnocení"
-        description="Vždy jen jedna fotka najednou — v přehledné nabídce (stejný princip jako u editoru nominace)."
+        description="Vždy jen jedna fotka najednou — celá soupiska s průměry, pak řez po řezu jako u sestavy na zápas: kompletní lajny (3F + 2D)."
         busyKey={busyKey}
         choices={choices}
         onPick={async (key) => {

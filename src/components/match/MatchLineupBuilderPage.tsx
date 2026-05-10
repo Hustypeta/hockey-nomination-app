@@ -447,8 +447,9 @@ export function MatchLineupBuilderPage() {
               Export grafiky (Instagram)
             </p>
             <p className="mt-1 text-xs text-white/50">
-              Stejná nabídka jako u hodnocení zápasu: celý tým jen jména (jako grafika nominace), pak řezy s dresy —
-              brankáři, obrana, 1.+2. a 3.+4. řada na útok. Na mobilu ji najdeš také jako <strong className="text-white/80">Generovat plakát</strong>{" "}
+              Stejná nabídka jako u hodnocení zápasu: celý tým jen jména (jako grafika nominace), pak řezy s dresy po
+              kompletních lajnách (3× útočník + 2× obránce; na 1. řezu též 1. gólman, na 4. též 13. útočník a 2. gólman).
+              Na mobilu ji najdeš také jako <strong className="text-white/80">Generovat plakát</strong>{" "}
               ve spodní liště (ikona stažení).
             </p>
             <div className="mt-3">

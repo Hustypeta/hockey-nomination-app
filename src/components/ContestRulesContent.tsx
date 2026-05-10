@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CONTEST_DEADLINE_CS } from "@/lib/contestTimeBonus";
 import { SitePageHero } from "@/components/site/SitePageHero";
 
 const sectionClass = "sestava-premium-panel-dark rounded-2xl p-4 sm:p-5";
@@ -34,7 +35,7 @@ export function ContestRulesContent() {
                 <strong className="text-white">Nominaci do soutěže je z každého účtu možné poslat pouze jednou.</strong>{" "}
                 Koncepty sestavy můžeš u účtu ukládat opakovaně; do vyhodnocení se započítá až odeslání soutěžní nominace
                 nejpozději do{" "}
-                <strong className="text-white">10. května 2026, 23:59 (středoevropský čas)</strong>.
+                <strong className="text-white">{CONTEST_DEADLINE_CS}</strong>.
               </li>
               <li>Editor nominace lze využívat k soukromým účelům i bez odeslání do soutěže.</li>
             </ul>

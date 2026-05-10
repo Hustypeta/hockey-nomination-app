@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
@@ -69,6 +69,9 @@ export function MatchRatingExperience({
   const [ratings, setRatings] = useState<RatingMap>(initialRatings);
   const [myRatings, setMyRatings] = useState<Record<string, number>>(initialMyRatings);
   const [sheetPlayerId, setSheetPlayerId] = useState<string | null>(null);
+  /** Po uložení v mobilním sheetu — zarovnání „dotčeného“ řádku na desktopové straně hodnocení. */
+  const [sheetCommittedPid, setSheetCommittedPid] = useState<string | undefined>(undefined);
+  const acknowledgeSheetCommitted = useCallback(() => setSheetCommittedPid(undefined), []);
 
   const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
 
@@ -162,12 +165,15 @@ export function MatchRatingExperience({
               lockedReason={lockedReason}
               onRatingsChange={setRatings}
               onMyRatingsChange={setMyRatings}
+              sheetCommittedPlayerId={sheetCommittedPid}
+              onConsumeSheetCommitted={acknowledgeSheetCommitted}
             />
           </div>
 
           <div className="lg:hidden rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-sm text-white/70">
-            Klepni na hráče v sestavě a oboduj ho 1,0–10,0. Na drese vidíš vždy průměr fanoušků; svoji známku
-            najdeš v tomto okně a ve svém účtu v Moje hodnocení.
+            Klepni na hráče v sestavě a oboduj ho 1,0–10,0. Na velkém displeji použij blok vpravo: posuny jsou jen návrh
+            — potvrď je tlačítkem „Uložit svoje hodnocení“. Na dresech je vždy průměr všech fanoušků; své uložené známky
+            najdeš i pod účtem v sekci Moje hodnocení.
           </div>
         </section>
       </div>
@@ -186,6 +192,7 @@ export function MatchRatingExperience({
           onClose={() => setSheetPlayerId(null)}
           onSaved={(newMine, newRatings) => {
             setMyRatings((m) => ({ ...m, [sheetPlayer.id]: newMine }));
+            setSheetCommittedPid(sheetPlayer.id);
             if (newRatings) setRatings(newRatings);
           }}
         />
@@ -366,7 +373,7 @@ function RatingSheet({
             onClick={() => void submit()}
             className="flex-1 rounded-xl border border-emerald-400/55 bg-gradient-to-b from-emerald-400 to-emerald-600 px-3 py-2 font-display text-sm font-black uppercase tracking-wide text-white shadow-[0_8px_24px_rgba(0,0,0,0.45)] disabled:opacity-50"
           >
-            {saving ? "Ukládám…" : "Uložit hodnocení"}
+            {saving ? "Ukládám…" : "Uložit tuto známku"}
           </button>
         </div>
       </div>

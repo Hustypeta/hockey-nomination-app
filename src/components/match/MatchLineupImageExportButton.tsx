@@ -169,7 +169,7 @@ export function MatchLineupImageExportButton({
         onClose={() => setModalOpen(false)}
         eyebrow="Sestava na zápas"
         title="Generovat plakát"
-        description="Stejný princip jako u hodnocení zápasu: nejdřív celá soupiska jen jména, pak řezy po skupinách (G, D, útok). Vždy jedna PNG."
+        description="Stejný princip jako u hodnocení zápasu: nejdřív celá soupiska jen jména, pak řezy po kompletních lajnách (3F + 2D; na 1. lajně 1. gólman, na 4. též 13. útočník a 2. gólman). Vždy jedna PNG."
         busyKey={busyKey}
         choices={choices}
         onPick={async (key) => {

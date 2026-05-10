@@ -10,7 +10,7 @@ import {
 } from "@/lib/matchLineupPosterSegments";
 import { rosterLastDisplay } from "@/lib/namesOnlyRoster";
 
-const RATING_SECTIONS: MatchLineupPosterGroup[] = ["goalies", "defense", "forwards-12", "forwards-34"];
+const RATING_SECTIONS: MatchLineupPosterGroup[] = ["line-1", "line-2", "line-3", "line-4"];
 
 const formatCsDate = (d: Date) =>
   new Intl.DateTimeFormat("cs-CZ", {
@@ -190,6 +190,7 @@ export const MatchRatingNamesFullPoster = forwardRef<
 });
 
 function gridColsFor(group: MatchLineupPosterGroup) {
+  if (group.startsWith("line-")) return "grid-cols-3";
   return group === "goalies" ? "grid-cols-3" : group === "defense" ? "grid-cols-2" : "grid-cols-3";
 }
 

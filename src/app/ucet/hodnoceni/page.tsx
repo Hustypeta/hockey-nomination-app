@@ -129,7 +129,8 @@ export default async function MyMatchRatingsPage() {
             </Link>
           </div>
           <p className="mt-2 text-sm text-white/60">
-            Přehled tvých uložených hodnocení hráčů v zápasech. Pro úpravu otevři příslušný zápas.
+            Jedná se o zápasy kde máš opravdu potvrzené svoje vlastní známky (po „Uložit svoje hodnocení“ nebo mobilním uložení u hráče). Číslo vpravo je průměr z{' '}
+            <strong className="font-semibold text-white/82">tvých hodnot přes jednotlivé hráče</strong> — nikoli celkový průměr komunity za zápas (ten vidí každý na stránce zápasu na dresech).
           </p>
 
           {grouped.length === 0 ? (
@@ -166,16 +167,21 @@ export default async function MyMatchRatingsPage() {
                             )}
                           </div>
                           <div className="mt-1 text-[11px] text-white/45">
-                            {fmtDate(g.startsAt)}
-                            <span className="mx-2 text-white/25">·</span>
-                            {g.countRated} hráčů ohodnoceno
-                            <span className="mx-2 text-white/25">·</span>
-                            naposledy {fmtDate(g.lastRatedAt)}
-                          </div>
+                          {fmtDate(g.startsAt)}
+                          <span className="mx-2 text-white/25">·</span>
+                          {g.countRated} osobních známek
+                          <span className="mx-2 text-white/25">·</span>
+                          naposledy {fmtDate(g.lastRatedAt)}
                         </div>
-                        <div className="shrink-0 rounded-full bg-emerald-400/15 px-3 py-1 font-display text-sm font-black tabular-nums text-emerald-300">
-                          ⌀ {fmtRating(g.avg)}
-                        </div>
+                      </div>
+                      <div className="flex shrink-0 flex-col items-end gap-0.5 text-right">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-200/85">
+                          Průměr tvých uložených
+                        </span>
+                        <span className="rounded-full bg-emerald-400/15 px-3 py-1 font-display text-sm font-black tabular-nums text-emerald-300">
+                          {fmtRating(g.avg)}
+                        </span>
+                      </div>
                       </Link>
                     </li>
                   );
