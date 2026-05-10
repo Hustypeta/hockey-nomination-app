@@ -72,9 +72,8 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
     const dateLabel = footerInstantIso ? formatCsDate(new Date(footerInstantIso)) : mountedDateLabel;
 
     const host = siteUrl.replace(/^https?:\/\//, "");
-    /** Čtvrtý pár jen LB (sedmý bek); osmý je vždy `extraDefensemen[0]` — dvojice na plakátu. */
-    const bek7 = lineup.defensePairs[3].lb ?? null;
-    const bek8 = lineup.extraDefensemen[0] ?? null;
+    const extraD = lineup.extraDefensemen[0] ?? null;
+    const seventhDefenseId = lineup.defensePairs[3].lb ?? lineup.extraDefensemen[0] ?? null;
     const titleLine = nominationTitle?.trim() ?? "";
     const wm = watermarkUserLabel?.trim() ?? "";
 
@@ -117,8 +116,35 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
         </header>
 
         <div className={`relative mx-0 mb-1 mt-0.5 px-2 py-0 sm:mb-1.5 sm:px-2 ${innerChrome}`}>
-          {/* Útok nahoře (trojice), beci jako dvojice + 7./8., náhrady útok, gólmani dole — šířka jednoho sloupce pro export */}
-          <div className="flex min-w-0 flex-col gap-2 sm:gap-2.5">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:gap-x-5 sm:gap-y-3">
+            <div className="min-w-0 space-y-2 sm:space-y-2.5">
+              <section>
+                <h2 className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}>
+                  Brankáři
+                </h2>
+                <div className="grid min-w-0 grid-cols-3 gap-x-3.5 gap-y-1 sm:gap-x-4 sm:gap-y-1">
+                  {lineup.goalies.map((gid, i) => (
+                    <div key={`g-${i}`} className="flex min-w-0 flex-col gap-0.5">
+                      <span className={`shrink-0 text-center font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
+                        {i + 1}. golman
+                      </span>
+                      <PosterJerseyWrap>
+                        <Nhl25JerseyCard
+                          player={getPlayer(gid)}
+                          positionLabel="G"
+                          size="compact"
+                          nameplateVariant="poster"
+                          isCaptain={gid ? captainId === gid : false}
+                          isAssistant={gid ? aids.includes(gid) : false}
+                          ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
+                          disableMotion
+                        />
+                      </PosterJerseyWrap>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
               <section>
                 <h2 className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}>
                   Útočné řady
@@ -130,7 +156,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       className={`flex min-w-0 flex-col gap-0 overflow-hidden rounded-lg border px-1 py-1 sm:gap-0.5 sm:px-1.5 sm:py-1.5 ${lineBox}`}
                     >
                       <span className={`shrink-0 font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
-                        {i + 1}. lajna (LW · C · RW)
+                        {i + 1}. lajna
                       </span>
                       <div className="grid min-w-0 w-full grid-cols-3 gap-x-3.5 gap-y-0 sm:gap-x-4">
                         <PosterJerseyWrap>
@@ -174,7 +200,9 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   ))}
                 </div>
               </section>
+            </div>
 
+            <div className="min-w-0 space-y-2 sm:space-y-2.5">
               <section>
                 <h2 className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}>
                   Obranné páry
@@ -183,7 +211,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   {lineup.defensePairs.slice(0, 3).map((pair, i) => (
                     <div key={i} className={`min-w-0 rounded-lg border px-1 py-1 sm:px-1.5 sm:py-1.5 ${lineBox}`}>
                       <p className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}>
-                        {i + 1}. pár (LD · RD)
+                        {i + 1}. pár
                       </p>
                       <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
                         <PosterJerseyWrap>
@@ -215,29 +243,17 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   ))}
                   <div className={`min-w-0 rounded-lg border px-1 py-1 sm:px-1.5 sm:py-1.5 ${lineBox}`}>
                     <p className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}>
-                      7. a 8. bek
+                      7. bek
                     </p>
-                    <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
+                    <div className="flex w-full min-w-0 justify-center">
                       <PosterJerseyWrap>
                         <Nhl25JerseyCard
-                          player={getPlayer(bek7)}
+                          player={getPlayer(seventhDefenseId)}
                           positionLabel="D"
                           size="compact"
                           nameplateVariant="poster"
-                          isCaptain={bek7 ? captainId === bek7 : false}
-                          isAssistant={bek7 ? aids.includes(bek7) : false}
-                          ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
-                          disableMotion
-                        />
-                      </PosterJerseyWrap>
-                      <PosterJerseyWrap>
-                        <Nhl25JerseyCard
-                          player={getPlayer(bek8)}
-                          positionLabel="D"
-                          size="compact"
-                          nameplateVariant="poster"
-                          isCaptain={bek8 ? captainId === bek8 : false}
-                          isAssistant={bek8 ? aids.includes(bek8) : false}
+                          isCaptain={seventhDefenseId ? captainId === seventhDefenseId : false}
+                          isAssistant={seventhDefenseId ? aids.includes(seventhDefenseId) : false}
                           ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                           disableMotion
                         />
@@ -256,9 +272,9 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   Doplněk soupisky
                 </h2>
                 <p className={`mb-0.5 text-center font-display text-[13px] font-bold uppercase tracking-wider sm:text-[14.5px] ${subheading}`}>
-                  X · náhradní útočník
+                  13. útok · náhradníci
                 </p>
-                <div className="grid min-w-0 grid-cols-2 gap-x-3.5 gap-y-1 sm:gap-x-4 sm:gap-y-1">
+                <div className={`grid min-w-0 gap-x-3.5 gap-y-1 sm:gap-x-4 sm:gap-y-1 ${extraD ? "grid-cols-3" : "grid-cols-2"}`}>
                   <div className="min-w-0">
                     <p className={`mb-0.5 text-center font-display text-[13px] font-bold uppercase tracking-wider sm:text-[14.5px] ${subheading}`}>
                       X
@@ -301,35 +317,33 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                       />
                     </PosterJerseyWrap>
                   </div>
-                </div>
-              </section>
-
-              <section>
-                <h2 className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}>
-                  Brankáři
-                </h2>
-                <div className="grid min-w-0 grid-cols-3 gap-x-3.5 gap-y-1 sm:gap-x-4 sm:gap-y-1">
-                  {lineup.goalies.map((gid, i) => (
-                    <div key={`g-${i}`} className="flex min-w-0 flex-col gap-0.5">
-                      <span className={`shrink-0 text-center font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
-                        {i + 1}. golman
-                      </span>
+                  {extraD ? (
+                    <div className="min-w-0">
+                      <p className={`mb-0.5 text-center font-display text-[13px] font-bold uppercase tracking-wider sm:text-[14.5px] ${subheading}`}>
+                        náhr. D
+                      </p>
                       <PosterJerseyWrap>
                         <Nhl25JerseyCard
-                          player={getPlayer(gid)}
-                          positionLabel="G"
+                          player={getPlayer(extraD)}
+                          positionLabel="D"
                           size="compact"
                           nameplateVariant="poster"
-                          isCaptain={gid ? captainId === gid : false}
-                          isAssistant={gid ? aids.includes(gid) : false}
+                          isCaptain={captainId === extraD}
+                          isAssistant={aids.includes(extraD)}
                           ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
                           disableMotion
                         />
                       </PosterJerseyWrap>
                     </div>
-                  ))}
+                  ) : null}
                 </div>
+                {!extraD ? (
+                  <p className={`mt-1 text-center font-display text-[13px] font-semibold leading-snug sm:text-[14px] ${subheading}`}>
+                    Osmého beka doplň v editoru pod 7. bekem.
+                  </p>
+                ) : null}
               </section>
+            </div>
           </div>
         </div>
 
