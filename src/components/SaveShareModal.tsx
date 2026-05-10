@@ -40,9 +40,9 @@ interface SaveShareModalProps {
   /** Světlý / tmavý plakát (řídí skrytý DOM před exportem). */
   posterTheme?: PosterLetterboxTheme;
   onPosterThemeChange?: (t: PosterLetterboxTheme) => void;
-  /** Dresy vs. jen jména (grafika jako soupiska). */
-  posterVariant?: "jerseys" | "names";
-  onPosterVariantChange?: (v: "jerseys" | "names") => void;
+  /** Dresy vs. jen jména vs. webová grafika nominace (článkový styl). */
+  posterVariant?: "jerseys" | "names" | "names-web";
+  onPosterVariantChange?: (v: "jerseys" | "names" | "names-web") => void;
 }
 
 const SHARE_TITLE = "MS 2026 – nominace";
@@ -149,16 +149,22 @@ export function SaveShareModal({
       const bg =
         posterVariant === "names"
           ? "#060b14"
-          : posterTheme === "dark"
-            ? "#0b0e14"
-            : "#e8ecf2";
+          : posterVariant === "names-web"
+            ? "#301018"
+            : posterTheme === "dark"
+              ? "#0b0e14"
+              : "#e8ecf2";
       const canvas = await captureElementToCanvas(el, {
         scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
         backgroundColor: bg,
       });
       baseCanvasRef.current = canvas;
       setExportLetterboxTheme(
-        posterVariant === "names" ? "dark" : posterTheme === "dark" ? "dark" : "light"
+        posterVariant === "names" || posterVariant === "names-web"
+          ? "dark"
+          : posterTheme === "dark"
+            ? "dark"
+            : "light"
       );
       const raw = canvasToPngDataUrl(canvas);
       setPreviewDataUrl(raw);
@@ -301,11 +307,11 @@ export function SaveShareModal({
                   <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-white/45">
                     Typ obrázku
                   </p>
-                  <div className="flex gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                     <button
                       type="button"
                       onClick={() => onPosterVariantChange("jerseys")}
-                      className={`flex-1 rounded-lg py-2.5 text-xs font-bold transition-colors sm:text-sm ${
+                      className={`rounded-lg py-2.5 text-[11px] font-bold transition-colors sm:text-xs ${
                         posterVariant === "jerseys"
                           ? "bg-white text-slate-900 ring-2 ring-[#c8102e]/60"
                           : "bg-white/5 text-white/55 hover:bg-white/10"
@@ -316,7 +322,7 @@ export function SaveShareModal({
                     <button
                       type="button"
                       onClick={() => onPosterVariantChange("names")}
-                      className={`flex-1 rounded-lg py-2.5 text-xs font-bold transition-colors sm:text-sm ${
+                      className={`rounded-lg py-2.5 text-[11px] font-bold transition-colors sm:text-xs ${
                         posterVariant === "names"
                           ? "bg-[#003087] text-white ring-2 ring-sky-400/45"
                           : "bg-white/5 text-white/55 hover:bg-white/10"
@@ -324,11 +330,24 @@ export function SaveShareModal({
                     >
                       Jen jména
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => onPosterVariantChange("names-web")}
+                      className={`rounded-lg py-2.5 text-[11px] font-bold leading-snug transition-colors sm:text-xs ${
+                        posterVariant === "names-web"
+                          ? "bg-[#5c1624] text-white ring-2 ring-[#f1c40f]/55"
+                          : "bg-white/5 text-white/55 hover:bg-white/10"
+                      }`}
+                    >
+                      Web nominace
+                    </button>
                   </div>
                   <p className="mt-2 text-[11px] leading-snug text-white/45">
                     {posterVariant === "names"
-                      ? "Tmavá grafika se jmény — vhodná na feed nebo posílání jako obrázek (podobná soupisce)."
-                      : "Plakát s fotkami dresů — přepni Světlý / Tmavý podle pozadí."}
+                      ? "Tmavá grafika se jmény — vhodná na feed jako jednoduchá soupiska bez klubů."
+                      : posterVariant === "names-web"
+                        ? "Bordó styl s logem Lineup, řádky příjmení — klub (kurzívou), vhodná jako grafika přílohy k článku."
+                        : "Plakát s fotkami dresů — přepni Světlý / Tmavý podle pozadí."}
                   </p>
                 </div>
               ) : null}

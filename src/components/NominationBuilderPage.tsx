@@ -2,9 +2,15 @@
 
 import { useSession } from "next-auth/react";
 import type { PosterLetterboxTheme } from "@/lib/captureSharePoster";
-import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
+import {
+  captureElementToCanvas,
+  canvasToPngDataUrl,
+  downloadDataUrl,
+} from "@/lib/captureSharePoster";
+import { SHARE_POSTER_WIDTH_PX, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { flushSync } from "react-dom";
 import {
   DndContext,
   DragOverlay,
@@ -22,6 +28,7 @@ import { toast } from "sonner";
 import { LineBuilder } from "@/components/LineBuilder";
 import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import { NamesOnlySharePoster } from "@/components/NamesOnlySharePoster";
+import { NominationWebStyleSharePoster } from "@/components/NominationWebStyleSharePoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
@@ -30,6 +37,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
+import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 import { RosterUniquenessScore } from "@/components/sestava/RosterUniquenessScore";
@@ -67,7 +75,11 @@ export function NominationBuilderPage() {
   const shareWatermarkLabel =
     authStatus === "authenticated" && wmFromSession ? wmFromSession : null;
   const [sharePosterTheme, setSharePosterTheme] = useState<PosterLetterboxTheme>("light");
-  const [sharePosterVariant, setSharePosterVariant] = useState<"jerseys" | "names">("jerseys");
+  const [sharePosterVariant, setSharePosterVariant] = useState<"jerseys" | "names" | "names-web">("jerseys");
+  /** Grafika použitá jen během rychlého exportu PNG z lišty (nebije volbu v modalu Sdílet). */
+  const [quickExportPosterKind, setQuickExportPosterKind] = useState<
+    "jerseys" | "names" | "names-web" | null
+  >(null);
   const [savedNominationSlug, setSavedNominationSlug] = useState<string | null>(null);
   const [guestShareCode, setGuestShareCode] = useState<string | null>(null);
   /** Veřejná část URL /v/{slug} z hostovského sdílení (stejný tvar jako u uložené nominace). */
@@ -82,6 +94,8 @@ export function NominationBuilderPage() {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [posterExportPickerOpen, setPosterExportPickerOpen] = useState(false);
+  const [posterExportBusyKey, setPosterExportBusyKey] = useState<string | null>(null);
   const [shareCaptureVisible, setShareCaptureVisible] = useState(false);
   const [saving, setSaving] = useState(false);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
@@ -144,6 +158,88 @@ export function NominationBuilderPage() {
   const isComplete = isLineupComplete(lineup);
   const leadershipOk = useMemo(() => isLeadershipComplete(lineup, captainId), [lineup, captainId]);
   const canOpenShareModal = isComplete;
+
+  const posterForCapture = quickExportPosterKind ?? sharePosterVariant;
+
+  const slugifyPosterFilename = useCallback((raw: string) => {
+    const s = raw
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 48);
+    return s.length >= 2 ? s : "sestava";
+  }, []);
+
+  const runPosterPngExport = useCallback(
+    async (kind: "jerseys" | "names" | "names-web") => {
+      setPosterExportBusyKey(
+        kind === "jerseys" ? "export-jerseys" : kind === "names-web" ? "export-names-web" : "export-names"
+      );
+      try {
+        flushSync(() => {
+          setQuickExportPosterKind(kind);
+          setShareCaptureVisible(true);
+          setSharePosterFooterIso(new Date().toISOString());
+        });
+        await new Promise<void>((r) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => r()))
+        );
+        const el = shareCaptureRef.current;
+        if (!el) {
+          toast.error("Plakát se nepodařilo najít. Zkus stránku obnovit.");
+          return;
+        }
+        const bg =
+          kind === "names"
+            ? "#060b14"
+            : kind === "names-web"
+              ? "#301018"
+              : sharePosterTheme === "dark"
+                ? "#0b0e14"
+                : "#e8ecf2";
+        const canvas = await captureElementToCanvas(el, {
+          scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
+          backgroundColor: bg,
+        });
+        const base = slugifyPosterFilename(shareNominationTitle.trim());
+        const suf =
+          kind === "names" ? "soupiska-jmen" : kind === "names-web" ? "grafika-web" : "dresy";
+        downloadDataUrl(canvasToPngDataUrl(canvas), `ms2026-nominace-${suf}-${base}.png`);
+        toast.success(
+          kind === "names"
+            ? "Staženo: soupiska jen jmény (PNG)."
+            : kind === "names-web"
+              ? "Staženo: webová grafika nominace (PNG)."
+              : "Staženo: plakát s dresy (PNG)."
+        );
+        setPosterExportPickerOpen(false);
+      } catch (e) {
+        console.error(e);
+        toast.error("Export PNG se nepovedl — zkus to znovu za chvíli.");
+      } finally {
+        flushSync(() => {
+          setQuickExportPosterKind(null);
+          setShareCaptureVisible(false);
+        });
+        setPosterExportBusyKey(null);
+      }
+    },
+    [sharePosterTheme, shareNominationTitle, slugifyPosterFilename]
+  );
+
+  const openPosterExportPicker = useCallback(() => {
+    if (!canOpenShareModal) return;
+    if (!leadershipOk) {
+      const ok = window.confirm(
+        "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+      );
+      if (!ok) return;
+    }
+    setPosterExportPickerOpen(true);
+  }, [canOpenShareModal, leadershipOk]);
   const filled = selectedPlayers.length;
   const remaining = TOTAL_PLAYERS - filled;
 
@@ -990,6 +1086,39 @@ export function NominationBuilderPage() {
             !isComplete || !shareNominationTitle.trim() || !contestSubmissionOpen
           }
           className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+          onPosterExport={openPosterExportPicker}
+          posterExportDisabled={!canOpenShareModal}
+        />
+
+        <MatchPosterExportChoicesModal
+          open={posterExportPickerOpen}
+          onClose={() => posterExportBusyKey === null && setPosterExportPickerOpen(false)}
+          eyebrow="MS 2026"
+          title="Export nominace jako PNG"
+          description="Soupiska jen jména má mřížku příjmení po rolích, webová nominace kopíruje styl „grafiky na článek“, plakát s dresy vychází z motivu Světlý / Tmavý v modalu Dokončit nominaci."
+          busyKey={posterExportBusyKey}
+          choices={[
+            {
+              key: "export-names",
+              title: "Soupiska jen jména",
+              hint: "Tmavý plakát — příjmení po sekcích v mřížce (bez klubů), podobný soupisce „po řádcích“.",
+            },
+            {
+              key: "export-names-web",
+              title: "Webová nominace (grafika)",
+              hint: "Bordó plakát s logem Lineup, nadpisem NOMINACE a řádky „příjmení — kurzívou klub“ jako příloha k článku.",
+            },
+            {
+              key: "export-jerseys",
+              title: "Plakát s dresy",
+              hint: "Vizuálně stejné jako plakát v okně Dokončit nominaci při zapnutých dresech (světlo/tma z toho modalu).",
+            },
+          ]}
+          onPick={async (key) => {
+            if (key === "export-names") await runPosterPngExport("names");
+            else if (key === "export-names-web") await runPosterPngExport("names-web");
+            else if (key === "export-jerseys") await runPosterPngExport("jerseys");
+          }}
         />
 
         <div
@@ -1001,7 +1130,7 @@ export function NominationBuilderPage() {
           style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
           aria-hidden
         >
-          {sharePosterVariant === "jerseys" ? (
+          {posterForCapture === "jerseys" ? (
             <Nhl25SharePoster
               ref={shareCaptureRef}
               players={players}
@@ -1013,6 +1142,15 @@ export function NominationBuilderPage() {
               footerInstantIso={sharePosterFooterIso}
               posterTheme={sharePosterTheme}
               watermarkUserLabel={shareWatermarkLabel}
+            />
+          ) : posterForCapture === "names-web" ? (
+            <NominationWebStyleSharePoster
+              ref={shareCaptureRef}
+              players={players}
+              lineup={lineup}
+              nominationTitle={shareNominationTitle}
+              siteUrl={siteOrigin}
+              footerInstantIso={sharePosterFooterIso}
             />
           ) : (
             <NamesOnlySharePoster
