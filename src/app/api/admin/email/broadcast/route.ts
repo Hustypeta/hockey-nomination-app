@@ -6,7 +6,7 @@ import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
 // Stejné znění jako jednorázový test (`/api/admin/email/test`).
 const SUBJECT = "Poslední den soutěže o dres!";
 const TEXT =
-  "Zdravím,\n\njen připomínám, že dnes v 19:30 je deadline soutěže o dres!\n\nDěkuji moc za využívání platformy Lineup.\n\nOtevřít editor: https://hokejlineup.cz/sestava\n";
+  "Zdravím,\n\ndnes v 19:30 je deadline soutěže o dres!\n\nDěkuji moc za využívání platformy Lineup a přeji krásný hokejový den.\n\nOtevřít editor: https://hokejlineup.cz/sestava\n";
 
 const CTA_URL = "https://hokejlineup.cz/sestava";
 const PREHEADER = "Dnes v 19:30 je deadline soutěže o dres — nezapomeň nominaci dokončit.";
