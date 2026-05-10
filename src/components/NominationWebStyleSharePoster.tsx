@@ -314,7 +314,8 @@ export const NominationWebStyleSharePoster = forwardRef<
                     fontWeight: 800,
                     letterSpacing: "0.22em",
                     textTransform: "uppercase",
-                    color: "#0b1f3d",
+                    color: "#ffffff",
+                    textShadow: "0 1px 3px rgba(0,8,26,0.75), 0 0 1px rgba(0,0,0,0.6)",
                   }}
                 >
                   Repre · MS 2026
@@ -330,9 +331,9 @@ export const NominationWebStyleSharePoster = forwardRef<
                   fontWeight: 900,
                   letterSpacing: "0.02em",
                   textTransform: "uppercase",
-                  color: CZ_NAVY,
+                  color: "#ffffff",
                   textShadow:
-                    "0 2px 0 rgba(255,255,255,0.35), 0 4px 18px rgba(255,251,246,0.45)",
+                    "0 2px 4px rgba(0,10,35,0.85), 0 3px 14px rgba(0,8,26,0.55), 0 0 1px rgba(0,0,0,0.5)",
                   wordBreak: "break-word",
                 }}
               >
