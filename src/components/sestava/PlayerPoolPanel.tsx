@@ -126,6 +126,9 @@ function DraggableCard({
   const canInteract = !disabled && !slotBlocks && !inRoster;
   const dndOn = enableDnd && canInteract;
 
+  const showDragHandle = enableDnd && canInteract;
+  // Úchyt jen na tlačítku — přes celou kartu s `touch-none` nešel v Safari při scrollu výběru.
+
   return (
     <div
       ref={setNodeRef}
@@ -159,35 +162,34 @@ function DraggableCard({
         aria-hidden
       />
       <div className="relative flex gap-2">
+        {showDragHandle ? (
+          <button
+            type="button"
+            className="mt-1 flex h-11 w-9 shrink-0 touch-none cursor-grab items-start justify-center rounded-lg border border-white/[0.08] bg-white/[0.04] pb-2 pt-0.5 transition-colors hover:border-[#f1c40f]/35 active:cursor-grabbing"
+            aria-label="Přetáhnout do soupisky"
+            {...listeners}
+            {...attributes}
+          >
+            <GripVertical className="h-4 w-4 shrink-0 text-[#f1c40f]/85" aria-hidden />
+          </button>
+        ) : (
+          enableDnd && (
+            <div className="mt-1 flex h-11 w-9 shrink-0 items-start justify-center rounded-lg opacity-55" aria-hidden>
+              <GripVertical className="h-4 w-4 shrink-0 text-slate-600" aria-hidden />
+            </div>
+          )
+        )}
         <div
           data-dnd-card={dndOn ? "1" : "0"}
           data-player={player.id}
           className={`
-            flex min-w-0 flex-1 flex-col gap-1.5 rounded-lg px-0.5 py-0.5
-            ${dndOn ? "touch-none cursor-grab active:cursor-grabbing" : "touch-pan-y cursor-default"}
+            flex min-w-0 flex-1 touch-manipulation flex-col gap-1.5 rounded-lg px-0.5 py-0.5
+            ${canInteract ? "cursor-pointer" : ""}
           `}
-          {...(dndOn ? listeners : {})}
-          {...(dndOn ? attributes : {})}
-          onDragStart={(e) => e.preventDefault()}
-          onPointerDownCapture={(e) => {
-            if (typeof window !== "undefined")
-              console.info("[dnd-card] pointer-down", {
-                playerId: player.id,
-                dndOn,
-                pointerType: e.pointerType,
-              });
-          }}
+          role="presentation"
           onClick={() => canInteract && onAdd()}
         >
           <div className="flex items-start gap-2">
-            {enableDnd ? (
-              <GripVertical
-                className={`mt-1 h-4 w-4 shrink-0 sm:h-4 sm:w-4 ${canInteract ? "text-[#f1c40f]/80" : "text-slate-600"}`}
-                aria-hidden
-              />
-            ) : (
-              <span className="mt-1 h-4 w-4 shrink-0" aria-hidden />
-            )}
             <div className="shrink-0">
               <PlayerAvatar
                 name={player.name}
@@ -207,14 +209,14 @@ function DraggableCard({
               </p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-1.5 pl-6 sm:pl-7">
+          <div className="flex flex-wrap items-center gap-1.5">
             <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95 sm:text-xs">
               {cur}/{lim} v nominaci
             </span>
             <PickRateBadge rate={rate} />
             {canInteract ? (
               <span className="text-[10px] font-medium leading-tight text-sky-200/75 sm:hidden">
-                {enableDnd ? "Přetáhni → soupiska" : "Klepni → přidat"}
+                {enableDnd ? "Úchyt vlevo = táhnout" : "Klepni → přidat"}
               </span>
             ) : null}
           </div>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import { CompleteRegistrationTracker } from "@/components/CompleteRegistrationTracker";
@@ -14,6 +14,12 @@ import {
 import { resolveFacebookAppId } from "@/lib/facebookApp";
 
 const SITE_URL = "https://hokejlineup.cz";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 function metadataBaseUrl(): URL {
   for (const raw of [process.env.NEXT_PUBLIC_SITE_URL, process.env.NEXTAUTH_URL]) {

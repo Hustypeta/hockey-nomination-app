@@ -405,7 +405,7 @@ export function OfficialLineupAdminEditor() {
 
   const content = (
     <div className="sestava-page-ambient min-h-screen pb-28 text-white">
-      {!isNarrowLayout ? <SestavaAmbientBackground /> : null}
+      <SestavaAmbientBackground className="hidden lg:block" />
       <div className="sticky top-0 z-40">
         <SiteHeader />
         <header className="relative border-b border-white/[0.1] bg-gradient-to-b from-[#0a1224]/95 via-[#080d18]/92 to-[#060a14]/95 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:px-4 lg:px-6">

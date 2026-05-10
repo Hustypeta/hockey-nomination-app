@@ -1,9 +1,9 @@
 /**
  * Společné pozadí MS 2026 — ledová deska (shodná s `.squad-ice-fill` u dresů na /sestava).
  */
-export function MsAmbientBackground() {
+export function MsAmbientBackground({ className = "" }: { className?: string }) {
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
+    <div className={`pointer-events-none fixed inset-0 -z-10 overflow-hidden ${className}`} aria-hidden>
       <div className="squad-ice-fill absolute inset-0" />
       <div
         className="absolute inset-0 opacity-90"

@@ -396,9 +396,9 @@ export function MatchLineupBuilderPage() {
     : null;
 
   const content = (
-    <div className="sestava-page-ambient min-h-screen pb-[10.75rem] text-white sm:pb-44 lg:pb-36">
+    <div className="sestava-page-ambient min-h-screen pb-[calc(10.75rem+env(safe-area-inset-bottom,0px))] text-white sm:pb-[calc(11rem+env(safe-area-inset-bottom,0px))] lg:pb-[calc(9rem+env(safe-area-inset-bottom,0px))]">
       {/* Mobile scroll perf: background layers off on narrow layouts */}
-      {!isNarrowLayout ? <SestavaAmbientBackground /> : null}
+      <SestavaAmbientBackground className="hidden lg:block" />
       <div className="sticky top-0 z-40">
         <SiteHeader />
       </div>
@@ -528,7 +528,7 @@ export function MatchLineupBuilderPage() {
             (fullscreen flex sloupec, ne částečně visící panel — iOS Safari má pak spolehlivý scroll). */}
         {mobilePlayerSheetOpen ? (
           <div
-            className="fixed inset-0 z-[52] flex flex-col bg-[#05080f] lg:hidden"
+            className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
             role="dialog"
             aria-modal="true"
             aria-labelledby="mobile-match-pool-title"
