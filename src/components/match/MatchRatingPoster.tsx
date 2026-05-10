@@ -2,7 +2,7 @@
 
 import { forwardRef, useMemo } from "react";
 import type { LineupStructure, Player } from "@/types";
-import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
 
 import {
@@ -213,6 +213,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                   ? mine
                   : null;
             const hue = ratingHue(display);
+            const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
             return (
               <div
                 key={pid}
@@ -278,6 +279,18 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                       {player.league ? (
                         <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span>
                       ) : null}
+                    </div>
+                  ) : null}
+                  {player && player.name !== displayName ? (
+                    <div
+                      style={{
+                        marginTop: 4,
+                        fontSize: 11,
+                        color: "rgba(255,255,255,0.4)",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      Na dresu: <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
                     </div>
                   ) : null}
                   {!preferMine && aggregate && aggregate.count > 0 ? (

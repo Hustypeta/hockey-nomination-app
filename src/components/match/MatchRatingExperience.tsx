@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
-import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
 import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
@@ -266,6 +266,8 @@ function RatingSheet({
     }
   };
 
+  const displayName = jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center sm:p-4"
@@ -282,6 +284,9 @@ function RatingSheet({
               {player.club}
               {player.league ? <span className="text-white/35"> · {player.league}</span> : null}
             </div>
+            {player.name !== displayName ? (
+              <div className="mt-0.5 text-[11px] text-white/40">Na dresu: {displayName}</div>
+            ) : null}
           </div>
           <button
             type="button"

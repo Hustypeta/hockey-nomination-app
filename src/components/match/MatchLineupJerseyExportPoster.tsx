@@ -2,7 +2,7 @@
 
 import { forwardRef, useMemo } from "react";
 import type { LineupStructure, Player } from "@/types";
-import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
@@ -119,6 +119,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
         >
           {ids.map((pid) => {
             const player = byId.get(pid) ?? null;
+            const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
             const role = roleForPlayerId(lineup, pid);
             return (
               <div
@@ -183,6 +184,19 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                       {player.league ? (
                         <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span>
                       ) : null}
+                    </div>
+                  ) : null}
+                  {player && player.name !== displayName ? (
+                    <div
+                      style={{
+                        marginTop: 4,
+                        fontSize: 11,
+                        color: "rgba(255,255,255,0.4)",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      Na dresu:{" "}
+                      <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
                     </div>
                   ) : null}
                 </div>
