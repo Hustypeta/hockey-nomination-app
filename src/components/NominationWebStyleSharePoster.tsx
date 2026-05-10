@@ -429,18 +429,26 @@ export const NominationWebStyleSharePoster = forwardRef<
               fontWeight: 900,
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "#0f2444",
-              textShadow: "0 1px 0 rgba(253,246,246,0.65)",
+              color: "#ffffff",
+              textShadow: "0 1px 3px rgba(0,10,30,0.75), 0 0 1px rgba(0,0,0,0.5)",
             }}
           >
             {SITE_BRAND} · MS 2026
           </p>
-          <p style={{ margin: "8px 0 0", fontSize: 15, fontWeight: 650, color: "#0f2444ee" }}>
+          <p
+            style={{
+              margin: "8px 0 0",
+              fontSize: 15,
+              fontWeight: 650,
+              color: "rgba(255,255,255,0.92)",
+              textShadow: "0 1px 2px rgba(0,10,30,0.65)",
+            }}
+          >
             Sestaveno {dateLabel}
             {host ? (
               <>
                 {" "}
-                · <span style={{ color: CZ_NAVY, fontWeight: 800 }}>{host}</span>
+                · <span style={{ color: "#ffffff", fontWeight: 800 }}>{host}</span>
               </>
             ) : null}
           </p>
