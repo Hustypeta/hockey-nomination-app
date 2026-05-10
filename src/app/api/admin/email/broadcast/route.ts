@@ -4,12 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
 
 // Stejné znění jako jednorázový test (`/api/admin/email/test`).
-const SUBJECT = "Lineup — poslední dva dny soutěže";
+const SUBJECT = "Poslední den soutěže o dres!";
 const TEXT =
-  "Velice Vám děkuji za Váš zájem o platformu Lineup.\n\nNezapomeňte, že soutěž končí před zahájením nominační tiskové konference před MS 2026, která proběhne v neděli 10. května v 19:30.\n\nTaké Vás chci informovat, že na webu připravujeme možnost stavět si sestavu přímo na konkrétní zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.\n\nV neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.\n\nPokud se Vám platforma Lineup líbí, budeme rádi za jakékoliv sdílení.\n\nDěkuji a přeji krásný den.\n\nOtevřít editor: https://hokejlineup.cz/sestava\n";
+  "Zdravím,\n\njen připomínám, že dnes v 19:30 je deadline soutěže o dres!\n\nDěkuji moc za využívání platformy Lineup.\n\nOtevřít editor: https://hokejlineup.cz/sestava\n";
 
 const CTA_URL = "https://hokejlineup.cz/sestava";
-const PREHEADER = "Poslední 2 dny soutěže — odešli nominaci včas.";
+const PREHEADER = "Dnes v 19:30 je deadline soutěže o dres — nezapomeň nominaci dokončit.";
 const LOGO_URL = "https://hokejlineup.cz/images/logo.png";
 
 const HTML = `<!doctype html>
@@ -62,22 +62,13 @@ const HTML = `<!doctype html>
 
                         <div style="margin-top:16px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.86); text-align:center;">
                           <p style="margin:0 0 10px 0;">
-                            Velice Vám děkuji za Váš zájem o platformu <strong style="color:#ffffff;">Lineup</strong>.
+                            Zdravím,
                           </p>
                           <p style="margin:0 0 10px 0;">
-                            Nezapomeňte, že soutěž končí před zahájením nominační tiskové konference před MS 2026, která proběhne v neděli <strong style="color:#ffffff;">10.&nbsp;května v&nbsp;19:30</strong>.
-                          </p>
-                          <p style="margin:0 0 10px 0;">
-                            Také Vás chci informovat, že na webu připravujeme možnost stavět si sestavu přímo na konkrétní zápas a hodnocení jednotlivých hráčů v nadcházejících zápasech.
-                          </p>
-                          <p style="margin:0 0 10px 0;">
-                            V neposlední řadě Vás chci upozornit, že si můžete v profilu nastavit přezdívku, která bude viditelná ve veřejném žebříčku výsledků soutěže.
-                          </p>
-                          <p style="margin:0 0 10px 0;">
-                            Pokud se Vám platforma Lineup líbí, budeme rádi za jakékoliv sdílení.
+                            Jen připomínám, že <strong style="color:#ffffff;">dnes</strong> v <strong style="color:#ffffff;">19:30</strong> je deadline soutěže o dres!
                           </p>
                           <p style="margin:0;">
-                            Děkuji a přeji krásný den.
+                            Děkuji moc za využívání platformy <strong style="color:#ffffff;">Lineup</strong>.
                           </p>
                         </div>
 
