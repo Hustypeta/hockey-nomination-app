@@ -64,7 +64,7 @@ export function MatchLineupBuilderPage() {
   const [draftImportReady, setDraftImportReady] = useState(!needDraftImport);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
   const [lineupPosterModalOpen, setLineupPosterModalOpen] = useState(false);
-  /** Drag & drop z poolu jen od `lg` výš — na mobilu jen klepnutí (sheet / slot). */
+  /** Široký layout (≥ lg): DnD z poolu zapnuté. Úzký: jen klepnutí, bez přetahování. */
   const enableDnd = !isNarrowLayout;
 
   const {

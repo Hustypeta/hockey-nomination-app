@@ -137,7 +137,7 @@ export function NominationBuilderPage() {
     })
   );
 
-  /** Drag & drop z poolu jen od `lg` výš — na mobilu kvůli UI a Safari scrollu jen klepnutí. */
+  /** Široký layout (≥ lg / 1024px): přetahování z poolu zapnuté. Úzký: jen klepnutí — bez DnD. */
   const enableDnd = !isNarrowLayout;
 
   const selectedPlayers = useMemo(() => lineupToPlayers(lineup, players), [lineup, players]);

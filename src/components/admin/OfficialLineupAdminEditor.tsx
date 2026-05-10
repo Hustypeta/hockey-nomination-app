@@ -53,7 +53,7 @@ export function OfficialLineupAdminEditor() {
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
 
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
-  /** Stejné jako veřejný editor — DnD jen od `lg` výš. */
+  /** Široký editor (≥ lg): DnD z poolu; úzký: jen klepnutí. */
   const enableDnd = !isNarrowLayout;
   const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
   const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
