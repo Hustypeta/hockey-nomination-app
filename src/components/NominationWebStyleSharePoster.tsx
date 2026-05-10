@@ -1,26 +1,20 @@
 "use client";
 
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Player, LineupStructure } from "@/types";
-import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
+import { NOMINATION_WEB_POSTER_H, NOMINATION_WEB_POSTER_W } from "@/lib/sharePosterLayout";
 import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 import { buildNominationWebStyleRoster, type NominationWebStyleRow } from "@/lib/nominationWebStyleRoster";
 
-/** Světlejší modrá / červená ve smyslu vlajky ČR (bez ostrého bílého panelu). */
-const FLAG_BLUE = "#4788cf";
-const FLAG_BLUE_SOFT = "#6aaee6";
-const FLAG_RED_SOFT = "#e56b78";
-const FLAG_RED_BRIGHT = "#f0808c";
-const CZ_NAVY_LINE = "#0a2a52";
-const CZ_NAVY_CAPS = "#041c3f";
+const CZ_NAVY = "#082552";
+const CZ_RED_CORE = "#c8102e";
+const CZ_BLUE_SKY = "#4a98e8";
 
-export interface NominationWebStyleSharePosterProps {
-  players: Player[];
-  lineup: LineupStructure;
-  nominationTitle?: string | null;
-  siteUrl?: string;
-  footerInstantIso?: string | null;
-}
+/** Cílová typografie soupisky; výšku dorovnává `rosterScale` (bez ořezu). */
+const ROSTER_NAME_PX = 36;
+const ROSTER_CLUB_PX = 22;
+const ROSTER_DASH_PX = 16;
+const ROSTER_SECTION_GAP_MAIN = 12;
 
 const formatCsDate = (d: Date) =>
   new Intl.DateTimeFormat("cs-CZ", {
@@ -29,59 +23,119 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-function BannerLabel({ children }: { children: string }) {
+function SectionRibbon({ children }: { children: string }) {
   return (
     <div
       style={{
-        display: "inline-block",
-        marginBottom: 22,
-        background: `linear-gradient(90deg, ${CZ_NAVY_LINE} 0%, #174a82 100%)`,
-        borderLeft: "6px solid #d4243a",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 10,
+        marginBottom: 11,
+        padding: "7px 20px 7px 15px",
+        borderRadius: "999px",
+        background: `linear-gradient(90deg, ${CZ_NAVY}ee 0%, #0c3d7aee 72%, ${CZ_RED_CORE}dd 100%)`,
         boxShadow:
-          "0 4px 18px rgba(4,28,63,0.45), inset 0 1px 0 rgba(255,255,255,0.22)",
-        color: "#f0f9ff",
-        fontWeight: 800,
-        fontSize: 22,
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        padding: "12px 52px 12px 18px",
-        borderRadius: "0 999px 999px 0",
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function PlayerLine({ row }: { row: NominationWebStyleRow }) {
-  return (
-    <p
-      style={{
-        margin: "0 0 14px 0",
-        lineHeight: 1.28,
-        fontSize: 44,
+          "0 0 0 1px rgba(255,255,255,0.2), inset 0 2px 0 rgba(255,255,255,0.22), 0 10px 24px rgba(0,28,74,0.35)",
       }}
     >
       <span
         style={{
+          display: "block",
+          width: 10,
+          height: 10,
+          borderRadius: "50%",
+          background: `#fff`,
+          boxShadow: `inset 0 0 0 2px ${CZ_BLUE_SKY}, 0 0 12px rgba(255,255,255,0.45)`,
+        }}
+        aria-hidden
+      />
+      <span
+        style={{
           fontWeight: 900,
-          color: "#ffffff",
-          letterSpacing: "0.065em",
+          fontSize: 15,
+          letterSpacing: "0.16em",
           textTransform: "uppercase",
-          textShadow:
-            "0 2px 0 rgba(12,74,148,0.55), 0 3px 12px rgba(180,35,52,0.45), 0 1px 2px rgba(0,0,0,0.35)",
+          color: "#f8fafc",
+        }}
+      >
+        {children}
+      </span>
+    </div>
+  );
+}
+
+function PlayerChip({ row }: { row: NominationWebStyleRow }) {
+  return (
+    <div
+      style={{
+        padding: "11px 13px",
+        borderRadius: 14,
+        background:
+          "linear-gradient(145deg, rgba(255,255,255,0.16) 0%, rgba(8,39,94,0.28) 100%)",
+        boxShadow:
+          "0 0 0 1px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.12), 0 8px 20px rgba(0,28,74,0.25)",
+      }}
+    >
+      <div
+        style={{
+          fontSize: ROSTER_NAME_PX,
+          lineHeight: 1.05,
+          fontWeight: 900,
+          letterSpacing: "0.025em",
+          textTransform: "uppercase",
+          color: "#fff",
+          wordBreak: "break-word",
+          textShadow: `1px 1px 0 ${CZ_NAVY}, 0 0 12px rgba(200,16,46,0.35)`,
         }}
       >
         {row.name}
-      </span>
-      <span style={{ color: "#fff7ed", padding: "0 0.28em", fontWeight: 800 }} aria-hidden>
-        —
-      </span>
-      <em style={{ fontStyle: "italic", color: "#f1f7ff", fontSize: 28, fontWeight: 650 }}>
-        {row.club}
-      </em>
-    </p>
+      </div>
+      <div style={{ marginTop: 5, marginLeft: 1 }}>
+        <span
+          style={{ color: "rgba(255,255,255,0.5)", marginRight: 8, fontSize: ROSTER_DASH_PX }}
+          aria-hidden
+        >
+          —
+        </span>
+        <em
+          style={{
+            fontSize: ROSTER_CLUB_PX,
+            fontStyle: "italic",
+            fontWeight: 600,
+            color: "#e8f6ff",
+            wordBreak: "break-word",
+          }}
+        >
+          {row.club}
+        </em>
+      </div>
+    </div>
   );
+}
+
+function PlayerColumns({ rows, columns = 2 }: { rows: NominationWebStyleRow[]; columns?: 2 | 3 }) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+        columnGap: 13,
+        rowGap: 10,
+      }}
+    >
+      {rows.map((row, i) => (
+        <PlayerChip key={`${row.name}-${row.club}-${i}`} row={row} />
+      ))}
+    </div>
+  );
+}
+
+export interface NominationWebStyleSharePosterProps {
+  players: Player[];
+  lineup: LineupStructure;
+  nominationTitle?: string | null;
+  siteUrl?: string;
+  footerInstantIso?: string | null;
 }
 
 export const NominationWebStyleSharePoster = forwardRef<
@@ -101,33 +155,50 @@ export const NominationWebStyleSharePoster = forwardRef<
   const titleLine = nominationTitle?.trim() ?? "";
 
   const dateLabel =
-    footerInstantIso != null
-      ? formatCsDate(new Date(footerInstantIso))
-      : formatCsDate(new Date());
+    footerInstantIso != null ? formatCsDate(new Date(footerInstantIso)) : formatCsDate(new Date());
 
   const { goalies, defense, forwards } = useMemo(
     () => buildNominationWebStyleRoster(players, lineup),
     [players, lineup]
   );
 
+  const rosterViewportRef = useRef<HTMLDivElement>(null);
+  const rosterBlockRef = useRef<HTMLDivElement>(null);
+  const [rosterScale, setRosterScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const vp = rosterViewportRef.current;
+    const block = rosterBlockRef.current;
+    if (!vp || !block) return;
+
+    const fit = () => {
+      const avail = vp.clientHeight;
+      if (avail < 2) return;
+      const need = block.scrollHeight;
+      if (need < 1) return;
+      const raw = (avail / need) * 0.99;
+      setRosterScale(raw >= 0.999 ? 1 : Math.min(1, raw));
+    };
+
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(vp);
+    ro.observe(block);
+    return () => ro.disconnect();
+  }, [goalies, defense, forwards, titleLine]);
+
   const origin = siteUrl.replace(/\/$/, "");
   const logoSrc = origin.length > 0 ? `${origin}${SITE_LOGO_URL}` : SITE_LOGO_URL;
 
-  /** Diagonála světle modrá → červená jako zjednodušená vlajka (bez „bílého pruhu"). */
-  const bgLayers = `
-    linear-gradient(121deg,
-      ${FLAG_BLUE} 0%,
-      ${FLAG_BLUE_SOFT} 34%,
-      ${FLAG_RED_SOFT} 35%,
-      ${FLAG_RED_BRIGHT} 72%,
-      ${FLAG_BLUE_SOFT} 100%),
-    radial-gradient(circle at 92% -8%, rgba(255,248,246,0.28) 0%, transparent 45%),
-    radial-gradient(circle at 8% 100%, rgba(20,74,148,0.35) 0%, transparent 55%),
-    repeating-linear-gradient(115deg,
-      rgba(255,255,255,0.035) 0px,
-      rgba(255,255,255,0.035) 1px,
-      transparent 1px,
-      transparent 11px)`;
+  /** Plátno vyplněné po celé ploše 3:4 — modrý klín + korálově červené pole (náznak ČR bez bílé plochy). */
+  const surface = `
+    linear-gradient(165deg,
+      ${CZ_BLUE_SKY} 0%,
+      #5faaec 38%,
+      #e05868 62%,
+      #f07784 85%),
+    radial-gradient(circle at 118% -12%, rgba(255,253,251,0.45) 0%, transparent 46%),
+    radial-gradient(circle at -28% 108%, rgba(8,41,118,0.55) 0%, transparent 55%)`;
 
   return (
     <div
@@ -135,12 +206,17 @@ export const NominationWebStyleSharePoster = forwardRef<
       className="nomination-web-style-share-poster"
       style={{
         position: "relative",
-        width: SHARE_POSTER_WIDTH_PX,
-        maxWidth: SHARE_POSTER_WIDTH_PX,
+        boxSizing: "border-box",
+        width: NOMINATION_WEB_POSTER_W,
+        maxWidth: NOMINATION_WEB_POSTER_W,
+        height: NOMINATION_WEB_POSTER_H,
+        minHeight: NOMINATION_WEB_POSTER_H,
         flexShrink: 0,
         overflow: "hidden",
-        backgroundColor: FLAG_BLUE,
-        backgroundImage: bgLayers,
+        backgroundColor: CZ_BLUE_SKY,
+        backgroundImage: surface,
+        display: "flex",
+        flexDirection: "column",
         color: "#fdfefe",
         textRendering: "geometricPrecision",
         WebkitFontSmoothing: "antialiased",
@@ -149,139 +225,214 @@ export const NominationWebStyleSharePoster = forwardRef<
           '"Segoe UI", ui-sans-serif, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif',
       }}
     >
-      {/* Bez bílé plochy: jen slabý vignette pro hloubku */}
       <div
         aria-hidden
         style={{
           position: "absolute",
-          pointerEvents: "none",
           inset: 0,
           background:
-            "radial-gradient(ellipse 116% 90% at 50% -6%, transparent 54%, rgba(6,38,94,0.18) 100%)",
+            "radial-gradient(ellipse 104% 90% at 50% -4%, transparent 54%, rgba(6,34,92,0.22) 100%)",
+          pointerEvents: "none",
           zIndex: 0,
         }}
       />
+      {/* Jemný zlatý lem — prémiová linka */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 32,
+          right: 32,
+          height: 4,
+          background: `linear-gradient(90deg, ${CZ_NAVY} 0%, #fbbf24aa 52%, ${CZ_RED_CORE}dd 100%)`,
+          opacity: 0.95,
+          borderRadius: 2,
+          zIndex: 1,
+          pointerEvents: "none",
+        }}
+      />
 
-      <div style={{ position: "relative", zIndex: 1, padding: "40px 44px 36px 40px" }}>
-        <header
-          style={{
-            display: "flex",
-            alignItems: "stretch",
-            justifyContent: "space-between",
-            gap: 20,
-            marginBottom: 32,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={logoSrc}
-              alt=""
-              decoding="async"
-              style={{
-                height: 112,
-                width: "auto",
-                objectFit: "contain",
-                display: "block",
-                filter:
-                  "drop-shadow(3px 4px 0 rgba(212,36,58,0.35)) drop-shadow(-2px -2px 0 rgba(4,74,148,0.45)) drop-shadow(0 12px 28px rgba(0,0,0,0.35))",
-              }}
-            />
-            <div
-              aria-hidden
-              style={{
-                width: 5,
-                alignSelf: "stretch",
-                minHeight: 100,
-                background: `linear-gradient(180deg, ${CZ_NAVY_LINE} 0%, #d4243a 52%, ${FLAG_BLUE_SOFT} 100%)`,
-                borderRadius: 2,
-                boxShadow:
-                  "0 0 0 2px rgba(255,248,246,0.35), inset 0 1px 0 rgba(255,255,255,0.55)",
-              }}
-            />
-          </div>
-          <div style={{ flex: 1, minWidth: 0, textAlign: "right", paddingLeft: 10 }}>
-            <p
-              style={{
-                margin: 0,
-                fontSize: 58,
-                lineHeight: 1.02,
-                fontWeight: 900,
-                letterSpacing: "0.03em",
-                textTransform: "uppercase",
-                color: CZ_NAVY_CAPS,
-                wordBreak: "break-word",
-                textShadow:
-                  "0 3px 0 rgba(244,237,239,0.55), -1px -1px 0 rgba(218,239,254,0.45), 0 6px 20px rgba(0,46,118,0.25)",
-              }}
-            >
-              NOMINACE MS 2026
-            </p>
-            {titleLine ? (
+      <div
+        style={{
+          position: "relative",
+          zIndex: 2,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0,
+          padding: "24px 32px 20px",
+        }}
+      >
+        <header style={{ flexShrink: 0, marginBottom: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 14,
+              paddingBottom: 12,
+              borderBottom: "2px solid rgba(8,37,82,0.22)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={logoSrc}
+                alt=""
+                decoding="async"
+                style={{
+                  height: 78,
+                  width: "auto",
+                  objectFit: "contain",
+                  display: "block",
+                  filter: `drop-shadow(0 2px 0 ${CZ_RED_CORE}) drop-shadow(-1px -1px 0 ${CZ_NAVY}) drop-shadow(0 10px 24px rgba(0,0,0,0.35))`,
+                }}
+              />
+              <div
+                aria-hidden
+                style={{
+                  width: 4,
+                  height: 66,
+                  borderRadius: 2,
+                  background: `linear-gradient(180deg, #fffef8 0%, ${CZ_RED_CORE} 48%, ${CZ_NAVY} 100%)`,
+                  boxShadow: "0 0 0 1px rgba(255,255,255,0.4)",
+                }}
+              />
+              <div>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 12,
+                    fontWeight: 800,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: "#0b1f3d",
+                  }}
+                >
+                  Repre · MS 2026
+                </p>
+              </div>
+            </div>
+            <div style={{ textAlign: "right", flex: "1", minWidth: 0 }}>
               <p
                 style={{
-                  margin: "14px 0 0",
-                  fontSize: 26,
-                  fontWeight: 800,
-                  color: CZ_NAVY_LINE,
-                  lineHeight: 1.35,
-                  textAlign: "right",
-                  marginLeft: "auto",
-                  wordBreak: "break-word",
+                  margin: 0,
+                  fontSize: 32,
+                  lineHeight: 0.96,
+                  fontWeight: 900,
+                  letterSpacing: "0.02em",
+                  textTransform: "uppercase",
+                  color: CZ_NAVY,
                   textShadow:
-                    "0 1px 0 rgba(253,246,246,0.35), 0 0 18px rgba(255,255,255,0.25)",
+                    "0 2px 0 rgba(255,255,255,0.35), 0 4px 18px rgba(255,251,246,0.45)",
+                  wordBreak: "break-word",
                 }}
               >
-                {titleLine}
+                NOMINACE
+                <br />
+                MS 2026
               </p>
-            ) : null}
+              {titleLine ? (
+                <p
+                  style={{
+                    margin: "10px 0 0",
+                    marginLeft: "auto",
+                    maxWidth: 420,
+                    fontSize: 16,
+                    fontWeight: 800,
+                    color: "#0f2847",
+                    lineHeight: 1.25,
+                    wordBreak: "break-word",
+                    textShadow: "0 1px 0 rgba(255,255,255,0.25)",
+                  }}
+                >
+                  {titleLine}
+                </p>
+              ) : null}
+            </div>
           </div>
         </header>
 
-        <div style={{ maxWidth: "94%" }}>
-          <section style={{ marginBottom: 26 }}>
-            <BannerLabel>BRANKÁŘI</BannerLabel>
-            <div>{goalies.map((row, i) => <PlayerLine key={`g-${i}`} row={row} />)}</div>
-          </section>
-
-          <section style={{ marginBottom: 26 }}>
-            <BannerLabel>OBRÁNCI</BannerLabel>
-            <div>{defense.map((row, i) => <PlayerLine key={`d-${i}`} row={row} />)}</div>
-          </section>
-
-          <section style={{ marginBottom: 12 }}>
-            <BannerLabel>ÚTOČNÍCI</BannerLabel>
-            <div>{forwards.map((row, i) => <PlayerLine key={`f-${i}`} row={row} />)}</div>
-          </section>
-        </div>
+        {/* Soupiska: velké písmo + škálování, aby se vešla do pevné výšky bez ořezu */}
+        <main
+          style={{
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            ref={rosterViewportRef}
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflow: "hidden",
+              width: "100%",
+            }}
+          >
+            <div
+              ref={rosterBlockRef}
+              style={{
+                width: "100%",
+                transform: `scale(${rosterScale})`,
+                transformOrigin: "top center",
+                willChange: "transform",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: ROSTER_SECTION_GAP_MAIN,
+                }}
+              >
+                <section style={{ flexShrink: 0 }}>
+                  <SectionRibbon>BRANKÁŘI</SectionRibbon>
+                  <PlayerColumns rows={goalies} columns={goalies.length <= 3 ? 3 : 2} />
+                </section>
+                <section style={{ flexShrink: 0 }}>
+                  <SectionRibbon>OBRÁNCI</SectionRibbon>
+                  <PlayerColumns rows={defense} columns={2} />
+                </section>
+                <section style={{ flexShrink: 0 }}>
+                  <SectionRibbon>ÚTOČNÍCI</SectionRibbon>
+                  <PlayerColumns rows={forwards} columns={3} />
+                </section>
+              </div>
+            </div>
+          </div>
+        </main>
 
         <footer
           style={{
-            marginTop: 22,
-            paddingTop: 16,
-            borderTop: "2px solid rgba(4,40,94,0.35)",
-            maxWidth: "92%",
+            flexShrink: 0,
+            marginTop: 10,
+            paddingTop: 10,
+            borderTop: "2px solid rgba(8,37,82,0.35)",
           }}
         >
           <p
             style={{
               margin: 0,
-              fontSize: 18,
-              fontWeight: 800,
-              letterSpacing: "0.18em",
+              fontSize: 15,
+              fontWeight: 900,
+              letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: CZ_NAVY_LINE,
-              textShadow: "0 1px 0 rgba(253,246,246,0.6)",
+              color: "#0f2444",
+              textShadow: "0 1px 0 rgba(253,246,246,0.65)",
             }}
           >
-            {SITE_BRAND}
+            {SITE_BRAND} · MS 2026
           </p>
-          <p style={{ margin: "8px 0 0", fontSize: 20, fontWeight: 600, color: CZ_NAVY_LINE }}>
+          <p style={{ margin: "8px 0 0", fontSize: 15, fontWeight: 650, color: "#0f2444ee" }}>
             Sestaveno {dateLabel}
             {host ? (
               <>
                 {" "}
-                · <span style={{ color: "#fffaf0", fontWeight: 800 }}>{host}</span>
+                · <span style={{ color: CZ_NAVY, fontWeight: 800 }}>{host}</span>
               </>
             ) : null}
           </p>

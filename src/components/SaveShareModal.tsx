@@ -13,7 +13,7 @@ import {
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
-import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
+import { NOMINATION_WEB_POSTER_H, NOMINATION_WEB_POSTER_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 
 interface SaveShareModalProps {
   isOpen: boolean;
@@ -150,7 +150,7 @@ export function SaveShareModal({
         posterVariant === "names"
           ? "#060b14"
           : posterVariant === "names-web"
-            ? "#4a7ab5"
+            ? "#5c9ade"
             : posterTheme === "dark"
               ? "#0b0e14"
               : "#e8ecf2";
@@ -348,7 +348,7 @@ export function SaveShareModal({
                     {posterVariant === "names"
                       ? "Tmavá grafika se jmény — vhodná na feed jako jednoduchá soupiska bez klubů."
                       : posterVariant === "names-web"
-                        ? "Bordó styl s logem Lineup, řádky příjmení — klub (kurzívou), vhodná jako grafika přílohy k článku."
+                        ? `Grafika nativně vyplňuje formát 3 : 4 (${NOMINATION_WEB_POSTER_W}×${NOMINATION_WEB_POSTER_H} px, Instagram feed). Jiné poměry přidají pruhy kolem celé soupisky.`
                         : "Plakát s fotkami dresů — přepni Světlý / Tmavý podle pozadí."}
                   </p>
                 </div>
@@ -439,19 +439,30 @@ export function SaveShareModal({
                 </p>
                 <div className="mb-3 grid grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">
                   {(
-                    [
-                      ["original", "Plakát"],
-                      ["1x1", "1 : 1"],
-                      ["9x16", "9 : 16"],
-                      ["16x9", "16 : 9"],
-                    ] as const
+                    posterVariant === "names-web"
+                      ? [
+                          ["original", "3 : 4 IG"],
+                          ["1x1", "1 : 1"],
+                          ["9x16", "9 : 16"],
+                          ["16x9", "16 : 9"],
+                        ] as const
+                      : ([
+                          ["original", "Plakát"],
+                          ["1x1", "1 : 1"],
+                          ["9x16", "9 : 16"],
+                          ["16x9", "16 : 9"],
+                        ] as const)
                   ).map(([id, label]) => (
                     <button
                       key={id}
                       type="button"
                       onClick={() => setPreviewFrame(id)}
                       title={
-                        id === "1x1"
+                        id === "original"
+                          ? posterVariant === "names-web"
+                            ? "Nativní výstup 1080×1440 (3 : 4). Celá soupiska, žádný ořez hráčů."
+                            : "Původní poměr exportu."
+                          : id === "1x1"
                           ? "Celá soupiska v čtverci — žádný ořez hráčů; po stranách letterbox (šedý/tmavý pruh), protože plakát je vyšší než široký."
                           : id === "9x16"
                             ? "Celý plakát ve formátu na mobil — všichni hráči."
@@ -470,9 +481,22 @@ export function SaveShareModal({
                   ))}
                 </div>
                 <p className="mt-2 text-center text-[11px] leading-snug text-white/50">
-                  Export je celý plakát bez ořezu hráčů. U poměru <strong className="font-semibold text-white/70">1 : 1</strong>{" "}
-                  je plakát užší než čtverec — po stranách jsou automaticky doplněné pruhy (letterbox), aby se vešla celá
-                  soupiska. To není chyba rozvržení. Na mobil často lépe sedí <strong className="font-semibold text-white/70">9 : 16</strong>.
+                  {posterVariant === "names-web" ? (
+                    <>
+                      <strong className="font-semibold text-white/70">Web nominace</strong> je graficky postavená jako{" "}
+                      <strong className="font-semibold text-white/70">Instagram 3 : 4</strong> — obrázek zaplňuje celý
+                      výstup bez obdélníku uvnitř. U <strong className="font-semibold text-white/70">1 : 1</strong> či{" "}
+                      <strong className="font-semibold text-white/70">9 : 16</strong> systém doplní pruhy, aby byl celý výpis
+                      pořád vidět.
+                    </>
+                  ) : (
+                    <>
+                      Export je celý plakát bez ořezu hráčů. U poměru{" "}
+                      <strong className="font-semibold text-white/70">1 : 1</strong> je plakát užší než čtverec — po
+                      stranách jsou automaticky doplněné pruhy (letterbox), aby se vešla celá soupiska. Na mobil často lépe
+                      sedí <strong className="font-semibold text-white/70">9 : 16</strong>.
+                    </>
+                  )}
                 </p>
               </div>
 
@@ -486,6 +510,21 @@ export function SaveShareModal({
               </div>
 
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    downloadAspect(NOMINATION_WEB_POSTER_W, NOMINATION_WEB_POSTER_H, "instagram-3x4")
+                  }
+                  title="Instagram feed — výplň 1080 × 1440."
+                  className={`flex items-center justify-center gap-2 rounded-xl py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors sm:col-span-2 ${
+                    posterVariant === "names-web"
+                      ? "bg-gradient-to-r from-amber-500/35 to-rose-600/35 ring-amber-400/45 hover:from-amber-500/45 hover:to-rose-600/45"
+                      : "bg-white/10 hover:bg-white/[0.14]"
+                  }`}
+                >
+                  <Download className="h-4 w-4" aria-hidden />
+                  Stáhnout PNG 3 : 4 (Instagram)
+                </button>
                 <button
                   type="button"
                   onClick={() => downloadAspect(1080, 1920, "stories-9x16")}
@@ -514,15 +553,42 @@ export function SaveShareModal({
                 </button>
               </div>
 
-              <button
-                type="button"
-                onClick={() => webSharePng(1080, 1920, "ms2026-nominace-stories.png")}
-                disabled={shareBusy}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#002266] py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-[#003087]/20 disabled:cursor-not-allowed disabled:opacity-45"
-              >
-                <Share2 className="h-4 w-4" aria-hidden />
-                Sdílet přes systém (9:16)
-              </button>
+              {posterVariant === "names-web" ? (
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      webSharePng(NOMINATION_WEB_POSTER_W, NOMINATION_WEB_POSTER_H, "ms2026-nominace-instagram-3x4.png")
+                    }
+                    disabled={shareBusy}
+                    title="Instagram feed — 1080 × 1440."
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-600/85 to-[#c8102e]/90 py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-black/25 disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    <Share2 className="h-4 w-4" aria-hidden />
+                    Sdílet přes systém (3:4)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => webSharePng(1080, 1920, "ms2026-nominace-stories.png")}
+                    disabled={shareBusy}
+                    title="Stories / Reels — 1080 × 1920."
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#002266] py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-[#003087]/20 disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    <Share2 className="h-4 w-4" aria-hidden />
+                    Sdílet přes systém (9:16)
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => webSharePng(1080, 1920, "ms2026-nominace-stories.png")}
+                  disabled={shareBusy}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#002266] py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-[#003087]/20 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  <Share2 className="h-4 w-4" aria-hidden />
+                  Sdílet přes systém (9:16)
+                </button>
+              )}
 
               <div className="flex flex-col gap-2 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
                 <button
