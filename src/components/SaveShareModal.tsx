@@ -150,7 +150,7 @@ export function SaveShareModal({
         posterVariant === "names"
           ? "#060b14"
           : posterVariant === "names-web"
-            ? "#2878d4"
+            ? "#003087"
             : posterTheme === "dark"
               ? "#0b0e14"
               : "#e8ecf2";

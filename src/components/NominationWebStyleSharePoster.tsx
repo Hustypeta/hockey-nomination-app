@@ -8,18 +8,21 @@ import { buildNominationWebStyleRoster, type NominationWebStyleRow } from "@/lib
 
 const CZ_NAVY = "#082552";
 const CZ_RED_CORE = "#c8102e";
-/** Základ plakátu — sytější než pastelový `#4a98e8`, aby grafika držela na Instagramu. */
-const CZ_BLUE_SKY = "#2878d4";
+/** Stejné jako `--accent-blue` na hokejlineup.cz (globální značková modrá). */
+const LINEUP_BLUE = "#003087";
+/** Tmavší modrá jako v UI (`from-[#003087]` → `to-[#002266]`). */
+const LINEUP_BLUE_DEEP = "#002266";
 
-/** Pozadí: hlubší modrá → sytá národní červená, méně bílé praní přes radialy. */
+/** Pozadí: tmavší „lineup“ modrá → brand #003087 → červená (bez pastelové sky blue). */
 const SURFACE_BG = `
     linear-gradient(165deg,
-      #143d80 0%,
-      #1b64c4 34%,
-      #c91832 58%,
-      #8f0f22 90%),
-    radial-gradient(circle at 118% -12%, rgba(90,160,255,0.36) 0%, transparent 50%),
-    radial-gradient(circle at -28% 108%, rgba(3,18,58,0.78) 0%, transparent 58%)`;
+      #04142f 0%,
+      #082552 22%,
+      ${LINEUP_BLUE} 46%,
+      #c91832 62%,
+      #7a1120 92%),
+    radial-gradient(circle at 118% -12%, rgba(0,70,158,0.42) 0%, transparent 52%),
+    radial-gradient(circle at -28% 108%, rgba(2,8,26,0.85) 0%, transparent 58%)`;
 
 /** Cílová typografie soupisky; výšku dorovnává `rosterScale` (bez ořezu). */
 const ROSTER_NAME_PX = 36;
@@ -44,7 +47,7 @@ function SectionRibbon({ children }: { children: string }) {
         marginBottom: 11,
         padding: "7px 20px 7px 15px",
         borderRadius: "999px",
-        background: `linear-gradient(90deg, ${CZ_NAVY} 0%, #0a4a9c 70%, ${CZ_RED_CORE} 100%)`,
+        background: `linear-gradient(90deg, ${LINEUP_BLUE_DEEP} 0%, ${LINEUP_BLUE} 55%, ${CZ_RED_CORE} 100%)`,
         boxShadow:
           "0 0 0 1px rgba(255,255,255,0.2), inset 0 2px 0 rgba(255,255,255,0.22), 0 10px 24px rgba(0,28,74,0.35)",
       }}
@@ -56,7 +59,7 @@ function SectionRibbon({ children }: { children: string }) {
           height: 10,
           borderRadius: "50%",
           background: `#fff`,
-          boxShadow: `inset 0 0 0 2px ${CZ_BLUE_SKY}, 0 0 12px rgba(255,255,255,0.45)`,
+          boxShadow: `inset 0 0 0 2px ${LINEUP_BLUE}, 0 0 12px rgba(125,211,252,0.35)`,
         }}
         aria-hidden
       />
@@ -217,7 +220,7 @@ export const NominationWebStyleSharePoster = forwardRef<
         minHeight: NOMINATION_WEB_POSTER_H,
         flexShrink: 0,
         overflow: "hidden",
-        backgroundColor: CZ_BLUE_SKY,
+        backgroundColor: LINEUP_BLUE,
         backgroundImage: surface,
         display: "flex",
         flexDirection: "column",
