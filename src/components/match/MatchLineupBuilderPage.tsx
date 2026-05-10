@@ -604,8 +604,6 @@ export function MatchLineupBuilderPage() {
         undoDisabled={!canUndo}
         shareDisabled={saving || !valid}
         shareLabel={saving ? "Ukládám…" : shareUrl ? "Sdílet" : "Uložit & sdílet"}
-        onPosterExport={() => valid && setLineupPosterModalOpen(true)}
-        posterExportDisabled={!valid}
         className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
       />
     </div>

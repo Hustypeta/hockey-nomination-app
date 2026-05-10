@@ -1,6 +1,6 @@
 "use client";
 
-import { Share2, Shuffle, RotateCcw, Trophy, Undo2, ImageDown } from "lucide-react";
+import { Share2, Shuffle, RotateCcw, Trophy, Undo2 } from "lucide-react";
 
 export function FloatingSestavaBar({
   onShare,
@@ -10,8 +10,6 @@ export function FloatingSestavaBar({
   undoDisabled,
   shareDisabled,
   shareLabel,
-  onPosterExport,
-  posterExportDisabled = true,
   onContestSubmit,
   contestSubmitBusy,
   contestSubmitInactive,
@@ -27,10 +25,6 @@ export function FloatingSestavaBar({
   undoDisabled?: boolean;
   shareDisabled: boolean;
   shareLabel: string;
-  /** Zápasová stránka `/zapasy/sestava`: otevře modal výběru grafiky. */
-  onPosterExport?: () => void;
-  /** Nesedí-li pravidla sestavy, tlačítko nelze použít. */
-  posterExportDisabled?: boolean;
   /** Odeslání do soutěže (jednou na účet). */
   onContestSubmit?: () => void;
   /** true = probíhá POST — tlačítko je skutečně disabled. */
@@ -112,25 +106,6 @@ export function FloatingSestavaBar({
               <span className="text-center">
                 <span className="max-sm:block sm:hidden">Zpět</span>
                 <span className="max-sm:hidden">Vrátit zpět</span>
-              </span>
-            </button>
-          ) : null}
-          {typeof onPosterExport === "function" ? (
-            <button
-              type="button"
-              onClick={() => void onPosterExport()}
-              disabled={posterExportDisabled}
-              aria-label="Generovat plakát se sestavou"
-              className={`flex min-h-[2.65rem] items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-[11px] font-semibold leading-tight transition-all sm:min-h-0 sm:gap-2 sm:px-4 sm:py-3 sm:text-sm ${
-                posterExportDisabled
-                  ? "cursor-not-allowed border border-white/10 bg-white/[0.02] text-white/30"
-                  : "border border-sky-400/45 bg-sky-500/12 text-sky-100 hover:border-sky-300/65 hover:bg-sky-500/22 active:scale-[0.98]"
-              }`}
-            >
-              <ImageDown className="h-3.5 w-3.5 shrink-0 opacity-90 sm:h-4 sm:w-4" aria-hidden />
-              <span className="text-center">
-                <span className="max-sm:block sm:hidden">Plakát</span>
-                <span className="max-sm:hidden">Generovat plakát</span>
               </span>
             </button>
           ) : null}
