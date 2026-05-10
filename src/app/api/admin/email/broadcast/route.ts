@@ -65,10 +65,10 @@ const HTML = `<!doctype html>
                             Zdravím,
                           </p>
                           <p style="margin:0 0 10px 0;">
-                            Jen připomínám, že <strong style="color:#ffffff;">dnes</strong> v <strong style="color:#ffffff;">19:30</strong> je deadline soutěže o dres!
+                            <strong style="color:#ffffff;">Dnes</strong> v <strong style="color:#ffffff;">19:30</strong> je deadline soutěže o dres!
                           </p>
                           <p style="margin:0;">
-                            Děkuji moc za využívání platformy <strong style="color:#ffffff;">Lineup</strong>.
+                            Děkuji moc za využívání platformy <strong style="color:#ffffff;">Lineup</strong> a přeji krásný hokejový den.
                           </p>
                         </div>
 
