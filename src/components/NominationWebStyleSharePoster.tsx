@@ -6,6 +6,12 @@ import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 import { buildNominationWebStyleRoster, type NominationWebStyleRow } from "@/lib/nominationWebStyleRoster";
 
+/** Paleta vlajky ČR (červená · modrá · bílá); červená #c8102e jako v editoru. */
+const CZ_RED = "#c8102e";
+const CZ_BLUE = "#003087";
+const CZ_NAVY_BG = "#0a1633";
+const CZ_CRIMSON_FIELD = "#400a16";
+
 export interface NominationWebStyleSharePosterProps {
   players: Player[];
   lineup: LineupStructure;
@@ -27,14 +33,15 @@ function BannerLabel({ children }: { children: string }) {
       style={{
         display: "inline-block",
         marginBottom: 16,
-        background: "linear-gradient(180deg, #ffffff 0%, #e0f7ff 100%)",
-        boxShadow: "0 0 0 1px rgba(125,211,252,0.45), 0 10px 28px rgba(0,0,0,0.25)",
-        color: "#0f172a",
+        background: "#ffffff",
+        borderLeft: `6px solid ${CZ_RED}`,
+        boxShadow: `0 0 0 2px ${CZ_BLUE}, 0 12px 28px rgba(0,0,0,0.35)`,
+        color: CZ_BLUE,
         fontWeight: 800,
         fontSize: 15,
         letterSpacing: "0.13em",
         textTransform: "uppercase",
-        padding: "8px 44px 8px 18px",
+        padding: "9px 44px 9px 14px",
         borderRadius: "0 999px 999px 0",
       }}
     >
@@ -58,15 +65,15 @@ function PlayerLine({ row }: { row: NominationWebStyleRow }) {
           color: "#ffffff",
           letterSpacing: "0.05em",
           textTransform: "uppercase",
-          textShadow: "0 1px 14px rgba(0,0,0,0.35)",
+          textShadow: `0 1px 14px rgba(0,0,0,0.35), 0 0 24px ${CZ_BLUE}`,
         }}
       >
         {row.name}
       </span>
-      <span style={{ color: "#67e8f9", padding: "0 0.32em", fontWeight: 700 }} aria-hidden>
+      <span style={{ color: "#bfdbfe", padding: "0 0.32em", fontWeight: 700 }} aria-hidden>
         —
       </span>
-      <em style={{ fontStyle: "italic", color: "#bff3ff", fontSize: 19, fontWeight: 600 }}>
+      <em style={{ fontStyle: "italic", color: "#e8efff", fontSize: 19, fontWeight: 600 }}>
         {row.club}
       </em>
     </p>
@@ -103,16 +110,16 @@ export const NominationWebStyleSharePoster = forwardRef<
   const logoSrc = origin.length > 0 ? `${origin}${SITE_LOGO_URL}` : SITE_LOGO_URL;
 
   const bgLayers = `
-    radial-gradient(ellipse 72% 54% at 12% 14%, rgba(255,96,139,0.48) 0%, transparent 52%),
-    radial-gradient(circle at 88% 92%, rgba(56,189,248,0.26) 0%, transparent 48%),
-    radial-gradient(circle at 26% 90%, rgba(251,211,141,0.16) 0%, transparent 44%),
+    radial-gradient(ellipse 80% 70% at 8% 10%, rgba(200,16,46,0.55) 0%, transparent 50%),
+    radial-gradient(circle at 94% 18%, rgba(255,255,255,0.14) 0%, transparent 28%),
+    radial-gradient(circle at 2% 100%, rgba(0,48,135,0.85) 0%, transparent 48%),
     repeating-linear-gradient(115deg,
-      rgba(255,255,255,0.038) 0px,
-      rgba(255,255,255,0.038) 1px,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 1px,
       transparent 1px,
       transparent 10px),
     repeating-linear-gradient(-25deg,
-      rgba(0,0,0,0.065) 0px,
+      rgba(0,0,0,0.075) 0px,
       transparent 2px,
       transparent 22px)`;
 
@@ -126,9 +133,9 @@ export const NominationWebStyleSharePoster = forwardRef<
         maxWidth: SHARE_POSTER_WIDTH_PX,
         flexShrink: 0,
         overflow: "hidden",
-        backgroundColor: "#3a1018",
+        backgroundColor: CZ_CRIMSON_FIELD,
         backgroundImage: bgLayers,
-        color: "#f4f4f4",
+        color: "#f8fafc",
         textRendering: "geometricPrecision",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
@@ -147,11 +154,11 @@ export const NominationWebStyleSharePoster = forwardRef<
           right: "-10%",
           top: "-28%",
           background:
-            "linear-gradient(145deg, rgba(255,252,255,0.99) 0%, rgba(224,246,255,0.95) 55%, rgba(255,255,255,0.92) 100%)",
+            "linear-gradient(145deg, #ffffff 0%, #eef2fc 54%, #f9fafb 100%)",
           transform: "rotate(17deg)",
           borderRadius: 6,
           boxShadow:
-            "-32px 0 100px rgba(200,16,46,0.32), -8px 0 42px rgba(56,189,248,0.14), inset -2px 0 0 rgba(255,255,255,0.75)",
+            "-36px 0 90px rgba(200,16,46,0.45), -10px 0 50px rgba(0,48,135,0.28), inset -2px 0 0 rgba(255,255,255,0.75)",
           zIndex: 0,
         }}
       />
@@ -163,7 +170,7 @@ export const NominationWebStyleSharePoster = forwardRef<
           pointerEvents: "none",
           inset: 0,
           background:
-            "linear-gradient(90deg, rgba(0,0,0,0) 46%, rgba(15,23,42,0.07) 72%, rgba(15,23,42,0.11) 100%)",
+            "linear-gradient(90deg, rgba(0,0,0,0) 40%, rgba(0,48,135,0.15) 78%, rgba(200,16,46,0.08) 100%)",
           zIndex: 0,
         }}
       />
@@ -199,9 +206,8 @@ export const NominationWebStyleSharePoster = forwardRef<
                 width: 3,
                 alignSelf: "stretch",
                 minHeight: 52,
-                background:
-                  "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(207,250,254,0.82) 100%)",
-                boxShadow: "0 0 0 1px rgba(255,255,255,0.3), 0 10px 34px rgba(0,0,0,0.18)",
+                background: `linear-gradient(180deg, #ffffff 0%, #dbe7ff 100%)`,
+                boxShadow: `0 0 0 1px rgba(255,255,255,0.35), 0 10px 28px rgba(0,48,135,0.25)`,
                 borderRadius: 1,
               }}
             />
@@ -215,7 +221,7 @@ export const NominationWebStyleSharePoster = forwardRef<
                 fontWeight: 900,
                 letterSpacing: "0.02em",
                 textTransform: "uppercase",
-                color: "#0f172a",
+                color: CZ_NAVY_BG,
                 wordBreak: "break-word",
                 textShadow: "0 1px 0 rgba(255,255,255,0.85), 0 0 32px rgba(255,255,255,0.55)",
               }}
@@ -228,7 +234,7 @@ export const NominationWebStyleSharePoster = forwardRef<
                   margin: "12px 0 0",
                   fontSize: 17,
                   fontWeight: 600,
-                  color: "#334155",
+                  color: CZ_BLUE,
                   lineHeight: 1.35,
                   textAlign: "right",
                   maxWidth: 440,
@@ -263,7 +269,7 @@ export const NominationWebStyleSharePoster = forwardRef<
           style={{
             marginTop: 18,
             paddingTop: 14,
-            borderTop: "1px solid rgba(255,255,255,0.24)",
+            borderTop: "1px solid rgba(255,255,255,0.35)",
             maxWidth: "72%",
           }}
         >
@@ -274,17 +280,17 @@ export const NominationWebStyleSharePoster = forwardRef<
               fontWeight: 800,
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "#ff8fb8",
+              color: CZ_RED,
             }}
           >
             {SITE_BRAND}
           </p>
-          <p style={{ margin: "6px 0 0", fontSize: 12, color: "rgba(255,255,255,0.82)" }}>
+          <p style={{ margin: "6px 0 0", fontSize: 12, color: "rgba(248,250,252,0.82)" }}>
             Sestaveno {dateLabel}
             {host ? (
               <>
                 {" "}
-                · <span style={{ color: "#7dd3fc", fontWeight: 700 }}>{host}</span>
+                · <span style={{ color: "#93c5fd", fontWeight: 700 }}>{host}</span>
               </>
             ) : null}
           </p>
