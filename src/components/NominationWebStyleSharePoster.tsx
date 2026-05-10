@@ -26,14 +26,14 @@ function BannerLabel({ children }: { children: string }) {
     <div
       style={{
         display: "inline-block",
-        marginBottom: 14,
+        marginBottom: 16,
         backgroundColor: "#ffffff",
         color: "#0a0a0a",
         fontWeight: 800,
-        fontSize: 12,
-        letterSpacing: "0.14em",
+        fontSize: 15,
+        letterSpacing: "0.13em",
         textTransform: "uppercase",
-        padding: "7px 40px 7px 16px",
+        padding: "8px 44px 8px 18px",
         borderRadius: "0 999px 999px 0",
       }}
     >
@@ -46,25 +46,25 @@ function PlayerLine({ row }: { row: NominationWebStyleRow }) {
   return (
     <p
       style={{
-        margin: "0 0 7px 0",
-        lineHeight: 1.38,
-        fontSize: 16,
+        margin: "0 0 10px 0",
+        lineHeight: 1.32,
+        fontSize: 27,
       }}
     >
       <span
         style={{
           fontWeight: 800,
           color: "#ffffff",
-          letterSpacing: "0.06em",
+          letterSpacing: "0.05em",
           textTransform: "uppercase",
         }}
       >
         {row.name}
       </span>
-      <span style={{ color: "rgba(255,255,255,0.82)", padding: "0 0.35em" }} aria-hidden>
+      <span style={{ color: "rgba(255,255,255,0.82)", padding: "0 0.32em" }} aria-hidden>
         —
       </span>
-      <em style={{ fontStyle: "italic", color: "#c9c9c9", fontSize: 14, fontWeight: 500 }}>
+      <em style={{ fontStyle: "italic", color: "#d8d8d8", fontSize: 19, fontWeight: 550 }}>
         {row.club}
       </em>
     </p>
@@ -126,8 +126,9 @@ export const NominationWebStyleSharePoster = forwardRef<
         backgroundColor: "#3a1018",
         backgroundImage: bgLayers,
         color: "#f4f4f4",
-        textRendering: "optimizeLegibility",
+        textRendering: "geometricPrecision",
         WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
         fontFamily:
           '"Segoe UI", ui-sans-serif, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif',
       }}
@@ -202,8 +203,8 @@ export const NominationWebStyleSharePoster = forwardRef<
             <p
               style={{
                 margin: 0,
-                fontSize: 56,
-                lineHeight: 0.94,
+                fontSize: 44,
+                lineHeight: 1.03,
                 fontWeight: 900,
                 letterSpacing: "0.02em",
                 textTransform: "uppercase",
@@ -211,18 +212,18 @@ export const NominationWebStyleSharePoster = forwardRef<
                 wordBreak: "break-word",
               }}
             >
-              NOMINACE
+              NOMINACE MS 2026
             </p>
             {titleLine ? (
               <p
                 style={{
-                  margin: "14px 0 0",
-                  fontSize: 15,
+                  margin: "12px 0 0",
+                  fontSize: 17,
                   fontWeight: 600,
                   color: "rgba(255,255,255,0.72)",
                   lineHeight: 1.35,
                   textAlign: "right",
-                  maxWidth: 420,
+                  maxWidth: 440,
                   marginLeft: "auto",
                   wordBreak: "break-word",
                 }}
@@ -233,18 +234,18 @@ export const NominationWebStyleSharePoster = forwardRef<
           </div>
         </header>
 
-        <div style={{ maxWidth: "58%" }}>
-          <section style={{ marginBottom: 26 }}>
+        <div style={{ maxWidth: "62%" }}>
+          <section style={{ marginBottom: 22 }}>
             <BannerLabel>BRANKÁŘI</BannerLabel>
             <div>{goalies.map((row, i) => <PlayerLine key={`g-${i}`} row={row} />)}</div>
           </section>
 
-          <section style={{ marginBottom: 26 }}>
+          <section style={{ marginBottom: 22 }}>
             <BannerLabel>OBRÁNCI</BannerLabel>
             <div>{defense.map((row, i) => <PlayerLine key={`d-${i}`} row={row} />)}</div>
           </section>
 
-          <section style={{ marginBottom: 14 }}>
+          <section style={{ marginBottom: 10 }}>
             <BannerLabel>ÚTOČNÍCI</BannerLabel>
             <div>{forwards.map((row, i) => <PlayerLine key={`f-${i}`} row={row} />)}</div>
           </section>
@@ -252,23 +253,23 @@ export const NominationWebStyleSharePoster = forwardRef<
 
         <footer
           style={{
-            marginTop: 22,
-            paddingTop: 16,
+            marginTop: 18,
+            paddingTop: 14,
             borderTop: "1px solid rgba(255,255,255,0.12)",
-            maxWidth: "70%",
+            maxWidth: "72%",
           }}
         >
           <p
             style={{
               margin: 0,
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 800,
-              letterSpacing: "0.24em",
+              letterSpacing: "0.2em",
               textTransform: "uppercase",
               color: "#c8102e",
             }}
           >
-            MS 2026 · {SITE_BRAND}
+            {SITE_BRAND}
           </p>
           <p style={{ margin: "6px 0 0", fontSize: 12, color: "rgba(255,255,255,0.55)" }}>
             Sestaveno {dateLabel}
