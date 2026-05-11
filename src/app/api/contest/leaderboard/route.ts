@@ -14,8 +14,22 @@ async function isAdmin(): Promise<boolean> {
   return verifyAdminToken(token);
 }
 
-function leaderboardIsPublic(): boolean {
+/** Zapne fanouškovské čtení žebříčku (`CONTEST_LEADERBOARD_PUBLIC=true`). */
+function leaderboardWantsPublic(): boolean {
   return process.env.CONTEST_LEADERBOARD_PUBLIC?.trim().toLowerCase() === "true";
+}
+
+/**
+ * Jednoznačně vypne veřejné výsledky i když někdo omylem nechal `CONTEST_LEADERBOARD_PUBLIC=true` (test / staging).
+ * Na produkci nastav `CONTEST_LEADERBOARD_FORCE_OFF=true`, dokud nechceš žebříček skutečně ukázat.
+ */
+function leaderboardForceOff(): boolean {
+  return process.env.CONTEST_LEADERBOARD_FORCE_OFF?.trim().toLowerCase() === "true";
+}
+
+function leaderboardIsPublic(): boolean {
+  if (leaderboardForceOff()) return false;
+  return leaderboardWantsPublic();
 }
 
 export async function GET() {
