@@ -27,8 +27,18 @@ function leaderboardForceOff(): boolean {
   return process.env.CONTEST_LEADERBOARD_FORCE_OFF?.trim().toLowerCase() === "true";
 }
 
+/**
+ * Na produkci musí být navíc explicitní souhlas se zobrazením (`CONTEST_LEADERBOARD_LIVE=true`).
+ * Omyl `CONTEST_LEADERBOARD_PUBLIC=true` tak sám o sobě fanouškům tabulku neotevře.
+ */
+function leaderboardLiveOnProduction(): boolean {
+  if (process.env.NODE_ENV !== "production") return true;
+  return process.env.CONTEST_LEADERBOARD_LIVE?.trim().toLowerCase() === "true";
+}
+
 function leaderboardIsPublic(): boolean {
   if (leaderboardForceOff()) return false;
+  if (!leaderboardLiveOnProduction()) return false;
   return leaderboardWantsPublic();
 }
 
