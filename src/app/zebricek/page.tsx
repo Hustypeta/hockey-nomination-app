@@ -49,12 +49,6 @@ export default function LeaderboardHubPage() {
         align="center"
       />
       <main className="relative z-10 mx-auto max-w-3xl px-4 pb-24 pt-2 sm:px-6">
-        <div
-          className="mb-6 rounded-2xl border border-amber-400/35 bg-amber-500/10 px-4 py-4 text-center text-sm leading-relaxed text-amber-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:px-6 sm:text-[15px] sm:leading-snug"
-          role="status"
-        >
-          Omlouváme se — žebříček, který byl zveřejněn, nebyl platný; jednalo se pouze o test.
-        </div>
         <section
           id="sestavovaci-soutez"
           className="scroll-mt-28 rounded-2xl border border-white/[0.08] bg-black/20 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8"
