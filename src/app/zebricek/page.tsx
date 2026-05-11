@@ -45,10 +45,16 @@ export default function LeaderboardHubPage() {
       <SitePageHero
         kicker="Výsledky"
         title="Žebříček"
-        subtitle="Sestavovací soutěž a Pick’em — po zveřejnění oficiální soupisky a vyhodnocení."
+        subtitle="Nominace a Pick’em — žebříček bodů až po zveřejnění oficiální soupisky a vyhodnocení (prázdná stránka ≠ špatný tip)."
         align="center"
       />
       <main className="relative z-10 mx-auto max-w-3xl px-4 pb-24 pt-2 sm:px-6">
+        <div
+          className="mb-6 rounded-2xl border border-amber-400/35 bg-amber-500/10 px-4 py-4 text-center text-sm leading-relaxed text-amber-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:px-6 sm:text-[15px] sm:leading-snug"
+          role="status"
+        >
+          Omlouváme se — žebříček, který byl zveřejněn, nebyl platný; jednalo se pouze o test.
+        </div>
         <section
           id="sestavovaci-soutez"
           className="scroll-mt-28 rounded-2xl border border-white/[0.08] bg-black/20 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8"
@@ -63,8 +69,9 @@ export default function LeaderboardHubPage() {
           <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-sky-300/85">Pick’em</p>
           <h2 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">Play-off MS 2026</h2>
           <p className="mt-3 text-sm leading-relaxed text-white/65">
-            Žebříček Pick’em tipérů doplníme až budou k dispozici výsledky a nastavené bodování — zobrazení tedy také
-            následuje až po vyhodnocení play-off (podle dat v bracketu).
+            <span className="text-white/80">Stejný princip jako u nominace:</span> dokud nejsou dohrané zápasy a nastavené
+            body, žebříček tipérů tu nemusí být — <strong className="font-semibold text-white/90">neznamená to, že byl
+            špatný tip</strong>, jen ještě neproběhlo vyhodnocení podle bracketu.
           </p>
         </section>
 
