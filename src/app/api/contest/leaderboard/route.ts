@@ -9,6 +9,26 @@ import { publicLeaderboardDisplayName } from "@/lib/publicUserLabel";
 
 const OFFICIAL_ID = "official";
 
+function noStoreJson(data: object, init?: { status?: number }) {
+  const res = NextResponse.json(data, init);
+  res.headers.set("Cache-Control", "private, no-store, must-revalidate");
+  return res;
+}
+
+/**
+ * „Skutečné“ nasazení (Railway, Vercel, …) — tady platí přísnější pravidla než u čistě lokálního vývoje.
+ * Jediná `CONTEST_LEADERBOARD_PUBLIC=true` tak na serveru nestačí k zveřejnění (viz LIVE gate).
+ */
+function isRemoteDeployment(): boolean {
+  return Boolean(
+    process.env.VERCEL ||
+    process.env.RAILWAY_ENVIRONMENT ||
+    process.env.RAILWAY_PROJECT_ID ||
+    process.env.RENDER ||
+    process.env.FLY_APP_NAME
+  );
+}
+
 async function isAdmin(): Promise<boolean> {
   const token = (await cookies()).get(CONTEST_ADMIN_COOKIE)?.value;
   return verifyAdminToken(token);
@@ -28,24 +48,24 @@ function leaderboardForceOff(): boolean {
 }
 
 /**
- * Na produkci musí být navíc explicitní souhlas se zobrazením (`CONTEST_LEADERBOARD_LIVE=true`).
- * Omyl `CONTEST_LEADERBOARD_PUBLIC=true` tak sám o sobě fanouškům tabulku neotevře.
+ * Veřejný „live“ žebříček na produkci / vzdáleném hostu jen při explicitním `CONTEST_LEADERBOARD_LIVE=true`.
+ * Lokálně (bez Railway/Vercel/…) můžeš testovat jen s `CONTEST_LEADERBOARD_PUBLIC=true`.
  */
-function leaderboardLiveOnProduction(): boolean {
-  if (process.env.NODE_ENV !== "production") return true;
+function leaderboardLiveGateOk(): boolean {
+  if (!isRemoteDeployment()) return true;
   return process.env.CONTEST_LEADERBOARD_LIVE?.trim().toLowerCase() === "true";
 }
 
 function leaderboardIsPublic(): boolean {
   if (leaderboardForceOff()) return false;
-  if (!leaderboardLiveOnProduction()) return false;
+  if (!leaderboardLiveGateOk()) return false;
   return leaderboardWantsPublic();
 }
 
 export async function GET() {
   try {
     if (!leaderboardIsPublic() && !(await isAdmin())) {
-      return NextResponse.json({
+      return noStoreJson({
         published: false,
         hidden: true,
         updatedAt: null as string | null,
@@ -55,7 +75,7 @@ export async function GET() {
 
     const official = await prisma.officialLineup.findUnique({ where: { id: OFFICIAL_ID } });
     if (!official?.lineupStructure) {
-      return NextResponse.json({
+      return noStoreJson({
         published: false,
         hidden: false,
         updatedAt: null as string | null,
@@ -148,7 +168,16 @@ export async function GET() {
 
     const ranked = rows.map((r, i) => ({ rank: i + 1, ...r }));
 
-    return NextResponse.json({
+    if (!(await isAdmin()) && !leaderboardIsPublic()) {
+      return noStoreJson({
+        published: false,
+        hidden: true,
+        updatedAt: null as string | null,
+        leaderboard: [],
+      });
+    }
+
+    return noStoreJson({
       published: true,
       hidden: false,
       updatedAt: official.updatedAt.toISOString(),
@@ -156,6 +185,6 @@ export async function GET() {
     });
   } catch (e) {
     console.error("leaderboard:", e);
-    return NextResponse.json({ error: "Žebříček se nepodařilo načíst." }, { status: 500 });
+    return noStoreJson({ error: "Žebříček se nepodařilo načíst." }, { status: 500 });
   }
 }
