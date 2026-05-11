@@ -11,7 +11,6 @@ const staticRoutes = [
   "/clanky/rady-k-nominaci",
   "/clanky/kurzy-a-analyza-ms-2026",
   "/pravidla-souteze",
-  "/zebricek",
   "/bracket",
   "/kdo-jsem",
   "/ochrana-udaju",

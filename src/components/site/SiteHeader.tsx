@@ -19,7 +19,6 @@ const NAV: NavItem[] = [
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
   { href: "/bracket", label: "Pick’em" },
   { href: "/forum", label: "Fórum" },
-  { href: "/zebricek", label: "Žebříček" },
   { href: "/pravidla-souteze", label: "Pravidla" },
 ];
 

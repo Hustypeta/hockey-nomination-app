@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ContestNominationLeaderboardBlock } from "@/components/contest/ContestNominationLeaderboardBlock";
 import { SiteShell } from "@/components/site/SiteShell";
 import { SitePageHero } from "@/components/site/SitePageHero";
 import {
@@ -10,14 +9,13 @@ import {
 } from "@/lib/siteBranding";
 
 export const metadata: Metadata = {
-  title: "Žebříček",
-  description:
-    "Žebříček sestavovací soutěže a Pick’em — výsledky po zveřejnění oficiální soupisky a vyhodnocení.",
+  title: "Upozornění",
+  description: "Informace k předešlému zobrazení výsledků.",
+  robots: { index: false, follow: false },
   alternates: { canonical: "/zebricek" },
   openGraph: {
-    title: "Žebříček",
-    description:
-      "Žebříček sestavovací soutěže a Pick’em — výsledky po zveřejnění oficiální soupisky a vyhodnocení.",
+    title: "Upozornění",
+    description: "Informace k předešlému zobrazení výsledků.",
     url: "/zebricek",
     type: "website",
     locale: "cs_CZ",
@@ -32,50 +30,31 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Žebříček",
-    description:
-      "Žebříček sestavovací soutěže a Pick’em — výsledky po zveřejnění oficiální soupisky a vyhodnocení.",
+    title: "Upozornění",
+    description: "Informace k předešlému zobrazení výsledků.",
     images: [SITE_OG_DEFAULT_IMAGE_URL],
   },
 };
 
-export default function LeaderboardHubPage() {
+export default function ZebricekNoticePage() {
   return (
     <SiteShell>
       <SitePageHero
-        kicker="Výsledky"
-        title="Žebříček"
-        subtitle="Nominace a Pick’em — žebříček bodů až po zveřejnění oficiální soupisky a vyhodnocení (prázdná stránka ≠ špatný tip)."
+        kicker="Informace"
+        title="Upozornění"
+        subtitle="Tato adresa sloužila jen k dočasnému sdělení."
         align="center"
       />
       <main className="relative z-10 mx-auto max-w-3xl px-4 pb-24 pt-2 sm:px-6">
-        <section
-          id="sestavovaci-soutez"
-          className="scroll-mt-28 rounded-2xl border border-white/[0.08] bg-black/20 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8"
+        <div
+          className="rounded-2xl border border-amber-400/35 bg-amber-500/10 px-4 py-5 text-center text-sm leading-relaxed text-amber-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:px-8 sm:text-[15px] sm:leading-snug"
+          role="status"
         >
-          <ContestNominationLeaderboardBlock />
-        </section>
-
-        <section
-          id="pickem"
-          className="mt-10 scroll-mt-28 rounded-2xl border border-white/[0.08] bg-black/20 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:mt-12 sm:p-8"
-        >
-          <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-sky-300/85">Pick’em</p>
-          <h2 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">Play-off MS 2026</h2>
-          <p className="mt-3 text-sm leading-relaxed text-white/65">
-            <span className="text-white/80">Stejný princip jako u nominace:</span> dokud nejsou dohrané zápasy a nastavené
-            body, žebříček tipérů tu nemusí být — <strong className="font-semibold text-white/90">neznamená to, že byl
-            špatný tip</strong>, jen ještě neproběhlo vyhodnocení podle bracketu.
-          </p>
-        </section>
-
-        <p className="mt-12 text-center text-sm text-white/55">
-          <Link href="/pravidla-souteze" className="text-cyan-200/90 underline-offset-4 hover:underline">
-            Pravidla soutěže
-          </Link>
-          {" · "}
-          <Link href="/" className="text-white/45 underline-offset-4 hover:text-white/75 hover:underline">
-            Úvod
+          Omlouváme se — žebříček, který byl zveřejněn, nebyl platný; jednalo se pouze o test.
+        </div>
+        <p className="mt-8 text-center text-sm text-white/55">
+          <Link href="/" className="text-cyan-200/90 underline-offset-4 hover:underline">
+            Zpět na úvod
           </Link>
         </p>
       </main>
