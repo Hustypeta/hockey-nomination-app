@@ -1432,7 +1432,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
     <main className="relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
       <SitePageHero
         title="Bracket Pick’em"
-        subtitle="Vítejte v Pick'emu pro MS v hokeji 2026. Zde si můžete tipnout pořadí skupin, výsledky play off a také vyzkoušet bonusové tipy. Žebříček nejlepších tiperů bude zveřejněn na našem webu."
+        subtitle="Vítejte v Pick'emu pro MS v hokeji 2026. Zde si můžete tipnout pořadí skupin, výsledky play off a také vyzkoušet bonusové tipy."
         align="center"
       />
 

@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ContestNominationLeaderboardBlock } from "@/components/contest/ContestNominationLeaderboardBlock";
-import { PickemLeaderboardSection } from "@/components/zebricek/PickemLeaderboardSection";
 import { SiteShell } from "@/components/site/SiteShell";
 import { SitePageHero } from "@/components/site/SitePageHero";
-import { CONTEST_DEADLINE_CS } from "@/lib/contestTimeBonus";
 import {
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
@@ -13,11 +11,13 @@ import {
 
 export const metadata: Metadata = {
   title: "Žebříček",
-  description: "Žebříček sestavovací soutěže a Pick’em MS 2026.",
+  description:
+    "Žebříček sestavovací soutěže a Pick’em — výsledky po zveřejnění oficiální soupisky a vyhodnocení.",
   alternates: { canonical: "/zebricek" },
   openGraph: {
     title: "Žebříček",
-    description: "Žebříček sestavovací soutěže a Pick’em MS 2026.",
+    description:
+      "Žebříček sestavovací soutěže a Pick’em — výsledky po zveřejnění oficiální soupisky a vyhodnocení.",
     url: "/zebricek",
     type: "website",
     locale: "cs_CZ",
@@ -33,7 +33,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Žebříček",
-    description: "Žebříček sestavovací soutěže a Pick’em MS 2026.",
+    description:
+      "Žebříček sestavovací soutěže a Pick’em — výsledky po zveřejnění oficiální soupisky a vyhodnocení.",
     images: [SITE_OG_DEFAULT_IMAGE_URL],
   },
 };
@@ -44,7 +45,7 @@ export default function LeaderboardHubPage() {
       <SitePageHero
         kicker="Výsledky"
         title="Žebříček"
-        subtitle="Sestavovací soutěž (nominace) a Pick’em play-off — na jedné stránce."
+        subtitle="Sestavovací soutěž a Pick’em — po zveřejnění oficiální soupisky a vyhodnocení."
         align="center"
       />
       <main className="relative z-10 mx-auto max-w-3xl px-4 pb-24 pt-2 sm:px-6">
@@ -52,26 +53,19 @@ export default function LeaderboardHubPage() {
           id="sestavovaci-soutez"
           className="scroll-mt-28 rounded-2xl border border-white/[0.08] bg-black/20 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8"
         >
-          <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-[#f1c40f]/85">
-            Sestavovací soutěž
-          </p>
-          <h2 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">Nominace na MS</h2>
-          <p className="mt-2 text-xs text-white/50">
-            Platí pravidla sestavovací soutěže — uzávěrka odeslání nominací {CONTEST_DEADLINE_CS}. Po zveřejnění
-            oficiální soupisky se zde zobrazí body všech zapojených účastníků.
-          </p>
-          <ContestNominationLeaderboardBlock className="mt-5" />
+          <ContestNominationLeaderboardBlock />
         </section>
 
         <section
           id="pickem"
           className="mt-10 scroll-mt-28 rounded-2xl border border-white/[0.08] bg-black/20 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:mt-12 sm:p-8"
         >
-          <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-sky-300/85">
-            Pick’em
-          </p>
+          <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-sky-300/85">Pick’em</p>
           <h2 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">Play-off MS 2026</h2>
-          <PickemLeaderboardSection />
+          <p className="mt-3 text-sm leading-relaxed text-white/65">
+            Žebříček Pick’em tipérů doplníme až budou k dispozici výsledky a nastavené bodování — zobrazení tedy také
+            následuje až po vyhodnocení play-off (podle dat v bracketu).
+          </p>
         </section>
 
         <p className="mt-12 text-center text-sm text-white/55">

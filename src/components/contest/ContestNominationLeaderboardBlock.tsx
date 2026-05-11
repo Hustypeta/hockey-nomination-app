@@ -1,111 +1,102 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CONTEST_DEADLINE_CS } from "@/lib/contestTimeBonus";
 
 type Row = {
   rank: number;
-  nominationId: string;
   displayName: string;
-  image: string | null;
   points: number;
-  createdAt: string;
-  breakdown: {
-    basePlayerPoints: number;
-    playerPointsAfterTimeBonus: number;
-    captainBonus: number;
-    assistantBonus: number;
-    timeBonusPercent: number;
-  };
 };
 
-/** Žebříček sestavovací soutěže — data z GET /api/contest/leaderboard. */
+function Placeholder() {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5">
+      <p className="text-sm font-semibold leading-relaxed text-white">Žebříček zatím není zobrazen.</p>
+      <p className="mt-2 text-sm leading-relaxed text-white/65">
+        Veřejný žebříček soutěže o nominace{" "}
+        <strong className="font-semibold text-white/85">zveřejníme až po zveřejnění oficiální soupisky reprezentace</strong>{" "}
+        (tím vznikne pevné pořadí pro výpočet bodů). Jakmile administrátor soupisku uloží a zveřejní, objeví se tady
+        tabulka — mezitím můžeš nominaci dál skládat a odesílat do soutěže podle pravidel.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Blok pro /zebricek: dokud API nepublikuje data (oficiální soupiska + veřejný leaderboard), jen vysvětlení;
+ * pak tabulka.
+ */
 export function ContestNominationLeaderboardBlock({ className = "" }: { className?: string }) {
-  const [published, setPublished] = useState<boolean | null>(null);
-  const [hidden, setHidden] = useState<boolean>(false);
-  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [rows, setRows] = useState<Row[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/contest/leaderboard")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.error) {
-          setError(typeof data.error === "string" ? data.error : "Chyba");
-          return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/contest/leaderboard");
+        const data = (await res.json()) as {
+          published?: boolean;
+          hidden?: boolean;
+          leaderboard?: Array<Row & { nominationId?: string }>;
+        };
+        if (cancelled) return;
+        const list = Array.isArray(data.leaderboard) ? data.leaderboard : [];
+        if (data.published && !data.hidden && list.length > 0) {
+          setRows(
+            list.map((r) => ({
+              rank: r.rank,
+              displayName: r.displayName,
+              points: r.points,
+            }))
+          );
+          setReady(true);
         }
-        setPublished(!!data.published);
-        setHidden(!!data.hidden);
-        setUpdatedAt(typeof data.updatedAt === "string" ? data.updatedAt : null);
-        setRows(Array.isArray(data.leaderboard) ? data.leaderboard : []);
-      })
-      .catch(() => setError("Nepodařilo se načíst žebříček."));
+      } catch {
+        /* ignoruj */
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
     <div className={className}>
-      <p className="text-sm text-white/65">
-        Body se počítají po uložení oficiální soupisky v administraci. Časový bonus podle okamžiku uložení
-        nominace uživatelem.
+      <p className="font-display text-[10px] font-bold uppercase tracking-[0.28em] text-[#f1c40f]/85">
+        Sestavovací soutěž
+      </p>
+      <h2 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">Nominace na MS</h2>
+      <p className="mt-3 text-sm leading-relaxed text-white/70">
+        Platí pravidla sestavovací soutěže — uzávěrka odeslání nominací {CONTEST_DEADLINE_CS}.
       </p>
 
-      {error ? (
-        <p className="mt-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
-          {error}
-        </p>
-      ) : published === null ? (
-        <p className="mt-8 text-white/50">Načítám…</p>
-      ) : hidden ? (
-        <p className="mt-8 rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-white/75">
-          Vyhodnocení soutěže zatím není veřejné — probíhá interní testování.
-        </p>
-      ) : !published ? (
-        <p className="mt-8 rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-white/75">
-          Oficiální soupiska ještě není zveřejněna — žebříček zatím není k dispozici.
-        </p>
+      {loading ? (
+        <p className="mt-6 text-sm text-white/45">Načítám stav žebříčku…</p>
+      ) : ready ? (
+        <div className="mt-6 space-y-4">
+          <p className="text-sm leading-relaxed text-white/75">
+            Oficiální soupiska je zveřejněná — žebříček platných nominací podle pravidel soutěže:
+          </p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-300/90">Aktuální pořadí</p>
+          <ul className="divide-y divide-white/10 rounded-xl border border-white/10 bg-black/30">
+            {rows.map((r) => (
+              <li key={`${r.rank}-${r.displayName}`} className="flex items-center gap-3 px-4 py-3 text-sm">
+                <span className="w-8 shrink-0 font-mono text-white/50">{r.rank}.</span>
+                <span className="min-w-0 flex-1 truncate font-semibold text-white">{r.displayName}</span>
+                <span className="shrink-0 font-mono tabular-nums text-amber-200">{r.points} b.</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : (
-        <>
-          {updatedAt ? (
-            <p className="mt-4 text-xs text-white/45">
-              Oficiální soupiska uložena: {new Date(updatedAt).toLocaleString("cs-CZ")}
-            </p>
-          ) : null}
-          <div className="mt-6 overflow-x-auto rounded-2xl border border-white/10 bg-black/25">
-            <table className="w-full min-w-[320px] text-left text-sm">
-              <thead>
-                <tr className="border-b border-white/10 text-[10px] uppercase tracking-wider text-white/45">
-                  <th className="px-3 py-3">#</th>
-                  <th className="px-3 py-3">Účastník</th>
-                  <th className="px-3 py-3 text-right tabular-nums">Body</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} className="px-3 py-8 text-center text-white/50">
-                      Zatím žádné platné nominace.
-                    </td>
-                  </tr>
-                ) : (
-                  rows.map((r) => (
-                    <tr key={r.nominationId} className="border-b border-white/[0.06] last:border-0">
-                      <td className="px-3 py-2.5 font-mono text-white/70">{r.rank}</td>
-                      <td className="px-3 py-2.5">
-                        <span className="font-medium text-white">{r.displayName}</span>
-                        <span className="ml-2 text-[10px] text-white/35" title="Časová prémie při odeslání">
-                          (+{r.breakdown.timeBonusPercent}% čas)
-                        </span>
-                      </td>
-                      <td className="px-3 py-2.5 text-right font-display text-lg font-bold tabular-nums text-[#f1c40f]">
-                        {r.points}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </>
+        <div className="mt-6">
+          <Placeholder />
+        </div>
       )}
     </div>
   );

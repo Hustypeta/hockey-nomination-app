@@ -123,8 +123,9 @@ export function ContestRulesContent() {
             </h2>
             <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
               <li>
-                Žebříček všech platných nominací bude zveřejněn na webových stránkách po zpracování oficiálních
-                výsledků.
+                Žebříček platných nominací zveřejníme na tomto webu{" "}
+                <strong className="text-white">až po zveřejnění oficiální soupisky reprezentace</strong> a zpracování
+                výsledků dle pravidel.
               </li>
               <li>
                 <strong className="text-white">1. místo:</strong> Hokejový dres (specifikace typu a velikosti bude

@@ -367,8 +367,7 @@ export function OfficialLineupAdminEditor() {
               Admin — oficiální soupiska
             </h1>
             <p className="mt-2 text-sm text-white/65">
-              Stejný editor jako nominace na MS (25 hráčů). Po uložení se podle této sestavy vyhodnotí soutěž (
-              <code className="text-cyan-200/90">GET /api/contest/leaderboard</code>).
+              Stejný editor jako nominace na MS (25 hráčů). Po uložení se podle této sestavy vyhodnotí soutěž.
             </p>
             <form onSubmit={handleLogin} className="mt-6 space-y-3">
               <label className="block text-xs font-medium uppercase tracking-wider text-white/50">
