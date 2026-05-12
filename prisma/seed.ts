@@ -24,7 +24,7 @@ if (!connectionString) throw new Error("DATABASE_URL is not set");
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-/** Pořadí importu + chybějící repre (CZE, FIN, GER) — doplníš JSON do `data/` a znovu spustíš `MS_FANTASY_SEED_FANTASY_DATA`. */
+/** Pořadí importu; chybí jen FIN/GER JSON v `data/` — doplníš a znovu spustíš `MS_FANTASY_SEED_FANTASY_DATA`. */
 const FANTASY_ROSTER_FILES: { team: string; file: string; note?: string }[] = [
   { team: "AUT", file: "austria-ms2026-fantasy-roster.json" },
   { team: "CZE", file: "czechia-ms2026-fantasy-roster.json" },

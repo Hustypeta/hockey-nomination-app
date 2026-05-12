@@ -63,7 +63,7 @@ Pravidla bodů jsou definovaná v `src/lib/msFantasyConfig.ts` (`MS_FANTASY_POIN
 
 1. **Výsledky a body** — zdroj pravdy pro góly/asistence/+/− u vybraných hráčů za den; volání `lineupDayPoints` / skater+goalie funkce a uložení nebo agregace.
 2. **Žebříček fantasy** — porovnání podle součtu bodů za den / turnaj (samostatná feature nad uloženými sestavami).
-3. **Data** — doplnit chybějící fantasy JSON pro **Česko, Finsko, Německo** (`czechia-ms2026-fantasy-roster.json`, `finland-ms2026-fantasy-roster.json`, `germany-ms2026-fantasy-roster.json` v `data/`), případně upravit uzávěrky v `ms2026-fantasy-game-days.json`; znovu spustit seed s `MS_FANTASY_SEED_FANTASY_DATA=true`.
+3. **Data** — fantasy JSON pro Česko je v `data/czechia-ms2026-fantasy-roster.json`; chybí ještě **Finsko a Německo** (`finland-ms2026-fantasy-roster.json`, `germany-ms2026-fantasy-roster.json` v `data/`), případně upravit uzávěrky v `ms2026-fantasy-game-days.json`; znovu spustit seed s `MS_FANTASY_SEED_FANTASY_DATA=true`.
 
 ---
 

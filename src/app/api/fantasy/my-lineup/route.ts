@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { msFantasyNotEnabledResponse } from "@/lib/msFantasyApiGate";
-import { salaryForTier } from "@/lib/msFantasyConfig";
+import { isMsFantasyLineupSubmissionEnabled, salaryForTier } from "@/lib/msFantasyConfig";
 import { validateMsFantasyLineup, type RosterPickInput } from "@/lib/msFantasyValidation";
 
 function mapPlayerRow(p: {
@@ -78,6 +78,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const gate = msFantasyNotEnabledResponse();
   if (gate) return gate;
+
+  if (!isMsFantasyLineupSubmissionEnabled()) {
+    return NextResponse.json(
+      { error: "Ukládání fantasy sestav je dočasně vypnuté — zkus to prosím později." },
+      { status: 403 }
+    );
+  }
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {

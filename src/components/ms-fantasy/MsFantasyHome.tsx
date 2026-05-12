@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight, BookOpen, Calendar } from "lucide-react";
-import { MS_FANTASY_CAP } from "@/lib/msFantasyConfig";
+import { MS_FANTASY_CAP, isMsFantasyLineupSubmissionEnabled } from "@/lib/msFantasyConfig";
 
 type DayRow = {
   id: string;
@@ -16,6 +16,7 @@ type DayRow = {
 export function MsFantasyHome() {
   const [days, setDays] = useState<DayRow[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const fantasySubmissionsEnabled = isMsFantasyLineupSubmissionEnabled();
 
   useEffect(() => {
     let cancelled = false;
@@ -46,6 +47,11 @@ export function MsFantasyHome() {
           Každý hrací den sestavíš <span className="text-slate-200">6 hráčů</span> z poolu (1× brankář, zbytek útočníci
           nebo obránci). Zastropování <span className="text-slate-200">{MS_FANTASY_CAP} kreditů</span> na den. Odevzdání
           musí být před prvním zápasem dne — čas uzávěrky u každého dne níže.
+          {!fantasySubmissionsEnabled ? (
+            <span className="block pt-2 text-amber-200/95">
+              Ukládání sestav na server je zatím vypnuté — fantasy jde jen vyzkoušet v rozhraní.
+            </span>
+          ) : null}
         </p>
         <p className="mt-4">
           <Link

@@ -27,6 +27,16 @@ export function isMsFantasyVisibleToUsers(): boolean {
   return true;
 }
 
+/**
+ * Uložení sestavy na server (`POST /api/fantasy/my-lineup`) = účast u daného hracího dne.
+ * Vypnutím necháš fantasy stránky zapnuté, ale bez přijímání „odevzdání“ (např. před ostrým startem).
+ */
+export function isMsFantasyLineupSubmissionEnabled(): boolean {
+  const v = process.env.NEXT_PUBLIC_MS_FANTASY_SUBMISSION_ENABLED?.trim().toLowerCase();
+  if (v === "false" || v === "0" || v === "no" || v === "off") return false;
+  return true;
+}
+
 export const MS_FANTASY_TIERS = ["A", "B", "C", "D", "E"] as const;
 export type MsFantasyTier = (typeof MS_FANTASY_TIERS)[number];
 

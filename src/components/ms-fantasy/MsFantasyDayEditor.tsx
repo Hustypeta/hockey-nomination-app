@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
-import { MS_FANTASY_CAP, MS_FANTASY_TEAM_SIZE } from "@/lib/msFantasyConfig";
+import { MS_FANTASY_CAP, MS_FANTASY_TEAM_SIZE, isMsFantasyLineupSubmissionEnabled } from "@/lib/msFantasyConfig";
 import { MS_FANTASY_ROSTER_TEAM_OPTIONS, MS_FANTASY_TIER_CODES } from "@/lib/msFantasyRosterFilters";
 
 export type MsFantasyRosterPlayer = {
@@ -48,6 +48,8 @@ function formationSlotsFromPicks(picks: Array<MsFantasyRosterPlayer | null | und
   });
   return out;
 }
+
+const fantasySubmissionsEnabled = isMsFantasyLineupSubmissionEnabled();
 
 export function MsFantasyDayEditor({ slug }: { slug: string }) {
   const { status } = useSession();
@@ -314,10 +316,18 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             —{" "}
             {day.isLocked ? (
               <span className="text-amber-200">den je uzavřený</span>
+            ) : !fantasySubmissionsEnabled ? (
+              <span className="text-amber-200">den je otevřený jen k prohlížení — ukládání sestav je vypnuté</span>
             ) : (
               <span className="text-emerald-200">můžeš upravovat sestavu</span>
             )}
           </p>
+          {!day.isLocked && !fantasySubmissionsEnabled ? (
+            <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+              Odevzdávání fantasy sestav na server je zatím vypnuté (správce prostředí). Skládání v prohlížeči můžeš
+              zkoušet; tlačítko uložení zůstane neaktivní, dokud se funkce nezapne.
+            </p>
+          ) : null}
           {slots.some((s) => s?.id) && goalieCount !== 1 ? (
             <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
               Pro platné uložení musí být v sestavě přesně jeden brankář (G). Aktuálně:{" "}
@@ -340,7 +350,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               {status === "authenticated" ? (
                 <button
                   type="button"
-                  disabled={day.isLocked || saveState === "saving"}
+                  disabled={day.isLocked || saveState === "saving" || !fantasySubmissionsEnabled}
                   onClick={() => void save()}
                   className="
                     rounded-lg bg-gradient-to-r from-[#0090cc] to-[#00B4FF] px-4 py-2.5 text-xs font-display font-bold uppercase tracking-[0.12em]
@@ -348,16 +358,16 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                     hover:brightness-110
                   "
                 >
-                  {saveState === "saving" ? "Ukládám…" : "Uložit sestavu"}
+                  {saveState === "saving" ? "Ukládám…" : !fantasySubmissionsEnabled ? "Ukládání vypnuto" : "Uložit sestavu"}
                 </button>
               ) : (
                 <button
                   type="button"
-                  disabled={day.isLocked}
+                  disabled={day.isLocked || !fantasySubmissionsEnabled}
                   onClick={() => void signIn("google", { callbackUrl: `/fantasy/${slug}` })}
                   className="rounded-lg border border-[#00B4FF]/40 px-4 py-2 text-xs font-semibold text-[#00B4FF] hover:bg-[#00B4FF]/10 disabled:opacity-40"
                 >
-                  Přihlásit a uložit
+                  {!fantasySubmissionsEnabled ? "Přihlášení (ukládání vypnuto)" : "Přihlásit a uložit"}
                 </button>
               )}
               {saveState === "ok" ? <span className="text-xs text-emerald-400">Uloženo.</span> : null}

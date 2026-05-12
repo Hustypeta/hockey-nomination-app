@@ -1,0 +1,202 @@
+[
+  {
+    "code": "CZE26-G60-KVACA",
+    "name": "Petr Kváča",
+    "team": "CZE",
+    "jerseyNumber": 60,
+    "position": "G",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-G32-KORENA",
+    "name": "Josef Kořenář",
+    "team": "CZE",
+    "jerseyNumber": 32,
+    "position": "G",
+    "tier": "E"
+  },
+  {
+    "code": "CZE26-G33-PAVLAT",
+    "name": "Dominik Pavlát",
+    "team": "CZE",
+    "jerseyNumber": 33,
+    "position": "G",
+    "tier": "E"
+  },
+  {
+    "code": "CZE26-D56-CIBULK",
+    "name": "Tomáš Cibulka",
+    "team": "CZE",
+    "jerseyNumber": 56,
+    "position": "D",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-D79-GALVAS",
+    "name": "Tomáš Galvas",
+    "team": "CZE",
+    "jerseyNumber": 79,
+    "position": "D",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-D55-HAJEK",
+    "name": "Libor Hájek",
+    "team": "CZE",
+    "jerseyNumber": 55,
+    "position": "D",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-D42-SCOTKA",
+    "name": "Jan Ščotka",
+    "team": "CZE",
+    "jerseyNumber": 42,
+    "position": "D",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-D27-ALSCHE",
+    "name": "Marek Alscher",
+    "team": "CZE",
+    "jerseyNumber": 27,
+    "position": "D",
+    "tier": "C"
+  },
+  {
+    "code": "CZE26-D17-HRONEK",
+    "name": "Filip Hronek",
+    "team": "CZE",
+    "jerseyNumber": 17,
+    "position": "D",
+    "tier": "A"
+  },
+  {
+    "code": "CZE26-D06-KEMPNY",
+    "name": "Michal Kempný",
+    "team": "CZE",
+    "jerseyNumber": 6,
+    "position": "D",
+    "tier": "C"
+  },
+  {
+    "code": "CZE26-D26-TICHAC",
+    "name": "Jiří Ticháček",
+    "team": "CZE",
+    "jerseyNumber": 26,
+    "position": "D",
+    "tier": "E"
+  },
+  {
+    "code": "CZE26-F10-CERVEN",
+    "name": "Roman Červenka",
+    "team": "CZE",
+    "jerseyNumber": 10,
+    "position": "F",
+    "tier": "B"
+  },
+  {
+    "code": "CZE26-F61-KAUT",
+    "name": "Martin Kaut",
+    "team": "CZE",
+    "jerseyNumber": 61,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "CZE26-F89-MANDAT",
+    "name": "Jan Mandát",
+    "team": "CZE",
+    "jerseyNumber": 89,
+    "position": "F",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-F23-SEDLAK",
+    "name": "Lukáš Sedlák",
+    "team": "CZE",
+    "jerseyNumber": 23,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "CZE26-F08-BERANE",
+    "name": "Ondřej Beránek",
+    "team": "CZE",
+    "jerseyNumber": 8,
+    "position": "F",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-F12-CERNOC",
+    "name": "Jiří Černoch",
+    "team": "CZE",
+    "jerseyNumber": 12,
+    "position": "F",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-F81-KUBALI",
+    "name": "Dominik Kubalík",
+    "team": "CZE",
+    "jerseyNumber": 81,
+    "position": "F",
+    "tier": "B"
+  },
+  {
+    "code": "CZE26-F91-VOZENI",
+    "name": "Daniel Voženílek",
+    "team": "CZE",
+    "jerseyNumber": 91,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "CZE26-F19-FLEK",
+    "name": "Jakub Flek",
+    "team": "CZE",
+    "jerseyNumber": 19,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "CZE26-F87-KOVARC",
+    "name": "Michal Kovařčík",
+    "team": "CZE",
+    "jerseyNumber": 87,
+    "position": "F",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-F95-BLUMEL",
+    "name": "Matěj Blümel",
+    "team": "CZE",
+    "jerseyNumber": 95,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "CZE26-F49-CHMELA",
+    "name": "Jaroslav Chmelař",
+    "team": "CZE",
+    "jerseyNumber": 49,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "CZE26-F21-MELOVS",
+    "name": "Matyáš Melovský",
+    "team": "CZE",
+    "jerseyNumber": 21,
+    "position": "F",
+    "tier": "D"
+  },
+  {
+    "code": "CZE26-F96-TOMASE",
+    "name": "David Tomášek",
+    "team": "CZE",
+    "jerseyNumber": 96,
+    "position": "F",
+    "tier": "C"
+  }
+]
