@@ -55,7 +55,7 @@ Pravidla bodů jsou definovaná v `src/lib/msFantasyConfig.ts` (`MS_FANTASY_POIN
 - Salary cap a kontrola 1× G v UI i na serveru (`validateMsFantasyLineup`, POST `my-lineup`).
 - Uložení sestavy na uživatele + den (`MsFantasyLineup`, `salarySpent`, `pickIds`), uzávěrka podle `lockAt`.
 - Načítání poolu (`/api/fantasy/roster`) a seznam dnů (`/api/fantasy/game-days`, `[slug]`).
-- Import soupisek z JSON přes Prisma seed a proměnné `MS_FANTASY_SEED_*` (viz `prisma/seed.ts`).
+- Import soupisek a hracích dnů přes Prisma seed: **`MS_FANTASY_SEED_FANTASY_DATA=true`** načte `data/ms2026-fantasy-game-days.json` (17 dnů 15.–31. 5. 2026) + všechny soupisky z manifestu v `prisma/seed.ts` (smaže existující fantasy dny včetně odevzdaných sestav a celý pool). Jednotlivé týmy lze dál seedovat env `MS_FANTASY_SEED_AUT` apod.; vzorek: `MS_FANTASY_SEED_SAMPLE`.
 
 ---
 
@@ -63,7 +63,7 @@ Pravidla bodů jsou definovaná v `src/lib/msFantasyConfig.ts` (`MS_FANTASY_POIN
 
 1. **Výsledky a body** — zdroj pravdy pro góly/asistence/+/− u vybraných hráčů za den; volání `lineupDayPoints` / skater+goalie funkce a uložení nebo agregace.
 2. **Žebříček fantasy** — porovnání podle součtu bodů za den / turnaj (samostatná feature nad uloženými sestavami).
-3. **Data** — po oficiálním zveřejnění IIHF doplnit soupisky (např. čísla dresů u SLO v JSON); znovu seedovat příslušné `MS_FANTASY_SEED_*`.
+3. **Data** — doplnit chybějící fantasy JSON pro **Česko, Finsko, Německo** (`czechia-ms2026-fantasy-roster.json`, `finland-ms2026-fantasy-roster.json`, `germany-ms2026-fantasy-roster.json` v `data/`), případně upravit uzávěrky v `ms2026-fantasy-game-days.json`; znovu spustit seed s `MS_FANTASY_SEED_FANTASY_DATA=true`.
 
 ---
 
@@ -75,7 +75,8 @@ Pravidla bodů jsou definovaná v `src/lib/msFantasyConfig.ts` (`MS_FANTASY_POIN
 | Validace 6 hráčů, 1 G, cap | `src/lib/msFantasyValidation.ts` |
 | Výpočet bodů ze „boxu“ | `src/lib/msFantasyScoring.ts` |
 | Uložení / lock | `src/app/api/fantasy/my-lineup/route.ts` |
-| Modely DB | `prisma/schema.prisma` (`MsFantasyRosterPlayer`, `MsFantasyGameDay`, `MsFantasyLineup`) |
+| Hrací dny MS (fantasy) | `data/ms2026-fantasy-game-days.json` |
+| Manifest fantasy soupisek v seedu | `prisma/seed.ts` (`FANTASY_ROSTER_FILES`, `MS_FANTASY_SEED_FANTASY_DATA`) |
 
 ---
 

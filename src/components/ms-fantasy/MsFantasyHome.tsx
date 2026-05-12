@@ -73,12 +73,15 @@ export function MsFantasyHome() {
             data.
           </p>
           <p className="mt-4 text-xs leading-relaxed text-slate-500">
-            Pro správce serveru: spusť <span className="font-mono text-slate-400">npm run db:seed</span> s nastaveným{" "}
-            <span className="font-mono text-slate-400">DATABASE_URL</span> a proměnnými{" "}
-            <span className="font-mono text-slate-400">MS_FANTASY_SEED_SAMPLE=true</span> (ukázkové dny + vzorek v
-            poolu) a případně <span className="font-mono text-slate-400">MS_FANTASY_SEED_AUT=true</span>,{" "}
-            <span className="font-mono text-slate-400">MS_FANTASY_SEED_DEN=true</span>, … pro týmy z{" "}
-            <span className="font-mono text-slate-400">data/*-ms2026-fantasy-roster.json</span>. Viz také seed v{" "}
+            Pro správce serveru: kompletní fantasy MS 2026 najednou:{" "}
+            <span className="font-mono text-slate-400">MS_FANTASY_SEED_FANTASY_DATA=true</span> +{" "}
+            <span className="font-mono text-slate-400">npm run db:seed</span> (dny z{" "}
+            <span className="font-mono text-slate-400">data/ms2026-fantasy-game-days.json</span>, soupisky všech repre z{" "}
+            <span className="font-mono text-slate-400">data/</span> dle seedu; chybějící JSON se přeskočí s varováním). Nebo
+            jen vzorek:{" "}
+            <span className="font-mono text-slate-400">MS_FANTASY_SEED_SAMPLE=true</span> a případně{" "}
+            <span className="font-mono text-slate-400">MS_FANTASY_SEED_AUT=true</span>,{" "}
+            <span className="font-mono text-slate-400">MS_FANTASY_SEED_DEN=true</span>, … Viz{" "}
             <span className="font-mono text-slate-400">prisma/seed.ts</span>.
           </p>
         </div>

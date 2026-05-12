@@ -1,0 +1,19 @@
+[
+  { "slug": "2026-05-15", "title": "MS 2026 — pátek 15. 5.", "lockAt": "2026-05-15T12:00:00.000Z", "sortOrder": 1 },
+  { "slug": "2026-05-16", "title": "MS 2026 — sobota 16. 5.", "lockAt": "2026-05-16T12:00:00.000Z", "sortOrder": 2 },
+  { "slug": "2026-05-17", "title": "MS 2026 — neděle 17. 5.", "lockAt": "2026-05-17T12:00:00.000Z", "sortOrder": 3 },
+  { "slug": "2026-05-18", "title": "MS 2026 — pondělí 18. 5.", "lockAt": "2026-05-18T12:00:00.000Z", "sortOrder": 4 },
+  { "slug": "2026-05-19", "title": "MS 2026 — úterý 19. 5.", "lockAt": "2026-05-19T12:00:00.000Z", "sortOrder": 5 },
+  { "slug": "2026-05-20", "title": "MS 2026 — středa 20. 5.", "lockAt": "2026-05-20T12:00:00.000Z", "sortOrder": 6 },
+  { "slug": "2026-05-21", "title": "MS 2026 — čtvrtek 21. 5.", "lockAt": "2026-05-21T12:00:00.000Z", "sortOrder": 7 },
+  { "slug": "2026-05-22", "title": "MS 2026 — pátek 22. 5.", "lockAt": "2026-05-22T12:00:00.000Z", "sortOrder": 8 },
+  { "slug": "2026-05-23", "title": "MS 2026 — sobota 23. 5.", "lockAt": "2026-05-23T12:00:00.000Z", "sortOrder": 9 },
+  { "slug": "2026-05-24", "title": "MS 2026 — neděle 24. 5.", "lockAt": "2026-05-24T12:00:00.000Z", "sortOrder": 10 },
+  { "slug": "2026-05-25", "title": "MS 2026 — pondělí 25. 5.", "lockAt": "2026-05-25T12:00:00.000Z", "sortOrder": 11 },
+  { "slug": "2026-05-26", "title": "MS 2026 — úterý 26. 5.", "lockAt": "2026-05-26T12:00:00.000Z", "sortOrder": 12 },
+  { "slug": "2026-05-27", "title": "MS 2026 — středa 27. 5.", "lockAt": "2026-05-27T12:00:00.000Z", "sortOrder": 13 },
+  { "slug": "2026-05-28", "title": "MS 2026 — čtvrtek 28. 5.", "lockAt": "2026-05-28T12:00:00.000Z", "sortOrder": 14 },
+  { "slug": "2026-05-29", "title": "MS 2026 — pátek 29. 5.", "lockAt": "2026-05-29T12:00:00.000Z", "sortOrder": 15 },
+  { "slug": "2026-05-30", "title": "MS 2026 — sobota 30. 5.", "lockAt": "2026-05-30T12:00:00.000Z", "sortOrder": 16 },
+  { "slug": "2026-05-31", "title": "MS 2026 — neděle 31. 5. (finále)", "lockAt": "2026-05-31T12:00:00.000Z", "sortOrder": 17 }
+]
