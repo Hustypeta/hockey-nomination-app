@@ -1,7 +1,19 @@
 import "dotenv/config";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { loadMs2026Candidates } from "../src/lib/ms2026Candidates";
+
+/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`) — v `ms_fantasy_roster_players` jde jen o **platové tiery** (A–E), ne o písmena kapitánů na dresech. Tier A jen výjimečně: SUI (Josi, Hischier, Meier). Ostatní zkratky v logu: GBR Kirk v C; HUN/LAT/NOR/SVK podle JSON. */
+type FantasyRosterJsonRow = {
+  code: string;
+  name: string;
+  team: string;
+  jerseyNumber: number | null;
+  position: string;
+  tier: string;
+};
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL is not set");
@@ -45,6 +57,292 @@ async function seedMsFantasySample() {
   }
 }
 
+async function seedAustriaMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_AUT?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "austria-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_AUT: nepodařilo se načíst data/austria-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_AUT: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "AUT" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Austria MS 2026 fantasy roster rows (MS_FANTASY_SEED_AUT)`);
+}
+
+async function seedUsaMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_USA?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "usa-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_USA: nepodařilo se načíst data/usa-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_USA: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "USA" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} USA MS 2026 fantasy roster rows (MS_FANTASY_SEED_USA)`);
+}
+
+async function seedCanadaMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_CAN?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "canada-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_CAN: nepodařilo se načíst data/canada-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_CAN: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "CAN" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Canada MS 2026 fantasy roster rows (MS_FANTASY_SEED_CAN)`);
+}
+
+async function seedSwedenMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_SWE?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "sweden-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_SWE: nepodařilo se načíst data/sweden-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_SWE: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "SWE" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Sweden MS 2026 fantasy roster rows (MS_FANTASY_SEED_SWE)`);
+}
+
+async function seedGreatBritainMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_GBR?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "great-britain-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_GBR: nepodařilo se načíst data/great-britain-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_GBR: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "GBR" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Great Britain MS 2026 fantasy roster rows (MS_FANTASY_SEED_GBR)`);
+  console.log("  Platové tiery: jen Kirk v C, zbytek D nebo E");
+}
+
+async function seedHungaryMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_HUN?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "hungary-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_HUN: nepodařilo se načíst data/hungary-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_HUN: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "HUN" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Hungary MS 2026 fantasy roster rows (MS_FANTASY_SEED_HUN)`);
+  console.log("  Platové tiery: jen C až E (žádný nejvyšší ani druhý nejvyšší plat)");
+}
+
+async function seedLatviaMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_LAT?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "latvia-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_LAT: nepodařilo se načíst data/latvia-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_LAT: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "LAT" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Latvia MS 2026 fantasy roster rows (MS_FANTASY_SEED_LAT)`);
+  console.log("  Platové tiery: B Balcers, jádro v C, zbytek D/E");
+}
+
+async function seedSwitzerlandMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_SUI?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "switzerland-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_SUI: nepodařilo se načíst data/switzerland-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_SUI: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "SUI" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Switzerland MS 2026 fantasy roster rows (MS_FANTASY_SEED_SUI)`);
+  console.log("  Platové tiery: A Josi, Hischier, Meier · B Niederreiter, Moser · jádro C · zbytek D/E");
+}
+
+async function seedNorwayMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_NOR?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "norway-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_NOR: nepodařilo se načíst data/norway-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_NOR: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "NOR" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Norway MS 2026 fantasy roster rows (MS_FANTASY_SEED_NOR)`);
+  console.log("  Platové tiery: jen C až E (žádný A ani B v platu)");
+}
+
+async function seedSlovakiaMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_SVK?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "slovakia-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_SVK: nepodařilo se načíst data/slovakia-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_SVK: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "SVK" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Slovakia MS 2026 fantasy roster rows (MS_FANTASY_SEED_SVK)`);
+  console.log("  Platové tiery: B Hlavaj, M. Pospíšil, Sýkora · bez platového A · zbytek C/D/E");
+}
+
 async function main() {
   console.log("Seeding database (MS 2026 kandidáti)...");
 
@@ -66,6 +364,16 @@ async function main() {
   console.log(`Seeded ${rows.length} players from czech-ms-2026-candidates-80.json`);
 
   await seedMsFantasySample();
+  await seedAustriaMs2026FantasyRoster();
+  await seedUsaMs2026FantasyRoster();
+  await seedCanadaMs2026FantasyRoster();
+  await seedSwedenMs2026FantasyRoster();
+  await seedGreatBritainMs2026FantasyRoster();
+  await seedHungaryMs2026FantasyRoster();
+  await seedLatviaMs2026FantasyRoster();
+  await seedSwitzerlandMs2026FantasyRoster();
+  await seedNorwayMs2026FantasyRoster();
+  await seedSlovakiaMs2026FantasyRoster();
 }
 
 main()

@@ -1,0 +1,202 @@
+[
+  {
+    "code": "AUT26-G30-KICKERT",
+    "name": "David Kickert",
+    "team": "AUT",
+    "jerseyNumber": 30,
+    "position": "G",
+    "tier": "B"
+  },
+  {
+    "code": "AUT26-G33-VORAUE",
+    "name": "Florian Vorauer",
+    "team": "AUT",
+    "jerseyNumber": 33,
+    "position": "G",
+    "tier": "C"
+  },
+  {
+    "code": "AUT26-G35-TOLVAN",
+    "name": "Atte Tolvanen",
+    "team": "AUT",
+    "jerseyNumber": 35,
+    "position": "G",
+    "tier": "B"
+  },
+  {
+    "code": "AUT26-D04-SCHNET",
+    "name": "Ramon Schnetzer",
+    "team": "AUT",
+    "jerseyNumber": 4,
+    "position": "D",
+    "tier": "C"
+  },
+  {
+    "code": "AUT26-D05-HACKL",
+    "name": "Dominic Hackl",
+    "team": "AUT",
+    "jerseyNumber": 5,
+    "position": "D",
+    "tier": "D"
+  },
+  {
+    "code": "AUT26-D12-MAIER",
+    "name": "David Maier",
+    "team": "AUT",
+    "jerseyNumber": 12,
+    "position": "D",
+    "tier": "C"
+  },
+  {
+    "code": "AUT26-D18-STAPEL",
+    "name": "Paul Stapelfeldt",
+    "team": "AUT",
+    "jerseyNumber": 18,
+    "position": "D",
+    "tier": "C"
+  },
+  {
+    "code": "AUT26-D32-WOLF",
+    "name": "Bernd Wolf",
+    "team": "AUT",
+    "jerseyNumber": 32,
+    "position": "D",
+    "tier": "D"
+  },
+  {
+    "code": "AUT26-D45-BIBER",
+    "name": "Gregor Biber",
+    "team": "AUT",
+    "jerseyNumber": 45,
+    "position": "D",
+    "tier": "D"
+  },
+  {
+    "code": "AUT26-D67-WIMMER",
+    "name": "Philipp Wimmer",
+    "team": "AUT",
+    "jerseyNumber": 67,
+    "position": "D",
+    "tier": "C"
+  },
+  {
+    "code": "AUT26-D78-NICKL",
+    "name": "Thimo Nickl",
+    "team": "AUT",
+    "jerseyNumber": 78,
+    "position": "D",
+    "tier": "D"
+  },
+  {
+    "code": "AUT26-D92-UNTERW",
+    "name": "Clemens Unterweger",
+    "team": "AUT",
+    "jerseyNumber": 92,
+    "position": "D",
+    "tier": "B"
+  },
+  {
+    "code": "AUT26-F03-SCHNEI",
+    "name": "Peter Schneider",
+    "team": "AUT",
+    "jerseyNumber": 3,
+    "position": "F",
+    "tier": "B"
+  },
+  {
+    "code": "AUT26-F08-REBERN",
+    "name": "Maximilian Rebernig",
+    "team": "AUT",
+    "jerseyNumber": 8,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "AUT26-F09-WALLNE",
+    "name": "Leon Wallner",
+    "team": "AUT",
+    "jerseyNumber": 9,
+    "position": "F",
+    "tier": "B"
+  },
+  {
+    "code": "AUT26-F14-NEUBAU",
+    "name": "Henrik Neubauer",
+    "team": "AUT",
+    "jerseyNumber": 14,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "AUT26-F16-ZWERGE",
+    "name": "Dominic Zwerger",
+    "team": "AUT",
+    "jerseyNumber": 16,
+    "position": "F",
+    "tier": "B"
+  },
+  {
+    "code": "AUT26-F17-SCHERZ",
+    "name": "Ian Scherzer",
+    "team": "AUT",
+    "jerseyNumber": 17,
+    "position": "F",
+    "tier": "D"
+  },
+  {
+    "code": "AUT26-F40-HARNIS",
+    "name": "Tim Harnisch",
+    "team": "AUT",
+    "jerseyNumber": 40,
+    "position": "F",
+    "tier": "D"
+  },
+  {
+    "code": "AUT26-F48-THALER",
+    "name": "Lucas Thaler",
+    "team": "AUT",
+    "jerseyNumber": 48,
+    "position": "F",
+    "tier": "C"
+  },
+  {
+    "code": "AUT26-F52-HUBER",
+    "name": "Paul Huber",
+    "team": "AUT",
+    "jerseyNumber": 52,
+    "position": "F",
+    "tier": "D"
+  },
+  {
+    "code": "AUT26-F61-SCHWIN",
+    "name": "Simeon Schwinger",
+    "team": "AUT",
+    "jerseyNumber": 61,
+    "position": "F",
+    "tier": "E"
+  },
+  {
+    "code": "AUT26-F70-NISSNE",
+    "name": "Benjamin Nissner",
+    "team": "AUT",
+    "jerseyNumber": 70,
+    "position": "F",
+    "tier": "E"
+  },
+  {
+    "code": "AUT26-F81-KOLARI",
+    "name": "Leon Kolarik",
+    "team": "AUT",
+    "jerseyNumber": 81,
+    "position": "F",
+    "tier": "E"
+  },
+  {
+    "code": "AUT26-F96-HUBERM",
+    "name": "Mario Huber",
+    "team": "AUT",
+    "jerseyNumber": 96,
+    "position": "F",
+    "tier": "E"
+  }
+]
