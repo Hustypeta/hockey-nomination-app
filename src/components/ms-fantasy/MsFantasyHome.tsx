@@ -68,9 +68,18 @@ export function MsFantasyHome() {
 
       {days && days.length === 0 ? (
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-10 text-center text-slate-400">
-          <p className="text-sm leading-relaxed">
-            Zatím nejsou v databázi žádné hrací dny ani pool hráčů. Až doplníš Excel a nahraješ data, rozcestník tu
-            naplní konkrétní termíny.
+          <p className="text-sm leading-relaxed text-slate-300">
+            Zatím tu nejsou žádné fantasy hrací dny ani pool hráčů — databáze na tomto prostředí ještě neobsahuje fantasy
+            data.
+          </p>
+          <p className="mt-4 text-xs leading-relaxed text-slate-500">
+            Pro správce serveru: spusť <span className="font-mono text-slate-400">npm run db:seed</span> s nastaveným{" "}
+            <span className="font-mono text-slate-400">DATABASE_URL</span> a proměnnými{" "}
+            <span className="font-mono text-slate-400">MS_FANTASY_SEED_SAMPLE=true</span> (ukázkové dny + vzorek v
+            poolu) a případně <span className="font-mono text-slate-400">MS_FANTASY_SEED_AUT=true</span>,{" "}
+            <span className="font-mono text-slate-400">MS_FANTASY_SEED_DEN=true</span>, … pro týmy z{" "}
+            <span className="font-mono text-slate-400">data/*-ms2026-fantasy-roster.json</span>. Viz také seed v{" "}
+            <span className="font-mono text-slate-400">prisma/seed.ts</span>.
           </p>
         </div>
       ) : null}
