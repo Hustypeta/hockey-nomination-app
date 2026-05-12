@@ -11,6 +11,7 @@ import {
 import { toCanvas } from "html-to-image";
 import type { LineupStructure, Player } from "@/types";
 import { MatchLineupJerseyExportPoster } from "@/components/match/MatchLineupJerseyExportPoster";
+import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
 import { MatchLineupNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
 import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 import type { MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
@@ -31,6 +32,7 @@ function slugifyForFile(raw: string): string {
 
 function filenameLineupSlot(slot: string, baseSlug: string): string {
   if (slot === "cele-jmena") return `sestava-zapas-jmena-${baseSlug}-komplet.png`;
+  if (slot === "cele-dresy") return `sestava-zapas-dresy-${baseSlug}-komplet.png`;
   const map: Record<string, string> = {
     "line-1": "1-lajna",
     "line-2": "2-lajna",
@@ -91,6 +93,11 @@ export function MatchLineupImageExportButton({
         hint: "Jako grafika „jen jména“ v editoru nominace (tmavý plakát, celá soupiska).",
       },
       {
+        key: "cele-dresy",
+        title: "Celá sestava — dresy",
+        hint: "Kompletní soupiska s dresy (brankáři, 4 lajny, obrana pod počtem beků, případně 13. útočník).",
+      },
+      {
         key: "line-1",
         title: "Dresy — 1. lajna",
         hint: "Tři útočníci vedle sebe, dva obránci vedle sebe, pod nimi 1. gólman.",
@@ -127,7 +134,9 @@ export function MatchLineupImageExportButton({
         const selector =
           slot === "cele-jmena"
             ? "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
-            : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
+            : slot === "cele-dresy"
+              ? "[data-export-slot=\"cele-dresy\"].match-lineup-full-jersey-poster"
+              : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
         const node = stage.querySelector<HTMLElement>(selector);
         if (!node) {
           toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
@@ -169,7 +178,7 @@ export function MatchLineupImageExportButton({
         onClose={() => setModalOpen(false)}
         eyebrow="Sestava na zápas"
         title="Generovat plakát"
-        description="Stejný princip jako u hodnocení zápasu: nejdřív celá soupiska jen jména, pak řezy po kompletních lajnách (3F + 2D; na 1. lajně 1. gólman, na 4. též 13. útočník a 2. gólman). Vždy jedna PNG."
+        description="Celá soupiska jen jména nebo s dresy, případně řezy po kompletních lajnách (3F + 2D; na 1. lajně 1. gólman, na 4. též 13. útočník a 2. gólman). Vždy jedna PNG."
         busyKey={busyKey}
         choices={choices}
         onPick={async (key) => {
@@ -196,6 +205,13 @@ export function MatchLineupImageExportButton({
           allowExtraForward={allowExtraForward}
           siteUrl={siteOrigin}
           footerInstantIso={footerIso}
+        />
+        <MatchLineupFullJerseyExportPoster
+          lineupTitle={titleLine}
+          lineup={lineup}
+          players={players}
+          defenseCount={defenseCount}
+          allowExtraForward={allowExtraForward}
         />
         {SEGMENTS.map((g) => (
           <MatchLineupJerseyExportPoster

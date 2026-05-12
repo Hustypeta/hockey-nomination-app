@@ -377,7 +377,7 @@ export function MatchLineupBuilderPage() {
   if (loading || (needDraftImport && !draftImportReady)) {
     return (
       <AppLoadingScreen
-        tagline="Tvorba sestavy na zápas"
+        tagline="Editor sestavy"
         message={
           loading
             ? "Načítám editor zápasové sestavy…"
@@ -408,7 +408,7 @@ export function MatchLineupBuilderPage() {
         <div className="mb-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="font-display text-2xl font-black">Tvorba sestavy na zápas</h1>
+              <h1 className="font-display text-2xl font-black">Editor sestavy</h1>
               <p className="mt-1 text-sm text-white/60">
                 Fanouškovský editor (sdílení jako u nominace). {authStatus === "authenticated" ? "Přihlášeno." : ""}
               </p>

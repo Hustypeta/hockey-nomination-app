@@ -116,7 +116,7 @@ export function MyMatchLineupsPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
           <h1 className="font-sans text-2xl font-bold text-white sm:text-3xl">Zápasové sestavy</h1>
-          <p className="mt-1 text-sm text-slate-500">Uložené odkazy z editoru “Tvorba sestavy na zápas”.</p>
+          <p className="mt-1 text-sm text-slate-500">Uložené odkazy z editoru sestavy na zápas.</p>
         </div>
         <Link
           href="/zapasy/sestava"
@@ -138,7 +138,7 @@ export function MyMatchLineupsPage() {
       {empty ? (
         <p className="mt-8 rounded-2xl border border-white/10 bg-black/25 p-8 text-center text-slate-400">
           Zatím nemáš uloženou žádnou zápasovou sestavu. Otevři{" "}
-          <strong className="text-white">Tvorba sestavy na zápas</strong>, slož ji a dej <strong className="text-white">Uložit</strong>.
+          <strong className="text-white">Editor sestavy</strong>, slož ji a dej <strong className="text-white">Uložit</strong>.
         </p>
       ) : null}
 

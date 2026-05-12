@@ -8,6 +8,7 @@ import { MatchRatingExperience } from "@/components/match/MatchRatingExperience"
 import { FlagMark } from "@/components/flags/FlagMark";
 import { SiteShell } from "@/components/site/SiteShell";
 import { resolveBeijirMatchResult } from "@/lib/beijirMatchResults";
+import { countryLabelCs } from "@/lib/flagCountryLabels";
 
 // Railway build: do not prerender at build-time (needs DB at runtime).
 export const dynamic = "force-dynamic";
@@ -172,7 +173,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
                       <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-black/10 bg-white shadow-sm sm:h-20 sm:w-20">
                         <FlagMark code={t.a} className="h-8 w-12 sm:h-9 sm:w-14" />
                       </div>
-                      <div className="text-sm font-semibold text-slate-700">{t.a === "CZE" ? "Česko" : t.a === "SWE" ? "Švédsko" : t.a === "FIN" ? "Finsko" : t.a === "SUI" ? "Švýcarsko" : t.a}</div>
+                      <div className="text-sm font-semibold text-slate-700">{countryLabelCs(t.a)}</div>
                     </div>
                     <div className="text-center">
                       <div className="text-xs font-semibold text-slate-500">
@@ -194,7 +195,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
                       <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-black/10 bg-white shadow-sm sm:h-20 sm:w-20">
                         <FlagMark code={t.b} className="h-8 w-12 sm:h-9 sm:w-14" />
                       </div>
-                      <div className="text-sm font-semibold text-slate-700">{t.b === "CZE" ? "Česko" : t.b === "SWE" ? "Švédsko" : t.b === "FIN" ? "Finsko" : t.b === "SUI" ? "Švýcarsko" : t.b}</div>
+                      <div className="text-sm font-semibold text-slate-700">{countryLabelCs(t.b)}</div>
                     </div>
                   </>
                 );

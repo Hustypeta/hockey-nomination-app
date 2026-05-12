@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { MatchLineupBuilderPage } from "@/components/match/MatchLineupBuilderPage";
 
 export const metadata = {
-  title: "Tvorba sestavy na zápas",
+  title: "Editor sestavy",
 };
 
 function SestavaFallback() {

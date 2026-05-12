@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Veřejné statistiky pro landing (konverze / social proof) + stav časového bonusu.
+ * Pick’emy = jen účty, které jednou odeslaly tip do soutěže (`contestSubmittedAt`), ne rozpracované koncepty.
  */
 export async function GET() {
   try {
@@ -22,7 +23,9 @@ export async function GET() {
       prisma.user.count({
         where: { email: { not: null } },
       }),
-      prisma.pickemEntry.count(),
+      prisma.pickemEntry.count({
+        where: { contestSubmittedAt: { not: null } },
+      }),
     ]);
     return NextResponse.json({
       nominationCount,

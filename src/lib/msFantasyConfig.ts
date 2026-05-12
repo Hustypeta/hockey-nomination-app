@@ -18,9 +18,13 @@ export const MS_FANTASY_TIER_SALARY: Record<string, number> = {
   E: 14,
 };
 
-/** Zobrazit položku Fantasy v menu a povolit plné stránky `/fantasy/*`. */
+/**
+ * Povolit stránky `/fantasy/*` (menu má Fantasy vždy; vypnutí např. před spuštěním: env na false).
+ */
 export function isMsFantasyVisibleToUsers(): boolean {
-  return process.env.NEXT_PUBLIC_MS_FANTASY_VISIBLE?.trim().toLowerCase() === "true";
+  const v = process.env.NEXT_PUBLIC_MS_FANTASY_VISIBLE?.trim().toLowerCase();
+  if (v === "false" || v === "0" || v === "no" || v === "off") return false;
+  return true;
 }
 
 export const MS_FANTASY_TIERS = ["A", "B", "C", "D", "E"] as const;
