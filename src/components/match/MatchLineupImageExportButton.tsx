@@ -93,22 +93,22 @@ export function MatchLineupImageExportButton({
       {
         key: "line-1",
         title: "Dresy — 1. lajna",
-        hint: "3× útočník + 2× obránce + 1. gólman.",
+        hint: "Tři útočníci vedle sebe, dva obránci vedle sebe, pod nimi 1. gólman.",
       },
       {
         key: "line-2",
         title: "Dresy — 2. lajna",
-        hint: "3× útočník + 2× obránce.",
+        hint: "Tři útočníci vedle sebe, dva obránci vedle sebe.",
       },
       {
         key: "line-3",
         title: "Dresy — 3. lajna",
-        hint: "3× útočník + 2× obránce.",
+        hint: "Tři útočníci vedle sebe, dva obránci vedle sebe.",
       },
       {
         key: "line-4",
         title: "Dresy — 4. lajna",
-        hint: "3× útočník + 2× obránce + 13. útočník (pokud je povolen) + 2. gólman.",
+        hint: "Tři útočníci a dva obránci jako výš; dole vedle sebe 13. útočník a 2. gólman (pokud jsou v sestavě).",
       },
     ],
     []

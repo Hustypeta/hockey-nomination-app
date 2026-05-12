@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useMemo, type CSSProperties } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
@@ -9,6 +9,7 @@ import {
   jerseyPosterExportRowMeta,
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
+  splitMatchLineupLinePosterChunks,
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
 
@@ -78,8 +79,8 @@ interface MatchRatingPosterProps {
 }
 
 /**
- * Off-screen plakát pro export hodnocení do PNG. Layout je 2 sloupce na kartu hráče, velké číslo hodnocení vpravo,
- * vlevo dres se jménem a klubem. Segmentace po lajnách (viz `pickMatchLineupSegmentPlayerIds` line-* ).
+ * Off-screen plakát pro export hodnocení do PNG. U řezů line-1…line-4 je rozložení jako na ledě (3 útočníci,
+ * 2 obránci, spodek u 1. lajny 1× gólman / u 4. lajny až 2 hráči vedle sebe). Ostatní segmenty: 2 sloupce karet.
  */
 export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterProps>(
   function MatchRatingPoster(
@@ -103,7 +104,182 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
       () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
       [lineup, group, defenseCount, allowExtraForward]
     );
+    const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
     const cols = 2;
+
+    const cardShell: CSSProperties = {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 18,
+      padding: 18,
+      borderRadius: 22,
+      background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
+      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
+      border: "1px solid rgba(255,255,255,0.1)",
+      minHeight: 180,
+    };
+
+    const renderRatingCard = (pid: string) => {
+      const rowMeta = jerseyPosterExportRowMeta(lineup, group, pid, defenseCount, allowExtraForward);
+      const player = byId.get(pid) ?? null;
+      const aggregate = ratings[pid];
+      const mine = myRatings[pid];
+      const display = preferMine
+        ? typeof mine === "number"
+          ? mine
+          : null
+        : aggregate && Number.isFinite(aggregate.avg) && aggregate.avg > 0
+          ? aggregate.avg
+          : typeof mine === "number"
+            ? mine
+            : null;
+      const hue = ratingHue(display);
+      const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
+      return (
+        <div style={cardShell}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 8,
+              flexShrink: 0,
+            }}
+          >
+            <PremiumJerseySlotCard
+              player={player}
+              positionLabel={rowMeta.positionLabel}
+              kind={rowMeta.jerseyKind === "goalie" ? "goalie" : "skater"}
+              size="skater"
+              disableMotion
+              lightRinkSurface={false}
+              ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
+            />
+          </div>
+
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                fontSize: 26,
+                fontWeight: 900,
+                color: "white",
+                lineHeight: 1.05,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {player ? player.name : "—"}
+            </div>
+            {player ? (
+              <div
+                style={{
+                  marginTop: 6,
+                  fontSize: 14,
+                  color: "rgba(255,255,255,0.7)",
+                  lineHeight: 1.25,
+                }}
+              >
+                <span style={{ color: "white", fontWeight: 600 }}>{player.club}</span>
+                {player.league ? (
+                  <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span>
+                ) : null}
+              </div>
+            ) : null}
+            {player && player.name !== displayName ? (
+              <div
+                style={{
+                  marginTop: 4,
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.4)",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                Na dresu: <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
+              </div>
+            ) : null}
+            {!preferMine && aggregate && aggregate.count > 0 ? (
+              <div
+                style={{
+                  marginTop: 8,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "3px 10px",
+                  borderRadius: 999,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "rgba(255,255,255,0.7)",
+                  background: "rgba(255,255,255,0.07)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                }}
+              >
+                {aggregate.count} {aggregate.count === 1 ? "hlas" : aggregate.count < 5 ? "hlasy" : "hlasů"}
+              </div>
+            ) : null}
+            {preferMine && typeof mine === "number" ? (
+              <div
+                style={{
+                  marginTop: 8,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "3px 10px",
+                  borderRadius: 999,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "#34d399",
+                  background: "rgba(52, 211, 153, 0.12)",
+                  border: "1px solid rgba(52, 211, 153, 0.35)",
+                }}
+              >
+                Tvoje známka
+              </div>
+            ) : null}
+          </div>
+
+          <div
+            style={{
+              flexShrink: 0,
+              width: 130,
+              height: 130,
+              borderRadius: 24,
+              background: hue.bg,
+              boxShadow: `0 12px 32px ${hue.ring}, 0 0 0 3px rgba(255,255,255,0.95) inset`,
+              border: `3px solid rgba(255,255,255,0.95)`,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              color: hue.text,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 64,
+                fontWeight: 900,
+                lineHeight: 1,
+                letterSpacing: "-0.04em",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {fmtRating(display)}
+            </div>
+            <div
+              style={{
+                marginTop: 4,
+                fontSize: 10,
+                fontWeight: 800,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                opacity: 0.8,
+              }}
+            >
+              / 10
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const bottomIds = lineChunks?.bottom.filter(Boolean) ?? [];
 
     return (
       <div
@@ -184,198 +360,82 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
           </div>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${cols}, 1fr)`,
-            gap: 22,
-            marginTop: 28,
-          }}
-        >
-          {ids.map((pid) => {
-            const rowMeta = jerseyPosterExportRowMeta(
-              lineup,
-              group,
-              pid,
-              defenseCount,
-              allowExtraForward
-            );
-            const player = byId.get(pid) ?? null;
-            const aggregate = ratings[pid];
-            const mine = myRatings[pid];
-            const display = preferMine
-              ? typeof mine === "number"
-                ? mine
-                : null
-              : aggregate && Number.isFinite(aggregate.avg) && aggregate.avg > 0
-                ? aggregate.avg
-                : typeof mine === "number"
-                  ? mine
-                  : null;
-            const hue = ratingHue(display);
-            const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
-            return (
+        {lineChunks ? (
+          <div
+            style={{
+              marginTop: 28,
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+            }}
+          >
+            {lineChunks.forwards.filter(Boolean).length > 0 ? (
               <div
-                key={pid}
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 18,
-                  padding: 18,
-                  borderRadius: 22,
-                  background:
-                    "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
-                  boxShadow:
-                    "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  minHeight: 180,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                  gap: 16,
+                  alignItems: "stretch",
                 }}
               >
-                {/* Levá strana: dres + jméno + klub */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 8,
-                    flexShrink: 0,
-                  }}
-                >
-                  <PremiumJerseySlotCard
-                    player={player}
-                    positionLabel={rowMeta.positionLabel}
-                    kind={rowMeta.jerseyKind === "goalie" ? "goalie" : "skater"}
-                    size="skater"
-                    disableMotion
-                    lightRinkSurface={false}
-                    ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
-                  />
-                </div>
-
-                {/* Střední část: jméno + klub + (volitelně přečtené iniciály) */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div
-                    style={{
-                      fontSize: 26,
-                      fontWeight: 900,
-                      color: "white",
-                      lineHeight: 1.05,
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    {player ? player.name : "—"}
-                  </div>
-                  {player ? (
-                    <div
-                      style={{
-                        marginTop: 6,
-                        fontSize: 14,
-                        color: "rgba(255,255,255,0.7)",
-                        lineHeight: 1.25,
-                      }}
-                    >
-                      <span style={{ color: "white", fontWeight: 600 }}>{player.club}</span>
-                      {player.league ? (
-                        <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span>
-                      ) : null}
-                    </div>
-                  ) : null}
-                  {player && player.name !== displayName ? (
-                    <div
-                      style={{
-                        marginTop: 4,
-                        fontSize: 11,
-                        color: "rgba(255,255,255,0.4)",
-                        letterSpacing: "0.04em",
-                      }}
-                    >
-                      Na dresu: <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
-                    </div>
-                  ) : null}
-                  {!preferMine && aggregate && aggregate.count > 0 ? (
-                    <div
-                      style={{
-                        marginTop: 8,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        padding: "3px 10px",
-                        borderRadius: 999,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: "rgba(255,255,255,0.7)",
-                        background: "rgba(255,255,255,0.07)",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                      }}
-                    >
-                      {aggregate.count} {aggregate.count === 1 ? "hlas" : aggregate.count < 5 ? "hlasy" : "hlasů"}
-                    </div>
-                  ) : null}
-                  {preferMine && typeof mine === "number" ? (
-                    <div
-                      style={{
-                        marginTop: 8,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        padding: "3px 10px",
-                        borderRadius: 999,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: "#34d399",
-                        background: "rgba(52, 211, 153, 0.12)",
-                        border: "1px solid rgba(52, 211, 153, 0.35)",
-                      }}
-                    >
-                      Tvoje známka
-                    </div>
-                  ) : null}
-                </div>
-
-                {/* Pravá strana: VELKÉ číslo hodnocení */}
-                <div
-                  style={{
-                    flexShrink: 0,
-                    width: 130,
-                    height: 130,
-                    borderRadius: 24,
-                    background: hue.bg,
-                    boxShadow: `0 12px 32px ${hue.ring}, 0 0 0 3px rgba(255,255,255,0.95) inset`,
-                    border: `3px solid rgba(255,255,255,0.95)`,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: hue.text,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 64,
-                      fontWeight: 900,
-                      lineHeight: 1,
-                      letterSpacing: "-0.04em",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    {fmtRating(display)}
-                  </div>
-                  <div
-                    style={{
-                      marginTop: 4,
-                      fontSize: 10,
-                      fontWeight: 800,
-                      letterSpacing: "0.18em",
-                      textTransform: "uppercase",
-                      opacity: 0.8,
-                    }}
-                  >
-                    / 10
-                  </div>
-                </div>
+                {lineChunks.forwards.filter(Boolean).map((pid) => (
+                  <div key={pid}>{renderRatingCard(pid)}</div>
+                ))}
               </div>
-            );
-          })}
-        </div>
+            ) : null}
+
+            {lineChunks.defense.filter(Boolean).length > 0 ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: 16,
+                  alignItems: "stretch",
+                }}
+              >
+                {lineChunks.defense.filter(Boolean).map((pid) => (
+                  <div key={pid}>{renderRatingCard(pid)}</div>
+                ))}
+              </div>
+            ) : null}
+
+            {bottomIds.length > 0 ? (
+              bottomIds.length === 1 ? (
+                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                  <div style={{ width: "100%", maxWidth: 520 }}>
+                    {renderRatingCard(bottomIds[0]!)}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                    gap: 16,
+                    alignItems: "stretch",
+                  }}
+                >
+                  {bottomIds.map((pid) => (
+                    <div key={pid}>{renderRatingCard(pid)}</div>
+                  ))}
+                </div>
+              )
+            ) : null}
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${cols}, 1fr)`,
+              gap: 22,
+              marginTop: 28,
+            }}
+          >
+            {ids.map((pid) => (
+              <div key={pid}>{renderRatingCard(pid)}</div>
+            ))}
+          </div>
+        )}
 
         <div
           style={{

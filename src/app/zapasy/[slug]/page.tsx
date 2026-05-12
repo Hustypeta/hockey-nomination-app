@@ -7,6 +7,7 @@ import type { LineupStructure } from "@/types";
 import { MatchRatingExperience } from "@/components/match/MatchRatingExperience";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { SiteShell } from "@/components/site/SiteShell";
+import { resolveBeijirMatchResult } from "@/lib/beijirMatchResults";
 
 // Railway build: do not prerender at build-time (needs DB at runtime).
 export const dynamic = "force-dynamic";
@@ -99,6 +100,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
           startsAt: true,
           published: true,
           officialLineup: true,
+          category: true,
         },
       });
   if (!preview && (!match || !match.published)) notFound();
@@ -115,6 +117,12 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
     startsAt,
   });
   const tz = "Europe/Prague";
+  const beijirResult = resolveBeijirMatchResult({
+    slug,
+    category: preview ? "beijir" : match?.category ?? null,
+    homeCode: preview?.homeCode ?? match?.homeCode,
+    awayCode: preview?.awayCode ?? match?.awayCode,
+  });
 
   const ratings = preview
     ? ({} as Record<string, { avg: number; count: number }>)
@@ -148,7 +156,13 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="overflow-hidden rounded-3xl border border-white/10 bg-white text-slate-900 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
           <div className="px-4 py-4 sm:px-6 sm:py-6">
-            <div className="flex items-center justify-center gap-6 sm:gap-10">
+            <div className="flex flex-col items-center justify-center gap-4">
+              {beijirResult ? (
+                <div className="text-center font-mono text-sm font-black tracking-tight text-slate-800 sm:text-base">
+                  {beijirResult.headline}
+                </div>
+              ) : null}
+              <div className="flex items-center justify-center gap-6 sm:gap-10">
               {(() => {
                 const t = splitTeams(preview ? preview : match!);
                 if (!t) return null;
@@ -164,7 +178,17 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
                       <div className="text-xs font-semibold text-slate-500">
                         {startsAt ? new Date(startsAt).toLocaleString("cs-CZ", { timeZone: tz }) : "—"}
                       </div>
-                      <div className="mt-2 font-display text-3xl font-black text-slate-900 sm:text-4xl">-</div>
+                      <div className="mt-2 font-display text-3xl font-black tabular-nums text-slate-900 sm:text-4xl">
+                        {beijirResult ? (
+                          <>
+                            {beijirResult.homeGoals}
+                            <span className="mx-1 text-slate-400">:</span>
+                            {beijirResult.awayGoals}
+                          </>
+                        ) : (
+                          "-"
+                        )}
+                      </div>
                     </div>
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-black/10 bg-white shadow-sm sm:h-20 sm:w-20">
@@ -175,6 +199,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
                   </>
                 );
               })()}
+              </div>
             </div>
             <div className="mt-4 text-center text-xs text-slate-500">
               {(preview ? preview.venue : match?.venue) ? <span>{preview ? preview.venue : match?.venue}</span> : null}

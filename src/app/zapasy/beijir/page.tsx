@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { resolveBeijirMatchResult } from "@/lib/beijirMatchResults";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { SiteShell } from "@/components/site/SiteShell";
 
@@ -117,6 +118,12 @@ export default async function ZapasyBeijirPage() {
 
         <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-white shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
           {list.map((m) => {
+            const beijirResult = resolveBeijirMatchResult({
+              slug: m.slug,
+              category: "beijir",
+              homeCode: m.homeCode,
+              awayCode: m.awayCode,
+            });
             const Row = (
               <div className="grid grid-cols-[4.25rem_1fr_auto] items-center gap-3 sm:grid-cols-[5.5rem_1fr_auto]">
                 <div className="text-[11px] font-semibold tabular-nums text-slate-500">
@@ -131,6 +138,11 @@ export default async function ZapasyBeijirPage() {
                 </div>
 
                 <div className="min-w-0">
+                  {beijirResult ? (
+                    <div className="mb-1 font-mono text-[10px] font-black leading-tight tracking-tight text-slate-800 sm:text-[11px]">
+                      {beijirResult.headline}
+                    </div>
+                  ) : null}
                   {(() => {
                     const teams = splitTeams(m);
                     if (!teams) {
@@ -157,7 +169,17 @@ export default async function ZapasyBeijirPage() {
                   </div>
                 </div>
 
-                <div className="text-sm font-black text-slate-400">-</div>
+                <div className="text-sm font-black tabular-nums text-slate-800">
+                  {beijirResult ? (
+                    <>
+                      {beijirResult.homeGoals}
+                      <span className="text-slate-400">:</span>
+                      {beijirResult.awayGoals}
+                    </>
+                  ) : (
+                    <span className="text-slate-400">-</span>
+                  )}
+                </div>
               </div>
             );
 

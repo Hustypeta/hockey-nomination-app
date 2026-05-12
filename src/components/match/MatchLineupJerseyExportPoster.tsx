@@ -1,12 +1,13 @@
 "use client";
 
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useMemo, type CSSProperties } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
+  splitMatchLineupLinePosterChunks,
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
 
@@ -43,7 +44,89 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
       [lineup, group, defenseCount, allowExtraForward]
     );
+    const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
     const cols = 2;
+
+    const cardShell: CSSProperties = {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 18,
+      padding: 18,
+      borderRadius: 22,
+      background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
+      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
+      border: "1px solid rgba(255,255,255,0.1)",
+      minHeight: 160,
+    };
+
+    const renderPlayerCard = (pid: string) => {
+      const player = byId.get(pid) ?? null;
+      const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
+      const role = roleForPlayerId(lineup, pid);
+      return (
+        <div key={pid} style={cardShell}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 8,
+              flexShrink: 0,
+            }}
+          >
+            <PremiumJerseySlotCard
+              player={player}
+              positionLabel={role.label}
+              kind={role.kind}
+              size="skater"
+              disableMotion
+              lightRinkSurface={false}
+              ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
+            />
+          </div>
+
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                fontSize: 26,
+                fontWeight: 900,
+                color: "white",
+                lineHeight: 1.05,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {player ? player.name : "—"}
+            </div>
+            {player ? (
+              <div
+                style={{
+                  marginTop: 6,
+                  fontSize: 14,
+                  color: "rgba(255,255,255,0.7)",
+                  lineHeight: 1.25,
+                }}
+              >
+                <span style={{ color: "white", fontWeight: 600 }}>{player.club}</span>
+                {player.league ? <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span> : null}
+              </div>
+            ) : null}
+            {player && player.name !== displayName ? (
+              <div
+                style={{
+                  marginTop: 4,
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.4)",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                Na dresu: <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      );
+    };
 
     return (
       <div
@@ -109,101 +192,80 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
           </div>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${cols}, 1fr)`,
-            gap: 22,
-            marginTop: 28,
-          }}
-        >
-          {ids.map((pid) => {
-            const player = byId.get(pid) ?? null;
-            const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
-            const role = roleForPlayerId(lineup, pid);
-            return (
+        {lineChunks ? (
+          <div
+            style={{
+              marginTop: 28,
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+            }}
+          >
+            {lineChunks.forwards.filter(Boolean).length > 0 ? (
               <div
-                key={pid}
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 18,
-                  padding: 18,
-                  borderRadius: 22,
-                  background:
-                    "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
-                  boxShadow:
-                    "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  minHeight: 160,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                  gap: 16,
+                  alignItems: "stretch",
                 }}
               >
+                {lineChunks.forwards.filter(Boolean).map((pid) => (
+                  <div key={pid}>{renderPlayerCard(pid)}</div>
+                ))}
+              </div>
+            ) : null}
+
+            {lineChunks.defense.filter(Boolean).length > 0 ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: 16,
+                  alignItems: "stretch",
+                }}
+              >
+                {lineChunks.defense.filter(Boolean).map((pid) => (
+                  <div key={pid}>{renderPlayerCard(pid)}</div>
+                ))}
+              </div>
+            ) : null}
+
+            {lineChunks.bottom.filter(Boolean).length > 0 ? (
+              lineChunks.bottom.filter(Boolean).length === 1 ? (
+                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                  <div style={{ width: "100%", maxWidth: 520 }}>
+                    {renderPlayerCard(lineChunks.bottom.filter(Boolean)[0]!)}
+                  </div>
+                </div>
+              ) : (
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 8,
-                    flexShrink: 0,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                    gap: 16,
+                    alignItems: "stretch",
                   }}
                 >
-                  <PremiumJerseySlotCard
-                    player={player}
-                      positionLabel={role.label}
-                      kind={role.kind}
-                    size="skater"
-                    disableMotion
-                    lightRinkSurface={false}
-                    ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
-                  />
+                  {lineChunks.bottom.filter(Boolean).map((pid) => (
+                    <div key={pid}>{renderPlayerCard(pid)}</div>
+                  ))}
                 </div>
-
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div
-                    style={{
-                      fontSize: 26,
-                      fontWeight: 900,
-                      color: "white",
-                      lineHeight: 1.05,
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    {player ? player.name : "—"}
-                  </div>
-                  {player ? (
-                    <div
-                      style={{
-                        marginTop: 6,
-                        fontSize: 14,
-                        color: "rgba(255,255,255,0.7)",
-                        lineHeight: 1.25,
-                      }}
-                    >
-                      <span style={{ color: "white", fontWeight: 600 }}>{player.club}</span>
-                      {player.league ? (
-                        <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span>
-                      ) : null}
-                    </div>
-                  ) : null}
-                  {player && player.name !== displayName ? (
-                    <div
-                      style={{
-                        marginTop: 4,
-                        fontSize: 11,
-                        color: "rgba(255,255,255,0.4)",
-                        letterSpacing: "0.04em",
-                      }}
-                    >
-                      Na dresu:{" "}
-                      <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              )
+            ) : null}
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${cols}, 1fr)`,
+              gap: 22,
+              marginTop: 28,
+            }}
+          >
+            {ids.map((pid) => renderPlayerCard(pid))}
+          </div>
+        )}
 
         <div
           style={{

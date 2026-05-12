@@ -79,10 +79,10 @@ export function MatchRatingExportButton({
         title: `Dresy a hodnocení — ${MATCH_LINEUP_POSTER_GROUP_TITLE[g]}`,
         hint:
           g === "line-1"
-            ? "3× útočník + 2× obránce + 1. gólman (stejný řez jako sestava na zápas)."
+            ? "Stejné rozložení jako dresy u zápasu: 3 útočníci, 2 obránci, pod nimi 1. gólman."
             : g === "line-4"
-              ? "3× útočník + 2× obránce + 13. útočník (pokud je povolen) + 2. gólman."
-              : "3× útočník + 2× obránce.",
+              ? "3 útočníci a 2 obránci jako výš; dole vedle sebe 13. útočník a 2. gólman (pokud jsou v sestavě)."
+              : "Tři útočníci vedle sebe, dva obránci vedle sebe (stejný řez jako sestava na zápas).",
       })),
     ],
     []

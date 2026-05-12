@@ -22,6 +22,30 @@ export const MATCH_LINEUP_POSTER_GROUP_TITLE: Record<MatchLineupPosterGroup, str
   "line-4": "4. lajna",
 };
 
+export type MatchLineupLinePosterGroup = "line-1" | "line-2" | "line-3" | "line-4";
+
+export function isMatchLineupLinePosterGroup(
+  group: MatchLineupPosterGroup
+): group is MatchLineupLinePosterGroup {
+  return group === "line-1" || group === "line-2" || group === "line-3" || group === "line-4";
+}
+
+/**
+ * Pořadí z `pickMatchLineupSegmentPlayerIds` u line-*: 3× F, 2× D, pak volitelně spodek
+ * (1. lajna: 1. gólman; 4. lajna: 13. útočník + 2. gólman).
+ */
+export function splitMatchLineupLinePosterChunks(
+  ids: string[],
+  group: MatchLineupPosterGroup
+): { forwards: string[]; defense: string[]; bottom: string[] } | null {
+  if (!isMatchLineupLinePosterGroup(group)) return null;
+  return {
+    forwards: ids.slice(0, 3),
+    defense: ids.slice(3, 5),
+    bottom: ids.slice(5),
+  };
+}
+
 export function pickMatchLineupSegmentPlayerIds(
   lineup: LineupStructure,
   group: MatchLineupPosterGroup,
