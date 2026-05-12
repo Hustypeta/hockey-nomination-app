@@ -27,6 +27,27 @@ type GameDayPayload = {
 
 type SlotPlayer = MsFantasyRosterPlayer | null;
 
+/** Pořadí slotů: 0 = G, 1–2 = D, 3–5 = F — stejné jako vizuální „squad“ na ledě. */
+const SLOT_G = 0;
+const SLOTS_D = [1, 2] as const;
+const SLOTS_F = [3, 4, 5] as const;
+
+function formationSlotsFromPicks(picks: Array<MsFantasyRosterPlayer | null | undefined>): SlotPlayer[] {
+  const out: SlotPlayer[] = Array.from({ length: MS_FANTASY_TEAM_SIZE }, () => null);
+  const flat = picks.filter((x): x is MsFantasyRosterPlayer => Boolean(x));
+  const g = flat.find((p) => p.position === "G");
+  const ds = flat.filter((p) => p.position === "D");
+  const fs = flat.filter((p) => p.position === "F");
+  if (g) out[SLOT_G] = g;
+  ds.slice(0, 2).forEach((p, i) => {
+    out[SLOTS_D[i]] = p;
+  });
+  fs.slice(0, 3).forEach((p, i) => {
+    out[SLOTS_F[i]] = p;
+  });
+  return out;
+}
+
 export function MsFantasyDayEditor({ slug }: { slug: string }) {
   const { status } = useSession();
   const [day, setDay] = useState<GameDayPayload | null>(null);
@@ -85,7 +106,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
           lineup: { picks: Array<MsFantasyRosterPlayer | null>; pickIds: string[] } | null;
         };
         if (cancelled || !data.lineup?.pickIds?.length) return;
-        const next: SlotPlayer[] = Array.from({ length: MS_FANTASY_TEAM_SIZE }, (_, i) => data.lineup!.picks[i] ?? null);
+        const next = formationSlotsFromPicks(data.lineup!.picks);
         setSlots(next);
       } catch {
         /* prázdné sloty */
@@ -164,55 +185,41 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
       const already = picksIds.includes(p.id);
       if (already) return;
 
-      if (p.position === "G") {
-        let nextSlots = [...slots];
-        /** Odstraň jakéhokoli předchozího GK */
-        nextSlots = nextSlots.map((s) => (s?.position === "G" ? null : s));
-
-        /** Slot pro nového GK: aktivní pokud je prázdný, jinak první prázdný */
-        let gIx =
-          activeIx < MS_FANTASY_TEAM_SIZE && !nextSlots[activeIx]?.id ? activeIx : nextSlots.findIndex((s) => !s?.id);
-        if (gIx === -1) {
-          /** plná lavice — přepíš aktivní */
-          gIx = activeIx;
-        }
-        nextSlots[gIx] = p;
-
-        /** Útok/obránce se nesmí dostat jen do slotů, kde je jen GK — jen úklid bez další změny */
-        setSlots(nextSlots);
-      } else {
-        /** Nejprvé zkus aktivní slot, pokud není GK */
-        const base = [...slots];
-        let target = activeIx;
-        if (base[target]?.position === "G") {
-          const j = base.findIndex((s, ix) => !s?.id && ix !== activeIx);
-          if (j !== -1) target = j;
-          else target = base.findIndex((s) => !s?.id);
-          if (target === -1) target = activeIx;
+      setSlots((prev) => {
+        const n = [...prev];
+        for (let i = 0; i < n.length; i++) {
+          if (n[i]?.id === p.id) n[i] = null;
         }
 
-        /** Nepřepisovat brankářský slot */
-        let finalIx = target;
-        if (base[finalIx]?.position === "G") {
-          const j = base.findIndex((s) => !s?.id);
-          if (j === -1) {
-            /** žádné volné — přepsat první ne-G slot */
-            const k = base.findIndex((s) => s?.position !== "G");
-            finalIx = k === -1 ? 0 : k;
-          } else finalIx = j;
+        if (p.position === "G") {
+          for (let i = 1; i < n.length; i++) {
+            if (n[i]?.position === "G") n[i] = null;
+          }
+          n[SLOT_G] = p;
+          return n;
         }
 
-        base[finalIx] = p;
-        setSlots(base);
+        if (p.position === "D") {
+          const empty = SLOTS_D.find((i) => !n[i]);
+          const ix = empty ?? (activeIx === 1 || activeIx === 2 ? activeIx : SLOTS_D[0]);
+          n[ix] = p;
+          return n;
+        }
 
-        const fe = base.findIndex((s) => !s?.id);
-        if (fe !== -1) setActiveIx(fe);
-      }
+        if (p.position === "F") {
+          const empty = SLOTS_F.find((i) => !n[i]);
+          const ix = empty ?? (activeIx >= 3 && activeIx <= 5 ? activeIx : SLOTS_F[0]);
+          n[ix] = p;
+          return n;
+        }
+
+        return n;
+      });
 
       setSaveErr(null);
       setSaveState("idle");
     },
-    [activeIx, day, picksIds, slots]
+    [activeIx, day, picksIds]
   );
 
   const save = useCallback(async () => {
@@ -348,62 +355,180 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {slots.map((slot, i) => {
-              const sel = activeIx === i;
-              const label = `Slot ${i + 1}`;
-              return (
-                <button
-                  key={label}
-                  type="button"
-                  disabled={day.isLocked}
-                  onClick={() => setActiveIx(i)}
-                  className={`
-                    flex min-h-[4.75rem] flex-col rounded-xl border px-3 py-3 text-left transition
-                    disabled:opacity-55
-                    ${
-                      sel
-                        ? "border-[#00B4FF]/55 bg-[#00B4FF]/12 shadow-[inset_0_0_0_1px_rgba(0,180,255,0.22)]"
-                        : "border-white/[0.08] bg-black/20 hover:border-white/[0.16]"
-                    }
-                  `}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500">{label}</span>
-                    {slot?.id ? (
-                      <button
-                        type="button"
-                        disabled={day.isLocked}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          clearSlot(i);
-                        }}
-                        className="text-[0.625rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
-                      >
-                        Odebrat
-                      </button>
-                    ) : null}
-                  </div>
-                  {slot ? (
-                    <div className="mt-2 min-w-0">
-                      <p className="truncate font-semibold text-white">{slot.name}</p>
-                      <p className="mt-1 text-[0.75rem] text-slate-500">
-                        {slot.jerseyNumber != null ? `#${slot.jerseyNumber} · ` : null}
-                        {slot.team} · {slot.position} · tier {slot.tier} ·{" "}
-                        <span className="text-[#7ee0ff]">{slot.salary}</span>
-                      </p>
+          <div className="mx-auto max-w-md space-y-5">
+            <div>
+              <p className="mb-2 text-center font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500">
+                Brankář
+              </p>
+              {(() => {
+                const i = SLOT_G;
+                const slot = slots[i];
+                const sel = activeIx === i;
+                return (
+                  <button
+                    key="slot-g"
+                    type="button"
+                    disabled={day.isLocked}
+                    onClick={() => setActiveIx(i)}
+                    className={`
+                      flex w-full min-h-[5.25rem] flex-col rounded-xl border px-4 py-3 text-left transition
+                      disabled:opacity-55
+                      ${
+                        sel
+                          ? "border-[#00B4FF]/55 bg-[#00B4FF]/12 shadow-[inset_0_0_0_1px_rgba(0,180,255,0.22)]"
+                          : "border-white/[0.08] bg-black/20 hover:border-white/[0.16]"
+                      }
+                    `}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="font-mono text-[0.7rem] font-bold text-[#7ee0ff]">G</span>
+                      {slot?.id ? (
+                        <button
+                          type="button"
+                          disabled={day.isLocked}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            clearSlot(i);
+                          }}
+                          className="text-[0.625rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
+                        >
+                          Odebrat
+                        </button>
+                      ) : null}
                     </div>
-                  ) : (
-                    <p className="mt-2 text-[0.8125rem] text-slate-600">Vyber hráče vpravo →</p>
-                  )}
-                </button>
-              );
-            })}
+                    {slot ? (
+                      <div className="mt-2 min-w-0">
+                        <p className="truncate text-base font-semibold text-white">{slot.name}</p>
+                        <p className="mt-1 text-[0.75rem] text-slate-500">
+                          {slot.team} · tier {slot.tier} · <span className="text-[#7ee0ff]">{slot.salary}</span>
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="mt-2 text-[0.8125rem] text-slate-600">Vyber gólmana vpravo →</p>
+                    )}
+                  </button>
+                );
+              })()}
+            </div>
+
+            <div>
+              <p className="mb-2 text-center font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500">
+                Obránci
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                {SLOTS_D.map((i) => {
+                  const slot = slots[i];
+                  const sel = activeIx === i;
+                  return (
+                    <button
+                      key={`slot-d-${i}`}
+                      type="button"
+                      disabled={day.isLocked}
+                      onClick={() => setActiveIx(i)}
+                      className={`
+                        flex min-h-[5.25rem] flex-col rounded-xl border px-3 py-3 text-left transition
+                        disabled:opacity-55
+                        ${
+                          sel
+                            ? "border-[#00B4FF]/55 bg-[#00B4FF]/12 shadow-[inset_0_0_0_1px_rgba(0,180,255,0.22)]"
+                            : "border-white/[0.08] bg-black/20 hover:border-white/[0.16]"
+                        }
+                      `}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="font-mono text-[0.7rem] font-bold text-[#7ee0ff]">D</span>
+                        {slot?.id ? (
+                          <button
+                            type="button"
+                            disabled={day.isLocked}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              clearSlot(i);
+                            }}
+                            className="text-[0.625rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
+                          >
+                            Odebrat
+                          </button>
+                        ) : null}
+                      </div>
+                      {slot ? (
+                        <div className="mt-2 min-w-0">
+                          <p className="truncate text-sm font-semibold leading-snug text-white">{slot.name}</p>
+                          <p className="mt-1 text-[0.7rem] text-slate-500">
+                            {slot.team} · {slot.tier} · <span className="text-[#7ee0ff]">{slot.salary}</span>
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="mt-2 text-[0.75rem] text-slate-600">Bek →</p>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 text-center font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500">
+                Útočníci
+              </p>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                {SLOTS_F.map((i) => {
+                  const slot = slots[i];
+                  const sel = activeIx === i;
+                  return (
+                    <button
+                      key={`slot-f-${i}`}
+                      type="button"
+                      disabled={day.isLocked}
+                      onClick={() => setActiveIx(i)}
+                      className={`
+                        flex min-h-[5.5rem] flex-col rounded-xl border px-2 py-2.5 text-left transition
+                        disabled:opacity-55
+                        ${
+                          sel
+                            ? "border-[#00B4FF]/55 bg-[#00B4FF]/12 shadow-[inset_0_0_0_1px_rgba(0,180,255,0.22)]"
+                            : "border-white/[0.08] bg-black/20 hover:border-white/[0.16]"
+                        }
+                      `}
+                    >
+                      <div className="flex items-start justify-between gap-1">
+                        <span className="font-mono text-[0.65rem] font-bold text-[#7ee0ff]">F</span>
+                        {slot?.id ? (
+                          <button
+                            type="button"
+                            disabled={day.isLocked}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              clearSlot(i);
+                            }}
+                            className="shrink-0 text-[0.55rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
+                          >
+                            ×
+                          </button>
+                        ) : null}
+                      </div>
+                      {slot ? (
+                        <div className="mt-1.5 min-w-0">
+                          <p className="line-clamp-2 text-[0.8125rem] font-semibold leading-tight text-white">
+                            {slot.name}
+                          </p>
+                          <p className="mt-1 text-[0.65rem] text-slate-500">
+                            {slot.team} · <span className="text-[#7ee0ff]">{slot.salary}</span>
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="mt-2 text-[0.7rem] text-slate-600">Útok →</p>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           <p className="mt-4 text-[0.7rem] leading-relaxed text-slate-500">
-            Kliknutím aktivuješ slot. Z výpisu pak přidej hráče; druhého gólmana se systém pokusí nepřepsat přes aktivní útočníkův
-            slot — i tak hlídej počet GK ručně. Ukládání vždy validuje kap a jednoho brankáře na serveru.
+            Klikni na pozici na „ledě“, pak vyber hráče vpravo — gólman jde vždy nahoru, beci doprostřed, útočníci dole.
+            Plná řada se přepíše na aktivním políčku. Uložení kontroluje cap a jednoho brankáře na serveru.
           </p>
         </section>
       </div>
@@ -448,7 +573,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             </div>
           ) : roster.length === 0 ? (
             <p className="px-3 py-10 text-center text-sm leading-relaxed text-slate-500">
-              V poolu ještě nejsou hráči nebo nesedí filtr — po naplnění Excelu/importu se tu objeví kompletní soupiska.
+              V poolu zatím nejsou hráči, nebo nesedí filtr — po seedu/importu se tu objeví soupiska MS.
             </p>
           ) : (
             <>

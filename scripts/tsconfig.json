@@ -13,5 +13,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["./**/*.ts", "../src/lib/clubLeague.ts"]
+  "include": ["./**/*.ts", "../prisma/seed.ts", "../src/lib/**/*.ts"]
 }

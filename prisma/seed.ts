@@ -1,9 +1,12 @@
 import "dotenv/config";
+import { config as loadEnv } from "dotenv";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { loadMs2026Candidates } from "../src/lib/ms2026Candidates";
+
+loadEnv({ path: join(process.cwd(), ".env.local"), override: true });
 
 /** MS 2026 fantasy import (`MS_FANTASY_SEED_*`) — v `ms_fantasy_roster_players` jen **platové tiery** (A–E). Tier A výjimečně SUI (Josi, Hischier, Meier). DEN/ITA/SLO: soupisky z veřejných zdrojů (viz JSON v `data/`), po zveřejnění IIHF lze snadno přepsat. */
 type FantasyRosterJsonRow = {
