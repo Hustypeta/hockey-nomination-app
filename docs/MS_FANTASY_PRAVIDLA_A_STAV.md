@@ -55,7 +55,7 @@ Pravidla bodů jsou definovaná v `src/lib/msFantasyConfig.ts` (`MS_FANTASY_POIN
 - Salary cap a kontrola 1× G v UI i na serveru (`validateMsFantasyLineup`, POST `my-lineup`).
 - Uložení sestavy na uživatele + den (`MsFantasyLineup`, `salarySpent`, `pickIds`), uzávěrka podle `lockAt`.
 - Načítání poolu (`/api/fantasy/roster`) a seznam dnů (`/api/fantasy/game-days`, `[slug]`).
-- Import soupisek a hracích dnů přes Prisma seed: **`MS_FANTASY_SEED_FANTASY_DATA=true`** načte `data/ms2026-fantasy-game-days.json` (17 dnů 15.–31. 5. 2026) + všechny soupisky z manifestu v `prisma/seed.ts` (smaže existující fantasy dny včetně odevzdaných sestav a celý pool). Jednotlivé týmy lze dál seedovat env `MS_FANTASY_SEED_AUT` apod.; vzorek: `MS_FANTASY_SEED_SAMPLE`.
+- Import soupisek a hracích dnů přes Prisma seed: **`MS_FANTASY_SEED_FANTASY_DATA=true`** načte `data/ms2026-fantasy-game-days.json` (17 dnů 15.–31. 5. 2026) + všechny soupisky z manifestu v `prisma/seed.ts` (smaže existující fantasy dny včetně odevzdaných sestav a celý pool). Jednotlivé týmy lze dál seedovat env `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` jen doplní dva ukázkové hrací dny, pokud v DB žádné nejsou (ne fantasy pool — ten je jen z JSON repre; při seedu se mažou záznamy `SAMPLE-*`).
 
 ---
 

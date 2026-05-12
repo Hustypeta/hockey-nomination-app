@@ -77,9 +77,9 @@ export function MsFantasyHome() {
             <span className="font-mono text-slate-400">MS_FANTASY_SEED_FANTASY_DATA=true</span> +{" "}
             <span className="font-mono text-slate-400">npm run db:seed</span> (dny z{" "}
             <span className="font-mono text-slate-400">data/ms2026-fantasy-game-days.json</span>, soupisky všech repre z{" "}
-            <span className="font-mono text-slate-400">data/</span> dle seedu; chybějící JSON se přeskočí s varováním). Nebo
-            jen vzorek:{" "}
-            <span className="font-mono text-slate-400">MS_FANTASY_SEED_SAMPLE=true</span> a případně{" "}
+            <span className="font-mono text-slate-400">data/</span> dle seedu; chybějící JSON se přeskočí s varováním). Jen
+            rychlý test bez kalendáře: <span className="font-mono text-slate-400">MS_FANTASY_SEED_SAMPLE=true</span> doplní
+            dva ukázkové hrací dny (pool hráčů ne — ten jen z JSON repre), případně zapni jednotlivé týmy{" "}
             <span className="font-mono text-slate-400">MS_FANTASY_SEED_AUT=true</span>,{" "}
             <span className="font-mono text-slate-400">MS_FANTASY_SEED_DEN=true</span>, … Viz{" "}
             <span className="font-mono text-slate-400">prisma/seed.ts</span>.

@@ -8,7 +8,7 @@ import { loadMs2026Candidates } from "../src/lib/ms2026Candidates";
 
 loadEnv({ path: join(process.cwd(), ".env.local"), override: true });
 
-/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`). Kompletní kalendář + všechny soupisky z `data/`: `MS_FANTASY_SEED_FANTASY_DATA=true` (smaže fantasy dny včetně odevzdaných sestav a celý pool, pak načte `ms2026-fantasy-game-days.json` + JSON repre dle manifestu v `prisma/seed.ts`). Jinak jednotlivé `MS_FANTASY_SEED_AUT` apod. a volitelně `MS_FANTASY_SEED_SAMPLE` (2 ukázkové dny + 10 hráčů). */
+/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`). Kompletní kalendář + všechny soupisky z `data/`: `MS_FANTASY_SEED_FANTASY_DATA=true` (smaže fantasy dny včetně odevzdaných sestav a celý pool, pak načte `ms2026-fantasy-game-days.json` + JSON repre dle manifestu v `prisma/seed.ts`). Jinak jednotlivé `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` už jen doplní **2 ukázkové hrací dny** (ne pool) pokud v DB žádné dny nejsou — pool vždy jen z JSON repre. Při každém seedu se smažou záznamy s kódem `SAMPLE-*` (starý vývojový vzorek). */
 type FantasyRosterJsonRow = {
   code: string;
   name: string;
@@ -135,25 +135,6 @@ async function seedMsFantasySample() {
     });
     console.log("Seeded 2 sample MS fantasy game days (MS_FANTASY_SEED_SAMPLE)");
   }
-
-  const existingRoster = await prisma.msFantasyRosterPlayer.count();
-  if (existingRoster === 0) {
-    await prisma.msFantasyRosterPlayer.createMany({
-      data: [
-        { code: "SAMPLE-G-1", name: "Ukázkový Brankář", team: "CZE", jerseyNumber: 1, position: "G", tier: "A" },
-        { code: "SAMPLE-G-2", name: "Druhý Brankář", team: "SWE", jerseyNumber: 30, position: "G", tier: "B" },
-        { code: "SAMPLE-D-1", name: "Ukázkový Obránce", team: "CAN", jerseyNumber: 8, position: "D", tier: "B" },
-        { code: "SAMPLE-D-2", name: "Tvrdý Defenzivák", team: "USA", jerseyNumber: 33, position: "D", tier: "C" },
-        { code: "SAMPLE-F-1", name: "Útočná Hvězda", team: "FIN", jerseyNumber: 88, position: "F", tier: "A" },
-        { code: "SAMPLE-F-2", name: "Kreativní Center", team: "CZE", jerseyNumber: 14, position: "F", tier: "B" },
-        { code: "SAMPLE-F-3", name: "Wing Střelec", team: "FIN", jerseyNumber: 17, position: "F", tier: "C" },
-        { code: "SAMPLE-F-4", name: "Dvousměrák", team: "LAT", jerseyNumber: 47, position: "F", tier: "D" },
-        { code: "SAMPLE-F-5", name: "Rychlý Křídelník", team: "AUT", jerseyNumber: 11, position: "F", tier: "E" },
-        { code: "SAMPLE-D-3", name: "Tichý Blokátor", team: "CHE", jerseyNumber: 5, position: "D", tier: "E" },
-      ],
-    });
-    console.log("Seeded 10 sample fantasy roster players (MS_FANTASY_SEED_SAMPLE)");
-  }
 }
 
 async function seedAustriaMs2026FantasyRoster() {
@@ -260,6 +241,13 @@ async function main() {
   });
 
   console.log(`Seeded ${rows.length} players from czech-ms-2026-candidates-80.json`);
+
+  const removedSample = await prisma.msFantasyRosterPlayer.deleteMany({
+    where: { code: { startsWith: "SAMPLE-" } },
+  });
+  if (removedSample.count > 0) {
+    console.log(`Odstraněno ${removedSample.count} řádků ukázkových fantasy hráčů (kód SAMPLE-*).`);
+  }
 
   await seedMsFantasyFantasyDataBundle();
 
