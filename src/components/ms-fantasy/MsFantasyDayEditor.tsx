@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { MS_FANTASY_CAP, MS_FANTASY_TEAM_SIZE } from "@/lib/msFantasyConfig";
+import { MS_FANTASY_ROSTER_TEAM_OPTIONS, MS_FANTASY_TIER_CODES } from "@/lib/msFantasyRosterFilters";
 
 export type MsFantasyRosterPlayer = {
   id: string;
@@ -59,6 +60,8 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
   const [q, setQ] = useState("");
   const [posFilter, setPosFilter] = useState("");
+  const [teamFilter, setTeamFilter] = useState("");
+  const [tierFilter, setTierFilter] = useState("");
   const [roster, setRoster] = useState<MsFantasyRosterPlayer[]>([]);
   const [rosterSkip, setRosterSkip] = useState<number | null>(null);
   const [rosterLoading, setRosterLoading] = useState(false);
@@ -69,6 +72,17 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   const salaryUsed = useMemo(() => slots.reduce((s, p) => s + (p?.salary ?? 0), 0), [slots]);
   const picksIds = useMemo(() => slots.map((p) => p?.id).filter(Boolean) as string[], [slots]);
   const goalieCount = useMemo(() => slots.filter((s) => s?.position === "G").length, [slots]);
+  const hasExtraRosterFilters = Boolean(teamFilter || tierFilter);
+
+  const appendRosterQueryParams = useCallback(
+    (sp: URLSearchParams) => {
+      if (q.trim()) sp.set("q", q.trim());
+      if (posFilter) sp.set("position", posFilter);
+      if (teamFilter) sp.set("team", teamFilter);
+      if (tierFilter) sp.set("tier", tierFilter);
+    },
+    [q, posFilter, teamFilter, tierFilter]
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -124,8 +138,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
         setRosterLoading(true);
         try {
           const sp = new URLSearchParams();
-          if (q.trim()) sp.set("q", q.trim());
-          if (posFilter) sp.set("position", posFilter);
+          appendRosterQueryParams(sp);
           sp.set("skip", "0");
           sp.set("take", "60");
           const res = await fetch(`/api/fantasy/roster?${sp}`, { cache: "no-store" });
@@ -146,15 +159,14 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [q, posFilter]);
+  }, [appendRosterQueryParams]);
 
   const loadMoreRoster = useCallback(async () => {
     if (rosterSkip == null) return;
     setRosterLoading(true);
     try {
       const sp = new URLSearchParams();
-      if (q.trim()) sp.set("q", q.trim());
-      if (posFilter) sp.set("position", posFilter);
+      appendRosterQueryParams(sp);
       sp.set("skip", String(rosterSkip));
       sp.set("take", "60");
       const res = await fetch(`/api/fantasy/roster?${sp}`, { cache: "no-store" });
@@ -165,7 +177,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
     } finally {
       setRosterLoading(false);
     }
-  }, [q, posFilter, rosterSkip]);
+  }, [appendRosterQueryParams, rosterSkip]);
 
   const clearSlot = useCallback((i: number) => {
     setSlots((prev) => {
@@ -551,6 +563,56 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             </button>
           ))}
         </div>
+
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-1 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Repre</span>
+            <select
+              value={teamFilter}
+              onChange={(e) => setTeamFilter(e.target.value)}
+              className="w-full rounded-xl border border-white/[0.1] bg-[#080c14]/95 px-3 py-2 text-sm text-white outline-none focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30"
+            >
+              <option value="">Všechny země</option>
+              {MS_FANTASY_ROSTER_TEAM_OPTIONS.map((t) => (
+                <option key={t.code} value={t.code}>
+                  {t.labelCs} ({t.code})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Platový tier</span>
+            <select
+              value={tierFilter}
+              onChange={(e) => setTierFilter(e.target.value)}
+              className="w-full rounded-xl border border-white/[0.1] bg-[#080c14]/95 px-3 py-2 text-sm text-white outline-none focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30"
+            >
+              <option value="">Všechny tiery</option>
+              {MS_FANTASY_TIER_CODES.map((t) => (
+                <option key={t} value={t}>
+                  Tier {t}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        {hasExtraRosterFilters ? (
+          <button
+            type="button"
+            onClick={() => {
+              setTeamFilter("");
+              setTierFilter("");
+            }}
+            className="mt-2 text-xs font-semibold text-[#00B4FF] hover:underline"
+          >
+            Zrušit filtry repre / tier
+          </button>
+        ) : null}
+
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-600">
+          Klubová liga u fantasy poolu zatím v datech není — jen reprezentace, tier a pozice z importu MS.
+        </p>
 
         <input
           type="search"
