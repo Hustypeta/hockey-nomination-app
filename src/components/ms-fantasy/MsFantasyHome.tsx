@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, BookOpen, Calendar } from "lucide-react";
 import { MS_FANTASY_CAP } from "@/lib/msFantasyConfig";
 
 type DayRow = {
@@ -46,6 +46,15 @@ export function MsFantasyHome() {
           Každý hrací den sestavíš <span className="text-slate-200">6 hráčů</span> z poolu (1× brankář, zbytek útočníci
           nebo obránci). Zastropování <span className="text-slate-200">{MS_FANTASY_CAP} kreditů</span> na den. Odevzdání
           musí být před prvním zápasem dne — čas uzávěrky u každého dne níže.
+        </p>
+        <p className="mt-4">
+          <Link
+            href="/fantasy/pravidla"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#00B4FF]/35 bg-[#00B4FF]/10 px-4 py-2.5 text-sm font-semibold text-[#7ee0ff] transition hover:border-[#00B4FF]/55 hover:bg-[#00B4FF]/15"
+          >
+            <BookOpen className="h-4 w-4 shrink-0 text-[#00B4FF]" aria-hidden />
+            Kompletní pravidla a fantasy body
+          </Link>
         </p>
       </div>
 

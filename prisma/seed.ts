@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { loadMs2026Candidates } from "../src/lib/ms2026Candidates";
 
-/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`) — v `ms_fantasy_roster_players` jde jen o **platové tiery** (A–E), ne o písmena kapitánů na dresech. Tier A jen výjimečně: SUI (Josi, Hischier, Meier). Ostatní zkratky v logu: GBR Kirk v C; HUN/LAT/NOR/SVK podle JSON. */
+/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`) — v `ms_fantasy_roster_players` jen **platové tiery** (A–E). Tier A výjimečně SUI (Josi, Hischier, Meier). DEN/ITA/SLO: soupisky z veřejných zdrojů (viz JSON v `data/`), po zveřejnění IIHF lze snadno přepsat. */
 type FantasyRosterJsonRow = {
   code: string;
   name: string;
@@ -343,6 +343,93 @@ async function seedSlovakiaMs2026FantasyRoster() {
   console.log("  Platové tiery: B Hlavaj, M. Pospíšil, Sýkora · bez platového A · zbytek C/D/E");
 }
 
+async function seedDenmarkMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_DEN?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "denmark-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_DEN: nepodařilo se načíst data/denmark-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_DEN: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "DEN" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Denmark MS 2026 fantasy roster rows (MS_FANTASY_SEED_DEN)`);
+  console.log("  Platové tiery: jen C–E (Mølgaard, Blichfeld v C) · zbytek D/E");
+}
+
+async function seedItalyMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_ITA?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "italy-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_ITA: nepodařilo se načíst data/italy-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_ITA: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "ITA" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Italy MS 2026 fantasy roster rows (MS_FANTASY_SEED_ITA)`);
+  console.log("  Platové tiery: jen C–E (Larkin, Mantenuto v C) · zbytek D/E");
+}
+
+async function seedSloveniaMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_SLO?.trim() !== "true") return;
+  const fp = join(process.cwd(), "data", "slovenia-ms2026-fantasy-roster.json");
+  let rows: FantasyRosterJsonRow[];
+  try {
+    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
+  } catch {
+    console.warn("MS_FANTASY_SEED_SLO: nepodařilo se načíst data/slovenia-ms2026-fantasy-roster.json — přeskakuji.");
+    return;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) {
+    console.warn("MS_FANTASY_SEED_SLO: prázdný soubor — přeskakuji.");
+    return;
+  }
+  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team: "SLO" } });
+  await prisma.msFantasyRosterPlayer.createMany({
+    data: rows.map((r) => ({
+      code: r.code,
+      name: r.name,
+      team: r.team,
+      jerseyNumber: r.jerseyNumber ?? null,
+      position: r.position,
+      tier: r.tier.trim().toUpperCase(),
+    })),
+  });
+  console.log(`Seeded ${rows.length} Slovenia MS 2026 fantasy roster rows (MS_FANTASY_SEED_SLO)`);
+  console.log("  Platové tiery: jen C–E (Drozg, Sabolič v C) · dresy v datech null (doplnit z IIHF) · zbytek D/E");
+}
+
 async function main() {
   console.log("Seeding database (MS 2026 kandidáti)...");
 
@@ -374,6 +461,9 @@ async function main() {
   await seedSwitzerlandMs2026FantasyRoster();
   await seedNorwayMs2026FantasyRoster();
   await seedSlovakiaMs2026FantasyRoster();
+  await seedDenmarkMs2026FantasyRoster();
+  await seedItalyMs2026FantasyRoster();
+  await seedSloveniaMs2026FantasyRoster();
 }
 
 main()

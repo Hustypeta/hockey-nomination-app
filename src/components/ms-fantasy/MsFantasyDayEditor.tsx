@@ -271,9 +271,17 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 lg:flex-row lg:gap-10">
       <div className="min-w-0 flex-1 space-y-5">
         <div>
-          <Link href="/fantasy" className="text-xs font-semibold text-[#00B4FF] hover:underline">
-            ← Hrací dny
-          </Link>
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+            <Link href="/fantasy" className="font-semibold text-[#00B4FF] hover:underline">
+              ← Hrací dny
+            </Link>
+            <span className="text-slate-600" aria-hidden>
+              ·
+            </span>
+            <Link href="/fantasy/pravidla" className="font-semibold text-[#00B4FF] hover:underline">
+              Pravidla a body
+            </Link>
+          </p>
           <h1 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">{day.title}</h1>
           <p className="mt-2 text-sm text-slate-400">
             Uzávěrka:{" "}
