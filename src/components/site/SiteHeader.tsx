@@ -7,20 +7,30 @@ import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
+import { isMsFantasyVisibleToUsers } from "@/lib/msFantasyConfig";
 
 type NavItem = { href: string; label: string; shortLabel?: string };
 
 /** shortLabel = kratší text na úzkém desktopu (pod xl), aby se vešly všechny položky bez skrytého scrollu */
-const NAV: NavItem[] = [
+const NAV_BASE: NavItem[] = [
   { href: "/", label: "Úvod" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
   { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
   { href: "/zapasy/sestava", label: "Tvorba sestavy na zápas", shortLabel: "Sestava zápas" },
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
+];
+
+const NAV_TAIL: NavItem[] = [
   { href: "/bracket", label: "Pick’em" },
   { href: "/forum", label: "Fórum" },
   { href: "/zebricek", label: "Žebříček" },
   { href: "/pravidla-souteze", label: "Pravidla" },
+];
+
+const NAV: NavItem[] = [
+  ...NAV_BASE,
+  ...(isMsFantasyVisibleToUsers() ? [{ href: "/fantasy", label: "Fantasy MS", shortLabel: "Fantasy" } as NavItem] : []),
+  ...NAV_TAIL,
 ];
 
 function DesktopNavLabel({ item }: { item: NavItem }) {

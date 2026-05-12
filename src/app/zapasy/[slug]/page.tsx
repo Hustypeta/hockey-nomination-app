@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 import type { LineupStructure } from "@/types";
 import { MatchRatingExperience } from "@/components/match/MatchRatingExperience";
-import { MatchRatingShareControls } from "@/components/match/MatchRatingShareControls";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { SiteShell } from "@/components/site/SiteShell";
 
@@ -189,12 +188,6 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
 
         {lineup && match?.officialLineup ? (
           <div className="mt-8 space-y-6">
-            {ratingGate.open && !preview ? (
-              <MatchRatingShareControls
-                matchSlug={match!.slug}
-                defaultTitle={`Hodnocení — ${match!.title}`}
-              />
-            ) : null}
             <MatchRatingExperience
               slug={match!.slug}
               matchTitle={match!.title}

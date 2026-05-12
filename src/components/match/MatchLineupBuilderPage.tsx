@@ -27,7 +27,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useUndoableState } from "@/hooks/useUndoableState";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
-import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
+import { MatchLineupSaveShareModal } from "@/components/match/MatchLineupSaveShareModal";
 
 function isMatchLineupValid(
   lineup: LineupStructure,
@@ -64,6 +64,7 @@ export function MatchLineupBuilderPage() {
   const [draftImportReady, setDraftImportReady] = useState(!needDraftImport);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
   const [lineupPosterModalOpen, setLineupPosterModalOpen] = useState(false);
+  const [saveShareModalOpen, setSaveShareModalOpen] = useState(false);
   /** Široký layout (≥ lg): DnD z poolu zapnuté. Úzký: jen klepnutí, bez přetahování. */
   const enableDnd = !isNarrowLayout;
 
@@ -412,60 +413,6 @@ export function MatchLineupBuilderPage() {
                 Fanouškovský editor (sdílení jako u nominace). {authStatus === "authenticated" ? "Přihlášeno." : ""}
               </p>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <input
-                value={shareTitle}
-                onChange={(e) => setShareTitle(e.target.value)}
-                className="rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-white"
-                placeholder="Název sestavy…"
-              />
-              <button
-                type="button"
-                onClick={() => void saveShare()}
-                disabled={saving}
-                className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2 text-sm font-bold text-white disabled:opacity-50"
-              >
-                {saving ? "Ukládám…" : "Uložit"}
-              </button>
-              <button
-                type="button"
-                onClick={() => void handleShare()}
-                disabled={saving || !valid}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#f1c40f]/40 bg-gradient-to-b from-[#f1c40f]/15 to-[#f1c40f]/5 px-4 py-2 text-sm font-bold text-[#f1e6a8] hover:from-[#f1c40f]/25 hover:to-[#f1c40f]/10 disabled:opacity-50"
-              >
-                Sdílet
-              </button>
-            </div>
-          </div>
-          {shareUrl ? (
-            <p className="mt-3 text-xs text-white/60">
-              Odkaz: <span className="select-all font-mono text-white">{shareUrl}</span>
-            </p>
-          ) : null}
-          <div className="mt-4 border-t border-white/[0.08] pt-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45">
-              Export grafiky (Instagram)
-            </p>
-            <p className="mt-1 text-xs text-white/50">
-              Stejná nabídka jako u hodnocení zápasu: celý tým jen jména (jako grafika nominace), pak řezy s dresy po
-              kompletních lajnách (3× útočník + 2× obránce; na 1. řezu též 1. gólman, na 4. též 13. útočník a 2. gólman).
-              Na mobilu ji najdeš také jako <strong className="text-white/80">Generovat plakát</strong>{" "}
-              ve spodní liště (ikona stažení).
-            </p>
-            <div className="mt-3">
-              <MatchLineupImageExportButton
-                modalOpen={lineupPosterModalOpen}
-                onModalOpenChange={setLineupPosterModalOpen}
-                shareTitle={shareTitle}
-                lineup={lineup}
-                players={players}
-                defenseCount={defenseCount}
-                allowExtraForward={allowExtraForward}
-                shareSlug={shareSlug}
-                siteOrigin={siteOrigin}
-                disabled={!valid}
-              />
-            </div>
           </div>
         </div>
 
@@ -597,7 +544,7 @@ export function MatchLineupBuilderPage() {
       <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
 
       <FloatingSestavaBar
-        onShare={() => void handleShare()}
+        onShare={() => setSaveShareModalOpen(true)}
         onRandom={handleRandom}
         onReset={handleReset}
         onUndo={handleUndo}
@@ -605,6 +552,26 @@ export function MatchLineupBuilderPage() {
         shareDisabled={saving || !valid}
         shareLabel={saving ? "Ukládám…" : shareUrl ? "Sdílet" : "Uložit & sdílet"}
         className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+      />
+
+      <MatchLineupSaveShareModal
+        open={saveShareModalOpen}
+        onClose={() => setSaveShareModalOpen(false)}
+        shareTitle={shareTitle}
+        onShareTitleChange={setShareTitle}
+        shareUrl={shareUrl}
+        saving={saving}
+        valid={valid}
+        onSave={saveShare}
+        onShareLink={handleShare}
+        posterModalOpen={lineupPosterModalOpen}
+        onPosterModalOpenChange={setLineupPosterModalOpen}
+        lineup={lineup}
+        players={players}
+        defenseCount={defenseCount}
+        allowExtraForward={allowExtraForward}
+        shareSlug={shareSlug}
+        siteOrigin={siteOrigin}
       />
     </div>
   );

@@ -9,6 +9,8 @@ import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
 import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
 import { MatchRatingExportButton } from "@/components/match/MatchRatingExportButton";
+import { FloatingPrimaryBar } from "@/components/shared/FloatingPrimaryBar";
+import { MatchRatingSaveShareModal } from "@/components/match/MatchRatingSaveShareModal";
 
 type RatingMap = Record<string, { avg: number; count: number }>;
 
@@ -66,6 +68,7 @@ export function MatchRatingExperience({
   lockedReason,
   startsAtLabel,
 }: MatchRatingExperienceProps) {
+  const [shareOpen, setShareOpen] = useState(false);
   const [ratings, setRatings] = useState<RatingMap>(initialRatings);
   const [myRatings, setMyRatings] = useState<Record<string, number>>(initialMyRatings);
   const [sheetPlayerId, setSheetPlayerId] = useState<string | null>(null);
@@ -89,6 +92,27 @@ export function MatchRatingExperience({
 
   return (
     <>
+      {canRate ? (
+        <>
+          <FloatingPrimaryBar
+            label="Uložit & sdílet"
+            onClick={() => setShareOpen(true)}
+          />
+          <MatchRatingSaveShareModal
+            open={shareOpen}
+            onClose={() => setShareOpen(false)}
+            matchTitle={matchTitle}
+            startsAtLabel={startsAtLabel}
+            matchSlug={slug}
+            lineup={lineup}
+            players={players}
+            defenseCount={defenseCount}
+            allowExtraForward={allowExtraForward}
+            ratings={ratings}
+            myRatings={myRatings}
+          />
+        </>
+      ) : null}
       <div className="flex flex-wrap items-center justify-end gap-2">
         <MatchRatingExportButton
           matchTitle={matchTitle}
@@ -228,7 +252,7 @@ function RatingSheet({
   /** Po otevření sheetu pro nového hráče zresetujeme draft z props, ne z předchozího sheetu. */
   useEffect(() => {
     setDraft(draftFromMineOrAggregate(mine, aggregate));
-  }, [mine, player.id, aggregate.avg, aggregate.count]);
+  }, [mine, player.id, aggregate]);
 
   const submit = async () => {
     if (!canRate) {

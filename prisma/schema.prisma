@@ -37,6 +37,7 @@ model User {
   nominations   Nomination[] @relation("NominationOwner")
   pickemEntry   PickemEntry?
   matchShareLinks MatchShareLink[]
+  msFantasyLineups MsFantasyLineup[]
   /// Jedna nominace na uživatele započítaná do soutěže (odeslání do soutěže).
   contestEntryNominationId String? @unique
   contestEntryNomination   Nomination? @relation("ContestEntry", fields: [contestEntryNominationId], references: [id], onDelete: SetNull)
@@ -244,4 +245,58 @@ model MatchRatingShareLink {
 
   @@index([matchId])
   @@map("match_rating_share_links")
+}
+
+/// Hráč ve fantasy poolu MS — import z Excelu: ID→`code`, jméno, pozice O/Ú/B→G/D/F, tým, kategorie→`tier`, číslo dresu.
+model MsFantasyRosterPlayer {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  team         String
+  jerseyNumber Int?
+  /// G | D | F — v databázi vždy tyto hodnoty; z Excelu (O / Ú / B) při importu přemapuj přes `normalizeMsFantasyPosition`.
+  position     String
+  /// Kategorie z Excelu (úroveň hráče A–E) — plat dle `msFantasyConfig`.
+  tier         String
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([position])
+  @@index([active])
+  @@map("ms_fantasy_roster_players")
+}
+
+/// Jeden uzamykatelný hrací den (deadline = lockAt před prvním zápasem).
+model MsFantasyGameDay {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  lockAt    DateTime
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lineups MsFantasyLineup[]
+
+  @@index([lockAt])
+  @@map("ms_fantasy_game_days")
+}
+
+/// Odevzdaná sestava uživatele na konkrétní den (6× id z poolu, pořadí = sloty).
+model MsFantasyLineup {
+  id          String   @id @default(cuid())
+  userId      String
+  gameDayId   String
+  pickIds     String[]
+  salarySpent Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameDay MsFantasyGameDay @relation(fields: [gameDayId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameDayId])
+  @@index([gameDayId])
+  @@map("ms_fantasy_lineups")
 }
