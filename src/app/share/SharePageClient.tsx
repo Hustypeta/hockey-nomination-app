@@ -50,7 +50,7 @@ function ShareContentInner({
 
   if (!payload) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#0c0e12] px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-transparent px-4">
         <p className="mb-4 font-display text-xl text-white">Odkaz je neplatný nebo poškozený.</p>
         <Link href="/sestava" className="text-[#c41e3a] hover:underline">
           ← Zpět na editor nominace
@@ -62,7 +62,7 @@ function ShareContentInner({
   const ordered = lineupToPlayers(payload.lineupStructure, players);
   if (ordered.length !== 25) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#0c0e12] px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-transparent px-4">
         <p className="mb-4 text-center font-display text-xl text-white">
           V odkazu chybí data hráčů nebo je sestava nekompletní.
         </p>

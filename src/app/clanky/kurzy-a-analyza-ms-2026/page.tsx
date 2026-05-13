@@ -22,7 +22,7 @@ const TABLE = [
 
 export default function ArticleOddsAnalysisPage() {
   return (
-    <main className="min-h-screen bg-[#05080f] text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <div className="sticky top-0 z-40">
         <SiteHeader />
       </div>
@@ -77,7 +77,7 @@ export default function ArticleOddsAnalysisPage() {
             </h2>
 
             <p>
-              1. Kanada: Ofenzivní síla a hloubka kádruKanada potvrzuje roli tradičního hegemona. Letošní výběr těží z kombinace nastupujících hvězd a zkušených veteránů. Účast potvrdili hráči jako Macklin Celebrini, Gavin McKenna, Mark Scheifele či Mathew Barzal, v obraně pak vyčnívá Morgan Rielly. Přítomnost lídrů jako Tavares či O’Reilly dodává týmu potřebný klid. Pokud se kanadskému výběru podaří stabilizovat brankoviště, bude díky své ofenzivní hloubce jen těžko k zastavení.
+              1. Kanada: Ofenzivní síla a hloubka kádruKanada potvrzuje roli tradičního hegemona. Letošní výběr těží z kombinace nastupujících hvězd a zkušených veteránů. Účast potvrdili hráči jako Macklin Celebrini, Gavin McKenna nebo Mark Scheifele, v obraně pak vyčnívá Morgan Rielly. Přítomnost lídrů jako Tavares či O’Reilly dodává týmu potřebný klid. Pokud se kanadskému výběru podaří stabilizovat brankoviště, bude díky své ofenzivní hloubce jen těžko k zastavení.
             </p>
             <p>
               2. USA: Dynamika a obhajoba zlataAmerický výběr obhajuje loňské prvenství a i letos sází na agresivní forčeking a vynikající bruslení. Kádr složený výhradně z hráčů NHL je v pohybu dominantní a dokáže soupeře dostat pod extrémní tlak. USA zůstávají jedním z nejvážnějších kandidátů na finálovou účast.

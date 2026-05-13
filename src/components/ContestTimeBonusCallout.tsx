@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarClock, Zap } from "lucide-react";
-import { CONTEST_DEADLINE_CS, type ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
+import { Zap } from "lucide-react";
+import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
 export function ContestTimeBonusCallout({
   variant,
@@ -86,47 +86,20 @@ export function ContestTimeBonusCallout({
                 : "text-xs font-semibold tracking-wide text-sky-300/95"
             }
           >
-            Aktuální časový bonus
+            {isLanding ? "Nominační soutěž" : "Aktuální časový bonus"}
           </p>
           {isLanding ? (
             <>
-              <p className="mt-3 font-display text-[clamp(1.85rem,4.2vw,2.5rem)] font-bold leading-[1.08] tracking-tight">
-                {bonusPercent > 0 ? (
-                  <>
-                    <span className="bg-gradient-to-br from-sky-50 via-sky-200 to-sky-400/95 bg-clip-text text-transparent drop-shadow-[0_2px_20px_rgba(56,189,248,0.35)]">
-                      +{bonusPercent} %
-                    </span>
-                    <span className="text-[0.58em] font-semibold uppercase tracking-[0.14em] text-white/78">
-                      {" "}
-                      k bodům
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-white/90">Právě bez časového bonusu</span>
-                )}
-              </p>
-              <p className="mt-3 text-sm">
+              <p className="mt-3 text-pretty text-sm leading-relaxed text-white/88 sm:text-[15px]">
                 <Link
                   href="/pravidla-souteze"
-                  className="inline-flex items-center gap-1 font-medium text-sky-300/95 underline decoration-sky-400/35 underline-offset-[5px] transition hover:text-sky-200 hover:decoration-sky-300/60"
+                  className="font-semibold text-sky-300 underline decoration-sky-400/45 underline-offset-[4px] transition hover:text-white hover:decoration-sky-300/70"
                 >
                   více v pravidlech soutěže
                 </Link>
+                <span className="text-white/55"> — </span>
+                Nominační soutěž ukončena. Aktuálně se čeká na oficiální soupisku k prvnímu zápasu.
               </p>
-              <div className="mt-5 rounded-2xl border border-white/[0.08] bg-black/30 px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:py-4">
-                <div className="flex gap-3">
-                  <CalendarClock className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 text-sky-300/70" aria-hidden />
-                  <p className="text-xs leading-relaxed text-white/55">
-                    <span className="block font-semibold text-white/72">Uzávěrka odeslání</span>
-                    <span className="mt-1 block text-[13px] text-white/88">{CONTEST_DEADLINE_CS}</span>
-                    {!submissionOpen ? (
-                      <span className="mt-2 block font-semibold text-rose-300/95">
-                        Soutěž už nepřijímá nové nominace k vyhodnocení.
-                      </span>
-                    ) : null}
-                  </p>
-                </div>
-              </div>
             </>
           ) : (
             <>

@@ -17,7 +17,7 @@ export default async function MatchShareViewPage({ params }: { params: Promise<{
   const lineup = row.lineupStructure as unknown as LineupStructure;
   const players = loadMs2026Candidates();
   return (
-    <main className="min-h-screen bg-[#05080f] text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <div className="mx-auto max-w-5xl px-4 py-10">
         <h1 className="font-display text-2xl font-black">{row.title ?? "Sdílená sestava"}</h1>
         <p className="mt-2 text-sm text-white/60">Sestava na zápas (sdílení).</p>

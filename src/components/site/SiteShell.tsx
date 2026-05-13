@@ -1,4 +1,3 @@
-import { SiteBackground } from "@/components/site/SiteBackground";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteHeader } from "@/components/site/SiteHeader";
 
@@ -10,8 +9,7 @@ export function SiteShell({
   showFooter?: boolean;
 }) {
   return (
-    <div className="relative min-h-screen bg-[#05080f] text-white">
-      <SiteBackground />
+    <div className="relative min-h-screen bg-transparent text-white">
       <SiteHeader />
       <div className="relative z-10">{children}</div>
       {showFooter ? (

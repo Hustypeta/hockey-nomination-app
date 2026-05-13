@@ -5,7 +5,6 @@ import type { Player, LineupStructure } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
 import { SestavaHero } from "@/components/sestava/SestavaHero";
 import { LineBuilder } from "@/components/LineBuilder";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
@@ -44,7 +43,6 @@ export function ReadonlySquadBuilderView({
 
   return (
     <div className="sestava-page-ambient min-h-screen pb-24 text-white">
-      <SestavaAmbientBackground />
 
       <div className="sticky top-0 z-40">
         <SiteHeader />

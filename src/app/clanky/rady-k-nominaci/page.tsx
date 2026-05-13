@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function ArticleNominationTipsPage() {
   return (
-    <main className="min-h-screen bg-[#05080f] text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <div className="sticky top-0 z-40">
         <SiteHeader />
       </div>

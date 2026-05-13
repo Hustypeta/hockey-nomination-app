@@ -14,7 +14,7 @@ export const metadata: Metadata = {
  */
 export default function PromoFbCoverPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0c] px-3 py-6 sm:px-6 sm:py-10">
+    <div className="min-h-screen bg-transparent px-3 py-6 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-[min(100%,1240px)]">
         <div className="mb-5 rounded-xl border border-sky-400/20 bg-sky-500/[0.06] px-4 py-3 text-center sm:px-5">
           <p className="font-display text-[11px] font-bold uppercase tracking-[0.2em] text-sky-200/85">

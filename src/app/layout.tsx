@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { FrozenArenaAmbientBackground } from "@/components/site/FrozenArenaAmbientBackground";
 import { AuthProvider } from "@/components/AuthProvider";
 import { CompleteRegistrationTracker } from "@/components/CompleteRegistrationTracker";
 import { MetaPixel } from "@/components/MetaPixel";
@@ -93,13 +94,15 @@ export default function RootLayout({
 
   return (
     <html lang="cs">
-      <body className="antialiased min-h-screen bg-[#05080f] font-sans text-white">
+      <body className="relative antialiased min-h-screen bg-[#020408] font-sans text-white">
+        <FrozenArenaAmbientBackground />
         <script
           type="application/ld+json"
           // JSON-LD musí být čisté JSON string (ne JSX object)
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <AuthProvider>
+          <div className="relative z-0">
           <MetaPixel />
           <CompleteRegistrationTracker />
           {children}
@@ -112,6 +115,7 @@ export default function RootLayout({
               },
             }}
           />
+          </div>
         </AuthProvider>
       </body>
     </html>

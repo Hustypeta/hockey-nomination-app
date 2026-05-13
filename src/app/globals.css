@@ -418,7 +418,7 @@ body {
   }
 }
 
-/* Pozadí řeší SestavaAmbientBackground — zde jen minimální kontext stránky */
+/* Pozadí stránky řeší `FrozenArenaAmbientBackground` v root layoutu — zde jen minimální kontext stránky */
 .sestava-page-ambient {
   position: relative;
 }
@@ -521,4 +521,89 @@ html.social-cover [data-sonner-toaster] {
 
 html.social-cover body {
   overflow-x: hidden;
+}
+
+/* —— MS Fantasy: aréna, led, slot animace (game-day UI) —— */
+@keyframes ms-fantasy-arena-sweep {
+  0%,
+  100% {
+    opacity: 0.42;
+    transform: translate3d(-6%, 0, 0) scale(1.04);
+  }
+  50% {
+    opacity: 0.68;
+    transform: translate3d(7%, 0, 0) scale(1.07);
+  }
+}
+
+@keyframes ms-fantasy-empty-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(0, 212, 255, 0),
+      0 0 22px rgba(0, 200, 255, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(0, 212, 255, 0.12),
+      0 0 42px rgba(0, 210, 255, 0.38);
+  }
+}
+
+@keyframes ms-fantasy-ice-gleam {
+  0% {
+    transform: translate3d(-130%, 0, 0) skewX(-14deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate3d(220%, 0, 0) skewX(-14deg);
+    opacity: 0;
+  }
+}
+
+.ms-fantasy-arena-lights {
+  animation: ms-fantasy-arena-sweep 12s ease-in-out infinite;
+}
+
+.ms-fantasy-empty-pulse {
+  animation: ms-fantasy-empty-glow 2.5s ease-in-out infinite;
+}
+
+.ms-fantasy-save-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.ms-fantasy-save-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.22) 42%,
+    rgba(255, 255, 255, 0.38) 50%,
+    rgba(255, 255, 255, 0.18) 58%,
+    transparent 100%
+  );
+  transform: translateX(-120%) skewX(-12deg);
+  pointer-events: none;
+}
+
+.ms-fantasy-save-shimmer:hover::after {
+  animation: ms-fantasy-ice-gleam 0.85s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-fantasy-arena-lights,
+  .ms-fantasy-empty-pulse {
+    animation: none !important;
+  }
+
+  .ms-fantasy-save-shimmer:hover::after {
+    animation: none;
+  }
 }

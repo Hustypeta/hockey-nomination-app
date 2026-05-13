@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { FlagMark } from "@/components/flags/FlagMark";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check, Lock } from "lucide-react";
+import { motion } from "framer-motion";
 import { MS_FANTASY_CAP, MS_FANTASY_TEAM_SIZE, isMsFantasyLineupSubmissionEnabled } from "@/lib/msFantasyConfig";
 import { MS_FANTASY_ROSTER_TEAM_OPTIONS, MS_FANTASY_TIER_CODES } from "@/lib/msFantasyRosterFilters";
 import { MsFantasyIceRink } from "./MsFantasyIceRink";
+import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
+import { MsFantasyPlayerAvatar } from "./MsFantasyPlayerAvatar";
 
 export type MsFantasyRosterPlayer = {
   id: string;
@@ -73,6 +77,16 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   const [saveErr, setSaveErr] = useState<string | null>(null);
 
   const salaryUsed = useMemo(() => slots.reduce((s, p) => s + (p?.salary ?? 0), 0), [slots]);
+  const salaryCapPct = useMemo(
+    () => Math.min(100, Math.round((salaryUsed / MS_FANTASY_CAP) * 1000) / 10),
+    [salaryUsed]
+  );
+  const salaryOverCap = salaryUsed > MS_FANTASY_CAP;
+  const salaryBarGradient = salaryOverCap
+    ? "from-red-500 via-red-400 to-rose-600"
+    : salaryCapPct >= 95
+      ? "from-amber-400 via-amber-300 to-orange-500"
+      : "from-sky-500 via-[#00B4FF] to-cyan-400";
   const picksIds = useMemo(() => slots.map((p) => p?.id).filter(Boolean) as string[], [slots]);
   const goalieCount = useMemo(() => slots.filter((s) => s?.position === "G").length, [slots]);
   const hasExtraRosterFilters = Boolean(teamFilter || tierFilter);
@@ -243,6 +257,11 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
       void signIn("google", { callbackUrl: `/fantasy/${slug}` });
       return;
     }
+    if (salaryUsed > MS_FANTASY_CAP) {
+      setSaveErr(`Platový strop ${MS_FANTASY_CAP} kreditů je překročen — uprav sestavu.`);
+      setSaveState("err");
+      return;
+    }
     const pickIds = picksIds;
     if (pickIds.length !== MS_FANTASY_TEAM_SIZE) {
       setSaveErr(`Vyber všech ${MS_FANTASY_TEAM_SIZE} hráčů.`);
@@ -268,7 +287,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
       setSaveErr("Bez připojení k serveru.");
       setSaveState("err");
     }
-  }, [day, picksIds, slug, status]);
+  }, [day, picksIds, slug, status, salaryUsed]);
 
   if (dayErr) {
     return (
@@ -291,82 +310,123 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 lg:flex-row lg:gap-10">
-      <div className="min-w-0 flex-1 space-y-5">
-        <div>
-          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-            <Link href="/fantasy" className="font-semibold text-[#00B4FF] hover:underline">
-              ← Hrací dny
-            </Link>
-            <span className="text-slate-600" aria-hidden>
-              ·
-            </span>
-            <Link href="/fantasy/pravidla" className="font-semibold text-[#00B4FF] hover:underline">
-              Pravidla a body
-            </Link>
-          </p>
-          <h1 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">{day.title}</h1>
-          <p className="mt-2 text-sm text-slate-400">
-            Uzávěrka:{" "}
-            <strong className="font-medium text-slate-200">
-              {new Date(day.lockAt).toLocaleString("cs-CZ", {
-                timeZone: "Europe/Prague",
-                dateStyle: "medium",
-                timeStyle: "short",
-              })}
-            </strong>{" "}
-            —{" "}
-            {day.isLocked ? (
-              <span className="text-amber-200">den je uzavřený</span>
-            ) : !fantasySubmissionsEnabled ? (
-              <span className="text-amber-200">den je otevřený jen k prohlížení — ukládání sestav je vypnuté</span>
-            ) : (
-              <span className="text-emerald-200">můžeš upravovat sestavu</span>
-            )}
-          </p>
-          {!day.isLocked && !fantasySubmissionsEnabled ? (
-            <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-              Odevzdávání fantasy sestav na server je zatím vypnuté (správce prostředí). Skládání v prohlížeči můžeš
-              zkoušet; tlačítko uložení zůstane neaktivní, dokud se funkce nezapne.
+        <div className="min-w-0 flex-1 space-y-5">
+          <MsFantasyGlassPanel className="p-5 sm:p-6" glow="subtle">
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+              <Link href="/fantasy" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
+                ← Hrací dny
+              </Link>
+              <span className="text-slate-600" aria-hidden>
+                ·
+              </span>
+              <Link href="/fantasy/pravidla" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
+                Pravidla a body
+              </Link>
             </p>
-          ) : null}
-          {slots.some((s) => s?.id) && goalieCount !== 1 ? (
-            <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-              Pro platné uložení musí být v sestavě přesně jeden brankář (G). Aktuálně:{" "}
-              {goalieCount === 0 ? "žádný" : goalieCount >= 2 ? `${goalieCount} (stačí jeden)` : String(goalieCount)}.
+            <p className="mt-3 font-display text-xs font-bold uppercase tracking-[0.24em] text-cyan-200/90">MS 2026</p>
+            <h1 className="mt-1 font-display text-3xl font-bold tracking-wide text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.4)] sm:text-4xl">
+              {day.title}
+            </h1>
+            <p className="mt-3 text-sm text-slate-300">
+              Uzávěrka:{" "}
+              <strong className="font-medium text-white">
+                {new Date(day.lockAt).toLocaleString("cs-CZ", {
+                  timeZone: "Europe/Prague",
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+              </strong>{" "}
+              —{" "}
+              {day.isLocked ? (
+                <span className="text-amber-200">den je uzavřený</span>
+              ) : !fantasySubmissionsEnabled ? (
+                <span className="text-amber-200">den je otevřený jen k prohlížení — ukládání sestav je vypnuté</span>
+              ) : (
+                <span className="text-emerald-200">můžeš upravovat sestavu</span>
+              )}
             </p>
-          ) : null}
-        </div>
+            {!day.isLocked && !fantasySubmissionsEnabled ? (
+              <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+                Odevzdávání fantasy sestav na server je zatím vypnuté (správce prostředí). Skládání v prohlížeči můžeš
+                zkoušet; tlačítko uložení zůstane neaktivní, dokud se funkce nezapne.
+              </p>
+            ) : null}
+            {slots.some((s) => s?.id) && goalieCount !== 1 ? (
+              <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+                Pro platné uložení musí být v sestavě přesně jeden brankář (G). Aktuálně:{" "}
+                {goalieCount === 0 ? "žádný" : goalieCount >= 2 ? `${goalieCount} (stačí jeden)` : String(goalieCount)}.
+              </p>
+            ) : null}
+          </MsFantasyGlassPanel>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5">
-          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-display text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Salary cap</p>
-              <p className="font-mono text-lg text-white tabular-nums">
-                <span className={salaryUsed > MS_FANTASY_CAP ? "text-red-300" : "text-[#7ee0ff]"}>{salaryUsed}</span>
+        <section className="relative overflow-hidden rounded-3xl border border-cyan-400/15 bg-gradient-to-b from-slate-900/85 via-[#0a101c]/92 to-[#05080f]/95 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-6">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-[#c8102e]/10 blur-3xl" />
+
+          <div className="relative mb-5 flex flex-wrap items-end justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500 sm:text-xs">Platový strop</p>
+              <p className="font-mono text-xl font-bold text-white tabular-nums sm:text-2xl">
+                <span className={salaryOverCap ? "text-red-300" : "text-[#9ae9ff]"}>{salaryUsed}</span>
                 <span className="text-slate-500"> / </span>
-                <span>{MS_FANTASY_CAP}</span>
+                <span className="text-slate-300">{MS_FANTASY_CAP}</span>
+              </p>
+              <div className="mt-2.5 h-2.5 w-full max-w-[14rem] overflow-hidden rounded-full bg-black/40 ring-1 ring-white/10 sm:max-w-xs">
+                <motion.div
+                  className={`h-full rounded-full bg-gradient-to-r ${salaryBarGradient} shadow-[0_0_14px_rgba(0,212,255,0.35)]`}
+                  initial={false}
+                  animate={{ width: `${salaryCapPct}%` }}
+                  transition={{ type: "spring", stiffness: 260, damping: 28 }}
+                />
+              </div>
+              <p className="mt-1.5 text-[0.65rem] text-slate-500">
+                {salaryOverCap
+                  ? "Překročen strop — uložení je uzamčeno."
+                  : salaryCapPct >= 95
+                    ? "Blízko stropu — zbývá málo kapacity."
+                    : "Kapacita pod kontrolou."}
               </p>
             </div>
             <div className="flex shrink-0 flex-col items-end gap-1">
               {status === "authenticated" ? (
                 <button
                   type="button"
-                  disabled={day.isLocked || saveState === "saving" || !fantasySubmissionsEnabled}
+                  disabled={
+                    day.isLocked ||
+                    saveState === "saving" ||
+                    !fantasySubmissionsEnabled ||
+                    salaryOverCap
+                  }
                   onClick={() => void save()}
-                  className="
-                    rounded-lg bg-gradient-to-r from-[#0090cc] to-[#00B4FF] px-4 py-2.5 text-xs font-display font-bold uppercase tracking-[0.12em]
-                    text-[#03050a] shadow-[0_0_22px_rgba(0,180,255,0.35)] transition disabled:opacity-40
-                    hover:brightness-110
-                  "
+                  className="ms-fantasy-save-shimmer group relative flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#0077b6] via-[#00B4FF] to-[#48cae4] px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.14em] text-[#03050a] shadow-[0_0_28px_rgba(0,180,255,0.45),inset_0_1px_0_rgba(255,255,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_36px_rgba(0,212,255,0.55)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
                 >
-                  {saveState === "saving" ? "Ukládám…" : !fantasySubmissionsEnabled ? "Ukládání vypnuto" : "Uložit sestavu"}
+                  {salaryOverCap ? (
+                    <Lock className="h-4 w-4 shrink-0 opacity-95" aria-hidden />
+                  ) : (
+                    <svg className="h-4 w-4 shrink-0 opacity-90" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <path
+                        d="M5 18c2-6 4-10 8-14l2 2c-3 3-5 7-6 12M7 20l3-2M15 6l2 2"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                  {saveState === "saving"
+                    ? "Ukládám…"
+                    : !fantasySubmissionsEnabled
+                      ? "Ukládání vypnuto"
+                      : salaryOverCap
+                        ? "Strop překročen"
+                        : "Uložit sestavu"}
                 </button>
               ) : (
                 <button
                   type="button"
                   disabled={day.isLocked || !fantasySubmissionsEnabled}
                   onClick={() => void signIn("google", { callbackUrl: `/fantasy/${slug}` })}
-                  className="rounded-lg border border-[#00B4FF]/40 px-4 py-2 text-xs font-semibold text-[#00B4FF] hover:bg-[#00B4FF]/10 disabled:opacity-40"
+                  className="rounded-xl border border-[#00B4FF]/45 bg-[#00B4FF]/10 px-4 py-2.5 text-xs font-semibold text-[#9ae9ff] shadow-[0_0_18px_rgba(0,180,255,0.15)] transition hover:bg-[#00B4FF]/18 disabled:opacity-40"
                 >
                   {!fantasySubmissionsEnabled ? "Přihlášení (ukládání vypnuto)" : "Přihlásit a uložit"}
                 </button>
@@ -378,28 +438,33 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <MsFantasyIceRink
-            slots={slots}
-            activeIx={activeIx}
-            isLocked={day.isLocked}
-            onSelectSlot={setActiveIx}
-            onClearSlot={clearSlot}
-          />
+          <div className="mt-8 border-t border-white/[0.08] pt-8 sm:mt-10 sm:pt-10">
+            <MsFantasyIceRink
+              slots={slots}
+              activeIx={activeIx}
+              isLocked={day.isLocked}
+              onSelectSlot={setActiveIx}
+              onClearSlot={clearSlot}
+            />
+          </div>
         </section>
       </div>
 
-      <aside className="w-full shrink-0 lg:max-w-sm lg:border-l lg:border-white/[0.08] lg:pl-8">
-        <h2 className="font-display text-sm font-bold uppercase tracking-[0.14em] text-slate-500">Soupiska MS</h2>
+      <aside className="w-full shrink-0 lg:max-w-sm lg:border-l lg:border-cyan-400/10 lg:pl-8">
+        <div className="border-b border-white/[0.06] pb-4">
+          <h2 className="font-display text-lg font-bold uppercase tracking-[0.12em] text-white sm:text-xl">Soupiska MS</h2>
+          <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Oficiální pool hráčů</p>
+        </div>
 
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           {[["", "Vše"], ["G", "G"], ["D", "D"], ["F", "F"]].map(([v, lbl]) => (
             <button
               key={lbl}
               type="button"
               onClick={() => setPosFilter(v)}
               className={`
-                rounded-full px-3 py-1 text-xs font-semibold transition
-                ${posFilter === v ? "bg-[#00B4FF]/20 text-[#7ee0ff]" : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-[#00B4FF]/35"}
+                rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide transition
+                ${posFilter === v ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40" : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200"}
               `}
             >
               {lbl}
@@ -413,7 +478,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             <select
               value={teamFilter}
               onChange={(e) => setTeamFilter(e.target.value)}
-              className="w-full rounded-xl border border-white/[0.1] bg-[#080c14]/95 px-3 py-2 text-sm text-white outline-none focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30"
+              className="w-full rounded-xl border border-white/[0.12] bg-slate-950/80 px-3 py-2.5 text-sm text-white shadow-inner outline-none backdrop-blur-sm focus:border-[#00B4FF]/50 focus:ring-2 focus:ring-[#00B4FF]/35"
             >
               <option value="">Všechny země</option>
               {MS_FANTASY_ROSTER_TEAM_OPTIONS.map((t) => (
@@ -428,7 +493,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             <select
               value={tierFilter}
               onChange={(e) => setTierFilter(e.target.value)}
-              className="w-full rounded-xl border border-white/[0.1] bg-[#080c14]/95 px-3 py-2 text-sm text-white outline-none focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30"
+              className="w-full rounded-xl border border-white/[0.12] bg-slate-950/80 px-3 py-2.5 text-sm text-white shadow-inner outline-none backdrop-blur-sm focus:border-[#00B4FF]/50 focus:ring-2 focus:ring-[#00B4FF]/35"
             >
               <option value="">Všechny tiery</option>
               {MS_FANTASY_TIER_CODES.map((t) => (
@@ -463,14 +528,14 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
           onChange={(e) => setQ(e.target.value)}
           placeholder="Hledat jméno…"
           className="
-            mt-3 w-full rounded-xl border border-white/[0.1] bg-[#080c14]/95 px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-600
-            focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30
+            mt-3 w-full rounded-xl border border-white/[0.12] bg-slate-950/80 px-3 py-2.5 text-sm text-white shadow-inner outline-none backdrop-blur-sm placeholder:text-slate-600
+            focus:border-[#00B4FF]/50 focus:ring-2 focus:ring-[#00B4FF]/35
           "
           autoCapitalize="off"
           autoCorrect="off"
         />
 
-        <div className="mt-3 max-h-[min(70vh,28rem)] space-y-1 overflow-y-auto rounded-xl border border-white/[0.08] bg-black/25 p-2">
+        <div className="mt-3 max-h-[min(70vh,28rem)] space-y-2 overflow-y-auto rounded-2xl border border-white/[0.08] bg-gradient-to-b from-slate-950/90 to-black/50 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
           {rosterLoading && roster.length === 0 ? (
             <div className="px-3 py-6 text-center text-sm text-slate-500">
               <Loader2 className="mx-auto mb-2 h-5 w-5 animate-spin text-[#00B4FF]" />
@@ -491,21 +556,43 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                     disabled={day.isLocked}
                     onClick={() => addPlayer(p)}
                     className={`
-                      flex w-full items-center gap-2 rounded-lg border border-transparent px-2 py-2 text-left transition
-                      hover:border-[#00B4FF]/35 hover:bg-white/[0.05] disabled:pointer-events-none disabled:opacity-40
-                      ${inLineup ? "opacity-35" : ""}
+                      pool-card-interactive group flex w-full items-center gap-3 rounded-xl border px-2.5 py-2.5 text-left transition
+                      disabled:pointer-events-none disabled:opacity-40
+                      ${
+                        inLineup
+                          ? "border-cyan-400/45 bg-gradient-to-r from-cyan-500/18 via-[#00B4FF]/10 to-transparent shadow-[0_0_22px_rgba(0,180,255,0.22)] ring-1 ring-cyan-300/35"
+                          : "border-white/[0.06] bg-gradient-to-r from-white/[0.06] to-transparent hover:border-cyan-400/30 hover:from-cyan-500/10"
+                      }
                     `}
                   >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#00B4FF]/14 font-mono text-[0.7rem] font-bold text-[#7ee0ff]">
-                      {p.position}
-                    </span>
+                    <div className="relative shrink-0">
+                      <MsFantasyPlayerAvatar playerId={p.id} variant="circle" size="2.65rem" />
+                      <span className="absolute -bottom-0.5 -right-0.5 z-10 scale-90">
+                        <FlagMark code={p.team} className="h-3.5 w-5 ring-1 ring-black/40" />
+                      </span>
+                    </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-white">{p.name}</p>
-                      <p className="text-[0.7rem] text-slate-500">
-                        {p.jerseyNumber != null ? `#${p.jerseyNumber} · ` : null}
-                        {p.team} · tier {p.tier} · <span className="tabular-nums text-[#00B4FF]">{p.salary}</span>
+                      <p className="truncate text-sm font-semibold text-white">{p.name}</p>
+                      <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[0.7rem] text-slate-400">
+                        <span className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[0.65rem] font-bold text-slate-300">{p.team}</span>
+                        {p.jerseyNumber != null ? <span className="tabular-nums">#{p.jerseyNumber}</span> : null}
+                        <span>·</span>
+                        <span>
+                          tier <strong className="text-slate-200">{p.tier}</strong>
+                        </span>
+                        <span>·</span>
+                        <span className="tabular-nums font-semibold text-[#7ee0ff]">{p.salary}</span>
                       </p>
                     </div>
+                    {inLineup ? (
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00B4FF]/25 text-[#b8f8ff] shadow-[0_0_16px_rgba(0,180,255,0.35)] ring-1 ring-cyan-300/50">
+                        <Check className="h-4 w-4 stroke-[3]" aria-hidden />
+                      </span>
+                    ) : (
+                      <span className="shrink-0 rounded-lg bg-[#00B4FF]/15 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-[#9ae9ff] ring-1 ring-[#00B4FF]/25 transition group-hover:bg-[#00B4FF]/22">
+                        +
+                      </span>
+                    )}
                   </button>
                 );
               })}

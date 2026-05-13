@@ -79,7 +79,7 @@ export default async function MatchRatingSharePage({ params }: { params: Promise
   );
 
   return (
-    <main className="min-h-screen bg-[#05080f] text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <div className="mx-auto max-w-5xl px-4 py-10">
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
           <div className="flex flex-wrap items-center gap-2">

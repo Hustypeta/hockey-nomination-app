@@ -6,7 +6,7 @@ import { SITE_BRAND } from "@/lib/siteBranding";
 import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
 
 const DEFAULT_INTRO =
-  "Staň se na chvíli trenérem národního týmu České hokejové reprezentace. Sestav si svojí vlastní nominaci a soutěž o zajímavé ceny.";
+  "Zahraj si Fantasy na MS 2026. Každý den si naklikej svůj tým a soutěž s ostatními a hraj o atraktivní hokejové ceny.";
 
 type AppLoadingScreenProps = {
   /** Řádek pod logem (např. kontext stránky). */
@@ -25,7 +25,7 @@ type AppLoadingScreenProps = {
  * Jednotná celostránková obrazovka při načítání dat — odkazy nahoře, aby byly vidět bez rolování.
  */
 export function AppLoadingScreen({
-  tagline = "MS 2026 · nominace",
+  tagline = "MS 2026 · Fantasy a Pick'em",
   message = "Načítám…",
   intro,
   showSignInCta = false,
@@ -34,19 +34,12 @@ export function AppLoadingScreen({
 
   const handleSignIn = () => {
     const cb =
-      typeof window !== "undefined" ? `${window.location.pathname}${window.location.search}` : "/sestava";
-    signIn(undefined, { callbackUrl: cb || "/sestava" });
+      typeof window !== "undefined" ? `${window.location.pathname}${window.location.search}` : "/fantasy";
+    signIn(undefined, { callbackUrl: cb || "/fantasy" });
   };
 
   return (
-    <div className="relative min-h-screen overflow-y-auto bg-[#0c0e12]">
-      <div
-        className="pointer-events-none fixed inset-0 opacity-[0.12]"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 80% 50% at 50% -20%, #003f87 0%, transparent 55%)",
-        }}
-      />
+    <div className="relative min-h-screen overflow-y-auto bg-transparent">
       <div className="relative flex min-h-screen flex-col items-center justify-start px-4 py-6 sm:justify-center sm:px-6 sm:py-10">
         <div className="flex w-full max-w-4xl flex-col items-center rounded-2xl border border-[#2a3142] bg-[#151922]/92 px-4 py-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:px-8 sm:py-10">
           <h1 className="font-display text-2xl tracking-[0.14em] text-white sm:text-3xl md:text-4xl">
@@ -108,19 +101,19 @@ export function AppLoadingScreen({
                 <ul className="mt-3 space-y-2.5 text-[13px] leading-snug text-white/82">
                   <li className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#c41e3a]" aria-hidden />
-                    <span>Ukládat nominaci k účtu a vrátit se k ní později.</span>
+                    <span>Ukládat fantasy sestavy a nominace k účtu a vracet se k nim později.</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#003f87]" aria-hidden />
-                    <span>Kratší odkaz po uložení místo dlouhého sdíleného řetězce v URL.</span>
+                    <span>Pick&apos;em na MS 2026 a přehled v účtu.</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" aria-hidden />
-                    <span>Odeslat nominaci do soutěže (když je otevřená) a zapojit se do vyhodnocení.</span>
+                    <span>Zapojit se do soutěží, když jsou otevřené (pravidla vždy u dané aktivity).</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" aria-hidden />
-                    <span>Přehled nominací v sekci účet.</span>
+                    <span>Přehled aktivit v sekci účet.</span>
                   </li>
                 </ul>
               </div>

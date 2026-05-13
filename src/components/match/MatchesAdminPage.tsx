@@ -18,7 +18,6 @@ import { EMPTY_LINEUP } from "@/types";
 import { LineBuilder } from "@/components/LineBuilder";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { SiteHeader } from "@/components/site/SiteHeader";
-import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 import type { Position } from "@/types";
@@ -476,8 +475,7 @@ export function MatchesAdminPage() {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <div className="min-h-screen bg-[#05080f] text-white">
-        <SestavaAmbientBackground />
+      <div className="min-h-screen bg-transparent text-white">
         <div className="sticky top-0 z-40">
           <SiteHeader />
         </div>

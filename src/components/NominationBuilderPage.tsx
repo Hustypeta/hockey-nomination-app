@@ -25,7 +25,6 @@ import { NamesOnlySharePoster } from "@/components/NamesOnlySharePoster";
 import { NominationWebStyleSharePoster } from "@/components/NominationWebStyleSharePoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
-import { SestavaAmbientBackground } from "@/components/sestava/SestavaAmbientBackground";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
@@ -727,9 +726,6 @@ export function NominationBuilderPage() {
       onDragCancel={handleDragCancel}
     >
       <div className="sestava-page-ambient min-h-screen pb-[calc(10.75rem+env(safe-area-inset-bottom,0px))] text-white sm:pb-[calc(11rem+env(safe-area-inset-bottom,0px))] lg:pb-[calc(9rem+env(safe-area-inset-bottom,0px))]">
-        {/* Mobile scroll perf: background layers off on narrow layouts */}
-        <SestavaAmbientBackground className="hidden lg:block" />
-
         <div className="sticky top-0 z-40">
           <SiteHeader />
           <SestavaHero filled={filled} />

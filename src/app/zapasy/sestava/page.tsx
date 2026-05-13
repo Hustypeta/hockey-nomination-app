@@ -10,7 +10,7 @@ export const metadata = {
 
 function SestavaFallback() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#03050a] text-sm text-white/70">
+    <div className="flex min-h-screen items-center justify-center bg-transparent text-sm text-white/70">
       Načítám editor…
     </div>
   );

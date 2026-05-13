@@ -22,7 +22,7 @@ export function SocialCoverPage() {
   }, []);
 
   return (
-    <div className="social-cover-root min-h-screen bg-[#020408]">
+    <div className="social-cover-root min-h-screen bg-transparent">
       <div className="flex min-h-screen items-center justify-center px-3 py-6 sm:px-6 sm:py-10">
         <div className="social-cover-scale-wrapper w-full max-w-[calc(100vw-1.5rem)] overflow-x-auto">
           <SocialCoverCanvas />
