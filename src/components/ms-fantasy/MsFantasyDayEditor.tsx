@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { Loader2, Check, Lock } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Lock, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { MS_FANTASY_CAP, MS_FANTASY_TEAM_SIZE, isMsFantasyLineupSubmissionEnabled } from "@/lib/msFantasyConfig";
 import { MS_FANTASY_ROSTER_TEAM_OPTIONS, MS_FANTASY_TIER_CODES } from "@/lib/msFantasyRosterFilters";
@@ -56,6 +56,263 @@ function formationSlotsFromPicks(picks: Array<MsFantasyRosterPlayer | null | und
 
 const fantasySubmissionsEnabled = isMsFantasyLineupSubmissionEnabled();
 
+type MsFantasyRosterPanelProps = {
+  day: GameDayPayload;
+  layout: "sidebar" | "sheet";
+  posFilter: string;
+  setPosFilter: (v: string) => void;
+  teamFilter: string;
+  setTeamFilter: (v: string) => void;
+  tierFilter: string;
+  setTierFilter: (v: string) => void;
+  hasExtraRosterFilters: boolean;
+  q: string;
+  setQ: (v: string) => void;
+  rosterLoading: boolean;
+  roster: MsFantasyRosterPlayer[];
+  rosterSkip: number | null;
+  loadMoreRoster: () => Promise<void>;
+  picksIds: string[];
+  addPlayer: (p: MsFantasyRosterPlayer) => void;
+};
+
+function MsFantasyRosterPanel({
+  day,
+  layout,
+  posFilter,
+  setPosFilter,
+  teamFilter,
+  setTeamFilter,
+  tierFilter,
+  setTierFilter,
+  hasExtraRosterFilters,
+  q,
+  setQ,
+  rosterLoading,
+  roster,
+  rosterSkip,
+  loadMoreRoster,
+  picksIds,
+  addPlayer,
+}: MsFantasyRosterPanelProps) {
+  const listScrollClass =
+    layout === "sidebar" ? "max-h-[min(70vh,28rem)] overflow-y-auto" : "overflow-visible";
+
+  return (
+    <>
+      <div className="border-b border-white/[0.06] pb-3 sm:pb-4">
+        <h2 className="font-display text-base font-bold uppercase tracking-[0.12em] text-white sm:text-lg lg:text-xl">
+          Soupiska MS
+        </h2>
+        <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          Oficiální pool hráčů
+        </p>
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
+        {[["", "Vše"], ["G", "G"], ["D", "D"], ["F", "F"]].map(([v, lbl]) => (
+          <button
+            key={lbl}
+            type="button"
+            onClick={() => setPosFilter(v)}
+            className={`
+                rounded-full px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide transition touch-manipulation sm:px-3.5 sm:text-xs
+                ${posFilter === v ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40" : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200"}
+              `}
+          >
+            {lbl}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-3 space-y-3 sm:mt-4">
+        <div>
+          <span className="mb-1.5 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500 sm:mb-2">Repre</span>
+          <div className="-mx-0.5 flex max-w-full gap-1.5 overflow-x-auto px-0.5 pb-1 pt-0.5 [scrollbar-width:thin]">
+            <button
+              type="button"
+              onClick={() => setTeamFilter("")}
+              className={[
+                "shrink-0 touch-manipulation rounded-full px-2.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide transition sm:px-3 sm:text-xs",
+                teamFilter === ""
+                  ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
+                  : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
+              ].join(" ")}
+            >
+              Vše
+            </button>
+            {MS_FANTASY_ROSTER_TEAM_OPTIONS.map((t) => {
+              const on = teamFilter === t.code;
+              return (
+                <button
+                  key={t.code}
+                  type="button"
+                  onClick={() => setTeamFilter(on ? "" : t.code)}
+                  title={t.labelCs}
+                  className={[
+                    "shrink-0 touch-manipulation rounded-full px-2.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide transition sm:px-3 sm:text-xs",
+                    on
+                      ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
+                      : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
+                  ].join(" ")}
+                >
+                  {t.code}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div>
+          <span className="mb-1.5 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500 sm:mb-2">Platový tier</span>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setTierFilter("")}
+              className={[
+                "touch-manipulation rounded-full px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide transition sm:text-xs",
+                tierFilter === ""
+                  ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
+                  : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
+              ].join(" ")}
+            >
+              Vše
+            </button>
+            {MS_FANTASY_TIER_CODES.map((t) => {
+              const on = tierFilter === t;
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTierFilter(on ? "" : t)}
+                  className={[
+                    "touch-manipulation rounded-full px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide transition sm:text-xs",
+                    on
+                      ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
+                      : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
+                  ].join(" ")}
+                >
+                  {t}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {hasExtraRosterFilters ? (
+        <button
+          type="button"
+          onClick={() => {
+            setTeamFilter("");
+            setTierFilter("");
+          }}
+          className="mt-2 text-xs font-semibold text-[#00B4FF] hover:underline"
+        >
+          Zrušit filtry repre / tier
+        </button>
+      ) : null}
+
+      <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-600">
+        Klubová liga u fantasy poolu zatím v datech není — jen reprezentace, tier a pozice z importu MS.
+      </p>
+
+      <input
+        type="search"
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        placeholder="Hledat jméno…"
+        className="
+            mt-3 w-full rounded-xl border border-white/[0.12] bg-slate-950/80 px-3 py-2.5 text-base text-white shadow-inner outline-none backdrop-blur-sm placeholder:text-slate-600 sm:text-sm
+            focus:border-[#00B4FF]/50 focus:ring-2 focus:ring-[#00B4FF]/35
+          "
+        autoCapitalize="off"
+        autoCorrect="off"
+        enterKeyHint="search"
+      />
+
+      <div
+        className={[
+          "mt-3 space-y-2 rounded-2xl border border-white/[0.08] bg-gradient-to-b from-slate-950/90 to-black/50 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+          listScrollClass,
+        ].join(" ")}
+      >
+        {rosterLoading && roster.length === 0 ? (
+          <div className="px-3 py-6 text-center text-sm text-slate-500">
+            <Loader2 className="mx-auto mb-2 h-5 w-5 animate-spin text-[#00B4FF]" />
+            Načítám hráče…
+          </div>
+        ) : roster.length === 0 ? (
+          <p className="px-3 py-10 text-center text-sm leading-relaxed text-slate-500">
+            V poolu zatím nejsou hráči, nebo nesedí filtr — po seedu/importu se tu objeví soupiska MS.
+          </p>
+        ) : (
+          <>
+            {roster.map((p) => {
+              const inLineup = picksIds.includes(p.id);
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  disabled={day.isLocked}
+                  onClick={() => addPlayer(p)}
+                  className={`
+                      pool-card-interactive group flex w-full items-center gap-3 rounded-xl border px-2.5 py-2.5 text-left touch-manipulation active:scale-[0.99]
+                      disabled:pointer-events-none disabled:opacity-40
+                      ${
+                        inLineup
+                          ? "border-cyan-400/50 bg-gradient-to-r from-cyan-500/22 via-[#00B4FF]/14 to-transparent shadow-[0_0_32px_rgba(0,200,255,0.28)] ring-1 ring-cyan-300/50 hover:border-cyan-300/70"
+                          : "border-white/[0.06] bg-gradient-to-r from-white/[0.06] to-transparent hover:border-cyan-400/45 hover:from-cyan-500/15 hover:via-[#00B4FF]/10 hover:to-transparent"
+                      }
+                    `}
+                >
+                  <div className="relative shrink-0">
+                    <MsFantasyPlayerAvatar playerId={p.id} variant="circle" frame="premium" size="2.65rem" />
+                    <span className="absolute -bottom-0.5 -right-0.5 z-10 scale-90">
+                      <FlagMark code={p.team} className="h-3.5 w-5 ring-1 ring-black/40" />
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-white">{p.name}</p>
+                    <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[0.7rem] text-slate-400">
+                      <span className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[0.65rem] font-bold text-slate-300">{p.team}</span>
+                      {p.jerseyNumber != null ? <span className="tabular-nums">#{p.jerseyNumber}</span> : null}
+                      <span>·</span>
+                      <span>
+                        tier <strong className="text-slate-200">{p.tier}</strong>
+                      </span>
+                      <span>·</span>
+                      <span className="tabular-nums font-semibold text-[#7ee0ff]">{p.salary}</span>
+                    </p>
+                  </div>
+                  {inLineup ? (
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00B4FF]/25 text-[#b8f8ff] shadow-[0_0_16px_rgba(0,180,255,0.35)] ring-1 ring-cyan-300/50">
+                      <Check className="h-4 w-4 stroke-[3]" aria-hidden />
+                    </span>
+                  ) : (
+                    <span className="shrink-0 rounded-lg bg-[#00B4FF]/15 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-[#9ae9ff] ring-1 ring-[#00B4FF]/25 transition group-hover:bg-[#00B4FF]/22">
+                      +
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+            {rosterSkip !== null ? (
+              <button
+                type="button"
+                disabled={rosterLoading}
+                onClick={() => void loadMoreRoster()}
+                className="mt-2 w-full touch-manipulation rounded-lg border border-white/[0.1] py-2.5 text-xs font-semibold text-slate-400 hover:bg-white/[0.04] sm:py-2"
+              >
+                {rosterLoading ? "Načítám…" : "Další řádky"}
+              </button>
+            ) : null}
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
 export function MsFantasyDayEditor({ slug }: { slug: string }) {
   const { status } = useSession();
   const [day, setDay] = useState<GameDayPayload | null>(null);
@@ -75,6 +332,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
   const [saveState, setSaveState] = useState<"idle" | "saving" | "ok" | "err">("idle");
   const [saveErr, setSaveErr] = useState<string | null>(null);
+  const [mobileRosterOpen, setMobileRosterOpen] = useState(false);
 
   const salaryUsed = useMemo(() => slots.reduce((s, p) => s + (p?.salary ?? 0), 0), [slots]);
   const salaryCapPct = useMemo(
@@ -196,6 +454,15 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
     }
   }, [appendRosterQueryParams, rosterSkip]);
 
+  useEffect(() => {
+    if (!mobileRosterOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileRosterOpen]);
+
   const clearSlot = useCallback((i: number) => {
     setSlots((prev) => {
       const n = [...prev];
@@ -247,6 +514,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
       setSaveErr(null);
       setSaveState("idle");
+      setMobileRosterOpen(false);
     },
     [activeIx, day, picksIds]
   );
@@ -309,13 +577,13 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6 sm:py-8 lg:flex-row lg:gap-8">
-        <div className="min-w-0 flex-1 space-y-4">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-4 sm:gap-5 sm:px-5 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 lg:flex-row lg:gap-8 lg:pb-8 lg:pt-8">
+      <div className="min-w-0 flex-1 space-y-4">
         <section className="relative overflow-hidden rounded-3xl border border-cyan-400/15 bg-gradient-to-b from-slate-900/85 via-[#0a101c]/92 to-[#05080f]/95 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-5">
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
           <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-[#c8102e]/10 blur-3xl" />
 
-          <div className="relative mb-2 flex flex-wrap items-end justify-between gap-3 sm:mb-3">
+          <div className="relative mb-2 flex flex-col gap-4 sm:mb-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-3">
             <div className="min-w-0 flex-1">
               <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500 sm:text-xs">Platový strop</p>
               <p className="font-mono text-xl font-bold text-white tabular-nums sm:text-2xl">
@@ -323,7 +591,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                 <span className="text-slate-500"> / </span>
                 <span className="text-slate-300">{MS_FANTASY_CAP}</span>
               </p>
-              <div className="mt-2.5 h-2.5 w-full max-w-[14rem] overflow-hidden rounded-full bg-black/40 ring-1 ring-white/10 sm:max-w-xs">
+              <div className="mt-2.5 h-2.5 w-full max-w-full overflow-hidden rounded-full bg-black/40 ring-1 ring-white/10 sm:max-w-xs">
                 <motion.div
                   className={`h-full rounded-full bg-gradient-to-r ${salaryBarGradient} shadow-[0_0_14px_rgba(0,212,255,0.35)]`}
                   initial={false}
@@ -339,7 +607,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                     : "Kapacita pod kontrolou."}
               </p>
             </div>
-            <div className="flex shrink-0 flex-col items-end gap-1">
+            <div className="flex w-full shrink-0 flex-col items-stretch gap-2 sm:w-auto sm:items-end">
               {status === "authenticated" ? (
                 <button
                   type="button"
@@ -355,7 +623,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                       : undefined
                   }
                   onClick={() => void save()}
-                  className="ms-fantasy-save-shimmer group relative flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#0077b6] via-[#00B4FF] to-[#48cae4] px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.14em] text-[#03050a] shadow-[0_0_28px_rgba(0,180,255,0.45),inset_0_1px_0_rgba(255,255,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_36px_rgba(0,212,255,0.55)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
+                  className="ms-fantasy-save-shimmer group relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#0077b6] via-[#00B4FF] to-[#48cae4] px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.14em] text-[#03050a] shadow-[0_0_28px_rgba(0,180,255,0.45),inset_0_1px_0_rgba(255,255,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_36px_rgba(0,212,255,0.55)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 touch-manipulation sm:w-auto sm:min-h-0"
                 >
                   {salaryOverCap ? (
                     <Lock className="h-4 w-4 shrink-0 opacity-95" aria-hidden />
@@ -383,14 +651,14 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                   type="button"
                   disabled={day.isLocked || !fantasySubmissionsEnabled}
                   onClick={() => void signIn("google", { callbackUrl: `/fantasy/${slug}` })}
-                  className="rounded-xl border border-[#00B4FF]/45 bg-[#00B4FF]/10 px-4 py-2.5 text-xs font-semibold text-[#9ae9ff] shadow-[0_0_18px_rgba(0,180,255,0.15)] transition hover:bg-[#00B4FF]/18 disabled:opacity-40"
+                  className="w-full touch-manipulation rounded-xl border border-[#00B4FF]/45 bg-[#00B4FF]/10 px-4 py-3 text-xs font-semibold text-[#9ae9ff] shadow-[0_0_18px_rgba(0,180,255,0.15)] transition hover:bg-[#00B4FF]/18 disabled:opacity-40 sm:w-auto sm:py-2.5"
                 >
                   {!fantasySubmissionsEnabled ? "Přihlášení (odesílání vypnuto)" : "Přihlásit a odeslat"}
                 </button>
               )}
               {saveState === "ok" ? <span className="text-xs text-emerald-400">Odesláno.</span> : null}
               {saveState === "err" && saveErr ? (
-                <span className="max-w-[18rem] text-right text-xs text-red-300">{saveErr}</span>
+                <span className="max-w-[18rem] text-left text-xs text-red-300 sm:text-right">{saveErr}</span>
               ) : null}
             </div>
           </div>
@@ -458,207 +726,104 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
         </section>
       </div>
 
-      <aside className="w-full shrink-0 lg:max-w-sm lg:border-l lg:border-cyan-400/10 lg:pl-8">
-        <div className="border-b border-white/[0.06] pb-4">
-          <h2 className="font-display text-lg font-bold uppercase tracking-[0.12em] text-white sm:text-xl">Soupiska MS</h2>
-          <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">Oficiální pool hráčů</p>
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {[["", "Vše"], ["G", "G"], ["D", "D"], ["F", "F"]].map(([v, lbl]) => (
-            <button
-              key={lbl}
-              type="button"
-              onClick={() => setPosFilter(v)}
-              className={`
-                rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide transition
-                ${posFilter === v ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40" : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200"}
-              `}
-            >
-              {lbl}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-4 space-y-3">
-          <div>
-            <span className="mb-2 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Repre</span>
-            <div className="-mx-0.5 flex max-w-full gap-1.5 overflow-x-auto px-0.5 pb-1 pt-0.5 [scrollbar-width:thin]">
-              <button
-                type="button"
-                onClick={() => setTeamFilter("")}
-                className={[
-                  "shrink-0 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition",
-                  teamFilter === ""
-                    ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
-                    : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
-                ].join(" ")}
-              >
-                Vše
-              </button>
-              {MS_FANTASY_ROSTER_TEAM_OPTIONS.map((t) => {
-                const on = teamFilter === t.code;
-                return (
-                  <button
-                    key={t.code}
-                    type="button"
-                    onClick={() => setTeamFilter(on ? "" : t.code)}
-                    title={t.labelCs}
-                    className={[
-                      "shrink-0 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition",
-                      on
-                        ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
-                        : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
-                    ].join(" ")}
-                  >
-                    {t.code}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          <div>
-            <span className="mb-2 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Platový tier</span>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setTierFilter("")}
-                className={[
-                  "rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide transition",
-                  tierFilter === ""
-                    ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
-                    : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
-                ].join(" ")}
-              >
-                Vše
-              </button>
-              {MS_FANTASY_TIER_CODES.map((t) => {
-                const on = tierFilter === t;
-                return (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => setTierFilter(on ? "" : t)}
-                    className={[
-                      "rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide transition",
-                      on
-                        ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
-                        : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
-                    ].join(" ")}
-                  >
-                    {t}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {hasExtraRosterFilters ? (
-          <button
-            type="button"
-            onClick={() => {
-              setTeamFilter("");
-              setTierFilter("");
-            }}
-            className="mt-2 text-xs font-semibold text-[#00B4FF] hover:underline"
-          >
-            Zrušit filtry repre / tier
-          </button>
-        ) : null}
-
-        <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-600">
-          Klubová liga u fantasy poolu zatím v datech není — jen reprezentace, tier a pozice z importu MS.
-        </p>
-
-        <input
-          type="search"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Hledat jméno…"
-          className="
-            mt-3 w-full rounded-xl border border-white/[0.12] bg-slate-950/80 px-3 py-2.5 text-sm text-white shadow-inner outline-none backdrop-blur-sm placeholder:text-slate-600
-            focus:border-[#00B4FF]/50 focus:ring-2 focus:ring-[#00B4FF]/35
-          "
-          autoCapitalize="off"
-          autoCorrect="off"
-        />
-
-        <div className="mt-3 max-h-[min(70vh,28rem)] space-y-2 overflow-y-auto rounded-2xl border border-white/[0.08] bg-gradient-to-b from-slate-950/90 to-black/50 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-          {rosterLoading && roster.length === 0 ? (
-            <div className="px-3 py-6 text-center text-sm text-slate-500">
-              <Loader2 className="mx-auto mb-2 h-5 w-5 animate-spin text-[#00B4FF]" />
-              Načítám hráče…
-            </div>
-          ) : roster.length === 0 ? (
-            <p className="px-3 py-10 text-center text-sm leading-relaxed text-slate-500">
-              V poolu zatím nejsou hráči, nebo nesedí filtr — po seedu/importu se tu objeví soupiska MS.
-            </p>
-          ) : (
-            <>
-              {roster.map((p) => {
-                const inLineup = picksIds.includes(p.id);
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    disabled={day.isLocked}
-                    onClick={() => addPlayer(p)}
-                    className={`
-                      pool-card-interactive group flex w-full items-center gap-3 rounded-xl border px-2.5 py-2.5 text-left
-                      disabled:pointer-events-none disabled:opacity-40
-                      ${
-                        inLineup
-                          ? "border-cyan-400/50 bg-gradient-to-r from-cyan-500/22 via-[#00B4FF]/14 to-transparent shadow-[0_0_32px_rgba(0,200,255,0.28)] ring-1 ring-cyan-300/50 hover:border-cyan-300/70"
-                          : "border-white/[0.06] bg-gradient-to-r from-white/[0.06] to-transparent hover:border-cyan-400/45 hover:from-cyan-500/15 hover:via-[#00B4FF]/10 hover:to-transparent"
-                      }
-                    `}
-                  >
-                    <div className="relative shrink-0">
-                      <MsFantasyPlayerAvatar playerId={p.id} variant="circle" frame="premium" size="2.65rem" />
-                      <span className="absolute -bottom-0.5 -right-0.5 z-10 scale-90">
-                        <FlagMark code={p.team} className="h-3.5 w-5 ring-1 ring-black/40" />
-                      </span>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-white">{p.name}</p>
-                      <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[0.7rem] text-slate-400">
-                        <span className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[0.65rem] font-bold text-slate-300">{p.team}</span>
-                        {p.jerseyNumber != null ? <span className="tabular-nums">#{p.jerseyNumber}</span> : null}
-                        <span>·</span>
-                        <span>
-                          tier <strong className="text-slate-200">{p.tier}</strong>
-                        </span>
-                        <span>·</span>
-                        <span className="tabular-nums font-semibold text-[#7ee0ff]">{p.salary}</span>
-                      </p>
-                    </div>
-                    {inLineup ? (
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00B4FF]/25 text-[#b8f8ff] shadow-[0_0_16px_rgba(0,180,255,0.35)] ring-1 ring-cyan-300/50">
-                        <Check className="h-4 w-4 stroke-[3]" aria-hidden />
-                      </span>
-                    ) : (
-                      <span className="shrink-0 rounded-lg bg-[#00B4FF]/15 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-[#9ae9ff] ring-1 ring-[#00B4FF]/25 transition group-hover:bg-[#00B4FF]/22">
-                        +
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-              {rosterSkip !== null ? (
-                <button
-                  type="button"
-                  disabled={rosterLoading}
-                  onClick={() => void loadMoreRoster()}
-                  className="mt-2 w-full rounded-lg border border-white/[0.1] py-2 text-xs font-semibold text-slate-400 hover:bg-white/[0.04]"
-                >
-                  {rosterLoading ? "Načítám…" : "Další řádky"}
-                </button>
-              ) : null}
-            </>
-          )}
+      <aside className="hidden w-full shrink-0 lg:block lg:max-w-sm lg:border-l lg:border-cyan-400/10 lg:pl-8">
+        <div className="lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto lg:pb-4 lg:pr-1">
+          <MsFantasyRosterPanel
+            day={day}
+            layout="sidebar"
+            posFilter={posFilter}
+            setPosFilter={setPosFilter}
+            teamFilter={teamFilter}
+            setTeamFilter={setTeamFilter}
+            tierFilter={tierFilter}
+            setTierFilter={setTierFilter}
+            hasExtraRosterFilters={hasExtraRosterFilters}
+            q={q}
+            setQ={setQ}
+            rosterLoading={rosterLoading}
+            roster={roster}
+            rosterSkip={rosterSkip}
+            loadMoreRoster={loadMoreRoster}
+            picksIds={picksIds}
+            addPlayer={addPlayer}
+          />
         </div>
       </aside>
+
+      <div
+        className={`pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-3 pb-[max(0.65rem,env(safe-area-inset-bottom,0px))] pt-2 lg:hidden ${mobileRosterOpen ? "hidden" : ""}`}
+      >
+        <button
+          type="button"
+          onClick={() => setMobileRosterOpen(true)}
+          className="pointer-events-auto flex w-full max-w-md min-h-[3.25rem] touch-manipulation items-center justify-center gap-2 rounded-2xl border border-cyan-400/35 bg-gradient-to-r from-[#0a1628]/95 via-[#0c1a2e]/98 to-[#05080f]/95 px-4 py-3 text-sm font-bold text-white shadow-[0_-8px_40px_rgba(0,0,0,0.45),0_0_28px_rgba(0,180,255,0.2)] backdrop-blur-md active:scale-[0.99]"
+        >
+          <Users className="h-5 w-5 shrink-0 text-cyan-200" aria-hidden />
+          Soupiska MS — vybrat hráče
+        </button>
+      </div>
+
+      {mobileRosterOpen ? (
+        <div
+          className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="ms-fantasy-mobile-roster-title"
+        >
+          <div className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+            <button
+              type="button"
+              onClick={() => setMobileRosterOpen(false)}
+              className="flex touch-manipulation items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/[0.1]"
+            >
+              <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+              Zpět k ledu
+            </button>
+            <h2 id="ms-fantasy-mobile-roster-title" className="min-w-0 flex-1 truncate text-center font-display text-base font-bold text-white">
+              Soupiska MS
+            </h2>
+            <button
+              type="button"
+              onClick={() => setMobileRosterOpen(false)}
+              className="rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
+              aria-label="Zavřít"
+            >
+              Hotovo
+            </button>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-4 sm:px-4">
+            <MsFantasyRosterPanel
+              day={day}
+              layout="sheet"
+              posFilter={posFilter}
+              setPosFilter={setPosFilter}
+              teamFilter={teamFilter}
+              setTeamFilter={setTeamFilter}
+              tierFilter={tierFilter}
+              setTierFilter={setTierFilter}
+              hasExtraRosterFilters={hasExtraRosterFilters}
+              q={q}
+              setQ={setQ}
+              rosterLoading={rosterLoading}
+              roster={roster}
+              rosterSkip={rosterSkip}
+              loadMoreRoster={loadMoreRoster}
+              picksIds={picksIds}
+              addPlayer={addPlayer}
+            />
+          </div>
+          <div className="relative z-[1] flex shrink-0 justify-center border-t border-white/[0.1] bg-[#05080f]/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <button
+              type="button"
+              onClick={() => setMobileRosterOpen(false)}
+              className="flex w-full max-w-md min-h-12 touch-manipulation items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3 text-sm font-bold text-white shadow-lg shadow-black/40 active:scale-[0.99]"
+            >
+              <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
+              Hotovo — zpět k sestavě na ledu
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
