@@ -13,7 +13,7 @@
     "team": "CZE",
     "jerseyNumber": 32,
     "position": "G",
-    "tier": "E"
+    "tier": "D"
   },
   {
     "code": "CZE26-G33-PAVLAT",
@@ -21,7 +21,7 @@
     "team": "CZE",
     "jerseyNumber": 33,
     "position": "G",
-    "tier": "E"
+    "tier": "D"
   },
   {
     "code": "CZE26-D56-CIBULK",
@@ -85,7 +85,7 @@
     "team": "CZE",
     "jerseyNumber": 26,
     "position": "D",
-    "tier": "E"
+    "tier": "D"
   },
   {
     "code": "CZE26-F10-CERVEN",
@@ -117,7 +117,7 @@
     "team": "CZE",
     "jerseyNumber": 23,
     "position": "F",
-    "tier": "C"
+    "tier": "B"
   },
   {
     "code": "CZE26-F08-BERANE",
@@ -197,6 +197,6 @@
     "team": "CZE",
     "jerseyNumber": 96,
     "position": "F",
-    "tier": "C"
+    "tier": "B"
   }
 ]
