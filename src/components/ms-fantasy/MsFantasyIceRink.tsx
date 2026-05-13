@@ -208,18 +208,33 @@ function EmptySlotCard({ selected, disabled, reduceMotion }: { selected: boolean
   return (
     <div
       className={[
-        "relative flex min-h-[6.5rem] w-[6.1rem] flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed px-1.5 py-2 shadow-inner backdrop-blur-[3px] transition sm:min-h-[6.85rem] sm:w-[6.55rem]",
+        "relative flex min-h-[6.5rem] w-[6.1rem] flex-col items-center justify-center rounded-xl border-2 border-dashed px-1.5 py-2 shadow-inner backdrop-blur-[3px] transition-all duration-300 ease-out will-change-transform sm:min-h-[6.85rem] sm:w-[6.55rem]",
         "border-cyan-400/45 bg-gradient-to-b from-white/40 via-cyan-50/25 to-sky-100/20",
+        "group-hover:-translate-y-0.5 group-hover:scale-[1.035] group-hover:border-cyan-200/85 group-hover:from-white/55 group-hover:via-cyan-50/40 group-hover:to-sky-100/35",
+        "group-hover:shadow-[0_0_0_1px_rgba(0,245,255,0.45),0_0_36px_rgba(0,220,255,0.55),0_0_72px_rgba(0,180,255,0.28),0_12px_28px_rgba(0,60,90,0.2)]",
+        "motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100",
         selected ? "border-[#00d4ff] from-cyan-100/55 ring-2 ring-[#00B4FF]/70 ring-offset-[2px] ring-offset-sky-100/90 shadow-[0_0_22px_rgba(0,212,255,0.32)]" : "",
-        !reduceMotion ? "ms-fantasy-empty-pulse" : "",
         disabled ? "opacity-55" : "",
       ].join(" ")}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,212,255,0.2),transparent_55%)]" />
-      <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#00B4FF] to-[#0066a3] text-white shadow-[0_0_20px_rgba(0,180,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] ring-2 ring-white/45 sm:h-11 sm:w-11">
-        <Plus className="h-5 w-5 stroke-[2.5] sm:h-[1.35rem] sm:w-[1.35rem]" aria-hidden />
+      <div
+        className={[
+          "pointer-events-none absolute inset-0 rounded-[10px] bg-[radial-gradient(circle_at_50%_0%,rgba(0,212,255,0.2),transparent_55%)]",
+          !reduceMotion ? "ms-fantasy-empty-pulse" : "",
+        ].join(" ")}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[10px] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+        style={{
+          background: "radial-gradient(circle at 50% 0%, rgba(0, 245, 255, 0.42), transparent 58%)",
+        }}
+        aria-hidden
+      />
+      <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#00B4FF] to-[#0066a3] text-white shadow-[0_0_20px_rgba(0,180,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] ring-2 ring-white/45 transition-all duration-300 ease-out group-hover:scale-110 group-hover:shadow-[0_0_28px_rgba(0,230,255,0.85),0_0_48px_rgba(0,200,255,0.45),inset_0_1px_0_rgba(255,255,255,0.45)] group-hover:ring-cyan-100/70 motion-reduce:group-hover:scale-100 sm:h-11 sm:w-11">
+        <Plus className="h-5 w-5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100 sm:h-[1.35rem] sm:w-[1.35rem]" aria-hidden />
       </span>
-      <span className="relative mt-1.5 text-center text-[0.62rem] font-bold uppercase tracking-[0.1em] text-slate-700 sm:text-[0.65rem]">
+      <span className="relative z-10 mt-1.5 text-center text-[0.62rem] font-bold uppercase tracking-[0.1em] text-slate-700 transition-colors duration-300 group-hover:text-slate-900 sm:text-[0.65rem]">
         Přidat
       </span>
     </div>
