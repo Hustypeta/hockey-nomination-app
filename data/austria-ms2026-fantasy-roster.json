@@ -13,7 +13,7 @@
     "team": "AUT",
     "jerseyNumber": 33,
     "position": "G",
-    "tier": "C"
+    "tier": "E"
   },
   {
     "code": "AUT26-G35-TOLVAN",
@@ -29,7 +29,7 @@
     "team": "AUT",
     "jerseyNumber": 4,
     "position": "D",
-    "tier": "C"
+    "tier": "E"
   },
   {
     "code": "AUT26-D05-HACKL",
@@ -37,7 +37,7 @@
     "team": "AUT",
     "jerseyNumber": 5,
     "position": "D",
-    "tier": "D"
+    "tier": "E"
   },
   {
     "code": "AUT26-D12-MAIER",
@@ -53,7 +53,7 @@
     "team": "AUT",
     "jerseyNumber": 18,
     "position": "D",
-    "tier": "C"
+    "tier": "E"
   },
   {
     "code": "AUT26-D32-WOLF",
@@ -69,7 +69,7 @@
     "team": "AUT",
     "jerseyNumber": 45,
     "position": "D",
-    "tier": "D"
+    "tier": "E"
   },
   {
     "code": "AUT26-D67-WIMMER",
@@ -77,7 +77,7 @@
     "team": "AUT",
     "jerseyNumber": 67,
     "position": "D",
-    "tier": "C"
+    "tier": "E"
   },
   {
     "code": "AUT26-D78-NICKL",
@@ -93,7 +93,7 @@
     "team": "AUT",
     "jerseyNumber": 92,
     "position": "D",
-    "tier": "C"
+    "tier": "D"
   },
   {
     "code": "AUT26-F03-SCHNEI",
@@ -109,7 +109,7 @@
     "team": "AUT",
     "jerseyNumber": 8,
     "position": "F",
-    "tier": "C"
+    "tier": "E"
   },
   {
     "code": "AUT26-F09-WALLNE",
@@ -117,7 +117,7 @@
     "team": "AUT",
     "jerseyNumber": 9,
     "position": "F",
-    "tier": "C"
+    "tier": "E"
   },
   {
     "code": "AUT26-F14-NEUBAU",
@@ -125,7 +125,7 @@
     "team": "AUT",
     "jerseyNumber": 14,
     "position": "F",
-    "tier": "C"
+    "tier": "E"
   },
   {
     "code": "AUT26-F16-ZWERGE",
@@ -133,7 +133,7 @@
     "team": "AUT",
     "jerseyNumber": 16,
     "position": "F",
-    "tier": "B"
+    "tier": "C"
   },
   {
     "code": "AUT26-F17-SCHERZ",
@@ -141,7 +141,7 @@
     "team": "AUT",
     "jerseyNumber": 17,
     "position": "F",
-    "tier": "D"
+    "tier": "E"
   },
   {
     "code": "AUT26-F40-HARNIS",
@@ -149,7 +149,7 @@
     "team": "AUT",
     "jerseyNumber": 40,
     "position": "F",
-    "tier": "D"
+    "tier": "E"
   },
   {
     "code": "AUT26-F48-THALER",
@@ -157,7 +157,7 @@
     "team": "AUT",
     "jerseyNumber": 48,
     "position": "F",
-    "tier": "C"
+    "tier": "E"
   },
   {
     "code": "AUT26-F52-HUBER",
@@ -165,7 +165,7 @@
     "team": "AUT",
     "jerseyNumber": 52,
     "position": "F",
-    "tier": "D"
+    "tier": "E"
   },
   {
     "code": "AUT26-F61-SCHWIN",
@@ -181,7 +181,7 @@
     "team": "AUT",
     "jerseyNumber": 70,
     "position": "F",
-    "tier": "E"
+    "tier": "D"
   },
   {
     "code": "AUT26-F81-KOLARI",
@@ -197,6 +197,6 @@
     "team": "AUT",
     "jerseyNumber": 96,
     "position": "F",
-    "tier": "E"
+    "tier": "D"
   }
 ]

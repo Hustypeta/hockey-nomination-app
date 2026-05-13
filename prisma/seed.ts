@@ -26,20 +26,20 @@ const prisma = new PrismaClient({ adapter });
 
 /** Pořadí importu fantasy poolu z `data/` (viz `MS_FANTASY_SEED_FANTASY_DATA`). */
 const FANTASY_ROSTER_FILES: { team: string; file: string; note?: string }[] = [
-  { team: "AUT", file: "austria-ms2026-fantasy-roster.json" },
+  { team: "AUT", file: "austria-ms2026-fantasy-roster.json", note: "Platové tiery: C Zwerger, Schneider, Kickert, Tolvanen · D Nissner, M. Huber, Nickl, Wolf, Unterweger · gólman Vorauer E · zbytek E" },
   { team: "CZE", file: "czechia-ms2026-fantasy-roster.json" },
   { team: "CAN", file: "canada-ms2026-fantasy-roster.json" },
   { team: "DEN", file: "denmark-ms2026-fantasy-roster.json", note: "Platové tiery: jen C–E (Mølgaard, Blichfeld v C) · zbytek D/E" },
   { team: "FIN", file: "finland-ms2026-fantasy-roster.json" },
   { team: "GER", file: "germany-ms2026-fantasy-roster.json" },
-  { team: "GBR", file: "great-britain-ms2026-fantasy-roster.json", note: "Platové tiery: C Kirk · D Bowns, Dowd, C. Neilson, Halbert, Richardson, T. Brown, Perlini, Waller · zbytek E" },
-  { team: "HUN", file: "hungary-ms2026-fantasy-roster.json", note: "Platové tiery: jen C až E (žádný nejvyšší ani druhý nejvyšší plat)" },
+  { team: "GBR", file: "great-britain-ms2026-fantasy-roster.json", note: "Platové tiery: C Kirk · D Bowns, Dowd, C. Neilson, Halbert, Richardson, T. Brown · zbytek E (Archie Hazeldine O)" },
+  { team: "HUN", file: "hungary-ms2026-fantasy-roster.json", note: "Platové tiery: C Hári, Galló, Sebők · D Sofron, Bartalis, Stipsicz, Bálizs, Vay · zbytek E" },
   { team: "ITA", file: "italy-ms2026-fantasy-roster.json", note: "Platové tiery: jen C–E (Larkin, Mantenuto v C) · zbytek D/E" },
-  { team: "LAT", file: "latvia-ms2026-fantasy-roster.json", note: "Platové tiery: B Balcers, jádro v C, zbytek D/E" },
-  { team: "NOR", file: "norway-ms2026-fantasy-roster.json", note: "Platové tiery: jen C až E (žádný A ani B v platu)" },
-  { team: "SLO", file: "slovenia-ms2026-fantasy-roster.json", note: "Platové tiery: jen C–E (Drozg, Sabolič v C) · dresy v datech null (doplnit z IIHF) · zbytek D/E" },
+  { team: "LAT", file: "latvia-ms2026-fantasy-roster.json", note: "Platové tiery: B Balcers, Gudļevskis · C Dzierkals, Krastenbergs, Zīle · D Batņa, Egle, Freibergs, Mamčics, Cibuļskis, Grigals, Mitens · zbytek E" },
+  { team: "NOR", file: "norway-ms2026-fantasy-roster.json", note: "Platové tiery: C Pettersen, Brandsegg-Nygård, Solberg, Haukeland · D Johannesen, Martinsen, T. Olsen, E. Ø. Salsten, Vikingstad, Krogdahl, Kåsastul, Normann · zbytek E" },
+  { team: "SLO", file: "slovenia-ms2026-fantasy-roster.json", note: "Platové tiery: C Sabolič, Tičar, Gregorc · D Drozg, Ograjenšek, Kuralt, Štebih, Magovac, Horák, Ž. Us · zbytek E · dresy null (IIHF)" },
   { team: "SVK", file: "slovakia-ms2026-fantasy-roster.json", note: "Platové tiery: B Hlavaj, M. Pospíšil, Sýkora · bez platového A · zbytek C/D/E" },
-  { team: "SUI", file: "switzerland-ms2026-fantasy-roster.json", note: "Platové tiery: A Josi, Hischier, Meier · B Niederreiter, Moser · jádro C · zbytek D/E" },
+  { team: "SUI", file: "switzerland-ms2026-fantasy-roster.json", note: "Platové tiery: A Josi, Hischier · B Genoni, Meier, Niederreiter, Suter, Moser · C Malgin, Andrighetto, Kukan, Marti, Berra, Aeschlimann · D Thürkauf, Riat, Bertschy, Berni, Egli, Frick · zbytek E" },
   { team: "SWE", file: "sweden-ms2026-fantasy-roster.json" },
   { team: "USA", file: "usa-ms2026-fantasy-roster.json" },
 ];
@@ -139,7 +139,12 @@ async function seedMsFantasySample() {
 
 async function seedAustriaMs2026FantasyRoster() {
   if (process.env.MS_FANTASY_SEED_AUT?.trim() !== "true") return;
-  await importFantasyRosterJson("AUT", "austria-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_AUT");
+  await importFantasyRosterJson(
+    "AUT",
+    "austria-ms2026-fantasy-roster.json",
+    "MS_FANTASY_SEED_AUT",
+    "Platové tiery: C Zwerger, Schneider, Kickert, Tolvanen · D Nissner, M. Huber, Nickl, Wolf, Unterweger · gólman Vorauer E · zbytek E"
+  );
 }
 
 async function seedUsaMs2026FantasyRoster() {
@@ -159,7 +164,7 @@ async function seedSwedenMs2026FantasyRoster() {
 
 async function seedGreatBritainMs2026FantasyRoster() {
   if (process.env.MS_FANTASY_SEED_GBR?.trim() !== "true") return;
-  await importFantasyRosterJson("GBR", "great-britain-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_GBR", "Platové tiery: C Kirk · D Bowns, Dowd, C. Neilson, Halbert, Richardson, T. Brown, Perlini, Waller · zbytek E");
+  await importFantasyRosterJson("GBR", "great-britain-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_GBR", "Platové tiery: C Kirk · D Bowns, Dowd, C. Neilson, Halbert, Richardson, T. Brown · zbytek E (Archie Hazeldine O)");
 }
 
 async function seedHungaryMs2026FantasyRoster() {
@@ -168,13 +173,13 @@ async function seedHungaryMs2026FantasyRoster() {
     "HUN",
     "hungary-ms2026-fantasy-roster.json",
     "MS_FANTASY_SEED_HUN",
-    "Platové tiery: jen C až E (žádný nejvyšší ani druhý nejvyšší plat)"
+    "Platové tiery: C Hári, Galló, Sebők · D Sofron, Bartalis, Stipsicz, Bálizs, Vay · zbytek E"
   );
 }
 
 async function seedLatviaMs2026FantasyRoster() {
   if (process.env.MS_FANTASY_SEED_LAT?.trim() !== "true") return;
-  await importFantasyRosterJson("LAT", "latvia-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_LAT", "Platové tiery: B Balcers, jádro v C, zbytek D/E");
+  await importFantasyRosterJson("LAT", "latvia-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_LAT", "Platové tiery: B Balcers, Gudļevskis · C Dzierkals, Krastenbergs, Zīle · D Batņa, Egle, Freibergs, Mamčics, Cibuļskis, Grigals, Mitens · zbytek E");
 }
 
 async function seedSwitzerlandMs2026FantasyRoster() {
@@ -183,13 +188,13 @@ async function seedSwitzerlandMs2026FantasyRoster() {
     "SUI",
     "switzerland-ms2026-fantasy-roster.json",
     "MS_FANTASY_SEED_SUI",
-    "Platové tiery: A Josi, Hischier, Meier · B Niederreiter, Moser · jádro C · zbytek D/E"
+    "Platové tiery: A Josi, Hischier · B Genoni, Meier, Niederreiter, Suter, Moser · C Malgin, Andrighetto, Kukan, Marti, Berra, Aeschlimann · D Thürkauf, Riat, Bertschy, Berni, Egli, Frick · zbytek E"
   );
 }
 
 async function seedNorwayMs2026FantasyRoster() {
   if (process.env.MS_FANTASY_SEED_NOR?.trim() !== "true") return;
-  await importFantasyRosterJson("NOR", "norway-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_NOR", "Platové tiery: jen C až E (žádný A ani B v platu)");
+  await importFantasyRosterJson("NOR", "norway-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_NOR", "Platové tiery: C Pettersen, Brandsegg-Nygård, Solberg, Haukeland · D Johannesen, Martinsen, T. Olsen, E. Ø. Salsten, Vikingstad, Krogdahl, Kåsastul, Normann · zbytek E");
 }
 
 async function seedSlovakiaMs2026FantasyRoster() {
@@ -218,7 +223,7 @@ async function seedSloveniaMs2026FantasyRoster() {
     "SLO",
     "slovenia-ms2026-fantasy-roster.json",
     "MS_FANTASY_SEED_SLO",
-    "Platové tiery: jen C–E (Drozg, Sabolič v C) · dresy v datech null (doplnit z IIHF) · zbytek D/E"
+    "Platové tiery: C Sabolič, Tičar, Gregorc · D Drozg, Ograjenšek, Kuralt, Štebih, Magovac, Horák, Ž. Us · zbytek E · dresy null (IIHF)"
   );
 }
 

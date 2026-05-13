@@ -1,202 +1,34 @@
 [
-  {
-    "code": "FIN26-F16-ALEKSA",
-    "name": "Aleksander Barkov",
-    "team": "FIN",
-    "jerseyNumber": 16,
-    "position": "F",
-    "tier": "A"
-  },
-  {
-    "code": "FIN26-F15-ANTONL",
-    "name": "Anton Lundell",
-    "team": "FIN",
-    "jerseyNumber": 15,
-    "position": "F",
-    "tier": "A"
-  },
-  {
-    "code": "FIN26-F86-TEUVOT",
-    "name": "Teuvo Teräväinen",
-    "team": "FIN",
-    "jerseyNumber": 86,
-    "position": "F",
-    "tier": "A"
-  },
-  {
-    "code": "FIN26-G70-JOONAS",
-    "name": "Joonas Korpisalo",
-    "team": "FIN",
-    "jerseyNumber": 70,
-    "position": "G",
-    "tier": "A"
-  },
-  {
-    "code": "FIN26-D10-HENRIJ",
-    "name": "Henri Jokiharju",
-    "team": "FIN",
-    "jerseyNumber": 10,
-    "position": "D",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-D58-URHOVA",
-    "name": "Urho Vaakanainen",
-    "team": "FIN",
-    "jerseyNumber": 58,
-    "position": "D",
-    "tier": "B"
-  },
-  {
-    "code": "FIN26-D03-OLLIMA",
-    "name": "Olli Määttä",
-    "team": "FIN",
-    "jerseyNumber": 3,
-    "position": "D",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-D33-NIKOLA",
-    "name": "Nikolas Matinpalo",
-    "team": "FIN",
-    "jerseyNumber": 33,
-    "position": "D",
-    "tier": "B"
-  },
-  {
-    "code": "FIN26-F13-JESSEP",
-    "name": "Jesse Puljujärvi",
-    "team": "FIN",
-    "jerseyNumber": 13,
-    "position": "F",
-    "tier": "B"
-  },
-  {
-    "code": "FIN26-F34-AATURA",
-    "name": "Aatu Räty",
-    "team": "FIN",
-    "jerseyNumber": 34,
-    "position": "F",
-    "tier": "B"
-  },
-  {
-    "code": "FIN26-F92-LENNIH",
-    "name": "Lenni Hämeenaho",
-    "team": "FIN",
-    "jerseyNumber": 92,
-    "position": "F",
-    "tier": "B"
-  },
-  {
-    "code": "FIN26-D41-VILLEH",
-    "name": "Ville Heinola",
-    "team": "FIN",
-    "jerseyNumber": 41,
-    "position": "D",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-D04-MIKKOL",
-    "name": "Mikko Lehtonen",
-    "team": "FIN",
-    "jerseyNumber": 4,
-    "position": "D",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-G31-JUSTUS",
-    "name": "Justus Annunen",
-    "team": "FIN",
-    "jerseyNumber": 31,
-    "position": "G",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-F65-SAKARI",
-    "name": "Sakari Manninen",
-    "team": "FIN",
-    "jerseyNumber": 65,
-    "position": "F",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-F80-SAKUMA",
-    "name": "Saku Mäenalanen",
-    "team": "FIN",
-    "jerseyNumber": 80,
-    "position": "F",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-F24-HANNES",
-    "name": "Hannes Björninen",
-    "team": "FIN",
-    "jerseyNumber": 24,
-    "position": "F",
-    "tier": "E"
-  },
-  {
-    "code": "FIN26-F19-WALTTE",
-    "name": "Waltteri Merelä",
-    "team": "FIN",
-    "jerseyNumber": 19,
-    "position": "F",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-G29-HARRIS",
-    "name": "Harri Säteri",
-    "team": "FIN",
-    "jerseyNumber": 29,
-    "position": "G",
-    "tier": "C"
-  },
-  {
-    "code": "FIN26-F21-PATRIK",
-    "name": "Patrik Puistola",
-    "team": "FIN",
-    "jerseyNumber": 21,
-    "position": "F",
-    "tier": "D"
-  },
-  {
-    "code": "FIN26-F27-JANNEK",
-    "name": "Janne Kuokkanen",
-    "team": "FIN",
-    "jerseyNumber": 27,
-    "position": "F",
-    "tier": "D"
-  },
-  {
-    "code": "FIN26-F23-SAMIPA",
-    "name": "Sami Päivärinta",
-    "team": "FIN",
-    "jerseyNumber": 23,
-    "position": "F",
-    "tier": "D"
-  },
-  {
-    "code": "FIN26-F37-EEMILE",
-    "name": "Eemil Erholtz",
-    "team": "FIN",
-    "jerseyNumber": 37,
-    "position": "F",
-    "tier": "D"
-  },
-  {
-    "code": "FIN26-D18-VILISA",
-    "name": "Vili Saarijärvi",
-    "team": "FIN",
-    "jerseyNumber": 18,
-    "position": "D",
-    "tier": "D"
-  },
-  {
-    "code": "FIN26-D55-MIKAEL",
-    "name": "Mikael Seppälä",
-    "team": "FIN",
-    "jerseyNumber": 55,
-    "position": "D",
-    "tier": "D"
-  }
+  { "code": "FIN26-F16-ALEKSA", "name": "Aleksander Barkov", "team": "FIN", "jerseyNumber": 16, "position": "F", "tier": "A" },
+  { "code": "FIN26-F86-TEUVOT", "name": "Teuvo Teräväinen", "team": "FIN", "jerseyNumber": 86, "position": "F", "tier": "A" },
+  { "code": "FIN26-G70-JOONAS", "name": "Joonas Korpisalo", "team": "FIN", "jerseyNumber": 70, "position": "G", "tier": "B" },
+  { "code": "FIN26-F15-ANTONL", "name": "Anton Lundell", "team": "FIN", "jerseyNumber": 15, "position": "F", "tier": "B" },
+  { "code": "FIN26-D04-MIKKOL", "name": "Mikko Lehtonen", "team": "FIN", "jerseyNumber": 4, "position": "D", "tier": "B" },
+  { "code": "FIN26-D03-OLLIMA", "name": "Olli Määttä", "team": "FIN", "jerseyNumber": 3, "position": "D", "tier": "C" },
+  { "code": "FIN26-D10-HENRIJ", "name": "Henri Jokiharju", "team": "FIN", "jerseyNumber": 10, "position": "D", "tier": "C" },
+  { "code": "FIN26-F65-SAKARI", "name": "Sakari Manninen", "team": "FIN", "jerseyNumber": 65, "position": "F", "tier": "C" },
+  { "code": "FIN26-F13-JESSEP", "name": "Jesse Puljujärvi", "team": "FIN", "jerseyNumber": 13, "position": "F", "tier": "C" },
+  { "code": "FIN26-G31-JUSTUS", "name": "Justus Annunen", "team": "FIN", "jerseyNumber": 31, "position": "G", "tier": "C" },
+  { "code": "FIN26-G29-HARRIS", "name": "Harri Säteri", "team": "FIN", "jerseyNumber": 29, "position": "G", "tier": "C" },
+  { "code": "FIN26-F27-JANNEK", "name": "Janne Kuokkanen", "team": "FIN", "jerseyNumber": 27, "position": "F", "tier": "D" },
+  { "code": "FIN26-F19-WALTTE", "name": "Waltteri Merelä", "team": "FIN", "jerseyNumber": 19, "position": "F", "tier": "D" },
+  { "code": "FIN26-F21-PATRIK", "name": "Patrik Puistola", "team": "FIN", "jerseyNumber": 21, "position": "F", "tier": "D" },
+  { "code": "FIN26-F34-AATURA", "name": "Aatu Räty", "team": "FIN", "jerseyNumber": 34, "position": "F", "tier": "D" },
+  { "code": "FIN26-F24-HANNES", "name": "Hannes Björninen", "team": "FIN", "jerseyNumber": 24, "position": "F", "tier": "D" },
+  { "code": "FIN26-F80-SAKUMA", "name": "Saku Mäenalanen", "team": "FIN", "jerseyNumber": 80, "position": "F", "tier": "D" },
+  { "code": "FIN26-D41-VILLEH", "name": "Ville Heinola", "team": "FIN", "jerseyNumber": 41, "position": "D", "tier": "D" },
+  { "code": "FIN26-D58-URHOVA", "name": "Urho Vaakanainen", "team": "FIN", "jerseyNumber": 58, "position": "D", "tier": "D" },
+  { "code": "FIN26-D55-MIKAEL", "name": "Mikael Seppälä", "team": "FIN", "jerseyNumber": 55, "position": "D", "tier": "D" },
+  { "code": "FIN26-F92-LENNIH", "name": "Lenni Hämeenaho", "team": "FIN", "jerseyNumber": 92, "position": "F", "tier": "E" },
+  { "code": "FIN26-F37-EEMILE", "name": "Eemil Erholtz", "team": "FIN", "jerseyNumber": 37, "position": "F", "tier": "E" },
+  { "code": "FIN26-F00-AKURATY", "name": "Aku Räty", "team": "FIN", "jerseyNumber": null, "position": "F", "tier": "E" },
+  { "code": "FIN26-F00-PUHAKKA", "name": "Petteri Puhakka", "team": "FIN", "jerseyNumber": null, "position": "F", "tier": "E" },
+  { "code": "FIN26-F00-PAKKILA", "name": "Eetu Päkkilä", "team": "FIN", "jerseyNumber": null, "position": "F", "tier": "E" },
+  { "code": "FIN26-F23-SAMIPA", "name": "Sami Päivärinta", "team": "FIN", "jerseyNumber": 23, "position": "F", "tier": "E" },
+  { "code": "FIN26-D18-VILISA", "name": "Vili Saarijärvi", "team": "FIN", "jerseyNumber": 18, "position": "D", "tier": "E" },
+  { "code": "FIN26-D33-NIKOLA", "name": "Nikolas Matinpalo", "team": "FIN", "jerseyNumber": 33, "position": "D", "tier": "E" },
+  { "code": "FIN26-D00-RIIKOLA", "name": "Juuso Riikola", "team": "FIN", "jerseyNumber": null, "position": "D", "tier": "E" },
+  { "code": "FIN26-D00-KUKKONE", "name": "Miska Kukkonen", "team": "FIN", "jerseyNumber": null, "position": "D", "tier": "E" },
+  { "code": "FIN26-D00-VILEN", "name": "Topias Vilén", "team": "FIN", "jerseyNumber": null, "position": "D", "tier": "E" },
+  { "code": "FIN26-G00-IGNATJE", "name": "Waltteri Ignatjew", "team": "FIN", "jerseyNumber": null, "position": "G", "tier": "E" }
 ]

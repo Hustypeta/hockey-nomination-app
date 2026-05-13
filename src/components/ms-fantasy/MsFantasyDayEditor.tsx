@@ -6,6 +6,7 @@ import { signIn, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { MS_FANTASY_CAP, MS_FANTASY_TEAM_SIZE, isMsFantasyLineupSubmissionEnabled } from "@/lib/msFantasyConfig";
 import { MS_FANTASY_ROSTER_TEAM_OPTIONS, MS_FANTASY_TIER_CODES } from "@/lib/msFantasyRosterFilters";
+import { MsFantasyIceRink } from "./MsFantasyIceRink";
 
 export type MsFantasyRosterPlayer = {
   id: string;
@@ -377,178 +378,13 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <div className="mx-auto max-w-md space-y-5">
-            <div>
-              <p className="mb-2 text-center font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500">
-                Brankář
-              </p>
-              {(() => {
-                const i = SLOT_G;
-                const slot = slots[i];
-                const sel = activeIx === i;
-                return (
-                  <button
-                    key="slot-g"
-                    type="button"
-                    disabled={day.isLocked}
-                    onClick={() => setActiveIx(i)}
-                    className={`
-                      flex w-full min-h-[5.25rem] flex-col rounded-xl border px-4 py-3 text-left transition
-                      disabled:opacity-55
-                      ${
-                        sel
-                          ? "border-[#00B4FF]/55 bg-[#00B4FF]/12 shadow-[inset_0_0_0_1px_rgba(0,180,255,0.22)]"
-                          : "border-white/[0.08] bg-black/20 hover:border-white/[0.16]"
-                      }
-                    `}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="font-mono text-[0.7rem] font-bold text-[#7ee0ff]">G</span>
-                      {slot?.id ? (
-                        <button
-                          type="button"
-                          disabled={day.isLocked}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            clearSlot(i);
-                          }}
-                          className="text-[0.625rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
-                        >
-                          Odebrat
-                        </button>
-                      ) : null}
-                    </div>
-                    {slot ? (
-                      <div className="mt-2 min-w-0">
-                        <p className="truncate text-base font-semibold text-white">{slot.name}</p>
-                        <p className="mt-1 text-[0.75rem] text-slate-500">
-                          {slot.team} · tier {slot.tier} · <span className="text-[#7ee0ff]">{slot.salary}</span>
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="mt-2 text-[0.8125rem] text-slate-600">Vyber gólmana vpravo →</p>
-                    )}
-                  </button>
-                );
-              })()}
-            </div>
-
-            <div>
-              <p className="mb-2 text-center font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500">
-                Obránci
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                {SLOTS_D.map((i) => {
-                  const slot = slots[i];
-                  const sel = activeIx === i;
-                  return (
-                    <button
-                      key={`slot-d-${i}`}
-                      type="button"
-                      disabled={day.isLocked}
-                      onClick={() => setActiveIx(i)}
-                      className={`
-                        flex min-h-[5.25rem] flex-col rounded-xl border px-3 py-3 text-left transition
-                        disabled:opacity-55
-                        ${
-                          sel
-                            ? "border-[#00B4FF]/55 bg-[#00B4FF]/12 shadow-[inset_0_0_0_1px_rgba(0,180,255,0.22)]"
-                            : "border-white/[0.08] bg-black/20 hover:border-white/[0.16]"
-                        }
-                      `}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <span className="font-mono text-[0.7rem] font-bold text-[#7ee0ff]">D</span>
-                        {slot?.id ? (
-                          <button
-                            type="button"
-                            disabled={day.isLocked}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              clearSlot(i);
-                            }}
-                            className="text-[0.625rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
-                          >
-                            Odebrat
-                          </button>
-                        ) : null}
-                      </div>
-                      {slot ? (
-                        <div className="mt-2 min-w-0">
-                          <p className="truncate text-sm font-semibold leading-snug text-white">{slot.name}</p>
-                          <p className="mt-1 text-[0.7rem] text-slate-500">
-                            {slot.team} · {slot.tier} · <span className="text-[#7ee0ff]">{slot.salary}</span>
-                          </p>
-                        </div>
-                      ) : (
-                        <p className="mt-2 text-[0.75rem] text-slate-600">Bek →</p>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-2 text-center font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500">
-                Útočníci
-              </p>
-              <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                {SLOTS_F.map((i) => {
-                  const slot = slots[i];
-                  const sel = activeIx === i;
-                  return (
-                    <button
-                      key={`slot-f-${i}`}
-                      type="button"
-                      disabled={day.isLocked}
-                      onClick={() => setActiveIx(i)}
-                      className={`
-                        flex min-h-[5.5rem] flex-col rounded-xl border px-2 py-2.5 text-left transition
-                        disabled:opacity-55
-                        ${
-                          sel
-                            ? "border-[#00B4FF]/55 bg-[#00B4FF]/12 shadow-[inset_0_0_0_1px_rgba(0,180,255,0.22)]"
-                            : "border-white/[0.08] bg-black/20 hover:border-white/[0.16]"
-                        }
-                      `}
-                    >
-                      <div className="flex items-start justify-between gap-1">
-                        <span className="font-mono text-[0.65rem] font-bold text-[#7ee0ff]">F</span>
-                        {slot?.id ? (
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              disabled={day.isLocked}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                clearSlot(i);
-                              }}
-                              className="shrink-0 text-[0.55rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
-                            >
-                              Odebrat
-                            </button>
-                          </div>
-                        ) : null}
-                      </div>
-                      {slot ? (
-                        <div className="mt-1.5 min-w-0">
-                          <p className="line-clamp-2 text-[0.8125rem] font-semibold leading-tight text-white">
-                            {slot.name}
-                          </p>
-                          <p className="mt-1 text-[0.65rem] text-slate-500">
-                            {slot.team} · <span className="text-[#7ee0ff]">{slot.salary}</span>
-                          </p>
-                        </div>
-                      ) : (
-                        <p className="mt-2 text-[0.7rem] text-slate-600">Útok →</p>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <MsFantasyIceRink
+            slots={slots}
+            activeIx={activeIx}
+            isLocked={day.isLocked}
+            onSelectSlot={setActiveIx}
+            onClearSlot={clearSlot}
+          />
         </section>
       </div>
 

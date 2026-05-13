@@ -3,7 +3,7 @@
   { "code": "GBR26-F05-DAVIES", "name": "Ben Davies", "team": "GBR", "jerseyNumber": 5, "position": "F", "tier": "E" },
   { "code": "GBR26-F07-LACHOWI", "name": "Robert Lachowicz", "team": "GBR", "jerseyNumber": 7, "position": "F", "tier": "E" },
   { "code": "GBR26-D08-JENION", "name": "Bradley Jenion", "team": "GBR", "jerseyNumber": 8, "position": "D", "tier": "E" },
-  { "code": "GBR26-F09-PERLINI", "name": "Brett Perlini", "team": "GBR", "jerseyNumber": 9, "position": "F", "tier": "D" },
+  { "code": "GBR26-F09-PERLINI", "name": "Brett Perlini", "team": "GBR", "jerseyNumber": 9, "position": "F", "tier": "E" },
   { "code": "GBR26-F14-KIRK", "name": "Liam Kirk", "team": "GBR", "jerseyNumber": 14, "position": "F", "tier": "C" },
   { "code": "GBR26-F15-HOPKINS", "name": "Jack Hopkins", "team": "GBR", "jerseyNumber": 15, "position": "F", "tier": "E" },
   { "code": "GBR26-D17-RICHARD", "name": "Mark Richardson", "team": "GBR", "jerseyNumber": 17, "position": "D", "tier": "D" },
@@ -22,7 +22,7 @@
   { "code": "GBR26-F77-HAREWOOD", "name": "Bayley Harewood", "team": "GBR", "jerseyNumber": 77, "position": "F", "tier": "E" },
   { "code": "GBR26-D79-HALBERT", "name": "Nathanael Halbert", "team": "GBR", "jerseyNumber": 79, "position": "D", "tier": "D" },
   { "code": "GBR26-D84-TBROWN", "name": "Travis Brown", "team": "GBR", "jerseyNumber": 84, "position": "D", "tier": "D" },
-  { "code": "GBR26-F92-WALLER", "name": "Joshua Waller", "team": "GBR", "jerseyNumber": 92, "position": "F", "tier": "D" },
+  { "code": "GBR26-F92-WALLER", "name": "Joshua Waller", "team": "GBR", "jerseyNumber": 92, "position": "F", "tier": "E" },
   { "code": "GBR26-F94-CNEILSON", "name": "Cade Neilson", "team": "GBR", "jerseyNumber": 94, "position": "F", "tier": "D" },
-  { "code": "GBR26-F00-AHAZELDI", "name": "Archie Hazeldine", "team": "GBR", "jerseyNumber": null, "position": "F", "tier": "E" }
+  { "code": "GBR26-D00-AHAZELDI", "name": "Archie Hazeldine", "team": "GBR", "jerseyNumber": null, "position": "D", "tier": "E" }
 ]
