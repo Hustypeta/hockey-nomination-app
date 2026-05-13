@@ -4,6 +4,7 @@ import { useId } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { FlagMark } from "@/components/flags/FlagMark";
+import { msFantasyLineupCardLastName } from "@/lib/msFantasyDisplayName";
 import type { MsFantasyRosterPlayer } from "./MsFantasyDayEditor";
 import { MsFantasyPlayerAvatar } from "./MsFantasyPlayerAvatar";
 
@@ -49,6 +50,10 @@ type MsFantasyIceRinkProps = {
   isLocked: boolean;
   onSelectSlot: (index: number) => void;
   onClearSlot: (index: number) => void;
+  /** Stejné hodnoty jako v hlavičce editoru — žádný rozpor „0 / 165“ vs. skutečný stav. */
+  salaryUsed: number;
+  salaryCap: number;
+  salaryOverCap: boolean;
 };
 
 function IceNoiseOverlay({ filterId }: { filterId: string }) {
@@ -105,6 +110,13 @@ function RinkMarkings({ patternId }: { patternId: string }) {
         stroke="rgba(0,48,135,0.18)"
         strokeWidth="0.5"
       />
+      <g opacity="0.35" stroke="rgba(255,255,255,0.35)" strokeWidth="0.22" fill="none" strokeLinecap="round">
+        <path d="M12 88 Q 22 82 30 90" />
+        <path d="M68 42 Q 78 36 88 44" />
+        <path d="M40 24 Q 48 18 58 26" />
+        <path d="M18 52 L 26 48" />
+        <path d="M74 72 L 82 78" />
+      </g>
       <rect x="0" y="0" width="100" height="130" fill={`url(#${patternId}-shine)`} />
     </svg>
   );
@@ -137,13 +149,45 @@ function ArenaBackdrop() {
   );
 }
 
+function RinkSalaryStrip({ used, cap, over }: { used: number; cap: number; over: boolean }) {
+  const pct = Math.min(100, Math.round((used / cap) * 1000) / 10);
+  const grad = over
+    ? "from-red-500 via-red-400 to-rose-600"
+    : pct >= 95
+      ? "from-amber-400 via-amber-300 to-orange-500"
+      : "from-sky-500 via-[#00B4FF] to-cyan-400";
+
+  return (
+    <div className="pointer-events-none absolute left-2 right-2 top-2 z-20 flex items-center gap-3 rounded-xl border border-slate-900/45 bg-slate-950/72 px-2.5 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:left-4 sm:right-4 sm:top-3 sm:px-3.5">
+      <div className="shrink-0">
+        <p className="font-display text-[0.5rem] font-bold uppercase tracking-[0.16em] text-slate-400 sm:text-[0.55rem] sm:tracking-[0.18em]">
+          Platový strop
+        </p>
+        <p className="font-mono text-xs font-bold tabular-nums text-white sm:text-sm">
+          <span className={over ? "text-red-300" : "text-[#9ae9ff]"}>{used}</span>
+          <span className="text-slate-500"> / </span>
+          <span className="text-slate-400">{cap}</span>
+        </p>
+      </div>
+      <div className="min-w-0 flex-1 pt-0.5">
+        <div className="h-1.5 overflow-hidden rounded-full bg-black/55 ring-1 ring-white/10 sm:h-2">
+          <div
+            className={`h-full rounded-full bg-gradient-to-r ${grad} shadow-[0_0_12px_rgba(0,212,255,0.25)] transition-[width] duration-500 ease-out`}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PositionBadge({ label, compact = false }: { label: string; compact?: boolean }) {
   return (
     <span
       className={[
-        "relative font-display font-bold uppercase tracking-[0.2em] text-white/95 shadow-[0_4px_14px_rgba(0,0,0,0.35)]",
+        "relative font-display font-bold uppercase tracking-[0.18em] text-white/95 shadow-[0_4px_14px_rgba(0,0,0,0.35)]",
         compact
-          ? "px-2.5 py-1 text-[0.55rem] tracking-[0.14em] sm:text-[0.58rem]"
+          ? "px-2.5 py-1 text-[0.52rem] tracking-[0.12em] sm:text-[0.56rem]"
           : "px-3.5 py-1.5 text-[0.62rem] tracking-[0.2em] sm:text-[0.68rem] sm:tracking-[0.18em]",
       ].join(" ")}
       style={{
@@ -196,41 +240,32 @@ function FilledPlayerCard({
   reduceMotion: boolean;
 }) {
   const ac = teamAccent(slot.team);
+  const last = msFantasyLineupCardLastName(slot.name);
 
   const card = (
     <div
       className={[
-        "relative flex min-h-[10.5rem] w-[8rem] flex-col rounded-2xl border px-2 pb-2 pt-2 shadow-[0_22px_50px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.18)] sm:min-h-[11.25rem] sm:w-[8.85rem] sm:px-2.5 sm:pb-2.5 sm:pt-2.5",
+        "relative flex min-h-[9.75rem] w-[7.85rem] flex-col rounded-2xl border px-2 pb-2 pt-2 shadow-[0_26px_56px_rgba(0,0,0,0.58),inset_0_1px_0_rgba(255,255,255,0.18)] sm:min-h-[10.5rem] sm:w-[8.65rem] sm:px-2.5 sm:pb-2.5 sm:pt-2.5",
         "border-white/25 bg-gradient-to-b from-slate-800/98 via-slate-900 to-[#030712]",
         selected ? "ring-[3px] ring-[#00e5ff] ring-offset-[3px] ring-offset-sky-100/95" : "ring-1 ring-white/10",
         disabled ? "opacity-55" : "",
       ].join(" ")}
-      style={{ boxShadow: selected ? `0 0 32px ${ac.ring}, 0 22px 50px rgba(0,0,0,0.55)` : undefined }}
+      style={{ boxShadow: selected ? `0 0 36px ${ac.ring}, 0 26px 56px rgba(0,0,0,0.58)` : undefined }}
     >
-      <div className="pointer-events-none absolute left-1.5 top-1.5 z-20 scale-[0.92] drop-shadow-md sm:left-2 sm:top-2">
-        <FlagMark code={slot.team} className="h-4 w-6 sm:h-5 sm:w-7" />
-      </div>
-
       <div
         className="pointer-events-none absolute inset-0 rounded-2xl opacity-95"
         style={{
           background: `radial-gradient(120% 85% at 50% -15%, ${ac.ring}, transparent 52%), radial-gradient(90% 70% at 100% 100%, rgba(0,48,135,0.22), transparent 48%)`,
         }}
       />
-      <div className="pointer-events-none absolute inset-x-3 top-[4.25rem] h-px bg-gradient-to-r from-transparent via-white/12 to-transparent sm:top-[4.75rem]" />
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center px-0.5 pt-1">
-        <MsFantasyPlayerAvatar playerId={slot.id} variant="shield" size="3.35rem" />
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center px-1 pt-1">
+        <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="3.35rem" />
 
-        <p className="mt-2 line-clamp-2 w-full text-center text-[0.78rem] font-bold leading-tight text-white sm:text-[0.86rem]">
-          {slot.name}
-        </p>
-
-        <p className="mt-1 flex items-center gap-1 text-[0.6rem] font-semibold tabular-nums text-sky-200/85 sm:text-[0.62rem]">
-          <span className="rounded bg-black/35 px-1 py-0.5 font-mono text-[0.55rem] text-cyan-100/90">T{slot.tier}</span>
-          <span className="text-white/50">·</span>
-          <span>{slot.salary} kred.</span>
-        </p>
+        <div className="mt-2 flex w-full max-w-[6.75rem] items-center justify-center gap-1.5 sm:max-w-[7.25rem]">
+          <p className="truncate text-center text-[0.78rem] font-bold leading-tight text-white sm:text-[0.86rem]">{last}</p>
+          <FlagMark code={slot.team} className="h-3 w-4 shrink-0 rounded-sm ring-1 ring-white/30 sm:h-3.5 sm:w-5" />
+        </div>
 
         <div className="mt-auto flex w-full justify-center pt-2">
           <PositionBadge label={positionLabel} compact />
@@ -244,17 +279,26 @@ function FilledPlayerCard({
   return (
     <motion.div
       key={slot.id}
-      initial={{ opacity: 0, y: 14, scale: 0.94 }}
+      initial={{ opacity: 0, y: 18, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: "spring", stiffness: 440, damping: 26 }}
-      className="drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
+      transition={{ type: "spring", stiffness: 420, damping: 24 }}
+      className="drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
     >
       {card}
     </motion.div>
   );
 }
 
-export function MsFantasyIceRink({ slots, activeIx, isLocked, onSelectSlot, onClearSlot }: MsFantasyIceRinkProps) {
+export function MsFantasyIceRink({
+  slots,
+  activeIx,
+  isLocked,
+  onSelectSlot,
+  onClearSlot,
+  salaryUsed,
+  salaryCap,
+  salaryOverCap,
+}: MsFantasyIceRinkProps) {
   const rawId = useId().replace(/:/g, "");
   const noiseFilterId = `msFantasyIceNoise-${rawId}`;
   const scratchPatternId = `msFantasyScratches-${rawId}`;
@@ -309,8 +353,8 @@ export function MsFantasyIceRink({ slots, activeIx, isLocked, onSelectSlot, onCl
   };
 
   return (
-    <div className="mx-auto mt-10 w-full max-w-xl pt-2 sm:mt-12 sm:max-w-2xl sm:pt-4">
-      <p className="mb-5 text-center font-display text-xs font-bold uppercase tracking-[0.22em] text-slate-400 sm:mb-6 sm:text-sm sm:tracking-[0.2em]">
+    <div className="mx-auto w-full max-w-xl sm:max-w-2xl">
+      <p className="mb-3 text-center font-display text-xs font-bold uppercase tracking-[0.22em] text-slate-400 sm:mb-4 sm:text-sm sm:tracking-[0.2em]">
         Sestava na ledě
       </p>
 
@@ -339,7 +383,7 @@ export function MsFantasyIceRink({ slots, activeIx, isLocked, onSelectSlot, onCl
         <div className="pointer-events-none absolute inset-0 rounded-[2rem] shadow-[inset_0_0_80px_rgba(0,40,80,0.08)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-slate-900/20 to-transparent" />
 
-        <div className="relative z-10 flex flex-col items-stretch px-2 pb-10 pt-10 sm:px-6 sm:pb-12 sm:pt-12">
+        <div className="relative z-10 flex flex-col items-stretch px-2 pb-10 pt-[4.25rem] sm:px-6 sm:pb-12 sm:pt-[4.75rem]">
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">{SLOTS_F.map((ix) => renderSlot(ix, "Útočník"))}</div>
           <div className="mt-7 flex flex-wrap justify-center gap-4 sm:mt-8 sm:gap-8">{SLOTS_D.map((ix) => renderSlot(ix, "Obránce"))}</div>
           <div className="mt-8 flex justify-center sm:mt-9">{renderSlot(SLOT_G, "Brankář")}</div>
