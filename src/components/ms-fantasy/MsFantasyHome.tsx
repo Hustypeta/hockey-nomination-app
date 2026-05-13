@@ -63,9 +63,6 @@ export function MsFantasyHome() {
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200/90">
                 Hrajeme o atraktivní hokejové ceny, konkrétní nabídku v co nejbližší době upřesníme.
               </p>
-              <p className="mt-5 font-display text-xl font-bold tracking-wide text-white sm:text-2xl">
-                Balíčky a rozšíření — připravujeme
-              </p>
               <p className="mt-6">
                 <Link
                   href="/fantasy/pravidla"
