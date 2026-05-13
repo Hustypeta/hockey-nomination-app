@@ -40,65 +40,69 @@ export function MsFantasyHome() {
   }, []);
 
   return (
-    <div className="pb-16 pt-2 sm:pb-20">
+    <div className="pb-12 pt-1 sm:pb-16">
       <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
-        <MsFantasyGlassPanel className="p-6 sm:p-8" glow="cyan">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0 flex-1">
-              <p className="font-display text-xs font-bold uppercase tracking-[0.28em] text-cyan-200/95">MS 2026</p>
-              <h1 className="mt-2 font-display text-4xl font-bold tracking-[0.02em] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-5xl sm:tracking-tight">
+        <MsFantasyGlassPanel className="p-4 sm:p-5" glow="cyan">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1 pr-1">
+              <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.22em] text-cyan-200/90 sm:text-xs sm:tracking-[0.26em]">
+                MS 2026
+              </p>
+              <h1 className="mt-0.5 font-display text-3xl font-bold leading-none tracking-[0.02em] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.45)] sm:text-4xl sm:tracking-tight">
                 Fantasy
               </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200/90">
-                Každý hrací den sestavíš <span className="font-semibold text-white">6 hráčů</span> z poolu (1× brankář,
-                zbytek útočníci nebo obránci). Zastropování{" "}
-                <span className="font-semibold text-cyan-100">{MS_FANTASY_CAP} kreditů</span> na den. Odevzdání musí být
-                před prvním zápasem dne — čas uzávěrky u každého dne níže.
-                {!fantasySubmissionsEnabled ? (
-                  <span className="mt-2 block rounded-lg border border-amber-400/25 bg-amber-500/10 px-3 py-2 text-amber-100">
-                    Odesílání sestav na server je zatím vypnuté — fantasy jde jen vyzkoušet v rozhraní.
-                  </span>
-                ) : null}
-              </p>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200/90">
-                Hrajeme o atraktivní hokejové ceny, konkrétní nabídku v co nejbližší době upřesníme.
-              </p>
-              <p className="mt-6">
+              <div className="mt-3 max-w-2xl space-y-2 text-[0.8125rem] leading-snug text-slate-200/90 sm:text-sm sm:leading-relaxed">
+                <p>
+                  Každý hrací den sestavíš <span className="font-semibold text-white">6 hráčů</span> z poolu (1×
+                  brankář, zbytek útočníci nebo obránci). Zastropování{" "}
+                  <span className="font-semibold text-cyan-100">{MS_FANTASY_CAP} kreditů</span> na den. Odevzdání musí
+                  být před prvním zápasem dne — čas uzávěrky u každého dne níže.
+                  {!fantasySubmissionsEnabled ? (
+                    <span className="mt-2 block rounded-lg border border-amber-400/25 bg-amber-500/10 px-2.5 py-1.5 text-[0.8125rem] text-amber-100 sm:px-3 sm:py-2 sm:text-sm">
+                      Odesílání sestav na server je zatím vypnuté — fantasy jde jen vyzkoušet v rozhraní.
+                    </span>
+                  ) : null}
+                </p>
+                <p className="text-slate-300/95">
+                  Hrajeme o atraktivní hokejové ceny, konkrétní nabídku v co nejbližší době upřesníme.
+                </p>
+              </div>
+              <p className="mt-4">
                 <Link
                   href="/fantasy/pravidla"
-                  className="ms-fantasy-save-shimmer group relative inline-flex items-center gap-2 overflow-hidden rounded-xl border border-cyan-300/35 bg-gradient-to-r from-[#0077b6]/90 via-[#00B4FF]/95 to-[#48cae4]/90 px-5 py-3 text-sm font-semibold text-[#03050a] shadow-[0_0_28px_rgba(0,180,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(0,212,255,0.45)]"
+                  className="ms-fantasy-save-shimmer group relative inline-flex w-full max-w-md items-center justify-center gap-2 overflow-hidden rounded-lg border border-cyan-300/35 bg-gradient-to-r from-[#0077b6]/90 via-[#00B4FF]/95 to-[#48cae4]/90 px-4 py-2.5 text-xs font-semibold text-[#03050a] shadow-[0_0_20px_rgba(0,180,255,0.28)] transition hover:scale-[1.01] hover:shadow-[0_0_32px_rgba(0,212,255,0.38)] sm:inline-flex sm:w-auto sm:rounded-xl sm:px-5 sm:py-2.5 sm:text-sm"
                 >
-                  <BookOpen className="relative z-10 h-4 w-4 shrink-0" aria-hidden />
+                  <BookOpen className="relative z-10 h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden />
                   <span className="relative z-10">Kompletní pravidla a fantasy body</span>
                 </Link>
               </p>
             </div>
-            <div className="flex shrink-0 justify-center gap-4 text-white/90 sm:justify-end sm:gap-6 lg:pt-1">
-              <div className="flex h-14 w-14 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)] sm:h-16 sm:w-16">
-                <Shirt className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.25} aria-hidden />
+            <div className="flex shrink-0 gap-1.5 text-white/90 sm:gap-2">
+              <div className="flex h-10 w-10 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)] sm:h-11 sm:w-11">
+                <Shirt className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.25} aria-hidden />
               </div>
-              <div className="flex h-14 w-14 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)] sm:h-16 sm:w-16">
-                <Trophy className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.25} aria-hidden />
+              <div className="flex h-10 w-10 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)] sm:h-11 sm:w-11">
+                <Trophy className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.25} aria-hidden />
               </div>
-              <div className="flex h-14 w-14 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)] sm:h-16 sm:w-16">
-                <Ticket className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.25} aria-hidden />
+              <div className="flex h-10 w-10 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)] sm:h-11 sm:w-11">
+                <Ticket className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.25} aria-hidden />
               </div>
             </div>
           </div>
         </MsFantasyGlassPanel>
 
         {err ? (
-          <p className="mt-6 rounded-2xl border border-red-400/35 bg-red-950/40 px-4 py-3 text-sm text-red-100 backdrop-blur-md">
+          <p className="mt-4 rounded-xl border border-red-400/35 bg-red-950/40 px-3 py-2.5 text-sm text-red-100 backdrop-blur-md sm:px-4 sm:py-3">
             {err}
           </p>
         ) : null}
 
         {days === null && !err ? (
-          <p className="mt-8 text-center text-sm text-slate-400">Načítám hrací dny…</p>
+          <p className="mt-5 text-center text-sm text-slate-400">Načítám hrací dny…</p>
         ) : null}
 
         {days && days.length === 0 ? (
-          <MsFantasyGlassPanel className="mt-8 px-6 py-10 text-center" glow="subtle">
+          <MsFantasyGlassPanel className="mt-5 px-4 py-6 text-center sm:mt-6 sm:px-5 sm:py-8" glow="subtle">
             <p className="text-sm leading-relaxed text-slate-200">
               Zatím tu nejsou žádné fantasy hrací dny ani pool hráčů — databáze na tomto prostředí ještě neobsahuje
               fantasy data.
@@ -120,34 +124,34 @@ export function MsFantasyHome() {
         ) : null}
 
         {days && days.length > 0 ? (
-          <div className="mt-10 space-y-8">
-            <ul className="flex flex-col gap-3 sm:gap-4">
+          <div className="mt-6 space-y-3 sm:mt-7 sm:space-y-4">
+            <ul className="flex flex-col gap-2 sm:gap-3">
               {days.map((d) => (
                 <li key={d.id}>
                   <Link
                     href={`/fantasy/${d.slug}`}
                     className={`
-                      group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-white/[0.1]
-                      bg-gradient-to-r from-white/[0.07] via-white/[0.03] to-transparent px-4 py-4 backdrop-blur-xl
-                      shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset,0_8px_32px_rgba(0,0,0,0.25)]
-                      transition hover:border-cyan-300/35 hover:shadow-[0_0_40px_rgba(0,200,255,0.18)]
-                      sm:gap-5 sm:px-5 sm:py-5
+                      group relative flex items-center gap-3 overflow-hidden rounded-xl border border-white/[0.1]
+                      bg-gradient-to-r from-white/[0.07] via-white/[0.03] to-transparent px-3 py-3 backdrop-blur-xl
+                      shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset,0_6px_24px_rgba(0,0,0,0.22)]
+                      transition hover:border-cyan-300/35 hover:shadow-[0_0_32px_rgba(0,200,255,0.16)]
+                      sm:gap-4 sm:rounded-2xl sm:px-4 sm:py-4
                       ${d.isLocked ? "opacity-80" : ""}
                     `}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/[0.04] to-transparent opacity-0 transition group-hover:opacity-100" />
                     <div
                       className={[
-                        "relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full",
+                        "relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
                         "border border-cyan-200/30 bg-gradient-to-br from-cyan-400/25 to-slate-900/80",
-                        "shadow-[0_0_28px_rgba(0,200,255,0.35),inset_0_1px_0_rgba(255,255,255,0.2)]",
-                        "ring-2 ring-cyan-300/20",
+                        "shadow-[0_0_20px_rgba(0,200,255,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]",
+                        "ring-1 ring-cyan-300/20 sm:h-12 sm:w-12 sm:ring-2",
                       ].join(" ")}
                     >
-                      <Calendar className="relative z-10 h-6 w-6 text-cyan-100" aria-hidden />
+                      <Calendar className="relative z-10 h-5 w-5 text-cyan-100 sm:h-6 sm:w-6" aria-hidden />
                     </div>
                     <div className="relative min-w-0 flex-1">
-                      <p className="truncate font-display text-lg font-bold tracking-wide text-white sm:text-xl">
+                      <p className="truncate font-display text-base font-bold tracking-wide text-white sm:text-lg">
                         {d.title}
                       </p>
                       <p className="mt-1 text-xs text-slate-400">
@@ -171,8 +175,8 @@ export function MsFantasyHome() {
                         </span>
                       </p>
                     </div>
-                    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-cyan-200 shadow-[0_0_20px_rgba(0,200,255,0.2)] transition group-hover:translate-x-0.5 group-hover:border-cyan-300/40 group-hover:text-white">
-                      <ArrowRight className="h-5 w-5" aria-hidden />
+                    <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-cyan-200 shadow-[0_0_14px_rgba(0,200,255,0.18)] transition group-hover:translate-x-0.5 group-hover:border-cyan-300/40 group-hover:text-white sm:h-10 sm:w-10">
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden />
                     </div>
                   </Link>
                 </li>
