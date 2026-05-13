@@ -34,7 +34,8 @@ export const MS_FANTASY_TIER_SALARY_GOALIE: Record<string, number> = {
 export const MS_FANTASY_TIER_SALARY = MS_FANTASY_TIER_SALARY_SKATER;
 
 /**
- * Povolit stránky `/fantasy/*` (menu má Fantasy vždy; vypnutí např. před spuštěním: env na false).
+ * Povolit stránky `/fantasy` a editor dne (menu může odkazovat i na vypnutý režim; samotný obsah vyžaduje přihlášení).
+ * `/fantasy/pravidla` zůstává dostupné bez účtu. Vypnutí: `NEXT_PUBLIC_MS_FANTASY_VISIBLE=false`.
  */
 export function isMsFantasyVisibleToUsers(): boolean {
   const v = process.env.NEXT_PUBLIC_MS_FANTASY_VISIBLE?.trim().toLowerCase();

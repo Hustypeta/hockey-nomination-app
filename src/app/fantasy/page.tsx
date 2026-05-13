@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { notFound, redirect } from "next/navigation";
 import { MsFantasyHome } from "@/components/ms-fantasy/MsFantasyHome";
 import { SiteShell } from "@/components/site/SiteShell";
+import { authOptions } from "@/lib/auth";
 import {
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
@@ -36,8 +38,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FantasyIndexPage() {
+export const dynamic = "force-dynamic";
+
+export default async function FantasyIndexPage() {
   if (!isMsFantasyVisibleToUsers()) notFound();
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    redirect("/auth/signin?callbackUrl=%2Ffantasy");
+  }
 
   return (
     <SiteShell>

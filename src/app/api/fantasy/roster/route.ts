@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { msFantasyNotEnabledResponse } from "@/lib/msFantasyApiGate";
+import { msFantasyNotEnabledResponse, msFantasyRequireSessionResponse } from "@/lib/msFantasyApiGate";
 import { salaryForTier } from "@/lib/msFantasyConfig";
 import { isAllowedMsFantasyTeamCode, isAllowedMsFantasyTier } from "@/lib/msFantasyRosterFilters";
 
@@ -13,6 +13,9 @@ const MAX_PAGE = 80;
 export async function GET(request: NextRequest) {
   const gate = msFantasyNotEnabledResponse();
   if (gate) return gate;
+
+  const authGate = await msFantasyRequireSessionResponse();
+  if (authGate) return authGate;
 
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q")?.trim() ?? "";

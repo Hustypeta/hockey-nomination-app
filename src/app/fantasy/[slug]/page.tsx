@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { notFound, redirect } from "next/navigation";
 import { MsFantasyDayEditor } from "@/components/ms-fantasy/MsFantasyDayEditor";
 import { SiteShell } from "@/components/site/SiteShell";
+import { authOptions } from "@/lib/auth";
 import {
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
@@ -45,10 +47,18 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function FantasyDayPage(props: Props) {
   const { slug } = await props.params;
 
   if (!isMsFantasyVisibleToUsers()) notFound();
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    const path = `/fantasy/${encodeURIComponent(slug)}`;
+    redirect(`/auth/signin?callbackUrl=${encodeURIComponent(path)}`);
+  }
 
   return (
     <SiteShell>

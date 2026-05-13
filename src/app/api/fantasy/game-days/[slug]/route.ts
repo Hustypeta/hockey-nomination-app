@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { msFantasyNotEnabledResponse } from "@/lib/msFantasyApiGate";
+import { msFantasyNotEnabledResponse, msFantasyRequireSessionResponse } from "@/lib/msFantasyApiGate";
 
 export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }> }) {
   const gate = msFantasyNotEnabledResponse();
   if (gate) return gate;
+
+  const authGate = await msFantasyRequireSessionResponse();
+  if (authGate) return authGate;
 
   const { slug } = await ctx.params;
 

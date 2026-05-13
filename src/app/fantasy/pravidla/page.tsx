@@ -211,8 +211,8 @@ export default function FantasyRulesPage() {
             soupisek.
           </p>
           <ul className="mt-3 list-inside list-disc space-y-1.5 text-sm text-slate-300">
-            <li>Stránky `/fantasy` a editor dne včetně uzávěrky podle času dne</li>
-            <li>API `/api/fantasy/game-days`, `roster`, `my-lineup` (GET/POST s lockem a validací)</li>
+            <li>Stránky `/fantasy` a editor dne po přihlášení včetně uzávěrky podle času dne</li>
+            <li>API `/api/fantasy/game-days`, `roster`, `my-lineup` (GET/POST jen pro přihlášené; lock a validace u uložení)</li>
             <li>Modely `MsFantasyGameDay`, `MsFantasyRosterPlayer`, `MsFantasyLineup` a uložení `pickIds` / `salarySpent`</li>
             <li>Stránka pravidel, kterou právě čteš</li>
           </ul>
