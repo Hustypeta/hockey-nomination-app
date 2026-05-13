@@ -116,11 +116,11 @@ function EmptySlotCard({ selected, disabled, reduceMotion }: { selected: boolean
   return (
     <div
       className={[
-        "relative flex min-h-[6.85rem] w-[6.5rem] flex-col items-center justify-center rounded-xl border-2 border-dashed px-1.5 py-1.5 shadow-inner backdrop-blur-[3px] transition-all duration-300 ease-out will-change-transform sm:min-h-[7.35rem] sm:w-[7.35rem]",
+        "relative flex min-h-[6.25rem] w-[5.35rem] flex-col items-center justify-center rounded-xl border-2 border-dashed px-1 py-1.5 shadow-inner backdrop-blur-[3px] transition-[border-color,box-shadow,transform,background-color] duration-300 ease-out sm:min-h-[6.85rem] sm:w-[6.5rem] sm:px-1.5 sm:py-1.5 md:min-h-[7.35rem] md:w-[7.35rem]",
         "border-cyan-400/45 bg-gradient-to-b from-white/40 via-cyan-50/25 to-sky-100/20",
-        "group-hover:-translate-y-0.5 group-hover:scale-[1.035] group-hover:border-cyan-200/85 group-hover:from-white/55 group-hover:via-cyan-50/40 group-hover:to-sky-100/35",
-        "group-hover:shadow-[0_0_0_1px_rgba(0,245,255,0.45),0_0_36px_rgba(0,220,255,0.55),0_0_72px_rgba(0,180,255,0.28),0_12px_28px_rgba(0,60,90,0.2)]",
-        "motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100",
+        "sm:group-hover:-translate-y-0.5 sm:group-hover:scale-[1.035] sm:group-hover:border-cyan-200/85 sm:group-hover:from-white/55 sm:group-hover:via-cyan-50/40 sm:group-hover:to-sky-100/35",
+        "sm:group-hover:shadow-[0_0_0_1px_rgba(0,245,255,0.45),0_0_36px_rgba(0,220,255,0.55),0_0_72px_rgba(0,180,255,0.28),0_12px_28px_rgba(0,60,90,0.2)]",
+        "motion-reduce:sm:group-hover:translate-y-0 motion-reduce:sm:group-hover:scale-100",
         selected ? "border-[#00d4ff] from-cyan-100/55 ring-2 ring-[#00B4FF]/70 ring-offset-[2px] ring-offset-sky-100/90 shadow-[0_0_22px_rgba(0,212,255,0.32)]" : "",
         disabled ? "opacity-55" : "",
       ].join(" ")}
@@ -133,14 +133,14 @@ function EmptySlotCard({ selected, disabled, reduceMotion }: { selected: boolean
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 rounded-[10px] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 rounded-[10px] opacity-0 transition-opacity duration-300 ease-out sm:group-hover:opacity-100"
         style={{
           background: "radial-gradient(circle at 50% 0%, rgba(0, 245, 255, 0.42), transparent 58%)",
         }}
         aria-hidden
       />
-      <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#00B4FF] to-[#0066a3] text-white shadow-[0_0_20px_rgba(0,180,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] ring-2 ring-white/45 transition-all duration-300 ease-out group-hover:scale-110 group-hover:shadow-[0_0_28px_rgba(0,230,255,0.85),0_0_48px_rgba(0,200,255,0.45),inset_0_1px_0_rgba(255,255,255,0.45)] group-hover:ring-cyan-100/70 motion-reduce:group-hover:scale-100 sm:h-11 sm:w-11">
-        <Plus className="h-5 w-5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100 sm:h-[1.35rem] sm:w-[1.35rem]" aria-hidden />
+      <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#00B4FF] to-[#0066a3] text-white shadow-[0_0_20px_rgba(0,180,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] ring-2 ring-white/45 transition-[transform,box-shadow] duration-300 ease-out sm:group-hover:scale-110 sm:group-hover:shadow-[0_0_28px_rgba(0,230,255,0.85),0_0_48px_rgba(0,200,255,0.45),inset_0_1px_0_rgba(255,255,255,0.45)] sm:group-hover:ring-cyan-100/70 motion-reduce:sm:group-hover:scale-100 sm:h-11 sm:w-11">
+        <Plus className="h-4 w-4 stroke-[2.5] transition-transform duration-300 ease-out sm:group-hover:scale-110 motion-reduce:sm:group-hover:scale-100 sm:h-[1.35rem] sm:w-[1.35rem]" aria-hidden />
       </span>
       <span className="relative z-10 mt-1 text-center text-[0.62rem] font-bold uppercase tracking-[0.1em] text-slate-700 transition-colors duration-300 group-hover:text-slate-900 sm:text-[0.65rem]">
         Přidat
@@ -168,7 +168,7 @@ function FilledPlayerCard({
   const card = (
     <div
       className={[
-        "relative flex min-h-[7.05rem] w-[6.5rem] flex-col rounded-xl border px-2 pb-1.5 pt-1.5 shadow-[0_16px_36px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.18)] sm:min-h-[7.55rem] sm:w-[7.35rem] sm:px-2.5 sm:pb-2 sm:pt-2",
+        "relative flex min-h-[6.45rem] w-[5.35rem] flex-col rounded-xl border px-1.5 pb-1.5 pt-1 shadow-[0_16px_36px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.18)] sm:min-h-[7.05rem] sm:w-[6.5rem] sm:px-2 sm:pb-1.5 sm:pt-1.5 md:min-h-[7.55rem] md:w-[7.35rem] md:px-2.5 md:pb-2 md:pt-2",
         "border-white/25 bg-gradient-to-b from-slate-800/98 via-slate-900 to-[#030712]",
         selected ? "ring-[2px] ring-[#00e5ff] ring-offset-[2px] ring-offset-sky-100/95" : "ring-1 ring-white/10",
         disabled ? "opacity-55" : "",
@@ -182,11 +182,16 @@ function FilledPlayerCard({
         }}
       />
 
-      <div className="relative z-10 flex flex-col items-center gap-1 px-0.5 pt-0.5">
-        <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="3.1rem" />
+      <div className="relative z-10 flex flex-col items-center gap-0.5 px-0.5 pt-0.5 sm:gap-1">
+        <div className="shrink-0 sm:hidden">
+          <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="2.72rem" />
+        </div>
+        <div className="hidden shrink-0 sm:block">
+          <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="3.1rem" />
+        </div>
 
-        <div className="flex w-full max-w-[6.45rem] items-start justify-center gap-1.5 sm:max-w-[7.1rem]">
-          <p className="line-clamp-2 min-h-[2.2em] max-w-full break-words text-center text-[0.84rem] font-bold leading-snug text-white sm:min-h-[2.35em] sm:text-[0.95rem]">
+        <div className="flex w-full max-w-[5.05rem] items-start justify-center gap-1 sm:max-w-[6.45rem] md:max-w-[7.1rem]">
+          <p className="line-clamp-2 min-h-[2.1em] max-w-full break-words text-center text-[0.72rem] font-bold leading-snug text-white sm:min-h-[2.2em] sm:text-[0.84rem] md:min-h-[2.35em] md:text-[0.95rem]">
             {last}
           </p>
           <FlagMark code={slot.team} className="h-3.5 w-[1.05rem] shrink-0 self-start rounded-sm ring-1 ring-white/30 sm:h-4 sm:w-[1.2rem]" />
@@ -235,12 +240,12 @@ export function MsFantasyIceRink({
     const filled = Boolean(slot?.id);
 
     return (
-      <div key={`slot-wrap-${i}`} className="relative flex flex-col items-center">
+      <div key={`slot-wrap-${i}`} className="relative flex min-w-0 shrink-0 flex-col items-center">
         <button
           type="button"
           disabled={isLocked}
           onClick={() => onSelectSlot(i)}
-          className="group rounded-xl p-0.5 outline-none transition focus-visible:ring-2 focus-visible:ring-[#00B4FF]/70 disabled:opacity-55"
+          className="group relative z-20 min-w-0 touch-manipulation rounded-xl p-0.5 outline-none transition focus-visible:ring-2 focus-visible:ring-[#00B4FF]/70 disabled:opacity-55"
         >
           <div className="flex flex-col items-center gap-0.5 sm:gap-1">
             {filled && slot ? (
@@ -284,13 +289,14 @@ export function MsFantasyIceRink({
       </p>
 
       <IceRinkShell
+        className="ms-fantasy-rink-3d"
         noiseFilterId={noiseFilterId}
         scratchPatternId={scratchPatternId}
         transform="perspective(920px) rotateX(4deg) scale(0.94) translateZ(0)"
-        innerClassName="relative z-10 flex flex-col items-stretch px-2 pb-5 pt-[2.55rem] sm:px-3.5 sm:pb-6 sm:pt-[2.75rem]"
+        innerClassName="relative z-10 flex flex-col items-stretch px-1.5 pb-5 pt-[2.55rem] sm:px-3.5 sm:pb-6 sm:pt-[2.75rem]"
       >
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-2.5">{SLOTS_F.map((ix) => renderSlot(ix, "Útočník"))}</div>
-        <div className="mt-3.5 flex flex-wrap justify-center gap-3 sm:mt-4 sm:gap-5">{SLOTS_D.map((ix) => renderSlot(ix, "Obránce"))}</div>
+        <div className="flex min-w-0 flex-nowrap justify-center gap-1.5 sm:flex-wrap sm:gap-2.5">{SLOTS_F.map((ix) => renderSlot(ix, "Útočník"))}</div>
+        <div className="mt-3.5 flex min-w-0 flex-wrap justify-center gap-2 sm:mt-4 sm:gap-5">{SLOTS_D.map((ix) => renderSlot(ix, "Obránce"))}</div>
         <div className="mt-3.5 flex justify-center sm:mt-4">{renderSlot(SLOT_G, "Brankář")}</div>
       </IceRinkShell>
     </div>

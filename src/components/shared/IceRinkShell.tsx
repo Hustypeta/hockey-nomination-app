@@ -2,9 +2,14 @@
 
 import type { CSSProperties, ReactNode } from "react";
 
-function IceNoiseOverlay({ filterId }: { filterId: string }) {
+function IceNoiseOverlay({ filterId, className = "" }: { filterId: string; className?: string }) {
   return (
-    <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.055]" aria-hidden>
+    <svg
+      className={["pointer-events-none absolute inset-0 h-full w-full opacity-[0.055] max-sm:hidden", className]
+        .filter(Boolean)
+        .join(" ")}
+      aria-hidden
+    >
       <defs>
         <filter id={filterId} x="0%" y="0%" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" result="n" />

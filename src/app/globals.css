@@ -622,3 +622,19 @@ html.social-cover body {
     animation: none;
   }
 }
+
+/* Mobil: SVG feTurbulence + soustavné animace pod 3D transformem často „blikají“ a kazí touch — vypnuto mimo prefers-reduced-motion */
+@media (max-width: 639px) {
+  .ms-fantasy-arena-lights {
+    animation: none !important;
+  }
+
+  .ms-fantasy-empty-pulse {
+    animation: none !important;
+  }
+
+  /* Menší 3D na úzkém displeji = méně ořezu u overflow:hidden a stabilnější touch */
+  .ms-fantasy-rink-3d {
+    transform: perspective(880px) rotateX(2.5deg) scale(0.86) translateZ(0) !important;
+  }
+}
