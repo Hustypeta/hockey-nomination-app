@@ -526,17 +526,6 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                               }}
                               className="shrink-0 text-[0.55rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
                             >
-                              ×
-                            </button>
-                            <button
-                              type="button"
-                              disabled={day.isLocked}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                clearSlot(i);
-                              }}
-                              className="shrink-0 text-[0.55rem] uppercase tracking-wide text-[#00B4FF] hover:underline disabled:opacity-40"
-                            >
                               Odebrat
                             </button>
                           </div>
