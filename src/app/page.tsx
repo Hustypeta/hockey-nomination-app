@@ -8,7 +8,7 @@ import {
   SITE_OG_DEFAULT_IMAGE_WIDTH,
 } from "@/lib/siteBranding";
 
-const homeOgDesc = "Editor sestavy, pick'en, hodnocení hráčů a komunita fanoušků.";
+const homeOgDesc = "Editor sestavy, pick'em, fantasy a hodnocení hráčů.";
 
 const homeMetadata: Metadata = {
   title: {

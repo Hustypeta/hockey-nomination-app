@@ -45,7 +45,7 @@ export function ContestTimeBonusCallout({
     <div
       className={
         isLanding
-          ? "group relative flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden rounded-3xl border border-sky-400/20 bg-gradient-to-br from-[#0c182e]/95 via-[#0c1018]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.08),0_24px_52px_-14px_rgba(0,48,135,0.38),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl transition duration-300 hover:border-sky-400/32 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.14),0_28px_60px_-12px_rgba(0,100,180,0.3),inset_0_1px_0_rgba(255,255,255,0.08)]"
+          ? "group relative mx-auto w-full max-w-2xl overflow-hidden rounded-2xl border border-sky-400/20 bg-gradient-to-br from-[#0c182e]/95 via-[#0c1018]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.08),0_24px_52px_-14px_rgba(0,48,135,0.38),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl transition duration-300 hover:border-sky-400/32 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.14),0_28px_60px_-12px_rgba(0,100,180,0.3),inset_0_1px_0_rgba(255,255,255,0.08)]"
           : "w-full max-w-lg self-start text-left rounded-2xl border border-sky-400/35 bg-gradient-to-br from-sky-400/[0.14] via-sky-400/[0.06] to-transparent px-4 py-3.5 shadow-[0_0_28px_rgba(56,189,248,0.15)]"
       }
       {...(!isLanding
@@ -67,16 +67,16 @@ export function ContestTimeBonusCallout({
         </>
       ) : null}
       <div
-        className={`${!isLanding ? "flex items-start gap-3 text-left" : ""} ${isLanding ? "relative z-10 flex flex-col gap-5 p-6 sm:flex-row sm:items-start sm:gap-6 sm:p-7" : ""}`}
+        className={`${!isLanding ? "flex items-start gap-3 text-left" : ""} ${isLanding ? "relative z-10 flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-start sm:gap-4 sm:px-5 sm:py-4" : ""}`}
       >
         <div
           className={
             isLanding
-              ? "mx-auto flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-300/35 via-sky-500/15 to-[#003087]/40 text-sky-50 shadow-[0_0_0_1px_rgba(125,211,252,0.35),0_10px_36px_rgba(56,189,248,0.32),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-sky-300/28 sm:mx-0 sm:h-[4.5rem] sm:w-[4.5rem]"
+              ? "mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-300/35 via-sky-500/15 to-[#003087]/40 text-sky-50 shadow-[0_0_0_1px_rgba(125,211,252,0.35),0_8px_28px_rgba(56,189,248,0.28),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-sky-300/28 sm:mx-0 sm:h-14 sm:w-14"
               : "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-400/20 text-sky-200 ring-1 ring-sky-400/35"
           }
         >
-          <Zap className={isLanding ? "h-7 w-7 drop-shadow-[0_0_10px_rgba(56,189,248,0.55)] sm:h-8 sm:w-8" : "h-4 w-4"} aria-hidden />
+          <Zap className={isLanding ? "h-6 w-6 drop-shadow-[0_0_10px_rgba(56,189,248,0.55)] sm:h-7 sm:w-7" : "h-4 w-4"} aria-hidden />
         </div>
         <div className={`min-w-0 flex-1 ${!isLanding ? "text-left" : "text-center sm:text-left"}`}>
           <p
@@ -90,7 +90,7 @@ export function ContestTimeBonusCallout({
           </p>
           {isLanding ? (
             <>
-              <p className="mt-3 text-pretty text-sm leading-relaxed text-white/88 sm:text-[15px]">
+              <p className="mt-2 text-pretty text-sm leading-relaxed text-white/88 sm:text-[15px]">
                 Nominační soutěž ukončena. Aktuálně se čeká na oficiální soupisku k prvnímu zápasu.
               </p>
             </>

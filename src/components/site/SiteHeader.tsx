@@ -11,21 +11,16 @@ import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 type NavItem = { href: string; label: string; shortLabel?: string };
 
 /** shortLabel = kratší text na úzkém desktopu (pod xl), aby se vešly všechny položky bez skrytého scrollu */
-const NAV_BASE: NavItem[] = [
+const NAV: NavItem[] = [
   { href: "/", label: "Úvod" },
-  { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
-  { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
   { href: "/zapasy/sestava", label: "Editor sestavy", shortLabel: "Editor sestavy" },
-  { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
-];
-
-const NAV_TAIL: NavItem[] = [
   { href: "/bracket", label: "Pick’em" },
+  { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
+  { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
   { href: "/zebricek", label: "Žebříček" },
+  { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
 ];
-
-const NAV: NavItem[] = [...NAV_BASE, ...NAV_TAIL];
 
 function DesktopNavLabel({ item }: { item: NavItem }) {
   if (!item.shortLabel) return <>{item.label}</>;

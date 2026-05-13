@@ -38,7 +38,7 @@ function metadataBaseUrl(): URL {
 /** fb:app_id — `metadata.facebook.appId` (správné `property=`) + env `FACEBOOK_APP_ID` (viz {@link resolveFacebookAppId}). */
 export async function generateMetadata(): Promise<Metadata> {
   const facebookAppId = resolveFacebookAppId();
-  const previewText = "Editor sestavy, pick'en, hodnocení hráčů a komunita fanoušků.";
+  const previewText = "Editor sestavy, pick'em, fantasy a hodnocení hráčů.";
   const defaultTitle = "Lineup – hokejový editor sestavy";
   return {
     metadataBase: metadataBaseUrl(),
@@ -89,7 +89,7 @@ export default function RootLayout({
     "@type": "WebSite",
     name: "Lineup",
     url: SITE_URL,
-    description: "Editor sestavy, pick'en, hodnocení hráčů a komunita fanoušků.",
+    description: "Editor sestavy, pick'em, fantasy a hodnocení hráčů.",
   } as const;
 
   return (

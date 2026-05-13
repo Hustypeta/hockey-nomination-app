@@ -11,7 +11,6 @@ import {
   Trophy,
   BookOpen,
   LayoutGrid,
-  MessageSquare,
   LogIn,
 } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -22,6 +21,12 @@ import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
+
+/** Partnerský banner (MerkurXtip) — hero pod CTA „HRÁT FANTASY“. */
+const MERKURXTIP_BANNER_HREF =
+  "https://merkurxtip.click/o/2f9j7L?site_id=687&s1=loading_page&r_id=281&lpage=ZwJ7Cl";
+const MERKURXTIP_BANNER_IMG_SRC =
+  "https://raven1-merkurxtip-uploads-bucket.s3.eu-west-1.amazonaws.com/campaign-public/resources/banner/images/img_12_1764257760.jpg";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
@@ -95,10 +100,9 @@ export function LandingContent() {
               celé řady soutěží. Aktuálně běží Pick&apos;em a Fantasy na MS 2026!
             </p>
 
-            <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] text-white drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)] sm:mt-10">
-              Zahraj si Fantasy na{" "}
-              <span className="bg-gradient-to-r from-white via-white to-sky-100 bg-clip-text text-transparent">
-                MS 2026
+            <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-10">
+              <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
+                Zahraj si Fantasy na MS 2026
               </span>
             </h1>
 
@@ -120,7 +124,29 @@ export function LandingContent() {
                 <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
               </Link>
 
-              <div className="mx-auto mt-6 flex w-full max-w-xl justify-center">
+              <div className="mx-auto mt-6 w-full max-w-xl">
+                <a
+                  href={MERKURXTIP_BANNER_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow sponsored"
+                  className="block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] transition hover:border-cyan-400/30 hover:shadow-[0_12px_40px_rgba(0,180,255,0.12)]"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- externí hostitel banneru */}
+                  <img
+                    src={MERKURXTIP_BANNER_IMG_SRC}
+                    alt="MerkurXtip"
+                    className="mx-auto block h-auto w-full max-w-full object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              </div>
+
+              <p className="mx-auto mt-6 max-w-xl text-center text-pretty text-sm leading-relaxed text-slate-200/95 sm:text-[15px]">
+                Pro novinky z hokeje a mnohem více sledujte instagram Svět Hokeje.
+              </p>
+
+              <div className="mx-auto mt-4 flex w-full max-w-xl justify-center">
                 <LoadingScreenUsefulLinks />
               </div>
 
@@ -158,9 +184,9 @@ export function LandingContent() {
               </div>
             ) : null}
 
-            {/* Sociální důkaz + stav nominace */}
-            <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-5 sm:mt-12 lg:flex-row lg:items-stretch lg:gap-6">
-              <div className="group relative flex min-h-0 min-w-0 flex-1 overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)]">
+            {/* Sociální důkaz + stav nominace (nominace pod komunitou) */}
+            <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-4 sm:mt-12 sm:gap-5">
+              <div className="group relative flex min-h-0 min-w-0 w-full overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)]">
                 <div
                   className="pointer-events-none absolute -left-1/4 top-0 h-[140%] w-[70%] bg-[radial-gradient(ellipse_at_30%_0%,rgba(56,189,248,0.22),transparent_58%)]"
                   aria-hidden
@@ -236,13 +262,11 @@ export function LandingContent() {
                 </div>
               </div>
 
-              <div className="flex min-h-0 min-w-0 flex-1 flex-col self-stretch">
-                <ContestTimeBonusCallout
-                  variant="landing"
-                  bonusPercent={bonusPercent}
-                  submissionOpen={contestStats.contestSubmissionOpen}
-                />
-              </div>
+              <ContestTimeBonusCallout
+                variant="landing"
+                bonusPercent={bonusPercent}
+                submissionOpen={contestStats.contestSubmissionOpen}
+              />
             </div>
 
           {/* Odpočet — národní barvy */}
@@ -349,19 +373,19 @@ export function LandingContent() {
                   <ChevronRight className="h-4 w-4 opacity-70" aria-hidden />
                 </Link>
               </div>
-              <div className="rounded-2xl border border-violet-400/20 bg-gradient-to-b from-violet-950/35 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(139,92,246,0.12)]">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/20 text-violet-100 ring-1 ring-violet-400/30">
-                  <MessageSquare className="h-5 w-5" aria-hidden />
+              <div className="rounded-2xl border border-sky-400/25 bg-gradient-to-b from-[#0c182e]/90 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(56,189,248,0.14)]">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500/20 text-sky-100 ring-1 ring-sky-400/35">
+                  <Sparkles className="h-5 w-5" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
-                  Připravujeme také fórum, kde bude možné přidávat nominace a rozjet nejrůznější diskuze.
+                  Spustili jsme také Fantasy soutěž, kde můžeš soutěžit o atraktivní hokejové ceny.
                 </p>
                 <Link
-                  href="/forum"
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-violet-300/70 transition hover:text-violet-200"
+                  href="/fantasy"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-sky-300 transition hover:text-white"
                 >
-                  Fórum — připravujeme
-                  <ChevronRight className="h-4 w-4 opacity-70" aria-hidden />
+                  Fantasy
+                  <ChevronRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>
             </div>
