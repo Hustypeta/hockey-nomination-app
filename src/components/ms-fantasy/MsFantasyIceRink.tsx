@@ -389,10 +389,6 @@ export function MsFantasyIceRink({
           <div className="mt-8 flex justify-center sm:mt-9">{renderSlot(SLOT_G, "Brankář")}</div>
         </div>
       </div>
-
-      <p className="mt-4 text-center text-xs leading-relaxed text-slate-500 sm:mt-5 sm:text-sm">
-        Vyber dres pro aktivní slot, pak hráče v seznamu vpravo. U obsazeného místa odeber přes ×.
-      </p>
     </div>
   );
 }
