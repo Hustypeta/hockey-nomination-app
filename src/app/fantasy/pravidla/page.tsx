@@ -200,27 +200,6 @@ export default function FantasyRulesPage() {
             </table>
           </div>
         </section>
-
-        <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-5 sm:px-5">
-          <h2 className="font-display text-sm font-bold uppercase tracking-[0.14em] text-slate-500">
-            Co je v produktu hotové
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-400">
-            Celá smyčka fantasy kolem sestav — rozhraní, API i databáze — je funkční: hráč vidí dny, vybere šestici,
-            systém ověří pravidla a uloží řádek do databáze. Pool hráčů a hrací dny jdou naplnit seedem z JSON
-            soupisek.
-          </p>
-          <ul className="mt-3 list-inside list-disc space-y-1.5 text-sm text-slate-300">
-            <li>Stránky `/fantasy` a editor dne po přihlášení včetně uzávěrky podle času dne</li>
-            <li>API `/api/fantasy/game-days`, `roster`, `my-lineup` (GET/POST jen pro přihlášené; lock a validace u uložení)</li>
-            <li>Modely `MsFantasyGameDay`, `MsFantasyRosterPlayer`, `MsFantasyLineup` a uložení `pickIds` / `salarySpent`</li>
-            <li>Stránka pravidel, kterou právě čteš</li>
-          </ul>
-          <p className="mt-4 text-xs leading-relaxed text-slate-500">
-            Nad rámec toho zatím typicky zbývá napojit živé výsledky MS na výpočet bodů podle tabulek výše a případně
-            zobrazit souhrnný žebříček — samotná pravidla výpočtu už v repozitáři jsou.
-          </p>
-        </section>
       </div>
     </SiteShell>
   );
