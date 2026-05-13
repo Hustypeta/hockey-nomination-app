@@ -73,13 +73,15 @@ function IceNoiseOverlay({ filterId }: { filterId: string }) {
   );
 }
 
-/** SVG: čáry a kruhy na ledu. */
+/** SVG: čáry a kruhy na ledu (vyšší „virtuální“ rozlišení viewBoxu = ostřejší čáry při škálování). */
 function RinkMarkings({ patternId }: { patternId: string }) {
   return (
     <svg
       className="pointer-events-none absolute inset-0 h-full w-full text-[#c8102e]"
-      viewBox="0 0 100 130"
+      viewBox="0 0 200 260"
       preserveAspectRatio="xMidYMid slice"
+      shapeRendering="geometricPrecision"
+      textRendering="geometricPrecision"
       aria-hidden
     >
       <defs>
@@ -88,36 +90,36 @@ function RinkMarkings({ patternId }: { patternId: string }) {
           <stop offset="38%" stopColor="rgba(255,255,255,0)" />
           <stop offset="100%" stopColor="rgba(0,60,90,0.05)" />
         </linearGradient>
-        <pattern id={patternId} width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
-          <path d="M0 6h14" stroke="rgba(255,255,255,0.14)" strokeWidth="0.35" />
-          <path d="M4 0v14" stroke="rgba(0,80,120,0.06)" strokeWidth="0.25" />
+        <pattern id={patternId} width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
+          <path d="M0 12h28" stroke="rgba(255,255,255,0.16)" strokeWidth="0.7" vectorEffect="nonScalingStroke" />
+          <path d="M8 0v28" stroke="rgba(0,80,120,0.08)" strokeWidth="0.5" vectorEffect="nonScalingStroke" />
         </pattern>
       </defs>
-      <rect x="0" y="0" width="100" height="130" fill={`url(#${patternId})`} opacity="0.5" />
-      <rect x="0" y="0" width="100" height="22" fill="rgba(0,48,135,0.06)" />
-      <rect x="0" y="52" width="100" height="26" fill="rgba(0,48,135,0.04)" />
-      <line x1="0" y1="65" x2="100" y2="65" stroke="currentColor" strokeWidth="1.15" />
-      <line x1="0" y1="38" x2="100" y2="38" stroke="#1d4ed8" strokeWidth="0.85" opacity="0.72" />
-      <line x1="0" y1="92" x2="100" y2="92" stroke="#1d4ed8" strokeWidth="0.85" opacity="0.72" />
-      <circle cx="22" cy="32" r="9" fill="none" stroke="rgba(200,16,46,0.32)" strokeWidth="0.55" />
-      <circle cx="78" cy="32" r="9" fill="none" stroke="rgba(200,16,46,0.32)" strokeWidth="0.55" />
-      <circle cx="22" cy="98" r="9" fill="none" stroke="rgba(200,16,46,0.32)" strokeWidth="0.55" />
-      <circle cx="78" cy="98" r="9" fill="none" stroke="rgba(200,16,46,0.32)" strokeWidth="0.55" />
-      <circle cx="50" cy="65" r="5.5" fill="none" stroke="rgba(200,16,46,0.42)" strokeWidth="0.5" />
+      <rect x="0" y="0" width="200" height="260" fill={`url(#${patternId})`} opacity="0.52" />
+      <rect x="0" y="0" width="200" height="44" fill="rgba(0,48,135,0.07)" />
+      <rect x="0" y="104" width="200" height="52" fill="rgba(0,48,135,0.05)" />
+      <line x1="0" y1="130" x2="200" y2="130" stroke="currentColor" strokeWidth="2.2" vectorEffect="nonScalingStroke" />
+      <line x1="0" y1="76" x2="200" y2="76" stroke="#1d4ed8" strokeWidth="1.6" opacity="0.78" vectorEffect="nonScalingStroke" />
+      <line x1="0" y1="184" x2="200" y2="184" stroke="#1d4ed8" strokeWidth="1.6" opacity="0.78" vectorEffect="nonScalingStroke" />
+      <circle cx="44" cy="64" r="18" fill="none" stroke="rgba(200,16,46,0.38)" strokeWidth="1.05" />
+      <circle cx="156" cy="64" r="18" fill="none" stroke="rgba(200,16,46,0.38)" strokeWidth="1.05" />
+      <circle cx="44" cy="196" r="18" fill="none" stroke="rgba(200,16,46,0.38)" strokeWidth="1.05" />
+      <circle cx="156" cy="196" r="18" fill="none" stroke="rgba(200,16,46,0.38)" strokeWidth="1.05" />
+      <circle cx="100" cy="130" r="11" fill="none" stroke="rgba(200,16,46,0.48)" strokeWidth="1" />
       <path
-        d="M 28 118 A 22 14 0 0 0 72 118"
-        fill="rgba(0,48,135,0.05)"
-        stroke="rgba(0,48,135,0.18)"
-        strokeWidth="0.5"
+        d="M 56 236 A 44 28 0 0 0 144 236"
+        fill="rgba(0,48,135,0.06)"
+        stroke="rgba(0,48,135,0.22)"
+        strokeWidth="1"
       />
-      <g opacity="0.35" stroke="rgba(255,255,255,0.35)" strokeWidth="0.22" fill="none" strokeLinecap="round">
-        <path d="M12 88 Q 22 82 30 90" />
-        <path d="M68 42 Q 78 36 88 44" />
-        <path d="M40 24 Q 48 18 58 26" />
-        <path d="M18 52 L 26 48" />
-        <path d="M74 72 L 82 78" />
+      <g opacity="0.4" stroke="rgba(255,255,255,0.42)" strokeWidth="0.55" fill="none" strokeLinecap="round">
+        <path d="M24 176 Q 44 164 60 180" />
+        <path d="M136 84 Q 156 72 176 88" />
+        <path d="M80 48 Q 96 36 116 52" />
+        <path d="M36 104 L 52 96" />
+        <path d="M148 144 L 164 156" />
       </g>
-      <rect x="0" y="0" width="100" height="130" fill={`url(#${patternId}-shine)`} />
+      <rect x="0" y="0" width="200" height="260" fill={`url(#${patternId}-shine)`} />
     </svg>
   );
 }
@@ -374,9 +376,9 @@ export function MsFantasyIceRink({
       </p>
 
       <div
-        className="relative overflow-hidden rounded-[1.35rem] border border-cyan-200/25 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.08)_inset] sm:rounded-[1.5rem]"
+        className="relative overflow-hidden rounded-[1.35rem] border border-cyan-200/25 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.08)_inset] sm:rounded-[1.5rem] [backface-visibility:hidden]"
         style={{
-          transform: "perspective(920px) rotateX(4deg) scale(0.94)",
+          transform: "perspective(920px) rotateX(4deg) scale(0.94) translateZ(0)",
           transformOrigin: "50% 38%",
         }}
       >
@@ -384,10 +386,10 @@ export function MsFantasyIceRink({
         <IceNoiseOverlay filterId={noiseFilterId} />
 
         <div
-          className="absolute inset-0 opacity-[0.2] mix-blend-multiply"
+          className="absolute inset-0 opacity-[0.18] mix-blend-multiply"
           style={{
             background:
-              "repeating-linear-gradient(-28deg, transparent, transparent 11px, rgba(0,60,90,0.1) 11px, rgba(0,60,90,0.1) 12px), repeating-linear-gradient(18deg, transparent, transparent 17px, rgba(255,255,255,0.08) 17px, rgba(255,255,255,0.08) 18px)",
+              "repeating-linear-gradient(-28deg, transparent, transparent 8px, rgba(0,60,90,0.11) 8px, rgba(0,60,90,0.11) 9px), repeating-linear-gradient(18deg, transparent, transparent 13px, rgba(255,255,255,0.09) 13px, rgba(255,255,255,0.09) 14px)",
           }}
         />
 
