@@ -95,7 +95,7 @@ function PositionBadge({ label, compact = false }: { label: string; compact?: bo
       className={[
         "relative font-display font-bold uppercase tracking-[0.18em] text-white/95 shadow-[0_4px_14px_rgba(0,0,0,0.35)]",
         compact
-          ? "px-2 py-0.5 text-[0.52rem] tracking-[0.1em] sm:px-2.5 sm:py-0.5 sm:text-[0.56rem]"
+          ? "px-2 py-0.5 text-[0.52rem] tracking-[0.1em] sm:px-2.5 sm:py-0.5 sm:text-[0.56rem] md:text-[0.58rem] lg:text-[0.62rem]"
           : "px-2.5 py-1 text-[0.55rem] tracking-[0.14em] sm:px-3 sm:py-1.5 sm:text-[0.6rem] sm:tracking-[0.16em]",
       ].join(" ")}
       style={{
@@ -116,7 +116,7 @@ function EmptySlotCard({ selected, disabled, reduceMotion }: { selected: boolean
   return (
     <div
       className={[
-        "relative flex min-h-[6.25rem] w-[5.35rem] flex-col items-center justify-center rounded-xl border-2 border-dashed px-1 py-1.5 shadow-inner backdrop-blur-[3px] transition-[border-color,box-shadow,transform,background-color] duration-300 ease-out sm:min-h-[6.85rem] sm:w-[6.5rem] sm:px-1.5 sm:py-1.5 md:min-h-[7.35rem] md:w-[7.35rem]",
+        "relative flex min-h-[6.25rem] w-[5.35rem] flex-col items-center justify-center rounded-xl border-2 border-dashed px-1 py-1.5 shadow-inner backdrop-blur-[3px] transition-[border-color,box-shadow,transform,background-color] duration-300 ease-out sm:min-h-[6.85rem] sm:w-[6.5rem] sm:px-1.5 sm:py-1.5 md:min-h-[7.45rem] md:w-[7.65rem] md:px-2 md:py-2 lg:min-h-[8.1rem] lg:w-[8.2rem] lg:px-2 lg:py-2",
         "border-cyan-400/45 bg-gradient-to-b from-white/40 via-cyan-50/25 to-sky-100/20",
         "sm:group-hover:-translate-y-0.5 sm:group-hover:scale-[1.035] sm:group-hover:border-cyan-200/85 sm:group-hover:from-white/55 sm:group-hover:via-cyan-50/40 sm:group-hover:to-sky-100/35",
         "sm:group-hover:shadow-[0_0_0_1px_rgba(0,245,255,0.45),0_0_36px_rgba(0,220,255,0.55),0_0_72px_rgba(0,180,255,0.28),0_12px_28px_rgba(0,60,90,0.2)]",
@@ -139,8 +139,8 @@ function EmptySlotCard({ selected, disabled, reduceMotion }: { selected: boolean
         }}
         aria-hidden
       />
-      <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#00B4FF] to-[#0066a3] text-white shadow-[0_0_20px_rgba(0,180,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] ring-2 ring-white/45 transition-[transform,box-shadow] duration-300 ease-out sm:group-hover:scale-110 sm:group-hover:shadow-[0_0_28px_rgba(0,230,255,0.85),0_0_48px_rgba(0,200,255,0.45),inset_0_1px_0_rgba(255,255,255,0.45)] sm:group-hover:ring-cyan-100/70 motion-reduce:sm:group-hover:scale-100 sm:h-11 sm:w-11">
-        <Plus className="h-4 w-4 stroke-[2.5] transition-transform duration-300 ease-out sm:group-hover:scale-110 motion-reduce:sm:group-hover:scale-100 sm:h-[1.35rem] sm:w-[1.35rem]" aria-hidden />
+      <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#00B4FF] to-[#0066a3] text-white shadow-[0_0_20px_rgba(0,180,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] ring-2 ring-white/45 transition-[transform,box-shadow] duration-300 ease-out sm:group-hover:scale-110 sm:group-hover:shadow-[0_0_28px_rgba(0,230,255,0.85),0_0_48px_rgba(0,200,255,0.45),inset_0_1px_0_rgba(255,255,255,0.45)] sm:group-hover:ring-cyan-100/70 motion-reduce:sm:group-hover:scale-100 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-[3.15rem] lg:w-[3.15rem]">
+        <Plus className="h-4 w-4 stroke-[2.5] transition-transform duration-300 ease-out sm:group-hover:scale-110 motion-reduce:sm:group-hover:scale-100 sm:h-[1.35rem] sm:w-[1.35rem] md:h-6 md:w-6" aria-hidden />
       </span>
       <span className="relative z-10 mt-1 text-center text-[0.62rem] font-bold uppercase tracking-[0.1em] text-slate-700 transition-colors duration-300 group-hover:text-slate-900 sm:text-[0.65rem]">
         Přidat
@@ -168,7 +168,7 @@ function FilledPlayerCard({
   const card = (
     <div
       className={[
-        "relative flex min-h-[6.45rem] w-[5.35rem] flex-col rounded-xl border px-1.5 pb-1.5 pt-1 shadow-[0_16px_36px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.18)] sm:min-h-[7.05rem] sm:w-[6.5rem] sm:px-2 sm:pb-1.5 sm:pt-1.5 md:min-h-[7.55rem] md:w-[7.35rem] md:px-2.5 md:pb-2 md:pt-2",
+        "relative flex min-h-[6.45rem] w-[5.35rem] flex-col rounded-xl border px-1.5 pb-1.5 pt-1 shadow-[0_16px_36px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.18)] sm:min-h-[7.05rem] sm:w-[6.5rem] sm:px-2 sm:pb-1.5 sm:pt-1.5 md:min-h-[7.65rem] md:w-[7.65rem] md:px-2.5 md:pb-2 md:pt-2 lg:min-h-[8.35rem] lg:w-[8.2rem] lg:px-3 lg:pb-2.5 lg:pt-2.5",
         "border-white/25 bg-gradient-to-b from-slate-800/98 via-slate-900 to-[#030712]",
         selected ? "ring-[2px] ring-[#00e5ff] ring-offset-[2px] ring-offset-sky-100/95" : "ring-1 ring-white/10",
         disabled ? "opacity-55" : "",
@@ -186,15 +186,18 @@ function FilledPlayerCard({
         <div className="shrink-0 sm:hidden">
           <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="2.72rem" />
         </div>
-        <div className="hidden shrink-0 sm:block">
+        <div className="hidden shrink-0 sm:block lg:hidden">
           <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="3.1rem" />
         </div>
+        <div className="hidden shrink-0 lg:block">
+          <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="3.45rem" />
+        </div>
 
-        <div className="flex w-full max-w-[5.05rem] items-start justify-center gap-1 sm:max-w-[6.45rem] md:max-w-[7.1rem]">
-          <p className="line-clamp-2 min-h-[2.1em] max-w-full break-words text-center text-[0.72rem] font-bold leading-snug text-white sm:min-h-[2.2em] sm:text-[0.84rem] md:min-h-[2.35em] md:text-[0.95rem]">
+        <div className="flex w-full max-w-[5.05rem] items-start justify-center gap-1 sm:max-w-[6.45rem] md:max-w-[7.35rem] lg:max-w-[7.85rem]">
+          <p className="line-clamp-2 min-h-[2.1em] max-w-full break-words text-center text-[0.72rem] font-bold leading-snug text-white sm:min-h-[2.15em] sm:text-[0.86rem] md:min-h-[2.25em] md:text-[0.96rem] lg:min-h-[2.35em] lg:text-[1.02rem]">
             {last}
           </p>
-          <FlagMark code={slot.team} className="h-3.5 w-[1.05rem] shrink-0 self-start rounded-sm ring-1 ring-white/30 sm:h-4 sm:w-[1.2rem]" />
+          <FlagMark code={slot.team} className="h-3.5 w-[1.05rem] shrink-0 self-start rounded-sm ring-1 ring-white/30 sm:h-4 sm:w-[1.2rem] lg:h-[1.15rem] lg:w-[1.42rem]" />
         </div>
 
         <div className="flex w-full justify-center pt-0.5">
@@ -283,7 +286,7 @@ export function MsFantasyIceRink({
   };
 
   return (
-    <div className="mx-auto w-full max-w-[21rem] sm:max-w-lg">
+    <div className="mx-auto w-full max-w-[21rem] sm:max-w-xl lg:max-w-2xl">
       <p className="mb-2 text-center font-display text-[0.68rem] font-bold uppercase tracking-[0.18em] text-slate-400 sm:mb-2.5 sm:text-xs sm:tracking-[0.2em]">
         Sestava na ledě
       </p>
@@ -292,12 +295,16 @@ export function MsFantasyIceRink({
         className="ms-fantasy-rink-3d"
         noiseFilterId={noiseFilterId}
         scratchPatternId={scratchPatternId}
-        transform="perspective(920px) rotateX(4deg) scale(0.94) translateZ(0)"
-        innerClassName="relative z-10 flex flex-col items-stretch px-1.5 pb-5 pt-[2.55rem] sm:px-3.5 sm:pb-6 sm:pt-[2.75rem]"
+        transform="perspective(920px) rotateX(4deg) scale(0.97) translateZ(0)"
+        innerClassName="relative z-10 flex flex-col items-stretch px-1.5 pb-5 pt-[2.55rem] sm:px-3.5 sm:pb-6 sm:pt-[2.85rem] md:pt-[3rem] lg:px-5 lg:pb-7 lg:pt-[3.15rem]"
       >
-        <div className="flex min-w-0 flex-nowrap justify-center gap-1.5 sm:flex-wrap sm:gap-2.5">{SLOTS_F.map((ix) => renderSlot(ix, "Útočník"))}</div>
-        <div className="mt-3.5 flex min-w-0 flex-wrap justify-center gap-2 sm:mt-4 sm:gap-5">{SLOTS_D.map((ix) => renderSlot(ix, "Obránce"))}</div>
-        <div className="mt-3.5 flex justify-center sm:mt-4">{renderSlot(SLOT_G, "Brankář")}</div>
+        <div className="flex min-w-0 flex-nowrap justify-center gap-1.5 sm:flex-wrap sm:gap-2.5 md:gap-3 lg:gap-3.5">
+          {SLOTS_F.map((ix) => renderSlot(ix, "Útočník"))}
+        </div>
+        <div className="mt-3.5 flex min-w-0 flex-wrap justify-center gap-2 sm:mt-4 sm:gap-5 md:gap-6 lg:gap-7">
+          {SLOTS_D.map((ix) => renderSlot(ix, "Obránce"))}
+        </div>
+        <div className="mt-3.5 flex justify-center sm:mt-4 md:mt-5">{renderSlot(SLOT_G, "Brankář")}</div>
       </IceRinkShell>
     </div>
   );
