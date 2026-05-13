@@ -12,7 +12,7 @@
   { "code": "SUI26-D54-MARTI", "name": "Christian Marti", "team": "SUI", "jerseyNumber": 54, "position": "D", "tier": "D" },
   { "code": "SUI26-D56-BERNI", "name": "Tim Berni", "team": "SUI", "jerseyNumber": 56, "position": "D", "tier": "D" },
   { "code": "SUI26-F62-MALGIN", "name": "Denis Malgin", "team": "SUI", "jerseyNumber": 62, "position": "F", "tier": "C" },
-  { "code": "SUI26-G63-GENONI", "name": "Leonardo Genoni", "team": "SUI", "jerseyNumber": 63, "position": "G", "tier": "C" },
+  { "code": "SUI26-G63-GENONI", "name": "Leonardo Genoni", "team": "SUI", "jerseyNumber": 63, "position": "G", "tier": "B" },
   { "code": "SUI26-F72-EGLI", "name": "Dominik Egli", "team": "SUI", "jerseyNumber": 72, "position": "F", "tier": "D" },
   { "code": "SUI26-F79-THUERKAU", "name": "Calvin Thürkauf", "team": "SUI", "jerseyNumber": 79, "position": "F", "tier": "C" },
   { "code": "SUI26-F80-BAECHLER", "name": "Nicolas Baechler", "team": "SUI", "jerseyNumber": 80, "position": "F", "tier": "D" },

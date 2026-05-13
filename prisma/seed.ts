@@ -24,7 +24,7 @@ if (!connectionString) throw new Error("DATABASE_URL is not set");
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-/** Pořadí importu; chybí jen FIN/GER JSON v `data/` — doplníš a znovu spustíš `MS_FANTASY_SEED_FANTASY_DATA`. */
+/** Pořadí importu fantasy poolu z `data/` (viz `MS_FANTASY_SEED_FANTASY_DATA`). */
 const FANTASY_ROSTER_FILES: { team: string; file: string; note?: string }[] = [
   { team: "AUT", file: "austria-ms2026-fantasy-roster.json" },
   { team: "CZE", file: "czechia-ms2026-fantasy-roster.json" },
@@ -32,7 +32,7 @@ const FANTASY_ROSTER_FILES: { team: string; file: string; note?: string }[] = [
   { team: "DEN", file: "denmark-ms2026-fantasy-roster.json", note: "Platové tiery: jen C–E (Mølgaard, Blichfeld v C) · zbytek D/E" },
   { team: "FIN", file: "finland-ms2026-fantasy-roster.json" },
   { team: "GER", file: "germany-ms2026-fantasy-roster.json" },
-  { team: "GBR", file: "great-britain-ms2026-fantasy-roster.json", note: "Platové tiery: jen Kirk v C, zbytek D nebo E" },
+  { team: "GBR", file: "great-britain-ms2026-fantasy-roster.json", note: "Platové tiery: C Kirk · D Bowns, Dowd, C. Neilson, Halbert, Richardson, T. Brown, Perlini, Waller · zbytek E" },
   { team: "HUN", file: "hungary-ms2026-fantasy-roster.json", note: "Platové tiery: jen C až E (žádný nejvyšší ani druhý nejvyšší plat)" },
   { team: "ITA", file: "italy-ms2026-fantasy-roster.json", note: "Platové tiery: jen C–E (Larkin, Mantenuto v C) · zbytek D/E" },
   { team: "LAT", file: "latvia-ms2026-fantasy-roster.json", note: "Platové tiery: B Balcers, jádro v C, zbytek D/E" },
@@ -159,7 +159,7 @@ async function seedSwedenMs2026FantasyRoster() {
 
 async function seedGreatBritainMs2026FantasyRoster() {
   if (process.env.MS_FANTASY_SEED_GBR?.trim() !== "true") return;
-  await importFantasyRosterJson("GBR", "great-britain-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_GBR", "Platové tiery: jen Kirk v C, zbytek D nebo E");
+  await importFantasyRosterJson("GBR", "great-britain-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_GBR", "Platové tiery: C Kirk · D Bowns, Dowd, C. Neilson, Halbert, Richardson, T. Brown, Perlini, Waller · zbytek E");
 }
 
 async function seedHungaryMs2026FantasyRoster() {
