@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
     players: items.map((p) => ({
       ...p,
       tier: p.tier.toUpperCase(),
-      salary: salaryForTier(p.tier),
+      salary: salaryForTier(p.tier, p.position),
     })),
     nextSkip: items.length === take ? skip + take : null,
   });

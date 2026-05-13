@@ -24,7 +24,7 @@ function mapPlayerRow(p: {
     jerseyNumber: p.jerseyNumber,
     position: p.position.trim().toUpperCase(),
     tier,
-    salary: salaryForTier(tier),
+    salary: salaryForTier(tier, p.position),
   };
 }
 

@@ -11,9 +11,10 @@ Jednotný přehled toho, co je v kódu **dohodnuté a vynucované**, a co je zat
 | Počet hráčů ve sestavě | **6** | `MS_FANTASY_TEAM_SIZE` |
 | Brankářů | **přesně 1** (G), ostatní sloty F nebo D | `validateMsFantasyLineup` |
 | Opakování hráčů | **zakázáno** (6 různých `id`) | validace + API duplicita |
-| Salary cap (součet platů tierů) | **max. 144** | `MS_FANTASY_CAP` |
-| Plat podle tieru | A **34**, B **28**, C **22**, D **16**, E **14** | `MS_FANTASY_TIER_SALARY` |
-| Neznámý tier v datech | bere se jako cena **E** (`salaryForTier`) | `salaryForTier` |
+| Salary cap (součet platů tierů) | **max. 165** | `MS_FANTASY_CAP` |
+| Plat podle tieru — bruslaři (F/D) | A **40**, B **30**, C **25**, D **20**, E **15** | `MS_FANTASY_TIER_SALARY_SKATER` |
+| Plat podle tieru — brankáři (G) | A **45**, B **35**, C **28**, D **22**, E **18** | `MS_FANTASY_TIER_SALARY_GOALIE` |
+| Neznámý tier v datech | bere se jako cena **E** podle pozice (`salaryForTier`) | `salaryForTier` |
 | Uzávěrka dne | po `lockAt` nelze POST změnit sestavu (403) | `api/fantasy/my-lineup` |
 | Aktivní hráči | jen `active: true` v DB | `my-lineup` POST |
 | Viditelnost celé sekce | env `NEXT_PUBLIC_MS_FANTASY_VISIBLE` ≠ `false`/`0`/… | `isMsFantasyVisibleToUsers` |

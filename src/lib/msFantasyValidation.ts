@@ -1,7 +1,7 @@
 import {
   MS_FANTASY_CAP,
   MS_FANTASY_TEAM_SIZE,
-  MS_FANTASY_TIER_SALARY,
+  MS_FANTASY_TIER_SALARY_SKATER,
   salaryForTier,
 } from "./msFantasyConfig";
 
@@ -38,11 +38,11 @@ export function validateMsFantasyLineup(picks: RosterPickInput[]): LineupValidat
       return { ok: false, error: `Neznámá pozice u hráče v sestavě (${pos}).` };
     }
     const tier = p.tier.trim().toUpperCase();
-    if (!(tier in MS_FANTASY_TIER_SALARY)) {
+    if (!(tier in MS_FANTASY_TIER_SALARY_SKATER)) {
       return { ok: false, error: `Neplatný tier „${tier}“.` };
     }
     if (pos === "G") g++;
-    salary += salaryForTier(tier);
+    salary += salaryForTier(tier, pos);
   }
   if (g !== 1) {
     return {

@@ -12,7 +12,8 @@ import {
   MS_FANTASY_CAP,
   MS_FANTASY_POINTS,
   MS_FANTASY_TEAM_SIZE,
-  MS_FANTASY_TIER_SALARY,
+  MS_FANTASY_TIER_SALARY_GOALIE,
+  MS_FANTASY_TIER_SALARY_SKATER,
 } from "@/lib/msFantasyConfig";
 
 export const metadata: Metadata = {
@@ -84,7 +85,7 @@ export default function FantasyRulesPage() {
               obránci (F / D).
             </li>
             <li>
-              Součet platů podle tieru nesmí překročit{" "}
+              Součet platů podle tieru a pozice (bruslař vs. brankář) nesmí překročit{" "}
               <strong className="text-slate-100">{MS_FANTASY_CAP} kreditů</strong> (salary cap).
             </li>
             <li>
@@ -93,6 +94,7 @@ export default function FantasyRulesPage() {
             <li>Do sestavy jdou jen hráči z aktivního poolu (ne deaktivovaní).</li>
           </ul>
 
+          <h3 className="mt-4 text-sm font-semibold text-slate-200">Bruslaři (F / D)</h3>
           <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.04]">
             <table className="w-full min-w-[280px] text-left text-sm">
               <thead>
@@ -105,7 +107,27 @@ export default function FantasyRulesPage() {
                 {tierOrder.map((t) => (
                   <tr key={t} className="border-b border-white/[0.06] last:border-0">
                     <td className="px-4 py-2.5 font-mono font-medium">{t}</td>
-                    <td className="px-4 py-2.5 tabular-nums">{MS_FANTASY_TIER_SALARY[t] ?? "—"}</td>
+                    <td className="px-4 py-2.5 tabular-nums">{MS_FANTASY_TIER_SALARY_SKATER[t] ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="mt-6 text-sm font-semibold text-slate-200">Brankáři (G)</h3>
+          <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.04]">
+            <table className="w-full min-w-[280px] text-left text-sm">
+              <thead>
+                <tr className="border-b border-white/10 text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <th className="px-4 py-3">Tier</th>
+                  <th className="px-4 py-3">Plat (kredity)</th>
+                </tr>
+              </thead>
+              <tbody className="text-slate-200">
+                {tierOrder.map((t) => (
+                  <tr key={`g-${t}`} className="border-b border-white/[0.06] last:border-0">
+                    <td className="px-4 py-2.5 font-mono font-medium">{t}</td>
+                    <td className="px-4 py-2.5 tabular-nums">{MS_FANTASY_TIER_SALARY_GOALIE[t] ?? "—"}</td>
                   </tr>
                 ))}
               </tbody>

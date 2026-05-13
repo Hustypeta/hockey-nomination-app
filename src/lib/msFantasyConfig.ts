@@ -3,20 +3,35 @@
  * Úpravy capu / tier cen zde + v Prisma seed / importu Excelu.
  */
 
-export const MS_FANTASY_CAP = 144;
+export const MS_FANTASY_CAP = 165;
 export const MS_FANTASY_TEAM_SIZE = 6;
 /** Přesně jeden G, zbytek bruslaři (F/D). */
 export const MS_FANTASY_MIN_GOALIES = 1;
 export const MS_FANTASY_MAX_GOALIES = 1;
 
-/** Cena podle tieru (A nejdražší). */
-export const MS_FANTASY_TIER_SALARY: Record<string, number> = {
-  A: 34,
-  B: 28,
-  C: 22,
-  D: 16,
-  E: 14,
+/** Plat podle tieru — bruslaři (F/D). */
+export const MS_FANTASY_TIER_SALARY_SKATER: Record<string, number> = {
+  A: 40,
+  B: 30,
+  C: 25,
+  D: 20,
+  E: 15,
 };
+
+/** Plat podle tieru — brankáři (G). */
+export const MS_FANTASY_TIER_SALARY_GOALIE: Record<string, number> = {
+  A: 45,
+  B: 35,
+  C: 28,
+  D: 22,
+  E: 18,
+};
+
+/**
+ * @deprecated Použij `MS_FANTASY_TIER_SALARY_SKATER` / `MS_FANTASY_TIER_SALARY_GOALIE` nebo `salaryForTier(tier, position)`.
+ * Zůstává jako alias bruslařské tabulky kvůli starším importům / textům.
+ */
+export const MS_FANTASY_TIER_SALARY = MS_FANTASY_TIER_SALARY_SKATER;
 
 /**
  * Povolit stránky `/fantasy/*` (menu má Fantasy vždy; vypnutí např. před spuštěním: env na false).
@@ -40,8 +55,11 @@ export function isMsFantasyLineupSubmissionEnabled(): boolean {
 export const MS_FANTASY_TIERS = ["A", "B", "C", "D", "E"] as const;
 export type MsFantasyTier = (typeof MS_FANTASY_TIERS)[number];
 
-export function salaryForTier(tier: string): number {
-  return MS_FANTASY_TIER_SALARY[tier] ?? MS_FANTASY_TIER_SALARY.E;
+export function salaryForTier(tier: string, position?: string): number {
+  const t = tier.trim().toUpperCase();
+  const pos = (position ?? "").trim().toUpperCase();
+  const table = pos === "G" ? MS_FANTASY_TIER_SALARY_GOALIE : MS_FANTASY_TIER_SALARY_SKATER;
+  return table[t] ?? table.E;
 }
 
 /** Bodování na hráče / zápas (bez střel a hitů). Rozšíření: import box score. */
