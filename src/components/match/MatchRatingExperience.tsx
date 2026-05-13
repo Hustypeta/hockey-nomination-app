@@ -6,9 +6,9 @@ import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
+import { Share2 } from "lucide-react";
 import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
-import { FloatingPrimaryBar } from "@/components/shared/FloatingPrimaryBar";
 import { MatchRatingSaveShareModal } from "@/components/match/MatchRatingSaveShareModal";
 
 type RatingMap = Record<string, { avg: number; count: number }>;
@@ -90,10 +90,16 @@ export function MatchRatingExperience({
     <>
       {canRate ? (
         <>
-          <FloatingPrimaryBar
-            label="Uložit & sdílet"
-            onClick={() => setShareOpen(true)}
-          />
+          <div className="mb-6 rounded-2xl border border-[#f1c40f]/30 bg-gradient-to-br from-[#0f172a]/95 via-[#0a1428]/96 to-[#05080f]/95 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.4)] sm:p-2">
+            <button
+              type="button"
+              onClick={() => setShareOpen(true)}
+              className="flex min-h-[2.75rem] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#c8102e] via-[#a30d26] to-[#003087] px-4 py-3 font-display text-sm font-black uppercase tracking-wide text-white shadow-[0_8px_32px_rgba(200,16,46,0.38)] ring-1 ring-white/20 transition hover:brightness-110 active:brightness-95 sm:min-h-[3rem] sm:text-base"
+            >
+              <Share2 className="h-4 w-4 shrink-0 opacity-95 sm:h-5 sm:w-5" aria-hidden />
+              Uložit a sdílet
+            </button>
+          </div>
           <MatchRatingSaveShareModal
             open={shareOpen}
             onClose={() => setShareOpen(false)}
