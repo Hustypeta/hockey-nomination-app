@@ -18,10 +18,10 @@ const assetQ = assetV && assetV.length > 0 ? `?v=${encodeURIComponent(assetV)}` 
 export const SITE_LOGO_URL = `/images/logo.png${assetQ}`;
 export const SITE_ICON_URL = `/images/icon.png${assetQ}`;
 
-/** Výchozí OG/Twitter náhled odkazu — plakát (dresy MS 2026). Rozměry musí odpovídat souboru (po úpravách spusť `node scripts/pad-og-top.mjs`). */
-export const SITE_OG_DEFAULT_IMAGE_URL = `/images/promo/og-share-ms2026-jerseys.png${assetQ}`;
-export const SITE_OG_DEFAULT_IMAGE_WIDTH = 1024;
-export const SITE_OG_DEFAULT_IMAGE_HEIGHT = 533;
+/** Výchozí OG/Twitter náhled odkazu — sdílení na Facebooku / X. Rozměry musí odpovídat souboru v `public/images/promo/`. */
+export const SITE_OG_DEFAULT_IMAGE_URL = `/images/promo/og-share-ms2026-new.png${assetQ}`;
+export const SITE_OG_DEFAULT_IMAGE_WIDTH = 1536;
+export const SITE_OG_DEFAULT_IMAGE_HEIGHT = 1024;
 
 export const SITE_BRAND = "Lineup";
 

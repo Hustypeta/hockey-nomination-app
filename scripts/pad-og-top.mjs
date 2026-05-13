@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
-const input = join(root, "public/images/promo/og-share-ms2026-jerseys.png");
+const input = join(root, "public/images/promo/og-share-ms2026-new.png");
 const output = input;
 
 const pad = Math.min(140, Math.max(40, Number(process.argv[2]) || 72));
