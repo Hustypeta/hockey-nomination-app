@@ -1,14 +1,16 @@
 "use client";
 
-import { forwardRef, useMemo, useState, type ReactNode } from "react";
+import { forwardRef, useId, useMemo, useState, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
+  splitMatchLineupLinePosterChunks,
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
 import { rosterLastDisplay } from "@/lib/namesOnlyRoster";
+import { IceRinkShell } from "@/components/shared/IceRinkShell";
 
 const RATING_SECTIONS: MatchLineupPosterGroup[] = ["line-1", "line-2", "line-3", "line-4"];
 
@@ -40,13 +42,21 @@ function NameOnlyPill({ children }: { children: string }) {
   );
 }
 
-function NameRatingPill({ nameLine, avgLine }: { nameLine: string; avgLine: string }) {
+function voteLineCs(n: number): string {
+  if (n === 1) return "1 hlas";
+  if (n >= 2 && n <= 4) return `${n} hlasy`;
+  return `${n} hlasů`;
+}
+
+/** Kompaktní dlaždice jméno + průměr + hlasy — uvnitř „ledu“ jako ve fantasy editoru. */
+function RatingOnIceTile({ nameLine, avgLine, votes }: { nameLine: string; avgLine: string; votes: number }) {
   return (
-    <div className="flex min-h-[2.95rem] flex-col items-center justify-center gap-1 rounded-lg bg-white/[0.96] px-2.5 py-2 text-center shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[3rem]">
-      <span className="font-sans text-[16px] font-bold leading-snug tracking-wide text-[#0a1628] sm:text-[17px]">
-        <span className="line-clamp-2 break-words">{nameLine}</span>
+    <div className="relative flex min-h-[5rem] w-[5rem] flex-col items-center justify-center gap-0.5 rounded-xl border border-white/90 bg-white/[0.96] px-1 py-1.5 text-center shadow-[0_10px_26px_rgba(0,0,0,0.22)] antialiased sm:min-h-[5.35rem] sm:w-[5.35rem]">
+      <span className="line-clamp-2 max-w-full break-words font-sans text-[12px] font-bold leading-snug text-[#0a1628] sm:text-[13px]">
+        {nameLine}
       </span>
-      <span className="font-display text-[13px] font-black tabular-nums text-[#b45309] sm:text-[14px]">Ø {avgLine}</span>
+      <span className="font-display text-[11px] font-black tabular-nums text-[#b45309] sm:text-[12px]">Ø {avgLine}</span>
+      <span className="text-[8px] font-semibold leading-tight text-slate-500 sm:text-[9px]">{voteLineCs(votes)}</span>
     </div>
   );
 }
@@ -147,20 +157,28 @@ export const MatchRatingNamesFullPoster = forwardRef<
   { headline, subline, lineup, players, defenseCount, allowExtraForward, ratings, siteUrl = "", footerInstantIso = null },
   ref
 ) {
+  const iceUid = useId().replace(/:/g, "");
   const [mountedDateLabel] = useState(() => formatCsDate(new Date()));
   const dateLabel = footerInstantIso ? formatCsDate(new Date(footerInstantIso)) : mountedDateLabel;
   const host = siteUrl.replace(/^https?:\/\//, "");
   const titleLine = headline.trim();
 
-  const sections = useMemo(() => {
+  const lineBlocks = useMemo(() => {
     return RATING_SECTIONS.map((group) => {
       const ids = pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward);
+      const chunks = splitMatchLineupLinePosterChunks(ids, group);
       const rows = ids.map((id) => {
         const agg = ratings[id];
         const avg = agg && Number.isFinite(agg.avg) && agg.avg > 0 ? agg.avg : null;
-        return { nameLine: rosterLastDisplay(players, id), avgLine: fmtAvg(avg) };
+        const votes = typeof agg?.count === "number" && Number.isFinite(agg.count) ? agg.count : 0;
+        return {
+          id,
+          nameLine: rosterLastDisplay(players, id),
+          avgLine: fmtAvg(avg),
+          votes,
+        };
       });
-      return { group, rows };
+      return { group, chunks, rows };
     });
   }, [lineup, players, defenseCount, allowExtraForward, ratings]);
 
@@ -171,28 +189,60 @@ export const MatchRatingNamesFullPoster = forwardRef<
         <PosterHeader eyebrow="Hodnocení hráčů" titleLine={titleLine} subline={subline} kicker="Průměry fanoušků · jména (komplet)" />
 
         <div className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-12">
-          {sections.map(({ group, rows }) => (
-            <section key={group}>
-              <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE[group]}</SectionTitle>
-              <div className={`mx-auto grid max-w-3xl gap-2.5 ${gridColsFor(group)} sm:gap-3`}>
-                {rows.map((row, i) => (
-                  <NameRatingPill key={`${group}-${i}`} nameLine={row.nameLine} avgLine={row.avgLine} />
-                ))}
-              </div>
-            </section>
-          ))}
+          {lineBlocks.map(({ group, chunks, rows }) => {
+            if (!chunks) return null;
+            const byId = new Map(rows.map((r) => [r.id, r]));
+            const noiseId = `${iceUid}-n-${group}`;
+            const patId = `${iceUid}-p-${group}`;
+            return (
+              <section key={group} className="min-w-0">
+                <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE[group]}</SectionTitle>
+                <p className="mt-1 text-center font-display text-[0.58rem] font-bold uppercase tracking-[0.14em] text-white/38 sm:text-[0.6rem]">
+                  Sestava na ledě
+                </p>
+                <div className="mx-auto mt-2 w-full max-w-[22rem] sm:max-w-md">
+                  <IceRinkShell
+                    noiseFilterId={noiseId}
+                    scratchPatternId={patId}
+                    transform="perspective(920px) rotateX(4deg) scale(0.82) translateZ(0)"
+                  >
+                    <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
+                      {chunks.forwards.filter(Boolean).map((pid) => {
+                        const r = byId.get(pid!);
+                        if (!r) return null;
+                        return <RatingOnIceTile key={pid} nameLine={r.nameLine} avgLine={r.avgLine} votes={r.votes} />;
+                      })}
+                    </div>
+                    <div className="mt-3 flex flex-wrap justify-center gap-2.5 sm:mt-4 sm:gap-4">
+                      {chunks.defense.filter(Boolean).map((pid) => {
+                        const r = byId.get(pid!);
+                        if (!r) return null;
+                        return <RatingOnIceTile key={pid} nameLine={r.nameLine} avgLine={r.avgLine} votes={r.votes} />;
+                      })}
+                    </div>
+                    {chunks.bottom.filter(Boolean).length > 0 ? (
+                      <div className="mt-3 flex flex-wrap justify-center gap-2.5 sm:mt-4 sm:gap-4">
+                        {chunks.bottom.filter(Boolean).map((pid) => {
+                          const r = byId.get(pid!);
+                          if (!r) return null;
+                          return <RatingOnIceTile key={pid} nameLine={r.nameLine} avgLine={r.avgLine} votes={r.votes} />;
+                        })}
+                      </div>
+                    ) : null}
+                  </IceRinkShell>
+                </div>
+              </section>
+            );
+          })}
         </div>
       </div>
 
       <NamesFooter dateLabel={dateLabel} host={host} footerTag="Hodnocení zápasu" />
     </div>
   );
-});
-
-function gridColsFor(group: MatchLineupPosterGroup) {
-  if (group.startsWith("line-")) return "grid-cols-3";
-  return group === "goalies" ? "grid-cols-3" : group === "defense" ? "grid-cols-2" : "grid-cols-3";
 }
+);
+
 
 function DecorativeBg() {
   return (
