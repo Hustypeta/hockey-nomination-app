@@ -311,54 +311,6 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6 sm:py-8 lg:flex-row lg:gap-8">
         <div className="min-w-0 flex-1 space-y-4">
-          <MsFantasyGlassPanel className="p-5 sm:p-6" glow="subtle">
-            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-              <Link href="/fantasy" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
-                ← Hrací dny
-              </Link>
-              <span className="text-slate-600" aria-hidden>
-                ·
-              </span>
-              <Link href="/fantasy/pravidla" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
-                Pravidla a body
-              </Link>
-            </p>
-            <p className="mt-3 font-display text-xs font-bold uppercase tracking-[0.24em] text-cyan-200/90">MS 2026</p>
-            <h1 className="mt-1 font-display text-3xl font-bold tracking-wide text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.4)] sm:text-4xl">
-              {day.title}
-            </h1>
-            <p className="mt-3 text-sm text-slate-300">
-              Uzávěrka:{" "}
-              <strong className="font-medium text-white">
-                {new Date(day.lockAt).toLocaleString("cs-CZ", {
-                  timeZone: "Europe/Prague",
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
-              </strong>{" "}
-              —{" "}
-              {day.isLocked ? (
-                <span className="text-amber-200">den je uzavřený</span>
-              ) : !fantasySubmissionsEnabled ? (
-                <span className="text-amber-200">den je otevřený jen k prohlížení — odesílání sestav je vypnuté</span>
-              ) : (
-                <span className="text-emerald-200">můžeš upravovat sestavu</span>
-              )}
-            </p>
-            {!day.isLocked && !fantasySubmissionsEnabled ? (
-              <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-                Odevzdávání fantasy sestav na server je zatím vypnuté (správce prostředí). Skládání v prohlížeči můžeš
-                zkoušet; tlačítko odeslání zůstane neaktivní, dokud se funkce nezapne.
-              </p>
-            ) : null}
-            {slots.some((s) => s?.id) && goalieCount !== 1 ? (
-              <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-                Pro platné odeslání musí být v sestavě přesně jeden brankář (G). Aktuálně:{" "}
-                {goalieCount === 0 ? "žádný" : goalieCount >= 2 ? `${goalieCount} (stačí jeden)` : String(goalieCount)}.
-              </p>
-            ) : null}
-          </MsFantasyGlassPanel>
-
         <section className="relative overflow-hidden rounded-3xl border border-cyan-400/15 bg-gradient-to-b from-slate-900/85 via-[#0a101c]/92 to-[#05080f]/95 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-5">
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
           <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-[#c8102e]/10 blur-3xl" />
@@ -455,6 +407,54 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               salaryOverCap={salaryOverCap}
             />
           </div>
+
+          <MsFantasyGlassPanel className="mt-4 border-t border-white/[0.08] p-4 sm:mt-5 sm:p-5" glow="subtle">
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+              <Link href="/fantasy" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
+                ← Hrací dny
+              </Link>
+              <span className="text-slate-600" aria-hidden>
+                ·
+              </span>
+              <Link href="/fantasy/pravidla" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
+                Pravidla a body
+              </Link>
+            </p>
+            <p className="mt-3 font-display text-xs font-bold uppercase tracking-[0.24em] text-cyan-200/90">MS 2026</p>
+            <h1 className="mt-1 font-display text-3xl font-bold tracking-wide text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.4)] sm:text-4xl">
+              {day.title}
+            </h1>
+            <p className="mt-3 text-sm text-slate-300">
+              Uzávěrka:{" "}
+              <strong className="font-medium text-white">
+                {new Date(day.lockAt).toLocaleString("cs-CZ", {
+                  timeZone: "Europe/Prague",
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+              </strong>{" "}
+              —{" "}
+              {day.isLocked ? (
+                <span className="text-amber-200">den je uzavřený</span>
+              ) : !fantasySubmissionsEnabled ? (
+                <span className="text-amber-200">den je otevřený jen k prohlížení — odesílání sestav je vypnuté</span>
+              ) : (
+                <span className="text-emerald-200">můžeš upravovat sestavu</span>
+              )}
+            </p>
+            {!day.isLocked && !fantasySubmissionsEnabled ? (
+              <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+                Odevzdávání fantasy sestav na server je zatím vypnuté (správce prostředí). Skládání v prohlížeči můžeš
+                zkoušet; tlačítko odeslání zůstane neaktivní, dokud se funkce nezapne.
+              </p>
+            ) : null}
+            {slots.some((s) => s?.id) && goalieCount !== 1 ? (
+              <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+                Pro platné odeslání musí být v sestavě přesně jeden brankář (G). Aktuálně:{" "}
+                {goalieCount === 0 ? "žádný" : goalieCount >= 2 ? `${goalieCount} (stačí jeden)` : String(goalieCount)}.
+              </p>
+            ) : null}
+          </MsFantasyGlassPanel>
         </section>
       </div>
 
