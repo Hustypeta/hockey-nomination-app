@@ -8,7 +8,6 @@ import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDispla
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
 import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
 import { MatchRatingClient } from "@/components/match/MatchRatingClient";
-import { MatchRatingExportButton } from "@/components/match/MatchRatingExportButton";
 import { FloatingPrimaryBar } from "@/components/shared/FloatingPrimaryBar";
 import { MatchRatingSaveShareModal } from "@/components/match/MatchRatingSaveShareModal";
 
@@ -46,8 +45,6 @@ interface MatchRatingExperienceProps {
   initialMyRatings: Record<string, number>;
   canRate: boolean;
   lockedReason?: string;
-  /** Datum / čas zápasu na exportní plakát. */
-  startsAtLabel?: string;
 }
 
 /**
@@ -66,7 +63,6 @@ export function MatchRatingExperience({
   initialMyRatings,
   canRate,
   lockedReason,
-  startsAtLabel,
 }: MatchRatingExperienceProps) {
   const [shareOpen, setShareOpen] = useState(false);
   const [ratings, setRatings] = useState<RatingMap>(initialRatings);
@@ -102,31 +98,10 @@ export function MatchRatingExperience({
             open={shareOpen}
             onClose={() => setShareOpen(false)}
             matchTitle={matchTitle}
-            startsAtLabel={startsAtLabel}
             matchSlug={slug}
-            lineup={lineup}
-            players={players}
-            defenseCount={defenseCount}
-            allowExtraForward={allowExtraForward}
-            ratings={ratings}
-            myRatings={myRatings}
           />
         </>
       ) : null}
-      <div className="flex flex-wrap items-center justify-end gap-2">
-        <MatchRatingExportButton
-          matchTitle={matchTitle}
-          matchSlug={slug}
-          lineup={lineup}
-          players={players}
-          defenseCount={defenseCount}
-          allowExtraForward={allowExtraForward}
-          ratings={ratings}
-          myRatings={myRatings}
-          preferMine={false}
-          startsAtLabel={startsAtLabel}
-        />
-      </div>
 
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">

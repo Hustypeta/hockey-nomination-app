@@ -3,33 +3,17 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Copy, X } from "lucide-react";
-import type { LineupStructure, Player } from "@/types";
-import { MatchRatingExportButton } from "@/components/match/MatchRatingExportButton";
 
 export function MatchRatingSaveShareModal({
   open,
   onClose,
   matchTitle,
-  startsAtLabel,
   matchSlug,
-  lineup,
-  players,
-  defenseCount,
-  allowExtraForward,
-  ratings,
-  myRatings,
 }: {
   open: boolean;
   onClose: () => void;
   matchTitle: string;
-  startsAtLabel?: string;
   matchSlug: string;
-  lineup: LineupStructure;
-  players: Player[];
-  defenseCount: 6 | 7 | 8;
-  allowExtraForward: boolean;
-  ratings: Record<string, { avg: number; count: number } | undefined>;
-  myRatings: Record<string, number | undefined>;
 }) {
   const [title, setTitle] = useState(`Hodnocení — ${matchTitle}`);
   const [busy, setBusy] = useState(false);
@@ -81,7 +65,7 @@ export function MatchRatingSaveShareModal({
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Sdílení</p>
-            <h2 className="mt-1 font-display text-lg font-black text-white">Odkaz & export grafiky</h2>
+            <h2 className="mt-1 font-display text-lg font-black text-white">Sdílení hodnocení</h2>
           </div>
           <button
             type="button"
@@ -172,27 +156,6 @@ export function MatchRatingSaveShareModal({
                   {copied ? "Zkopírováno" : "Kopírovat"}
                 </button>
               ) : null}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Export grafiky</p>
-            <p className="mt-1 text-xs text-white/60">
-              Stejné řezy jako u sestavy na zápas (celá soupiska jen jména, pak lajny).
-            </p>
-            <div className="mt-3">
-              <MatchRatingExportButton
-                matchTitle={matchTitle}
-                startsAtLabel={startsAtLabel}
-                matchSlug={matchSlug}
-                lineup={lineup}
-                players={players}
-                defenseCount={defenseCount}
-                allowExtraForward={allowExtraForward}
-                ratings={ratings}
-                myRatings={myRatings}
-                preferMine={false}
-              />
             </div>
           </div>
         </div>
