@@ -91,13 +91,6 @@ export function ContestTimeBonusCallout({
           {isLanding ? (
             <>
               <p className="mt-3 text-pretty text-sm leading-relaxed text-white/88 sm:text-[15px]">
-                <Link
-                  href="/pravidla-souteze"
-                  className="font-semibold text-sky-300 underline decoration-sky-400/45 underline-offset-[4px] transition hover:text-white hover:decoration-sky-300/70"
-                >
-                  více v pravidlech soutěže
-                </Link>
-                <span className="text-white/55"> — </span>
                 Nominační soutěž ukončena. Aktuálně se čeká na oficiální soupisku k prvnímu zápasu.
               </p>
             </>
@@ -112,14 +105,6 @@ export function ContestTimeBonusCallout({
                 ) : (
                   <span className="text-sm font-semibold text-white/85">0 % — bez časového bonusu</span>
                 )}
-              </p>
-              <p className="mt-2 text-xs">
-                <Link
-                  href="/pravidla-souteze"
-                  className="font-medium text-cyan-300/95 underline-offset-2 transition hover:text-cyan-200 hover:underline"
-                >
-                  více v pravidlech soutěže
-                </Link>
               </p>
               {!submissionOpen ? (
                 <p className="mt-2 text-[10px] font-semibold leading-snug text-rose-300/90">
