@@ -45,7 +45,7 @@ export function ContestTimeBonusCallout({
     <div
       className={
         isLanding
-          ? "group relative mx-auto w-full max-w-2xl overflow-hidden rounded-2xl border border-sky-400/20 bg-gradient-to-br from-[#0c182e]/95 via-[#0c1018]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.08),0_24px_52px_-14px_rgba(0,48,135,0.38),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl transition duration-300 hover:border-sky-400/32 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.14),0_28px_60px_-12px_rgba(0,100,180,0.3),inset_0_1px_0_rgba(255,255,255,0.08)]"
+          ? "group relative w-full overflow-hidden rounded-2xl border border-sky-400/20 bg-gradient-to-br from-[#0c182e]/95 via-[#0c1018]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.08),0_24px_52px_-14px_rgba(0,48,135,0.38),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl transition duration-300 hover:border-sky-400/32 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.14),0_28px_60px_-12px_rgba(0,100,180,0.3),inset_0_1px_0_rgba(255,255,255,0.08)]"
           : "w-full max-w-lg self-start text-left rounded-2xl border border-sky-400/35 bg-gradient-to-br from-sky-400/[0.14] via-sky-400/[0.06] to-transparent px-4 py-3.5 shadow-[0_0_28px_rgba(56,189,248,0.15)]"
       }
       {...(!isLanding

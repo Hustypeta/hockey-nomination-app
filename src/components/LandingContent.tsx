@@ -187,7 +187,7 @@ export function LandingContent() {
             ) : null}
 
             {/* Sociální důkaz + stav nominace (nominace pod komunitou) */}
-            <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-4 sm:mt-12 sm:gap-5">
+            <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-6 sm:mt-12 sm:gap-8">
               <div className="group relative flex min-h-0 min-w-0 w-full overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)]">
                 <div
                   className="pointer-events-none absolute -left-1/4 top-0 h-[140%] w-[70%] bg-[radial-gradient(ellipse_at_30%_0%,rgba(56,189,248,0.22),transparent_58%)]"
@@ -269,50 +269,50 @@ export function LandingContent() {
                 bonusPercent={bonusPercent}
                 submissionOpen={contestStats.contestSubmissionOpen}
               />
-            </div>
 
-          {/* Odpočet — národní barvy */}
-          <div className="mx-auto mt-12 max-w-2xl sm:mt-14">
-            <div className="rounded-2xl border border-[#c8102e]/25 bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 p-5 shadow-[0_0_48px_rgba(200,16,46,0.15)] sm:p-6">
-              <div className="flex items-center justify-center gap-2 text-white/90">
-                <Clock className="h-5 w-5 text-sky-300" aria-hidden />
-                <span className="font-display text-sm font-bold uppercase tracking-[0.22em]">
-                  Odpočet do šampionátu
-                </span>
+              {/* Odpočet — národní barvy (stejná šířka jako Komunita / soutěž) */}
+              <div className="w-full">
+                <div className="rounded-2xl border border-[#c8102e]/25 bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 p-5 shadow-[0_0_48px_rgba(200,16,46,0.15)] sm:p-6">
+                  <div className="flex items-center justify-center gap-2 text-white/90">
+                    <Clock className="h-5 w-5 text-sky-300" aria-hidden />
+                    <span className="font-display text-sm font-bold uppercase tracking-[0.22em]">
+                      Odpočet do šampionátu
+                    </span>
+                  </div>
+                  {!cd ? (
+                    <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4" aria-label="Odpočet se načítá">
+                      {["dní", "hod", "min", "sek"].map((l) => (
+                        <div key={l} className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4">
+                          <div className="font-display text-3xl font-bold tabular-nums text-white/70 sm:text-4xl">—</div>
+                          <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-300/85">{l}</div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : cd.ended ? (
+                    <p className="mt-4 text-center font-display text-2xl font-bold text-white">MS je tady — sestav sestavu!</p>
+                  ) : (
+                    <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4">
+                      {[
+                        { v: cd.d, l: "dní" },
+                        { v: cd.h, l: "hod" },
+                        { v: cd.m, l: "min" },
+                        { v: cd.s, l: "sek" },
+                      ].map((x) => (
+                        <div
+                          key={x.l}
+                          className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4"
+                        >
+                          <div className="font-display text-3xl font-bold tabular-nums text-white sm:text-4xl">{x.v}</div>
+                          <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-300/85">
+                            {x.l}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              {!cd ? (
-                <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4" aria-label="Odpočet se načítá">
-                  {["dní", "hod", "min", "sek"].map((l) => (
-                    <div key={l} className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4">
-                      <div className="font-display text-3xl font-bold tabular-nums text-white/70 sm:text-4xl">—</div>
-                      <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-300/85">{l}</div>
-                    </div>
-                  ))}
-                </div>
-              ) : cd.ended ? (
-                <p className="mt-4 text-center font-display text-2xl font-bold text-white">MS je tady — sestav sestavu!</p>
-              ) : (
-                <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4">
-                  {[
-                    { v: cd.d, l: "dní" },
-                    { v: cd.h, l: "hod" },
-                    { v: cd.m, l: "min" },
-                    { v: cd.s, l: "sek" },
-                  ].map((x) => (
-                    <div
-                      key={x.l}
-                      className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4"
-                    >
-                      <div className="font-display text-3xl font-bold tabular-nums text-white sm:text-4xl">{x.v}</div>
-                      <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-300/85">
-                        {x.l}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          </div>
 
           <p className="mx-auto mt-8 max-w-lg text-center text-xs leading-relaxed text-slate-500">
             Fanouškovská soutěž inspirovaná reálnou nominací — není oficiálním produktem ČSLH.
