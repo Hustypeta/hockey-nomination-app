@@ -43,30 +43,51 @@ export function MsFantasyHome() {
     <div className="pb-16 pt-2 sm:pb-20">
       <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
         <MsFantasyGlassPanel className="p-6 sm:p-8" glow="cyan">
-          <p className="font-display text-xs font-bold uppercase tracking-[0.28em] text-cyan-200/95">MS 2026</p>
-          <h1 className="mt-2 font-display text-4xl font-bold tracking-[0.02em] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-5xl sm:tracking-tight">
-            Fantasy
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200/90">
-            Každý hrací den sestavíš <span className="font-semibold text-white">6 hráčů</span> z poolu (1× brankář,
-            zbytek útočníci nebo obránci). Zastropování{" "}
-            <span className="font-semibold text-cyan-100">{MS_FANTASY_CAP} kreditů</span> na den. Odevzdání musí být
-            před prvním zápasem dne — čas uzávěrky u každého dne níže.
-            {!fantasySubmissionsEnabled ? (
-              <span className="mt-2 block rounded-lg border border-amber-400/25 bg-amber-500/10 px-3 py-2 text-amber-100">
-                Ukládání sestav na server je zatím vypnuté — fantasy jde jen vyzkoušet v rozhraní.
-              </span>
-            ) : null}
-          </p>
-          <p className="mt-6">
-            <Link
-              href="/fantasy/pravidla"
-              className="ms-fantasy-save-shimmer group relative inline-flex items-center gap-2 overflow-hidden rounded-xl border border-cyan-300/35 bg-gradient-to-r from-[#0077b6]/90 via-[#00B4FF]/95 to-[#48cae4]/90 px-5 py-3 text-sm font-semibold text-[#03050a] shadow-[0_0_28px_rgba(0,180,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(0,212,255,0.45)]"
-            >
-              <BookOpen className="relative z-10 h-4 w-4 shrink-0" aria-hidden />
-              <span className="relative z-10">Kompletní pravidla a fantasy body</span>
-            </Link>
-          </p>
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-xs font-bold uppercase tracking-[0.28em] text-cyan-200/95">MS 2026</p>
+              <h1 className="mt-2 font-display text-4xl font-bold tracking-[0.02em] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-5xl sm:tracking-tight">
+                Fantasy
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200/90">
+                Každý hrací den sestavíš <span className="font-semibold text-white">6 hráčů</span> z poolu (1× brankář,
+                zbytek útočníci nebo obránci). Zastropování{" "}
+                <span className="font-semibold text-cyan-100">{MS_FANTASY_CAP} kreditů</span> na den. Odevzdání musí být
+                před prvním zápasem dne — čas uzávěrky u každého dne níže.
+                {!fantasySubmissionsEnabled ? (
+                  <span className="mt-2 block rounded-lg border border-amber-400/25 bg-amber-500/10 px-3 py-2 text-amber-100">
+                    Odesílání sestav na server je zatím vypnuté — fantasy jde jen vyzkoušet v rozhraní.
+                  </span>
+                ) : null}
+              </p>
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200/90">
+                Hrajeme o atraktivní hokejové ceny, konkrétní nabídku v co nejbližší době upřesníme.
+              </p>
+              <p className="mt-5 font-display text-xl font-bold tracking-wide text-white sm:text-2xl">
+                Balíčky a rozšíření — připravujeme
+              </p>
+              <p className="mt-6">
+                <Link
+                  href="/fantasy/pravidla"
+                  className="ms-fantasy-save-shimmer group relative inline-flex items-center gap-2 overflow-hidden rounded-xl border border-cyan-300/35 bg-gradient-to-r from-[#0077b6]/90 via-[#00B4FF]/95 to-[#48cae4]/90 px-5 py-3 text-sm font-semibold text-[#03050a] shadow-[0_0_28px_rgba(0,180,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(0,212,255,0.45)]"
+                >
+                  <BookOpen className="relative z-10 h-4 w-4 shrink-0" aria-hidden />
+                  <span className="relative z-10">Kompletní pravidla a fantasy body</span>
+                </Link>
+              </p>
+            </div>
+            <div className="flex shrink-0 justify-center gap-4 text-white/90 sm:justify-end sm:gap-6 lg:pt-1">
+              <div className="flex h-14 w-14 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)] sm:h-16 sm:w-16">
+                <Shirt className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.25} aria-hidden />
+              </div>
+              <div className="flex h-14 w-14 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)] sm:h-16 sm:w-16">
+                <Trophy className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.25} aria-hidden />
+              </div>
+              <div className="flex h-14 w-14 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)] sm:h-16 sm:w-16">
+                <Ticket className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.25} aria-hidden />
+              </div>
+            </div>
+          </div>
         </MsFantasyGlassPanel>
 
         {err ? (
@@ -103,41 +124,6 @@ export function MsFantasyHome() {
 
         {days && days.length > 0 ? (
           <div className="mt-10 space-y-8">
-            <MsFantasyGlassPanel className="p-6 sm:p-7" glow="cyan">
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="min-w-0">
-                  <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.28em] text-cyan-200/90">
-                    MS 2026 fantasy
-                  </p>
-                  <p className="mt-2 font-display text-xl font-bold tracking-wide text-white sm:text-2xl">
-                    Balíčky a rozšíření — připravujeme
-                  </p>
-                  <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-300/95">
-                    Chystáme rozšíření okolo odměn a soutěžních balíčků. Sleduj aktualizace — pravidla fantasy a body
-                    už najdeš v odkazu výše.
-                  </p>
-                  <Link
-                    href="/fantasy/pravidla"
-                    className="mt-4 inline-flex items-center gap-2 rounded-lg bg-cyan-400/15 px-4 py-2 text-xs font-bold uppercase tracking-wider text-cyan-100 ring-1 ring-cyan-300/30 transition hover:bg-cyan-400/25"
-                  >
-                    Pravidla
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-                  </Link>
-                </div>
-                <div className="flex shrink-0 justify-center gap-6 text-white/90 sm:pr-2">
-                  <div className="flex h-16 w-16 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)]">
-                    <Shirt className="h-7 w-7" strokeWidth={1.25} aria-hidden />
-                  </div>
-                  <div className="flex h-16 w-16 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)]">
-                    <Trophy className="h-7 w-7" strokeWidth={1.25} aria-hidden />
-                  </div>
-                  <div className="flex h-16 w-16 flex-col items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_0_24px_rgba(0,200,255,0.15)]">
-                    <Ticket className="h-7 w-7" strokeWidth={1.25} aria-hidden />
-                  </div>
-                </div>
-              </div>
-            </MsFantasyGlassPanel>
-
             <ul className="flex flex-col gap-3 sm:gap-4">
               {days.map((d) => (
                 <li key={d.id}>

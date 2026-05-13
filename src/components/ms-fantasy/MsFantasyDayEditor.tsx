@@ -278,7 +278,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
       });
       const j = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
-        setSaveErr(typeof j.error === "string" ? j.error : "Uložení se nepodařilo.");
+        setSaveErr(typeof j.error === "string" ? j.error : "Odeslání se nepodařilo.");
         setSaveState("err");
         return;
       }
@@ -340,7 +340,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               {day.isLocked ? (
                 <span className="text-amber-200">den je uzavřený</span>
               ) : !fantasySubmissionsEnabled ? (
-                <span className="text-amber-200">den je otevřený jen k prohlížení — ukládání sestav je vypnuté</span>
+                <span className="text-amber-200">den je otevřený jen k prohlížení — odesílání sestav je vypnuté</span>
               ) : (
                 <span className="text-emerald-200">můžeš upravovat sestavu</span>
               )}
@@ -348,12 +348,12 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             {!day.isLocked && !fantasySubmissionsEnabled ? (
               <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
                 Odevzdávání fantasy sestav na server je zatím vypnuté (správce prostředí). Skládání v prohlížeči můžeš
-                zkoušet; tlačítko uložení zůstane neaktivní, dokud se funkce nezapne.
+                zkoušet; tlačítko odeslání zůstane neaktivní, dokud se funkce nezapne.
               </p>
             ) : null}
             {slots.some((s) => s?.id) && goalieCount !== 1 ? (
               <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-                Pro platné uložení musí být v sestavě přesně jeden brankář (G). Aktuálně:{" "}
+                Pro platné odeslání musí být v sestavě přesně jeden brankář (G). Aktuálně:{" "}
                 {goalieCount === 0 ? "žádný" : goalieCount >= 2 ? `${goalieCount} (stačí jeden)` : String(goalieCount)}.
               </p>
             ) : null}
@@ -363,7 +363,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
           <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-[#c8102e]/10 blur-3xl" />
 
-          <div className="relative mb-5 flex flex-wrap items-end justify-between gap-4">
+          <div className="relative mb-3 flex flex-wrap items-end justify-between gap-4 sm:mb-4">
             <div className="min-w-0 flex-1">
               <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500 sm:text-xs">Platový strop</p>
               <p className="font-mono text-xl font-bold text-white tabular-nums sm:text-2xl">
@@ -381,7 +381,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               </div>
               <p className="mt-1.5 text-[0.65rem] text-slate-500">
                 {salaryOverCap
-                  ? "Překročen strop — uložení je uzamčeno."
+                  ? "Překročen strop — odeslání je uzamčeno."
                   : salaryCapPct >= 95
                     ? "Blízko stropu — zbývá málo kapacity."
                     : "Kapacita pod kontrolou."}
@@ -396,6 +396,11 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                     saveState === "saving" ||
                     !fantasySubmissionsEnabled ||
                     salaryOverCap
+                  }
+                  title={
+                    salaryOverCap
+                      ? `Platový strop ${MS_FANTASY_CAP} překročen (${salaryUsed} kreditů) — odeber hráče nebo vyměň za levnější.`
+                      : undefined
                   }
                   onClick={() => void save()}
                   className="ms-fantasy-save-shimmer group relative flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#0077b6] via-[#00B4FF] to-[#48cae4] px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.14em] text-[#03050a] shadow-[0_0_28px_rgba(0,180,255,0.45),inset_0_1px_0_rgba(255,255,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_36px_rgba(0,212,255,0.55)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
@@ -414,12 +419,12 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                     </svg>
                   )}
                   {saveState === "saving"
-                    ? "Ukládám…"
+                    ? "Odesílám…"
                     : !fantasySubmissionsEnabled
-                      ? "Ukládání vypnuto"
+                      ? "Odesílání vypnuto"
                       : salaryOverCap
                         ? "Strop překročen"
-                        : "Uložit sestavu"}
+                        : "Odeslat do soutěže"}
                 </button>
               ) : (
                 <button
@@ -428,23 +433,26 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                   onClick={() => void signIn("google", { callbackUrl: `/fantasy/${slug}` })}
                   className="rounded-xl border border-[#00B4FF]/45 bg-[#00B4FF]/10 px-4 py-2.5 text-xs font-semibold text-[#9ae9ff] shadow-[0_0_18px_rgba(0,180,255,0.15)] transition hover:bg-[#00B4FF]/18 disabled:opacity-40"
                 >
-                  {!fantasySubmissionsEnabled ? "Přihlášení (ukládání vypnuto)" : "Přihlásit a uložit"}
+                  {!fantasySubmissionsEnabled ? "Přihlášení (odesílání vypnuto)" : "Přihlásit a odeslat"}
                 </button>
               )}
-              {saveState === "ok" ? <span className="text-xs text-emerald-400">Uloženo.</span> : null}
+              {saveState === "ok" ? <span className="text-xs text-emerald-400">Odesláno.</span> : null}
               {saveState === "err" && saveErr ? (
                 <span className="max-w-[18rem] text-right text-xs text-red-300">{saveErr}</span>
               ) : null}
             </div>
           </div>
 
-          <div className="mt-8 border-t border-white/[0.08] pt-8 sm:mt-10 sm:pt-10">
+          <div className="mt-4 border-t border-white/[0.08] pt-4 sm:mt-5 sm:pt-5">
             <MsFantasyIceRink
               slots={slots}
               activeIx={activeIx}
               isLocked={day.isLocked}
               onSelectSlot={setActiveIx}
               onClearSlot={clearSlot}
+              salaryUsed={salaryUsed}
+              salaryCap={MS_FANTASY_CAP}
+              salaryOverCap={salaryOverCap}
             />
           </div>
         </section>
@@ -472,37 +480,78 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
           ))}
         </div>
 
-        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <label className="block">
-            <span className="mb-1 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Repre</span>
-            <select
-              value={teamFilter}
-              onChange={(e) => setTeamFilter(e.target.value)}
-              className="w-full rounded-xl border border-white/[0.12] bg-slate-950/80 px-3 py-2.5 text-sm text-white shadow-inner outline-none backdrop-blur-sm focus:border-[#00B4FF]/50 focus:ring-2 focus:ring-[#00B4FF]/35"
-            >
-              <option value="">Všechny země</option>
-              {MS_FANTASY_ROSTER_TEAM_OPTIONS.map((t) => (
-                <option key={t.code} value={t.code}>
-                  {t.labelCs} ({t.code})
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="block">
-            <span className="mb-1 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Platový tier</span>
-            <select
-              value={tierFilter}
-              onChange={(e) => setTierFilter(e.target.value)}
-              className="w-full rounded-xl border border-white/[0.12] bg-slate-950/80 px-3 py-2.5 text-sm text-white shadow-inner outline-none backdrop-blur-sm focus:border-[#00B4FF]/50 focus:ring-2 focus:ring-[#00B4FF]/35"
-            >
-              <option value="">Všechny tiery</option>
-              {MS_FANTASY_TIER_CODES.map((t) => (
-                <option key={t} value={t}>
-                  Tier {t}
-                </option>
-              ))}
-            </select>
-          </label>
+        <div className="mt-4 space-y-3">
+          <div>
+            <span className="mb-2 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Repre</span>
+            <div className="-mx-0.5 flex max-w-full gap-1.5 overflow-x-auto px-0.5 pb-1 pt-0.5 [scrollbar-width:thin]">
+              <button
+                type="button"
+                onClick={() => setTeamFilter("")}
+                className={[
+                  "shrink-0 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition",
+                  teamFilter === ""
+                    ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
+                    : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
+                ].join(" ")}
+              >
+                Vše
+              </button>
+              {MS_FANTASY_ROSTER_TEAM_OPTIONS.map((t) => {
+                const on = teamFilter === t.code;
+                return (
+                  <button
+                    key={t.code}
+                    type="button"
+                    onClick={() => setTeamFilter(on ? "" : t.code)}
+                    title={t.labelCs}
+                    className={[
+                      "shrink-0 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition",
+                      on
+                        ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
+                        : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
+                    ].join(" ")}
+                  >
+                    {t.code}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <span className="mb-2 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Platový tier</span>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setTierFilter("")}
+                className={[
+                  "rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide transition",
+                  tierFilter === ""
+                    ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
+                    : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
+                ].join(" ")}
+              >
+                Vše
+              </button>
+              {MS_FANTASY_TIER_CODES.map((t) => {
+                const on = tierFilter === t;
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setTierFilter(on ? "" : t)}
+                    className={[
+                      "rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide transition",
+                      on
+                        ? "bg-gradient-to-r from-[#00B4FF]/35 to-cyan-400/25 text-white shadow-[0_0_20px_rgba(0,180,255,0.25)] ring-1 ring-cyan-300/40"
+                        : "border border-white/[0.1] bg-white/[0.04] text-slate-400 hover:border-cyan-400/30 hover:bg-white/[0.07] hover:text-slate-200",
+                    ].join(" ")}
+                  >
+                    {t}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {hasExtraRosterFilters ? (
@@ -556,17 +605,17 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                     disabled={day.isLocked}
                     onClick={() => addPlayer(p)}
                     className={`
-                      pool-card-interactive group flex w-full items-center gap-3 rounded-xl border px-2.5 py-2.5 text-left transition
+                      pool-card-interactive group flex w-full items-center gap-3 rounded-xl border px-2.5 py-2.5 text-left
                       disabled:pointer-events-none disabled:opacity-40
                       ${
                         inLineup
-                          ? "border-cyan-400/45 bg-gradient-to-r from-cyan-500/18 via-[#00B4FF]/10 to-transparent shadow-[0_0_22px_rgba(0,180,255,0.22)] ring-1 ring-cyan-300/35"
-                          : "border-white/[0.06] bg-gradient-to-r from-white/[0.06] to-transparent hover:border-cyan-400/30 hover:from-cyan-500/10"
+                          ? "border-cyan-400/50 bg-gradient-to-r from-cyan-500/22 via-[#00B4FF]/14 to-transparent shadow-[0_0_32px_rgba(0,200,255,0.28)] ring-1 ring-cyan-300/50 hover:border-cyan-300/70"
+                          : "border-white/[0.06] bg-gradient-to-r from-white/[0.06] to-transparent hover:border-cyan-400/45 hover:from-cyan-500/15 hover:via-[#00B4FF]/10 hover:to-transparent"
                       }
                     `}
                   >
                     <div className="relative shrink-0">
-                      <MsFantasyPlayerAvatar playerId={p.id} variant="circle" size="2.65rem" />
+                      <MsFantasyPlayerAvatar playerId={p.id} variant="circle" frame="premium" size="2.65rem" />
                       <span className="absolute -bottom-0.5 -right-0.5 z-10 scale-90">
                         <FlagMark code={p.team} className="h-3.5 w-5 ring-1 ring-black/40" />
                       </span>

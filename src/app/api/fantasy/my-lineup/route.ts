@@ -81,14 +81,14 @@ export async function POST(request: NextRequest) {
 
   if (!isMsFantasyLineupSubmissionEnabled()) {
     return NextResponse.json(
-      { error: "Ukládání fantasy sestav je dočasně vypnuté — zkus to prosím později." },
+      { error: "Odesílání fantasy sestav je dočasně vypnuté — zkus to prosím později." },
       { status: 403 }
     );
   }
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Pro uložení sestavy se přihlas." }, { status: 401 });
+    return NextResponse.json({ error: "Pro odeslání sestavy se přihlas." }, { status: 401 });
   }
 
   let body: unknown;
