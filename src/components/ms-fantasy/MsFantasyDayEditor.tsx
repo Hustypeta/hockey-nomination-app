@@ -309,8 +309,8 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 lg:flex-row lg:gap-10">
-        <div className="min-w-0 flex-1 space-y-5">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6 sm:py-8 lg:flex-row lg:gap-8">
+        <div className="min-w-0 flex-1 space-y-4">
           <MsFantasyGlassPanel className="p-5 sm:p-6" glow="subtle">
             <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
               <Link href="/fantasy" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
@@ -359,11 +359,11 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             ) : null}
           </MsFantasyGlassPanel>
 
-        <section className="relative overflow-hidden rounded-3xl border border-cyan-400/15 bg-gradient-to-b from-slate-900/85 via-[#0a101c]/92 to-[#05080f]/95 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-6">
+        <section className="relative overflow-hidden rounded-3xl border border-cyan-400/15 bg-gradient-to-b from-slate-900/85 via-[#0a101c]/92 to-[#05080f]/95 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-5">
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
           <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-[#c8102e]/10 blur-3xl" />
 
-          <div className="relative mb-3 flex flex-wrap items-end justify-between gap-4 sm:mb-4">
+          <div className="relative mb-2 flex flex-wrap items-end justify-between gap-3 sm:mb-3">
             <div className="min-w-0 flex-1">
               <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500 sm:text-xs">Platový strop</p>
               <p className="font-mono text-xl font-bold text-white tabular-nums sm:text-2xl">
@@ -443,7 +443,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <div className="mt-4 border-t border-white/[0.08] pt-4 sm:mt-5 sm:pt-5">
+          <div className="mt-3 border-t border-white/[0.08] pt-3 sm:mt-4 sm:pt-4">
             <MsFantasyIceRink
               slots={slots}
               activeIx={activeIx}
