@@ -4,11 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Share2 } from "lucide-react";
 import {
-  buildHtmlToImageOptions,
+  captureElementToCanvas,
   canvasToPngDataUrl,
   downloadDataUrl,
 } from "@/lib/captureSharePoster";
-import { toCanvas } from "html-to-image";
+import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 import type { LineupStructure, Player } from "@/types";
 import { MatchLineupJerseyExportPoster } from "@/components/match/MatchLineupJerseyExportPoster";
 import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
@@ -142,11 +142,10 @@ export function MatchLineupImageExportButton({
           toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
           return;
         }
-        const opts = await buildHtmlToImageOptions(node, {
+        const canvas = await captureElementToCanvas(node, {
+          scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
           backgroundColor: bg,
-          pixelRatio: 2,
         });
-        const canvas = await toCanvas(node, opts);
         downloadDataUrl(canvasToPngDataUrl(canvas), filenameLineupSlot(slot, baseSlug));
         toast.success("Staženo 1 PNG.");
       } catch (e) {

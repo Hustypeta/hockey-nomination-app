@@ -64,7 +64,7 @@ export function SaveShareModal({
   contestTimeBonusPercent = 0,
   posterTheme = "light",
   onPosterThemeChange,
-  posterVariant = "jerseys",
+  posterVariant = "names",
   onPosterVariantChange,
 }: SaveShareModalProps) {
   const [shareBusy, setShareBusy] = useState(false);

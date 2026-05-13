@@ -67,7 +67,7 @@ export function NominationBuilderPage() {
   const shareWatermarkLabel =
     authStatus === "authenticated" && wmFromSession ? wmFromSession : null;
   const [sharePosterTheme, setSharePosterTheme] = useState<PosterLetterboxTheme>("light");
-  const [sharePosterVariant, setSharePosterVariant] = useState<"jerseys" | "names" | "names-web">("jerseys");
+  const [sharePosterVariant, setSharePosterVariant] = useState<"jerseys" | "names" | "names-web">("names");
   const [savedNominationSlug, setSavedNominationSlug] = useState<string | null>(null);
   const [guestShareCode, setGuestShareCode] = useState<string | null>(null);
   /** Veřejná část URL /v/{slug} z hostovského sdílení (stejný tvar jako u uložené nominace). */

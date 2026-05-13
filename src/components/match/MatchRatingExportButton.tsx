@@ -4,11 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Share2 } from "lucide-react";
 import {
-  buildHtmlToImageOptions,
+  captureElementToCanvas,
   canvasToPngDataUrl,
   downloadDataUrl,
 } from "@/lib/captureSharePoster";
-import { toCanvas } from "html-to-image";
+import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 import type { LineupStructure, Player } from "@/types";
 import { MATCH_LINEUP_POSTER_GROUP_TITLE, type MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
 import { MatchRatingPoster } from "@/components/match/MatchRatingPoster";
@@ -106,11 +106,11 @@ export function MatchRatingExportButton({
           toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
           return;
         }
-        const opts = await buildHtmlToImageOptions(node, {
-          backgroundColor: "#05080f",
-          pixelRatio: 2,
+        const bg = slot === "cele-jmena" ? "#060b14" : "#05080f";
+        const canvas = await captureElementToCanvas(node, {
+          scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
+          backgroundColor: bg,
         });
-        const canvas = await toCanvas(node, opts);
         downloadDataUrl(canvasToPngDataUrl(canvas), filenameForRatingSlot(slot, matchSlug));
         toast.success("Staženo 1 PNG.");
       } catch (e) {
