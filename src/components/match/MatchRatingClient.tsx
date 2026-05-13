@@ -182,13 +182,7 @@ export function MatchRatingClient({
         <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/70">
           {lockedReason || "Hodnocení se otevře po skončení zápasu."}
         </div>
-      ) : (
-        <p className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.07] px-3 py-2 text-xs leading-relaxed text-emerald-100/90">
-          Průměry fanoušků na zápisu vlevo jdou všem automaticky přepočítávat při nových hlasech. Posuvníky zde jen
-          přichystají hodnoty — potvrď je najednou tlačítkem níže („Uložit svoje hodnocení“), aby se opravdu uložili k
-          tvému účtu i pro export odkazu.
-        </p>
-      )}
+      ) : null}
 
       {ids.map((pid) => {
         const p = byId.get(pid);
