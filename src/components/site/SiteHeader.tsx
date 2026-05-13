@@ -14,6 +14,7 @@ type NavItem = { href: string; label: string; shortLabel?: string };
 const NAV_BASE: NavItem[] = [
   { href: "/", label: "Úvod" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
+  { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
   { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
   { href: "/zapasy/sestava", label: "Editor sestavy", shortLabel: "Editor sestavy" },
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
@@ -21,7 +22,6 @@ const NAV_BASE: NavItem[] = [
 
 const NAV_TAIL: NavItem[] = [
   { href: "/bracket", label: "Pick’em" },
-  { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
   { href: "/zebricek", label: "Žebříček" },
 ];
 

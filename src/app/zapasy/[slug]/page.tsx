@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
 import type { LineupStructure } from "@/types";
 import { MatchRatingExperience } from "@/components/match/MatchRatingExperience";
+import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { SiteShell } from "@/components/site/SiteShell";
 import { resolveBeijirMatchResult } from "@/lib/beijirMatchResults";
@@ -78,8 +80,25 @@ async function loadRatingsOpenFlag(matchId: string): Promise<boolean> {
   }
 }
 
-export default async function MatchDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+type MatchTabKey = "prehled" | "sestava" | "hodnoceni";
+
+function normalizeTab(raw: unknown): MatchTabKey {
+  const v = typeof raw === "string" ? raw.trim().toLowerCase() : "";
+  if (v === "sestava") return "sestava";
+  if (v === "hodnoceni") return "hodnoceni";
+  return "prehled";
+}
+
+export default async function MatchDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>> | Record<string, string | string[] | undefined>;
+}) {
   const { slug } = await params;
+  const sp = searchParams ? await searchParams : {};
+  const tab = normalizeTab(Array.isArray(sp.tab) ? sp.tab[0] : sp.tab);
   const preview = PREVIEW_MATCHES[slug] ?? null;
   /**
    * `select` (s explicitním seznamem polí) má dva důvody:
@@ -212,39 +231,126 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ sl
           </div>
         </div>
 
-        {lineup && match?.officialLineup ? (
-          <div className="mt-8 space-y-6">
-            <MatchRatingExperience
-              slug={match!.slug}
-              matchTitle={match!.title}
-              lineup={lineup}
-              players={players}
-              captainId={match.officialLineup.captainId ?? null}
-              defenseCount={(match.officialLineup.defenseCount as 6 | 7 | 8) ?? 8}
-              allowExtraForward={Boolean(match.officialLineup.allowExtraForward)}
-              initialRatings={ratings}
-              initialMyRatings={myRatings}
-              canRate={ratingGate.open}
-              lockedReason={ratingGate.reason}
-              startsAtLabel={
-                startsAt
-                  ? new Date(startsAt).toLocaleString("cs-CZ", {
-                      timeZone: tz,
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })
-                  : undefined
-              }
-            />
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          {(
+            [
+              { key: "prehled", label: "Přehled" },
+              { key: "sestava", label: "Sestava" },
+              { key: "hodnoceni", label: "Hodnocení hráčů" },
+            ] as const
+          ).map((t) => (
+            <Link
+              key={t.key}
+              href={`/zapasy/${encodeURIComponent(slug)}?tab=${t.key}`}
+              className={`
+                rounded-full px-4 py-2 text-xs font-semibold transition
+                ${
+                  tab === t.key
+                    ? "bg-[#00B4FF]/16 text-slate-100 ring-1 ring-[#00B4FF]/35"
+                    : "border border-white/[0.10] bg-white/[0.03] text-slate-400 hover:border-[#00B4FF]/30 hover:bg-white/[0.05]"
+                }
+              `}
+              aria-current={tab === t.key ? "page" : undefined}
+            >
+              {t.label}
+            </Link>
+          ))}
+        </div>
+
+        {tab === "prehled" ? (
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <h2 className="font-display text-lg font-black">Přehled</h2>
+              <dl className="mt-3 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                  <dt className="text-[11px] font-semibold uppercase tracking-wider text-white/45">Začátek</dt>
+                  <dd className="mt-1 text-white/80">
+                    {startsAt ? new Date(startsAt).toLocaleString("cs-CZ", { timeZone: tz }) : "—"}
+                  </dd>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                  <dt className="text-[11px] font-semibold uppercase tracking-wider text-white/45">Místo</dt>
+                  <dd className="mt-1 text-white/80">{preview ? preview.venue ?? "—" : match?.venue ?? "—"}</dd>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 sm:col-span-2">
+                  <dt className="text-[11px] font-semibold uppercase tracking-wider text-white/45">Vysílá se</dt>
+                  <dd className="mt-1 text-white/70">Doplním (TV/stream) — zatím placeholder.</dd>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 sm:col-span-2">
+                  <dt className="text-[11px] font-semibold uppercase tracking-wider text-white/45">Kurzy</dt>
+                  <dd className="mt-1 text-white/70">Doplníš později (podobně jako Livesport).</dd>
+                </div>
+              </dl>
+            </section>
+            <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <h2 className="font-display text-lg font-black">Info</h2>
+              <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-sm text-white/70">
+                Tahle záložka je připravená na „Livesport-style“ bloky (TV/stream, kurzy, případně sestavy / statistiky).
+                Kurzy sem doplníš ty.
+              </div>
+            </section>
           </div>
-        ) : (
-          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <h2 className="font-display text-lg font-black">Oficiální sestava</h2>
-            <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-white/65">
-              Oficiální sestava zatím nebyla oznámena. Jakmile ji admin doplní, zobrazí se tady.
+        ) : null}
+
+        {tab === "sestava" ? (
+          lineup && match?.officialLineup ? (
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <h2 className="font-display text-lg font-black">Sestava</h2>
+              <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+                <MatchOfficialLineupView
+                  lineup={lineup}
+                  players={players}
+                  captainId={match.officialLineup.captainId ?? null}
+                  matchDefenseCount={(match.officialLineup.defenseCount as 6 | 7 | 8) ?? 8}
+                  matchAllowExtraForward={Boolean(match.officialLineup.allowExtraForward)}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <h2 className="font-display text-lg font-black">Sestava</h2>
+              <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-white/65">
+                Oficiální sestava zatím nebyla oznámena. Jakmile ji admin doplní, zobrazí se tady.
+              </div>
+            </div>
+          )
+        ) : null}
+
+        {tab === "hodnoceni" ? (
+          lineup && match?.officialLineup ? (
+            <div className="mt-6 space-y-6">
+              <MatchRatingExperience
+                slug={match!.slug}
+                matchTitle={match!.title}
+                lineup={lineup}
+                players={players}
+                captainId={match.officialLineup.captainId ?? null}
+                defenseCount={(match.officialLineup.defenseCount as 6 | 7 | 8) ?? 8}
+                allowExtraForward={Boolean(match.officialLineup.allowExtraForward)}
+                initialRatings={ratings}
+                initialMyRatings={myRatings}
+                canRate={ratingGate.open}
+                lockedReason={ratingGate.reason}
+                startsAtLabel={
+                  startsAt
+                    ? new Date(startsAt).toLocaleString("cs-CZ", {
+                        timeZone: tz,
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })
+                    : undefined
+                }
+              />
+            </div>
+          ) : (
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <h2 className="font-display text-lg font-black">Hodnocení hráčů</h2>
+              <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-white/65">
+                Hodnocení se zobrazí, jakmile admin vloží oficiální sestavu a spustí hodnocení.
+              </div>
+            </div>
+          )
+        ) : null}
       </div>
       </main>
     </SiteShell>

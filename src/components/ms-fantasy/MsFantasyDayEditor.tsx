@@ -547,11 +547,6 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               </div>
             </div>
           </div>
-
-          <p className="mt-4 text-[0.7rem] leading-relaxed text-slate-500">
-            Klikni na pozici na „ledě“, pak vyber hráče vpravo — gólman jde vždy nahoru, beci doprostřed, útočníci dole.
-            Plná řada se přepíše na aktivním políčku. Uložení kontroluje cap a jednoho brankáře na serveru.
-          </p>
         </section>
       </div>
 

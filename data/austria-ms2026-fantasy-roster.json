@@ -5,7 +5,7 @@
     "team": "AUT",
     "jerseyNumber": 30,
     "position": "G",
-    "tier": "B"
+    "tier": "C"
   },
   {
     "code": "AUT26-G33-VORAUE",
@@ -21,7 +21,7 @@
     "team": "AUT",
     "jerseyNumber": 35,
     "position": "G",
-    "tier": "B"
+    "tier": "C"
   },
   {
     "code": "AUT26-D04-SCHNET",
@@ -93,7 +93,7 @@
     "team": "AUT",
     "jerseyNumber": 92,
     "position": "D",
-    "tier": "B"
+    "tier": "C"
   },
   {
     "code": "AUT26-F03-SCHNEI",
@@ -101,7 +101,7 @@
     "team": "AUT",
     "jerseyNumber": 3,
     "position": "F",
-    "tier": "B"
+    "tier": "C"
   },
   {
     "code": "AUT26-F08-REBERN",
@@ -117,7 +117,7 @@
     "team": "AUT",
     "jerseyNumber": 9,
     "position": "F",
-    "tier": "B"
+    "tier": "C"
   },
   {
     "code": "AUT26-F14-NEUBAU",
