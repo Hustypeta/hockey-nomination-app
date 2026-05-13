@@ -95,7 +95,7 @@ function PositionBadge({ label, compact = false }: { label: string; compact?: bo
       className={[
         "relative font-display font-bold uppercase tracking-[0.18em] text-white/95 shadow-[0_4px_14px_rgba(0,0,0,0.35)]",
         compact
-          ? "px-2 py-0.5 text-[0.5rem] tracking-[0.1em] sm:px-2.5 sm:py-0.5 sm:text-[0.54rem]"
+          ? "px-2 py-0.5 text-[0.52rem] tracking-[0.1em] sm:px-2.5 sm:py-0.5 sm:text-[0.56rem]"
           : "px-2.5 py-1 text-[0.55rem] tracking-[0.14em] sm:px-3 sm:py-1.5 sm:text-[0.6rem] sm:tracking-[0.16em]",
       ].join(" ")}
       style={{
@@ -116,7 +116,7 @@ function EmptySlotCard({ selected, disabled, reduceMotion }: { selected: boolean
   return (
     <div
       className={[
-        "relative flex min-h-[6.15rem] w-[5.85rem] flex-col items-center justify-center rounded-xl border-2 border-dashed px-1.5 py-1.5 shadow-inner backdrop-blur-[3px] transition-all duration-300 ease-out will-change-transform sm:min-h-[6.45rem] sm:w-[6.2rem]",
+        "relative flex min-h-[6.85rem] w-[6.5rem] flex-col items-center justify-center rounded-xl border-2 border-dashed px-1.5 py-1.5 shadow-inner backdrop-blur-[3px] transition-all duration-300 ease-out will-change-transform sm:min-h-[7.35rem] sm:w-[7.35rem]",
         "border-cyan-400/45 bg-gradient-to-b from-white/40 via-cyan-50/25 to-sky-100/20",
         "group-hover:-translate-y-0.5 group-hover:scale-[1.035] group-hover:border-cyan-200/85 group-hover:from-white/55 group-hover:via-cyan-50/40 group-hover:to-sky-100/35",
         "group-hover:shadow-[0_0_0_1px_rgba(0,245,255,0.45),0_0_36px_rgba(0,220,255,0.55),0_0_72px_rgba(0,180,255,0.28),0_12px_28px_rgba(0,60,90,0.2)]",
@@ -168,7 +168,7 @@ function FilledPlayerCard({
   const card = (
     <div
       className={[
-        "relative flex min-h-[6.35rem] w-[5.95rem] flex-col rounded-xl border px-1.5 pb-1 pt-1.5 shadow-[0_16px_36px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.18)] sm:min-h-[6.65rem] sm:w-[6.35rem] sm:px-2 sm:pb-1.5 sm:pt-2",
+        "relative flex min-h-[7.05rem] w-[6.5rem] flex-col rounded-xl border px-2 pb-1.5 pt-1.5 shadow-[0_16px_36px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.18)] sm:min-h-[7.55rem] sm:w-[7.35rem] sm:px-2.5 sm:pb-2 sm:pt-2",
         "border-white/25 bg-gradient-to-b from-slate-800/98 via-slate-900 to-[#030712]",
         selected ? "ring-[2px] ring-[#00e5ff] ring-offset-[2px] ring-offset-sky-100/95" : "ring-1 ring-white/10",
         disabled ? "opacity-55" : "",
@@ -183,11 +183,13 @@ function FilledPlayerCard({
       />
 
       <div className="relative z-10 flex flex-col items-center gap-1 px-0.5 pt-0.5">
-        <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="2.85rem" />
+        <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="3.1rem" />
 
-        <div className="flex w-full max-w-[5.85rem] items-center justify-center gap-1.5 sm:max-w-[6.25rem]">
-          <p className="truncate text-center text-[0.8rem] font-bold leading-snug text-white sm:text-[0.9rem]">{last}</p>
-          <FlagMark code={slot.team} className="h-3 w-4 shrink-0 rounded-sm ring-1 ring-white/30 sm:h-3.5 sm:w-[1.15rem]" />
+        <div className="flex w-full max-w-[6.45rem] items-start justify-center gap-1.5 sm:max-w-[7.1rem]">
+          <p className="line-clamp-2 min-h-[2.2em] max-w-full break-words text-center text-[0.84rem] font-bold leading-snug text-white sm:min-h-[2.35em] sm:text-[0.95rem]">
+            {last}
+          </p>
+          <FlagMark code={slot.team} className="h-3.5 w-[1.05rem] shrink-0 self-start rounded-sm ring-1 ring-white/30 sm:h-4 sm:w-[1.2rem]" />
         </div>
 
         <div className="flex w-full justify-center pt-0.5">
@@ -276,15 +278,20 @@ export function MsFantasyIceRink({
   };
 
   return (
-    <div className="mx-auto w-full max-w-[17.5rem] sm:max-w-md">
-      <p className="mb-2 text-center font-display text-[0.65rem] font-bold uppercase tracking-[0.18em] text-slate-400 sm:mb-2.5 sm:text-xs sm:tracking-[0.2em]">
+    <div className="mx-auto w-full max-w-[21rem] sm:max-w-lg">
+      <p className="mb-2 text-center font-display text-[0.68rem] font-bold uppercase tracking-[0.18em] text-slate-400 sm:mb-2.5 sm:text-xs sm:tracking-[0.2em]">
         Sestava na ledě
       </p>
 
-      <IceRinkShell noiseFilterId={noiseFilterId} scratchPatternId={scratchPatternId}>
-        <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">{SLOTS_F.map((ix) => renderSlot(ix, "Útočník"))}</div>
-        <div className="mt-3 flex flex-wrap justify-center gap-2.5 sm:mt-4 sm:gap-4">{SLOTS_D.map((ix) => renderSlot(ix, "Obránce"))}</div>
-        <div className="mt-3 flex justify-center sm:mt-4">{renderSlot(SLOT_G, "Brankář")}</div>
+      <IceRinkShell
+        noiseFilterId={noiseFilterId}
+        scratchPatternId={scratchPatternId}
+        transform="perspective(920px) rotateX(4deg) scale(0.94) translateZ(0)"
+        innerClassName="relative z-10 flex flex-col items-stretch px-2 pb-5 pt-[2.55rem] sm:px-3.5 sm:pb-6 sm:pt-[2.75rem]"
+      >
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-2.5">{SLOTS_F.map((ix) => renderSlot(ix, "Útočník"))}</div>
+        <div className="mt-3.5 flex flex-wrap justify-center gap-3 sm:mt-4 sm:gap-5">{SLOTS_D.map((ix) => renderSlot(ix, "Obránce"))}</div>
+        <div className="mt-3.5 flex justify-center sm:mt-4">{renderSlot(SLOT_G, "Brankář")}</div>
       </IceRinkShell>
     </div>
   );
