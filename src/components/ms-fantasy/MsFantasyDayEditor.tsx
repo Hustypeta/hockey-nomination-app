@@ -6,7 +6,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { ArrowLeft, Check, Loader2, Lock, Users } from "lucide-react";
 import { motion } from "framer-motion";
-import { MS_FANTASY_CAP, MS_FANTASY_TEAM_SIZE, isMsFantasyLineupSubmissionEnabled } from "@/lib/msFantasyConfig";
+import {
+  MS_FANTASY_CAP,
+  MS_FANTASY_TEAM_SIZE,
+  isMsFantasyLineupSubmissionEnabled,
+  isMsFantasySchedulePauseDaySlug,
+} from "@/lib/msFantasyConfig";
 import { MS_FANTASY_ROSTER_TEAM_OPTIONS, MS_FANTASY_TIER_CODES } from "@/lib/msFantasyRosterFilters";
 import { MsFantasyIceRink } from "./MsFantasyIceRink";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
@@ -706,22 +711,29 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             <h1 className="mt-1 font-display text-3xl font-bold tracking-wide text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.4)] sm:text-4xl">
               {day.title}
             </h1>
-            <p className="mt-3 text-sm text-slate-300">
-              Uzávěrka fantasy (nelze měnit sestavu po tomto okamžiku):{" "}
-              <strong className="font-medium text-white">
-                {new Date(day.lockAt).toLocaleString("cs-CZ", {
-                  timeZone: "Europe/Prague",
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
-              </strong>
-              . Odpovídá začátku prvního zápasu daného dne v programu MS (čas dle CEST v aréně).
-            </p>
+            {isMsFantasySchedulePauseDaySlug(day.slug) ? null : (
+              <p className="mt-3 text-sm text-slate-300">
+                Uzávěrka fantasy (nelze měnit sestavu po tomto okamžiku):{" "}
+                <strong className="font-medium text-white">
+                  {new Date(day.lockAt).toLocaleString("cs-CZ", {
+                    timeZone: "Europe/Prague",
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </strong>
+                . Odpovídá začátku prvního zápasu daného dne v programu MS (čas dle CEST v aréně).
+              </p>
+            )}
             <div className="mt-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2.5 sm:px-4 sm:py-3">
               <p className="font-display text-[0.58rem] font-bold uppercase tracking-[0.16em] text-slate-500 sm:text-[0.62rem]">
                 Zápasy na tento den
               </p>
-              <MsFantasyMatchSchedule matchesRaw={day.matches ?? []} showSourceLink className="mt-2" />
+              <MsFantasyMatchSchedule
+                matchesRaw={day.matches ?? []}
+                showSourceLink
+                omitEmptyDayDeadlineHint={isMsFantasySchedulePauseDaySlug(day.slug)}
+                className="mt-2"
+              />
             </div>
             <p className="mt-3 text-sm text-slate-300">
               {day.isLocked ? (

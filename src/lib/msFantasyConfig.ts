@@ -63,6 +63,12 @@ export function salaryForTier(tier: string, position?: string): number {
   return table[t] ?? table.E;
 }
 
+/** Dny kalendáře MS bez zápasů — v přehledu nezobrazujeme řádek „uzávěrka = první zápas dne“ (u těchto dnů se nehraje). */
+export function isMsFantasySchedulePauseDaySlug(slug: string): boolean {
+  const s = slug.trim();
+  return s === "2026-05-27" || s === "2026-05-29";
+}
+
 /** Bodování na hráče / zápas (bez střel a hitů). Rozšíření: import box score. */
 export type MsFantasySkaterBox = {
   goals: number;

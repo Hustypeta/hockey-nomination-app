@@ -21,8 +21,9 @@ export type Ms2026FantasyOfficialGameDaySeed = {
   sortOrder: number;
   matches: Ms2026FantasyOfficialMatch[];
   /**
-   * Pokud chybí, `lockAt` v DB = nejdřívější `matches[].startAt`.
-   * 27. 5. je pauza — uzávěrka = první čtvrtfinále (28. 5.).
+   * Chybí-li, `lockAt` v DB = nejdřívější `matches[].startAt`.
+   * Pro kalendářní pauzy 27. a 29. 5. je v DB technický `lockAt` směrem k dalšímu hracímu dni — v UI se u těchto dnů
+   * uzávěrka fantasy nezobrazuje (nehraje se).
    */
   lockAt?: string;
 };
@@ -179,6 +180,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-28",
     title: "MS 2026 — čtvrtek 28. 5. (čtvrtfinále)",
     sortOrder: 14,
+    lockAt: "2026-05-28T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-28T14:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 1 (Swiss Life Arena, Zürich)" },
       { startAt: "2026-05-28T14:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 2 (BCF Arena, Fribourg)" },
@@ -197,6 +199,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-30",
     title: "MS 2026 — sobota 30. 5. (semifinále)",
     sortOrder: 16,
+    lockAt: "2026-05-30T13:20:00.000Z",
     matches: [
       { startAt: "2026-05-30T13:20:00.000Z", phase: "Semifinále", label: "Semifinále 1 (Swiss Life Arena, Zürich)" },
       { startAt: "2026-05-30T18:00:00.000Z", phase: "Semifinále", label: "Semifinále 2 (Swiss Life Arena, Zürich)" },
@@ -206,6 +209,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-31",
     title: "MS 2026 — neděle 31. 5. (medaile)",
     sortOrder: 17,
+    lockAt: "2026-05-31T13:30:00.000Z",
     matches: [
       { startAt: "2026-05-31T13:30:00.000Z", phase: "O bronz", label: "Zápas o bronz (Swiss Life Arena, Zürich)" },
       { startAt: "2026-05-31T18:20:00.000Z", phase: "Finále", label: "Finále (Swiss Life Arena, Zürich)" },

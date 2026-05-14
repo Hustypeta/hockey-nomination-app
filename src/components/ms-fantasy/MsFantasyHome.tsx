@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight, BookOpen, Calendar, Shirt, Ticket, Trophy } from "lucide-react";
-import { MS_FANTASY_CAP, isMsFantasyLineupSubmissionEnabled } from "@/lib/msFantasyConfig";
+import {
+  MS_FANTASY_CAP,
+  isMsFantasyLineupSubmissionEnabled,
+  isMsFantasySchedulePauseDaySlug,
+} from "@/lib/msFantasyConfig";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
 import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
 
@@ -145,7 +149,9 @@ export function MsFantasyHome() {
         {days && days.length > 0 ? (
           <div className="mt-6 space-y-3 sm:mt-7 sm:space-y-4">
             <ul className="flex flex-col gap-2 sm:gap-3">
-              {days.map((d) => (
+              {days.map((d) => {
+                const pauseDay = isMsFantasySchedulePauseDaySlug(d.slug);
+                return (
                 <li key={d.id}>
                   <Link
                     href={`/fantasy/${d.slug}`}
@@ -173,23 +179,26 @@ export function MsFantasyHome() {
                       <p className="truncate font-display text-base font-bold tracking-wide text-white sm:text-lg">
                         {d.title}
                       </p>
-                      <p className="mt-1 text-xs text-slate-400">
-                        Uzávěrka fantasy{" "}
-                        <time dateTime={d.lockAt} className="text-slate-300">
-                          {new Date(d.lockAt).toLocaleString("cs-CZ", {
-                            timeZone: "Europe/Prague",
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                          })}
-                        </time>{" "}
-                        <span className="text-slate-500">(= první zápas dne v čase arény / CEST)</span>
-                      </p>
+                      {pauseDay ? null : (
+                        <p className="mt-1 text-xs text-slate-400">
+                          Uzávěrka fantasy{" "}
+                          <time dateTime={d.lockAt} className="text-slate-300">
+                            {new Date(d.lockAt).toLocaleString("cs-CZ", {
+                              timeZone: "Europe/Prague",
+                              dateStyle: "medium",
+                              timeStyle: "short",
+                            })}
+                          </time>{" "}
+                          <span className="text-slate-500">(= první zápas dne v čase arény / CEST)</span>
+                        </p>
+                      )}
                       <div className="mt-2 rounded-lg border border-white/[0.06] bg-black/20 px-2.5 py-2 sm:px-3">
                         <p className="font-display text-[0.58rem] font-bold uppercase tracking-[0.14em] text-slate-500">
                           Zápasy dne
                         </p>
                         <MsFantasyMatchSchedule
                           matchesRaw={d.matches}
+                          omitEmptyDayDeadlineHint={pauseDay}
                           className="mt-1.5 max-h-40 overflow-y-auto overscroll-contain pr-0.5 sm:max-h-48"
                         />
                       </div>
@@ -209,7 +218,8 @@ export function MsFantasyHome() {
                     </div>
                   </Link>
                 </li>
-              ))}
+                );
+              })}
             </ul>
             <p className="mt-3 text-center text-[0.65rem] leading-snug text-slate-500 sm:text-xs">
               Časy zápasů v čase arény (CEST). Zdroj:{" "}

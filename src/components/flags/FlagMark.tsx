@@ -126,6 +126,17 @@ export function FlagMark({ code, className = "" }: { code: string | undefined | 
       </Svg>
     );
   }
+  if (raw === "GBR") {
+    return (
+      <Svg className={className} title="Velká Británie">
+        <rect width="30" height="20" fill="#012169" />
+        <path d="M0,0 L30,20 M30,0 L0,20" stroke="#ffffff" strokeWidth="5" strokeLinecap="square" />
+        <path d="M0,0 L30,20 M30,0 L0,20" stroke="#C8102E" strokeWidth="2.2" strokeLinecap="square" />
+        <path d="M15,0 V20 M0,10 H30" stroke="#ffffff" strokeWidth="7" />
+        <path d="M15,0 V20 M0,10 H30" stroke="#C8102E" strokeWidth="4" />
+      </Svg>
+    );
+  }
   if (raw === "HUN") {
     return (
       <Svg className={className} title="Maďarsko">

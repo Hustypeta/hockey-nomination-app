@@ -5,7 +5,7 @@ export const revalidate = 3600;
 const staticRoutes = [
   "/",
   "/sestava",
-  "/zapasy",
+  /** `/zapasy` jen přesměruje — v sitemapě jen finální cíl (méně hluku v GSC „přesměrování“). */
   "/zapasy/beijir",
   "/zapasy/ms-2026",
   "/clanky/rady-k-nominaci",

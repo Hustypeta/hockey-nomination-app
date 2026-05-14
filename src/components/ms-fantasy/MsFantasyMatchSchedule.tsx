@@ -8,18 +8,34 @@ type MsFantasyMatchScheduleProps = {
   matchesRaw: unknown;
   /** Zobrazit zdroj odkaz (fantasy den / přehled). */
   showSourceLink?: boolean;
+  /**
+   * Kalendářní dny bez zápasů (pauza) — bez věty o uzávěrce fantasy (ta se v UI u těchto dnů neukazuje).
+   */
+  omitEmptyDayDeadlineHint?: boolean;
   className?: string;
 };
 
-export function MsFantasyMatchSchedule({ matchesRaw, showSourceLink, className = "" }: MsFantasyMatchScheduleProps) {
+export function MsFantasyMatchSchedule({
+  matchesRaw,
+  showSourceLink,
+  omitEmptyDayDeadlineHint,
+  className = "",
+}: MsFantasyMatchScheduleProps) {
   const matches = parseMsFantasyMatches(matchesRaw);
 
   return (
     <div className={className}>
       {matches.length === 0 ? (
         <p className="text-[0.7rem] leading-snug text-slate-500 sm:text-xs">
-          Tento kalendářní den se na šampionátu nehraje. Uzávěrka fantasy odpovídá dalšímu klíčovému začátku v harmonogramu
-          (viz datum uzávěrky výše).
+          Tento kalendářní den se na šampionátu nehraje.
+          {omitEmptyDayDeadlineHint
+            ? null
+            : (
+                <>
+                  {" "}
+                  Uzávěrka fantasy odpovídá dalšímu klíčovému začátku v harmonogramu (viz datum uzávěrky výše).
+                </>
+              )}
         </p>
       ) : (
         <ul className="space-y-1.5 sm:space-y-2">
