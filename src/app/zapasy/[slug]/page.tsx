@@ -272,23 +272,13 @@ export default async function MatchDetailPage({
                   <dt className="text-[11px] font-semibold uppercase tracking-wider text-white/45">Místo</dt>
                   <dd className="mt-1 text-white/80">{preview ? preview.venue ?? "—" : match?.venue ?? "—"}</dd>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 sm:col-span-2">
-                  <dt className="text-[11px] font-semibold uppercase tracking-wider text-white/45">Vysílá se</dt>
-                  <dd className="mt-1 text-white/70">Doplním (TV/stream) — zatím placeholder.</dd>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 sm:col-span-2">
-                  <dt className="text-[11px] font-semibold uppercase tracking-wider text-white/45">Kurzy</dt>
-                  <dd className="mt-1 text-white/70">Doplníš později (podobně jako Livesport).</dd>
-                </div>
               </dl>
             </section>
-            <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <h2 className="font-display text-lg font-black">Info</h2>
-              <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-sm text-white/70">
-                Tahle záložka je připravená na „Livesport-style“ bloky (TV/stream, kurzy, případně sestavy / statistiky).
-                Kurzy sem doplníš ty.
-              </div>
-            </section>
+            {/* Livesport-style sloty: TV/stream, kurzy, případně další bloky — zatím prázdné */}
+            <section
+              className="min-h-[10rem] rounded-2xl border border-white/10 bg-white/[0.02] p-4"
+              aria-hidden
+            />
           </div>
         ) : null}
 

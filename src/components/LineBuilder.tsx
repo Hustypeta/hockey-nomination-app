@@ -49,6 +49,10 @@ interface LineBuilderProps {
   jerseyBadgesPreferFanAverage?: boolean;
   /** Klik na dres (jen v `mode="match"` / readOnly) — využíváme pro mobilní rating sheet. */
   onPlayerClick?: (playerId: string) => void;
+  /**
+   * Jen `mode="match"` + `readOnly`: kompaktní seznam jmen (bez dresů) — méně scrollování na stránkách zápasu.
+   */
+  matchPublicNamesOnly?: boolean;
 }
 
 /** Jemný akcent u nadpisu lajny – červená (repre), žádná „pruhovaná vlajka“. */
@@ -111,6 +115,7 @@ export function LineBuilder({
   myRatingByPlayerId,
   jerseyBadgesPreferFanAverage = false,
   onPlayerClick,
+  matchPublicNamesOnly = false,
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
   /** Ve veřejném hodnocení na úzkém displeji zmenšit jména na dresu (dlouhá příjmení). */
@@ -149,6 +154,38 @@ export function LineBuilder({
     }
     return null;
   }
+
+  /** Kompaktní řádek hodnocení vedle jména (bez dresového badge). */
+  function NameRowRating({ playerId }: { playerId: string }) {
+    const mine = myRatingByPlayerId?.[playerId];
+    const aggregate = ratingByPlayerId?.[playerId];
+    if (
+      !jerseyBadgesPreferFanAverage &&
+      typeof mine === "number" &&
+      Number.isFinite(mine)
+    ) {
+      return (
+        <span
+          className="shrink-0 rounded-full border border-emerald-400/35 bg-emerald-500/15 px-2 py-0.5 font-display text-[11px] font-black tabular-nums text-emerald-200"
+          aria-label="Tvoje hodnocení"
+        >
+          {formatRating(mine)}
+        </span>
+      );
+    }
+    if (aggregate && Number.isFinite(aggregate.avg) && aggregate.avg > 0) {
+      return (
+        <span
+          className="shrink-0 rounded-full border border-amber-300/40 bg-amber-400/15 px-2 py-0.5 font-display text-[11px] font-black tabular-nums text-amber-100"
+          aria-label={`Průměrné hodnocení (${aggregate.count} hlasů)`}
+        >
+          {formatRating(aggregate.avg)}
+        </span>
+      );
+    }
+    return null;
+  }
+
   const assistantIds = lineup.assistantIds ?? [];
   const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) : null);
 
@@ -440,6 +477,139 @@ export function LineBuilder({
 
     const defenseHeader =
       defCount === 8 ? "Obrana (8)" : defCount === 7 ? "Obrana (7)" : "Obrana (6)";
+
+    function MatchNameRow({ playerId, pos }: { playerId: string | null; pos: string }) {
+      const player = getPlayer(playerId);
+      const rowRating = playerId ? <NameRowRating playerId={playerId} /> : null;
+      const badges =
+        player != null ? (
+          <>
+            {captainId === player.id ? (
+              <span className="shrink-0 rounded border border-red-400/50 bg-red-600/90 px-1 py-0.5 text-[9px] font-black text-white">
+                C
+              </span>
+            ) : null}
+            {assistantIds.includes(player.id) ? (
+              <span className="shrink-0 rounded border border-sky-400/45 bg-[#003087]/90 px-1 py-0.5 text-[9px] font-black text-white">
+                A
+              </span>
+            ) : null}
+          </>
+        ) : null;
+
+      const rowInner = (
+        <>
+          <span className="w-8 shrink-0 text-left text-[10px] font-bold uppercase tracking-wide text-white/45">
+            {pos}
+          </span>
+          <span className="min-w-0 flex-1 truncate text-left text-sm font-semibold text-white">
+            {player?.name ?? "—"}
+          </span>
+          {badges}
+          {rowRating}
+        </>
+      );
+
+      if (player && onPlayerClick) {
+        return (
+          <button
+            type="button"
+            onClick={() => onPlayerClick(player.id)}
+            className="flex w-full min-w-0 items-center gap-2 rounded-lg border border-white/[0.08] bg-black/30 px-2.5 py-1.5 text-left transition hover:border-white/18 hover:bg-white/[0.05]"
+          >
+            {rowInner}
+          </button>
+        );
+      }
+
+      return (
+        <div className="flex w-full min-w-0 items-center gap-2 rounded-lg border border-white/[0.08] bg-black/22 px-2.5 py-1.5">
+          {rowInner}
+        </div>
+      );
+    }
+
+    if (readOnly && matchPublicNamesOnly) {
+      return (
+        <div className="min-w-0 w-full space-y-3 sm:space-y-4">
+          <SectionShell title="Brankáři" kicker="2 × G">
+            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
+              {[0, 1].map((i) => (
+                <MatchNameRow key={i} playerId={lineup.goalies[i]} pos="G" />
+              ))}
+            </div>
+          </SectionShell>
+
+          <SectionShell title="Útočné lajny" kicker={matchAllowExtraForward ? "4×3 + 13. útočník" : "4×3"}>
+            <div className="grid grid-cols-1 gap-2 sm:gap-2.5">
+              {[0, 1, 2, 3].map((i) => {
+                const line = lineup.forwardLines[i];
+                return (
+                  <div key={i} className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
+                    <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+                      {i + 1}. lajna
+                    </p>
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                      <MatchNameRow playerId={line.lw} pos="LW" />
+                      <MatchNameRow playerId={line.c} pos="C" />
+                      <MatchNameRow playerId={line.rw} pos="RW" />
+                    </div>
+                  </div>
+                );
+              })}
+              {matchAllowExtraForward ? (
+                <div className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
+                  <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+                    13. útočník
+                  </p>
+                  <MatchNameRow playerId={lineup.extraForwards[0] ?? null} pos="F" />
+                </div>
+              ) : null}
+            </div>
+          </SectionShell>
+
+          <SectionShell title={defenseHeader} kicker={showD4Pair ? "4× pár" : showD7 ? "3× pár + 1" : "3× pár"}>
+            <div className="space-y-2">
+              {[0, 1, 2].map((i) => {
+                const pair = lineup.defensePairs[i];
+                return (
+                  <div key={i} className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
+                    <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+                      {i + 1}. pár
+                    </p>
+                    <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
+                      <MatchNameRow playerId={pair.lb} pos="LD" />
+                      <MatchNameRow playerId={pair.rb} pos="RD" />
+                    </div>
+                  </div>
+                );
+              })}
+
+              {showD4Pair ? (
+                <div className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
+                  <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+                    4. pár
+                  </p>
+                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
+                    <MatchNameRow playerId={lineup.defensePairs[3].lb} pos="LD" />
+                    <MatchNameRow playerId={lineup.defensePairs[3].rb} pos="RD" />
+                  </div>
+                </div>
+              ) : null}
+
+              {showD7 ? (
+                <div className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
+                  <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+                    Obránce navíc
+                  </p>
+                  <MatchNameRow playerId={lineup.defensePairs[3].lb} pos="D" />
+                </div>
+              ) : null}
+            </div>
+          </SectionShell>
+        </div>
+      );
+    }
 
     const controlsDisabled = readOnly || !onMatchDefenseCountChange || !onMatchAllowExtraForwardChange;
 
