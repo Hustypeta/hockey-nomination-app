@@ -113,6 +113,8 @@ export function MatchRatingExperience({
             players={players}
             defenseCount={defenseCount}
             allowExtraForward={allowExtraForward}
+            ratings={ratings}
+            myRatings={myRatings}
           />
         </>
       ) : null}

@@ -4,6 +4,14 @@ import { forwardRef, useMemo, type CSSProperties, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
+import { matchPosterJerseyFrameStyles } from "@/lib/matchLineupPosterJerseyFrame";
+import {
+  fmtMatchRating,
+  matchRatingHue,
+  resolveMatchRatingDisplay,
+  type MatchRatingAggregateMap,
+  type MatchRatingMyMap,
+} from "@/lib/matchRatingExportDisplay";
 
 function roleForPlayerId(lineup: LineupStructure, playerId: string): { kind: "goalie" | "skater"; label: "G" | "D" | "F" } {
   if (lineup.goalies[0] === playerId || lineup.goalies[1] === playerId || lineup.goalies[2] === playerId) {
@@ -21,6 +29,11 @@ interface MatchLineupFullJerseyExportPosterProps {
   lineup: LineupStructure;
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
+  jerseyRatingExport?: {
+    ratings: MatchRatingAggregateMap;
+    myRatings: MatchRatingMyMap;
+    snapshotMode: "personal" | "community";
+  };
 }
 
 /**
@@ -29,47 +42,51 @@ interface MatchLineupFullJerseyExportPosterProps {
  */
 export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, MatchLineupFullJerseyExportPosterProps>(
   function MatchLineupFullJerseyExportPoster(
-    { lineupTitle, players, lineup, defenseCount, allowExtraForward },
+    { lineupTitle, players, lineup, defenseCount, allowExtraForward, jerseyRatingExport },
     ref
   ) {
     const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
     const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
+
+    const posterJerseyScale = 1.22;
+    const ratingExtraShellPx = jerseyRatingExport ? 6 : 0;
+    const jerseyFrame = matchPosterJerseyFrameStyles(posterJerseyScale, ratingExtraShellPx);
 
     const cardShell: CSSProperties = {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "flex-start",
-      gap: 6,
-      padding: "2px 0 8px",
+      gap: jerseyRatingExport ? 8 : 12,
+      padding: jerseyRatingExport ? "4px 0 14px" : "4px 0 10px",
     };
 
     const renderCard = (pid: string | null, positionLabel: string, reactKey: string) => {
       const player = pid ? (byId.get(pid) ?? null) : null;
       const role = pid ? roleForPlayerId(lineup, pid) : { kind: "skater" as const, label: "F" as const };
       const label = positionLabel || role.label;
+      const mode = jerseyRatingExport?.snapshotMode;
+      const display =
+        pid && jerseyRatingExport && mode
+          ? resolveMatchRatingDisplay(pid, jerseyRatingExport.ratings, jerseyRatingExport.myRatings, mode)
+          : null;
+      const aggregate = pid && jerseyRatingExport ? jerseyRatingExport.ratings[pid] : undefined;
+      const hue = display != null ? matchRatingHue(display) : matchRatingHue(null);
       return (
         <div key={reactKey} style={cardShell}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              transform: "scale(1.22)",
-              transformOrigin: "50% 0%",
-            }}
-          >
-            <PremiumJerseySlotCard
-              player={player}
-              positionLabel={label}
-              kind={role.kind}
-              size="compact"
-              disableMotion
-              posterEmbed
-              lightRinkSurface={false}
-              ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
-            />
+          <div style={jerseyFrame.shell}>
+            <div style={jerseyFrame.scaler}>
+              <PremiumJerseySlotCard
+                player={player}
+                positionLabel={label}
+                kind={role.kind}
+                size="compact"
+                disableMotion
+                posterEmbed
+                lightRinkSurface={false}
+                ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
+              />
+            </div>
           </div>
           <div style={{ width: "100%", textAlign: "center", paddingLeft: 2, paddingRight: 2 }}>
             <div
@@ -83,6 +100,53 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
             >
               {player ? player.name : "—"}
             </div>
+            {jerseyRatingExport && mode && pid ? (
+              <div style={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div
+                  style={{
+                    minWidth: 88,
+                    padding: "6px 12px 5px",
+                    borderRadius: 14,
+                    background: hue.bg,
+                    boxShadow: `0 6px 16px ${hue.ring}, 0 0 0 2px rgba(255,255,255,0.9) inset`,
+                    border: "2px solid rgba(255,255,255,0.9)",
+                    color: hue.text,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 34,
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      letterSpacing: "-0.04em",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {fmtMatchRating(display)}
+                  </div>
+                  <div
+                    style={{
+                      marginTop: 1,
+                      fontSize: 8,
+                      fontWeight: 800,
+                      letterSpacing: "0.14em",
+                      textTransform: "uppercase",
+                      opacity: 0.82,
+                    }}
+                  >
+                    / 10
+                  </div>
+                </div>
+                {mode === "community" && aggregate && aggregate.count > 0 ? (
+                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.45)" }}>
+                    {aggregate.count} hlasů
+                  </div>
+                ) : null}
+                {mode === "personal" && typeof jerseyRatingExport.myRatings[pid] !== "number" ? (
+                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.38)" }}>Neuloženo</div>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </div>
       );
@@ -197,7 +261,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                 color: "#f1c40f",
               }}
             >
-              Sestava na zápas
+              {jerseyRatingExport ? "Hodnocení hráčů" : "Sestava na zápas"}
             </div>
             <div
               style={{
@@ -211,7 +275,11 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               {lineupTitle.trim() || "Moje sestava"}
             </div>
             <div style={{ marginTop: 6, fontSize: 13, color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>
-              Celá soupiska · dresy
+              {jerseyRatingExport
+                ? jerseyRatingExport.snapshotMode === "personal"
+                  ? "Celá soupiska · dresy · moje známky"
+                  : "Celá soupiska · dresy · průměr komunity"
+                : "Celá soupiska · dresy"}
             </div>
           </div>
           <div style={{ textAlign: "right", flexShrink: 0 }}>

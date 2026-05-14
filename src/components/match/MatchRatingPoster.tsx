@@ -12,57 +12,13 @@ import {
   splitMatchLineupLinePosterChunks,
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
+import { fmtMatchRating, matchRatingHue } from "@/lib/matchRatingExportDisplay";
 
 /** @deprecated importuj z @/lib/matchLineupPosterSegments jako MatchLineupPosterGroup */
 export type MatchRatingPosterGroup = MatchLineupPosterGroup;
 
 type RatingMap = Record<string, { avg: number; count: number } | undefined>;
 type MyMap = Record<string, number | undefined>;
-
-function fmtRating(n: number | null | undefined): string {
-  if (typeof n !== "number" || !Number.isFinite(n) || n <= 0) return "–";
-  return n.toFixed(1).replace(".", ",");
-}
-
-/** Barva pro velký rating "score" — od červené (1) přes oranžovou až po zelenou (10). */
-function ratingHue(n: number | null): { bg: string; ring: string; text: string } {
-  if (n == null || n <= 0) {
-    return {
-      bg: "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%)",
-      ring: "rgba(255,255,255,0.25)",
-      text: "rgba(255,255,255,0.6)",
-    };
-  }
-  if (n >= 8.5)
-    return {
-      bg: "linear-gradient(180deg, #34d399 0%, #047857 100%)",
-      ring: "rgba(52, 211, 153, 0.55)",
-      text: "white",
-    };
-  if (n >= 7)
-    return {
-      bg: "linear-gradient(180deg, #a3e635 0%, #4d7c0f 100%)",
-      ring: "rgba(163, 230, 53, 0.55)",
-      text: "#0b1a05",
-    };
-  if (n >= 5)
-    return {
-      bg: "linear-gradient(180deg, #fde68a 0%, #d97706 100%)",
-      ring: "rgba(253, 230, 138, 0.55)",
-      text: "#1a1208",
-    };
-  if (n >= 3.5)
-    return {
-      bg: "linear-gradient(180deg, #fb923c 0%, #b45309 100%)",
-      ring: "rgba(251, 146, 60, 0.55)",
-      text: "white",
-    };
-  return {
-    bg: "linear-gradient(180deg, #f87171 0%, #991b1b 100%)",
-    ring: "rgba(248, 113, 113, 0.55)",
-    text: "white",
-  };
-}
 
 interface MatchRatingPosterProps {
   matchTitle: string;
@@ -134,7 +90,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
           : typeof mine === "number"
             ? mine
             : null;
-      const hue = ratingHue(display);
+      const hue = matchRatingHue(display);
       return (
         <div style={cardShell}>
           <div
@@ -232,7 +188,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              {fmtRating(display)}
+              {fmtMatchRating(display)}
             </div>
             <div
               style={{

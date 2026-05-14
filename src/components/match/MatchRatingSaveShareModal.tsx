@@ -6,6 +6,8 @@ import { Copy, X } from "lucide-react";
 import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 import type { LineupStructure, Player } from "@/types";
 
+type RatingMap = Record<string, { avg: number; count: number }>;
+
 export function MatchRatingSaveShareModal({
   open,
   onClose,
@@ -15,6 +17,8 @@ export function MatchRatingSaveShareModal({
   players,
   defenseCount,
   allowExtraForward,
+  ratings,
+  myRatings,
 }: {
   open: boolean;
   onClose: () => void;
@@ -24,6 +28,8 @@ export function MatchRatingSaveShareModal({
   players: Player[];
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
+  ratings: RatingMap;
+  myRatings: Record<string, number>;
 }) {
   const [title, setTitle] = useState(`Hodnocení — ${matchTitle}`);
   const [busy, setBusy] = useState(false);
@@ -179,8 +185,8 @@ export function MatchRatingSaveShareModal({
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Plakát</p>
             <p className="mt-1 text-xs leading-snug text-white/60">
-              Grafika zápasové soupisky (dresy / jména) — stejné možnosti jako v editoru sestavy na zápas. Vyber typ a
-              stáhni PNG.
+              Dresové PNG odpovídají režimu nahoře: u každého hráče je známka (moje uložené nebo průměr komunity).
+              „Jen jména“ je bez čísel. Stejné řezy jako v editoru sestavy na zápas.
             </p>
             <div className="mt-3">
               <MatchLineupImageExportButton
@@ -191,6 +197,11 @@ export function MatchRatingSaveShareModal({
                 allowExtraForward={allowExtraForward}
                 shareSlug={matchSlug}
                 siteOrigin={siteOrigin}
+                ratingSnapshot={{
+                  ratings,
+                  myRatings,
+                  mode: snapshotMode,
+                }}
               />
             </div>
           </div>
