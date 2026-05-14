@@ -2,6 +2,14 @@
  * Oficiální program MS v hokeji 2026 (skupiny + play-off) pro fantasy „den“ = kalendářní datum ve Švýcarsku.
  * Časy zápasů v ISO UTC (aréna = švýcarský čas, odpovídá CEST v květnu).
  *
+ * **Uzávěrka fantasy (`lockAt`)** = začátek prvního zápasu dne v čase arény (pro ČR zobrazeno jako CEST).
+ * U každého dne je `lockAt` vždy vyplněný explicitně (ne jen z `min(matches)`), aby se při úpravě pořadí
+ * zápasů omylem nezměnil konec sestavování.
+ *
+ * Kalendář prvních bulů (CEST) → `lockAt` UTC (CEST − 2 v květnu 2026):
+ * 15. 16:20, 16. 12:20, 17. 12:20, 18.–22. 16:20, 23. 12:20, 24.–25. 16:20, 26. 12:20,
+ * 27. pauza (technický lock až na 28. 16:20), 28. 16:20, 29. pauza (lock na 30. 15:20), 30. 15:20, 31. 15:30.
+ *
  * Kanonický zdroj: [IIHF — Schedule and Results 2026](https://www.iihf.com/en/events/2026/wm/schedule).
  * Pořadí `home` / `away` odpovídá zápisu na IIHF (první tým v „X vs Y“).
  */
@@ -21,9 +29,8 @@ export type Ms2026FantasyOfficialGameDaySeed = {
   sortOrder: number;
   matches: Ms2026FantasyOfficialMatch[];
   /**
-   * Chybí-li, `lockAt` v DB = nejdřívější `matches[].startAt`.
-   * Pro kalendářní pauzy 27. a 29. 5. je v DB technický `lockAt` směrem k dalšímu hracímu dni — v UI se u těchto dnů
-   * uzávěrka fantasy nezobrazuje (nehraje se).
+   * Konec sestavování fantasy pro tento kalendářní den (UTC). Vždy vyplnit — kanonické časy viz hlavičkový komentář souboru.
+   * Pro pauzy 27. a 29. 5. je to technický čas směrem k dalšímu hracímu dni; v UI se uzávěrka u těchto dnů nezobrazuje.
    */
   lockAt?: string;
 };
@@ -33,6 +40,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-15",
     title: "MS 2026 — pátek 15. 5.",
     sortOrder: 1,
+    lockAt: "2026-05-15T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-15T14:20:00.000Z", home: "FIN", away: "GER", group: "A" },
       { startAt: "2026-05-15T14:20:00.000Z", home: "CAN", away: "SWE", group: "B" },
@@ -44,6 +52,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-16",
     title: "MS 2026 — sobota 16. 5.",
     sortOrder: 2,
+    lockAt: "2026-05-16T10:20:00.000Z",
     matches: [
       { startAt: "2026-05-16T10:20:00.000Z", home: "GBR", away: "AUT", group: "A" },
       { startAt: "2026-05-16T10:20:00.000Z", home: "SVK", away: "NOR", group: "B" },
@@ -57,6 +66,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-17",
     title: "MS 2026 — neděle 17. 5.",
     sortOrder: 3,
+    lockAt: "2026-05-17T10:20:00.000Z",
     matches: [
       { startAt: "2026-05-17T10:20:00.000Z", home: "GBR", away: "USA", group: "A" },
       { startAt: "2026-05-17T10:20:00.000Z", home: "ITA", away: "SVK", group: "B" },
@@ -70,6 +80,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-18",
     title: "MS 2026 — pondělí 18. 5.",
     sortOrder: 4,
+    lockAt: "2026-05-18T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-18T14:20:00.000Z", home: "FIN", away: "USA", group: "A" },
       { startAt: "2026-05-18T14:20:00.000Z", home: "CAN", away: "DEN", group: "B" },
@@ -81,6 +92,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-19",
     title: "MS 2026 — úterý 19. 5.",
     sortOrder: 5,
+    lockAt: "2026-05-19T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-19T14:20:00.000Z", home: "LAT", away: "AUT", group: "A" },
       { startAt: "2026-05-19T14:20:00.000Z", home: "ITA", away: "NOR", group: "B" },
@@ -92,6 +104,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-20",
     title: "MS 2026 — středa 20. 5.",
     sortOrder: 6,
+    lockAt: "2026-05-20T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-20T14:20:00.000Z", home: "AUT", away: "SUI", group: "A" },
       { startAt: "2026-05-20T14:20:00.000Z", home: "CZE", away: "ITA", group: "B" },
@@ -103,6 +116,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-21",
     title: "MS 2026 — čtvrtek 21. 5.",
     sortOrder: 7,
+    lockAt: "2026-05-21T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-21T14:20:00.000Z", home: "LAT", away: "FIN", group: "A" },
       { startAt: "2026-05-21T14:20:00.000Z", home: "CAN", away: "NOR", group: "B" },
@@ -114,6 +128,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-22",
     title: "MS 2026 — pátek 22. 5.",
     sortOrder: 8,
+    lockAt: "2026-05-22T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-22T14:20:00.000Z", home: "GER", away: "HUN", group: "A" },
       { startAt: "2026-05-22T14:20:00.000Z", home: "CAN", away: "SLO", group: "B" },
@@ -125,6 +140,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-23",
     title: "MS 2026 — sobota 23. 5.",
     sortOrder: 9,
+    lockAt: "2026-05-23T10:20:00.000Z",
     matches: [
       { startAt: "2026-05-23T10:20:00.000Z", home: "LAT", away: "USA", group: "A" },
       { startAt: "2026-05-23T10:20:00.000Z", home: "DEN", away: "SLO", group: "B" },
@@ -138,6 +154,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-24",
     title: "MS 2026 — neděle 24. 5.",
     sortOrder: 10,
+    lockAt: "2026-05-24T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-24T14:20:00.000Z", home: "GBR", away: "LAT", group: "A" },
       { startAt: "2026-05-24T14:20:00.000Z", home: "DEN", away: "ITA", group: "B" },
@@ -149,6 +166,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-25",
     title: "MS 2026 — pondělí 25. 5.",
     sortOrder: 11,
+    lockAt: "2026-05-25T14:20:00.000Z",
     matches: [
       { startAt: "2026-05-25T14:20:00.000Z", home: "USA", away: "HUN", group: "A" },
       { startAt: "2026-05-25T14:20:00.000Z", home: "CZE", away: "NOR", group: "B" },
@@ -160,6 +178,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     slug: "2026-05-26",
     title: "MS 2026 — úterý 26. 5.",
     sortOrder: 12,
+    lockAt: "2026-05-26T10:20:00.000Z",
     matches: [
       { startAt: "2026-05-26T10:20:00.000Z", home: "HUN", away: "LAT", group: "A" },
       { startAt: "2026-05-26T10:20:00.000Z", home: "NOR", away: "DEN", group: "B" },
