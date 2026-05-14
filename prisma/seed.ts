@@ -85,7 +85,8 @@ async function importFantasyRosterJson(
 }
 
 /**
- * Import fantasy MS: hrací dny + program (`upsert` podle `slug`) **bez smazání existujících lineups**.
+ * Import fantasy MS: hrací dny + program (`upsert` podle `slug`) — řádky `MsFantasyGameDay` se nemažou,
+ * takže `ms_fantasy_lineups` zůstanou navázané (navíc DB FK `gameDayId` = ON DELETE RESTRICT brání smazání dne s lineupy).
  * Pool hráčů se defaultně vyprázdní a znovu načte z manifestu — nastav `MS_FANTASY_SEED_FANTASY_DATA_SKIP_POOL=true`,
  * pokud chceš jen doplnit/upravit kalendář a nechat soupisky v DB beze změny.
  */
