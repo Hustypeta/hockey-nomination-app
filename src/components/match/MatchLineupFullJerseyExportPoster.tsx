@@ -39,14 +39,9 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      justifyContent: "center",
-      gap: 10,
-      padding: "16px 12px 18px",
-      borderRadius: 18,
-      background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
-      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
-      border: "1px solid rgba(255,255,255,0.1)",
-      minHeight: 148,
+      justifyContent: "flex-start",
+      gap: 6,
+      padding: "2px 0 8px",
     };
 
     const renderCard = (pid: string | null, positionLabel: string, reactKey: string) => {
@@ -61,7 +56,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              transform: "scale(1.08)",
+              transform: "scale(1.22)",
               transformOrigin: "50% 0%",
             }}
           >
@@ -71,6 +66,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               kind={role.kind}
               size="compact"
               disableMotion
+              posterEmbed
               lightRinkSurface={false}
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
@@ -78,7 +74,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           <div style={{ width: "100%", textAlign: "center", paddingLeft: 2, paddingRight: 2 }}>
             <div
               style={{
-                fontSize: 24,
+                fontSize: 27,
                 fontWeight: 900,
                 color: "white",
                 lineHeight: 1.08,
@@ -106,8 +102,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: 18,
-              alignItems: "stretch",
+              gap: 16,
+              alignItems: "start",
             }}
           >
             {renderCard(p.lb, "LD", `pair-${i}-lb`)}
@@ -125,8 +121,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: 18,
-              alignItems: "stretch",
+              gap: 16,
+              alignItems: "start",
             }}
           >
             {renderCard(p3.lb, "LD", "pair-4-lb")}
@@ -241,8 +237,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: 18,
-                alignItems: "stretch",
+                gap: 16,
+                alignItems: "start",
               }}
             >
               {renderCard(g1, "G", "g1")}
@@ -260,8 +256,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                     style={{
                       display: "grid",
                       gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                      gap: 18,
-                      alignItems: "stretch",
+                      gap: 16,
+                      alignItems: "start",
                     }}
                   >
                     {renderCard(line.lw, "LW", `ln${li}-lw`)}

@@ -51,14 +51,9 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      justifyContent: "center",
-      gap: 14,
-      padding: "20px 14px 22px",
-      borderRadius: 22,
-      background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
-      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
-      border: "1px solid rgba(255,255,255,0.1)",
-      minHeight: 200,
+      justifyContent: "flex-start",
+      gap: 8,
+      padding: "2px 0 10px",
     };
 
     const renderPlayerCard = (pid: string) => {
@@ -72,7 +67,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              transform: "scale(1.14)",
+              transform: "scale(1.38)",
               transformOrigin: "50% 0%",
             }}
           >
@@ -82,6 +77,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
               kind={role.kind}
               size="skater"
               disableMotion
+              posterEmbed
               lightRinkSurface={false}
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
@@ -90,7 +86,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
           <div style={{ width: "100%", textAlign: "center", paddingLeft: 4, paddingRight: 4 }}>
             <div
               style={{
-                fontSize: 30,
+                fontSize: 34,
                 fontWeight: 900,
                 color: "white",
                 lineHeight: 1.08,
@@ -182,8 +178,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                  gap: 22,
-                  alignItems: "stretch",
+                  gap: 16,
+                  alignItems: "start",
                 }}
               >
                 {lineChunks.forwards.filter(Boolean).map((pid) => (
@@ -197,8 +193,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  gap: 22,
-                  alignItems: "stretch",
+                  gap: 16,
+                  alignItems: "start",
                 }}
               >
                 {lineChunks.defense.filter(Boolean).map((pid) => (
@@ -210,7 +206,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             {lineChunks.bottom.filter(Boolean).length > 0 ? (
               lineChunks.bottom.filter(Boolean).length === 1 ? (
                 <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                  <div style={{ width: "100%", maxWidth: 520 }}>
+                  <div style={{ width: "100%", maxWidth: 580 }}>
                     {renderPlayerCard(lineChunks.bottom.filter(Boolean)[0]!)}
                   </div>
                 </div>
@@ -219,8 +215,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                   style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                    gap: 22,
-                    alignItems: "stretch",
+                    gap: 16,
+                    alignItems: "start",
                   }}
                 >
                   {lineChunks.bottom.filter(Boolean).map((pid) => (
@@ -235,7 +231,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${cols}, 1fr)`,
-              gap: 26,
+              gap: 20,
               marginTop: 28,
             }}
           >

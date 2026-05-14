@@ -50,6 +50,11 @@ export interface PremiumJerseySlotCardProps {
   disableMotion?: boolean;
   /** NHL25 světlý panel — světlý led za dres místo tmavého `.squad-ice-fill`. */
   lightRinkSurface?: boolean;
+  /**
+   * Plakát (PNG export) — bez tmavého „ledu“ za dresem; dres sedí přímo na pozadí rodiče.
+   * Má přednost před `lightRinkSurface`.
+   */
+  posterEmbed?: boolean;
   /** Duplicitní příjmení v soupisce → iniciála („M. Kovařčík“). */
   ambiguousJerseyLastKeys?: ReadonlySet<string> | null;
 }
@@ -71,10 +76,11 @@ export function PremiumJerseySlotCard({
   className = "",
   disableMotion = false,
   lightRinkSurface = false,
+  posterEmbed = false,
   ambiguousJerseyLastKeys,
 }: PremiumJerseySlotCardProps) {
   const sz = SIZE_STYLES[size];
-  const iceFill = lightRinkSurface ? "squad-ice-surface-light" : "squad-ice-fill";
+  const iceFill = posterEmbed ? "bg-transparent" : lightRinkSurface ? "squad-ice-surface-light" : "squad-ice-fill";
   const showAssistant = isAssistant && !!player && !isCaptain;
   const empty = !player;
   /** Prázdný slot bez výběru — výrazně vybledlý oproti vybranému / obsazenému. */
@@ -98,9 +104,11 @@ export function PremiumJerseySlotCard({
 
   const hoverFx = disableMotion
     ? ""
-    : lightRinkSurface
-      ? "hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,100,130,0.18)]"
-      : "hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_16px_4px_rgba(200,16,46,0.45),0_12px_28px_rgba(0,0,0,0.38)]";
+    : posterEmbed
+      ? ""
+      : lightRinkSurface
+        ? "hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,100,130,0.18)]"
+        : "hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-[0_0_16px_4px_rgba(200,16,46,0.45),0_12px_28px_rgba(0,0,0,0.38)]";
 
   return (
     <div
@@ -113,15 +121,21 @@ export function PremiumJerseySlotCard({
         className={`
           ${iceFill} relative aspect-[100/120] w-full overflow-hidden rounded-[10px]
           ${
-            empty
-              ? emptyUnfocused
-                ? lightRinkSurface
-                  ? "ring-1 ring-inset ring-slate-300/50"
-                  : "ring-1 ring-inset ring-white/[0.07]"
-                : lightRinkSurface
-                  ? "ring-1 ring-inset ring-cyan-400/45"
-                  : "ring-1 ring-inset ring-white/18"
-              : ""
+            posterEmbed
+              ? empty
+                ? emptyUnfocused
+                  ? "ring-1 ring-inset ring-white/12"
+                  : "ring-1 ring-inset ring-white/22"
+                : ""
+              : empty
+                ? emptyUnfocused
+                  ? lightRinkSurface
+                    ? "ring-1 ring-inset ring-slate-300/50"
+                    : "ring-1 ring-inset ring-white/[0.07]"
+                  : lightRinkSurface
+                    ? "ring-1 ring-inset ring-cyan-400/45"
+                    : "ring-1 ring-inset ring-white/18"
+                : ""
           }
         `}
       >
@@ -134,7 +148,13 @@ export function PremiumJerseySlotCard({
           decoding="async"
           data-jersey-kind={kind}
           className={`
-            ${CZ_JERSEY_CARD_IMG_BASE} ${lightRinkSurface ? "drop-shadow-[0_4px_14px_rgba(15,60,80,0.2)]" : "drop-shadow-[0_6px_18px_rgba(0,0,0,0.42)]"}
+            ${CZ_JERSEY_CARD_IMG_BASE} ${
+              posterEmbed
+                ? "drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]"
+                : lightRinkSurface
+                  ? "drop-shadow-[0_4px_14px_rgba(15,60,80,0.2)]"
+                  : "drop-shadow-[0_6px_18px_rgba(0,0,0,0.42)]"
+            }
             ${empty ? (emptyUnfocused ? "opacity-[0.36] saturate-[0.52] brightness-[0.88]" : "opacity-[0.78] saturate-[0.95]") : ""}
           `}
         />
