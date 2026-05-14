@@ -828,6 +828,7 @@ export function NominationBuilderPage() {
                     enableDnd={enableDnd}
                     forcedPosition={forcedPoolPosition}
                     assignableFilter={selectedSlot ? canAssignPlayer : undefined}
+                    simplePickList
                     slotHint={
                       selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
                         ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
@@ -911,6 +912,7 @@ export function NominationBuilderPage() {
                     enableDnd={enableDnd}
                     forcedPosition={forcedPoolPosition}
                     assignableFilter={canAssignPlayer}
+                    simplePickList
                     slotHint={
                       selectedSlot.type === "extraDefenseman" && !lineup.defensePairs[3].lb
                         ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."

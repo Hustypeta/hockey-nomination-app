@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { msFantasyNotEnabledResponse, msFantasyRequireSessionResponse } from "@/lib/msFantasyApiGate";
+import { resolveMsFantasyMatchesFromDbOrOfficial } from "@/lib/msFantasyMatchesResolve";
 
 /** Seznam fantasy hracích dnů — pořadí podle lockAt / sortOrder. */
 export async function GET() {
@@ -25,6 +26,7 @@ export async function GET() {
   return NextResponse.json({
     days: rows.map((d) => ({
       ...d,
+      matches: resolveMsFantasyMatchesFromDbOrOfficial(d.slug, d.matches),
       lockAt: d.lockAt.toISOString(),
       isLocked: d.lockAt.getTime() <= now,
     })),

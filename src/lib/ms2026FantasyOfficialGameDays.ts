@@ -1,9 +1,9 @@
 /**
  * Oficiální program MS v hokeji 2026 (skupiny + play-off) pro fantasy „den“ = kalendářní datum ve Švýcarsku.
- * Časy zápasů v ISO UTC (v aréně platí CEST = UTC+2).
+ * Časy zápasů v ISO UTC (aréna = švýcarský čas, odpovídá CEST v květnu).
  *
- * Zdroje (shodný program): [iDNES program MS 2026](https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-2026-program-slozeni-zakladnich-skupin-tabulky.A250526_103549_reprezentace_ald),
- * [IIHF — harmonogram](https://www.iihf.com/en/events/2026/wm/news/69580/the_game_schedule_for_the_2026_iihf_ice_hockey_wor), přehled dnů [ms-hokej.tv](https://www.ms-hokej.tv/ms-v-hokeji-program/).
+ * Kanonický zdroj: [IIHF — Schedule and Results 2026](https://www.iihf.com/en/events/2026/wm/schedule).
+ * Pořadí `home` / `away` odpovídá zápisu na IIHF (první tým v „X vs Y“).
  */
 export type Ms2026FantasyOfficialMatch = {
   startAt: string;
@@ -34,9 +34,9 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     sortOrder: 1,
     matches: [
       { startAt: "2026-05-15T14:20:00.000Z", home: "FIN", away: "GER", group: "A" },
-      { startAt: "2026-05-15T14:20:00.000Z", home: "SWE", away: "CAN", group: "B" },
-      { startAt: "2026-05-15T18:20:00.000Z", home: "SUI", away: "USA", group: "A" },
-      { startAt: "2026-05-15T18:20:00.000Z", home: "DEN", away: "CZE", group: "B" },
+      { startAt: "2026-05-15T14:20:00.000Z", home: "CAN", away: "SWE", group: "B" },
+      { startAt: "2026-05-15T18:20:00.000Z", home: "USA", away: "SUI", group: "A" },
+      { startAt: "2026-05-15T18:20:00.000Z", home: "CZE", away: "DEN", group: "B" },
     ],
   },
   {
@@ -44,10 +44,10 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — sobota 16. 5.",
     sortOrder: 2,
     matches: [
-      { startAt: "2026-05-16T10:20:00.000Z", home: "AUT", away: "GBR", group: "A" },
+      { startAt: "2026-05-16T10:20:00.000Z", home: "GBR", away: "AUT", group: "A" },
       { startAt: "2026-05-16T10:20:00.000Z", home: "SVK", away: "NOR", group: "B" },
-      { startAt: "2026-05-16T14:20:00.000Z", home: "FIN", away: "HUN", group: "A" },
-      { startAt: "2026-05-16T14:20:00.000Z", home: "CAN", away: "ITA", group: "B" },
+      { startAt: "2026-05-16T14:20:00.000Z", home: "HUN", away: "FIN", group: "A" },
+      { startAt: "2026-05-16T14:20:00.000Z", home: "ITA", away: "CAN", group: "B" },
       { startAt: "2026-05-16T18:20:00.000Z", home: "SUI", away: "LAT", group: "A" },
       { startAt: "2026-05-16T18:20:00.000Z", home: "SLO", away: "CZE", group: "B" },
     ],
@@ -57,10 +57,10 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — neděle 17. 5.",
     sortOrder: 3,
     matches: [
-      { startAt: "2026-05-17T10:20:00.000Z", home: "USA", away: "GBR", group: "A" },
+      { startAt: "2026-05-17T10:20:00.000Z", home: "GBR", away: "USA", group: "A" },
       { startAt: "2026-05-17T10:20:00.000Z", home: "ITA", away: "SVK", group: "B" },
       { startAt: "2026-05-17T14:20:00.000Z", home: "AUT", away: "HUN", group: "A" },
-      { startAt: "2026-05-17T14:20:00.000Z", home: "SWE", away: "DEN", group: "B" },
+      { startAt: "2026-05-17T14:20:00.000Z", home: "DEN", away: "SWE", group: "B" },
       { startAt: "2026-05-17T18:20:00.000Z", home: "GER", away: "LAT", group: "A" },
       { startAt: "2026-05-17T18:20:00.000Z", home: "NOR", away: "SLO", group: "B" },
     ],
@@ -72,8 +72,8 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     matches: [
       { startAt: "2026-05-18T14:20:00.000Z", home: "FIN", away: "USA", group: "A" },
       { startAt: "2026-05-18T14:20:00.000Z", home: "CAN", away: "DEN", group: "B" },
-      { startAt: "2026-05-18T18:20:00.000Z", home: "SUI", away: "GER", group: "A" },
-      { startAt: "2026-05-18T18:20:00.000Z", home: "CZE", away: "SWE", group: "B" },
+      { startAt: "2026-05-18T18:20:00.000Z", home: "GER", away: "SUI", group: "A" },
+      { startAt: "2026-05-18T18:20:00.000Z", home: "SWE", away: "CZE", group: "B" },
     ],
   },
   {
@@ -92,7 +92,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — středa 20. 5.",
     sortOrder: 6,
     matches: [
-      { startAt: "2026-05-20T14:20:00.000Z", home: "SUI", away: "AUT", group: "A" },
+      { startAt: "2026-05-20T14:20:00.000Z", home: "AUT", away: "SUI", group: "A" },
       { startAt: "2026-05-20T14:20:00.000Z", home: "CZE", away: "ITA", group: "B" },
       { startAt: "2026-05-20T18:20:00.000Z", home: "USA", away: "GER", group: "A" },
       { startAt: "2026-05-20T18:20:00.000Z", home: "SWE", away: "SLO", group: "B" },
@@ -103,8 +103,8 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — čtvrtek 21. 5.",
     sortOrder: 7,
     matches: [
-      { startAt: "2026-05-21T14:20:00.000Z", home: "FIN", away: "LAT", group: "A" },
-      { startAt: "2026-05-21T14:20:00.000Z", home: "NOR", away: "CAN", group: "B" },
+      { startAt: "2026-05-21T14:20:00.000Z", home: "LAT", away: "FIN", group: "A" },
+      { startAt: "2026-05-21T14:20:00.000Z", home: "CAN", away: "NOR", group: "B" },
       { startAt: "2026-05-21T18:20:00.000Z", home: "SUI", away: "GBR", group: "A" },
       { startAt: "2026-05-21T18:20:00.000Z", home: "DEN", away: "SVK", group: "B" },
     ],
@@ -114,10 +114,10 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — pátek 22. 5.",
     sortOrder: 8,
     matches: [
-      { startAt: "2026-05-22T14:20:00.000Z", home: "HUN", away: "GER", group: "A" },
+      { startAt: "2026-05-22T14:20:00.000Z", home: "GER", away: "HUN", group: "A" },
       { startAt: "2026-05-22T14:20:00.000Z", home: "CAN", away: "SLO", group: "B" },
       { startAt: "2026-05-22T18:20:00.000Z", home: "FIN", away: "GBR", group: "A" },
-      { startAt: "2026-05-22T18:20:00.000Z", home: "ITA", away: "SWE", group: "B" },
+      { startAt: "2026-05-22T18:20:00.000Z", home: "SWE", away: "ITA", group: "B" },
     ],
   },
   {
@@ -125,12 +125,12 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — sobota 23. 5.",
     sortOrder: 9,
     matches: [
-      { startAt: "2026-05-23T10:20:00.000Z", home: "USA", away: "LAT", group: "A" },
+      { startAt: "2026-05-23T10:20:00.000Z", home: "LAT", away: "USA", group: "A" },
       { startAt: "2026-05-23T10:20:00.000Z", home: "DEN", away: "SLO", group: "B" },
       { startAt: "2026-05-23T14:20:00.000Z", home: "SUI", away: "HUN", group: "A" },
       { startAt: "2026-05-23T14:20:00.000Z", home: "SVK", away: "CZE", group: "B" },
-      { startAt: "2026-05-23T18:20:00.000Z", home: "GER", away: "AUT", group: "A" },
-      { startAt: "2026-05-23T18:20:00.000Z", home: "SWE", away: "NOR", group: "B" },
+      { startAt: "2026-05-23T18:20:00.000Z", home: "AUT", away: "GER", group: "A" },
+      { startAt: "2026-05-23T18:20:00.000Z", home: "NOR", away: "SWE", group: "B" },
     ],
   },
   {
@@ -138,10 +138,10 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — neděle 24. 5.",
     sortOrder: 10,
     matches: [
-      { startAt: "2026-05-24T14:20:00.000Z", home: "LAT", away: "GBR", group: "A" },
+      { startAt: "2026-05-24T14:20:00.000Z", home: "GBR", away: "LAT", group: "A" },
       { startAt: "2026-05-24T14:20:00.000Z", home: "DEN", away: "ITA", group: "B" },
       { startAt: "2026-05-24T18:20:00.000Z", home: "FIN", away: "AUT", group: "A" },
-      { startAt: "2026-05-24T18:20:00.000Z", home: "CAN", away: "SVK", group: "B" },
+      { startAt: "2026-05-24T18:20:00.000Z", home: "SVK", away: "CAN", group: "B" },
     ],
   },
   {
@@ -163,7 +163,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
       { startAt: "2026-05-26T10:20:00.000Z", home: "HUN", away: "LAT", group: "A" },
       { startAt: "2026-05-26T10:20:00.000Z", home: "NOR", away: "DEN", group: "B" },
       { startAt: "2026-05-26T14:20:00.000Z", home: "USA", away: "AUT", group: "A" },
-      { startAt: "2026-05-26T14:20:00.000Z", home: "SVK", away: "SWE", group: "B" },
+      { startAt: "2026-05-26T14:20:00.000Z", home: "SWE", away: "SVK", group: "B" },
       { startAt: "2026-05-26T18:20:00.000Z", home: "SUI", away: "FIN", group: "A" },
       { startAt: "2026-05-26T18:20:00.000Z", home: "CZE", away: "CAN", group: "B" },
     ],
@@ -180,10 +180,10 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — čtvrtek 28. 5. (čtvrtfinále)",
     sortOrder: 14,
     matches: [
-      { startAt: "2026-05-28T14:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 1 (Zürich)" },
-      { startAt: "2026-05-28T14:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 2 (Fribourg)" },
-      { startAt: "2026-05-28T18:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 3 (Zürich)" },
-      { startAt: "2026-05-28T18:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 4 (Fribourg)" },
+      { startAt: "2026-05-28T14:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 1 (Swiss Life Arena, Zürich)" },
+      { startAt: "2026-05-28T14:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 2 (BCF Arena, Fribourg)" },
+      { startAt: "2026-05-28T18:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 3 (Swiss Life Arena, Zürich)" },
+      { startAt: "2026-05-28T18:20:00.000Z", phase: "Čtvrtfinále", label: "Čtvrtfinále 4 (BCF Arena, Fribourg)" },
     ],
   },
   {
@@ -191,15 +191,15 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — pátek 29. 5. (pauza)",
     sortOrder: 15,
     matches: [],
-    lockAt: "2026-05-30T12:20:00.000Z",
+    lockAt: "2026-05-30T13:20:00.000Z",
   },
   {
     slug: "2026-05-30",
     title: "MS 2026 — sobota 30. 5. (semifinále)",
     sortOrder: 16,
     matches: [
-      { startAt: "2026-05-30T12:20:00.000Z", phase: "Semifinále", label: "Semifinále 1 (Zürich)" },
-      { startAt: "2026-05-30T16:20:00.000Z", phase: "Semifinále", label: "Semifinále 2 (Zürich)" },
+      { startAt: "2026-05-30T13:20:00.000Z", phase: "Semifinále", label: "Semifinále 1 (Swiss Life Arena, Zürich)" },
+      { startAt: "2026-05-30T18:00:00.000Z", phase: "Semifinále", label: "Semifinále 2 (Swiss Life Arena, Zürich)" },
     ],
   },
   {
@@ -207,8 +207,8 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — neděle 31. 5. (medaile)",
     sortOrder: 17,
     matches: [
-      { startAt: "2026-05-31T13:20:00.000Z", phase: "O bronz", label: "Zápas o bronz (Zürich)" },
-      { startAt: "2026-05-31T18:20:00.000Z", phase: "Finále", label: "Finále (Zürich)" },
+      { startAt: "2026-05-31T13:30:00.000Z", phase: "O bronz", label: "Zápas o bronz (Swiss Life Arena, Zürich)" },
+      { startAt: "2026-05-31T18:20:00.000Z", phase: "Finále", label: "Finále (Swiss Life Arena, Zürich)" },
     ],
   },
 ];

@@ -30,16 +30,16 @@ export function MsFantasyMatchSchedule({ matchesRaw, showSourceLink, className =
       )}
       {showSourceLink ? (
         <p className="mt-2 text-[0.62rem] leading-snug text-slate-600 sm:text-[0.65rem]">
-          Program a časy zápasů dle oficiálního rozpisu MS 2026 (např.{" "}
+          Program a časy zápasů dle{" "}
           <a
-            href="https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-2026-program-slozeni-zakladnich-skupin-tabulky.A250526_103549_reprezentace_ald"
+            href="https://www.iihf.com/en/events/2026/wm/schedule"
             target="_blank"
             rel="noopener noreferrer"
             className="text-cyan-400/90 underline decoration-cyan-500/40 underline-offset-2 hover:text-cyan-300"
           >
-            iDNES.cz
+            oficiálního rozvrhu IIHF (MS 2026)
           </a>
-          , IIHF).
+          .
         </p>
       ) : null}
     </div>

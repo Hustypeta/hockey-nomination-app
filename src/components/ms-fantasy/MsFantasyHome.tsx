@@ -110,16 +110,16 @@ export function MsFantasyHome() {
               fantasy data.
             </p>
             <p className="mt-4 text-[0.65rem] leading-relaxed text-slate-500">
-              Časy a páry zápasů odpovídají oficiálnímu programu MS 2026 (např.{" "}
+              Časy a páry zápasů odpovídají{" "}
               <a
-                href="https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-2026-program-slozeni-zakladnich-skupin-tabulky.A250526_103549_reprezentace_ald"
+                href="https://www.iihf.com/en/events/2026/wm/schedule"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan-400/90 underline decoration-cyan-500/35 underline-offset-2 hover:text-cyan-300"
               >
-                iDNES.cz
+                oficiálnímu rozvrhu IIHF
               </a>
-              , IIHF). Uzávěrka fantasy = začátek prvního zápasu daného dne (CEST).
+              . Uzávěrka fantasy = začátek prvního zápasu daného dne (CEST).
             </p>
             <p className="mt-4 text-xs leading-relaxed text-slate-400">
               Pro správce serveru: kompletní fantasy MS 2026 najednou:{" "}
@@ -212,16 +212,16 @@ export function MsFantasyHome() {
               ))}
             </ul>
             <p className="mt-3 text-center text-[0.65rem] leading-snug text-slate-500 sm:text-xs">
-              Časy zápasů v čase arény (CEST). Zdroj programu:{" "}
+              Časy zápasů v čase arény (CEST). Zdroj:{" "}
               <a
-                href="https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-2026-program-slozeni-zakladnich-skupin-tabulky.A250526_103549_reprezentace_ald"
+                href="https://www.iihf.com/en/events/2026/wm/schedule"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan-400/90 underline decoration-cyan-500/35 underline-offset-2 hover:text-cyan-300"
               >
-                iDNES.cz
+                IIHF — rozvrh MS 2026
               </a>
-              , IIHF.
+              .
             </p>
           </div>
         ) : null}

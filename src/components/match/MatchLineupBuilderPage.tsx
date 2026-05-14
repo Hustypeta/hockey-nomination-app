@@ -429,6 +429,7 @@ export function MatchLineupBuilderPage() {
                   onPreview={setPreviewPlayer}
                   enableDnd={enableDnd}
                   forcedPosition={forcedPoolPosition}
+                  simplePickList
                 />
               </div>
             </section>
@@ -513,6 +514,7 @@ export function MatchLineupBuilderPage() {
                   onPreview={setPreviewPlayer}
                   enableDnd={enableDnd}
                   forcedPosition={forcedPoolPosition}
+                  simplePickList
                 />
               </div>
             </div>

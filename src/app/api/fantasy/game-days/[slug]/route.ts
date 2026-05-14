@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { msFantasyNotEnabledResponse, msFantasyRequireSessionResponse } from "@/lib/msFantasyApiGate";
+import { resolveMsFantasyMatchesFromDbOrOfficial } from "@/lib/msFantasyMatchesResolve";
 
 export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }> }) {
   const gate = msFantasyNotEnabledResponse();
@@ -28,6 +29,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }
   return NextResponse.json({
     day: {
       ...day,
+      matches: resolveMsFantasyMatchesFromDbOrOfficial(day.slug, day.matches),
       lockAt: day.lockAt.toISOString(),
       isLocked: day.lockAt.getTime() <= now,
     },

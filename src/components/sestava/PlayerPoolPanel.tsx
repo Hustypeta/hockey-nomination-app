@@ -102,6 +102,7 @@ function DraggableCard({
   onInfo,
   counts,
   enableDnd,
+  simplePickList,
 }: {
   player: Player;
   disabled: boolean;
@@ -112,6 +113,8 @@ function DraggableCard({
   onInfo: () => void;
   counts: { G: number; D: number; F: number };
   enableDnd?: boolean;
+  /** Nominace / zápasová sestava: jen jméno, pozice (avatar), oblíbenost — klub/liga až v info. */
+  simplePickList?: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `drag-player-${player.id}`,
@@ -203,16 +206,20 @@ function DraggableCard({
               <p className="line-clamp-2 break-words text-pretty text-sm font-bold leading-snug text-white sm:text-[15px]">
                 {player.name}
               </p>
-              <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95">
-                <span className="text-slate-100">{player.club}</span>
-                {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}
-              </p>
+              {!simplePickList ? (
+                <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95">
+                  <span className="text-slate-100">{player.club}</span>
+                  {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}
+                </p>
+              ) : null}
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95 sm:text-xs">
-              {cur}/{lim} v nominaci
-            </span>
+            {!simplePickList ? (
+              <span className="rounded-lg border border-[#003087]/40 bg-[#003087]/20 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95 sm:text-xs">
+                {cur}/{lim} v nominaci
+              </span>
+            ) : null}
             <PickRateBadge rate={rate} />
             {canInteract ? (
               <span className="text-[10px] font-medium leading-tight text-sky-200/75 sm:hidden">
@@ -253,6 +260,7 @@ const TapCard = memo(function TapCard({
   onAdd,
   onInfo,
   counts,
+  simplePickList,
 }: {
   player: Player;
   disabled: boolean;
@@ -261,6 +269,7 @@ const TapCard = memo(function TapCard({
   onAdd: () => void;
   onInfo: () => void;
   counts: { G: number; D: number; F: number };
+  simplePickList?: boolean;
 }) {
   const lim = POSITION_LIMITS[player.position];
   const cur = counts[player.position];
@@ -295,16 +304,20 @@ const TapCard = memo(function TapCard({
             <p className="line-clamp-2 break-words text-pretty text-sm font-bold leading-snug text-white">
               {player.name}
             </p>
-            <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95">
-              <span className="text-slate-100">{player.club}</span>
-              {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}
-            </p>
+            {!simplePickList ? (
+              <p className="mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95">
+                <span className="text-slate-100">{player.club}</span>
+                {player.league ? <span className="text-slate-500"> · {player.league}</span> : null}
+              </p>
+            ) : null}
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-1.5 pl-0.5">
-          <span className="rounded-lg border border-[#003087]/35 bg-[#003087]/15 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95">
-            {cur}/{lim}
-          </span>
+          {!simplePickList ? (
+            <span className="rounded-lg border border-[#003087]/35 bg-[#003087]/15 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-sky-100/95">
+              {cur}/{lim}
+            </span>
+          ) : null}
           <PickRateBadge rate={rate} />
         </div>
       </button>
@@ -346,6 +359,8 @@ interface PlayerPoolPanelProps {
   assignableFilter?: (player: Player) => boolean;
   /** Doplňková nápověda pod bannerem (např. pravidla pro náhradního D). */
   slotHint?: string | null;
+  /** Nominace / zápasová sestava: v seznamu jen jméno, pozice (na avataru), oblíbenost; klub/liga v modalu Info. */
+  simplePickList?: boolean;
 }
 
 export function PlayerPoolPanel({
@@ -358,6 +373,7 @@ export function PlayerPoolPanel({
   forcedPosition = null,
   assignableFilter,
   slotHint,
+  simplePickList = false,
 }: PlayerPoolPanelProps) {
   const [tab, setTab] = useState<Tab>("all");
   /** Při vybraném slotu ve sestavě zrcadlíme pozici bez synchronizace přes effect. */
@@ -377,19 +393,20 @@ export function PlayerPoolPanel({
     const posFilter = forcedPosition ?? (tab === "all" ? null : tab);
     if (posFilter) list = list.filter((p) => p.position === posFilter);
     else if (tab !== "all") list = list.filter((p) => p.position === tab);
-    if (league) list = list.filter((p) => p.league === league);
+    if (league && !simplePickList) list = list.filter((p) => p.league === league);
     const nq = q.trim().toLowerCase();
     if (nq) {
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(nq) ||
-          p.club.toLowerCase().includes(nq) ||
-          (p.league && p.league.toLowerCase().includes(nq))
+      list = list.filter((p) =>
+        simplePickList
+          ? p.name.toLowerCase().includes(nq)
+          : p.name.toLowerCase().includes(nq) ||
+              p.club.toLowerCase().includes(nq) ||
+              (p.league && p.league.toLowerCase().includes(nq))
       );
     }
     // pick rate sort
     return sortPlayersByPickRate(list, pickSort === "popular" ? "desc" : "asc");
-  }, [players, tab, league, q, forcedPosition, pickSort]);
+  }, [players, tab, league, q, forcedPosition, pickSort, simplePickList]);
 
   const canAdd = (player: Player) => {
     if (usedIds.has(player.id)) return false;
@@ -462,30 +479,34 @@ export function PlayerPoolPanel({
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Hledat jméno, klub, ligu…"
+          placeholder={simplePickList ? "Hledat podle jména…" : "Hledat jméno, klub, ligu…"}
           className="w-full rounded-2xl border border-white/[0.12] bg-[#0a1428]/80 py-3.5 pl-11 pr-3.5 text-sm text-white shadow-[inset_0_2px_8px_rgba(0,0,0,0.25)] placeholder:text-slate-500 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-2 focus:ring-[#c8102e]/25 sm:py-4 sm:pr-4"
         />
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Filter className="h-4 w-4 text-[#c8102e]/70" />
-        <select
-          value={league}
-          onChange={(e) => setLeague(e.target.value)}
-          className="rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20"
-        >
-          <option value="">Všechny ligy</option>
-          {leagues.map((lg) => (
-            <option key={lg} value={lg}>
-              {lg}
-            </option>
-          ))}
-        </select>
+        {!simplePickList ? (
+          <>
+            <Filter className="h-4 w-4 text-[#c8102e]/70" />
+            <select
+              value={league}
+              onChange={(e) => setLeague(e.target.value)}
+              className="rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20"
+            >
+              <option value="">Všechny ligy</option>
+              {leagues.map((lg) => (
+                <option key={lg} value={lg}>
+                  {lg}
+                </option>
+              ))}
+            </select>
+          </>
+        ) : null}
 
         <select
           value={pickSort}
           onChange={(e) => setPickSort(e.target.value as PickRateSort)}
-          className="rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20"
+          className={`rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20 ${simplePickList ? "w-full sm:w-auto" : ""}`}
           aria-label="Řazení podle oblíbenosti"
         >
           <option value="popular">Nejoblíbenější</option>
@@ -511,6 +532,7 @@ export function PlayerPoolPanel({
                   inRoster={inRoster}
                   counts={counts}
                   enableDnd
+                  simplePickList={simplePickList}
                   onAdd={() => onAddPlayer(player)}
                   onInfo={() => onPreview(player)}
                 />
@@ -521,6 +543,7 @@ export function PlayerPoolPanel({
                   slotBlocks={slotBlocks}
                   inRoster={inRoster}
                   counts={counts}
+                  simplePickList={simplePickList}
                   onAdd={() => onAddPlayer(player)}
                   onInfo={() => onPreview(player)}
                 />
