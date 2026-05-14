@@ -1,25 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Copy, X } from "lucide-react";
+import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
+import type { LineupStructure, Player } from "@/types";
 
 export function MatchRatingSaveShareModal({
   open,
   onClose,
   matchTitle,
   matchSlug,
+  lineup,
+  players,
+  defenseCount,
+  allowExtraForward,
 }: {
   open: boolean;
   onClose: () => void;
   matchTitle: string;
   matchSlug: string;
+  lineup: LineupStructure;
+  players: Player[];
+  defenseCount: 6 | 7 | 8;
+  allowExtraForward: boolean;
 }) {
   const [title, setTitle] = useState(`Hodnocení — ${matchTitle}`);
   const [busy, setBusy] = useState(false);
   const [url, setUrl] = useState<string | null>(null);
   const [snapshotMode, setSnapshotMode] = useState<"personal" | "community">("personal");
   const [copied, setCopied] = useState(false);
+  const [siteOrigin, setSiteOrigin] = useState("");
+
+  useEffect(() => {
+    if (open && typeof window !== "undefined") {
+      setSiteOrigin(window.location.origin);
+    }
+  }, [open]);
 
   if (!open) return null;
 
@@ -156,6 +173,25 @@ export function MatchRatingSaveShareModal({
                   {copied ? "Zkopírováno" : "Kopírovat"}
                 </button>
               ) : null}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Plakát</p>
+            <p className="mt-1 text-xs leading-snug text-white/60">
+              Grafika zápasové soupisky (dresy / jména) — stejné možnosti jako v editoru sestavy na zápas. Vyber typ a
+              stáhni PNG.
+            </p>
+            <div className="mt-3">
+              <MatchLineupImageExportButton
+                shareTitle={matchTitle.trim() || "Oficiální sestava"}
+                lineup={lineup}
+                players={players}
+                defenseCount={defenseCount}
+                allowExtraForward={allowExtraForward}
+                shareSlug={matchSlug}
+                siteOrigin={siteOrigin}
+              />
             </div>
           </div>
         </div>

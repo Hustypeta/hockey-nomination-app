@@ -332,11 +332,12 @@ export function LineBuilder({
               isCaptain={player ? captainId === player.id : false}
               isAssistant={isAsst}
               isSelected={selected}
+              className={mode === "match" ? "origin-top scale-[1.05] sm:scale-[1.08]" : ""}
               showPositionBadge={mode !== "match"}
               showRoleBadge={mode !== "match"}
               overlayVariant={mode === "match" ? "lower" : "default"}
               nameplateScale={
-                mode === "match" ? (readOnly && isMatchRatingNarrow ? 0.68 : 0.92) : 1
+                mode === "match" ? (readOnly && isMatchRatingNarrow ? 0.72 : 1) : 1
               }
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
@@ -482,7 +483,7 @@ export function LineBuilder({
         ) : null}
 
         <SectionShell title="Brankáři" kicker="2 × G">
-          <div className="grid w-full grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid w-full grid-cols-2 gap-4 sm:gap-6">
             {[0, 1].map((i) => {
               const gid = lineup.goalies[i];
               return (
@@ -517,7 +518,7 @@ export function LineBuilder({
                   <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
                     {i + 1}. lajna
                   </p>
-                  <div className="mx-auto grid w-full max-w-md grid-cols-3 gap-x-2 gap-y-3 sm:max-w-none sm:gap-y-1 sm:gap-x-4">
+                  <div className="mx-auto grid w-full max-w-md grid-cols-3 gap-x-3 gap-y-4 sm:max-w-none sm:gap-x-6 sm:gap-y-2">
                     <Slot
                       playerId={line.lw}
                       label="LW"
@@ -611,7 +612,7 @@ export function LineBuilder({
                   <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
                     {i + 1}. pár
                   </p>
-                  <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-x-3 gap-y-3 sm:max-w-md sm:gap-x-4 sm:gap-y-4">
+                  <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-x-4 gap-y-4 sm:max-w-md sm:gap-x-6 sm:gap-y-5">
                     <Slot
                       playerId={pair.lb}
                       label="LD"
@@ -656,7 +657,7 @@ export function LineBuilder({
                 <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
                   4. pár
                 </p>
-                <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-x-3 gap-y-3 sm:max-w-md sm:gap-x-4 sm:gap-y-4">
+                <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-x-4 gap-y-4 sm:max-w-md sm:gap-x-6 sm:gap-y-5">
                   <Slot
                     playerId={lineup.defensePairs[3].lb}
                     label="LD"

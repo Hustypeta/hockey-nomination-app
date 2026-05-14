@@ -2,7 +2,7 @@
 
 import { forwardRef, useMemo, type CSSProperties, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
-import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
 
 function roleForPlayerId(lineup: LineupStructure, playerId: string): { kind: "goalie" | "skater"; label: "G" | "D" | "F" } {
@@ -37,20 +37,20 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
 
     const cardShell: CSSProperties = {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: "column",
       alignItems: "center",
-      gap: 12,
-      padding: 12,
+      justifyContent: "center",
+      gap: 10,
+      padding: "16px 12px 18px",
       borderRadius: 18,
       background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
       boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
       border: "1px solid rgba(255,255,255,0.1)",
-      minHeight: 118,
+      minHeight: 148,
     };
 
     const renderCard = (pid: string | null, positionLabel: string, reactKey: string) => {
       const player = pid ? (byId.get(pid) ?? null) : null;
-      const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
       const role = pid ? roleForPlayerId(lineup, pid) : { kind: "skater" as const, label: "F" as const };
       const label = positionLabel || role.label;
       return (
@@ -60,8 +60,9 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 6,
-              flexShrink: 0,
+              justifyContent: "center",
+              transform: "scale(1.08)",
+              transformOrigin: "50% 0%",
             }}
           >
             <PremiumJerseySlotCard
@@ -74,43 +75,18 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ width: "100%", textAlign: "center", paddingLeft: 2, paddingRight: 2 }}>
             <div
               style={{
-                fontSize: 20,
+                fontSize: 24,
                 fontWeight: 900,
                 color: "white",
-                lineHeight: 1.05,
+                lineHeight: 1.08,
                 letterSpacing: "-0.01em",
               }}
             >
               {player ? player.name : "—"}
             </div>
-            {player ? (
-              <div
-                style={{
-                  marginTop: 4,
-                  fontSize: 12,
-                  color: "rgba(255,255,255,0.7)",
-                  lineHeight: 1.25,
-                }}
-              >
-                <span style={{ color: "white", fontWeight: 600 }}>{player.club}</span>
-                {player.league ? <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span> : null}
-              </div>
-            ) : null}
-            {player && player.name !== displayName ? (
-              <div
-                style={{
-                  marginTop: 3,
-                  fontSize: 10,
-                  color: "rgba(255,255,255,0.4)",
-                  letterSpacing: "0.04em",
-                }}
-              >
-                Na dresu: <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
-              </div>
-            ) : null}
           </div>
         </div>
       );
@@ -130,7 +106,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: 12,
+              gap: 18,
               alignItems: "stretch",
             }}
           >
@@ -149,7 +125,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: 12,
+              gap: 18,
               alignItems: "stretch",
             }}
           >
@@ -265,7 +241,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: 12,
+                gap: 18,
                 alignItems: "stretch",
               }}
             >
@@ -284,7 +260,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                     style={{
                       display: "grid",
                       gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                      gap: 12,
+                      gap: 18,
                       alignItems: "stretch",
                     }}
                   >

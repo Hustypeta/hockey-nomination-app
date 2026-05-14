@@ -97,14 +97,22 @@ export function MatchRatingExperience({
               className="flex min-h-[2.75rem] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#c8102e] via-[#a30d26] to-[#003087] px-4 py-3 font-display text-sm font-black uppercase tracking-wide text-white shadow-[0_8px_32px_rgba(200,16,46,0.38)] ring-1 ring-white/20 transition hover:brightness-110 active:brightness-95 sm:min-h-[3rem] sm:text-base"
             >
               <Share2 className="h-4 w-4 shrink-0 opacity-95 sm:h-5 sm:w-5" aria-hidden />
-              Uložit a sdílet
+              Sdílet
             </button>
+            <p className="mt-2 px-1 text-center text-[11px] leading-snug text-white/50 sm:text-xs sm:leading-relaxed">
+              Odkaz na export hodnocení a plakát soupisky. <span className="text-white/70">Posuvníky ukládej dole</span>{" "}
+              tlačítkem „Uložit svoje hodnocení“.
+            </p>
           </div>
           <MatchRatingSaveShareModal
             open={shareOpen}
             onClose={() => setShareOpen(false)}
             matchTitle={matchTitle}
             matchSlug={slug}
+            lineup={lineup}
+            players={players}
+            defenseCount={defenseCount}
+            allowExtraForward={allowExtraForward}
           />
         </>
       ) : null}

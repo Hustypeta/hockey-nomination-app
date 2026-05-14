@@ -2,7 +2,7 @@
 
 import { forwardRef, useMemo, type CSSProperties } from "react";
 import type { LineupStructure, Player } from "@/types";
-import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
@@ -49,20 +49,20 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
 
     const cardShell: CSSProperties = {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: "column",
       alignItems: "center",
-      gap: 18,
-      padding: 18,
+      justifyContent: "center",
+      gap: 14,
+      padding: "20px 14px 22px",
       borderRadius: 22,
       background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
       boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 20px rgba(0,0,0,0.3)",
       border: "1px solid rgba(255,255,255,0.1)",
-      minHeight: 160,
+      minHeight: 200,
     };
 
     const renderPlayerCard = (pid: string) => {
       const player = byId.get(pid) ?? null;
-      const displayName = player ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
       const role = roleForPlayerId(lineup, pid);
       return (
         <div key={pid} style={cardShell}>
@@ -71,8 +71,9 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 8,
-              flexShrink: 0,
+              justifyContent: "center",
+              transform: "scale(1.14)",
+              transformOrigin: "50% 0%",
             }}
           >
             <PremiumJerseySlotCard
@@ -86,43 +87,18 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             />
           </div>
 
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ width: "100%", textAlign: "center", paddingLeft: 4, paddingRight: 4 }}>
             <div
               style={{
-                fontSize: 26,
+                fontSize: 30,
                 fontWeight: 900,
                 color: "white",
-                lineHeight: 1.05,
+                lineHeight: 1.08,
                 letterSpacing: "-0.01em",
               }}
             >
               {player ? player.name : "—"}
             </div>
-            {player ? (
-              <div
-                style={{
-                  marginTop: 6,
-                  fontSize: 14,
-                  color: "rgba(255,255,255,0.7)",
-                  lineHeight: 1.25,
-                }}
-              >
-                <span style={{ color: "white", fontWeight: 600 }}>{player.club}</span>
-                {player.league ? <span style={{ color: "rgba(255,255,255,0.5)" }}> · {player.league}</span> : null}
-              </div>
-            ) : null}
-            {player && player.name !== displayName ? (
-              <div
-                style={{
-                  marginTop: 4,
-                  fontSize: 11,
-                  color: "rgba(255,255,255,0.4)",
-                  letterSpacing: "0.04em",
-                }}
-              >
-                Na dresu: <span style={{ color: "rgba(255,255,255,0.7)" }}>{displayName}</span>
-              </div>
-            ) : null}
           </div>
         </div>
       );
@@ -198,7 +174,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
               marginTop: 28,
               display: "flex",
               flexDirection: "column",
-              gap: 20,
+              gap: 26,
             }}
           >
             {lineChunks.forwards.filter(Boolean).length > 0 ? (
@@ -206,7 +182,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                  gap: 16,
+                  gap: 22,
                   alignItems: "stretch",
                 }}
               >
@@ -221,7 +197,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  gap: 16,
+                  gap: 22,
                   alignItems: "stretch",
                 }}
               >
@@ -243,7 +219,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                   style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                    gap: 16,
+                    gap: 22,
                     alignItems: "stretch",
                   }}
                 >
@@ -259,7 +235,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${cols}, 1fr)`,
-              gap: 22,
+              gap: 26,
               marginTop: 28,
             }}
           >

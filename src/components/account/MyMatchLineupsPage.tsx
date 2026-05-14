@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { toast } from "sonner";
-import { Loader2, Plus, Share2 } from "lucide-react";
+import { Images, Loader2, Plus, Share2 } from "lucide-react";
+import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
+import type { LineupStructure, Player } from "@/types";
+import { normalizeLineupStructure } from "@/lib/lineupUtils";
+import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 
 type MatchShareLinkRow = {
   code: string;
@@ -43,10 +47,23 @@ async function shareLink(title: string, url: string) {
   }
 }
 
+type PosterBundle = {
+  code: string;
+  title: string;
+  slug: string | null;
+  defenseCount: 6 | 7 | 8;
+  allowExtraForward: boolean;
+  lineup: LineupStructure;
+  players: Player[];
+  siteOrigin: string;
+};
+
 export function MyMatchLineupsPage() {
   const { status } = useSession();
   const [links, setLinks] = useState<MatchShareLinkRow[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [poster, setPoster] = useState<PosterBundle | null>(null);
+  const [posterLoadingCode, setPosterLoadingCode] = useState<string | null>(null);
 
   useEffect(() => {
     if (status !== "authenticated") return;
@@ -69,6 +86,65 @@ export function MyMatchLineupsPage() {
   }, [status]);
 
   const empty = useMemo(() => Array.isArray(links) && links.length === 0, [links]);
+
+  async function openPosterGenerator(row: MatchShareLinkRow) {
+    setPosterLoadingCode(row.code);
+    try {
+      const [rp, rl] = await Promise.all([
+        fetch("/api/players"),
+        fetch(`/api/match-share-links/${encodeURIComponent(row.code)}`),
+      ]);
+      if (!rp.ok) {
+        toast.error("Nepodařilo se načíst hráče pro plakát.");
+        return;
+      }
+      if (!rl.ok) {
+        const err = (await rl.json().catch(() => ({}))) as { error?: string };
+        toast.error(typeof err.error === "string" ? err.error : "Nepodařilo se načíst sestavu.");
+        return;
+      }
+      const players = (await rp.json()) as Player[];
+      const data = (await rl.json()) as {
+        lineupStructure?: unknown;
+        defenseCount?: number;
+        allowExtraForward?: boolean;
+        title?: string | null;
+        slug?: string | null;
+      };
+      if (!data.lineupStructure || typeof data.lineupStructure !== "object") {
+        toast.error("V uložené sestavě chybí data soupisky.");
+        return;
+      }
+      const dcRaw = data.defenseCount ?? row.defenseCount;
+      const defenseCount: 6 | 7 | 8 =
+        dcRaw === 6 || dcRaw === 7 || dcRaw === 8 ? dcRaw : row.defenseCount === 6 || row.defenseCount === 7
+          ? row.defenseCount
+          : 8;
+      const allowExtraForward = Boolean(
+        typeof data.allowExtraForward === "boolean" ? data.allowExtraForward : row.allowExtraForward
+      );
+      const lineup = normalizeLineupStructure(data.lineupStructure as LineupStructure, { mode: "match" });
+      initJerseyNameDisambiguation(players);
+      const title =
+        (typeof data.title === "string" && data.title.trim()) || row.title?.trim() || "Sestava na zápas";
+      const slug = typeof data.slug === "string" && data.slug.length > 0 ? data.slug : row.slug ?? null;
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      setPoster({
+        code: row.code,
+        title,
+        slug,
+        defenseCount,
+        allowExtraForward,
+        lineup,
+        players,
+        siteOrigin: origin,
+      });
+    } catch {
+      toast.error("Plakát se nepodařilo připravit.");
+    } finally {
+      setPosterLoadingCode(null);
+    }
+  }
 
   if (status === "loading") {
     return (
@@ -154,6 +230,19 @@ export function MyMatchLineupsPage() {
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
+                  <button
+                    type="button"
+                    disabled={posterLoadingCode === l.code}
+                    onClick={() => void openPosterGenerator(l)}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-2 text-sm font-semibold text-violet-100 transition hover:border-violet-300/55 hover:bg-violet-500/25 disabled:opacity-60"
+                  >
+                    {posterLoadingCode === l.code ? (
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                    ) : (
+                      <Images className="h-4 w-4" aria-hidden />
+                    )}
+                    Plakát
+                  </button>
                   <Link
                     href={`/zapasy/sestava?kod=${encodeURIComponent(l.code)}`}
                     className="inline-flex items-center justify-center rounded-lg border border-sky-400/40 bg-sky-500/15 px-3 py-2 text-sm font-semibold text-sky-100 transition hover:border-sky-300/55 hover:bg-sky-500/25"
@@ -190,6 +279,24 @@ export function MyMatchLineupsPage() {
             </li>
           ))}
         </ul>
+      ) : null}
+
+      {poster ? (
+        <MatchLineupImageExportButton
+          key={poster.code}
+          shareTitle={poster.title}
+          lineup={poster.lineup}
+          players={poster.players}
+          defenseCount={poster.defenseCount}
+          allowExtraForward={poster.allowExtraForward}
+          shareSlug={poster.slug}
+          siteOrigin={poster.siteOrigin}
+          modalOpen
+          onModalOpenChange={(open) => {
+            if (!open) setPoster(null);
+          }}
+          showTriggerButton={false}
+        />
       ) : null}
     </div>
   );
