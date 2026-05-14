@@ -125,9 +125,12 @@ export function MsFantasyHome() {
               Pro správce serveru: kompletní fantasy MS 2026 najednou:{" "}
               <span className="font-mono text-slate-300">MS_FANTASY_SEED_FANTASY_DATA=true</span> +{" "}
               <span className="font-mono text-slate-300">npm run db:seed</span> (hrací dny + program zápasů z{" "}
-              <span className="font-mono text-slate-300">src/lib/ms2026FantasyOfficialGameDays.ts</span>, soupisky všech
-              repre z <span className="font-mono text-slate-300">data/</span> dle seedu; chybějící JSON se přeskočí s
-              varováním). Soubor{" "}
+              <span className="font-mono text-slate-300">src/lib/ms2026FantasyOfficialGameDays.ts</span> —{" "}
+              <strong className="font-semibold text-slate-200">upsert podle slug, odevzdané lineupy zůstanou</strong>;
+              soupisky všech repre z <span className="font-mono text-slate-300">data/</span> dle seedu (chybějící JSON
+              se přeskočí s varováním), pokud nenastavíš{" "}
+              <span className="font-mono text-slate-300">MS_FANTASY_SEED_FANTASY_DATA_SKIP_POOL=true</span> — pak se
+              mění jen kalendář / zápasy v DB). Soubor{" "}
               <span className="font-mono text-slate-300">data/ms2026-fantasy-game-days.json</span> drží jen základní
               metadata (slug, uzávěrka) pro rychlý přehled mimo seed. Jen rychlý test bez kalendáře:{" "}
               <span className="font-mono text-slate-300">MS_FANTASY_SEED_SAMPLE=true</span> doplní dva ukázkové hrací

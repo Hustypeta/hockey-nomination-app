@@ -14,7 +14,7 @@ import type { Prisma } from "@prisma/client";
 
 loadEnv({ path: join(process.cwd(), ".env.local"), override: true });
 
-/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`). Kompletní kalendář + všechny soupisky z `data/`: `MS_FANTASY_SEED_FANTASY_DATA=true` (smaže fantasy dny včetně odevzdaných sestav a celý pool, pak načte hrací dny z `src/lib/ms2026FantasyOfficialGameDays.ts` + JSON repre dle manifestu v `prisma/seed.ts`). Jinak jednotlivé `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` už jen doplní **2 ukázkové hrací dny** (ne pool) pokud v DB žádné dny nejsou — pool vždy jen z JSON repre. Při každém seedu se smažou záznamy s kódem `SAMPLE-*` (starý vývojový vzorek). */
+/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`). Kompletní kalendář + všechny soupisky z `data/`: `MS_FANTASY_SEED_FANTASY_DATA=true` (hrací dny **upsert** podle `slug` — **zachová odevzdané lineupy**; dál přepíše celý fantasy pool z JSON repre dle manifestu v `prisma/seed.ts`). Volitelně `MS_FANTASY_SEED_FANTASY_DATA_SKIP_POOL=true` — neimportuje soupisky a nemění pool. Jinak jednotlivé `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` už jen doplní **2 ukázkové hrací dny** (ne pool) pokud v DB žádné dny nejsou — pool vždy jen z JSON repre. Při každém seedu se smažou záznamy s kódem `SAMPLE-*` (starý vývojový vzorek). */
 type FantasyRosterJsonRow = {
   code: string;
   name: string;
@@ -85,8 +85,9 @@ async function importFantasyRosterJson(
 }
 
 /**
- * Jednorázově: všechny hrací dny z `src/lib/ms2026FantasyOfficialGameDays.ts` + celý fantasy pool ze všech JSON v manifestu.
- * Smaže existující fantasy dny (včetně odevzdaných sestav přes cascade) a celý pool hráčů, pak znovu naplní.
+ * Import fantasy MS: hrací dny + program (`upsert` podle `slug`) **bez smazání existujících lineups**.
+ * Pool hráčů se defaultně vyprázdní a znovu načte z manifestu — nastav `MS_FANTASY_SEED_FANTASY_DATA_SKIP_POOL=true`,
+ * pokud chceš jen doplnit/upravit kalendář a nechat soupisky v DB beze změny.
  */
 async function seedMsFantasyFantasyDataBundle() {
   if (process.env.MS_FANTASY_SEED_FANTASY_DATA?.trim() !== "true") return;
@@ -97,19 +98,26 @@ async function seedMsFantasyFantasyDataBundle() {
     return;
   }
 
-  await prisma.msFantasyGameDay.deleteMany({});
-  await prisma.msFantasyGameDay.createMany({
-    data: dayRows.map((r) => ({
-      slug: r.slug.trim(),
-      title: r.title.trim(),
-      lockAt: ms2026FantasyResolveLockAt(r),
-      sortOrder: Number(r.sortOrder) || 0,
-      matches: ms2026FantasySortedMatches(r) as Prisma.InputJsonValue,
-    })),
-  });
+  for (const r of dayRows) {
+    const slug = r.slug.trim();
+    const title = r.title.trim();
+    const lockAt = ms2026FantasyResolveLockAt(r);
+    const sortOrder = Number(r.sortOrder) || 0;
+    const matches = ms2026FantasySortedMatches(r) as Prisma.InputJsonValue;
+    await prisma.msFantasyGameDay.upsert({
+      where: { slug },
+      create: { slug, title, lockAt, sortOrder, matches },
+      update: { title, lockAt, sortOrder, matches },
+    });
+  }
   console.log(
-    `MS_FANTASY_SEED_FANTASY_DATA: ${dayRows.length} fantasy hracích dnů (program + uzávěrky) z src/lib/ms2026FantasyOfficialGameDays.ts`
+    `MS_FANTASY_SEED_FANTASY_DATA: ${dayRows.length} fantasy hracích dnů (upsert slug → lineupy zachovány) z src/lib/ms2026FantasyOfficialGameDays.ts`
   );
+
+  if (process.env.MS_FANTASY_SEED_FANTASY_DATA_SKIP_POOL?.trim() === "true") {
+    console.log("MS_FANTASY_SEED_FANTASY_DATA_SKIP_POOL=true — přeskakuji import fantasy poolu.");
+    return;
+  }
 
   await prisma.msFantasyRosterPlayer.deleteMany({});
   console.log("MS_FANTASY_SEED_FANTASY_DATA: fantasy pool vyprázdněn, importuji repre…");
