@@ -474,6 +474,18 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
     setSaveErr(null);
   }, []);
 
+  /** Na mobilu (<lg, stejně jako skrytý sidebar) otevři soupisku po tapu na prázdný slot („Přidat“). */
+  const handleSelectSlot = useCallback(
+    (i: number) => {
+      setActiveIx(i);
+      if (!day || day.isLocked) return;
+      if (typeof window === "undefined") return;
+      if (!window.matchMedia("(max-width: 1023px)").matches) return;
+      if (!slots[i]?.id) setMobileRosterOpen(true);
+    },
+    [day, slots]
+  );
+
   const addPlayer = useCallback(
     (p: MsFantasyRosterPlayer) => {
       if (!day || day.isLocked) return;
@@ -668,7 +680,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               slots={slots}
               activeIx={activeIx}
               isLocked={day.isLocked}
-              onSelectSlot={setActiveIx}
+              onSelectSlot={handleSelectSlot}
               onClearSlot={clearSlot}
               salaryUsed={salaryUsed}
               salaryCap={MS_FANTASY_CAP}
