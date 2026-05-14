@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, BookOpen, Calendar, Shirt, Ticket, Trophy } from "lucide-react";
 import { MS_FANTASY_CAP, isMsFantasyLineupSubmissionEnabled } from "@/lib/msFantasyConfig";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
+import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
 
 type DayRow = {
   id: string;
@@ -12,6 +13,7 @@ type DayRow = {
   title: string;
   lockAt: string;
   isLocked: boolean;
+  matches: unknown;
 };
 
 export function MsFantasyHome() {
@@ -107,13 +109,27 @@ export function MsFantasyHome() {
               Zatím tu nejsou žádné fantasy hrací dny ani pool hráčů — databáze na tomto prostředí ještě neobsahuje
               fantasy data.
             </p>
+            <p className="mt-4 text-[0.65rem] leading-relaxed text-slate-500">
+              Časy a páry zápasů odpovídají oficiálnímu programu MS 2026 (např.{" "}
+              <a
+                href="https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-2026-program-slozeni-zakladnich-skupin-tabulky.A250526_103549_reprezentace_ald"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan-400/90 underline decoration-cyan-500/35 underline-offset-2 hover:text-cyan-300"
+              >
+                iDNES.cz
+              </a>
+              , IIHF). Uzávěrka fantasy = začátek prvního zápasu daného dne (CEST).
+            </p>
             <p className="mt-4 text-xs leading-relaxed text-slate-400">
               Pro správce serveru: kompletní fantasy MS 2026 najednou:{" "}
               <span className="font-mono text-slate-300">MS_FANTASY_SEED_FANTASY_DATA=true</span> +{" "}
-              <span className="font-mono text-slate-300">npm run db:seed</span> (dny z{" "}
-              <span className="font-mono text-slate-300">data/ms2026-fantasy-game-days.json</span>, soupisky všech repre
-              z <span className="font-mono text-slate-300">data/</span> dle seedu; chybějící JSON se přeskočí s
-              varováním). Jen rychlý test bez kalendáře:{" "}
+              <span className="font-mono text-slate-300">npm run db:seed</span> (hrací dny + program zápasů z{" "}
+              <span className="font-mono text-slate-300">src/lib/ms2026FantasyOfficialGameDays.ts</span>, soupisky všech
+              repre z <span className="font-mono text-slate-300">data/</span> dle seedu; chybějící JSON se přeskočí s
+              varováním). Soubor{" "}
+              <span className="font-mono text-slate-300">data/ms2026-fantasy-game-days.json</span> drží jen základní
+              metadata (slug, uzávěrka) pro rychlý přehled mimo seed. Jen rychlý test bez kalendáře:{" "}
               <span className="font-mono text-slate-300">MS_FANTASY_SEED_SAMPLE=true</span> doplní dva ukázkové hrací
               dny (pool hráčů ne — ten jen z JSON repre), případně zapni jednotlivé týmy{" "}
               <span className="font-mono text-slate-300">MS_FANTASY_SEED_AUT=true</span>,{" "}
@@ -155,15 +171,25 @@ export function MsFantasyHome() {
                         {d.title}
                       </p>
                       <p className="mt-1 text-xs text-slate-400">
-                        Uzávěrka{" "}
+                        Uzávěrka fantasy{" "}
                         <time dateTime={d.lockAt} className="text-slate-300">
                           {new Date(d.lockAt).toLocaleString("cs-CZ", {
                             timeZone: "Europe/Prague",
                             dateStyle: "medium",
                             timeStyle: "short",
                           })}
-                        </time>
+                        </time>{" "}
+                        <span className="text-slate-500">(= první zápas dne v čase arény / CEST)</span>
                       </p>
+                      <div className="mt-2 rounded-lg border border-white/[0.06] bg-black/20 px-2.5 py-2 sm:px-3">
+                        <p className="font-display text-[0.58rem] font-bold uppercase tracking-[0.14em] text-slate-500">
+                          Zápasy dne
+                        </p>
+                        <MsFantasyMatchSchedule
+                          matchesRaw={d.matches}
+                          className="mt-1.5 max-h-40 overflow-y-auto overscroll-contain pr-0.5 sm:max-h-48"
+                        />
+                      </div>
                       <p className="mt-1.5">
                         <span
                           className={[
@@ -182,6 +208,18 @@ export function MsFantasyHome() {
                 </li>
               ))}
             </ul>
+            <p className="mt-3 text-center text-[0.65rem] leading-snug text-slate-500 sm:text-xs">
+              Časy zápasů v čase arény (CEST). Zdroj programu:{" "}
+              <a
+                href="https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-2026-program-slozeni-zakladnich-skupin-tabulky.A250526_103549_reprezentace_ald"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan-400/90 underline decoration-cyan-500/35 underline-offset-2 hover:text-cyan-300"
+              >
+                iDNES.cz
+              </a>
+              , IIHF.
+            </p>
           </div>
         ) : null}
       </div>

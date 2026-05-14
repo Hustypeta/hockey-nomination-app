@@ -54,9 +54,9 @@ Pravidla bodů jsou definovaná v `src/lib/msFantasyConfig.ts` (`MS_FANTASY_POIN
 - Přehled hracích dnů a editor sestavy (`/fantasy`, `/fantasy/[slug]`).
 - Stránka pravidel a bodů pro hráče: **`/fantasy/pravidla`**.
 - Salary cap a kontrola 1× G v UI i na serveru (`validateMsFantasyLineup`, POST `my-lineup`).
-- Uložení sestavy na uživatele + den (`MsFantasyLineup`, `salarySpent`, `pickIds`), uzávěrka podle `lockAt`.
-- Načítání poolu (`/api/fantasy/roster`) a seznam dnů (`/api/fantasy/game-days`, `[slug]`).
-- Import soupisek a hracích dnů přes Prisma seed: **`MS_FANTASY_SEED_FANTASY_DATA=true`** načte `data/ms2026-fantasy-game-days.json` (17 dnů 15.–31. 5. 2026) + všechny soupisky z manifestu v `prisma/seed.ts` (smaže existující fantasy dny včetně odevzdaných sestav a celý pool). Jednotlivé týmy lze dál seedovat env `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` jen doplní dva ukázkové hrací dny, pokud v DB žádné nejsou (ne fantasy pool — ten je jen z JSON repre; při seedu se mažou záznamy `SAMPLE-*`).
+- Uložení sestavy na uživatele + den (`MsFantasyLineup`, `salarySpent`, `pickIds`), uzávěrka podle `lockAt` (= začátek prvního zápasu dne z pole `matches`, viz níže).
+- Načítání poolu (`/api/fantasy/roster`) a seznam dnů (`/api/fantasy/game-days`, `[slug]`) včetně programu zápasů (`matches` JSON na `MsFantasyGameDay`).
+- Import soupisek a hracích dnů přes Prisma seed: **`MS_FANTASY_SEED_FANTASY_DATA=true`** načte **17 hracích dnů + program zápasů** z `src/lib/ms2026FantasyOfficialGameDays.ts` (uzávěrky odvozené od prvního buly nebo explicitně u pauz) + všechny soupisky z manifestu v `prisma/seed.ts` (smaže existující fantasy dny včetně odevzdaných sestav a celý pool). Soubor `data/ms2026-fantasy-game-days.json` slouží jen jako rychlý přehled slugů a uzávěrek mimo seed. Jednotlivé týmy lze dál seedovat env `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` jen doplní dva ukázkové hrací dny, pokud v DB žádné nejsou (ne fantasy pool — ten je jen z JSON repre; při seedu se mažou záznamy `SAMPLE-*`).
 
 ---
 
@@ -64,7 +64,7 @@ Pravidla bodů jsou definovaná v `src/lib/msFantasyConfig.ts` (`MS_FANTASY_POIN
 
 1. **Výsledky a body** — zdroj pravdy pro góly/asistence/+/− u vybraných hráčů za den; volání `lineupDayPoints` / skater+goalie funkce a uložení nebo agregace.
 2. **Žebříček fantasy** — porovnání podle součtu bodů za den / turnaj (samostatná feature nad uloženými sestavami).
-3. **Data** — fantasy JSON pro Česko je v `data/czechia-ms2026-fantasy-roster.json`; chybí ještě **Finsko a Německo** (`finland-ms2026-fantasy-roster.json`, `germany-ms2026-fantasy-roster.json` v `data/`), případně upravit uzávěrky v `ms2026-fantasy-game-days.json`; znovu spustit seed s `MS_FANTASY_SEED_FANTASY_DATA=true`.
+3. **Data** — fantasy JSON pro Česko je v `data/czechia-ms2026-fantasy-roster.json`; chybí ještě **Finsko a Německo** (`finland-ms2026-fantasy-roster.json`, `germany-ms2026-fantasy-roster.json` v `data/`). Úpravy programu MS / uzávěrek: `src/lib/ms2026FantasyOfficialGameDays.ts` (+ případně synchronně `data/ms2026-fantasy-game-days.json`); znovu spustit seed s `MS_FANTASY_SEED_FANTASY_DATA=true`.
 
 ---
 
@@ -76,7 +76,7 @@ Pravidla bodů jsou definovaná v `src/lib/msFantasyConfig.ts` (`MS_FANTASY_POIN
 | Validace 6 hráčů, 1 G, cap | `src/lib/msFantasyValidation.ts` |
 | Výpočet bodů ze „boxu“ | `src/lib/msFantasyScoring.ts` |
 | Uložení / lock | `src/app/api/fantasy/my-lineup/route.ts` |
-| Hrací dny MS (fantasy) | `data/ms2026-fantasy-game-days.json` |
+| Hrací dny MS (fantasy) + program zápasů | `src/lib/ms2026FantasyOfficialGameDays.ts` (přehled lockAt: `data/ms2026-fantasy-game-days.json`) |
 | Manifest fantasy soupisek v seedu | `prisma/seed.ts` (`FANTASY_ROSTER_FILES`, `MS_FANTASY_SEED_FANTASY_DATA`) |
 
 ---

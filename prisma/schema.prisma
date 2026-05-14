@@ -267,12 +267,14 @@ model MsFantasyRosterPlayer {
   @@map("ms_fantasy_roster_players")
 }
 
-/// Jeden uzamykatelný hrací den (deadline = lockAt před prvním zápasem).
+/// Jeden uzamykatelný hrací den (deadline = lockAt u prvního zápasu dne, viz `matches`).
 model MsFantasyGameDay {
   id        String   @id @default(cuid())
   slug      String   @unique
   title     String
   lockAt    DateTime
+  /// Zápasy daného kalendářního dne MS (časy v ISO UTC). Pořadí podle `startAt`.
+  matches   Json     @default("[]")
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

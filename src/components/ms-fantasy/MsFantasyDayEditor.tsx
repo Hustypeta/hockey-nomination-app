@@ -10,6 +10,7 @@ import { MS_FANTASY_CAP, MS_FANTASY_TEAM_SIZE, isMsFantasyLineupSubmissionEnable
 import { MS_FANTASY_ROSTER_TEAM_OPTIONS, MS_FANTASY_TIER_CODES } from "@/lib/msFantasyRosterFilters";
 import { MsFantasyIceRink } from "./MsFantasyIceRink";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
+import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
 import { MsFantasyPlayerAvatar } from "./MsFantasyPlayerAvatar";
 
 export type MsFantasyRosterPlayer = {
@@ -29,6 +30,7 @@ type GameDayPayload = {
   title: string;
   lockAt: string;
   isLocked: boolean;
+  matches?: unknown;
 };
 
 type SlotPlayer = MsFantasyRosterPlayer | null;
@@ -705,21 +707,31 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               {day.title}
             </h1>
             <p className="mt-3 text-sm text-slate-300">
-              Uzávěrka:{" "}
+              Uzávěrka fantasy (nelze měnit sestavu po tomto okamžiku):{" "}
               <strong className="font-medium text-white">
                 {new Date(day.lockAt).toLocaleString("cs-CZ", {
                   timeZone: "Europe/Prague",
                   dateStyle: "medium",
                   timeStyle: "short",
                 })}
-              </strong>{" "}
-              —{" "}
+              </strong>
+              . Odpovídá začátku prvního zápasu daného dne v programu MS (čas dle CEST v aréně).
+            </p>
+            <div className="mt-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2.5 sm:px-4 sm:py-3">
+              <p className="font-display text-[0.58rem] font-bold uppercase tracking-[0.16em] text-slate-500 sm:text-[0.62rem]">
+                Zápasy na tento den
+              </p>
+              <MsFantasyMatchSchedule matchesRaw={day.matches ?? []} showSourceLink className="mt-2" />
+            </div>
+            <p className="mt-3 text-sm text-slate-300">
               {day.isLocked ? (
-                <span className="text-amber-200">den je uzavřený</span>
+                <span className="text-amber-200">Den je uzavřený.</span>
               ) : !fantasySubmissionsEnabled ? (
-                <span className="text-amber-200">den je otevřený jen k prohlížení — odesílání sestav je vypnuté</span>
+                <span className="text-amber-200">
+                  Den je otevřený jen k prohlížení — odesílání sestav je vypnuté.
+                </span>
               ) : (
-                <span className="text-emerald-200">můžeš upravovat sestavu</span>
+                <span className="text-emerald-200">Můžeš upravovat sestavu.</span>
               )}
             </p>
             {!day.isLocked && !fantasySubmissionsEnabled ? (

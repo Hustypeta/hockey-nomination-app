@@ -17,6 +17,7 @@ export async function GET() {
       slug: true,
       title: true,
       lockAt: true,
+      matches: true,
     },
   });
 

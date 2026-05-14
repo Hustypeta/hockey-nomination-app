@@ -5,10 +5,16 @@ import { join } from "path";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { loadMs2026Candidates } from "../src/lib/ms2026Candidates";
+import {
+  MS2026_FANTASY_OFFICIAL_GAME_DAYS,
+  ms2026FantasyResolveLockAt,
+  ms2026FantasySortedMatches,
+} from "../src/lib/ms2026FantasyOfficialGameDays";
+import type { Prisma } from "@prisma/client";
 
 loadEnv({ path: join(process.cwd(), ".env.local"), override: true });
 
-/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`). Kompletní kalendář + všechny soupisky z `data/`: `MS_FANTASY_SEED_FANTASY_DATA=true` (smaže fantasy dny včetně odevzdaných sestav a celý pool, pak načte `ms2026-fantasy-game-days.json` + JSON repre dle manifestu v `prisma/seed.ts`). Jinak jednotlivé `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` už jen doplní **2 ukázkové hrací dny** (ne pool) pokud v DB žádné dny nejsou — pool vždy jen z JSON repre. Při každém seedu se smažou záznamy s kódem `SAMPLE-*` (starý vývojový vzorek). */
+/** MS 2026 fantasy import (`MS_FANTASY_SEED_*`). Kompletní kalendář + všechny soupisky z `data/`: `MS_FANTASY_SEED_FANTASY_DATA=true` (smaže fantasy dny včetně odevzdaných sestav a celý pool, pak načte hrací dny z `src/lib/ms2026FantasyOfficialGameDays.ts` + JSON repre dle manifestu v `prisma/seed.ts`). Jinak jednotlivé `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` už jen doplní **2 ukázkové hrací dny** (ne pool) pokud v DB žádné dny nejsou — pool vždy jen z JSON repre. Při každém seedu se smažou záznamy s kódem `SAMPLE-*` (starý vývojový vzorek). */
 type FantasyRosterJsonRow = {
   code: string;
   name: string;
@@ -43,8 +49,6 @@ const FANTASY_ROSTER_FILES: { team: string; file: string; note?: string }[] = [
   { team: "SWE", file: "sweden-ms2026-fantasy-roster.json" },
   { team: "USA", file: "usa-ms2026-fantasy-roster.json" },
 ];
-
-type FantasyGameDayJsonRow = { slug: string; title: string; lockAt: string; sortOrder: number };
 
 async function importFantasyRosterJson(
   team: string,
@@ -81,22 +85,15 @@ async function importFantasyRosterJson(
 }
 
 /**
- * Jednorázově: všechny hrací dny z `data/ms2026-fantasy-game-days.json` + celý fantasy pool ze všech JSON v manifestu.
+ * Jednorázově: všechny hrací dny z `src/lib/ms2026FantasyOfficialGameDays.ts` + celý fantasy pool ze všech JSON v manifestu.
  * Smaže existující fantasy dny (včetně odevzdaných sestav přes cascade) a celý pool hráčů, pak znovu naplní.
  */
 async function seedMsFantasyFantasyDataBundle() {
   if (process.env.MS_FANTASY_SEED_FANTASY_DATA?.trim() !== "true") return;
 
-  const fpDays = join(process.cwd(), "data", "ms2026-fantasy-game-days.json");
-  let dayRows: FantasyGameDayJsonRow[];
-  try {
-    dayRows = JSON.parse(readFileSync(fpDays, "utf-8")) as FantasyGameDayJsonRow[];
-  } catch {
-    console.warn("MS_FANTASY_SEED_FANTASY_DATA: nepodařilo se načíst data/ms2026-fantasy-game-days.json — přeskakuji fantasy.");
-    return;
-  }
+  const dayRows = MS2026_FANTASY_OFFICIAL_GAME_DAYS;
   if (!Array.isArray(dayRows) || dayRows.length === 0) {
-    console.warn("MS_FANTASY_SEED_FANTASY_DATA: prázdný ms2026-fantasy-game-days.json — přeskakuji fantasy.");
+    console.warn("MS_FANTASY_SEED_FANTASY_DATA: prázdný seznam hracích dnů — přeskakuji fantasy.");
     return;
   }
 
@@ -105,11 +102,14 @@ async function seedMsFantasyFantasyDataBundle() {
     data: dayRows.map((r) => ({
       slug: r.slug.trim(),
       title: r.title.trim(),
-      lockAt: new Date(r.lockAt),
+      lockAt: ms2026FantasyResolveLockAt(r),
       sortOrder: Number(r.sortOrder) || 0,
+      matches: ms2026FantasySortedMatches(r) as Prisma.InputJsonValue,
     })),
   });
-  console.log(`MS_FANTASY_SEED_FANTASY_DATA: ${dayRows.length} fantasy hracích dnů z data/ms2026-fantasy-game-days.json`);
+  console.log(
+    `MS_FANTASY_SEED_FANTASY_DATA: ${dayRows.length} fantasy hracích dnů (program + uzávěrky) z src/lib/ms2026FantasyOfficialGameDays.ts`
+  );
 
   await prisma.msFantasyRosterPlayer.deleteMany({});
   console.log("MS_FANTASY_SEED_FANTASY_DATA: fantasy pool vyprázdněn, importuji repre…");
@@ -129,8 +129,8 @@ async function seedMsFantasySample() {
     const lock2 = new Date("2026-05-16T14:30:00.000Z");
     await prisma.msFantasyGameDay.createMany({
       data: [
-        { slug: "2026-05-15", title: "Hrací den 1 (vzorek)", lockAt: lock1, sortOrder: 1 },
-        { slug: "2026-05-16", title: "Hrací den 2 (vzorek)", lockAt: lock2, sortOrder: 2 },
+        { slug: "2026-05-15", title: "Hrací den 1 (vzorek)", lockAt: lock1, sortOrder: 1, matches: [] },
+        { slug: "2026-05-16", title: "Hrací den 2 (vzorek)", lockAt: lock2, sortOrder: 2, matches: [] },
       ],
     });
     console.log("Seeded 2 sample MS fantasy game days (MS_FANTASY_SEED_SAMPLE)");
