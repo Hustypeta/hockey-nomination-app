@@ -57,36 +57,12 @@ type MsFantasyIceRinkProps = {
   salaryOverCap: boolean;
 };
 
-function RinkSalaryStrip({ used, cap, over }: { used: number; cap: number; over: boolean }) {
-  const pct = Math.min(100, Math.round((used / cap) * 1000) / 10);
-  const grad = over
-    ? "from-red-500 via-red-400 to-rose-600"
-    : pct >= 95
-      ? "from-amber-400 via-amber-300 to-orange-500"
-      : "from-sky-500 via-[#00B4FF] to-cyan-400";
-
-  return (
-    <div className="pointer-events-none absolute left-2 right-2 top-2 z-20 flex items-center gap-3 rounded-xl border border-slate-900/45 bg-slate-950/72 px-2.5 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:left-4 sm:right-4 sm:top-3 sm:px-3.5">
-      <div className="shrink-0">
-        <p className="font-display text-[0.5rem] font-bold uppercase tracking-[0.16em] text-slate-400 sm:text-[0.55rem] sm:tracking-[0.18em]">
-          Platový strop
-        </p>
-        <p className="font-mono text-xs font-bold tabular-nums text-white sm:text-sm">
-          <span className={over ? "text-red-300" : "text-[#9ae9ff]"}>{used}</span>
-          <span className="text-slate-500"> / </span>
-          <span className="text-slate-400">{cap}</span>
-        </p>
-      </div>
-      <div className="min-w-0 flex-1 pt-0.5">
-        <div className="h-1.5 overflow-hidden rounded-full bg-black/55 ring-1 ring-white/10 sm:h-2">
-          <div
-            className={`h-full rounded-full bg-gradient-to-r ${grad} shadow-[0_0_12px_rgba(0,212,255,0.25)] transition-[width] duration-500 ease-out`}
-            style={{ width: `${pct}%` }}
-          />
-        </div>
-      </div>
-    </div>
-  );
+function slotNeonVariant(slotIndex: number): "cyan" | "red" {
+  if (slotIndex === SLOT_G) return "red";
+  if (slotIndex === SLOTS_D[0]) return "cyan";
+  if (slotIndex === SLOTS_D[1]) return "red";
+  if (slotIndex === SLOTS_F[0] || slotIndex === SLOTS_F[2]) return "cyan";
+  return "red";
 }
 
 function PositionBadge({ label, compact = false }: { label: string; compact?: boolean }) {
@@ -112,37 +88,69 @@ function PositionBadge({ label, compact = false }: { label: string; compact?: bo
   );
 }
 
-function EmptySlotCard({ selected, disabled, reduceMotion }: { selected: boolean; disabled: boolean; reduceMotion: boolean }) {
+function EmptySlotCard({
+  selected,
+  disabled,
+  reduceMotion,
+  neon,
+}: {
+  selected: boolean;
+  disabled: boolean;
+  reduceMotion: boolean;
+  neon: "cyan" | "red";
+}) {
+  const isCyan = neon === "cyan";
+  const baseBorder = isCyan
+    ? "border-cyan-400/85 border-solid shadow-[0_0_20px_rgba(0,242,255,0.38),inset_0_0_24px_rgba(0,180,255,0.08)]"
+    : "border-rose-500/80 border-solid shadow-[0_0_20px_rgba(251,113,133,0.32),inset_0_0_24px_rgba(200,16,46,0.08)]";
+  const hoverLift =
+    "sm:group-hover:-translate-y-0.5 sm:group-hover:scale-[1.04] motion-reduce:sm:group-hover:translate-y-0 motion-reduce:sm:group-hover:scale-100";
+  const glowHover = isCyan
+    ? "sm:group-hover:shadow-[0_0_0_1px_rgba(0,245,255,0.55),0_0_40px_rgba(0,220,255,0.55),0_16px_36px_rgba(0,0,0,0.45)]"
+    : "sm:group-hover:shadow-[0_0_0_1px_rgba(251,113,133,0.5),0_0_40px_rgba(248,113,113,0.45),0_16px_36px_rgba(0,0,0,0.45)]";
+
   return (
     <div
       className={[
-        "relative flex min-h-[6.25rem] w-[5.35rem] flex-col items-center justify-center rounded-xl border-2 border-dashed px-1 py-1.5 shadow-inner backdrop-blur-[3px] transition-[border-color,box-shadow,transform,background-color] duration-300 ease-out sm:min-h-[6.85rem] sm:w-[6.5rem] sm:px-1.5 sm:py-1.5 md:min-h-[7.45rem] md:w-[7.65rem] md:px-2 md:py-2 lg:min-h-[8.1rem] lg:w-[8.2rem] lg:px-2 lg:py-2",
-        "border-cyan-400/45 bg-gradient-to-b from-white/40 via-cyan-50/25 to-sky-100/20",
-        "sm:group-hover:-translate-y-0.5 sm:group-hover:scale-[1.035] sm:group-hover:border-cyan-200/85 sm:group-hover:from-white/55 sm:group-hover:via-cyan-50/40 sm:group-hover:to-sky-100/35",
-        "sm:group-hover:shadow-[0_0_0_1px_rgba(0,245,255,0.45),0_0_36px_rgba(0,220,255,0.55),0_0_72px_rgba(0,180,255,0.28),0_12px_28px_rgba(0,60,90,0.2)]",
-        "motion-reduce:sm:group-hover:translate-y-0 motion-reduce:sm:group-hover:scale-100",
-        selected ? "border-[#00d4ff] from-cyan-100/55 ring-2 ring-[#00B4FF]/70 ring-offset-[2px] ring-offset-sky-100/90 shadow-[0_0_22px_rgba(0,212,255,0.32)]" : "",
+        "relative flex min-h-[6.25rem] w-[5.35rem] flex-col items-center justify-center rounded-xl border-2 px-1 py-1.5 backdrop-blur-sm transition-[border-color,box-shadow,transform,background-color] duration-300 ease-out sm:min-h-[6.85rem] sm:w-[6.5rem] sm:px-1.5 sm:py-1.5 md:min-h-[7.45rem] md:w-[7.65rem] md:px-2 md:py-2 lg:min-h-[8.1rem] lg:w-[8.2rem] lg:px-2 lg:py-2",
+        "bg-gradient-to-b from-slate-950/92 via-slate-950/88 to-black/90",
+        baseBorder,
+        hoverLift,
+        glowHover,
+        selected
+          ? isCyan
+            ? "ring-2 ring-cyan-300/80 ring-offset-2 ring-offset-slate-950 shadow-[0_0_32px_rgba(0,245,255,0.55)]"
+            : "ring-2 ring-rose-400/75 ring-offset-2 ring-offset-slate-950 shadow-[0_0_32px_rgba(251,113,133,0.45)]"
+          : "",
         disabled ? "opacity-55" : "",
       ].join(" ")}
     >
       <div
         className={[
-          "pointer-events-none absolute inset-0 rounded-[10px] bg-[radial-gradient(circle_at_50%_0%,rgba(0,212,255,0.2),transparent_55%)]",
+          "pointer-events-none absolute inset-0 rounded-[10px] opacity-70",
+          isCyan
+            ? "bg-[radial-gradient(circle_at_50%_0%,rgba(0,245,255,0.22),transparent_58%)]"
+            : "bg-[radial-gradient(circle_at_50%_0%,rgba(251,113,133,0.2),transparent_58%)]",
           !reduceMotion ? "ms-fantasy-empty-pulse" : "",
         ].join(" ")}
         aria-hidden
       />
-      <div
-        className="pointer-events-none absolute inset-0 rounded-[10px] opacity-0 transition-opacity duration-300 ease-out sm:group-hover:opacity-100"
-        style={{
-          background: "radial-gradient(circle at 50% 0%, rgba(0, 245, 255, 0.42), transparent 58%)",
-        }}
-        aria-hidden
-      />
-      <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#00B4FF] to-[#0066a3] text-white shadow-[0_0_20px_rgba(0,180,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] ring-2 ring-white/45 transition-[transform,box-shadow] duration-300 ease-out sm:group-hover:scale-110 sm:group-hover:shadow-[0_0_28px_rgba(0,230,255,0.85),0_0_48px_rgba(0,200,255,0.45),inset_0_1px_0_rgba(255,255,255,0.45)] sm:group-hover:ring-cyan-100/70 motion-reduce:sm:group-hover:scale-100 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-[3.15rem] lg:w-[3.15rem]">
+      <span
+        className={[
+          "relative z-10 flex h-9 w-9 items-center justify-center rounded-full text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] ring-2 ring-white/30 transition-[transform,box-shadow] duration-300 ease-out sm:group-hover:scale-110 motion-reduce:sm:group-hover:scale-100 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-[3.15rem] lg:w-[3.15rem]",
+          isCyan
+            ? "bg-gradient-to-br from-[#00e5ff] to-[#0066a3] shadow-[0_0_22px_rgba(0,230,255,0.55)] sm:group-hover:shadow-[0_0_30px_rgba(0,245,255,0.85)]"
+            : "bg-gradient-to-br from-[#fb7185] to-[#9f1239] shadow-[0_0_22px_rgba(251,113,133,0.45)] sm:group-hover:shadow-[0_0_30px_rgba(248,113,113,0.75)]",
+        ].join(" ")}
+      >
         <Plus className="h-4 w-4 stroke-[2.5] transition-transform duration-300 ease-out sm:group-hover:scale-110 motion-reduce:sm:group-hover:scale-100 sm:h-[1.35rem] sm:w-[1.35rem] md:h-6 md:w-6" aria-hidden />
       </span>
-      <span className="relative z-10 mt-1 text-center text-[0.62rem] font-bold uppercase tracking-[0.1em] text-slate-700 transition-colors duration-300 group-hover:text-slate-900 sm:text-[0.65rem]">
+      <span
+        className={[
+          "relative z-10 mt-1 text-center text-[0.62rem] font-bold uppercase tracking-[0.1em] sm:text-[0.65rem]",
+          isCyan ? "text-cyan-100/95" : "text-rose-100/95",
+        ].join(" ")}
+      >
         Přidat
       </span>
     </div>
@@ -261,7 +269,12 @@ export function MsFantasyIceRink({
               />
             ) : (
               <>
-                <EmptySlotCard selected={sel} disabled={isLocked} reduceMotion={!!reduceMotion} />
+                <EmptySlotCard
+                  selected={sel}
+                  disabled={isLocked}
+                  reduceMotion={!!reduceMotion}
+                  neon={slotNeonVariant(i)}
+                />
                 <PositionBadge label={positionLabel} />
               </>
             )}
@@ -287,16 +300,17 @@ export function MsFantasyIceRink({
 
   return (
     <div className="mx-auto w-full max-w-[21rem] sm:max-w-xl lg:max-w-2xl">
-      <p className="mb-2 text-center font-display text-[0.68rem] font-bold uppercase tracking-[0.18em] text-slate-400 sm:mb-2.5 sm:text-xs sm:tracking-[0.2em]">
+      <p className="mb-2 text-center font-display text-[0.68rem] font-bold uppercase tracking-[0.18em] text-slate-500 sm:mb-2.5 sm:text-xs sm:tracking-[0.2em]">
         Sestava na ledě
       </p>
 
       <IceRinkShell
-        className="ms-fantasy-rink-3d"
+        className="ms-fantasy-rink-3d border-cyan-400/30 shadow-[0_0_60px_rgba(0,180,255,0.12),0_24px_64px_rgba(0,0,0,0.55)]"
+        iceMood="arena"
         noiseFilterId={noiseFilterId}
         scratchPatternId={scratchPatternId}
         transform="perspective(920px) rotateX(4deg) scale(0.97) translateZ(0)"
-        innerClassName="relative z-10 flex flex-col items-stretch px-1.5 pb-5 pt-[2.55rem] sm:px-3.5 sm:pb-6 sm:pt-[2.85rem] md:pt-[3rem] lg:px-5 lg:pb-7 lg:pt-[3.15rem]"
+        innerClassName="relative z-10 flex flex-col items-stretch px-1.5 pb-8 pt-[2.55rem] sm:px-3.5 sm:pb-9 sm:pt-[2.85rem] md:pt-[3rem] lg:px-5 lg:pb-10 lg:pt-[3.15rem]"
       >
         <div className="flex min-w-0 flex-nowrap justify-center gap-1.5 sm:flex-wrap sm:gap-2.5 md:gap-3 lg:gap-3.5">
           {SLOTS_F.map((ix) => renderSlot(ix, "Útočník"))}
@@ -305,6 +319,18 @@ export function MsFantasyIceRink({
           {SLOTS_D.map((ix) => renderSlot(ix, "Obránce"))}
         </div>
         <div className="mt-3.5 flex justify-center sm:mt-4 md:mt-5">{renderSlot(SLOT_G, "Brankář")}</div>
+
+        <div
+          className="pointer-events-none absolute bottom-2.5 right-2.5 z-30 flex h-11 w-11 flex-col items-center justify-center rounded-full border-2 border-amber-400/55 bg-gradient-to-br from-amber-600/95 via-amber-800/95 to-amber-950/98 px-1 text-center shadow-[0_0_22px_rgba(251,191,36,0.35)] sm:bottom-3 sm:right-3 sm:h-12 sm:w-12"
+          aria-hidden
+        >
+          <span className="font-display text-[0.38rem] font-black uppercase leading-none tracking-wide text-amber-50/95">
+            MS
+          </span>
+          <span className="mt-px font-display text-[0.38rem] font-black uppercase leading-none tracking-wide text-amber-100/90">
+            2026
+          </span>
+        </div>
       </IceRinkShell>
     </div>
   );

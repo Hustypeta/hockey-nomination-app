@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { ArrowLeft, Check, Loader2, Lock, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2, Lock, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   MS_FANTASY_CAP,
@@ -63,6 +63,44 @@ function formationSlotsFromPicks(picks: Array<MsFantasyRosterPlayer | null | und
 
 const fantasySubmissionsEnabled = isMsFantasyLineupSubmissionEnabled();
 
+function SalaryRingGauge({ pct, over }: { pct: number; over: boolean }) {
+  const radius = 28;
+  const circumference = 2 * Math.PI * radius;
+  const dash = (Math.min(100, Math.max(0, pct)) / 100) * circumference;
+  const stroke = over ? "#fb7185" : "#22d3ee";
+  return (
+    <div className="relative h-[4.75rem] w-[4.75rem] shrink-0" aria-hidden>
+      <svg
+        viewBox="0 0 72 72"
+        className={[
+          "h-full w-full -rotate-90",
+          over ? "drop-shadow-[0_0_12px_rgba(251,113,133,0.35)]" : "drop-shadow-[0_0_14px_rgba(34,211,238,0.45)]",
+        ].join(" ")}
+      >
+        <circle cx="36" cy="36" r={radius} fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="7" />
+        <circle
+          cx="36"
+          cy="36"
+          r={radius}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="7"
+          strokeLinecap="round"
+          strokeDasharray={`${dash} ${circumference}`}
+          className="transition-[stroke-dasharray] duration-500 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span
+          className={`font-mono text-[0.72rem] font-bold tabular-nums leading-none ${over ? "text-red-200" : "text-cyan-100"}`}
+        >
+          {Math.round(Math.min(100, pct))}%
+        </span>
+      </div>
+    </div>
+  );
+}
+
 type MsFantasyRosterPanelProps = {
   day: GameDayPayload;
   layout: "sidebar" | "sheet";
@@ -107,11 +145,11 @@ function MsFantasyRosterPanel({
 
   return (
     <>
-      <div className="border-b border-white/[0.06] pb-3 sm:pb-4">
-        <h2 className="font-display text-base font-bold uppercase tracking-[0.12em] text-white sm:text-lg lg:text-xl">
+      <div className="border-b border-cyan-500/15 pb-3 sm:pb-4">
+        <h2 className="font-display text-base font-bold uppercase tracking-[0.14em] text-white sm:text-lg lg:text-xl">
           Soupiska MS
         </h2>
-        <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-cyan-200/50">
           Oficiální pool hráčů
         </p>
       </div>
@@ -229,8 +267,8 @@ function MsFantasyRosterPanel({
         onChange={(e) => setQ(e.target.value)}
         placeholder="Hledat jméno…"
         className="
-            mt-3 w-full rounded-xl border border-white/[0.12] bg-slate-950/80 px-3 py-2.5 text-base text-white shadow-inner outline-none backdrop-blur-sm placeholder:text-slate-600 sm:text-sm
-            focus:border-[#00B4FF]/50 focus:ring-2 focus:ring-[#00B4FF]/35
+            mt-3 w-full rounded-xl border border-cyan-500/20 bg-black/55 px-3 py-2.5 text-base text-white shadow-inner outline-none backdrop-blur-md placeholder:text-slate-600 sm:text-sm
+            focus:border-cyan-400/55 focus:ring-2 focus:ring-cyan-400/30
           "
         autoCapitalize="off"
         autoCorrect="off"
@@ -239,7 +277,7 @@ function MsFantasyRosterPanel({
 
       <div
         className={[
-          "mt-3 space-y-2 rounded-2xl border border-white/[0.08] bg-gradient-to-b from-slate-950/90 to-black/50 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+          "mt-3 space-y-2 rounded-2xl border border-cyan-500/15 bg-slate-950/40 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_12px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl",
           listScrollClass,
         ].join(" ")}
       >
@@ -598,33 +636,40 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-4 sm:gap-5 sm:px-5 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 lg:flex-row lg:gap-8 lg:pb-8 lg:pt-8">
       <div className="min-w-0 flex-1 space-y-4">
-        <section className="relative overflow-hidden rounded-3xl border border-cyan-400/15 bg-gradient-to-b from-slate-900/85 via-[#0a101c]/92 to-[#05080f]/95 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-5">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
-          <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-[#c8102e]/10 blur-3xl" />
+        <section className="relative overflow-hidden rounded-3xl border border-cyan-500/20 bg-gradient-to-b from-[#070c18]/98 via-[#060a14]/98 to-[#020308]/98 p-4 shadow-[0_0_80px_rgba(0,120,200,0.1),0_24px_80px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-5">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-cyan-500/12 blur-3xl" />
+          <div className="pointer-events-none absolute -left-20 bottom-0 h-52 w-52 rounded-full bg-[#c8102e]/12 blur-3xl" />
 
-          <div className="relative mb-2 flex flex-col gap-4 sm:mb-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-3">
-            <div className="min-w-0 flex-1">
-              <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500 sm:text-xs">Platový strop</p>
-              <p className="font-mono text-xl font-bold text-white tabular-nums sm:text-2xl">
-                <span className={salaryOverCap ? "text-red-300" : "text-[#9ae9ff]"}>{salaryUsed}</span>
-                <span className="text-slate-500"> / </span>
-                <span className="text-slate-300">{MS_FANTASY_CAP}</span>
-              </p>
-              <div className="mt-2.5 h-2.5 w-full max-w-full overflow-hidden rounded-full bg-black/40 ring-1 ring-white/10 sm:max-w-xs">
-                <motion.div
-                  className={`h-full rounded-full bg-gradient-to-r ${salaryBarGradient} shadow-[0_0_14px_rgba(0,212,255,0.35)]`}
-                  initial={false}
-                  animate={{ width: `${salaryCapPct}%` }}
-                  transition={{ type: "spring", stiffness: 260, damping: 28 }}
-                />
+          <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-5">
+            <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-end sm:gap-5">
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.22em] text-slate-500 sm:text-xs">
+                  Platový strop
+                </p>
+                <p className="font-mono text-xl font-bold text-white tabular-nums sm:text-2xl">
+                  <span className={salaryOverCap ? "text-red-300" : "text-[#7eefff]"}>{salaryUsed}</span>
+                  <span className="text-slate-500"> / </span>
+                  <span className="text-slate-300">{MS_FANTASY_CAP}</span>
+                </p>
+                <div className="mt-2.5 h-2.5 w-full max-w-full overflow-hidden rounded-full bg-black/50 ring-1 ring-cyan-500/15 sm:max-w-md">
+                  <motion.div
+                    className={`h-full rounded-full bg-gradient-to-r ${salaryBarGradient} shadow-[0_0_16px_rgba(0,212,255,0.45)]`}
+                    initial={false}
+                    animate={{ width: `${salaryCapPct}%` }}
+                    transition={{ type: "spring", stiffness: 260, damping: 28 }}
+                  />
+                </div>
+                <p className="mt-1.5 text-[0.65rem] text-slate-500">
+                  {salaryOverCap
+                    ? "Překročen strop — odeslání je uzamčeno."
+                    : salaryCapPct >= 95
+                      ? "Blízko stropu — zbývá málo kapacity."
+                      : "Kapacita pod kontrolou."}
+                </p>
               </div>
-              <p className="mt-1.5 text-[0.65rem] text-slate-500">
-                {salaryOverCap
-                  ? "Překročen strop — odeslání je uzamčeno."
-                  : salaryCapPct >= 95
-                    ? "Blízko stropu — zbývá málo kapacity."
-                    : "Kapacita pod kontrolou."}
-              </p>
+              <div className="flex justify-center sm:shrink-0 sm:justify-start sm:pb-1">
+                <SalaryRingGauge pct={salaryCapPct} over={salaryOverCap} />
+              </div>
             </div>
             <div className="flex w-full shrink-0 flex-col items-stretch gap-2 sm:w-auto sm:items-end">
               {status === "authenticated" ? (
@@ -642,7 +687,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                       : undefined
                   }
                   onClick={() => void save()}
-                  className="ms-fantasy-save-shimmer group relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#0077b6] via-[#00B4FF] to-[#48cae4] px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.14em] text-[#03050a] shadow-[0_0_28px_rgba(0,180,255,0.45),inset_0_1px_0_rgba(255,255,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_36px_rgba(0,212,255,0.55)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 touch-manipulation sm:w-auto sm:min-h-0"
+                  className="ms-fantasy-save-shimmer group relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-xl border border-cyan-300/25 bg-gradient-to-r from-[#005a8c] via-[#00B4FF] to-[#38bdf8] px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.14em] text-[#03050a] shadow-[0_0_32px_rgba(0,200,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_44px_rgba(0,220,255,0.6)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 touch-manipulation sm:w-auto sm:min-h-0"
                 >
                   {salaryOverCap ? (
                     <Lock className="h-4 w-4 shrink-0 opacity-95" aria-hidden />
@@ -664,6 +709,9 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                       : salaryOverCap
                         ? "Strop překročen"
                         : "Odeslat do soutěže"}
+                  {!salaryOverCap && saveState !== "saving" && fantasySubmissionsEnabled ? (
+                    <ArrowRight className="h-4 w-4 shrink-0 opacity-95" aria-hidden />
+                  ) : null}
                 </button>
               ) : (
                 <button
@@ -762,27 +810,29 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
         </section>
       </div>
 
-      <aside className="hidden w-full shrink-0 lg:block lg:max-w-sm lg:border-l lg:border-cyan-400/10 lg:pl-8">
+      <aside className="hidden w-full shrink-0 lg:block lg:max-w-[22.5rem] lg:border-l lg:border-cyan-500/15 lg:pl-6">
         <div className="lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto lg:pb-4 lg:pr-1">
-          <MsFantasyRosterPanel
-            day={day}
-            layout="sidebar"
-            posFilter={posFilter}
-            setPosFilter={setPosFilter}
-            teamFilter={teamFilter}
-            setTeamFilter={setTeamFilter}
-            tierFilter={tierFilter}
-            setTierFilter={setTierFilter}
-            hasExtraRosterFilters={hasExtraRosterFilters}
-            q={q}
-            setQ={setQ}
-            rosterLoading={rosterLoading}
-            roster={roster}
-            rosterSkip={rosterSkip}
-            loadMoreRoster={loadMoreRoster}
-            picksIds={picksIds}
-            addPlayer={addPlayer}
-          />
+          <MsFantasyGlassPanel glow="cyan" className="p-4 shadow-[0_0_48px_rgba(0,180,255,0.1)] sm:p-5">
+            <MsFantasyRosterPanel
+              day={day}
+              layout="sidebar"
+              posFilter={posFilter}
+              setPosFilter={setPosFilter}
+              teamFilter={teamFilter}
+              setTeamFilter={setTeamFilter}
+              tierFilter={tierFilter}
+              setTierFilter={setTierFilter}
+              hasExtraRosterFilters={hasExtraRosterFilters}
+              q={q}
+              setQ={setQ}
+              rosterLoading={rosterLoading}
+              roster={roster}
+              rosterSkip={rosterSkip}
+              loadMoreRoster={loadMoreRoster}
+              picksIds={picksIds}
+              addPlayer={addPlayer}
+            />
+          </MsFantasyGlassPanel>
         </div>
       </aside>
 

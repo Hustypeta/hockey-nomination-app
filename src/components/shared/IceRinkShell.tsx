@@ -112,6 +112,8 @@ export type IceRinkShellProps = {
   transform?: CSSProperties["transform"];
   /** Vnitřní zóna nad ledem (padding kolem řad karet). */
   innerClassName?: string;
+  /** `arena` = tmavší led, více kontrastu (fantasy editor); `bright` = výchozí světlejší led (export plakátů). */
+  iceMood?: "bright" | "arena";
 };
 
 /**
@@ -124,6 +126,7 @@ export function IceRinkShell({
   className = "",
   transform = "perspective(920px) rotateX(4deg) scale(0.88) translateZ(0)",
   innerClassName = "relative z-10 flex flex-col items-stretch px-1.5 pb-4 pt-[2.35rem] sm:px-3 sm:pb-5 sm:pt-[2.5rem]",
+  iceMood = "bright",
 }: IceRinkShellProps) {
   return (
     <div
@@ -144,9 +147,19 @@ export function IceRinkShell({
         }}
       />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-white/88 via-cyan-50/82 to-sky-100/78" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_55%_at_50%_-5%,rgba(255,255,255,0.75),transparent_52%)]" />
-      <div className="absolute inset-0 opacity-50 mix-blend-soft-light bg-[radial-gradient(ellipse_at_80%_20%,rgba(0,180,255,0.12),transparent_45%)]" />
+      {iceMood === "arena" ? (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-700/45 via-slate-900/55 to-slate-950/72" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_52%_at_50%_-8%,rgba(255,255,255,0.32),transparent_58%)]" />
+          <div className="absolute inset-0 opacity-[0.55] mix-blend-soft-light bg-[radial-gradient(ellipse_at_82%_18%,rgba(0,220,255,0.2),transparent_42%)]" />
+        </>
+      ) : (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-b from-white/88 via-cyan-50/82 to-sky-100/78" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_55%_at_50%_-5%,rgba(255,255,255,0.75),transparent_52%)]" />
+          <div className="absolute inset-0 opacity-50 mix-blend-soft-light bg-[radial-gradient(ellipse_at_80%_20%,rgba(0,180,255,0.12),transparent_45%)]" />
+        </>
+      )}
 
       <RinkMarkings patternId={scratchPatternId} />
 
