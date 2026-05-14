@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { msFantasyNotEnabledResponse, msFantasyRequireSessionResponse } from "@/lib/msFantasyApiGate";
 import { resolveMsFantasyMatchesFromDbOrOfficial } from "@/lib/msFantasyMatchesResolve";
+import { ms2026FantasyOfficialLockAtIso } from "@/lib/ms2026FantasyOfficialGameDays";
 
 export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }> }) {
   const gate = msFantasyNotEnabledResponse();
@@ -25,13 +26,15 @@ export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }
 
   if (!day) return NextResponse.json({ error: "den nenalezen" }, { status: 404 });
 
+  const lockIso = ms2026FantasyOfficialLockAtIso(day.slug) ?? day.lockAt.toISOString();
+  const lockMs = new Date(lockIso).getTime();
   const now = new Date().getTime();
   return NextResponse.json({
     day: {
       ...day,
       matches: resolveMsFantasyMatchesFromDbOrOfficial(day.slug, day.matches),
-      lockAt: day.lockAt.toISOString(),
-      isLocked: day.lockAt.getTime() <= now,
+      lockAt: lockIso,
+      isLocked: lockMs <= now,
     },
   });
 }

@@ -245,6 +245,14 @@ export function ms2026FantasyResolveLockAt(row: Ms2026FantasyOfficialGameDaySeed
   return new Date(Math.min(...times));
 }
 
+/** UTC ISO uzávěrky z kanonického kalendáře — pro API má přednost před `lockAt` v DB (seed může být starý). */
+export function ms2026FantasyOfficialLockAtIso(slug: string): string | null {
+  const s = slug.trim();
+  const row = MS2026_FANTASY_OFFICIAL_GAME_DAYS.find((d) => d.slug === s);
+  if (!row) return null;
+  return ms2026FantasyResolveLockAt(row).toISOString();
+}
+
 export function ms2026FantasySortedMatches(row: Ms2026FantasyOfficialGameDaySeed): Ms2026FantasyOfficialMatch[] {
   return [...row.matches].sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
 }

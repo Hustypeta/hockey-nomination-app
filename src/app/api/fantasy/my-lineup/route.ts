@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { msFantasyNotEnabledResponse } from "@/lib/msFantasyApiGate";
 import { isMsFantasyLineupSubmissionEnabled, salaryForTier } from "@/lib/msFantasyConfig";
 import { validateMsFantasyLineup, type RosterPickInput } from "@/lib/msFantasyValidation";
+import { ms2026FantasyOfficialLockAtIso } from "@/lib/ms2026FantasyOfficialGameDays";
 
 function mapPlayerRow(p: {
   id: string;
@@ -113,13 +114,14 @@ export async function POST(request: NextRequest) {
 
   const day = await prisma.msFantasyGameDay.findUnique({
     where: { id: gameDayId },
-    select: { id: true, lockAt: true },
+    select: { id: true, slug: true, lockAt: true },
   });
   if (!day) {
     return NextResponse.json({ error: "Neplatný fantasy den." }, { status: 400 });
   }
 
-  if (new Date() >= day.lockAt) {
+  const lockIso = ms2026FantasyOfficialLockAtIso(day.slug) ?? day.lockAt.toISOString();
+  if (Date.now() >= new Date(lockIso).getTime()) {
     return NextResponse.json({ error: "Deadline už proběhl — sestavu nelze měnit." }, { status: 403 });
   }
 

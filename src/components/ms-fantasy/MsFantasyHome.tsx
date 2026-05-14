@@ -3,11 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight, BookOpen, Calendar, Shirt, Ticket, Trophy } from "lucide-react";
-import {
-  MS_FANTASY_CAP,
-  isMsFantasyLineupSubmissionEnabled,
-  isMsFantasySchedulePauseDaySlug,
-} from "@/lib/msFantasyConfig";
+import { isMsFantasyLineupSubmissionEnabled, isMsFantasySchedulePauseDaySlug } from "@/lib/msFantasyConfig";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
 import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
 
@@ -59,10 +55,9 @@ export function MsFantasyHome() {
               </h1>
               <div className="mt-3 max-w-2xl space-y-2 text-[0.8125rem] leading-snug text-slate-200/90 sm:text-sm sm:leading-relaxed">
                 <p>
-                  Každý hrací den sestavíš <span className="font-semibold text-white">6 hráčů</span> z poolu (1×
-                  brankář, zbytek útočníci nebo obránci). Zastropování{" "}
-                  <span className="font-semibold text-cyan-100">{MS_FANTASY_CAP} kreditů</span> na den. Odevzdání musí
-                  být před prvním zápasem dne — čas uzávěrky u každého dne níže.
+                  Zde si můžeš každý den vybrat <span className="font-semibold text-white">6 hráčů</span> (1x
+                  brankář, 2x obránci a 3x útočníci) a poslat je do soutěže. Nezapomeň dodržet budget a že uzávěrka je
+                  vždy před prvním zápasem dne.
                   {!fantasySubmissionsEnabled ? (
                     <span className="mt-2 block rounded-lg border border-amber-400/25 bg-amber-500/10 px-2.5 py-1.5 text-[0.8125rem] text-amber-100 sm:px-3 sm:py-2 sm:text-sm">
                       Odesílání sestav na server je zatím vypnuté — fantasy jde jen vyzkoušet v rozhraní.
