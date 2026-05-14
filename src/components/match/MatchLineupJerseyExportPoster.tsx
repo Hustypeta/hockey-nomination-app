@@ -65,8 +65,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
     const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
     const cols = 2;
 
-    const posterJerseyScale = jerseyRatingExport ? 1.06 : 1.38;
-    const ratingExtraShellPx = jerseyRatingExport ? 10 : 0;
+    const posterJerseyScale = jerseyRatingExport ? 1.26 : 1.38;
+    const ratingExtraShellPx = jerseyRatingExport ? 14 : 0;
     const jerseyFrame = matchPosterJerseyFrameStyles(posterJerseyScale, ratingExtraShellPx);
 
     const cardShell: CSSProperties = {
@@ -74,8 +74,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "flex-start",
-      gap: jerseyRatingExport ? 6 : 14,
-      padding: jerseyRatingExport ? "2px 0 8px" : "4px 0 12px",
+      gap: jerseyRatingExport ? 4 : 14,
+      padding: jerseyRatingExport ? "0 0 4px" : "4px 0 12px",
     };
 
     const renderPlayerCard = (pid: string) => {
@@ -129,14 +129,14 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             {jerseyRatingExport && mode ? (
               <div
                 style={{
-                  marginTop: 6,
+                  marginTop: 4,
                   display: "flex",
                   flexDirection: "row",
                   flexWrap: "wrap",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 8,
-                  rowGap: 4,
+                  gap: 6,
+                  rowGap: 2,
                 }}
               >
                 <div
@@ -144,9 +144,9 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                     display: "inline-flex",
                     flexDirection: "row",
                     alignItems: "baseline",
-                    gap: 6,
-                    padding: "6px 14px 5px",
-                    borderRadius: 14,
+                    gap: 5,
+                    padding: "5px 12px 4px",
+                    borderRadius: 12,
                     background: hue.bg,
                     boxShadow: `0 6px 16px ${hue.ring}, 0 0 0 2px rgba(255,255,255,0.9) inset`,
                     border: "2px solid rgba(255,255,255,0.9)",
@@ -155,7 +155,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                 >
                   <span
                     style={{
-                      fontSize: 30,
+                      fontSize: 28,
                       fontWeight: 900,
                       lineHeight: 1,
                       letterSpacing: "-0.04em",
@@ -166,7 +166,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                   </span>
                   <span
                     style={{
-                      fontSize: 11,
+                      fontSize: 10,
                       fontWeight: 800,
                       letterSpacing: "0.12em",
                       textTransform: "uppercase",
@@ -214,7 +214,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       );
     };
 
-    const pad = jerseyRatingExport ? 36 : 56;
+    const pad = jerseyRatingExport ? 30 : 56;
     const rootStyle: CSSProperties = jerseyRatingExport
       ? {
           width: LINE_JERSEY_POSTER_W,
@@ -247,7 +247,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             alignItems: "flex-start",
             justifyContent: "space-between",
             gap: 12,
-            paddingBottom: jerseyRatingExport ? 14 : 22,
+            paddingBottom: jerseyRatingExport ? 10 : 22,
             borderBottom: "3px solid rgba(241, 196, 15, 0.6)",
             flexShrink: 0,
           }}
@@ -266,8 +266,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             </div>
             <div
               style={{
-                marginTop: jerseyRatingExport ? 4 : 8,
-                fontSize: jerseyRatingExport ? 32 : 42,
+                marginTop: jerseyRatingExport ? 3 : 8,
+                fontSize: jerseyRatingExport ? 30 : 42,
                 fontWeight: 900,
                 lineHeight: 1.05,
                 color: "white",
@@ -310,10 +310,10 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
         {lineChunks ? (
           <div
             style={{
-              marginTop: jerseyRatingExport ? 14 : 28,
+              marginTop: jerseyRatingExport ? 8 : 28,
               display: "flex",
               flexDirection: "column",
-              gap: jerseyRatingExport ? 12 : 26,
+              gap: jerseyRatingExport ? 8 : 26,
               ...(jerseyRatingExport
                 ? { flex: 1, minHeight: 0, justifyContent: "center" as const }
                 : {}),
