@@ -7,16 +7,20 @@ import { isMsFantasyLineupSubmissionEnabled, salaryForTier } from "@/lib/msFanta
 import { validateMsFantasyLineup, type RosterPickInput } from "@/lib/msFantasyValidation";
 import { ms2026FantasyOfficialLockAtIso } from "@/lib/ms2026FantasyOfficialGameDays";
 
-function mapPlayerRow(p: {
-  id: string;
-  code: string;
-  name: string;
-  team: string;
-  jerseyNumber: number | null;
-  position: string;
-  tier: string;
-}) {
-  const tier = p.tier.trim().toUpperCase();
+function mapPlayerRow(
+  p: {
+    id: string;
+    code: string;
+    name: string;
+    team: string;
+    jerseyNumber: number | null;
+    position: string;
+    tier: string;
+  },
+  snapshot?: { tier: string; salary: number } | null
+) {
+  const tier = (snapshot?.tier ?? p.tier).trim().toUpperCase();
+  const salary = snapshot != null ? snapshot.salary : salaryForTier(tier, p.position);
   return {
     id: p.id,
     code: p.code,
@@ -25,7 +29,7 @@ function mapPlayerRow(p: {
     jerseyNumber: p.jerseyNumber,
     position: p.position.trim().toUpperCase(),
     tier,
-    salary: salaryForTier(tier, p.position),
+    salary,
   };
 }
 
@@ -63,8 +67,20 @@ export async function GET(request: NextRequest) {
       tier: true,
     },
   });
-  const byId = Object.fromEntries(players.map((p) => [p.id, mapPlayerRow(p)]));
-  const picks = lineup.pickIds.map((id) => byId[id] ?? null);
+  const byId = Object.fromEntries(players.map((p) => [p.id, p]));
+  const snapOk =
+    lineup.pickTiers.length === lineup.pickIds.length &&
+    lineup.pickSalaries.length === lineup.pickIds.length &&
+    lineup.pickIds.length === 6;
+  const picks = lineup.pickIds.map((id, i) => {
+    const row = byId[id];
+    if (!row) return null;
+    const snap =
+      snapOk && lineup.pickTiers[i] != null && lineup.pickSalaries[i] != null
+        ? { tier: lineup.pickTiers[i]!, salary: lineup.pickSalaries[i]! }
+        : null;
+    return mapPlayerRow(row, snap);
+  });
 
   return NextResponse.json({
     lineup: {
@@ -153,16 +169,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
+  const pickTiers = pickIds.map((id) => byId[id].tier.trim().toUpperCase());
+  const pickSalaries = pickIds.map((id) => salaryForTier(byId[id].tier.trim().toUpperCase(), byId[id].position));
+
   await prisma.msFantasyLineup.upsert({
     where: { userId_gameDayId: { userId: session.user.id, gameDayId } },
     create: {
       userId: session.user.id,
       gameDayId,
       pickIds,
+      pickTiers,
+      pickSalaries,
       salarySpent: validation.salary,
     },
     update: {
       pickIds,
+      pickTiers,
+      pickSalaries,
       salarySpent: validation.salary,
     },
   });

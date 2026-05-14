@@ -291,6 +291,10 @@ model MsFantasyLineup {
   userId      String
   gameDayId   String
   pickIds     String[]
+  /// Tier u každého slotu v pořadí `pickIds` — snímek v okamžiku odevzdání (změna tieru v rosteru nemění historické sestavy).
+  pickTiers    String[] @default([])
+  /// Plat v kreditech u každého slotu v pořadí `pickIds` — snímek při odevzdání; součet = `salarySpent`.
+  pickSalaries Int[]    @default([])
   salarySpent Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
