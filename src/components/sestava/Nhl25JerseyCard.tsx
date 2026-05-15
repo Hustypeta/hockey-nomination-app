@@ -199,7 +199,7 @@ export function Nhl25JerseyCard({
                   className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-start px-2 pt-[44%]`}
                 >
                   {numStr ? (
-                    <span className={`${numCls}`} style={jerseyNumberStyle(".", "poster")}>
+                    <span className={`${numCls}`} style={jerseyNumberStyle(ln || numStr, "poster")}>
                       {numStr}
                     </span>
                   ) : null}

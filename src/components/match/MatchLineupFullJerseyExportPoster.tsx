@@ -4,7 +4,7 @@ import { forwardRef, useMemo, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
-import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_3X4_STYLE } from "@/lib/sharePosterLayout";
 import {
   fmtMatchRating,
   matchRatingHue,
@@ -13,8 +13,10 @@ import {
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
 
+const JERSEY_SLOT_MAX_W = "mx-auto w-full max-w-[8.85rem]";
+
 function PosterJerseyWrap({ children }: { children: ReactNode }) {
-  return <div className="flex min-w-0 w-full justify-center overflow-visible">{children}</div>;
+  return <div className="flex w-full justify-center overflow-visible">{children}</div>;
 }
 
 interface MatchLineupFullJerseyExportPosterProps {
@@ -90,8 +92,11 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
     const lineBox = "border-slate-400/35 bg-white/[0.52]";
     const pairTitle = "text-slate-600";
 
+    const forwardLines = lineup.forwardLines.slice(0, 4);
+    const sectionHeading = `mb-0.5 border-b pb-0.5 font-display text-[13px] font-extrabold uppercase tracking-[0.12em] ${heading}`;
+
     const renderSlot = (pid: string | null, positionLabel: string, reactKey: string) => (
-      <div key={reactKey} className="flex min-w-0 flex-col gap-0.5">
+      <div key={reactKey} className={`${JERSEY_SLOT_MAX_W} flex min-w-0 flex-col gap-0`}>
         <PosterJerseyWrap>
           <Nhl25JerseyCard
             player={getPlayer(pid)}
@@ -117,59 +122,41 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
         data-export-slot="cele-dresy"
         data-poster-surface="light"
         className="match-lineup-full-jersey-poster nhl25-share-poster-capture relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 bg-gradient-to-b from-white via-[#f4f6f9] to-[#e8ecf2] antialiased subpixel-antialiased shadow-[0_20px_50px_rgba(15,23,42,0.12)] [text-rendering:optimizeLegibility]"
-        style={{
-          width: SHARE_POSTER_3X4_W,
-          height: SHARE_POSTER_3X4_H,
-          minHeight: SHARE_POSTER_3X4_H,
-          maxHeight: SHARE_POSTER_3X4_H,
-          maxWidth: SHARE_POSTER_3X4_W,
-        }}
+        style={SHARE_POSTER_3X4_STYLE}
       >
         <div className="nhl25-moje-sestava-accent mx-2 mt-1.5 shrink-0 rounded-full sm:mx-2 sm:mt-2" aria-hidden />
 
-        <header className="relative shrink-0 px-2 pb-0.5 pt-2 sm:px-2">
+        <header className="relative shrink-0 px-2 pb-0 pt-1.5 sm:px-2">
           <div className="min-w-0 text-center sm:text-left">
             {titleLine ? (
-              <h1 className="line-clamp-3 font-display text-[1.65rem] font-extrabold leading-[1.08] tracking-tight text-slate-950 sm:text-[1.9rem]">
+              <h1 className="line-clamp-2 font-display text-[1.42rem] font-extrabold leading-[1.06] tracking-tight text-slate-950 sm:text-[1.58rem]">
                 {titleLine}
               </h1>
-            ) : (
-              <p className="font-display text-[1.35rem] font-extrabold uppercase tracking-[0.12em] text-slate-950">
-                MS 2026
-              </p>
-            )}
+            ) : null}
           </div>
         </header>
 
-        <div className="relative mx-0 mb-1 mt-0.5 min-h-0 flex-1 px-2 py-0 sm:mb-1 sm:px-2">
-          <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:gap-x-5 sm:gap-y-3">
-            <div className="min-w-0 space-y-2 sm:space-y-2.5">
-              <section>
-                <h2
-                  className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}
-                >
-                  Brankáři
-                </h2>
-                <div className="grid min-w-0 grid-cols-2 gap-x-3.5 gap-y-1 sm:gap-x-4 sm:gap-y-1">
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden px-2 pb-1 pt-0 sm:px-2">
+          <div className="grid min-h-0 flex-1 grid-cols-2 gap-x-3">
+            <div className="flex min-h-0 flex-col justify-between gap-1">
+              <section className="shrink-0">
+                <h2 className={sectionHeading}>Brankáři</h2>
+                <div className="grid min-w-0 grid-cols-2 gap-x-3.5 gap-y-1 sm:gap-x-4">
                   {renderSlot(lineup.goalies[0], "G", "g1")}
                   {renderSlot(lineup.goalies[1], "G", "g2")}
                 </div>
               </section>
 
-              <section>
-                <h2
-                  className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}
-                >
-                  Útočné řady
-                </h2>
-                <div className="space-y-1 sm:space-y-1.5">
-                  {lineup.forwardLines.map((line, i) => (
+              <section className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
+                <h2 className={`${sectionHeading} shrink-0`}>Útočné řady</h2>
+                <div className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
+                  {forwardLines.map((line, i) => (
                     <div
                       key={`fl-${i}`}
-                      className={`flex min-w-0 flex-col gap-0 overflow-hidden rounded-lg border px-1 py-1 sm:gap-0.5 sm:px-1.5 sm:py-1.5 ${lineBox}`}
+                      className={`flex min-w-0 flex-col gap-0 overflow-visible rounded-lg border px-1 py-0.5 ${lineBox}`}
                     >
                       <span
-                        className={`shrink-0 font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}
+                        className={`shrink-0 font-display text-[12px] font-bold uppercase tracking-wide sm:text-[13px] ${subheading}`}
                       >
                         {i + 1}. lajna
                       </span>
@@ -184,18 +171,14 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               </section>
             </div>
 
-            <div className="min-w-0 space-y-2 sm:space-y-2.5">
-              <section>
-                <h2
-                  className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}
-                >
-                  Obranné páry
-                </h2>
-                <div className="flex min-w-0 flex-col gap-1.5 sm:gap-2">
+            <div className="flex min-h-0 flex-col justify-between gap-1">
+              <section className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
+                <h2 className={`${sectionHeading} shrink-0`}>Obranné páry</h2>
+                <div className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
                   {lineup.defensePairs.slice(0, 3).map((pair, i) => (
-                    <div key={`pair-${i}`} className={`min-w-0 rounded-lg border px-1 py-1 sm:px-1.5 sm:py-1.5 ${lineBox}`}>
+                    <div key={`pair-${i}`} className={`min-w-0 rounded-lg border px-1 py-0.5 ${lineBox}`}>
                       <p
-                        className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}
+                        className={`mb-0.5 text-center font-display text-[12px] font-extrabold uppercase tracking-[0.1em] sm:text-[13px] ${pairTitle}`}
                       >
                         {i + 1}. pár
                       </p>
@@ -206,9 +189,9 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                     </div>
                   ))}
                   {defenseCount === 8 && (p3?.lb || p3?.rb) ? (
-                    <div className={`min-w-0 rounded-lg border px-1 py-1 sm:px-1.5 sm:py-1.5 ${lineBox}`}>
+                    <div className={`min-w-0 rounded-lg border px-1 py-0.5 ${lineBox}`}>
                       <p
-                        className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}
+                        className={`mb-0.5 text-center font-display text-[12px] font-extrabold uppercase tracking-[0.1em] sm:text-[13px] ${pairTitle}`}
                       >
                         4. pár
                       </p>
@@ -219,43 +202,44 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                     </div>
                   ) : null}
                   {seventhDefenseId ? (
-                    <div className={`min-w-0 rounded-lg border px-1 py-1 sm:px-1.5 sm:py-1.5 ${lineBox}`}>
+                    <div className={`min-w-0 rounded-lg border px-1 py-0.5 ${lineBox}`}>
                       <p
-                        className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}
+                        className={`mb-0.5 text-center font-display text-[12px] font-extrabold uppercase tracking-[0.1em] sm:text-[13px] ${pairTitle}`}
                       >
                         7. bek
                       </p>
-                      <div className="flex w-full min-w-0 justify-center">{renderSlot(seventhDefenseId, "D", "d7")}</div>
+                      <div className="grid grid-cols-3 gap-x-3.5">
+                        <div className="col-start-2">{renderSlot(seventhDefenseId, "D", "d7")}</div>
+                      </div>
                     </div>
                   ) : null}
                 </div>
               </section>
 
               {allowExtraForward && lineup.extraForwards[0] ? (
-                <section
-                  className="rounded-lg border border-dashed border-slate-400/40 bg-white/[0.48] px-1 py-1 sm:px-1.5 sm:py-1.5"
-                >
-                  <h2 className="mb-1 text-center font-display text-[15px] font-extrabold uppercase tracking-[0.1em] text-slate-900 sm:text-[17px]">
+                <div className={`min-w-0 rounded-lg border px-1 py-0.5 ${lineBox}`}>
+                  <p
+                    className={`mb-0.5 text-center font-display text-[12px] font-extrabold uppercase tracking-[0.1em] sm:text-[13px] ${pairTitle}`}
+                  >
                     13. útočník
-                  </h2>
-                  <div className="flex w-full min-w-0 justify-center">
-                    {renderSlot(lineup.extraForwards[0], "F", "xf")}
+                  </p>
+                  <div className="grid grid-cols-3 gap-x-3.5">
+                    <div className="col-start-2">{renderSlot(lineup.extraForwards[0], "F", "xf")}</div>
                   </div>
-                </section>
+                </div>
               ) : null}
             </div>
           </div>
         </div>
 
-        <footer className="mt-auto flex shrink-0 flex-col gap-1 border-t border-slate-200/90 bg-slate-100/80 px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5">
-          <div className="max-w-[48%] text-left text-[13px] font-medium leading-snug text-slate-600 sm:text-[14px]">
-            <p className="font-display text-[14px] font-extrabold tracking-wide text-[#c8102e] sm:text-[15px]">
+        <footer className="relative z-[2] mt-auto flex shrink-0 flex-col gap-0.5 border-t border-slate-200/90 bg-slate-100/95 px-2 py-1.5 sm:flex-row sm:items-end sm:justify-between sm:px-2">
+          <div className="max-w-[48%] text-left text-[12px] font-medium leading-snug text-slate-600">
+            <p className="font-display text-[13px] font-extrabold tracking-wide text-[#c8102e]">
               {jerseyRatingExport ? "Hodnocení zápasu" : "Sestava na zápas"}
             </p>
           </div>
           <div className="min-w-0 flex-1 text-center">
-            <p className="text-[14px] font-semibold text-slate-800 sm:text-[15px]">Soupiska</p>
-            <p className="mt-1 font-display text-[22px] font-black tracking-[0.12em] text-[#003087] sm:text-[24px]">
+            <p className="font-display text-[20px] font-black tracking-[0.12em] text-[#003087] sm:text-[22px]">
               {host || "hokejlineup.cz"}
             </p>
           </div>

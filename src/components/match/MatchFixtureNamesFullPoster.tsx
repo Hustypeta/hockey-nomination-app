@@ -2,7 +2,7 @@
 
 import { forwardRef, useId, useMemo, useState, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
-import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_3X4_STYLE } from "@/lib/sharePosterLayout";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
@@ -28,7 +28,7 @@ function fmtAvg(n: number | null | undefined): string {
 
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
-    <h3 className="mb-3 text-center font-display text-[13px] font-bold uppercase tracking-[0.26em] text-white/92 antialiased sm:text-[14px]">
+    <h3 className="mb-4 text-center font-display text-[14px] font-bold uppercase tracking-[0.26em] text-white/92 antialiased sm:mb-5 sm:text-[15px]">
       {children}
     </h3>
   );
@@ -36,7 +36,7 @@ function SectionTitle({ children }: { children: ReactNode }) {
 
 function NameOnlyPill({ children }: { children: string }) {
   return (
-    <div className="flex min-h-[2.75rem] items-center justify-center rounded-lg bg-white/[0.96] px-2.5 py-2 text-center font-sans text-[17px] font-bold leading-snug tracking-wide text-[#0a1628] shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[2.85rem] sm:text-[18px]">
+    <div className="flex min-h-[3.1rem] items-center justify-center rounded-xl bg-white/[0.96] px-3 py-2.5 text-center font-sans text-[18px] font-bold leading-snug tracking-wide text-[#0a1628] shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[3.35rem] sm:text-[19px]">
       <span className="line-clamp-2 break-words">{children}</span>
     </div>
   );
@@ -78,14 +78,6 @@ type RatingMap = Record<string, { avg: number; count: number } | undefined>;
 const lineupSharedRoot =
   "match-lineup-names-full-poster relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]";
 
-const poster3x4Style = {
-  width: SHARE_POSTER_3X4_W,
-  height: SHARE_POSTER_3X4_H,
-  minHeight: SHARE_POSTER_3X4_H,
-  maxHeight: SHARE_POSTER_3X4_H,
-  maxWidth: SHARE_POSTER_3X4_W,
-} as const;
-
 const ratingSharedRoot =
   "match-rating-names-full-poster relative shrink-0 overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]";
 
@@ -117,33 +109,33 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
     }, [lineup, players, defenseCount, allowExtraForward]);
 
     return (
-      <div ref={ref} data-export-slot="cele-jmena" className={lineupSharedRoot} style={poster3x4Style}>
+      <div ref={ref} data-export-slot="cele-jmena" className={lineupSharedRoot} style={SHARE_POSTER_3X4_STYLE}>
         <DecorativeBg />
-        <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-3 pt-8 sm:px-10 sm:pt-9">
-          <PosterHeader eyebrow="MS 2026 · zápas" titleLine={titleLine} subline={subline} />
+        <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-2 pt-8 sm:px-10 sm:pt-9">
+          <PosterHeader titleLine={titleLine} subline={subline} />
 
-          <div className="mt-5 min-h-0 flex-1 space-y-5 sm:mt-6 sm:space-y-6">
-            <section>
+          <div className="mt-6 flex min-h-0 flex-1 flex-col justify-between py-3 sm:mt-7 sm:py-5">
+            <section className="flex shrink-0 flex-col justify-center">
               <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionTitle>
-              <div className="mx-auto grid max-w-xl grid-cols-2 gap-2 sm:gap-2.5">
+              <div className="mx-auto grid w-full max-w-[520px] grid-cols-2 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
                 {goalies.map((n, i) => (
                   <NameOnlyPill key={`goalies-${i}`}>{n}</NameOnlyPill>
                 ))}
               </div>
             </section>
 
-            <section>
+            <section className="flex min-h-0 flex-[1.15] flex-col justify-center">
               <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionTitle>
-              <div className="mx-auto grid max-w-3xl grid-cols-2 gap-2.5 sm:gap-3">
+              <div className="mx-auto grid w-full max-w-[640px] grid-cols-2 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
                 {defense.map((n, i) => (
                   <NameOnlyPill key={`defense-${i}`}>{n}</NameOnlyPill>
                 ))}
               </div>
             </section>
 
-            <section>
+            <section className="flex min-h-0 flex-[1.55] flex-col justify-center">
               <SectionTitle>Útočníci</SectionTitle>
-              <div className="mx-auto grid max-w-3xl grid-cols-3 gap-2.5 sm:gap-3">
+              <div className="mx-auto grid w-full max-w-[920px] grid-cols-3 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
                 {forwards.map((n, i) => (
                   <NameOnlyPill key={`forwards-${i}`}>{n}</NameOnlyPill>
                 ))}
@@ -191,12 +183,12 @@ export const MatchRatingNamesFullPoster = forwardRef<
   }, [lineup, players, defenseCount, allowExtraForward, ratings]);
 
   return (
-    <div ref={ref} data-export-slot="cele-jmena" className={`${ratingSharedRoot} flex flex-col`} style={poster3x4Style}>
+    <div ref={ref} data-export-slot="cele-jmena" className={`${ratingSharedRoot} flex flex-col`} style={SHARE_POSTER_3X4_STYLE}>
       <DecorativeBg />
       <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-3 pt-8 sm:px-10 sm:pt-9">
         <PosterHeader eyebrow="Hodnocení hráčů" titleLine={titleLine} subline={subline} />
 
-        <div className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-12">
+        <div className="mt-5 flex min-h-0 flex-1 flex-col justify-between gap-6 py-2 sm:mt-6">
           {lineBlocks.map(({ group, chunks, rows }) => {
             if (!chunks) return null;
             const byId = new Map(rows.map((r) => [r.id, r]));
@@ -277,15 +269,17 @@ function PosterHeader({
   titleLine,
   subline,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   titleLine: string;
   subline?: string;
 }) {
   return (
     <header className="max-w-[72%] shrink-0 pr-2">
-      <p className="font-display text-[11px] font-bold uppercase tracking-[0.32em] text-[#c8102e]/95">{eyebrow}</p>
+      {eyebrow ? (
+        <p className="font-display text-[11px] font-bold uppercase tracking-[0.32em] text-[#c8102e]/95">{eyebrow}</p>
+      ) : null}
       {titleLine ? (
-        <h1 className="mt-2 line-clamp-3 font-display text-[1.5rem] font-bold leading-[1.1] tracking-wide text-white sm:text-[1.72rem]">
+        <h1 className={`line-clamp-3 font-display text-[1.5rem] font-bold leading-[1.1] tracking-wide text-white sm:text-[1.72rem] ${eyebrow ? "mt-2" : ""}`}>
           {titleLine}
         </h1>
       ) : null}

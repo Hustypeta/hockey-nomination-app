@@ -15,6 +15,15 @@ export const NOMINATION_WEB_POSTER_H = 1440;
 export const SHARE_POSTER_3X4_W = NOMINATION_WEB_POSTER_W;
 export const SHARE_POSTER_3X4_H = NOMINATION_WEB_POSTER_H;
 
+/** Fixní rozměry plakátu 3 : 4 pro inline `style` u exportních DOM uzlů. */
+export const SHARE_POSTER_3X4_STYLE = {
+  width: SHARE_POSTER_3X4_W,
+  height: SHARE_POSTER_3X4_H,
+  minHeight: SHARE_POSTER_3X4_H,
+  maxHeight: SHARE_POSTER_3X4_H,
+  maxWidth: SHARE_POSTER_3X4_W,
+} as const;
+
 /**
  * `pixelRatio` pro html-to-image u exportu plakátu. Dřívější 8–9 znamenalo ~rozlišení 9–10k px na šířku
  * (násobil se i výška) → extrémně pomalý render a PNG.

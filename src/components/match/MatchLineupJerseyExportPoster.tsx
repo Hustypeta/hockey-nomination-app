@@ -18,10 +18,9 @@ import {
   type MatchRatingAggregateMap,
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
+import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
 
-/** PNG řezu lajny — šířka∶výška = 3∶4 (např. 1080×1440). */
-const LINE_JERSEY_POSTER_W = 1080;
-const LINE_JERSEY_POSTER_H = Math.round((LINE_JERSEY_POSTER_W * 4) / 3);
+const LINE_JERSEY_SLOT_MAX_W = 220;
 
 function roleForPlayerId(lineup: LineupStructure, playerId: string): { kind: "goalie" | "skater"; label: "G" | "D" | "F" } {
   if (lineup.goalies[0] === playerId || lineup.goalies[1] === playerId) {
@@ -74,8 +73,12 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "flex-start",
-      gap: jerseyRatingExport ? 4 : 14,
-      padding: jerseyRatingExport ? "0 0 4px" : "4px 0 12px",
+      gap: jerseyRatingExport ? 4 : 10,
+      padding: jerseyRatingExport ? "0 0 4px" : "2px 0 8px",
+      width: "100%",
+      maxWidth: LINE_JERSEY_SLOT_MAX_W,
+      marginLeft: "auto",
+      marginRight: "auto",
     };
 
     const renderPlayerCard = (pid: string) => {
@@ -214,30 +217,21 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       );
     };
 
-    const pad = jerseyRatingExport ? 30 : 56;
-    const rootStyle: CSSProperties = jerseyRatingExport
-      ? {
-          width: LINE_JERSEY_POSTER_W,
-          height: LINE_JERSEY_POSTER_H,
-          minHeight: LINE_JERSEY_POSTER_H,
-          maxHeight: LINE_JERSEY_POSTER_H,
-          padding: pad,
-          fontFamily: "'Barlow Condensed', 'Inter', system-ui, sans-serif",
-          background: "linear-gradient(135deg, #050a18 0%, #0a1428 32%, #121c34 65%, #050a18 100%)",
-          color: "white",
-          boxSizing: "border-box",
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-        }
-      : {
-          width: LINE_JERSEY_POSTER_W,
-          padding: pad,
-          fontFamily: "'Barlow Condensed', 'Inter', system-ui, sans-serif",
-          background: "linear-gradient(135deg, #050a18 0%, #0a1428 32%, #121c34 65%, #050a18 100%)",
-          color: "white",
-          boxSizing: "border-box",
-        };
+    const pad = jerseyRatingExport ? 28 : 32;
+    const rootStyle: CSSProperties = {
+      width: SHARE_POSTER_3X4_W,
+      height: SHARE_POSTER_3X4_H,
+      minHeight: SHARE_POSTER_3X4_H,
+      maxHeight: SHARE_POSTER_3X4_H,
+      padding: pad,
+      fontFamily: "'Barlow Condensed', 'Inter', system-ui, sans-serif",
+      background: "linear-gradient(135deg, #050a18 0%, #0a1428 32%, #121c34 65%, #050a18 100%)",
+      color: "white",
+      boxSizing: "border-box",
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+    };
 
     return (
       <div ref={ref} data-export-slot={group} className="match-lineup-jersey-export-poster" style={rootStyle}>
@@ -310,13 +304,13 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
         {lineChunks ? (
           <div
             style={{
-              marginTop: jerseyRatingExport ? 8 : 28,
+              marginTop: jerseyRatingExport ? 6 : 12,
               display: "flex",
               flexDirection: "column",
-              gap: jerseyRatingExport ? 8 : 26,
-              ...(jerseyRatingExport
-                ? { flex: 1, minHeight: 0, justifyContent: "center" as const }
-                : {}),
+              gap: jerseyRatingExport ? 10 : 18,
+              flex: 1,
+              minHeight: 0,
+              justifyContent: "space-evenly",
             }}
           >
             {lineChunks.forwards.filter(Boolean).length > 0 ? (
@@ -352,7 +346,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             {lineChunks.bottom.filter(Boolean).length > 0 ? (
               lineChunks.bottom.filter(Boolean).length === 1 ? (
                 <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                  <div style={{ width: "100%", maxWidth: jerseyRatingExport ? 420 : 580 }}>
+                  <div style={{ width: "100%", maxWidth: LINE_JERSEY_SLOT_MAX_W }}>
                     {renderPlayerCard(lineChunks.bottom.filter(Boolean)[0]!)}
                   </div>
                 </div>
@@ -377,11 +371,11 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${cols}, 1fr)`,
-              gap: jerseyRatingExport ? 12 : 20,
-              marginTop: jerseyRatingExport ? 14 : 28,
-              ...(jerseyRatingExport
-                ? { flex: 1, minHeight: 0, alignContent: "center" as const }
-                : {}),
+              gap: jerseyRatingExport ? 12 : 18,
+              marginTop: 12,
+              flex: 1,
+              minHeight: 0,
+              alignContent: "space-evenly",
             }}
           >
             {ids.map((pid) => renderPlayerCard(pid))}
@@ -390,8 +384,9 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
 
         <div
           style={{
-            marginTop: jerseyRatingExport ? "auto" : 36,
-            paddingTop: jerseyRatingExport ? 10 : 0,
+            marginTop: "auto",
+            paddingTop: 8,
+            flexShrink: 0,
             textAlign: "center",
             fontSize: jerseyRatingExport ? 22 : 24,
             color: "rgba(126,200,255,0.95)",
@@ -399,7 +394,6 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             textTransform: "none",
             fontWeight: 900,
             fontFamily: "var(--font-display, 'Barlow Condensed', system-ui)",
-            ...(jerseyRatingExport ? { flexShrink: 0 as const } : {}),
           }}
         >
           hokejlineup.cz
