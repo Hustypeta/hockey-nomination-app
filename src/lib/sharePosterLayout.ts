@@ -6,10 +6,14 @@ export const SHARE_POSTER_WIDTH_PX = 1120;
 
 /**
  * Instagram feed — poměr 3 : 4 (1080 × 1440 px).
- * Webová grafika nominace má nativně tento rozměr; ostatní plakáty zůstávají na {@link SHARE_POSTER_WIDTH_PX}.
+ * Sdílené plakáty nominace i zápasové exporty používají tento rozměr; {@link SHARE_POSTER_WIDTH_PX} zůstává jen pro starší náhledy / marketing.
  */
 export const NOMINATION_WEB_POSTER_W = 1080;
 export const NOMINATION_WEB_POSTER_H = 1440;
+
+/** Instagram / sdílení — poměr 3 : 4 (šířka × výška). */
+export const SHARE_POSTER_3X4_W = NOMINATION_WEB_POSTER_W;
+export const SHARE_POSTER_3X4_H = NOMINATION_WEB_POSTER_H;
 
 /**
  * `pixelRatio` pro html-to-image u exportu plakátu. Dřívější 8–9 znamenalo ~rozlišení 9–10k px na šířku

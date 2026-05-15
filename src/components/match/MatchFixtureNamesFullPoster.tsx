@@ -2,7 +2,7 @@
 
 import { forwardRef, useId, useMemo, useState, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
-import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
@@ -76,7 +76,15 @@ interface BaseFixtureNamesFullPosterProps {
 type RatingMap = Record<string, { avg: number; count: number } | undefined>;
 
 const lineupSharedRoot =
-  "match-lineup-names-full-poster relative shrink-0 overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]";
+  "match-lineup-names-full-poster relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]";
+
+const poster3x4Style = {
+  width: SHARE_POSTER_3X4_W,
+  height: SHARE_POSTER_3X4_H,
+  minHeight: SHARE_POSTER_3X4_H,
+  maxHeight: SHARE_POSTER_3X4_H,
+  maxWidth: SHARE_POSTER_3X4_W,
+} as const;
 
 const ratingSharedRoot =
   "match-rating-names-full-poster relative shrink-0 overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]";
@@ -109,15 +117,15 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
     }, [lineup, players, defenseCount, allowExtraForward]);
 
     return (
-      <div ref={ref} data-export-slot="cele-jmena" className={lineupSharedRoot} style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}>
+      <div ref={ref} data-export-slot="cele-jmena" className={lineupSharedRoot} style={poster3x4Style}>
         <DecorativeBg />
-        <div className="relative z-[1] px-9 pb-6 pt-10 sm:px-11 sm:pb-8 sm:pt-11">
-          <PosterHeader eyebrow="MS 2026 · zápas" titleLine={titleLine} subline={subline} kicker="Český nároďák · soupiska · jen jména (komplet)" />
+        <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-3 pt-8 sm:px-10 sm:pt-9">
+          <PosterHeader eyebrow="MS 2026 · zápas" titleLine={titleLine} subline={subline} />
 
-          <div className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-12">
+          <div className="mt-5 min-h-0 flex-1 space-y-5 sm:mt-6 sm:space-y-6">
             <section>
               <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionTitle>
-              <div className="mx-auto grid max-w-3xl grid-cols-3 gap-2.5 sm:gap-3">
+              <div className="mx-auto grid max-w-xl grid-cols-2 gap-2 sm:gap-2.5">
                 {goalies.map((n, i) => (
                   <NameOnlyPill key={`goalies-${i}`}>{n}</NameOnlyPill>
                 ))}
@@ -183,10 +191,10 @@ export const MatchRatingNamesFullPoster = forwardRef<
   }, [lineup, players, defenseCount, allowExtraForward, ratings]);
 
   return (
-    <div ref={ref} data-export-slot="cele-jmena" className={ratingSharedRoot} style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}>
+    <div ref={ref} data-export-slot="cele-jmena" className={`${ratingSharedRoot} flex flex-col`} style={poster3x4Style}>
       <DecorativeBg />
-      <div className="relative z-[1] px-9 pb-6 pt-10 sm:px-11 sm:pb-8 sm:pt-11">
-        <PosterHeader eyebrow="Hodnocení hráčů" titleLine={titleLine} subline={subline} kicker="Průměry fanoušků · jména (komplet)" />
+      <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-3 pt-8 sm:px-10 sm:pt-9">
+        <PosterHeader eyebrow="Hodnocení hráčů" titleLine={titleLine} subline={subline} />
 
         <div className="mt-8 flex flex-col gap-10 sm:mt-10 sm:gap-12">
           {lineBlocks.map(({ group, chunks, rows }) => {
@@ -268,23 +276,20 @@ function PosterHeader({
   eyebrow,
   titleLine,
   subline,
-  kicker,
 }: {
   eyebrow: string;
   titleLine: string;
   subline?: string;
-  kicker: string;
 }) {
   return (
-    <header className="max-w-[62%] pr-2">
+    <header className="max-w-[72%] shrink-0 pr-2">
       <p className="font-display text-[11px] font-bold uppercase tracking-[0.32em] text-[#c8102e]/95">{eyebrow}</p>
       {titleLine ? (
-        <h1 className="mt-2 line-clamp-4 font-display text-[1.45rem] font-bold leading-[1.12] tracking-wide text-white sm:text-[1.75rem]">
+        <h1 className="mt-2 line-clamp-3 font-display text-[1.5rem] font-bold leading-[1.1] tracking-wide text-white sm:text-[1.72rem]">
           {titleLine}
         </h1>
       ) : null}
       {subline ? <p className="mt-1.5 font-display text-sm text-white/52">{subline}</p> : null}
-      <p className={`font-display text-[11px] font-semibold uppercase tracking-[0.22em] text-white/52 ${titleLine || subline ? "mt-2" : "mt-3"}`}>{kicker}</p>
     </header>
   );
 }
@@ -299,13 +304,15 @@ function NamesFooter({
   footerTag: string;
 }) {
   return (
-    <footer className="relative z-[1] flex flex-col gap-2 border-t border-white/[0.09] bg-black/45 px-8 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-10">
+    <footer className="relative z-[1] mt-auto flex shrink-0 flex-col gap-2 border-t border-white/[0.09] bg-black/45 px-8 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-10">
       <div className="max-w-[46%] text-left text-[11px] leading-snug text-white/55 sm:text-[12px]">
         <p className="font-display font-bold tracking-wide text-[#c8102e]">{footerTag}</p>
       </div>
       <div className="min-w-0 flex-1 text-center">
         <p className="text-[13px] font-medium text-white/78">Exportováno {dateLabel}</p>
-        {host ? <p className="mt-1 font-display text-sm tracking-wide text-[#7ec8ff]/95">{host}</p> : null}
+        <p className="mt-1.5 font-display text-[22px] font-black tracking-[0.14em] text-[#7ec8ff] sm:text-[24px]">
+          {host || "hokejlineup.cz"}
+        </p>
       </div>
       <div className="hidden w-[46%] sm:block" aria-hidden />
     </footer>

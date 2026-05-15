@@ -13,7 +13,13 @@ import {
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
-import { NOMINATION_WEB_POSTER_H, NOMINATION_WEB_POSTER_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
+import {
+  NOMINATION_WEB_POSTER_H,
+  NOMINATION_WEB_POSTER_W,
+  SHARE_POSTER_3X4_H,
+  SHARE_POSTER_3X4_W,
+  SHARE_POSTER_CAPTURE_PIXEL_RATIO,
+} from "@/lib/sharePosterLayout";
 
 interface SaveShareModalProps {
   isOpen: boolean;
@@ -346,10 +352,10 @@ export function SaveShareModal({
                   </div>
                   <p className="mt-2 text-[11px] leading-snug text-white/45">
                     {posterVariant === "names"
-                      ? "Tmavá grafika se jmény — vhodná na feed jako jednoduchá soupiska bez klubů."
+                      ? "Tmavá grafika se jmény — nativně 3 : 4 (1080×1440), vhodná na Instagram feed."
                       : posterVariant === "names-web"
                         ? `Grafika nativně vyplňuje formát 3 : 4 (${NOMINATION_WEB_POSTER_W}×${NOMINATION_WEB_POSTER_H} px, Instagram feed). Jiné poměry přidají pruhy kolem celé soupisky.`
-                        : "Plakát s fotkami dresů — přepni Světlý / Tmavý podle pozadí."}
+                        : "Plakát s dresy nativně 3 : 4 (1080×1440) — přepni Světlý / Tmavý podle pozadí."}
                   </p>
                 </div>
               ) : null}
@@ -439,7 +445,7 @@ export function SaveShareModal({
                 </p>
                 <div className="mb-3 grid grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">
                   {(
-                    posterVariant === "names-web"
+                    posterVariant === "names-web" || posterVariant === "jerseys" || posterVariant === "names"
                       ? [
                           ["original", "3 : 4 IG"],
                           ["1x1", "1 : 1"],
@@ -459,7 +465,9 @@ export function SaveShareModal({
                       onClick={() => setPreviewFrame(id)}
                       title={
                         id === "original"
-                          ? posterVariant === "names-web"
+                          ? posterVariant === "names-web" ||
+                              posterVariant === "jerseys" ||
+                              posterVariant === "names"
                             ? "Nativní výstup 1080×1440 (3 : 4). Celá soupiska, žádný ořez hráčů."
                             : "Původní poměr exportu."
                           : id === "1x1"
@@ -481,11 +489,13 @@ export function SaveShareModal({
                   ))}
                 </div>
                 <p className="mt-2 text-center text-[11px] leading-snug text-white/50">
-                  {posterVariant === "names-web" ? (
+                  {posterVariant === "names-web" ||
+                  posterVariant === "jerseys" ||
+                  posterVariant === "names" ? (
                     <>
-                      <strong className="font-semibold text-white/70">Web nominace</strong> je graficky postavená jako{" "}
-                      <strong className="font-semibold text-white/70">Instagram 3 : 4</strong> — obrázek zaplňuje celý
-                      výstup bez obdélníku uvnitř. U <strong className="font-semibold text-white/70">1 : 1</strong> či{" "}
+                      Plakát je nativně{" "}
+                      <strong className="font-semibold text-white/70">3 : 4</strong> (1080×1440) — výstup zaplňuje celý
+                      formát bez vnitřního obdélníku. U <strong className="font-semibold text-white/70">1 : 1</strong> či{" "}
                       <strong className="font-semibold text-white/70">9 : 16</strong> systém doplní pruhy, aby byl celý výpis
                       pořád vidět.
                     </>
@@ -513,11 +523,15 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={() =>
-                    downloadAspect(NOMINATION_WEB_POSTER_W, NOMINATION_WEB_POSTER_H, "instagram-3x4")
+                    downloadAspect(
+                      posterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
+                      posterVariant === "names-web" ? NOMINATION_WEB_POSTER_H : SHARE_POSTER_3X4_H,
+                      "instagram-3x4"
+                    )
                   }
                   title="Instagram feed — výplň 1080 × 1440."
                   className={`flex items-center justify-center gap-2 rounded-xl py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors sm:col-span-2 ${
-                    posterVariant === "names-web"
+                    posterVariant === "names-web" || posterVariant === "jerseys" || posterVariant === "names"
                       ? "bg-gradient-to-r from-amber-500/35 to-rose-600/35 ring-amber-400/45 hover:from-amber-500/45 hover:to-rose-600/45"
                       : "bg-white/10 hover:bg-white/[0.14]"
                   }`}

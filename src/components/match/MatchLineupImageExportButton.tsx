@@ -164,7 +164,7 @@ export function MatchLineupImageExportButton({
       }
       setBusyKey(slot);
       try {
-        const bg = slot === "cele-jmena" ? "#060b14" : "#05080f";
+        const bg = slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? "#e8ecf2" : "#05080f";
         const selector =
           slot === "cele-jmena"
             ? "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
@@ -249,6 +249,7 @@ export function MatchLineupImageExportButton({
           players={players}
           defenseCount={defenseCount}
           allowExtraForward={allowExtraForward}
+          siteUrl={siteOrigin}
           jerseyRatingExport={jerseyRatingExport}
         />
         {SEGMENTS.map((g) => (

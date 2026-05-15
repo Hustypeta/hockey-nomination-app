@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import type { PosterLetterboxTheme } from "@/lib/captureSharePoster";
-import { NOMINATION_WEB_POSTER_W, SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
+import { NOMINATION_WEB_POSTER_W, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
@@ -999,8 +999,8 @@ export function NominationBuilderPage() {
               : "pointer-events-none fixed left-0 top-0 z-[-1] -translate-x-full"
           }
           style={{
-            width: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_WIDTH_PX,
-            maxWidth: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_WIDTH_PX,
+            width: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
+            maxWidth: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
           }}
           aria-hidden
         >

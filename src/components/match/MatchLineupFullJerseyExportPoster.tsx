@@ -1,10 +1,10 @@
 "use client";
 
-import { forwardRef, useMemo, type CSSProperties, type ReactNode } from "react";
+import { forwardRef, useMemo, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
-import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
-import { matchPosterJerseyFrameStyles } from "@/lib/matchLineupPosterJerseyFrame";
+import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
+import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
 import {
   fmtMatchRating,
   matchRatingHue,
@@ -13,14 +13,8 @@ import {
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
 
-function roleForPlayerId(lineup: LineupStructure, playerId: string): { kind: "goalie" | "skater"; label: "G" | "D" | "F" } {
-  if (lineup.goalies[0] === playerId || lineup.goalies[1] === playerId || lineup.goalies[2] === playerId) {
-    return { kind: "goalie", label: "G" };
-  }
-  for (const p of lineup.defensePairs) {
-    if (p.lb === playerId || p.rb === playerId) return { kind: "skater", label: "D" };
-  }
-  return { kind: "skater", label: "F" };
+function PosterJerseyWrap({ children }: { children: ReactNode }) {
+  return <div className="flex min-w-0 w-full justify-center overflow-visible">{children}</div>;
 }
 
 interface MatchLineupFullJerseyExportPosterProps {
@@ -29,6 +23,7 @@ interface MatchLineupFullJerseyExportPosterProps {
   lineup: LineupStructure;
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
+  siteUrl?: string;
   jerseyRatingExport?: {
     ratings: MatchRatingAggregateMap;
     myRatings: MatchRatingMyMap;
@@ -36,341 +31,236 @@ interface MatchLineupFullJerseyExportPosterProps {
   };
 }
 
+function MatchJerseyRatingBadge({
+  pid,
+  jerseyRatingExport,
+}: {
+  pid: string;
+  jerseyRatingExport: NonNullable<MatchLineupFullJerseyExportPosterProps["jerseyRatingExport"]>;
+}) {
+  const mode = jerseyRatingExport.snapshotMode;
+  const display = resolveMatchRatingDisplay(
+    pid,
+    jerseyRatingExport.ratings,
+    jerseyRatingExport.myRatings,
+    mode
+  );
+  const aggregate = jerseyRatingExport.ratings[pid];
+  const hue = matchRatingHue(display);
+  return (
+    <div className="mt-1 flex flex-col items-center gap-0.5">
+      <div
+        className="inline-flex items-baseline gap-1 rounded-xl border-2 border-white/90 px-2.5 py-1"
+        style={{
+          background: hue.bg,
+          color: hue.text,
+          boxShadow: `0 6px 16px ${hue.ring}, 0 0 0 2px rgba(255,255,255,0.9) inset`,
+        }}
+      >
+        <span className="font-display text-[1.35rem] font-black tabular-nums leading-none tracking-tight">
+          {fmtMatchRating(display)}
+        </span>
+        <span className="text-[9px] font-extrabold uppercase tracking-wider opacity-85">/10</span>
+      </div>
+      {mode === "community" && aggregate && aggregate.count > 0 ? (
+        <span className="text-[9px] font-semibold text-slate-500">{aggregate.count} hlasů</span>
+      ) : null}
+      {mode === "personal" && typeof jerseyRatingExport.myRatings[pid] !== "number" ? (
+        <span className="text-[9px] font-semibold text-slate-400">Neuloženo</span>
+      ) : null}
+    </div>
+  );
+}
+
 /**
- * Celá zápasová soupiska s dresy (PremiumJersey) — jedna vysoká PNG, podobně jako nominace {@link Nhl25SharePoster}.
- * Počty obránců / 13. útočník podle stejných pravidel jako editor zápasové sestavy.
+ * Celá zápasová soupiska s dresy — layout jako {@link Nhl25SharePoster} (3 : 4, dvousloupec, Nhl25JerseyCard).
  */
 export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, MatchLineupFullJerseyExportPosterProps>(
   function MatchLineupFullJerseyExportPoster(
-    { lineupTitle, players, lineup, defenseCount, allowExtraForward, jerseyRatingExport },
+    { lineupTitle, players, lineup, defenseCount, allowExtraForward, siteUrl = "", jerseyRatingExport },
     ref
   ) {
-    const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
     const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
+    const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) ?? null : null);
+    const host = siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const titleLine = lineupTitle.trim();
 
-    const posterJerseyScale = 1.22;
-    const ratingExtraShellPx = jerseyRatingExport ? 6 : 0;
-    const jerseyFrame = matchPosterJerseyFrameStyles(posterJerseyScale, ratingExtraShellPx);
+    const heading = "border-slate-300 text-slate-900";
+    const subheading = "text-slate-700";
+    const lineBox = "border-slate-400/35 bg-white/[0.52]";
+    const pairTitle = "text-slate-600";
 
-    const cardShell: CSSProperties = {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "flex-start",
-      gap: jerseyRatingExport ? 8 : 12,
-      padding: jerseyRatingExport ? "4px 0 14px" : "4px 0 10px",
-    };
-
-    const renderCard = (pid: string | null, positionLabel: string, reactKey: string) => {
-      const player = pid ? (byId.get(pid) ?? null) : null;
-      const role = pid ? roleForPlayerId(lineup, pid) : { kind: "skater" as const, label: "F" as const };
-      const label = positionLabel || role.label;
-      const mode = jerseyRatingExport?.snapshotMode;
-      const display =
-        pid && jerseyRatingExport && mode
-          ? resolveMatchRatingDisplay(pid, jerseyRatingExport.ratings, jerseyRatingExport.myRatings, mode)
-          : null;
-      const aggregate = pid && jerseyRatingExport ? jerseyRatingExport.ratings[pid] : undefined;
-      const hue = display != null ? matchRatingHue(display) : matchRatingHue(null);
-      return (
-        <div key={reactKey} style={cardShell}>
-          <div style={jerseyFrame.shell}>
-            <div style={jerseyFrame.scaler}>
-              <PremiumJerseySlotCard
-                player={player}
-                positionLabel={label}
-                kind={role.kind}
-                size="compact"
-                disableMotion
-                posterEmbed
-                lightRinkSurface={false}
-                ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
-              />
-            </div>
-          </div>
-          <div style={{ width: "100%", textAlign: "center", paddingLeft: 2, paddingRight: 2 }}>
-            <div
-              style={{
-                fontSize: 27,
-                fontWeight: 900,
-                color: "white",
-                lineHeight: 1.08,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {player ? player.name : "—"}
-            </div>
-            {jerseyRatingExport && mode && pid ? (
-              <div style={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                <div
-                  style={{
-                    minWidth: 88,
-                    padding: "6px 12px 5px",
-                    borderRadius: 14,
-                    background: hue.bg,
-                    boxShadow: `0 6px 16px ${hue.ring}, 0 0 0 2px rgba(255,255,255,0.9) inset`,
-                    border: "2px solid rgba(255,255,255,0.9)",
-                    color: hue.text,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 34,
-                      fontWeight: 900,
-                      lineHeight: 1,
-                      letterSpacing: "-0.04em",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    {fmtMatchRating(display)}
-                  </div>
-                  <div
-                    style={{
-                      marginTop: 1,
-                      fontSize: 8,
-                      fontWeight: 800,
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      opacity: 0.82,
-                    }}
-                  >
-                    / 10
-                  </div>
-                </div>
-                {mode === "community" && aggregate && aggregate.count > 0 ? (
-                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.45)" }}>
-                    {aggregate.count} hlasů
-                  </div>
-                ) : null}
-                {mode === "personal" && typeof jerseyRatingExport.myRatings[pid] !== "number" ? (
-                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.38)" }}>Neuloženo</div>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-        </div>
-      );
-    };
-
-    const g1 = lineup.goalies[0];
-    const g2 = lineup.goalies[1];
-
-    const defenseBlocks: Array<{ key: string; nodes: ReactNode }> = [];
-    for (let i = 0; i < 3; i++) {
-      const p = lineup.defensePairs[i];
-      if (!p?.lb && !p?.rb) continue;
-      defenseBlocks.push({
-        key: `pair-${i}`,
-        nodes: (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: 16,
-              alignItems: "start",
-            }}
-          >
-            {renderCard(p.lb, "LD", `pair-${i}-lb`)}
-            {renderCard(p.rb, "RD", `pair-${i}-rb`)}
-          </div>
-        ),
-      });
-    }
-    const p3 = lineup.defensePairs[3];
-    if (defenseCount === 8 && (p3?.lb || p3?.rb)) {
-      defenseBlocks.push({
-        key: "pair-4",
-        nodes: (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: 16,
-              alignItems: "start",
-            }}
-          >
-            {renderCard(p3.lb, "LD", "pair-4-lb")}
-            {renderCard(p3.rb, "RD", "pair-4-rb")}
-          </div>
-        ),
-      });
-    } else if (defenseCount === 7 && p3?.lb) {
-      defenseBlocks.push({
-        key: "d7",
-        nodes: (
-          <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-              <div style={{ width: "100%", maxWidth: 480 }}>{renderCard(p3.lb, "D", "d7")}</div>
-          </div>
-        ),
-      });
-    }
-
-    const sectionTitle = (t: string) => (
-      <div
-        style={{
-          marginBottom: 12,
-          fontSize: 13,
-          fontWeight: 800,
-          letterSpacing: "0.22em",
-          textTransform: "uppercase",
-          color: "rgba(255,255,255,0.72)",
-          borderBottom: "1px solid rgba(255,255,255,0.12)",
-          paddingBottom: 8,
-        }}
-      >
-        {t}
+    const renderSlot = (pid: string | null, positionLabel: string, reactKey: string) => (
+      <div key={reactKey} className="flex min-w-0 flex-col gap-0.5">
+        <PosterJerseyWrap>
+          <Nhl25JerseyCard
+            player={getPlayer(pid)}
+            positionLabel={positionLabel}
+            size="compact"
+            nameplateVariant="poster"
+            ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
+            disableMotion
+          />
+        </PosterJerseyWrap>
+        {jerseyRatingExport && pid ? (
+          <MatchJerseyRatingBadge pid={pid} jerseyRatingExport={jerseyRatingExport} />
+        ) : null}
       </div>
     );
 
-    const lineLabel = (n: number) => (
-      <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 700, color: "rgba(241,196,15,0.95)" }}>{n}. lajna</div>
-    );
+    const p3 = lineup.defensePairs[3];
+    const seventhDefenseId = defenseCount === 7 ? (p3?.lb ?? null) : null;
 
     return (
       <div
         ref={ref}
         data-export-slot="cele-dresy"
-        className="match-lineup-full-jersey-poster"
+        data-poster-surface="light"
+        className="match-lineup-full-jersey-poster nhl25-share-poster-capture relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 bg-gradient-to-b from-white via-[#f4f6f9] to-[#e8ecf2] antialiased subpixel-antialiased shadow-[0_20px_50px_rgba(15,23,42,0.12)] [text-rendering:optimizeLegibility]"
         style={{
-          width: 1080,
-          padding: 48,
-          fontFamily: "'Barlow Condensed', 'Inter', system-ui, sans-serif",
-          background:
-            "linear-gradient(135deg, #050a18 0%, #0a1428 32%, #121c34 65%, #050a18 100%)",
-          color: "white",
-          boxSizing: "border-box",
+          width: SHARE_POSTER_3X4_W,
+          height: SHARE_POSTER_3X4_H,
+          minHeight: SHARE_POSTER_3X4_H,
+          maxHeight: SHARE_POSTER_3X4_H,
+          maxWidth: SHARE_POSTER_3X4_W,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            gap: 16,
-            paddingBottom: 20,
-            borderBottom: "3px solid rgba(241, 196, 15, 0.6)",
-          }}
-        >
-          <div style={{ minWidth: 0 }}>
-            <div
-              style={{
-                fontSize: 14,
-                fontWeight: 800,
-                letterSpacing: "0.28em",
-                textTransform: "uppercase",
-                color: "#f1c40f",
-              }}
-            >
-              {jerseyRatingExport ? "Hodnocení hráčů" : "Sestava na zápas"}
-            </div>
-            <div
-              style={{
-                marginTop: 6,
-                fontSize: 38,
-                fontWeight: 900,
-                lineHeight: 1.05,
-                color: "white",
-              }}
-            >
-              {lineupTitle.trim() || "Moje sestava"}
-            </div>
-            <div style={{ marginTop: 6, fontSize: 13, color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>
-              {jerseyRatingExport
-                ? jerseyRatingExport.snapshotMode === "personal"
-                  ? "Celá soupiska · dresy · moje známky"
-                  : "Celá soupiska · dresy · průměr komunity"
-                : "Celá soupiska · dresy"}
-            </div>
-          </div>
-          <div style={{ textAlign: "right", flexShrink: 0 }}>
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 800,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.55)",
-              }}
-            >
-              {defenseCount} beků
-              {allowExtraForward ? " · 13. útočník" : ""}
-            </div>
-          </div>
-        </div>
+        <div className="nhl25-moje-sestava-accent mx-2 mt-1.5 shrink-0 rounded-full sm:mx-2 sm:mt-2" aria-hidden />
 
-        <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 28 }}>
-          <section>
-            {sectionTitle("Brankáři")}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: 16,
-                alignItems: "start",
-              }}
-            >
-              {renderCard(g1, "G", "g1")}
-              {renderCard(g2, "G", "g2")}
-            </div>
-          </section>
+        <header className="relative shrink-0 px-2 pb-0.5 pt-2 sm:px-2">
+          <div className="min-w-0 text-center sm:text-left">
+            {titleLine ? (
+              <h1 className="line-clamp-3 font-display text-[1.65rem] font-extrabold leading-[1.08] tracking-tight text-slate-950 sm:text-[1.9rem]">
+                {titleLine}
+              </h1>
+            ) : (
+              <p className="font-display text-[1.35rem] font-extrabold uppercase tracking-[0.12em] text-slate-950">
+                MS 2026
+              </p>
+            )}
+          </div>
+        </header>
 
-          <section>
-            {sectionTitle("Útočné řady")}
-            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              {lineup.forwardLines.map((line, li) => (
-                <div key={`fl-${li}`}>
-                  {lineLabel(li + 1)}
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                      gap: 16,
-                      alignItems: "start",
-                    }}
-                  >
-                    {renderCard(line.lw, "LW", `ln${li}-lw`)}
-                    {renderCard(line.c, "C", `ln${li}-c`)}
-                    {renderCard(line.rw, "RW", `ln${li}-rw`)}
+        <div className="relative mx-0 mb-1 mt-0.5 min-h-0 flex-1 px-2 py-0 sm:mb-1 sm:px-2">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:gap-x-5 sm:gap-y-3">
+            <div className="min-w-0 space-y-2 sm:space-y-2.5">
+              <section>
+                <h2
+                  className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}
+                >
+                  Brankáři
+                </h2>
+                <div className="grid min-w-0 grid-cols-2 gap-x-3.5 gap-y-1 sm:gap-x-4 sm:gap-y-1">
+                  {renderSlot(lineup.goalies[0], "G", "g1")}
+                  {renderSlot(lineup.goalies[1], "G", "g2")}
+                </div>
+              </section>
+
+              <section>
+                <h2
+                  className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}
+                >
+                  Útočné řady
+                </h2>
+                <div className="space-y-1 sm:space-y-1.5">
+                  {lineup.forwardLines.map((line, i) => (
+                    <div
+                      key={`fl-${i}`}
+                      className={`flex min-w-0 flex-col gap-0 overflow-hidden rounded-lg border px-1 py-1 sm:gap-0.5 sm:px-1.5 sm:py-1.5 ${lineBox}`}
+                    >
+                      <span
+                        className={`shrink-0 font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}
+                      >
+                        {i + 1}. lajna
+                      </span>
+                      <div className="grid min-w-0 w-full grid-cols-3 gap-x-3.5 gap-y-0 sm:gap-x-4">
+                        {renderSlot(line.lw, "LW", `ln${i}-lw`)}
+                        {renderSlot(line.c, "C", `ln${i}-c`)}
+                        {renderSlot(line.rw, "RW", `ln${i}-rw`)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            <div className="min-w-0 space-y-2 sm:space-y-2.5">
+              <section>
+                <h2
+                  className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}
+                >
+                  Obranné páry
+                </h2>
+                <div className="flex min-w-0 flex-col gap-1.5 sm:gap-2">
+                  {lineup.defensePairs.slice(0, 3).map((pair, i) => (
+                    <div key={`pair-${i}`} className={`min-w-0 rounded-lg border px-1 py-1 sm:px-1.5 sm:py-1.5 ${lineBox}`}>
+                      <p
+                        className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}
+                      >
+                        {i + 1}. pár
+                      </p>
+                      <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
+                        {renderSlot(pair.lb, "LD", `pair-${i}-lb`)}
+                        {renderSlot(pair.rb, "RD", `pair-${i}-rb`)}
+                      </div>
+                    </div>
+                  ))}
+                  {defenseCount === 8 && (p3?.lb || p3?.rb) ? (
+                    <div className={`min-w-0 rounded-lg border px-1 py-1 sm:px-1.5 sm:py-1.5 ${lineBox}`}>
+                      <p
+                        className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}
+                      >
+                        4. pár
+                      </p>
+                      <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
+                        {renderSlot(p3.lb, "LD", "pair-4-lb")}
+                        {renderSlot(p3.rb, "RD", "pair-4-rb")}
+                      </div>
+                    </div>
+                  ) : null}
+                  {seventhDefenseId ? (
+                    <div className={`min-w-0 rounded-lg border px-1 py-1 sm:px-1.5 sm:py-1.5 ${lineBox}`}>
+                      <p
+                        className={`mb-0.5 text-center font-display text-[14px] font-extrabold uppercase tracking-[0.1em] sm:text-[15px] ${pairTitle}`}
+                      >
+                        7. bek
+                      </p>
+                      <div className="flex w-full min-w-0 justify-center">{renderSlot(seventhDefenseId, "D", "d7")}</div>
+                    </div>
+                  ) : null}
+                </div>
+              </section>
+
+              {allowExtraForward && lineup.extraForwards[0] ? (
+                <section
+                  className="rounded-lg border border-dashed border-slate-400/40 bg-white/[0.48] px-1 py-1 sm:px-1.5 sm:py-1.5"
+                >
+                  <h2 className="mb-1 text-center font-display text-[15px] font-extrabold uppercase tracking-[0.1em] text-slate-900 sm:text-[17px]">
+                    13. útočník
+                  </h2>
+                  <div className="flex w-full min-w-0 justify-center">
+                    {renderSlot(lineup.extraForwards[0], "F", "xf")}
                   </div>
-                </div>
-              ))}
+                </section>
+              ) : null}
             </div>
-          </section>
-
-          <section>
-            {sectionTitle("Obranné páry")}
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {defenseBlocks.map((b) => (
-                <div key={b.key}>{b.nodes}</div>
-              ))}
-            </div>
-          </section>
-
-          {allowExtraForward && lineup.extraForwards[0] ? (
-            <section>
-              {sectionTitle("13. útočník")}
-              <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                <div style={{ width: "100%", maxWidth: 520 }}>
-                  {renderCard(lineup.extraForwards[0], "F", "xf")}
-                </div>
-              </div>
-            </section>
-          ) : null}
+          </div>
         </div>
 
-        <div
-          style={{
-            marginTop: 32,
-            textAlign: "center",
-            fontSize: 11,
-            color: "rgba(255,255,255,0.45)",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          hokejlineup.cz
-        </div>
+        <footer className="mt-auto flex shrink-0 flex-col gap-1 border-t border-slate-200/90 bg-slate-100/80 px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5">
+          <div className="max-w-[48%] text-left text-[13px] font-medium leading-snug text-slate-600 sm:text-[14px]">
+            <p className="font-display text-[14px] font-extrabold tracking-wide text-[#c8102e] sm:text-[15px]">
+              {jerseyRatingExport ? "Hodnocení zápasu" : "Sestava na zápas"}
+            </p>
+          </div>
+          <div className="min-w-0 flex-1 text-center">
+            <p className="text-[14px] font-semibold text-slate-800 sm:text-[15px]">Soupiska</p>
+            <p className="mt-1 font-display text-[22px] font-black tracking-[0.12em] text-[#003087] sm:text-[24px]">
+              {host || "hokejlineup.cz"}
+            </p>
+          </div>
+          <div className="hidden w-[48%] sm:block" aria-hidden />
+        </footer>
       </div>
     );
   }

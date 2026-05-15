@@ -393,11 +393,12 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             marginTop: jerseyRatingExport ? "auto" : 36,
             paddingTop: jerseyRatingExport ? 10 : 0,
             textAlign: "center",
-            fontSize: jerseyRatingExport ? 11 : 12,
-            color: "rgba(255,255,255,0.45)",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            fontWeight: 700,
+            fontSize: jerseyRatingExport ? 22 : 24,
+            color: "rgba(126,200,255,0.95)",
+            letterSpacing: "0.12em",
+            textTransform: "none",
+            fontWeight: 900,
+            fontFamily: "var(--font-display, 'Barlow Condensed', system-ui)",
             ...(jerseyRatingExport ? { flexShrink: 0 as const } : {}),
           }}
         >

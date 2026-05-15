@@ -4,7 +4,7 @@ import { forwardRef, useMemo, useState, type ReactNode } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
-import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
 
@@ -93,12 +93,18 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
       <div
         ref={ref}
         data-poster-surface={dark ? "dark" : "light"}
-        className={`nhl25-share-poster-capture relative shrink-0 overflow-hidden rounded-none border-0 antialiased subpixel-antialiased [text-rendering:optimizeLegibility] ${shell}`}
-        style={{ width: SHARE_POSTER_WIDTH_PX, maxWidth: SHARE_POSTER_WIDTH_PX }}
+        className={`nhl25-share-poster-capture relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 antialiased subpixel-antialiased [text-rendering:optimizeLegibility] ${shell}`}
+        style={{
+          width: SHARE_POSTER_3X4_W,
+          height: SHARE_POSTER_3X4_H,
+          minHeight: SHARE_POSTER_3X4_H,
+          maxHeight: SHARE_POSTER_3X4_H,
+          maxWidth: SHARE_POSTER_3X4_W,
+        }}
       >
-        <div className="nhl25-moje-sestava-accent mx-2 mt-1.5 rounded-full sm:mx-2 sm:mt-2" aria-hidden />
+        <div className="nhl25-moje-sestava-accent mx-2 mt-1.5 shrink-0 rounded-full sm:mx-2 sm:mt-2" aria-hidden />
 
-        <header className="relative px-2 pb-0.5 pt-2 sm:px-2">
+        <header className="relative shrink-0 px-2 pb-0.5 pt-2 sm:px-2">
           <div className="min-w-0 text-center sm:text-left">
             {titleLine ? (
               <h1
@@ -106,16 +112,17 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
               >
                 {titleLine}
               </h1>
-            ) : null}
-            <p
-              className={`font-display text-[15px] font-bold uppercase tracking-[0.14em] sm:text-[16px] ${dark ? "text-sky-300" : "text-[#003087]"} ${titleLine ? "mt-1" : ""}`}
-            >
-              Český nároďák · soupiska
-            </p>
+            ) : (
+              <p
+                className={`font-display text-[1.35rem] font-extrabold uppercase tracking-[0.12em] ${dark ? "text-white" : "text-slate-950"}`}
+              >
+                MS 2026
+              </p>
+            )}
           </div>
         </header>
 
-        <div className={`relative mx-0 mb-1 mt-0.5 px-2 py-0 sm:mb-1.5 sm:px-2 ${innerChrome}`}>
+        <div className={`relative mx-0 mb-1 mt-0.5 min-h-0 flex-1 px-2 py-0 sm:mb-1 sm:px-2 ${innerChrome}`}>
           <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:gap-x-5 sm:gap-y-3">
             <div className="min-w-0 space-y-2 sm:space-y-2.5">
               <section>
@@ -348,7 +355,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
         </div>
 
         <footer
-          className={`flex flex-col gap-1 border-t px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5 ${
+          className={`mt-auto flex shrink-0 flex-col gap-1 border-t px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5 ${
             dark ? "border-white/10 bg-black/35" : "border-slate-200/90 bg-slate-100/80"
           }`}
         >
@@ -364,11 +371,9 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
             <p className={`text-[14px] font-semibold sm:text-[15px] ${dark ? "text-white/88" : "text-slate-800"}`}>
               {dateLabel ? `Sestaveno ${dateLabel}` : "Sestaveno"}
             </p>
-            {host ? (
-              <p className={`mt-0.5 font-display text-[13px] font-bold tracking-wide sm:text-[14px] ${dark ? "text-sky-300" : "text-[#003087]"}`}>
-                {host}
-              </p>
-            ) : null}
+            <p className={`mt-1 font-display text-[22px] font-black tracking-[0.12em] sm:text-[24px] ${dark ? "text-sky-300" : "text-[#003087]"}`}>
+              {host || "hokejlineup.cz"}
+            </p>
           </div>
           <div className="hidden w-[48%] sm:block" aria-hidden />
         </footer>
