@@ -4,6 +4,7 @@ import {
   getTimeBonusPercentForInstant,
   isNominationSubmissionOpen,
 } from "@/lib/contestTimeBonus";
+import { isPickemSubmissionOpen } from "@/lib/pickemContest";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,7 @@ export async function GET() {
       pickemCount,
       contestTimeBonusPercent: getTimeBonusPercentForInstant(now),
       contestSubmissionOpen: isNominationSubmissionOpen(now),
+      pickemSubmissionOpen: isPickemSubmissionOpen(now),
     });
   } catch {
     return NextResponse.json({
@@ -41,6 +43,7 @@ export async function GET() {
       pickemCount: null as number | null,
       contestTimeBonusPercent: 0,
       contestSubmissionOpen: true,
+      pickemSubmissionOpen: false,
     });
   }
 }

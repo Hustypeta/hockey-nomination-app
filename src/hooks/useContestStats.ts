@@ -8,6 +8,7 @@ export type ContestStats = {
   pickemCount: number | null;
   contestTimeBonusPercent: number;
   contestSubmissionOpen: boolean;
+  pickemSubmissionOpen: boolean;
 };
 
 const DEFAULT_STATS: ContestStats = {
@@ -16,6 +17,7 @@ const DEFAULT_STATS: ContestStats = {
   pickemCount: null,
   contestTimeBonusPercent: 0,
   contestSubmissionOpen: true,
+  pickemSubmissionOpen: false,
 };
 
 /**
@@ -40,6 +42,7 @@ export function useContestStats() {
             pickemCount?: number | null;
             contestTimeBonusPercent?: number;
             contestSubmissionOpen?: boolean;
+            pickemSubmissionOpen?: boolean;
           }) => {
             if (cancelled) return;
             setStats({
@@ -50,6 +53,7 @@ export function useContestStats() {
               contestTimeBonusPercent:
                 typeof d.contestTimeBonusPercent === "number" ? d.contestTimeBonusPercent : 0,
               contestSubmissionOpen: d.contestSubmissionOpen !== false,
+              pickemSubmissionOpen: d.pickemSubmissionOpen === true,
             });
           }
         )

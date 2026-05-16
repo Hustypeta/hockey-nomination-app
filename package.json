@@ -22,6 +22,7 @@
     "email:broadcast": "node scripts/resend-broadcast.mjs",
     "verify:scoring": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/verify-contest-scoring.ts",
     "preview:leaderboard": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/preview-contest-leaderboard.ts",
+    "fantasy:import-fin-ger": "npx ts-node --project scripts/tsconfig.json scripts/import-ms-fantasy-roster-teams.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

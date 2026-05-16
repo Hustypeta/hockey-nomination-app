@@ -51,7 +51,6 @@ export function MatchOfficialLineupView({
       myRatingByPlayerId={myRatingByPlayerId}
       jerseyBadgesPreferFanAverage={jerseyBadgesPreferFanAverage}
       onPlayerClick={onPlayerClick}
-      matchPublicNamesOnly
     />
   );
 }

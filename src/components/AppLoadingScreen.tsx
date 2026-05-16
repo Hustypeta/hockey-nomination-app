@@ -4,6 +4,8 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { SITE_BRAND } from "@/lib/siteBranding";
 import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
+import { ContestsStatusBanner } from "@/components/ContestsStatusBanner";
+import { useContestStats } from "@/hooks/useContestStats";
 
 const DEFAULT_INTRO =
   "Zahraj si Fantasy na MS 2026. Každý den si naklikej svůj tým a soutěž s ostatními a hraj o atraktivní hokejové ceny.";
@@ -25,12 +27,13 @@ type AppLoadingScreenProps = {
  * Jednotná celostránková obrazovka při načítání dat — odkazy nahoře, aby byly vidět bez rolování.
  */
 export function AppLoadingScreen({
-  tagline = "MS 2026 · Fantasy a Pick'em",
+  tagline = "MS 2026 · Fantasy",
   message = "Načítám…",
   intro,
   showSignInCta = false,
 }: AppLoadingScreenProps) {
   const introText = intro === undefined ? DEFAULT_INTRO : intro;
+  const contestStats = useContestStats();
 
   const handleSignIn = () => {
     const cb =
@@ -59,6 +62,11 @@ export function AppLoadingScreen({
           <div className="mt-6 w-full sm:mt-8">
             <LoadingScreenUsefulLinks />
           </div>
+
+          <ContestsStatusBanner
+            className="mt-5 w-full sm:mt-6"
+            pickemSubmissionOpen={contestStats.pickemSubmissionOpen}
+          />
 
           {introText ? (
             <p className="mt-6 text-center text-sm leading-relaxed text-white/82 sm:text-[15px] sm:mt-8">

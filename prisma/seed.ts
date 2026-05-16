@@ -1,10 +1,10 @@
 import "dotenv/config";
 import { config as loadEnv } from "dotenv";
-import { readFileSync } from "fs";
 import { join } from "path";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { loadMs2026Candidates } from "../src/lib/ms2026Candidates";
+import { importMsFantasyRosterJson } from "../src/lib/msFantasyRosterImport";
 import {
   MS2026_FANTASY_OFFICIAL_GAME_DAYS,
   ms2026FantasyResolveLockAt,
@@ -15,14 +15,6 @@ import type { Prisma } from "@prisma/client";
 loadEnv({ path: join(process.cwd(), ".env.local"), override: true });
 
 /** MS 2026 fantasy import (`MS_FANTASY_SEED_*`). Kompletní kalendář + všechny soupisky z `data/`: `MS_FANTASY_SEED_FANTASY_DATA=true` (hrací dny **upsert** podle `slug` — **zachová odevzdané lineupy**; dál přepíše celý fantasy pool z JSON repre dle manifestu v `prisma/seed.ts`). Volitelně `MS_FANTASY_SEED_FANTASY_DATA_SKIP_POOL=true` — neimportuje soupisky a nemění pool. Jinak jednotlivé `MS_FANTASY_SEED_AUT` apod.; `MS_FANTASY_SEED_SAMPLE` už jen doplní **2 ukázkové hrací dny** (ne pool) pokud v DB žádné dny nejsou — pool vždy jen z JSON repre. Při každém seedu se smažou záznamy s kódem `SAMPLE-*` (starý vývojový vzorek). */
-type FantasyRosterJsonRow = {
-  code: string;
-  name: string;
-  team: string;
-  jerseyNumber: number | null;
-  position: string;
-  tier: string;
-};
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL is not set");
@@ -56,32 +48,7 @@ async function importFantasyRosterJson(
   warnPrefix: string,
   note?: string
 ): Promise<number> {
-  const fp = join(process.cwd(), "data", filename);
-  let rows: FantasyRosterJsonRow[];
-  try {
-    rows = JSON.parse(readFileSync(fp, "utf-8")) as FantasyRosterJsonRow[];
-  } catch {
-    console.warn(`${warnPrefix}: nepodařilo se načíst data/${filename} — přeskakuji.`);
-    return 0;
-  }
-  if (!Array.isArray(rows) || rows.length === 0) {
-    console.warn(`${warnPrefix}: prázdný nebo neplatný soubor data/${filename} — přeskakuji.`);
-    return 0;
-  }
-  await prisma.msFantasyRosterPlayer.deleteMany({ where: { team } });
-  await prisma.msFantasyRosterPlayer.createMany({
-    data: rows.map((r) => ({
-      code: r.code,
-      name: r.name,
-      team: r.team,
-      jerseyNumber: r.jerseyNumber ?? null,
-      position: r.position,
-      tier: r.tier.trim().toUpperCase(),
-    })),
-  });
-  console.log(`${warnPrefix}: ${rows.length} řádků (${team}) z data/${filename}`);
-  if (note) console.log(`  ${note}`);
-  return rows.length;
+  return importMsFantasyRosterJson(prisma, team, filename, warnPrefix, note);
 }
 
 /**
@@ -236,6 +203,16 @@ async function seedSloveniaMs2026FantasyRoster() {
   );
 }
 
+async function seedFinlandMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_FIN?.trim() !== "true") return;
+  await importFantasyRosterJson("FIN", "finland-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_FIN");
+}
+
+async function seedGermanyMs2026FantasyRoster() {
+  if (process.env.MS_FANTASY_SEED_GER?.trim() !== "true") return;
+  await importFantasyRosterJson("GER", "germany-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_GER");
+}
+
 async function main() {
   console.log("Seeding database (MS 2026 kandidáti)...");
 
@@ -281,6 +258,8 @@ async function main() {
     await seedDenmarkMs2026FantasyRoster();
     await seedItalyMs2026FantasyRoster();
     await seedSloveniaMs2026FantasyRoster();
+    await seedFinlandMs2026FantasyRoster();
+    await seedGermanyMs2026FantasyRoster();
   }
 }
 

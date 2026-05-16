@@ -7,7 +7,6 @@ import type { ReactNode } from "react";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import type { Player, LineupStructure } from "@/types";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/LineupJerseyCard";
 import { PremiumJerseySlotCard, type PremiumJerseySize } from "@/components/sestava/PremiumJerseySlotCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
@@ -118,8 +117,6 @@ export function LineBuilder({
   matchPublicNamesOnly = false,
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
-  /** Ve veřejném hodnocení na úzkém displeji zmenšit jména na dresu (dlouhá příjmení). */
-  const isMatchRatingNarrow = useMediaQuery("(max-width: 1023px)");
   const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
 
   /** Lehce sjednocený formát hodnocení (1.0–10.0, vždy 1 desetina, čárka místo tečky). */
@@ -369,13 +366,17 @@ export function LineBuilder({
               isCaptain={player ? captainId === player.id : false}
               isAssistant={isAsst}
               isSelected={selected}
-              className={mode === "match" ? "origin-top scale-[1.05] sm:scale-[1.08]" : ""}
+              className={
+                mode === "match"
+                  ? readOnly
+                    ? "origin-top max-sm:mx-auto max-sm:max-w-[9.5rem] sm:scale-[1.05] md:scale-[1.08]"
+                    : "origin-top scale-[1.05] sm:scale-[1.08]"
+                  : ""
+              }
               showPositionBadge={mode !== "match"}
               showRoleBadge={mode !== "match"}
               overlayVariant={mode === "match" ? "lower" : "default"}
-              nameplateScale={
-                mode === "match" ? (readOnly && isMatchRatingNarrow ? 0.72 : 1) : 1
-              }
+              nameplateScale={mode === "match" ? 0.92 : 1}
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
           )}
@@ -502,7 +503,7 @@ export function LineBuilder({
           <span className="w-8 shrink-0 text-left text-[10px] font-bold uppercase tracking-wide text-white/45">
             {pos}
           </span>
-          <span className="min-w-0 flex-1 truncate text-left text-sm font-semibold text-white">
+          <span className="min-w-0 flex-1 text-left text-sm font-semibold leading-snug text-white max-sm:whitespace-normal max-sm:break-words sm:truncate">
             {player?.name ?? "—"}
           </span>
           {badges}
@@ -549,7 +550,7 @@ export function LineBuilder({
                     <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
                       {i + 1}. lajna
                     </p>
-                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                    <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3 sm:gap-2">
                       <MatchNameRow playerId={line.lw} pos="LW" />
                       <MatchNameRow playerId={line.c} pos="C" />
                       <MatchNameRow playerId={line.rw} pos="RW" />
@@ -688,7 +689,13 @@ export function LineBuilder({
                   <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
                     {i + 1}. lajna
                   </p>
-                  <div className="mx-auto grid w-full max-w-md grid-cols-3 gap-x-3 gap-y-4 sm:max-w-none sm:gap-x-6 sm:gap-y-2">
+                  <div
+                    className={
+                      readOnly
+                        ? "mx-auto grid w-full grid-cols-1 gap-y-3 sm:max-w-md sm:grid-cols-3 sm:gap-x-6 sm:gap-y-2 md:max-w-none"
+                        : "mx-auto grid w-full max-w-md grid-cols-3 gap-x-3 gap-y-4 sm:max-w-none sm:gap-x-6 sm:gap-y-2"
+                    }
+                  >
                     <Slot
                       playerId={line.lw}
                       label="LW"

@@ -185,11 +185,6 @@ export function MatchRatingExperience({
             />
           </div>
 
-          <div className="lg:hidden rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-sm text-white/70">
-            Klepni na hráče v sestavě a oboduj ho 1,0–10,0. Na velkém displeji použij blok vpravo: posuny jsou jen návrh
-            — potvrď je tlačítkem „Uložit svoje hodnocení“. Na dresech je vždy průměr všech fanoušků; své uložené známky
-            najdeš i pod účtem v sekci Moje hodnocení.
-          </div>
         </section>
       </div>
 

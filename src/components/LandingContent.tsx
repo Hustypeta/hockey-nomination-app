@@ -15,12 +15,11 @@ import {
 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
-import { ContestTimeBonusCallout } from "@/components/ContestTimeBonusCallout";
+import { ContestsStatusBanner } from "@/components/ContestsStatusBanner";
 import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
 import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
-import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
 /** Partnerský banner (MerkurXtip) — hero pod CTA „HRÁT FANTASY“. */
 const MERKURXTIP_BANNER_HREF =
@@ -68,10 +67,6 @@ export function LandingContent() {
   const communityUsersCount = contestStats.communityUsersCount;
   const pickemCount = contestStats.pickemCount;
   const cd = useCountdown(MS_2026_KICKOFF);
-  const bonusPercent = [0, 10, 25, 40].includes(contestStats.contestTimeBonusPercent)
-    ? (contestStats.contestTimeBonusPercent as ContestTimeBonusPercent)
-    : (0 as ContestTimeBonusPercent);
-
   return (
     <main>
       {/* ——— Hero ——— */}
@@ -98,7 +93,7 @@ export function LandingContent() {
             <p className="mx-auto max-w-4xl text-pretty px-1">
               <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-sky-200/90 bg-clip-text text-transparent text-[clamp(1rem,3.3vw,1.55rem)] font-semibold leading-snug tracking-[0.01em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-[clamp(1.05rem,2.9vw,1.75rem)] sm:leading-snug md:text-[clamp(1.1rem,2.5vw,1.95rem)]">
                 Vítejte na platformě Lineup. Zde si můžete stavět a sdílet sestavy českého hokejového týmu a zapojit se do
-                celé řady soutěží. Aktuálně běží Pick&apos;em a Fantasy na MS 2026!
+                celé řady soutěží. Aktuálně běží Fantasy na MS 2026!
               </span>
             </p>
 
@@ -126,17 +121,32 @@ export function LandingContent() {
                 <ChevronRight className="relative h-7 w-7 shrink-0 transition group-hover:translate-x-1" aria-hidden />
               </Link>
 
-              <div className="mx-auto mt-6 w-full max-w-xl">
+              <div
+                className="mx-auto mt-8 w-full max-w-xl border-t border-white/12 pt-8 sm:mt-10 sm:pt-9"
+                aria-labelledby="merkurxtip-promo-heading"
+              >
+                <div
+                  className="mx-auto mb-5 h-px w-full max-w-[12rem] bg-gradient-to-r from-transparent via-[#f1c40f]/55 to-transparent sm:mb-6"
+                  aria-hidden
+                />
+                <p
+                  id="merkurxtip-promo-heading"
+                  className="mx-auto max-w-md text-pretty text-center text-[13px] font-medium leading-snug text-slate-300/95 sm:text-sm sm:leading-relaxed"
+                >
+                  Rád tipuješ? Vsad si na svůj tip na{" "}
+                  <span className="font-semibold text-[#f1c40f]/95">MerkurXtip</span> a získej{" "}
+                  <span className="font-semibold text-white">500 Kč zdarma</span>
+                </p>
                 <a
                   href={MERKURXTIP_BANNER_HREF}
                   target="_blank"
                   rel="noopener noreferrer nofollow sponsored"
-                  className="block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] transition hover:border-cyan-400/30 hover:shadow-[0_12px_40px_rgba(0,180,255,0.12)]"
+                  className="mt-4 block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] transition hover:border-[#f1c40f]/35 hover:shadow-[0_12px_40px_rgba(241,196,15,0.12)] sm:mt-5"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- externí hostitel banneru */}
                   <img
                     src={MERKURXTIP_BANNER_IMG_SRC}
-                    alt="MerkurXtip"
+                    alt="MerkurXtip — partnerská nabídka"
                     className="mx-auto block h-auto w-full max-w-full object-contain"
                     loading="lazy"
                     decoding="async"
@@ -144,7 +154,7 @@ export function LandingContent() {
                 </a>
               </div>
 
-              <p className="mx-auto mt-6 max-w-xl text-center text-pretty text-sm leading-relaxed text-slate-200/95 sm:text-[15px]">
+              <p className="mx-auto mt-8 max-w-xl text-center text-pretty text-sm leading-relaxed text-slate-200/95 sm:mt-10 sm:text-[15px]">
                 Pro novinky z hokeje a mnohem více sledujte instagram Svět Hokeje.
               </p>
 
@@ -264,11 +274,7 @@ export function LandingContent() {
                 </div>
               </div>
 
-              <ContestTimeBonusCallout
-                variant="landing"
-                bonusPercent={bonusPercent}
-                submissionOpen={contestStats.contestSubmissionOpen}
-              />
+              <ContestsStatusBanner pickemSubmissionOpen={contestStats.pickemSubmissionOpen} />
 
               {/* Odpočet — národní barvy (stejná šířka jako Komunita / soutěž) */}
               <div className="w-full">
@@ -289,7 +295,9 @@ export function LandingContent() {
                       ))}
                     </div>
                   ) : cd.ended ? (
-                    <p className="mt-4 text-center font-display text-2xl font-bold text-white">MS je tady — sestav sestavu!</p>
+                    <p className="mt-5 py-2 text-center font-display text-3xl font-black tracking-wide text-white sm:mt-6 sm:text-4xl md:text-5xl">
+                      MS je tady!
+                    </p>
                   ) : (
                     <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4">
                       {[

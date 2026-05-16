@@ -21,6 +21,7 @@ import {
 } from "@/data/ms2026BracketTeams";
 import { SitePageHero } from "@/components/site/SitePageHero";
 import { encodeBracketPayload, decodeBracketPayload } from "@/lib/bracketPayload";
+import { isPickemSubmissionOpen } from "@/lib/pickemContest";
 import type { BracketMatchPick, BracketPickemPayload } from "@/types/bracketPickem";
 import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
 import type { Player, Position } from "@/types";
@@ -969,6 +970,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
   const [pickemTitle, setPickemTitle] = useState("");
   /** Po jednorázovém „Odeslat do soutěže“ je payload na serveru zamčený. */
   const [contestLocked, setContestLocked] = useState(false);
+  const pickemContestClosed = !isPickemSubmissionOpen(new Date());
 
   const teamById = useMemo(() => new Map(MS2026_BRACKET_TEAMS.map((t) => [t.id, t] as const)), []);
   const isMobile = useIsMobile(900);
@@ -1392,6 +1394,10 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
       toast.error("Do soutěže už máte Pick’em jednou odeslaný.");
       return;
     }
+    if (pickemContestClosed) {
+      toast.error("Soutěž Pick'em na MS 2026 je uzavřena.");
+      return;
+    }
     if (!confirmIfIncomplete()) return;
     if (submitting) return;
     setSubmitting(true);
@@ -1417,7 +1423,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
     } finally {
       setSubmitting(false);
     }
-  }, [authStatus, picks, submitting, confirmIfIncomplete, contestLocked]);
+  }, [authStatus, picks, submitting, confirmIfIncomplete, contestLocked, pickemContestClosed]);
 
   const resetAll = () => {
     if (contestLocked) {
@@ -1753,10 +1759,24 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         </div>
       ) : null}
 
+      {pickemContestClosed && !contestLocked ? (
+        <div
+          className="pickem-panel mt-10 rounded-2xl border border-rose-400/30 bg-rose-500/[0.08] p-5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:p-6"
+          role="status"
+        >
+          <p className="text-sm font-semibold text-rose-100">Soutěž Pick&apos;em na MS 2026 uzavřena!</p>
+          <p className="mt-2 text-xs text-rose-100/75">
+            Koncept si můžeš ještě uložit k účtu; nové odeslání do soutěže už není možné.
+          </p>
+        </div>
+      ) : null}
+
       <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#00E5FF]/18 shadow-[0_0_48px_rgba(0,229,255,0.06)]">
         <Trophy className="h-8 w-8 text-[#00E5FF]/85" aria-hidden />
         <p className="text-sm text-white/78">
-          Hotovo? Ulož si koncept k účtu nebo tipy odešli do soutěže.
+          {pickemContestClosed
+            ? "Hotovo? Ulož si koncept k účtu nebo sdílej tipy odkazem."
+            : "Hotovo? Ulož si koncept k účtu nebo tipy odešli do soutěže."}
         </p>
         <label className="w-full max-w-xl text-left text-xs font-medium text-white/65">
           Název Pick’em <span className="font-normal text-white/35">(volitelné)</span>
@@ -1781,10 +1801,16 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
           <button
             type="button"
             onClick={submitPickemToContest}
-            disabled={submitting || contestLocked}
+            disabled={submitting || contestLocked || pickemContestClosed}
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#00E5FF]/35 bg-white/[0.04] px-5 py-3.5 text-sm font-semibold text-white/90 shadow-[0_0_0_1px_rgba(0,229,255,0.10)] transition hover:bg-white/[0.07] hover:border-[#00E5FF]/55 disabled:opacity-60"
           >
-            {submitting ? "Odesílám…" : contestLocked ? "V soutěži odesláno" : "Odeslat do soutěže"}
+            {submitting
+              ? "Odesílám…"
+              : contestLocked
+                ? "V soutěži odesláno"
+                : pickemContestClosed
+                  ? "Soutěž uzavřena"
+                  : "Odeslat do soutěže"}
           </button>
           <button
             type="button"

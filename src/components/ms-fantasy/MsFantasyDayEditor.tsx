@@ -45,6 +45,14 @@ const SLOT_G = 0;
 const SLOTS_D = [1, 2] as const;
 const SLOTS_F = [3, 4, 5] as const;
 
+/** Filtr soupisky vpravo podle kliknutého slotu na ledě (G / D / F). */
+function positionFilterForSlotIndex(slotIndex: number): string {
+  if (slotIndex === SLOT_G) return "G";
+  if (slotIndex === 1 || slotIndex === 2) return "D";
+  if (slotIndex >= 3 && slotIndex <= 5) return "F";
+  return "";
+}
+
 function formationSlotsFromPicks(picks: Array<MsFantasyRosterPlayer | null | undefined>): SlotPlayer[] {
   const out: SlotPlayer[] = Array.from({ length: MS_FANTASY_TEAM_SIZE }, () => null);
   const flat = picks.filter((x): x is MsFantasyRosterPlayer => Boolean(x));
@@ -515,15 +523,17 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
       return n;
     });
     setActiveIx(i);
+    setPosFilter(positionFilterForSlotIndex(i));
     setSaveState("idle");
     setSaveErr(null);
   }, []);
 
-  /** Na mobilu (<lg, stejně jako skrytý sidebar) otevři soupisku po tapu na prázdný slot („Přidat“). */
+  /** Klik na slot: aktivní pozice + filtr soupisky (G/D/F); na mobilu sheet u prázdného slotu. */
   const handleSelectSlot = useCallback(
     (i: number) => {
       setActiveIx(i);
       if (!day || day.isLocked) return;
+      setPosFilter(positionFilterForSlotIndex(i));
       if (typeof window === "undefined") return;
       if (!window.matchMedia("(max-width: 1023px)").matches) return;
       if (!slots[i]?.id) setMobileRosterOpen(true);

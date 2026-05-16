@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isPickemSubmissionOpen } from "@/lib/pickemContest";
 
 /**
  * Odeslání Pick’em tipů do soutěže (zatím ukládáme jako záznam u účtu; vyhodnocení/leaderboard naváže později).
@@ -23,6 +24,13 @@ export async function POST(request: NextRequest) {
 
     if (!body || typeof body !== "object") {
       return NextResponse.json({ error: "Chybí payload Pick’em." }, { status: 400 });
+    }
+
+    if (!isPickemSubmissionOpen(new Date())) {
+      return NextResponse.json(
+        { error: "Soutěž Pick'em na MS 2026 je uzavřena — nové odeslání už není možné." },
+        { status: 403 }
+      );
     }
 
     const existing = await prisma.pickemEntry.findUnique({
