@@ -85,8 +85,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
     const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
     const cols = 2;
 
-    const posterJerseyScale = jerseyRatingExport ? 1.26 : 1.38;
-    const ratingExtraShellPx = jerseyRatingExport ? 14 : 0;
+    const posterJerseyScale = jerseyRatingExport ? 1.14 : 1.38;
+    const ratingExtraShellPx = jerseyRatingExport ? 10 : 0;
     const jerseyFrame = matchPosterJerseyFrameStyles(posterJerseyScale, ratingExtraShellPx);
 
     const cardShell: CSSProperties = {
@@ -239,7 +239,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       );
     };
 
-    const pad = jerseyRatingExport ? 28 : 32;
+    const pad = jerseyRatingExport ? 26 : 32;
     const rootStyle: CSSProperties = {
       width: SHARE_POSTER_3X4_W,
       height: SHARE_POSTER_3X4_H,
@@ -257,7 +257,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
     };
 
     const iceUid = useId().replace(/:/g, "");
-    const rinkScale = jerseyRatingExport ? 0.8 : 0.94;
+    const rinkScale = jerseyRatingExport ? 0.86 : 0.94;
     const rinkTransform = `perspective(920px) rotateX(5deg) scale(${rinkScale}) translateZ(0)`;
 
     const wrapOnIce = (content: ReactNode) => (
@@ -381,73 +381,80 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
     return (
       <div ref={ref} data-export-slot={group} className="match-lineup-jersey-export-poster" style={rootStyle}>
         <MatchLineupPosterDecorativeBg />
-        <div
+        <header
           style={{
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "space-between",
-            gap: 12,
-            paddingBottom: jerseyRatingExport ? 10 : 18,
+            gap: jerseyRatingExport ? 16 : 12,
+            paddingBottom: jerseyRatingExport ? 12 : 18,
             borderBottom: "3px solid rgba(241, 196, 15, 0.6)",
             flexShrink: 0,
             position: "relative",
-            zIndex: 1,
+            zIndex: 2,
           }}
         >
-          <div style={{ minWidth: 0 }}>
-            <div
+          <div style={{ minWidth: 0, maxWidth: jerseyRatingExport ? "68%" : "72%", flex: "1 1 auto" }}>
+            <p
               style={{
-                fontSize: jerseyRatingExport ? 13 : 16,
+                fontSize: jerseyRatingExport ? 11 : 16,
                 fontWeight: 800,
-                letterSpacing: "0.28em",
+                letterSpacing: jerseyRatingExport ? "0.32em" : "0.28em",
                 textTransform: "uppercase",
-                color: "#f1c40f",
+                color: jerseyRatingExport ? "rgba(200, 16, 46, 0.95)" : "#f1c40f",
+                lineHeight: 1.2,
               }}
             >
               {jerseyRatingExport ? "Hodnocení hráčů" : "Sestava na zápas"}
-            </div>
-            <div
+            </p>
+            <h1
               style={{
-                marginTop: jerseyRatingExport ? 3 : 8,
-                fontSize: jerseyRatingExport ? 30 : 42,
+                marginTop: jerseyRatingExport ? 6 : 8,
+                fontSize: jerseyRatingExport ? 34 : 42,
                 fontWeight: 900,
-                lineHeight: 1.05,
+                lineHeight: 1.08,
                 color: "white",
+                overflow: "hidden",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                wordBreak: "break-word",
               }}
             >
               {lineupTitle.trim() || "Moje sestava"}
-            </div>
+            </h1>
             {jerseyRatingExport ? (
-              <div
+              <p
                 style={{
-                  marginTop: 4,
+                  marginTop: 5,
                   fontSize: 11,
                   fontWeight: 700,
-                  color: "rgba(255,255,255,0.55)",
-                  letterSpacing: "0.03em",
-                  lineHeight: 1.25,
+                  color: "rgba(255,255,255,0.52)",
+                  letterSpacing: "0.02em",
+                  lineHeight: 1.2,
                 }}
               >
                 {jerseyRatingExport.snapshotMode === "personal"
                   ? "Moje známky (1,0–10,0)"
                   : "Průměr komunity v době exportu"}
-              </div>
+              </p>
             ) : null}
           </div>
-          <div style={{ textAlign: "right", flexShrink: 0 }}>
-            <div
+          <aside style={{ textAlign: "right", flexShrink: 0, paddingTop: jerseyRatingExport ? 2 : 0, maxWidth: "32%" }}>
+            <p
               style={{
-                fontSize: jerseyRatingExport ? 12 : 14,
+                fontSize: jerseyRatingExport ? 13 : 14,
                 fontWeight: 800,
-                letterSpacing: "0.22em",
+                letterSpacing: "0.2em",
                 textTransform: "uppercase",
                 color: "rgba(255,255,255,0.55)",
+                lineHeight: 1.2,
               }}
             >
               {MATCH_LINEUP_POSTER_GROUP_TITLE[group]}
-            </div>
-          </div>
-        </div>
+            </p>
+          </aside>
+        </header>
 
         {wrapOnIce(lineFormation)}
 

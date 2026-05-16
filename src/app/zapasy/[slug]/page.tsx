@@ -293,6 +293,7 @@ export default async function MatchDetailPage({
                   captainId={match.officialLineup.captainId ?? null}
                   matchDefenseCount={(match.officialLineup.defenseCount as 6 | 7 | 8) ?? 8}
                   matchAllowExtraForward={Boolean(match.officialLineup.allowExtraForward)}
+                  namesOnly
                 />
               </div>
             </div>

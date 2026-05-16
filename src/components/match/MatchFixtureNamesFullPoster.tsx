@@ -1,18 +1,20 @@
 "use client";
 
-import { forwardRef, useId, useMemo, useState, type ReactNode } from "react";
+import { forwardRef, useMemo, useState, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { SHARE_POSTER_3X4_STYLE } from "@/lib/sharePosterLayout";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
-  splitMatchLineupLinePosterChunks,
-  type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
 import { rosterLastDisplay } from "@/lib/namesOnlyRoster";
-import { IceRinkShell } from "@/components/shared/IceRinkShell";
-
-const RATING_SECTIONS: MatchLineupPosterGroup[] = ["line-1", "line-2", "line-3", "line-4"];
+import {
+  fmtMatchRating,
+  matchRatingHue,
+  resolveMatchRatingDisplay,
+  type MatchRatingAggregateMap,
+  type MatchRatingMyMap,
+} from "@/lib/matchRatingExportDisplay";
 
 const formatCsDate = (d: Date) =>
   new Intl.DateTimeFormat("cs-CZ", {
@@ -20,11 +22,6 @@ const formatCsDate = (d: Date) =>
     month: "long",
     year: "numeric",
   }).format(d);
-
-function fmtAvg(n: number | null | undefined): string {
-  if (typeof n !== "number" || !Number.isFinite(n) || n <= 0) return "–";
-  return n.toFixed(1).replace(".", ",");
-}
 
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
@@ -48,15 +45,36 @@ function voteLineCs(n: number): string {
   return `${n} hlasů`;
 }
 
-/** Kompaktní dlaždice jméno + průměr + hlasy — uvnitř „ledu“ jako ve fantasy editoru. */
-function RatingOnIceTile({ nameLine, avgLine, votes }: { nameLine: string; avgLine: string; votes: number }) {
+function RatingNamePill({
+  nameLine,
+  display,
+  snapshotMode,
+  votes,
+}: {
+  nameLine: string;
+  display: number | null;
+  snapshotMode: "personal" | "community";
+  votes: number;
+}) {
+  const hue = matchRatingHue(display);
   return (
-    <div className="relative flex min-h-[5rem] w-[5rem] flex-col items-center justify-center gap-0.5 rounded-xl border border-white/90 bg-white/[0.96] px-1 py-1.5 text-center shadow-[0_10px_26px_rgba(0,0,0,0.22)] antialiased sm:min-h-[5.35rem] sm:w-[5.35rem]">
-      <span className="line-clamp-2 max-w-full break-words font-sans text-[12px] font-bold leading-snug text-[#0a1628] sm:text-[13px]">
+    <div className="flex min-h-[3.35rem] flex-col items-center justify-center gap-1.5 rounded-xl bg-white/[0.96] px-3 py-2.5 text-center shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[3.6rem]">
+      <span className="line-clamp-2 w-full break-words font-sans text-[17px] font-bold leading-snug tracking-wide text-[#0a1628] sm:text-[18px]">
         {nameLine}
       </span>
-      <span className="font-display text-[11px] font-black tabular-nums text-[#b45309] sm:text-[12px]">Ø {avgLine}</span>
-      <span className="text-[8px] font-semibold leading-tight text-slate-500 sm:text-[9px]">{voteLineCs(votes)}</span>
+      <span
+        className="inline-flex items-baseline gap-1 rounded-lg px-2.5 py-0.5 font-display text-[15px] font-black tabular-nums sm:text-[16px]"
+        style={{ background: hue.bg, color: hue.text, boxShadow: `0 0 0 1px rgba(255,255,255,0.85) inset` }}
+      >
+        {fmtMatchRating(display)}
+        <span className="text-[9px] font-extrabold uppercase tracking-wider opacity-80">/10</span>
+      </span>
+      {snapshotMode === "community" && votes > 0 ? (
+        <span className="text-[9px] font-semibold text-slate-500 sm:text-[10px]">{voteLineCs(votes)}</span>
+      ) : null}
+      {snapshotMode === "personal" ? (
+        <span className="text-[9px] font-bold uppercase tracking-wide text-emerald-700/90">Tvoje</span>
+      ) : null}
     </div>
   );
 }
@@ -152,88 +170,91 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
 
 export const MatchRatingNamesFullPoster = forwardRef<
   HTMLDivElement,
-  BaseFixtureNamesFullPosterProps & { ratings: RatingMap }
+  BaseFixtureNamesFullPosterProps & {
+    ratings: RatingMap;
+    myRatings: MatchRatingMyMap;
+    snapshotMode: "personal" | "community";
+  }
 >(function MatchRatingNamesFullPoster(
-  { headline, subline, lineup, players, defenseCount, allowExtraForward, ratings, siteUrl = "", footerInstantIso = null },
+  {
+    headline,
+    subline,
+    lineup,
+    players,
+    defenseCount,
+    allowExtraForward,
+    ratings,
+    myRatings,
+    snapshotMode,
+    siteUrl = "",
+    footerInstantIso = null,
+  },
   ref
 ) {
-  const iceUid = useId().replace(/:/g, "");
   const [mountedDateLabel] = useState(() => formatCsDate(new Date()));
   const dateLabel = footerInstantIso ? formatCsDate(new Date(footerInstantIso)) : mountedDateLabel;
   const host = siteUrl.replace(/^https?:\/\//, "");
   const titleLine = headline.trim();
 
-  const lineBlocks = useMemo(() => {
-    return RATING_SECTIONS.map((group) => {
-      const ids = pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward);
-      const chunks = splitMatchLineupLinePosterChunks(ids, group);
-      const rows = ids.map((id) => {
+  const renderPills = useMemo(() => {
+    return (ids: string[]) =>
+      ids.map((id) => {
         const agg = ratings[id];
-        const avg = agg && Number.isFinite(agg.avg) && agg.avg > 0 ? agg.avg : null;
         const votes = typeof agg?.count === "number" && Number.isFinite(agg.count) ? agg.count : 0;
-        return {
-          id,
-          nameLine: rosterLastDisplay(players, id),
-          avgLine: fmtAvg(avg),
-          votes,
-        };
+        const display = resolveMatchRatingDisplay(id, ratings, myRatings, snapshotMode);
+        return (
+          <RatingNamePill
+            key={id}
+            nameLine={rosterLastDisplay(players, id)}
+            display={display}
+            snapshotMode={snapshotMode}
+            votes={votes}
+          />
+        );
       });
-      return { group, chunks, rows };
-    });
-  }, [lineup, players, defenseCount, allowExtraForward, ratings]);
+  }, [players, ratings, myRatings, snapshotMode]);
+
+  const goalieIds = useMemo(
+    () => pickMatchLineupSegmentPlayerIds(lineup, "goalies", defenseCount, allowExtraForward),
+    [lineup, defenseCount, allowExtraForward]
+  );
+  const defenseIds = useMemo(
+    () => pickMatchLineupSegmentPlayerIds(lineup, "defense", defenseCount, allowExtraForward),
+    [lineup, defenseCount, allowExtraForward]
+  );
+  const forwardIds = useMemo(() => {
+    const ids12 = pickMatchLineupSegmentPlayerIds(lineup, "forwards-12", defenseCount, allowExtraForward);
+    const ids34 = pickMatchLineupSegmentPlayerIds(lineup, "forwards-34", defenseCount, allowExtraForward);
+    return [...ids12, ...ids34];
+  }, [lineup, defenseCount, allowExtraForward]);
 
   return (
     <div ref={ref} data-export-slot="cele-jmena" className={`${ratingSharedRoot} flex flex-col`} style={SHARE_POSTER_3X4_STYLE}>
       <DecorativeBg />
-      <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-3 pt-8 sm:px-10 sm:pt-9">
+      <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-2 pt-8 sm:px-10 sm:pt-9">
         <PosterHeader eyebrow="Hodnocení hráčů" titleLine={titleLine} subline={subline} />
 
-        <div className="mt-4 flex min-h-0 flex-1 flex-col justify-between gap-2.5 py-1 sm:mt-5">
-          {lineBlocks.map(({ group, chunks, rows }) => {
-            if (!chunks) return null;
-            const byId = new Map(rows.map((r) => [r.id, r]));
-            const noiseId = `${iceUid}-n-${group}`;
-            const patId = `${iceUid}-p-${group}`;
-            return (
-              <section key={group} className="min-w-0">
-                <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE[group]}</SectionTitle>
-                <p className="mt-1 text-center font-display text-[0.58rem] font-bold uppercase tracking-[0.14em] text-white/38 sm:text-[0.6rem]">
-                  Sestava na ledě
-                </p>
-                <div className="mx-auto mt-1.5 w-full max-w-[20rem] sm:max-w-[18rem]">
-                  <IceRinkShell
-                    noiseFilterId={noiseId}
-                    scratchPatternId={patId}
-                    transform="perspective(920px) rotateX(4deg) scale(0.72) translateZ(0)"
-                  >
-                    <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
-                      {chunks.forwards.filter(Boolean).map((pid) => {
-                        const r = byId.get(pid!);
-                        if (!r) return null;
-                        return <RatingOnIceTile key={pid} nameLine={r.nameLine} avgLine={r.avgLine} votes={r.votes} />;
-                      })}
-                    </div>
-                    <div className="mt-3 flex flex-wrap justify-center gap-2.5 sm:mt-4 sm:gap-4">
-                      {chunks.defense.filter(Boolean).map((pid) => {
-                        const r = byId.get(pid!);
-                        if (!r) return null;
-                        return <RatingOnIceTile key={pid} nameLine={r.nameLine} avgLine={r.avgLine} votes={r.votes} />;
-                      })}
-                    </div>
-                    {chunks.bottom.filter(Boolean).length > 0 ? (
-                      <div className="mt-3 flex flex-wrap justify-center gap-2.5 sm:mt-4 sm:gap-4">
-                        {chunks.bottom.filter(Boolean).map((pid) => {
-                          const r = byId.get(pid!);
-                          if (!r) return null;
-                          return <RatingOnIceTile key={pid} nameLine={r.nameLine} avgLine={r.avgLine} votes={r.votes} />;
-                        })}
-                      </div>
-                    ) : null}
-                  </IceRinkShell>
-                </div>
-              </section>
-            );
-          })}
+        <div className="mt-6 flex min-h-0 flex-1 flex-col justify-between py-3 sm:mt-7 sm:py-5">
+          <section className="flex shrink-0 flex-col justify-center">
+            <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionTitle>
+            <div className="mx-auto grid w-full max-w-[520px] grid-cols-2 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
+              {renderPills(goalieIds)}
+            </div>
+          </section>
+
+          <section className="flex min-h-0 flex-[1.15] flex-col justify-center">
+            <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionTitle>
+            <div className="mx-auto grid w-full max-w-[640px] grid-cols-2 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
+              {renderPills(defenseIds)}
+            </div>
+          </section>
+
+          <section className="flex min-h-0 flex-[1.55] flex-col justify-center">
+            <SectionTitle>Útočníci</SectionTitle>
+            <div className="mx-auto grid w-full max-w-[920px] grid-cols-3 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
+              {renderPills(forwardIds)}
+            </div>
+          </section>
         </div>
       </div>
 
@@ -241,10 +262,7 @@ export const MatchRatingNamesFullPoster = forwardRef<
     </div>
   );
 }
-);
-
-
-function DecorativeBg() {
+);function DecorativeBg() {
   return (
     <>
       <div

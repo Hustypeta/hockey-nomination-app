@@ -53,9 +53,8 @@ function filenameLineupSlot(slot: string, baseSlug: string, snap: MatchLineupIma
     "line-4": "4-lajna",
   };
   const suf = map[slot] ?? slot;
-  return snap
-    ? `hodnoceni-zapas-dresy-${baseSlug}-${suf}${modeTag}.png`
-    : `sestava-zapas-dresy-${baseSlug}-${suf}.png`;
+  if (snap) return `hodnoceni-zapas-${baseSlug}-${suf}${modeTag}.png`;
+  return `sestava-zapas-dresy-${baseSlug}-${suf}.png`;
 }
 
 export function MatchLineupImageExportButton({
@@ -122,7 +121,7 @@ export function MatchLineupImageExportButton({
         key: "cele-jmena",
         title: ratingSnapshot ? "Celá sestava — jména a známky" : "Celá sestava — jen jména",
         hint: ratingSnapshot
-          ? "Tmavý plakát po lajnách: příjmení, průměr a počet hlasů (režim nahoře)."
+          ? "Tmavý plakát: brankáři, obrana, útočníci — u každého jména známka (režim nahoře)."
           : "Jako grafika „jen jména“ v editoru nominace (tmavý plakát, celá soupiska).",
       },
       {
@@ -134,28 +133,34 @@ export function MatchLineupImageExportButton({
       },
       {
         key: "line-1",
-        title: "Dresy — 1. lajna",
-        hint: "Tři útočníci vedle sebe, dva obránci vedle sebe, pod nimi 1. gólman." + ratingHint,
+        title: ratingSnapshot ? "Hodnocení — 1. lajna" : "Dresy — 1. lajna",
+        hint: ratingSnapshot
+          ? "Formát 3:4 — dresy na ledě, jména a známky jako v editoru sestavy."
+          : "Tři útočníci vedle sebe, dva obránci vedle sebe, pod nimi 1. gólman.",
       },
       {
         key: "line-2",
-        title: "Dresy — 2. lajna",
-        hint: "Tři útočníci vedle sebe, dva obránci vedle sebe." + ratingHint,
+        title: ratingSnapshot ? "Hodnocení — 2. lajna" : "Dresy — 2. lajna",
+        hint: ratingSnapshot
+          ? "Formát 3:4 — dresy na ledě s hodnocením."
+          : "Tři útočníci vedle sebe, dva obránci vedle sebe.",
       },
       {
         key: "line-3",
-        title: "Dresy — 3. lajna",
-        hint: "Tři útočníci vedle sebe, dva obránci vedle sebe." + ratingHint,
+        title: ratingSnapshot ? "Hodnocení — 3. lajna" : "Dresy — 3. lajna",
+        hint: ratingSnapshot
+          ? "Formát 3:4 — dresy na ledě s hodnocením."
+          : "Tři útočníci vedle sebe, dva obránci vedle sebe.",
       },
       {
         key: "line-4",
-        title: "Dresy — 4. lajna",
-        hint:
-          "Tři útočníci a dva obránci jako výš; dole vedle sebe 13. útočník a 2. gólman (pokud jsou v sestavě)." +
-          ratingHint,
+        title: ratingSnapshot ? "Hodnocení — 4. lajna" : "Dresy — 4. lajna",
+        hint: ratingSnapshot
+          ? "Formát 3:4 — dresy na ledě; dole 13. útočník a 2. gólman."
+          : "Tři útočníci a dva obránci jako výš; dole vedle sebe 13. útočník a 2. gólman (pokud jsou v sestavě).",
       },
     ],
-    [ratingHint, ratingSnapshot]
+    [ratingSnapshot]
   );
 
   const runExport = useCallback(
@@ -184,7 +189,8 @@ export function MatchLineupImageExportButton({
         const prevHeight = node.style.height;
         const prevMaxHeight = node.style.maxHeight;
         const prevOverflow = node.style.overflow;
-        if (ratingSnapshot) {
+        const letterboxRatingJerseys = ratingSnapshot && slot === "cele-dresy";
+        if (letterboxRatingJerseys) {
           node.style.height = "auto";
           node.style.maxHeight = "none";
           node.style.overflow = "visible";
@@ -193,12 +199,11 @@ export function MatchLineupImageExportButton({
           scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
           backgroundColor: bg,
         });
-        if (ratingSnapshot) {
+        if (letterboxRatingJerseys) {
           node.style.height = prevHeight;
           node.style.maxHeight = prevMaxHeight;
           node.style.overflow = prevOverflow;
-          const theme = slot === "cele-jmena" ? "dark" : "light";
-          canvas = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme });
+          canvas = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme: "light" });
         }
         downloadDataUrl(canvasToPngDataUrl(canvas), filenameLineupSlot(slot, baseSlug, ratingSnapshot));
         toast.success("Staženo 1 PNG.");
@@ -233,7 +238,7 @@ export function MatchLineupImageExportButton({
         title="Generovat plakát"
         description={
           ratingSnapshot
-            ? "Dresové plakáty obsahují u každého hráče známku podle režimu nahoře (moje uložené / průměr komunity). „Jen jména“ zůstává bez čísel. Vždy jedna PNG."
+            ? "Celá soupiska nebo jednotlivé lajny — jen jména se známkami (3:4). Kompletní sestava s dresy je samostatná volba. Vždy jedna PNG."
             : "Celá soupiska jen jména nebo s dresy, případně řezy po kompletních lajnách (3F + 2D; na 1. lajně 1. gólman, na 4. též 13. útočník a 2. gólman). Vždy jedna PNG."
         }
         busyKey={busyKey}
@@ -262,6 +267,8 @@ export function MatchLineupImageExportButton({
             defenseCount={defenseCount}
             allowExtraForward={allowExtraForward}
             ratings={ratingSnapshot.ratings}
+            myRatings={ratingSnapshot.myRatings}
+            snapshotMode={ratingSnapshot.mode}
             siteUrl={siteOrigin}
             footerInstantIso={footerIso}
           />

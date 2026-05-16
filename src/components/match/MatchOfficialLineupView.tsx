@@ -17,6 +17,8 @@ export function MatchOfficialLineupView({
   myRatingByPlayerId,
   jerseyBadgesPreferFanAverage = false,
   onPlayerClick,
+  /** Záložka „Sestava“ u zápasu — jen jména; hodnocení ponechá dresy. */
+  namesOnly = false,
 }: {
   lineup: LineupStructure;
   players: Player[];
@@ -31,6 +33,7 @@ export function MatchOfficialLineupView({
   jerseyBadgesPreferFanAverage?: boolean;
   /** Mobilní rating sheet — klik na dres otevře formulář s slidrem. */
   onPlayerClick?: (playerId: string) => void;
+  namesOnly?: boolean;
 }) {
   return (
     <LineBuilder
@@ -51,6 +54,7 @@ export function MatchOfficialLineupView({
       myRatingByPlayerId={myRatingByPlayerId}
       jerseyBadgesPreferFanAverage={jerseyBadgesPreferFanAverage}
       onPlayerClick={onPlayerClick}
+      matchPublicNamesOnly={namesOnly}
     />
   );
 }

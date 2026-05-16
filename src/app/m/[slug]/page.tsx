@@ -28,6 +28,7 @@ export default async function MatchShareViewPage({ params }: { params: Promise<{
             captainId={row.captainId ?? null}
             matchDefenseCount={(row.defenseCount as 6 | 7 | 8) ?? 8}
             matchAllowExtraForward={Boolean(row.allowExtraForward)}
+            namesOnly
           />
         </div>
       </div>
