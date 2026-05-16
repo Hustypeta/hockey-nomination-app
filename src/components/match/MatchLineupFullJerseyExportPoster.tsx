@@ -50,19 +50,19 @@ function MatchJerseyRatingBadge({
   const aggregate = jerseyRatingExport.ratings[pid];
   const hue = matchRatingHue(display);
   return (
-    <div className="mt-1 flex flex-col items-center gap-0.5">
+    <div className="mt-0.5 flex flex-col items-center gap-0.5">
       <div
-        className="inline-flex items-baseline gap-1 rounded-xl border-2 border-white/90 px-2.5 py-1"
+        className="inline-flex items-baseline gap-0.5 rounded-lg border-2 border-white/90 px-2 py-0.5"
         style={{
           background: hue.bg,
           color: hue.text,
           boxShadow: `0 6px 16px ${hue.ring}, 0 0 0 2px rgba(255,255,255,0.9) inset`,
         }}
       >
-        <span className="font-display text-[1.35rem] font-black tabular-nums leading-none tracking-tight">
+        <span className="font-display text-[1.1rem] font-black tabular-nums leading-none tracking-tight">
           {fmtMatchRating(display)}
         </span>
-        <span className="text-[9px] font-extrabold uppercase tracking-wider opacity-85">/10</span>
+        <span className="text-[8px] font-extrabold uppercase tracking-wider opacity-85">/10</span>
       </div>
       {mode === "community" && aggregate && aggregate.count > 0 ? (
         <span className="text-[9px] font-semibold text-slate-500">{aggregate.count} hlasů</span>
@@ -93,7 +93,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
     const pairTitle = "text-slate-600";
 
     const forwardLines = lineup.forwardLines.slice(0, 4);
-    const sectionHeading = `mb-0.5 border-b pb-0.5 font-display text-[13px] font-extrabold uppercase tracking-[0.12em] ${heading}`;
+    const compact = Boolean(jerseyRatingExport);
+    const sectionHeading = `mb-0.5 border-b pb-0.5 font-display text-[${compact ? "11px" : "13px"}] font-extrabold uppercase tracking-[0.12em] ${heading}`;
 
     const renderSlot = (pid: string | null, positionLabel: string, reactKey: string) => (
       <div key={reactKey} className={`${JERSEY_SLOT_MAX_W} flex min-w-0 flex-col gap-0`}>
@@ -136,9 +137,9 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           </div>
         </header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden px-2 pb-1 pt-0 sm:px-2">
-          <div className="grid min-h-0 flex-1 grid-cols-2 gap-x-3">
-            <div className="flex min-h-0 flex-col justify-between gap-1">
+        <div className={`relative flex min-h-0 flex-1 flex-col px-2 pt-0 sm:px-2 ${compact ? "overflow-visible pb-2" : "overflow-hidden pb-1"}`}>
+          <div className={`grid min-h-0 flex-1 grid-cols-2 ${compact ? "gap-x-2" : "gap-x-3"}`}>
+            <div className={`flex min-h-0 flex-col justify-between ${compact ? "gap-0.5" : "gap-1"}`}>
               <section className="shrink-0">
                 <h2 className={sectionHeading}>Brankáři</h2>
                 <div className="grid min-w-0 grid-cols-2 gap-x-3.5 gap-y-1 sm:gap-x-4">
@@ -171,7 +172,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
               </section>
             </div>
 
-            <div className="flex min-h-0 flex-col justify-between gap-1">
+            <div className={`flex min-h-0 flex-col justify-between ${compact ? "gap-0.5" : "gap-1"}`}>
               <section className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
                 <h2 className={`${sectionHeading} shrink-0`}>Obranné páry</h2>
                 <div className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">

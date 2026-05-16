@@ -188,7 +188,7 @@ export const MatchRatingNamesFullPoster = forwardRef<
       <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-3 pt-8 sm:px-10 sm:pt-9">
         <PosterHeader eyebrow="Hodnocení hráčů" titleLine={titleLine} subline={subline} />
 
-        <div className="mt-5 flex min-h-0 flex-1 flex-col justify-between gap-6 py-2 sm:mt-6">
+        <div className="mt-4 flex min-h-0 flex-1 flex-col justify-between gap-2.5 py-1 sm:mt-5">
           {lineBlocks.map(({ group, chunks, rows }) => {
             if (!chunks) return null;
             const byId = new Map(rows.map((r) => [r.id, r]));
@@ -200,11 +200,11 @@ export const MatchRatingNamesFullPoster = forwardRef<
                 <p className="mt-1 text-center font-display text-[0.58rem] font-bold uppercase tracking-[0.14em] text-white/38 sm:text-[0.6rem]">
                   Sestava na ledě
                 </p>
-                <div className="mx-auto mt-2 w-full max-w-[22rem] sm:max-w-md">
+                <div className="mx-auto mt-1.5 w-full max-w-[20rem] sm:max-w-[18rem]">
                   <IceRinkShell
                     noiseFilterId={noiseId}
                     scratchPatternId={patId}
-                    transform="perspective(920px) rotateX(4deg) scale(0.82) translateZ(0)"
+                    transform="perspective(920px) rotateX(4deg) scale(0.72) translateZ(0)"
                   >
                     <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
                       {chunks.forwards.filter(Boolean).map((pid) => {

@@ -7,12 +7,13 @@ import {
   captureElementToCanvas,
   canvasToPngDataUrl,
   downloadDataUrl,
+  letterboxCanvas,
 } from "@/lib/captureSharePoster";
-import { SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 import type { LineupStructure, Player } from "@/types";
 import { MatchLineupJerseyExportPoster } from "@/components/match/MatchLineupJerseyExportPoster";
 import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
-import { MatchLineupNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
+import { MatchLineupNamesFullPoster, MatchRatingNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
 import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 import type { MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
 import type { MatchRatingAggregateMap, MatchRatingMyMap } from "@/lib/matchRatingExportDisplay";
@@ -119,8 +120,10 @@ export function MatchLineupImageExportButton({
     () => [
       {
         key: "cele-jmena",
-        title: "Celá sestava — jen jména",
-        hint: "Jako grafika „jen jména“ v editoru nominace (tmavý plakát, celá soupiska).",
+        title: ratingSnapshot ? "Celá sestava — jména a známky" : "Celá sestava — jen jména",
+        hint: ratingSnapshot
+          ? "Tmavý plakát po lajnách: příjmení, průměr a počet hlasů (režim nahoře)."
+          : "Jako grafika „jen jména“ v editoru nominace (tmavý plakát, celá soupiska).",
       },
       {
         key: "cele-dresy",
@@ -152,7 +155,7 @@ export function MatchLineupImageExportButton({
           ratingHint,
       },
     ],
-    [ratingHint]
+    [ratingHint, ratingSnapshot]
   );
 
   const runExport = useCallback(
@@ -167,7 +170,9 @@ export function MatchLineupImageExportButton({
         const bg = slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? "#e8ecf2" : "#05080f";
         const selector =
           slot === "cele-jmena"
-            ? "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
+            ? ratingSnapshot
+              ? "[data-export-slot=\"cele-jmena\"].match-rating-names-full-poster"
+              : "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
             : slot === "cele-dresy"
               ? "[data-export-slot=\"cele-dresy\"].match-lineup-full-jersey-poster"
               : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
@@ -176,10 +181,25 @@ export function MatchLineupImageExportButton({
           toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
           return;
         }
-        const canvas = await captureElementToCanvas(node, {
+        const prevHeight = node.style.height;
+        const prevMaxHeight = node.style.maxHeight;
+        const prevOverflow = node.style.overflow;
+        if (ratingSnapshot) {
+          node.style.height = "auto";
+          node.style.maxHeight = "none";
+          node.style.overflow = "visible";
+        }
+        let canvas = await captureElementToCanvas(node, {
           scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
           backgroundColor: bg,
         });
+        if (ratingSnapshot) {
+          node.style.height = prevHeight;
+          node.style.maxHeight = prevMaxHeight;
+          node.style.overflow = prevOverflow;
+          const theme = slot === "cele-jmena" ? "dark" : "light";
+          canvas = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme });
+        }
         downloadDataUrl(canvasToPngDataUrl(canvas), filenameLineupSlot(slot, baseSlug, ratingSnapshot));
         toast.success("Staženo 1 PNG.");
       } catch (e) {
@@ -234,15 +254,28 @@ export function MatchLineupImageExportButton({
           opacity: 0,
         }}
       >
-        <MatchLineupNamesFullPoster
-          headline={titleLine}
-          lineup={lineup}
-          players={players}
-          defenseCount={defenseCount}
-          allowExtraForward={allowExtraForward}
-          siteUrl={siteOrigin}
-          footerInstantIso={footerIso}
-        />
+        {ratingSnapshot ? (
+          <MatchRatingNamesFullPoster
+            headline={titleLine}
+            lineup={lineup}
+            players={players}
+            defenseCount={defenseCount}
+            allowExtraForward={allowExtraForward}
+            ratings={ratingSnapshot.ratings}
+            siteUrl={siteOrigin}
+            footerInstantIso={footerIso}
+          />
+        ) : (
+          <MatchLineupNamesFullPoster
+            headline={titleLine}
+            lineup={lineup}
+            players={players}
+            defenseCount={defenseCount}
+            allowExtraForward={allowExtraForward}
+            siteUrl={siteOrigin}
+            footerInstantIso={footerIso}
+          />
+        )}
         <MatchLineupFullJerseyExportPoster
           lineupTitle={titleLine}
           lineup={lineup}
