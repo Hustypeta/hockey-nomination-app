@@ -19,7 +19,7 @@
     "code": "CZE26-G33-PAVLAT",
     "name": "Dominik Pavlát",
     "team": "CZE",
-    "jerseyNumber": 33,
+    "jerseyNumber": 39,
     "position": "G",
     "tier": "D"
   },
@@ -27,7 +27,7 @@
     "code": "CZE26-D56-CIBULK",
     "name": "Tomáš Cibulka",
     "team": "CZE",
-    "jerseyNumber": 56,
+    "jerseyNumber": 65,
     "position": "D",
     "tier": "E"
   },
@@ -139,7 +139,7 @@
     "code": "CZE26-F81-KUBALI",
     "name": "Dominik Kubalík",
     "team": "CZE",
-    "jerseyNumber": 81,
+    "jerseyNumber": 18,
     "position": "F",
     "tier": "C"
   },
@@ -147,7 +147,7 @@
     "code": "CZE26-F91-VOZENI",
     "name": "Daniel Voženílek",
     "team": "CZE",
-    "jerseyNumber": 91,
+    "jerseyNumber": 95,
     "position": "F",
     "tier": "C"
   },
@@ -187,7 +187,7 @@
     "code": "CZE26-F21-MELOVS",
     "name": "Matyáš Melovský",
     "team": "CZE",
-    "jerseyNumber": 21,
+    "jerseyNumber": 11,
     "position": "F",
     "tier": "E"
   },

@@ -1,9 +1,10 @@
 "use client";
 
-import { forwardRef, useMemo, type CSSProperties } from "react";
+import { forwardRef, useId, useMemo, type CSSProperties, type ReactNode } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
+import { IceRinkShell } from "@/components/shared/IceRinkShell";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
@@ -21,6 +22,26 @@ import {
 import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
 
 const LINE_JERSEY_SLOT_MAX_W = 220;
+
+function MatchLineupPosterDecorativeBg() {
+  return (
+    <>
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 w-[42%] bg-gradient-to-br from-[#c8102e] via-[#8f0b22] to-[#003087]"
+        style={{
+          borderTopLeftRadius: "110px",
+          borderBottomLeftRadius: "110px",
+          transform: "translateX(12%)",
+        }}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-y-8 right-[36%] w-px bg-gradient-to-b from-transparent via-white/25 to-transparent opacity-70"
+        aria-hidden
+      />
+    </>
+  );
+}
 
 function roleForPlayerId(lineup: LineupStructure, playerId: string): { kind: "goalie" | "skater"; label: "G" | "D" | "F" } {
   if (lineup.goalies[0] === playerId || lineup.goalies[1] === playerId) {
@@ -114,6 +135,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
                 fontSize: jerseyRatingExport ? 22 : 34,
                 fontWeight: 900,
                 color: "white",
+                textShadow: "0 2px 12px rgba(0,0,0,0.65)",
                 lineHeight: jerseyRatingExport ? 1.12 : 1.08,
                 letterSpacing: "-0.01em",
                 ...(jerseyRatingExport
@@ -231,19 +253,145 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       overflow: "hidden",
       display: "flex",
       flexDirection: "column",
+      position: "relative",
     };
+
+    const iceUid = useId().replace(/:/g, "");
+    const rinkScale = jerseyRatingExport ? 0.8 : 0.94;
+    const rinkTransform = `perspective(920px) rotateX(5deg) scale(${rinkScale}) translateZ(0)`;
+
+    const wrapOnIce = (content: ReactNode) => (
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          marginTop: jerseyRatingExport ? 4 : 8,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <p
+          style={{
+            margin: jerseyRatingExport ? "0 0 6px" : "0 0 10px",
+            textAlign: "center",
+            fontSize: jerseyRatingExport ? 11 : 13,
+            fontWeight: 800,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.42)",
+          }}
+        >
+          Sestava na ledě
+        </p>
+        <IceRinkShell
+          className="mx-auto w-full border-cyan-400/30 shadow-[0_0_48px_rgba(0,180,255,0.14),0_20px_56px_rgba(0,0,0,0.55)]"
+          iceMood="arena"
+          noiseFilterId={`${iceUid}-noise`}
+          scratchPatternId={`${iceUid}-ice`}
+          transform={rinkTransform}
+          innerClassName={
+            jerseyRatingExport
+              ? "relative z-10 flex flex-col items-stretch px-2 pb-3 pt-7"
+              : "relative z-10 flex flex-col items-stretch px-3 pb-4 pt-8"
+          }
+        >
+          {content}
+        </IceRinkShell>
+      </div>
+    );
+
+    const lineFormation = lineChunks ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: jerseyRatingExport ? 8 : 12,
+          justifyContent: "space-evenly",
+        }}
+      >
+        {lineChunks.forwards.filter(Boolean).length > 0 ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              gap: jerseyRatingExport ? 8 : 12,
+              alignItems: "start",
+            }}
+          >
+            {lineChunks.forwards.filter(Boolean).map((pid) => (
+              <div key={pid}>{renderPlayerCard(pid)}</div>
+            ))}
+          </div>
+        ) : null}
+
+        {lineChunks.defense.filter(Boolean).length > 0 ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: jerseyRatingExport ? 8 : 12,
+              alignItems: "start",
+            }}
+          >
+            {lineChunks.defense.filter(Boolean).map((pid) => (
+              <div key={pid}>{renderPlayerCard(pid)}</div>
+            ))}
+          </div>
+        ) : null}
+
+        {lineChunks.bottom.filter(Boolean).length > 0 ? (
+          lineChunks.bottom.filter(Boolean).length === 1 ? (
+            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+              <div style={{ width: "100%", maxWidth: LINE_JERSEY_SLOT_MAX_W }}>
+                {renderPlayerCard(lineChunks.bottom.filter(Boolean)[0]!)}
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gap: jerseyRatingExport ? 8 : 12,
+                alignItems: "start",
+              }}
+            >
+              {lineChunks.bottom.filter(Boolean).map((pid) => (
+                <div key={pid}>{renderPlayerCard(pid)}</div>
+              ))}
+            </div>
+          )
+        ) : null}
+      </div>
+    ) : (
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          gap: jerseyRatingExport ? 10 : 14,
+          alignContent: "space-evenly",
+        }}
+      >
+        {ids.map((pid) => renderPlayerCard(pid))}
+      </div>
+    );
 
     return (
       <div ref={ref} data-export-slot={group} className="match-lineup-jersey-export-poster" style={rootStyle}>
+        <MatchLineupPosterDecorativeBg />
         <div
           style={{
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "space-between",
             gap: 12,
-            paddingBottom: jerseyRatingExport ? 10 : 22,
+            paddingBottom: jerseyRatingExport ? 10 : 18,
             borderBottom: "3px solid rgba(241, 196, 15, 0.6)",
             flexShrink: 0,
+            position: "relative",
+            zIndex: 1,
           }}
         >
           <div style={{ minWidth: 0 }}>
@@ -301,86 +449,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
           </div>
         </div>
 
-        {lineChunks ? (
-          <div
-            style={{
-              marginTop: jerseyRatingExport ? 6 : 12,
-              display: "flex",
-              flexDirection: "column",
-              gap: jerseyRatingExport ? 10 : 18,
-              flex: 1,
-              minHeight: 0,
-              justifyContent: "space-evenly",
-            }}
-          >
-            {lineChunks.forwards.filter(Boolean).length > 0 ? (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                  gap: jerseyRatingExport ? 10 : 16,
-                  alignItems: "start",
-                }}
-              >
-                {lineChunks.forwards.filter(Boolean).map((pid) => (
-                  <div key={pid}>{renderPlayerCard(pid)}</div>
-                ))}
-              </div>
-            ) : null}
-
-            {lineChunks.defense.filter(Boolean).length > 0 ? (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  gap: jerseyRatingExport ? 10 : 16,
-                  alignItems: "start",
-                }}
-              >
-                {lineChunks.defense.filter(Boolean).map((pid) => (
-                  <div key={pid}>{renderPlayerCard(pid)}</div>
-                ))}
-              </div>
-            ) : null}
-
-            {lineChunks.bottom.filter(Boolean).length > 0 ? (
-              lineChunks.bottom.filter(Boolean).length === 1 ? (
-                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                  <div style={{ width: "100%", maxWidth: LINE_JERSEY_SLOT_MAX_W }}>
-                    {renderPlayerCard(lineChunks.bottom.filter(Boolean)[0]!)}
-                  </div>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                    gap: jerseyRatingExport ? 10 : 16,
-                    alignItems: "start",
-                  }}
-                >
-                  {lineChunks.bottom.filter(Boolean).map((pid) => (
-                    <div key={pid}>{renderPlayerCard(pid)}</div>
-                  ))}
-                </div>
-              )
-            ) : null}
-          </div>
-        ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${cols}, 1fr)`,
-              gap: jerseyRatingExport ? 12 : 18,
-              marginTop: 12,
-              flex: 1,
-              minHeight: 0,
-              alignContent: "space-evenly",
-            }}
-          >
-            {ids.map((pid) => renderPlayerCard(pid))}
-          </div>
-        )}
+        {wrapOnIce(lineFormation)}
 
         <div
           style={{
@@ -388,6 +457,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             paddingTop: 8,
             flexShrink: 0,
             textAlign: "center",
+            position: "relative",
+            zIndex: 1,
             fontSize: jerseyRatingExport ? 22 : 24,
             color: "rgba(126,200,255,0.95)",
             letterSpacing: "0.12em",
