@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { SiteShell } from "@/components/site/SiteShell";
+import { resolveMs2026MatchResult } from "@/lib/ms2026MatchResults";
 
 export const metadata: Metadata = {
   title: "Zápasy — MS 2026",
@@ -52,21 +53,27 @@ export default async function ZapasyMs2026Page() {
         <h1 className="font-display text-3xl font-black">Zápasy</h1>
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
-            href="/zapasy/beijir"
-            className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-black tracking-wide text-white/70 hover:bg-white/[0.05]"
-          >
-            Beijir hockey games
-          </Link>
-          <Link
             href="/zapasy/ms-2026"
             className="rounded-full border border-white/25 bg-white/[0.08] px-4 py-2 text-sm font-black tracking-wide text-white"
           >
             MS 2026
           </Link>
+          <Link
+            href="/zapasy/beijir"
+            className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-black tracking-wide text-white/70 hover:bg-white/[0.05]"
+          >
+            Beijir hockey games
+          </Link>
         </div>
 
         <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-white shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
-          {matches.map((m) => (
+          {matches.map((m) => {
+            const msResult = resolveMs2026MatchResult({
+              category: "ms2026",
+              homeCode: m.homeCode,
+              awayCode: m.awayCode,
+            });
+            return (
             <Link
               key={m.slug}
               href={`/zapasy/${encodeURIComponent(m.slug)}`}
@@ -85,6 +92,11 @@ export default async function ZapasyMs2026Page() {
                 </div>
 
                 <div className="min-w-0">
+                  {msResult ? (
+                    <div className="mb-1 font-mono text-[10px] font-black leading-tight tracking-tight text-slate-800 sm:text-[11px]">
+                      {msResult.headline}
+                    </div>
+                  ) : null}
                   {(() => {
                     const teams = splitTeams(m);
                     if (!teams) {
@@ -111,10 +123,21 @@ export default async function ZapasyMs2026Page() {
                   </div>
                 </div>
 
-                <div className="text-sm font-black text-slate-400">-</div>
+                <div className="text-sm font-black tabular-nums text-slate-800">
+                  {msResult ? (
+                    <>
+                      {msResult.homeGoals}
+                      <span className="mx-0.5 text-slate-400">:</span>
+                      {msResult.awayGoals}
+                    </>
+                  ) : (
+                    <span className="text-slate-400">-</span>
+                  )}
+                </div>
               </div>
             </Link>
-          ))}
+            );
+          })}
           {matches.length === 0 ? (
             <div className="p-6 text-sm text-slate-600">
               Zatím žádné publikované zápasy.

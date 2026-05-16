@@ -13,6 +13,7 @@ import {
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
+import { MerkurXtipPromoBanner } from "@/components/marketing/MerkurXtipPromoBanner";
 import {
   NOMINATION_WEB_POSTER_H,
   NOMINATION_WEB_POSTER_W,
@@ -676,6 +677,8 @@ export function SaveShareModal({
               </button>
             </div>
           )}
+
+          <MerkurXtipPromoBanner compact className="mt-6" />
 
           <button
             type="button"

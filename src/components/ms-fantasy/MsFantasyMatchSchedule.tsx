@@ -2,7 +2,11 @@
 
 import { FlagMark } from "@/components/flags/FlagMark";
 import type { MsFantasyMatchDto } from "@/lib/msFantasyScheduleDisplay";
-import { formatMsFantasyMatchClockPrague, parseMsFantasyMatches } from "@/lib/msFantasyScheduleDisplay";
+import {
+  formatMsFantasyMatchClockPrague,
+  msFantasyMatchFinalScore,
+  parseMsFantasyMatches,
+} from "@/lib/msFantasyScheduleDisplay";
 
 type MsFantasyMatchScheduleProps = {
   matchesRaw: unknown;
@@ -65,6 +69,8 @@ export function MsFantasyMatchSchedule({
 function MsFantasyMatchRow({ m }: { m: MsFantasyMatchDto }) {
   const time = formatMsFantasyMatchClockPrague(m.startAt);
   const hasTeams = Boolean(m.home && m.away);
+  const score = msFantasyMatchFinalScore(m);
+  const hasScore = score.homeScore != null && score.awayScore != null;
 
   return (
     <li className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[0.7rem] text-slate-200 sm:text-xs">
@@ -75,7 +81,13 @@ function MsFantasyMatchRow({ m }: { m: MsFantasyMatchDto }) {
             <FlagMark code={m.home!} className="h-3 w-[0.9rem] shrink-0 rounded-sm ring-1 ring-white/20" />
             <span>{m.home}</span>
           </span>
-          <span className="text-slate-500">–</span>
+          {hasScore ? (
+            <span className="font-mono text-[0.72rem] font-black tabular-nums text-emerald-300/95 sm:text-xs">
+              {score.homeScore}:{score.awayScore}
+            </span>
+          ) : (
+            <span className="text-slate-500">–</span>
+          )}
           <span className="inline-flex items-center gap-1">
             <span>{m.away}</span>
             <FlagMark code={m.away!} className="h-3 w-[0.9rem] shrink-0 rounded-sm ring-1 ring-white/20" />

@@ -20,6 +20,8 @@ export function resolveMsFantasyMatchesFromDbOrOfficial(slug: string, dbMatches:
       group: m.group,
       phase: m.phase,
       label: m.label,
+      homeScore: m.homeScore,
+      awayScore: m.awayScore,
     }));
   }
   return parseMsFantasyMatches(dbMatches);

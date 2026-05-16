@@ -6,8 +6,8 @@ const staticRoutes = [
   "/",
   "/sestava",
   /** `/zapasy` jen přesměruje — v sitemapě jen finální cíl (méně hluku v GSC „přesměrování“). */
-  "/zapasy/beijir",
   "/zapasy/ms-2026",
+  "/zapasy/beijir",
   "/clanky/rady-k-nominaci",
   "/clanky/kurzy-a-analyza-ms-2026",
   "/pravidla-souteze",

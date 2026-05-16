@@ -16,7 +16,7 @@ export async function GET() {
   try {
     const now = new Date();
     /** Počet účtů, které už odeslaly nominaci do soutěže (ne počet konceptů). */
-    const [nominationCount, communityUsersCount, pickemCount] = await Promise.all([
+    const [nominationCount, communityUsersCount, pickemCount, fantasyPlayersCount] = await Promise.all([
       prisma.user.count({
         where: { contestEntryNominationId: { not: null } },
       }),
@@ -27,11 +27,16 @@ export async function GET() {
       prisma.pickemEntry.count({
         where: { contestSubmittedAt: { not: null } },
       }),
+      /** Unikátní účty s alespoň jednou uloženou fantasy sestavou (ne počet odevzdání). */
+      prisma.user.count({
+        where: { msFantasyLineups: { some: {} } },
+      }),
     ]);
     return NextResponse.json({
       nominationCount,
       communityUsersCount,
       pickemCount,
+      fantasyPlayersCount,
       contestTimeBonusPercent: getTimeBonusPercentForInstant(now),
       contestSubmissionOpen: isNominationSubmissionOpen(now),
       pickemSubmissionOpen: isPickemSubmissionOpen(now),
@@ -41,6 +46,7 @@ export async function GET() {
       nominationCount: null as number | null,
       communityUsersCount: null as number | null,
       pickemCount: null as number | null,
+      fantasyPlayersCount: null as number | null,
       contestTimeBonusPercent: 0,
       contestSubmissionOpen: true,
       pickemSubmissionOpen: false,

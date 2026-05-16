@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen, Calendar, Shirt, Ticket, Trophy } from "lucide-react";
+import { AlertTriangle, ArrowRight, BookOpen, Calendar, Shirt, Ticket, Trophy } from "lucide-react";
 import { isMsFantasyLineupSubmissionEnabled, isMsFantasySchedulePauseDaySlug } from "@/lib/msFantasyConfig";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
 import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
@@ -53,6 +53,19 @@ export function MsFantasyHome() {
               <h1 className="mt-0.5 font-display text-3xl font-bold leading-none tracking-[0.02em] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.45)] sm:text-4xl sm:tracking-tight">
                 Fantasy
               </h1>
+              <div
+                className="mt-3 rounded-xl border border-amber-400/45 bg-gradient-to-br from-amber-500/25 via-amber-600/12 to-orange-600/15 px-3.5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_28px_rgba(245,158,11,0.15)] sm:px-4 sm:py-3.5"
+                role="alert"
+              >
+                <p className="flex items-center gap-2 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-100 sm:text-xs">
+                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-300" aria-hidden />
+                  Důležitá informace
+                </p>
+                <p className="mt-2 text-[0.8125rem] leading-snug text-amber-50/95 sm:text-sm sm:leading-relaxed">
+                  Omlouváme se, kvůli technickým problémům nebyli do Fantasy dočasně dostupní hráči Finska a Německa.
+                  Problém je již vyřešen a vše funguje normálně.
+                </p>
+              </div>
               <div className="mt-3 max-w-2xl space-y-2 text-[0.8125rem] leading-snug text-slate-200/90 sm:text-sm sm:leading-relaxed">
                 <p>
                   Zde si můžeš každý den vybrat <span className="font-semibold text-white">6 hráčů</span> (1x

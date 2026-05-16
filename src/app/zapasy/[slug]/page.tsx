@@ -9,7 +9,7 @@ import { MatchRatingExperience } from "@/components/match/MatchRatingExperience"
 import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { SiteShell } from "@/components/site/SiteShell";
-import { resolveBeijirMatchResult } from "@/lib/beijirMatchResults";
+import { resolveMatchResult } from "@/lib/matchResults";
 import { countryLabelCs } from "@/lib/flagCountryLabels";
 
 // Railway build: do not prerender at build-time (needs DB at runtime).
@@ -137,7 +137,7 @@ export default async function MatchDetailPage({
     startsAt,
   });
   const tz = "Europe/Prague";
-  const beijirResult = resolveBeijirMatchResult({
+  const matchResult = resolveMatchResult({
     slug,
     category: preview ? "beijir" : match?.category ?? null,
     homeCode: preview?.homeCode ?? match?.homeCode,
@@ -177,9 +177,9 @@ export default async function MatchDetailPage({
         <div className="overflow-hidden rounded-3xl border border-white/10 bg-white text-slate-900 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
           <div className="px-4 py-4 sm:px-6 sm:py-6">
             <div className="flex flex-col items-center justify-center gap-4">
-              {beijirResult ? (
+              {matchResult ? (
                 <div className="text-center font-mono text-sm font-black tracking-tight text-slate-800 sm:text-base">
-                  {beijirResult.headline}
+                  {matchResult.headline}
                 </div>
               ) : null}
               <div className="flex items-center justify-center gap-6 sm:gap-10">
@@ -199,11 +199,11 @@ export default async function MatchDetailPage({
                         {startsAt ? new Date(startsAt).toLocaleString("cs-CZ", { timeZone: tz }) : "—"}
                       </div>
                       <div className="mt-2 font-display text-3xl font-black tabular-nums text-slate-900 sm:text-4xl">
-                        {beijirResult ? (
+                        {matchResult ? (
                           <>
-                            {beijirResult.homeGoals}
+                            {matchResult.homeGoals}
                             <span className="mx-1 text-slate-400">:</span>
-                            {beijirResult.awayGoals}
+                            {matchResult.awayGoals}
                           </>
                         ) : (
                           "-"

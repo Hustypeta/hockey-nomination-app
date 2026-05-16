@@ -6,6 +6,7 @@ export type ContestStats = {
   nominationCount: number | null;
   communityUsersCount: number | null;
   pickemCount: number | null;
+  fantasyPlayersCount: number | null;
   contestTimeBonusPercent: number;
   contestSubmissionOpen: boolean;
   pickemSubmissionOpen: boolean;
@@ -15,6 +16,7 @@ const DEFAULT_STATS: ContestStats = {
   nominationCount: null,
   communityUsersCount: null,
   pickemCount: null,
+  fantasyPlayersCount: null,
   contestTimeBonusPercent: 0,
   contestSubmissionOpen: true,
   pickemSubmissionOpen: false,
@@ -40,6 +42,7 @@ export function useContestStats() {
             nominationCount?: number | null;
             communityUsersCount?: number | null;
             pickemCount?: number | null;
+            fantasyPlayersCount?: number | null;
             contestTimeBonusPercent?: number;
             contestSubmissionOpen?: boolean;
             pickemSubmissionOpen?: boolean;
@@ -50,6 +53,8 @@ export function useContestStats() {
               communityUsersCount:
                 typeof d.communityUsersCount === "number" ? d.communityUsersCount : null,
               pickemCount: typeof d.pickemCount === "number" ? d.pickemCount : null,
+              fantasyPlayersCount:
+                typeof d.fantasyPlayersCount === "number" ? d.fantasyPlayersCount : null,
               contestTimeBonusPercent:
                 typeof d.contestTimeBonusPercent === "number" ? d.contestTimeBonusPercent : 0,
               contestSubmissionOpen: d.contestSubmissionOpen !== false,

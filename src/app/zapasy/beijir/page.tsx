@@ -103,16 +103,16 @@ export default async function ZapasyBeijirPage() {
         <h1 className="font-display text-3xl font-black">Zápasy</h1>
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
-            href="/zapasy/beijir"
-            className="rounded-full border border-white/25 bg-white/[0.08] px-4 py-2 text-sm font-black tracking-wide text-white"
-          >
-            Beijir hockey games
-          </Link>
-          <Link
             href="/zapasy/ms-2026"
             className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-black tracking-wide text-white/70 hover:bg-white/[0.05]"
           >
             MS 2026
+          </Link>
+          <Link
+            href="/zapasy/beijir"
+            className="rounded-full border border-white/25 bg-white/[0.08] px-4 py-2 text-sm font-black tracking-wide text-white"
+          >
+            Beijir hockey games
           </Link>
         </div>
 

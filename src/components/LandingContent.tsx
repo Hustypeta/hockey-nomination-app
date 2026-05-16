@@ -21,11 +21,7 @@ import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 
-/** Partnerský banner (MerkurXtip) — hero pod CTA „HRÁT FANTASY“. */
-const MERKURXTIP_BANNER_HREF =
-  "https://merkurxtip.click/o/2f9j7L?site_id=687&s1=loading_page&r_id=281&lpage=ZwJ7Cl";
-const MERKURXTIP_BANNER_IMG_SRC =
-  "https://raven1-merkurxtip-uploads-bucket.s3.eu-west-1.amazonaws.com/campaign-public/resources/banner/images/img_12_1764257760.jpg";
+import { MERKURXTIP_PROMO_HREF_LANDING, MERKURXTIP_PROMO_IMAGE_SRC } from "@/lib/merkurXtipPromo";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
@@ -66,6 +62,7 @@ export function LandingContent() {
   const nominationCount = contestStats.nominationCount;
   const communityUsersCount = contestStats.communityUsersCount;
   const pickemCount = contestStats.pickemCount;
+  const fantasyPlayersCount = contestStats.fantasyPlayersCount;
   const cd = useCountdown(MS_2026_KICKOFF);
   return (
     <main>
@@ -138,14 +135,14 @@ export function LandingContent() {
                   <span className="font-semibold text-white">500 Kč zdarma</span>
                 </p>
                 <a
-                  href={MERKURXTIP_BANNER_HREF}
+                  href={MERKURXTIP_PROMO_HREF_LANDING}
                   target="_blank"
                   rel="noopener noreferrer nofollow sponsored"
                   className="mt-4 block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] transition hover:border-[#f1c40f]/35 hover:shadow-[0_12px_40px_rgba(241,196,15,0.12)] sm:mt-5"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- externí hostitel banneru */}
                   <img
-                    src={MERKURXTIP_BANNER_IMG_SRC}
+                    src={MERKURXTIP_PROMO_IMAGE_SRC}
                     alt="MerkurXtip — partnerská nabídka"
                     className="mx-auto block h-auto w-full max-w-full object-contain"
                     loading="lazy"
@@ -247,10 +244,10 @@ export function LandingContent() {
                         label: "Pick’emů",
                       },
                       {
-                        tone: "bg-white/[0.06] ring-white/12",
-                        icon: "⏳",
-                        value: cd ? cd.d : null,
-                        label: "Dní do MS",
+                        tone: "bg-[#f1c40f]/10 ring-[#f1c40f]/25",
+                        icon: "⭐",
+                        value: fantasyPlayersCount,
+                        label: "Hráčů Fantasy",
                       },
                     ].map((x) => (
                       <div

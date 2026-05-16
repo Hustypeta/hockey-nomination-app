@@ -21,6 +21,9 @@ export type Ms2026FantasyOfficialMatch = {
   phase?: string;
   /** Když ještě nejsou známi soupeři (play-off). */
   label?: string;
+  /** Konečný výsledek (domácí : hosté). */
+  homeScore?: number;
+  awayScore?: number;
 };
 
 export type Ms2026FantasyOfficialGameDaySeed = {
@@ -45,7 +48,7 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
       { startAt: "2026-05-15T14:20:00.000Z", home: "FIN", away: "GER", group: "A" },
       { startAt: "2026-05-15T14:20:00.000Z", home: "CAN", away: "SWE", group: "B" },
       { startAt: "2026-05-15T18:20:00.000Z", home: "USA", away: "SUI", group: "A" },
-      { startAt: "2026-05-15T18:20:00.000Z", home: "CZE", away: "DEN", group: "B" },
+      { startAt: "2026-05-15T18:20:00.000Z", home: "CZE", away: "DEN", group: "B", homeScore: 4, awayScore: 1 },
     ],
   },
   {
