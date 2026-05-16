@@ -11,7 +11,9 @@ export type FantasyRosterJsonRow = {
   tier: string;
 };
 
-/** Nahradí jen řádky dané repre v poolu — ostatní týmy a odevzdané lineupy (pickIds) nedotkne. */
+/**
+ * Sloučí JSON repre do poolu přes `code` — **nemění id hráčů**, takže `pickIds` v odevzdaných sestavách zůstanou platné.
+ */
 export async function importMsFantasyRosterJson(
   prisma: PrismaClient,
   team: string,
@@ -31,20 +33,55 @@ export async function importMsFantasyRosterJson(
     console.warn(`${warnPrefix}: prázdný nebo neplatný soubor data/${filename} — přeskakuji.`);
     return 0;
   }
-  const removed = await prisma.msFantasyRosterPlayer.deleteMany({ where: { team } });
-  await prisma.msFantasyRosterPlayer.createMany({
-    data: rows.map((r) => ({
-      code: r.code,
-      name: r.name,
-      team: r.team,
-      jerseyNumber: r.jerseyNumber ?? null,
-      position: r.position,
-      tier: r.tier.trim().toUpperCase(),
-    })),
-  });
+
+  let upserted = 0;
+  for (const r of rows) {
+    const tier = r.tier.trim().toUpperCase();
+    await prisma.msFantasyRosterPlayer.upsert({
+      where: { code: r.code },
+      create: {
+        code: r.code,
+        name: r.name,
+        team: r.team,
+        jerseyNumber: r.jerseyNumber ?? null,
+        position: r.position,
+        tier,
+      },
+      update: {
+        name: r.name,
+        team: r.team,
+        jerseyNumber: r.jerseyNumber ?? null,
+        position: r.position,
+        tier,
+        active: true,
+      },
+    });
+    upserted++;
+  }
+
+  const lineupCount = await prisma.msFantasyLineup.count();
   console.log(
-    `${warnPrefix}: ${rows.length} hráčů (${team}) z data/${filename} (předtím v poolu pro ${team}: ${removed.count})`
+    `${warnPrefix}: ${upserted} hráčů (${team}) z data/${filename} — upsert podle code, ${lineupCount} odevzdaných sestav beze změny.`
   );
   if (note) console.log(`  ${note}`);
-  return rows.length;
+  return upserted;
+}
+
+/** Jednorázová úprava tieru v poolu (např. Lucas Raymond → A) bez doteku lineups. */
+export async function patchMsFantasyRosterPlayerTier(
+  prisma: PrismaClient,
+  code: string,
+  tier: string
+): Promise<{ code: string; tier: string; name: string } | null> {
+  const normalized = tier.trim().toUpperCase();
+  const row = await prisma.msFantasyRosterPlayer.findUnique({
+    where: { code },
+    select: { id: true, name: true, tier: true },
+  });
+  if (!row) return null;
+  await prisma.msFantasyRosterPlayer.update({
+    where: { code },
+    data: { tier: normalized },
+  });
+  return { code, tier: normalized, name: row.name };
 }

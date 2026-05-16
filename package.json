@@ -23,6 +23,9 @@
     "verify:scoring": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/verify-contest-scoring.ts",
     "preview:leaderboard": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/preview-contest-leaderboard.ts",
     "fantasy:import-fin-ger": "npx ts-node --project scripts/tsconfig.json scripts/import-ms-fantasy-roster-teams.ts",
+    "fantasy:import-swe": "npx ts-node --project scripts/tsconfig.json scripts/import-ms-fantasy-roster-teams.ts SWE",
+    "fantasy:import-tier-rebalance": "npx ts-node --project scripts/tsconfig.json scripts/import-ms-fantasy-roster-teams.ts ITA,FIN,SWE,SUI",
+    "fantasy:patch-tier": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-tier.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

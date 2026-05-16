@@ -16,13 +16,16 @@ config({ path: join(process.cwd(), ".env.local"), override: true });
 const TEAM_FILES: Record<string, string> = {
   FIN: "finland-ms2026-fantasy-roster.json",
   GER: "germany-ms2026-fantasy-roster.json",
+  SWE: "sweden-ms2026-fantasy-roster.json",
+  ITA: "italy-ms2026-fantasy-roster.json",
+  SUI: "switzerland-ms2026-fantasy-roster.json",
 };
 
 async function main() {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error("DATABASE_URL is not set (.env.local)");
 
-  const teamsRaw = process.env.TEAMS?.trim() || "FIN,GER";
+  const teamsRaw = process.argv.slice(2).join(",").trim() || process.env.TEAMS?.trim() || "FIN,GER";
   const teams = teamsRaw
     .split(",")
     .map((t) => t.trim().toUpperCase())

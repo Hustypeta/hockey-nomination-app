@@ -296,7 +296,7 @@ function MsFantasyRosterPanel({
           </div>
         ) : roster.length === 0 ? (
           <p className="px-3 py-10 text-center text-sm leading-relaxed text-slate-500">
-            V poolu zatím nejsou hráči, nebo nesedí filtr — po seedu/importu se tu objeví soupiska MS.
+            U tohoto týmu nebyl žádným hráčům přiřazen vybraný tier.
           </p>
         ) : (
           <>

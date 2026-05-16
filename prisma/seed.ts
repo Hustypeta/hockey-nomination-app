@@ -32,7 +32,7 @@ const FANTASY_ROSTER_FILES: { team: string; file: string; note?: string }[] = [
   { team: "GER", file: "germany-ms2026-fantasy-roster.json" },
   { team: "GBR", file: "great-britain-ms2026-fantasy-roster.json", note: "Platové tiery: C Kirk · D Bowns, Dowd, C. Neilson, Halbert, Richardson, T. Brown · zbytek E (Archie Hazeldine O)" },
   { team: "HUN", file: "hungary-ms2026-fantasy-roster.json", note: "Platové tiery: C Hári, Galló, Sebők · D Sofron, Bartalis, Stipsicz, Bálizs, Vay · zbytek E" },
-  { team: "ITA", file: "italy-ms2026-fantasy-roster.json", note: "Platové tiery: bez A/B · C Fadani, Pietroniro, Spornberger, Trivellato, De Luca, Zanetti, Segafredo · D Smith, Di Perna, Gios, Bradley, Frycklund, Misley, Saracino, Purdeller, Frigo, Mantenuto · zbytek E" },
+  { team: "ITA", file: "italy-ms2026-fantasy-roster.json", note: "Platové tiery: jen D a E (bez A/B/C) — posun o tier dolů oproti původnímu C/D/E rozložení" },
   { team: "LAT", file: "latvia-ms2026-fantasy-roster.json", note: "Platové tiery: B Balcers, Gudļevskis · C Dzierkals, Krastenbergs, Zīle · D Batņa, Egle, Freibergs, Mamčics, Cibuļskis, Grigals, Mitens · zbytek E" },
   { team: "NOR", file: "norway-ms2026-fantasy-roster.json", note: "Platové tiery: C Pettersen, Brandsegg-Nygård, Solberg, Haukeland · D Johannesen, Martinsen, T. Olsen, E. Ø. Salsten, Vikingstad, Krogdahl, Kåsastul, Normann · zbytek E" },
   { team: "SLO", file: "slovenia-ms2026-fantasy-roster.json", note: "Platové tiery: C Sabolič, Tičar, Gregorc · D Drozg, Ograjenšek, Kuralt, Štebih, Magovac, Horák, Ž. Us · zbytek E · dresy null (IIHF)" },
@@ -190,7 +190,7 @@ async function seedDenmarkMs2026FantasyRoster() {
 
 async function seedItalyMs2026FantasyRoster() {
   if (process.env.MS_FANTASY_SEED_ITA?.trim() !== "true") return;
-  await importFantasyRosterJson("ITA", "italy-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_ITA", "Platové tiery: bez A/B · C Fadani, Pietroniro, Spornberger, Trivellato, De Luca, Zanetti, Segafredo · D Smith, Di Perna, Gios, Bradley, Frycklund, Misley, Saracino, Purdeller, Frigo, Mantenuto · zbytek E");
+  await importFantasyRosterJson("ITA", "italy-ms2026-fantasy-roster.json", "MS_FANTASY_SEED_ITA", "Platové tiery: jen D a E (bez A/B/C)");
 }
 
 async function seedSloveniaMs2026FantasyRoster() {
