@@ -11,16 +11,21 @@ import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
 type NavItem = { href: string; label: string; shortLabel?: string };
 
 /** shortLabel = kratší text na úzkém desktopu (pod xl), aby se vešly všechny položky bez skrytého scrollu */
+const LINEUP_EDITOR_HREF = "/zapasy/sestava";
+
 const NAV: NavItem[] = [
   { href: "/", label: "Úvod" },
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
-  { href: "/zapasy/sestava", label: "Editor sestavy", shortLabel: "Editor sestavy" },
+  { href: LINEUP_EDITOR_HREF, label: "Editor sestavy", shortLabel: "Editor sestavy" },
   { href: "/bracket", label: "Pick’em" },
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
   { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
-  { href: "/zebricek", label: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
 ];
+
+function isNominationEditorPath(pathname: string) {
+  return pathname === "/sestava" || pathname.startsWith("/sestava/");
+}
 
 function DesktopNavLabel({ item }: { item: NavItem }) {
   if (!item.shortLabel) return <>{item.label}</>;
@@ -80,6 +85,8 @@ export function SiteHeader() {
   }, [mobileNavOpen]);
 
   const user = session?.user;
+  const onNominationEditor = isNominationEditorPath(pathname);
+  const showLineupEditorCta = !onNominationEditor;
 
   return (
     <>
@@ -248,10 +255,11 @@ export function SiteHeader() {
                       </span>
                     )}
                   </Link>
-                  <Link
-                    href="/sestava"
-                    style={{ "--ice": ICE, "--ice-dim": ICE_DIM } as CSSProperties}
-                    className={`
+                  {showLineupEditorCta ? (
+                    <Link
+                      href={LINEUP_EDITOR_HREF}
+                      style={{ "--ice": ICE, "--ice-dim": ICE_DIM } as CSSProperties}
+                      className={`
                     inline-flex shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-[var(--ice-dim)] to-[var(--ice)]
                     px-2.5 py-2 font-display text-[0.625rem] font-bold uppercase tracking-[0.08em] text-[#03050a] sm:text-[0.6875rem] xl:px-3 xl:text-xs xl:tracking-[0.1em]
                     shadow-[0_0_28px_rgba(0,180,255,0.45),0_6px_20px_rgba(0,0,0,0.35)]
@@ -259,15 +267,18 @@ export function SiteHeader() {
                     hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)] md:hover:scale-100 hover:scale-[1.03]
                     active:scale-[0.98]
                   `}
-                  >
-                    Do editoru sestavy
-                  </Link>
+                    >
+                      Do editoru sestavy
+                    </Link>
+                  ) : null}
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => signIn("google", { callbackUrl: "/sestava" })}
+                    onClick={() =>
+                      signIn("google", { callbackUrl: onNominationEditor ? "/sestava" : LINEUP_EDITOR_HREF })
+                    }
                     className={`
                     rounded-lg border border-white/[0.14] bg-white/[0.04] px-3 py-2 text-xs font-semibold text-slate-200 md:text-[0.8125rem]
                     transition duration-200 hover:scale-[1.03] hover:border-[#00B4FF]/45 hover:bg-[#00B4FF]/10 hover:text-white
@@ -276,10 +287,11 @@ export function SiteHeader() {
                   >
                     Přihlásit
                   </button>
-                  <Link
-                    href="/sestava"
-                    style={{ "--ice": ICE, "--ice-dim": ICE_DIM } as CSSProperties}
-                    className={`
+                  {showLineupEditorCta ? (
+                    <Link
+                      href={LINEUP_EDITOR_HREF}
+                      style={{ "--ice": ICE, "--ice-dim": ICE_DIM } as CSSProperties}
+                      className={`
                     inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[var(--ice-dim)] to-[var(--ice)]
                     px-3 py-2 font-display text-xs font-bold uppercase tracking-[0.1em] text-[#03050a] md:text-[0.8125rem] md:tracking-[0.11em]
                     shadow-[0_0_28px_rgba(0,180,255,0.45),0_6px_20px_rgba(0,0,0,0.35)]
@@ -287,9 +299,10 @@ export function SiteHeader() {
                     hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)] md:hover:scale-100 hover:scale-[1.03]
                     active:scale-[0.98]
                   `}
-                  >
-                    Začít
-                  </Link>
+                    >
+                      Začít
+                    </Link>
+                  ) : null}
                 </div>
               )}
             </div>
@@ -362,24 +375,33 @@ export function SiteHeader() {
           <div className="shrink-0 space-y-3 border-t border-white/[0.08] p-4">
             {status === "authenticated" && user ? (
               <>
-                <div className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.04] p-3">
+                <Link
+                  href="/ucet"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.04] p-3 transition hover:border-[#00B4FF]/35 hover:bg-white/[0.07]"
+                >
                   {user.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={user.image} alt="" width={44} height={44} className="h-11 w-11 rounded-full object-cover ring-2 ring-[#00B4FF]/40" />
                   ) : (
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-800 text-sm font-bold text-white ring-2 ring-[#00B4FF]/40">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-800 text-sm font-bold text-white ring-2 ring-[#00B4FF]/40">
                       {userInitials(user)}
                     </span>
                   )}
-                  <p className="min-w-0 flex-1 truncate text-sm text-slate-400">{user.email}</p>
-                </div>
-                <Link
-                  href="/sestava"
-                  onClick={() => setMobileNavOpen(false)}
-                  className="block w-full rounded-xl bg-gradient-to-r from-[#0090cc] to-[#00B4FF] py-3.5 text-center font-display text-sm font-bold uppercase tracking-[0.16em] text-[#03050a] shadow-[0_0_24px_rgba(0,180,255,0.45)] ring-1 ring-white/20 transition active:scale-[0.99]"
-                >
-                  Do editoru sestavy
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold text-white">{user.name?.trim() || "Můj účet"}</span>
+                    <span className="block truncate text-xs text-slate-400">{user.email}</span>
+                  </span>
                 </Link>
+                {showLineupEditorCta ? (
+                  <Link
+                    href={LINEUP_EDITOR_HREF}
+                    onClick={() => setMobileNavOpen(false)}
+                    className="block w-full rounded-xl bg-gradient-to-r from-[#0090cc] to-[#00B4FF] py-3.5 text-center font-display text-sm font-bold uppercase tracking-[0.16em] text-[#03050a] shadow-[0_0_24px_rgba(0,180,255,0.45)] ring-1 ring-white/20 transition active:scale-[0.99]"
+                  >
+                    Do editoru sestavy
+                  </Link>
+                ) : null}
               </>
             ) : (
               <div className="flex flex-col gap-2">
@@ -388,18 +410,22 @@ export function SiteHeader() {
                   className="rounded-xl border border-white/15 bg-white/[0.05] py-3.5 text-sm font-semibold text-white transition hover:border-[#00B4FF]/40"
                   onClick={() => {
                     setMobileNavOpen(false);
-                    void signIn("google", { callbackUrl: "/sestava" });
+                    void signIn("google", {
+                      callbackUrl: onNominationEditor ? "/sestava" : LINEUP_EDITOR_HREF,
+                    });
                   }}
                 >
                   Přihlásit
                 </button>
-                <Link
-                  href="/sestava"
-                  onClick={() => setMobileNavOpen(false)}
-                  className="block rounded-xl bg-gradient-to-r from-[#0090cc] to-[#00B4FF] py-3.5 text-center font-display text-sm font-bold uppercase tracking-[0.16em] text-[#03050a] shadow-[0_0_24px_rgba(0,180,255,0.45)] ring-1 ring-white/20"
-                >
-                  Začít
-                </Link>
+                {showLineupEditorCta ? (
+                  <Link
+                    href={LINEUP_EDITOR_HREF}
+                    onClick={() => setMobileNavOpen(false)}
+                    className="block rounded-xl bg-gradient-to-r from-[#0090cc] to-[#00B4FF] py-3.5 text-center font-display text-sm font-bold uppercase tracking-[0.16em] text-[#03050a] shadow-[0_0_24px_rgba(0,180,255,0.45)] ring-1 ring-white/20"
+                  >
+                    Začít
+                  </Link>
+                ) : null}
               </div>
             )}
           </div>
