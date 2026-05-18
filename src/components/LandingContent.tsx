@@ -95,7 +95,7 @@ export function LandingContent() {
 
             <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-10">
               <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
-                Zahraj si Fantasy na MS 2026
+                Zahraj si Daily Fantasy na MS 2026
               </span>
             </h1>
 
