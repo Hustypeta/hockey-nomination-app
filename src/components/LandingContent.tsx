@@ -100,7 +100,7 @@ export function LandingContent() {
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg font-medium leading-relaxed text-slate-200/95 sm:text-xl">
-              Každý den si naklikej svůj tým a soutěž s ostatními o poukazy na hern.
+              Každý den si naklikej svůj tým a soutěž s ostatními o poukazy na herní účet v celkové hodnotě 1500 Kč.
             </p>
 
             <div className="mx-auto mt-10 max-w-xl sm:mt-12">
