@@ -17,6 +17,7 @@ import { MsFantasyIceRink } from "./MsFantasyIceRink";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
 import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
 import { MsFantasyPlayerAvatar } from "./MsFantasyPlayerAvatar";
+import { MsFantasySubmitConsentModal } from "./MsFantasySubmitConsentModal";
 
 export type MsFantasyRosterPlayer = {
   id: string;
@@ -386,6 +387,8 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   const [saveState, setSaveState] = useState<"idle" | "saving" | "ok" | "err">("idle");
   const [saveErr, setSaveErr] = useState<string | null>(null);
   const [mobileRosterOpen, setMobileRosterOpen] = useState(false);
+  const [submitConsentOpen, setSubmitConsentOpen] = useState(false);
+  const [rulesConsent, setRulesConsent] = useState(false);
 
   const salaryUsed = useMemo(() => slots.reduce((s, p) => s + (p?.salary ?? 0), 0), [slots]);
   const salaryCapPct = useMemo(
@@ -586,7 +589,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
     [activeIx, day, picksIds]
   );
 
-  const save = useCallback(async () => {
+  const openSubmitConsent = useCallback(() => {
     if (!day || day.isLocked) return;
     if (status !== "authenticated") {
       void signIn("google", { callbackUrl: `/fantasy/${slug}` });
@@ -597,19 +600,33 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
       setSaveState("err");
       return;
     }
-    const pickIds = picksIds;
-    if (pickIds.length !== MS_FANTASY_TEAM_SIZE) {
+    if (picksIds.length !== MS_FANTASY_TEAM_SIZE) {
       setSaveErr(`Vyber všech ${MS_FANTASY_TEAM_SIZE} hráčů.`);
       setSaveState("err");
       return;
     }
+    setSaveErr(null);
+    setRulesConsent(false);
+    setSubmitConsentOpen(true);
+  }, [day, picksIds, slug, status, salaryUsed]);
+
+  const closeSubmitConsent = useCallback(() => {
+    if (saveState === "saving") return;
+    setSubmitConsentOpen(false);
+    setRulesConsent(false);
+  }, [saveState]);
+
+  const save = useCallback(async () => {
+    if (!day || day.isLocked) return;
+    if (!rulesConsent) return;
+    const pickIds = picksIds;
     setSaveState("saving");
     setSaveErr(null);
     try {
       const res = await fetch("/api/fantasy/my-lineup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gameDayId: day.id, pickIds }),
+        body: JSON.stringify({ gameDayId: day.id, pickIds, rulesAccepted: true }),
       });
       const j = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
@@ -618,11 +635,13 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
         return;
       }
       setSaveState("ok");
+      setSubmitConsentOpen(false);
+      setRulesConsent(false);
     } catch {
       setSaveErr("Bez připojení k serveru.");
       setSaveState("err");
     }
-  }, [day, picksIds, slug, status, salaryUsed]);
+  }, [day, picksIds, rulesConsent]);
 
   if (dayErr) {
     return (
@@ -696,7 +715,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                       ? `Platový strop ${MS_FANTASY_CAP} překročen (${salaryUsed} kreditů) — odeber hráče nebo vyměň za levnější.`
                       : undefined
                   }
-                  onClick={() => void save()}
+                  onClick={() => openSubmitConsent()}
                   className="ms-fantasy-save-shimmer group relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-xl border border-cyan-300/25 bg-gradient-to-r from-[#005a8c] via-[#00B4FF] to-[#38bdf8] px-5 py-3 text-xs font-display font-bold uppercase tracking-[0.14em] text-[#03050a] shadow-[0_0_32px_rgba(0,200,255,0.5),inset_0_1px_0_rgba(255,255,255,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_44px_rgba(0,220,255,0.6)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 touch-manipulation sm:w-auto sm:min-h-0"
                 >
                   {salaryOverCap ? (
@@ -920,6 +939,15 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
           </div>
         </div>
       ) : null}
+
+      <MsFantasySubmitConsentModal
+        open={submitConsentOpen}
+        onClose={closeSubmitConsent}
+        consent={rulesConsent}
+        onConsentChange={setRulesConsent}
+        onConfirm={() => void save()}
+        saving={saveState === "saving"}
+      />
     </div>
   );
 }

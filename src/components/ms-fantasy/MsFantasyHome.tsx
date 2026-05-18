@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AlertTriangle, ArrowRight, BookOpen, Calendar, Gift, Shirt, Ticket, Trophy } from "lucide-react";
+import { ArrowRight, BookOpen, Calendar, Gift, Shirt, Ticket, Trophy } from "lucide-react";
 import { isMsFantasyLineupSubmissionEnabled, isMsFantasySchedulePauseDaySlug } from "@/lib/msFantasyConfig";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
 import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
@@ -45,32 +45,19 @@ export function MsFantasyHome() {
     <div className="pb-12 pt-1 sm:pb-16">
       <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
         <MsFantasyGlassPanel className="p-4 sm:p-5" glow="cyan">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1 pr-1">
+          <div className="flex items-stretch justify-between gap-3 sm:gap-4">
+            <div className="flex min-w-0 flex-1 flex-col pr-1">
               <p className="font-display text-[0.65rem] font-bold uppercase tracking-[0.22em] text-cyan-200/90 sm:text-xs sm:tracking-[0.26em]">
                 MS 2026
               </p>
               <h1 className="mt-0.5 font-display text-3xl font-bold leading-none tracking-[0.02em] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.45)] sm:text-4xl sm:tracking-tight">
                 Fantasy
               </h1>
-              <div
-                className="mt-3 rounded-xl border border-amber-400/45 bg-gradient-to-br from-amber-500/25 via-amber-600/12 to-orange-600/15 px-3.5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_28px_rgba(245,158,11,0.15)] sm:px-4 sm:py-3.5"
-                role="alert"
-              >
-                <p className="flex items-center gap-2 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-100 sm:text-xs">
-                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-300" aria-hidden />
-                  Důležitá informace
-                </p>
-                <p className="mt-2 text-[0.8125rem] leading-snug text-amber-50/95 sm:text-sm sm:leading-relaxed">
-                  Omlouváme se, kvůli technickým problémům nebyli do Fantasy dočasně dostupní hráči Finska a Německa.
-                  Problém je již vyřešen a vše funguje normálně.
-                </p>
-              </div>
-              <div className="mt-3 max-w-2xl space-y-2 text-[0.8125rem] leading-snug text-slate-200/90 sm:text-sm sm:leading-relaxed">
-                <p>
-                  Zde si můžeš každý den vybrat <span className="font-semibold text-white">6 hráčů</span> (1x
-                  brankář, 2x obránci a 3x útočníci) a poslat je do soutěže. Nezapomeň dodržet budget a že uzávěrka je
-                  vždy před prvním zápasem dne.
+              <div className="mt-3 flex min-h-[13.5rem] flex-col sm:min-h-[15rem]">
+                <p className="text-[0.8125rem] leading-relaxed text-slate-200/90 sm:text-sm">
+                  Zde si můžeš každý den vybrat <span className="font-semibold text-white">6 hráčů</span> (1x brankář,
+                  2x obránci a 3x útočníci) a poslat je do soutěže. Nezapomeň dodržet budget a že uzávěrka je vždy před
+                  prvním zápasem dne.
                   {!fantasySubmissionsEnabled ? (
                     <span className="mt-2 block rounded-lg border border-amber-400/25 bg-amber-500/10 px-2.5 py-1.5 text-[0.8125rem] text-amber-100 sm:px-3 sm:py-2 sm:text-sm">
                       Odesílání sestav na server je zatím vypnuté — fantasy jde jen vyzkoušet v rozhraní.
@@ -78,35 +65,35 @@ export function MsFantasyHome() {
                   ) : null}
                 </p>
                 <div
-                  className="rounded-xl border border-[#f1c40f]/40 bg-gradient-to-br from-[#f1c40f]/14 via-amber-950/35 to-[#c8102e]/12 px-3.5 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_0_32px_rgba(241,196,15,0.12)] sm:px-4 sm:py-4"
+                  className="mt-3 flex flex-1 flex-col rounded-xl border border-[#f1c40f]/40 bg-gradient-to-br from-[#f1c40f]/14 via-amber-950/35 to-[#c8102e]/12 px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_0_32px_rgba(241,196,15,0.12)] sm:px-5 sm:py-5"
                   aria-labelledby="ms-fantasy-prizes-heading"
                 >
                   <p
                     id="ms-fantasy-prizes-heading"
-                    className="flex items-center gap-2 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#f1e6a8] sm:text-xs"
+                    className="flex items-center gap-2 font-display text-xs font-bold uppercase tracking-[0.14em] text-[#f1e6a8] sm:text-[0.8125rem]"
                   >
-                    <Gift className="h-4 w-4 shrink-0 text-[#f1c40f]" aria-hidden />
+                    <Gift className="h-4 w-4 shrink-0 text-[#f1c40f] sm:h-[1.125rem] sm:w-[1.125rem]" aria-hidden />
                     O co hrajeme?
                   </p>
-                  <ul className="mt-3 space-y-2.5">
-                    <li className="flex gap-3 rounded-lg border border-white/[0.1] bg-black/30 px-3 py-2.5 sm:py-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#f1c40f]/35 bg-[#f1c40f]/15 text-[#f1c40f] shadow-[0_0_16px_rgba(241,196,15,0.2)] sm:h-10 sm:w-10">
-                        <Trophy className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.75} aria-hidden />
+                  <ul className="mt-4 flex flex-1 flex-col justify-center gap-3">
+                    <li className="flex flex-1 items-center gap-3.5 rounded-lg border border-white/[0.1] bg-black/30 px-3.5 py-3 sm:gap-4 sm:px-4 sm:py-4">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#f1c40f]/35 bg-[#f1c40f]/15 text-[#f1c40f] shadow-[0_0_16px_rgba(241,196,15,0.2)] sm:h-12 sm:w-12">
+                        <Trophy className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]" strokeWidth={1.75} aria-hidden />
                       </span>
-                      <p className="min-w-0 text-[0.8125rem] leading-snug text-slate-100/95 sm:text-sm sm:leading-relaxed">
-                        <span className="font-display text-base font-bold tabular-nums text-[#f1c40f] sm:text-lg">
+                      <p className="min-w-0 text-sm leading-relaxed text-slate-100/95 sm:text-[0.9375rem]">
+                        <span className="font-display text-lg font-bold tabular-nums text-[#f1c40f] sm:text-xl">
                           500&nbsp;Kč
                         </span>{" "}
                         poukaz na herní účet pro{" "}
                         <span className="font-semibold text-white">celkového vítěze</span> (nejvíc bodů za celé MS).
                       </p>
                     </li>
-                    <li className="flex gap-3 rounded-lg border border-white/[0.1] bg-black/30 px-3 py-2.5 sm:py-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-cyan-300/30 bg-cyan-400/10 text-cyan-200 shadow-[0_0_16px_rgba(0,200,255,0.15)] sm:h-10 sm:w-10">
-                        <Ticket className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.75} aria-hidden />
+                    <li className="flex flex-1 items-center gap-3.5 rounded-lg border border-white/[0.1] bg-black/30 px-3.5 py-3 sm:gap-4 sm:px-4 sm:py-4">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-cyan-300/30 bg-cyan-400/10 text-cyan-200 shadow-[0_0_16px_rgba(0,200,255,0.15)] sm:h-12 sm:w-12">
+                        <Ticket className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]" strokeWidth={1.75} aria-hidden />
                       </span>
-                      <p className="min-w-0 text-[0.8125rem] leading-snug text-slate-100/95 sm:text-sm sm:leading-relaxed">
-                        <span className="font-display text-base font-bold tabular-nums text-cyan-200 sm:text-lg">
+                      <p className="min-w-0 text-sm leading-relaxed text-slate-100/95 sm:text-[0.9375rem]">
+                        <span className="font-display text-lg font-bold tabular-nums text-cyan-200 sm:text-xl">
                           5× 200&nbsp;Kč
                         </span>{" "}
                         poukaz na herní účet v{" "}
@@ -127,15 +114,15 @@ export function MsFantasyHome() {
                 </Link>
               </p>
             </div>
-            <div className="flex shrink-0 gap-1.5 text-white/90 sm:gap-2">
-              <div className="flex h-10 w-10 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)] sm:h-11 sm:w-11">
-                <Shirt className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.25} aria-hidden />
+            <div className="flex w-11 shrink-0 flex-col gap-2 self-stretch text-white/90 sm:w-12 sm:gap-2.5">
+              <div className="flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)]">
+                <Shirt className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]" strokeWidth={1.25} aria-hidden />
               </div>
-              <div className="flex h-10 w-10 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)] sm:h-11 sm:w-11">
-                <Trophy className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.25} aria-hidden />
+              <div className="flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)]">
+                <Trophy className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]" strokeWidth={1.25} aria-hidden />
               </div>
-              <div className="flex h-10 w-10 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)] sm:h-11 sm:w-11">
-                <Ticket className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.25} aria-hidden />
+              <div className="flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] shadow-[0_0_16px_rgba(0,200,255,0.12)]">
+                <Ticket className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]" strokeWidth={1.25} aria-hidden />
               </div>
             </div>
           </div>

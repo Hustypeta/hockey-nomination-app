@@ -120,9 +120,20 @@ export async function POST(request: NextRequest) {
   }
 
   const gameDayId = "gameDayId" in body && typeof body.gameDayId === "string" ? body.gameDayId.trim() : "";
+  const rulesAccepted = "rulesAccepted" in body && body.rulesAccepted === true;
   const rawIds =
     "pickIds" in body && Array.isArray(body.pickIds) ? body.pickIds.filter((x) => typeof x === "string") : [];
   const pickIds = rawIds.map((x: string) => x.trim()).filter(Boolean);
+
+  if (!rulesAccepted) {
+    return NextResponse.json(
+      {
+        error:
+          "Pro odeslání sestavy je nutný souhlas s pravidly soutěže a potvrzení věku nad 18 let.",
+      },
+      { status: 400 }
+    );
+  }
 
   if (!gameDayId) {
     return NextResponse.json({ error: "Chybí gameDayId." }, { status: 400 });
