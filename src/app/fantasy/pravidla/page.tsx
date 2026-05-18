@@ -277,8 +277,7 @@ export default function FantasyRulesPage() {
         <section className="mt-10 space-y-4">
           <h2 className="font-display text-lg font-bold text-white">Bodování za zápas</h2>
           <p className="text-sm leading-relaxed text-slate-400">
-            Body se počítají na základě reálných statistik z utkání Mistrovství světa. Výsledný fantasy žebříček se
-            aktualizuje po skončení hracího dne.
+            Body se počítají na základě reálných statistik z utkání Mistrovství světa.
           </p>
 
           <h3 className="text-sm font-semibold text-slate-200">Bruslař (útočník nebo obránce)</h3>
@@ -306,13 +305,6 @@ export default function FantasyRulesPage() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs leading-relaxed text-slate-500">
-            U plus/mínus platí <strong className="text-slate-400">+{sk.plusMinus} bod</strong> za každý kladný bod v
-            reálné statistice a naopak (záporný krok v +/- odečítá stejně mnoho bodů).
-          </p>
-          <p className="text-xs leading-relaxed text-slate-500">
-            Střely a hity se v této fázi do pravidel nezapočítávají.
-          </p>
 
           <h3 className="pt-2 text-sm font-semibold text-slate-200">Brankář</h3>
           <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.04]">
@@ -333,7 +325,7 @@ export default function FantasyRulesPage() {
                   <td className="px-4 py-2.5 font-mono tabular-nums text-amber-200/90">{gk.goalAgainst}</td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-2.5">Čisté konto (shutout)</td>
+                  <td className="px-4 py-2.5">Čisté konto</td>
                   <td className="px-4 py-2.5 font-mono tabular-nums text-emerald-200/95">+{gk.shutout}</td>
                 </tr>
               </tbody>
