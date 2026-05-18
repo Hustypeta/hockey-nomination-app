@@ -26,6 +26,7 @@
     "fantasy:import-swe": "npx ts-node --project scripts/tsconfig.json scripts/import-ms-fantasy-roster-teams.ts SWE",
     "fantasy:import-tier-rebalance": "npx ts-node --project scripts/tsconfig.json scripts/import-ms-fantasy-roster-teams.ts ITA,FIN,SWE,SUI",
     "fantasy:patch-tier": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-tier.ts",
+    "fantasy:replace-fin-granlund": "npx ts-node --project scripts/tsconfig.json scripts/replace-ms-fantasy-fin-granlund.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

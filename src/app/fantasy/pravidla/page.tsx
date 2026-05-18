@@ -172,7 +172,7 @@ export default function FantasyRulesPage() {
             <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed text-slate-300">
               <li>
                 Výsledky soutěže a losování tomboly budou zveřejněny a vyhodnoceny nejpozději do{" "}
-                <strong className="text-slate-200">3 dnů</strong> od odehrání finálového zápasu MS.
+                <strong className="text-slate-200">7 dnů</strong> od odehrání finálového zápasu MS.
               </li>
               <li>Výherci budou kontaktováni prostřednictvím e-mailu zadaného při registraci.</li>
               <li>

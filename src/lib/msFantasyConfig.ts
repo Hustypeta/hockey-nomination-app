@@ -63,6 +63,22 @@ export function salaryForTier(tier: string, position?: string): number {
   return table[t] ?? table.E;
 }
 
+/** Aktuální oznámení k poolu / soupisce (injury swap apod.). */
+export type MsFantasyNotice = {
+  id: string;
+  title: string;
+  body: string;
+};
+
+export const MS_FANTASY_ACTIVE_NOTICES: MsFantasyNotice[] = [
+  {
+    id: "fin-teravainen-granlund-2026",
+    title: "Změna soupisky Finska",
+    body:
+      "Z důvodu zranění nahradil Michael Granlund (útočník, tier A) Teuvo Teräväinen v poolu MS Fantasy. Pokud už máš Teräväinen v sestavě, v aplikaci uvidíš Granlunda — odevzdané sestavy zůstávají platné, soutěž pokračuje.",
+  },
+];
+
 /** Dny kalendáře MS bez zápasů — v přehledu nezobrazujeme řádek „uzávěrka = první zápas dne“ (u těchto dnů se nehraje). */
 export function isMsFantasySchedulePauseDaySlug(slug: string): boolean {
   const s = slug.trim();

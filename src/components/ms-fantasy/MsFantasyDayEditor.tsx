@@ -11,7 +11,9 @@ import {
   MS_FANTASY_TEAM_SIZE,
   isMsFantasyLineupSubmissionEnabled,
   isMsFantasySchedulePauseDaySlug,
+  MS_FANTASY_ACTIVE_NOTICES,
 } from "@/lib/msFantasyConfig";
+import { MsFantasyNoticeBanner } from "./MsFantasyNoticeBanner";
 import { MS_FANTASY_ROSTER_TEAM_OPTIONS, MS_FANTASY_TIER_CODES } from "@/lib/msFantasyRosterFilters";
 import { MsFantasyIceRink } from "./MsFantasyIceRink";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
@@ -665,6 +667,9 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-4 sm:gap-5 sm:px-5 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 lg:flex-row lg:gap-8 lg:pb-8 lg:pt-8">
       <div className="min-w-0 flex-1 space-y-4">
+        {MS_FANTASY_ACTIVE_NOTICES.map((notice) => (
+          <MsFantasyNoticeBanner key={notice.id} notice={notice} />
+        ))}
         <section className="relative overflow-hidden rounded-3xl border border-cyan-500/20 bg-gradient-to-b from-[#070c18]/98 via-[#060a14]/98 to-[#020308]/98 p-4 shadow-[0_0_80px_rgba(0,120,200,0.1),0_24px_80px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-5">
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-cyan-500/12 blur-3xl" />
           <div className="pointer-events-none absolute -left-20 bottom-0 h-52 w-52 rounded-full bg-[#c8102e]/12 blur-3xl" />

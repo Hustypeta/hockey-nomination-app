@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight, BookOpen, Calendar, Gift, Shirt, Ticket, Trophy } from "lucide-react";
-import { isMsFantasyLineupSubmissionEnabled, isMsFantasySchedulePauseDaySlug } from "@/lib/msFantasyConfig";
+import {
+  isMsFantasyLineupSubmissionEnabled,
+  isMsFantasySchedulePauseDaySlug,
+  MS_FANTASY_ACTIVE_NOTICES,
+} from "@/lib/msFantasyConfig";
+import { MsFantasyNoticeBanner } from "./MsFantasyNoticeBanner";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
 import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
 
@@ -127,6 +132,10 @@ export function MsFantasyHome() {
             </div>
           </div>
         </MsFantasyGlassPanel>
+
+        {MS_FANTASY_ACTIVE_NOTICES.map((notice) => (
+          <MsFantasyNoticeBanner key={notice.id} notice={notice} className="mt-4" />
+        ))}
 
         {err ? (
           <p className="mt-4 rounded-xl border border-red-400/35 bg-red-950/40 px-3 py-2.5 text-sm text-red-100 backdrop-blur-md sm:px-4 sm:py-3">

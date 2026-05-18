@@ -67,6 +67,42 @@ export async function importMsFantasyRosterJson(
   return upserted;
 }
 
+/**
+ * Náhrada hráče kvůli zranění na stejném `id` v poolu — `pickIds` v odevzdaných sestavách zůstanou platné,
+ * v UI se zobrazí nový hráč (tier/plat dle nových údajů; snímky v lineups se nemění automaticky).
+ */
+export async function replaceMsFantasyRosterPlayerInPlace(
+  prisma: PrismaClient,
+  outgoingCode: string,
+  replacement: FantasyRosterJsonRow
+): Promise<{ id: string; name: string; lineupCount: number } | null> {
+  const row = await prisma.msFantasyRosterPlayer.findUnique({
+    where: { code: outgoingCode },
+    select: { id: true, name: true },
+  });
+  if (!row) return null;
+
+  const tier = replacement.tier.trim().toUpperCase();
+  await prisma.msFantasyRosterPlayer.update({
+    where: { id: row.id },
+    data: {
+      code: replacement.code,
+      name: replacement.name,
+      team: replacement.team,
+      jerseyNumber: replacement.jerseyNumber ?? null,
+      position: replacement.position.trim().toUpperCase(),
+      tier,
+      active: true,
+    },
+  });
+
+  const lineupCount = await prisma.msFantasyLineup.count({
+    where: { pickIds: { has: row.id } },
+  });
+
+  return { id: row.id, name: replacement.name, lineupCount };
+}
+
 /** Jednorázová úprava tieru v poolu (např. Lucas Raymond → A) bez doteku lineups. */
 export async function patchMsFantasyRosterPlayerTier(
   prisma: PrismaClient,
