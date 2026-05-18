@@ -1,3 +1,5 @@
+import { SVET_HOKEJE_INSTAGRAM_URL } from "@/lib/siteBranding";
+
 function InstagramMark({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
@@ -24,7 +26,7 @@ export type LoadingScreenUsefulLinksProps = {
 export function LoadingScreenUsefulLinks({ className = "" }: LoadingScreenUsefulLinksProps) {
   return (
     <a
-      href="https://www.instagram.com/svet_hokeje/"
+      href={SVET_HOKEJE_INSTAGRAM_URL}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Svět Hokeje na Instagramu"

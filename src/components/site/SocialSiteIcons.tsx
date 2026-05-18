@@ -82,8 +82,8 @@ export type SocialSiteIconsProps = {
   /** Větší kruhy — např. hero (odkazové bloky jako u brand Instagramu). Patička ponechává výchozí. */
   size?: "default" | "lg";
   /**
-   * Instagram profilu Lineup (`NEXT_PUBLIC_INSTAGRAM_PAGE_URL`).
-   * Na úvodu v hero je false — tam je zvlášť kanál Svět Hokeje, jinak lidé kliknou na špatnou ikonu.
+   * Instagram profilu Lineup (`NEXT_PUBLIC_INSTAGRAM_PAGE_URL` na Railway).
+   * Kanál Svět Hokeje je zvlášť (text / tlačítko na úvodu), ne tato ikona.
    */
   showInstagram?: boolean;
 };
