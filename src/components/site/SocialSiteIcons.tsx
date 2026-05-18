@@ -81,11 +81,16 @@ function SocialIconPlaceholder({
 export type SocialSiteIconsProps = {
   /** Větší kruhy — např. hero (odkazové bloky jako u brand Instagramu). Patička ponechává výchozí. */
   size?: "default" | "lg";
+  /**
+   * Instagram profilu Lineup (`NEXT_PUBLIC_INSTAGRAM_PAGE_URL`).
+   * Na úvodu v hero je false — tam je zvlášť kanál Svět Hokeje, jinak lidé kliknou na špatnou ikonu.
+   */
+  showInstagram?: boolean;
 };
 
-export function SocialSiteIcons({ size = "default" }: SocialSiteIconsProps) {
+export function SocialSiteIcons({ size = "default", showInstagram = true }: SocialSiteIconsProps) {
   const fb = SITE_FACEBOOK_PAGE_URL.trim();
-  const ig = SITE_INSTAGRAM_PAGE_URL.trim();
+  const ig = showInstagram ? SITE_INSTAGRAM_PAGE_URL.trim() : "";
   const tt = SITE_TIKTOK_PAGE_URL.trim();
 
   const lg = size === "lg";
@@ -107,7 +112,7 @@ export function SocialSiteIcons({ size = "default" }: SocialSiteIconsProps) {
         </SocialIconPlaceholder>
       )}
       {ig ? (
-        <SocialIconLink href={ig} label="Instagram" title="Instagram" circleClassName={circleClassName}>
+        <SocialIconLink href={ig} label="Instagram — Lineup" title="Instagram Lineup" circleClassName={circleClassName}>
           <IconInstagram className={iconCls} />
         </SocialIconLink>
       ) : (
