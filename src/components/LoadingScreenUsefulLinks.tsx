@@ -1,6 +1,4 @@
-import { SITE_INSTAGRAM_PAGE_URL } from "@/lib/siteBranding";
-
-const LOADING_INSTAGRAM_FALLBACK = "https://www.instagram.com/svet_hokeje/";
+import { SVET_HOKEJE_INSTAGRAM_URL } from "@/lib/siteBranding";
 
 function InstagramMark({ className = "" }: { className?: string }) {
   return (
@@ -26,7 +24,7 @@ export type LoadingScreenUsefulLinksProps = {
 
 /** Proklik na Instagram (Svět Hokeje) — kompaktní tlačítko bez vnějšího rámu. */
 export function LoadingScreenUsefulLinks({ className = "" }: LoadingScreenUsefulLinksProps) {
-  const instagramHref = SITE_INSTAGRAM_PAGE_URL?.trim() || LOADING_INSTAGRAM_FALLBACK;
+  const instagramHref = SVET_HOKEJE_INSTAGRAM_URL;
 
   return (
     <a

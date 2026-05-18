@@ -22,6 +22,7 @@ import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 
 import { MERKURXTIP_PROMO_HREF_LANDING, MERKURXTIP_PROMO_IMAGE_SRC } from "@/lib/merkurXtipPromo";
+import { SVET_HOKEJE_INSTAGRAM_URL } from "@/lib/siteBranding";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
@@ -152,7 +153,16 @@ export function LandingContent() {
               </div>
 
               <p className="mx-auto mt-8 max-w-xl text-center text-pretty text-sm leading-relaxed text-slate-200/95 sm:mt-10 sm:text-[15px]">
-                Pro novinky z hokeje a mnohem více sledujte instagram Svět Hokeje.
+                Pro novinky z hokeje a mnohem více sledujte instagram{" "}
+                <Link
+                  href={SVET_HOKEJE_INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-[#f1c40f] underline decoration-[#f1c40f]/45 underline-offset-2 transition hover:text-amber-200 hover:decoration-amber-200/70"
+                >
+                  Svět Hokeje
+                </Link>
+                .
               </p>
 
               <div className="mx-auto mt-4 flex w-full max-w-xl justify-center">
