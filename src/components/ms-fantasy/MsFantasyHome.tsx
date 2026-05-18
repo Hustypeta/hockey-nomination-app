@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AlertTriangle, ArrowRight, BookOpen, Calendar, Shirt, Ticket, Trophy } from "lucide-react";
+import { AlertTriangle, ArrowRight, BookOpen, Calendar, Gift, Shirt, Ticket, Trophy } from "lucide-react";
 import { isMsFantasyLineupSubmissionEnabled, isMsFantasySchedulePauseDaySlug } from "@/lib/msFantasyConfig";
 import { MsFantasyGlassPanel } from "./MsFantasyFrozenArenaShell";
 import { MsFantasyMatchSchedule } from "./MsFantasyMatchSchedule";
@@ -77,9 +77,45 @@ export function MsFantasyHome() {
                     </span>
                   ) : null}
                 </p>
-                <p className="text-slate-300/95">
-                  Hrajeme o atraktivní hokejové ceny, konkrétní nabídku v co nejbližší době upřesníme.
-                </p>
+                <div
+                  className="rounded-xl border border-[#f1c40f]/40 bg-gradient-to-br from-[#f1c40f]/14 via-amber-950/35 to-[#c8102e]/12 px-3.5 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_0_32px_rgba(241,196,15,0.12)] sm:px-4 sm:py-4"
+                  aria-labelledby="ms-fantasy-prizes-heading"
+                >
+                  <p
+                    id="ms-fantasy-prizes-heading"
+                    className="flex items-center gap-2 font-display text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#f1e6a8] sm:text-xs"
+                  >
+                    <Gift className="h-4 w-4 shrink-0 text-[#f1c40f]" aria-hidden />
+                    O co hrajeme?
+                  </p>
+                  <ul className="mt-3 space-y-2.5">
+                    <li className="flex gap-3 rounded-lg border border-white/[0.1] bg-black/30 px-3 py-2.5 sm:py-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#f1c40f]/35 bg-[#f1c40f]/15 text-[#f1c40f] shadow-[0_0_16px_rgba(241,196,15,0.2)] sm:h-10 sm:w-10">
+                        <Trophy className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.75} aria-hidden />
+                      </span>
+                      <p className="min-w-0 text-[0.8125rem] leading-snug text-slate-100/95 sm:text-sm sm:leading-relaxed">
+                        <span className="font-display text-base font-bold tabular-nums text-[#f1c40f] sm:text-lg">
+                          500&nbsp;Kč
+                        </span>{" "}
+                        poukaz na herní účet pro{" "}
+                        <span className="font-semibold text-white">celkového vítěze</span> (nejvíc bodů za celé MS).
+                      </p>
+                    </li>
+                    <li className="flex gap-3 rounded-lg border border-white/[0.1] bg-black/30 px-3 py-2.5 sm:py-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-cyan-300/30 bg-cyan-400/10 text-cyan-200 shadow-[0_0_16px_rgba(0,200,255,0.15)] sm:h-10 sm:w-10">
+                        <Ticket className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5" strokeWidth={1.75} aria-hidden />
+                      </span>
+                      <p className="min-w-0 text-[0.8125rem] leading-snug text-slate-100/95 sm:text-sm sm:leading-relaxed">
+                        <span className="font-display text-base font-bold tabular-nums text-cyan-200 sm:text-lg">
+                          5× 200&nbsp;Kč
+                        </span>{" "}
+                        poukaz na herní účet v{" "}
+                        <span className="font-semibold text-white">tombole</span> (1 odehraný den = 1 lístek do
+                        losování).
+                      </p>
+                    </li>
+                  </ul>
+                </div>
               </div>
               <p className="mt-4">
                 <Link
