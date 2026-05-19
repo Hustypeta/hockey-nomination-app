@@ -75,7 +75,7 @@ export const MS_FANTASY_ACTIVE_NOTICES: MsFantasyNotice[] = [
     id: "fin-teravainen-granlund-2026",
     title: "Změna soupisky Finska",
     body:
-      "Z důvodu zranění nahradil Michael Granlund (útočník, tier A) Teuvo Teräväinen v poolu MS Fantasy. Pokud už máš Teräväinen v sestavě, v aplikaci uvidíš Granlunda — odevzdané sestavy zůstávají platné, soutěž pokračuje.",
+      "Z důvodu zranění nahradil Michael Granlund (útočník, tier A) Teuvo Teräväinen v poolu MS Fantasy.",
   },
 ];
 
