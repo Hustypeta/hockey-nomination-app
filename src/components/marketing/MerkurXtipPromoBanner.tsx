@@ -67,6 +67,15 @@ export function MerkurXtipPromoBanner({
           decoding="async"
         />
       </a>
+      <p
+        className={
+          compact
+            ? "mx-auto mt-2 max-w-md text-pretty text-center text-[11px] font-medium leading-snug text-slate-500"
+            : "mx-auto mt-3 max-w-md text-pretty text-center text-xs font-medium leading-relaxed text-slate-500"
+        }
+      >
+        Ministerstvo financí varuje: Účastí na hazardní hře může vzniknout závislost! Zákaz účasti osob mladších 18 let.
+      </p>
     </aside>
   );
 }

@@ -149,6 +149,10 @@ export function LandingContent() {
                     decoding="async"
                   />
                 </a>
+                <p className="mx-auto mt-3 max-w-md text-pretty text-center text-xs font-medium leading-relaxed text-slate-500">
+                  Ministerstvo financí varuje: Účastí na hazardní hře může vzniknout závislost! Zákaz účasti osob
+                  mladších 18 let.
+                </p>
               </div>
 
               <p className="mx-auto mt-8 max-w-xl text-center text-pretty text-sm leading-relaxed text-slate-200/95 sm:mt-10 sm:text-[15px]">
