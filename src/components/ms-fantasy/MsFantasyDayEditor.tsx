@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FlagMark } from "@/components/flags/FlagMark";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { ArrowLeft, ArrowRight, Check, Loader2, Lock, Users } from "lucide-react";
 import { motion } from "framer-motion";
@@ -166,7 +166,12 @@ function MsFantasyRosterPanel({
       </div>
 
       <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
-        {[["", "Vše"], ["G", "G"], ["D", "D"], ["F", "F"]].map(([v, lbl]) => (
+        {[
+          ["", "Vše"],
+          ["G", "Golman"],
+          ["D", "Obránce"],
+          ["F", "Útok"],
+        ].map(([v, lbl]) => (
           <button
             key={lbl}
             type="button"
@@ -389,6 +394,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   const [saveState, setSaveState] = useState<"idle" | "saving" | "ok" | "err">("idle");
   const [saveErr, setSaveErr] = useState<string | null>(null);
   const [mobileRosterOpen, setMobileRosterOpen] = useState(false);
+  const rosterPanelRef = useRef<HTMLElement>(null);
   const [submitConsentOpen, setSubmitConsentOpen] = useState(false);
   const [rulesConsent, setRulesConsent] = useState(false);
 
@@ -528,20 +534,34 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
       return n;
     });
     setActiveIx(i);
+    setQ("");
+    setTeamFilter("");
+    setTierFilter("");
     setPosFilter(positionFilterForSlotIndex(i));
     setSaveState("idle");
     setSaveErr(null);
   }, []);
 
-  /** Klik na slot: aktivní pozice + filtr soupisky (G/D/F); na mobilu sheet u prázdného slotu. */
+  /** Klik na prázdný slot (Přidat): reset filtrů soupisky, pozice G/D/F, mobilní sheet / scroll k panelu. */
   const handleSelectSlot = useCallback(
     (i: number) => {
-      setActiveIx(i);
       if (!day || day.isLocked) return;
+      setActiveIx(i);
       setPosFilter(positionFilterForSlotIndex(i));
-      if (typeof window === "undefined") return;
-      if (!window.matchMedia("(max-width: 1023px)").matches) return;
-      if (!slots[i]?.id) setMobileRosterOpen(true);
+
+      const isEmpty = !slots[i]?.id;
+      if (isEmpty) {
+        setQ("");
+        setTeamFilter("");
+        setTierFilter("");
+        if (typeof window !== "undefined") {
+          if (window.matchMedia("(max-width: 1023px)").matches) {
+            setMobileRosterOpen(true);
+          } else {
+            rosterPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+        }
+      }
     },
     [day, slots]
   );
@@ -844,7 +864,10 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
         </section>
       </div>
 
-      <aside className="hidden w-full shrink-0 lg:block lg:max-w-[22.5rem] lg:border-l lg:border-cyan-500/15 lg:pl-6">
+      <aside
+        ref={rosterPanelRef}
+        className="hidden w-full shrink-0 lg:block lg:max-w-[22.5rem] lg:border-l lg:border-cyan-500/15 lg:pl-6"
+      >
         <div className="lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto lg:pb-4 lg:pr-1">
           <MsFantasyGlassPanel glow="cyan" className="p-4 shadow-[0_0_48px_rgba(0,180,255,0.1)] sm:p-5">
             <MsFantasyRosterPanel

@@ -201,11 +201,14 @@ function FilledPlayerCard({
           <MsFantasyPlayerAvatar playerId={slot.id} variant="circle" frame="premium" size="3.45rem" />
         </div>
 
-        <div className="flex w-full max-w-[5.05rem] items-start justify-center gap-1 sm:max-w-[6.45rem] md:max-w-[7.35rem] lg:max-w-[7.85rem]">
-          <p className="line-clamp-2 min-h-[2.1em] max-w-full break-words text-center text-[0.72rem] font-bold leading-snug text-white sm:min-h-[2.15em] sm:text-[0.86rem] md:min-h-[2.25em] md:text-[0.96rem] lg:min-h-[2.35em] lg:text-[1.02rem]">
+        <div className="flex w-full max-w-[5.05rem] items-center justify-center gap-0.5 sm:max-w-[6.45rem] md:max-w-[7.35rem] lg:max-w-[7.85rem]">
+          <p
+            className="min-w-0 flex-1 truncate text-center text-[0.7rem] font-bold leading-none text-white sm:text-[0.82rem] md:text-[0.9rem] lg:text-[0.96rem]"
+            title={last}
+          >
             {last}
           </p>
-          <FlagMark code={slot.team} className="h-3.5 w-[1.05rem] shrink-0 self-start rounded-sm ring-1 ring-white/30 sm:h-4 sm:w-[1.2rem] lg:h-[1.15rem] lg:w-[1.42rem]" />
+          <FlagMark code={slot.team} className="h-3.5 w-[1.05rem] shrink-0 rounded-sm ring-1 ring-white/30 sm:h-4 sm:w-[1.2rem] lg:h-[1.15rem] lg:w-[1.42rem]" />
         </div>
 
         <div className="flex w-full justify-center pt-0.5">
