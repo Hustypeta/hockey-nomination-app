@@ -23,6 +23,8 @@ import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 import type { Position } from "@/types";
 import { assignPlayerToTarget, tryAutoAssignPlayer } from "@/lib/lineupAssign";
 import { parseDroppableId } from "@/lib/dndSlotIds";
+import { findPreviousMatchForLineupCopy } from "@/lib/matchAdminLineupCopy";
+import { normalizeLineupStructure } from "@/lib/lineupUtils";
 
 type MatchRow = {
   id: string;
@@ -131,7 +133,13 @@ export function MatchesAdminPage() {
   const [ratingsOpen, setRatingsOpen] = useState(false);
   const [togglingRatings, setTogglingRatings] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [copyingPrevious, setCopyingPrevious] = useState(false);
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
+
+  const previousLineupSource = useMemo(() => {
+    if (!active) return null;
+    return findPreviousMatchForLineupCopy(active, matches);
+  }, [active, matches]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -227,6 +235,27 @@ export function MatchesAdminPage() {
     });
   }, [matches]);
 
+  function applyMatchOfficialState(m: Record<string, unknown>) {
+    setPublished(Boolean(m.published));
+    setRatingsOpen(Boolean(m.ratingsOpen));
+    const offRaw = m.officialLineup;
+    if (typeof offRaw === "object" && offRaw !== null) {
+      const off = offRaw as Record<string, unknown>;
+      if (off.lineupStructure != null && typeof off.lineupStructure === "object") {
+        setLineup(normalizeLineupStructure(off.lineupStructure as LineupStructure, { mode: "match" }));
+      } else setLineup(EMPTY_LINEUP);
+      setCaptainId(typeof off.captainId === "string" ? off.captainId : null);
+      const dc = off.defenseCount;
+      setDefenseCount(dc === 6 || dc === 7 || dc === 8 ? dc : 8);
+      setAllowExtraForward(Boolean(off.allowExtraForward));
+    } else {
+      setLineup(EMPTY_LINEUP);
+      setCaptainId(null);
+      setDefenseCount(8);
+      setAllowExtraForward(false);
+    }
+  }
+
   async function loadMatch(id: string) {
     const r = await fetch(`/api/admin/matches/${encodeURIComponent(id)}/official-lineup`, {
       credentials: "include",
@@ -240,26 +269,52 @@ export function MatchesAdminPage() {
     if (typeof data !== "object" || data === null || !("match" in data)) return;
     const mRaw = (data as { match: unknown }).match;
     if (typeof mRaw !== "object" || mRaw === null) return;
-    const m = mRaw as Record<string, unknown>;
-    setPublished(Boolean(m.published));
-    setRatingsOpen(Boolean(m.ratingsOpen));
-    const offRaw = m.officialLineup;
-    if (typeof offRaw === "object" && offRaw !== null) {
+    applyMatchOfficialState(mRaw as Record<string, unknown>);
+  }
+
+  const copyFromPreviousMatch = async () => {
+    if (!activeId || !previousLineupSource) {
+      toast.error("Žádný starší zápas se sestavou v této kategorii.");
+      return;
+    }
+    if (
+      !window.confirm(
+        `Zkopírovat sestavu ze zápasu „${previousLineupSource.title}“ do „${active?.title ?? "aktuálního"}“? Uložení proběhne až po kliknutí na Uložit — můžeš ji ještě upravit.`
+      )
+    ) {
+      return;
+    }
+    setCopyingPrevious(true);
+    try {
+      const r = await fetch(
+        `/api/admin/matches/${encodeURIComponent(previousLineupSource.id)}/official-lineup`,
+        { credentials: "include", cache: "no-store" }
+      );
+      const data: unknown = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        toast.error(readAdminJsonError(data) ?? "Nelze načíst předchozí sestavu.");
+        return;
+      }
+      if (typeof data !== "object" || data === null || !("match" in data)) return;
+      const mRaw = (data as { match: unknown }).match;
+      if (typeof mRaw !== "object" || mRaw === null) return;
+      const m = mRaw as Record<string, unknown>;
+      const offRaw = m.officialLineup;
+      if (typeof offRaw !== "object" || offRaw === null || offRaw.lineupStructure == null) {
+        toast.error("Předchozí zápas nemá uloženou sestavu.");
+        return;
+      }
       const off = offRaw as Record<string, unknown>;
-      if (off.lineupStructure != null && typeof off.lineupStructure === "object")
-        setLineup(off.lineupStructure as LineupStructure);
-      else setLineup(EMPTY_LINEUP);
+      setLineup(normalizeLineupStructure(off.lineupStructure as LineupStructure, { mode: "match" }));
       setCaptainId(typeof off.captainId === "string" ? off.captainId : null);
       const dc = off.defenseCount;
       setDefenseCount(dc === 6 || dc === 7 || dc === 8 ? dc : 8);
       setAllowExtraForward(Boolean(off.allowExtraForward));
-    } else {
-      setLineup(EMPTY_LINEUP);
-      setCaptainId(null);
-      setDefenseCount(8);
-      setAllowExtraForward(false);
+      toast.success(`Sestava zkopírována z „${previousLineupSource.title}“. Uprav a ulož.`);
+    } finally {
+      setCopyingPrevious(false);
     }
-  }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -744,15 +799,46 @@ export function MatchesAdminPage() {
                   />
                 </div>
               </div>
-              <div className="mt-4 flex justify-end">
-                <button
-                  type="button"
-                  disabled={saving || !activeId}
-                  onClick={() => void saveOfficial()}
-                  className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
-                >
-                  {saving ? "Ukládám…" : "Uložit"}
-                </button>
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+                <div className="min-w-0 flex-1 text-[11px] leading-snug text-white/50 sm:max-w-md sm:text-right">
+                  {previousLineupSource ? (
+                    <>
+                      Předchozí sestava:{" "}
+                      <span className="font-semibold text-white/75">{previousLineupSource.title}</span>
+                      {previousLineupSource.startsAt ? (
+                        <>
+                          {" "}
+                          (
+                          {new Date(previousLineupSource.startsAt).toLocaleDateString("cs-CZ", {
+                            day: "numeric",
+                            month: "numeric",
+                          })}
+                          )
+                        </>
+                      ) : null}
+                    </>
+                  ) : (
+                    "Pro tento zápas není starší sestava ke zkopírování."
+                  )}
+                </div>
+                <div className="flex flex-wrap justify-end gap-2">
+                  <button
+                    type="button"
+                    disabled={!activeId || !previousLineupSource || copyingPrevious || saving}
+                    onClick={() => void copyFromPreviousMatch()}
+                    className="rounded-xl border border-cyan-400/35 bg-cyan-500/10 px-4 py-2.5 text-sm font-bold text-cyan-100 hover:bg-cyan-500/20 disabled:opacity-50"
+                  >
+                    {copyingPrevious ? "Kopíruji…" : "Vyplnit stejně jako předchozí zápas"}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={saving || !activeId || copyingPrevious}
+                    onClick={() => void saveOfficial()}
+                    className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+                  >
+                    {saving ? "Ukládám…" : "Uložit"}
+                  </button>
+                </div>
               </div>
             </div>
           </section>
