@@ -97,10 +97,10 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     sortOrder: 5,
     lockAt: "2026-05-19T14:20:00.000Z",
     matches: [
-      { startAt: "2026-05-19T14:20:00.000Z", home: "LAT", away: "AUT", group: "A" },
-      { startAt: "2026-05-19T14:20:00.000Z", home: "ITA", away: "NOR", group: "B" },
-      { startAt: "2026-05-19T18:20:00.000Z", home: "HUN", away: "GBR", group: "A" },
-      { startAt: "2026-05-19T18:20:00.000Z", home: "SLO", away: "SVK", group: "B" },
+      { startAt: "2026-05-19T14:20:00.000Z", home: "LAT", away: "AUT", group: "A", homeScore: 1, awayScore: 3 },
+      { startAt: "2026-05-19T14:20:00.000Z", home: "ITA", away: "NOR", group: "B", homeScore: 0, awayScore: 4 },
+      { startAt: "2026-05-19T18:20:00.000Z", home: "HUN", away: "GBR", group: "A", homeScore: 5, awayScore: 0 },
+      { startAt: "2026-05-19T18:20:00.000Z", home: "SLO", away: "SVK", group: "B", homeScore: 4, awayScore: 5 },
     ],
   },
   {
