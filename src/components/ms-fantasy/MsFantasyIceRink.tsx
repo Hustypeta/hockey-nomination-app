@@ -4,7 +4,11 @@ import { useId } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { FlagMark } from "@/components/flags/FlagMark";
-import { msFantasyLineupCardLastName } from "@/lib/msFantasyDisplayName";
+import {
+  msFantasyLineupCardLastName,
+  msFantasyLineupCardLastNameStyle,
+  msFantasyLineupCardLastNameTextClass,
+} from "@/lib/msFantasyDisplayName";
 import type { MsFantasyRosterPlayer } from "./MsFantasyDayEditor";
 import { MsFantasyPlayerAvatar } from "./MsFantasyPlayerAvatar";
 import { IceRinkShell } from "@/components/shared/IceRinkShell";
@@ -172,6 +176,8 @@ function FilledPlayerCard({
 }) {
   const ac = teamAccent(slot.team);
   const last = msFantasyLineupCardLastName(slot.name);
+  const lastNameClass = msFantasyLineupCardLastNameTextClass(last);
+  const lastNameStyle = msFantasyLineupCardLastNameStyle(last);
 
   const card = (
     <div
@@ -202,10 +208,7 @@ function FilledPlayerCard({
         </div>
 
         <div className="flex w-full max-w-[5.05rem] items-center justify-center gap-0.5 sm:max-w-[6.45rem] md:max-w-[7.35rem] lg:max-w-[7.85rem]">
-          <p
-            className="min-w-0 flex-1 truncate text-center text-[0.7rem] font-bold leading-none text-white sm:text-[0.82rem] md:text-[0.9rem] lg:text-[0.96rem]"
-            title={last}
-          >
+          <p className={lastNameClass} style={lastNameStyle} title={last}>
             {last}
           </p>
           <FlagMark code={slot.team} className="h-3.5 w-[1.05rem] shrink-0 rounded-sm ring-1 ring-white/30 sm:h-4 sm:w-[1.2rem] lg:h-[1.15rem] lg:w-[1.42rem]" />

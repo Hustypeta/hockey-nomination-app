@@ -300,11 +300,15 @@ export function MatchesAdminPage() {
       if (typeof mRaw !== "object" || mRaw === null) return;
       const m = mRaw as Record<string, unknown>;
       const offRaw = m.officialLineup;
-      if (typeof offRaw !== "object" || offRaw === null || offRaw.lineupStructure == null) {
+      if (typeof offRaw !== "object" || offRaw === null) {
         toast.error("Předchozí zápas nemá uloženou sestavu.");
         return;
       }
       const off = offRaw as Record<string, unknown>;
+      if (off.lineupStructure == null || typeof off.lineupStructure !== "object") {
+        toast.error("Předchozí zápas nemá uloženou sestavu.");
+        return;
+      }
       setLineup(normalizeLineupStructure(off.lineupStructure as LineupStructure, { mode: "match" }));
       setCaptainId(typeof off.captainId === "string" ? off.captainId : null);
       const dc = off.defenseCount;
