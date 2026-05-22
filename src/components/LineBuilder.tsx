@@ -11,6 +11,7 @@ import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/Li
 import { PremiumJerseySlotCard, type PremiumJerseySize } from "@/components/sestava/PremiumJerseySlotCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
+import { PowerPlayLineEditor } from "@/components/match/PowerPlayLineEditor";
 
 interface LineBuilderProps {
   lineup: LineupStructure;
@@ -903,6 +904,26 @@ export function LineBuilder({
             {showD6Only ? null : null}
           </div>
         </SectionShell>
+
+        {!readOnly ? (
+          <PowerPlayLineEditor
+            lineup={lineup}
+            onLineupChange={onLineupChange}
+            readOnly={readOnly}
+            renderSlot={(props) => (
+              <Slot
+                playerId={props.playerId}
+                label={props.label}
+                type={props.type}
+                lineIndex={props.lineIndex}
+                role={props.role}
+                dndId={props.dndId}
+                jerseySize="skater"
+                onClear={props.onClear}
+              />
+            )}
+          />
+        ) : null}
       </div>
     );
   }

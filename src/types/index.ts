@@ -53,6 +53,17 @@ export interface DefensePair {
   rb: string | null;
 }
 
+/** Jedna přesilovková pětka — rozestavení 1:3:1 (modrá, tři ve střele, mezi kruhy, před brankou). */
+export type PowerPlayRole = "point" | "left" | "bumper" | "right" | "netFront";
+
+export interface PowerPlayUnit {
+  point: string | null;
+  left: string | null;
+  bumper: string | null;
+  right: string | null;
+  netFront: string | null;
+}
+
 export interface LineupStructure {
   forwardLines: [ForwardLine, ForwardLine, ForwardLine, ForwardLine]; // 1.–4. lajna
   /** První tři páry po dvou; čtvrtý řádek = sedmý bek (jeden slot LB, RB zůstává prázdný). */
@@ -64,6 +75,10 @@ export interface LineupStructure {
   /** Osmý bek — náhradní obránce (po vyplnění sedmého beka v defensePairs[3].lb). */
   extraDefensemen: string[];
   assistantIds?: string[];
+  /** Volitelné — 2×5 hráčů v přesilovce (editor zápasové sestavy). */
+  powerPlay?: {
+    units: [PowerPlayUnit, PowerPlayUnit];
+  };
 }
 
 export const EMPTY_LINEUP: LineupStructure = {
@@ -83,4 +98,10 @@ export const EMPTY_LINEUP: LineupStructure = {
   extraForwards: [null],
   extraDefensemen: [],
   assistantIds: [],
+  powerPlay: {
+    units: [
+      { point: null, left: null, bumper: null, right: null, netFront: null },
+      { point: null, left: null, bumper: null, right: null, netFront: null },
+    ],
+  },
 };

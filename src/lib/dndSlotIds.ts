@@ -1,10 +1,12 @@
 import type { DropTarget } from "@/lib/lineupAssign";
+import type { PowerPlayRole } from "@/types";
 
 export function droppableIdForSlot(target: DropTarget): string {
   if (target.type === "goalie") return `slot-goalie-${target.index}`;
   if (target.type === "defense") return `slot-def-${target.pairIndex}-${target.role}`;
   if (target.type === "forward") return `slot-fwd-${target.lineIndex}-${target.role}`;
   if (target.type === "extraDefenseman") return `slot-xd-${target.slotIndex}`;
+  if (target.type === "powerPlay") return `slot-pp-${target.unitIndex}-${target.role}`;
   return `slot-xf-${target.slotIndex}`;
 }
 
@@ -40,6 +42,15 @@ export function droppableIdFromSelectedSlot(slot: {
   }
   if (type === "extraForward") return "slot-xf-0";
   if (type === "extraDefenseman") return "slot-xd-0";
+  if (
+    type === "powerPlay" &&
+    lineIndex !== undefined &&
+    (lineIndex === 0 || lineIndex === 1) &&
+    role &&
+    (role === "point" || role === "left" || role === "bumper" || role === "right" || role === "netFront")
+  ) {
+    return `slot-pp-${lineIndex}-${role}`;
+  }
   return null;
 }
 
@@ -80,6 +91,16 @@ export function parseDroppableId(id: string): DropTarget | null {
     const n = Number(id.slice("slot-xd-".length));
     if (n === 0) return { type: "extraDefenseman", slotIndex: 0 };
     return null;
+  }
+  if (id.startsWith("slot-pp-")) {
+    const rest = id.slice("slot-pp-".length);
+    const m = rest.match(/^(0|1)-(point|left|bumper|right|netFront)$/);
+    if (!m) return null;
+    return {
+      type: "powerPlay",
+      unitIndex: Number(m[1]) as 0 | 1,
+      role: m[2] as PowerPlayRole,
+    };
   }
   return null;
 }

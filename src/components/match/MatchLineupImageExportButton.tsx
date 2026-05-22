@@ -13,6 +13,7 @@ import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W, SHARE_POSTER_CAPTURE_PIXEL_RATI
 import type { LineupStructure, Player } from "@/types";
 import { MatchLineupJerseyExportPoster } from "@/components/match/MatchLineupJerseyExportPoster";
 import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
+import { MatchPowerPlayExportPoster } from "@/components/match/MatchPowerPlayExportPoster";
 import { MatchLineupNamesFullPoster, MatchRatingNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
 import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 import type { MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
@@ -40,6 +41,7 @@ function slugifyForFile(raw: string): string {
 
 function filenameLineupSlot(slot: string, baseSlug: string, snap: MatchLineupImageRatingSnapshot | undefined): string {
   const modeTag = snap ? (snap.mode === "personal" ? "-moje" : "-komunita") : "";
+  if (slot === "power-play") return `sestava-zapas-presilovka-${baseSlug}.png`;
   if (slot === "cele-jmena") return `sestava-zapas-jmena-${baseSlug}-komplet.png`;
   if (slot === "cele-dresy") {
     return snap
@@ -118,6 +120,11 @@ export function MatchLineupImageExportButton({
   const choices = useMemo(
     () => [
       {
+        key: "power-play",
+        title: "Přesilovka — 2 pětky na ledě",
+        hint: "Plakát 3:4 — 1. pětka nahoře, 2. pětka dole, rozestavení 1:3:1 na kluzišti.",
+      },
+      {
         key: "cele-jmena",
         title: ratingSnapshot ? "Celá sestava — jména a známky" : "Celá sestava — jen jména",
         hint: ratingSnapshot
@@ -172,15 +179,18 @@ export function MatchLineupImageExportButton({
       }
       setBusyKey(slot);
       try {
-        const bg = slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? "#e8ecf2" : "#05080f";
+        const bg =
+          slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? "#e8ecf2" : "#05080f";
         const selector =
-          slot === "cele-jmena"
-            ? ratingSnapshot
-              ? "[data-export-slot=\"cele-jmena\"].match-rating-names-full-poster"
-              : "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
-            : slot === "cele-dresy"
-              ? "[data-export-slot=\"cele-dresy\"].match-lineup-full-jersey-poster"
-              : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
+          slot === "power-play"
+            ? "[data-export-slot=\"power-play\"].match-power-play-export-poster"
+            : slot === "cele-jmena"
+              ? ratingSnapshot
+                ? "[data-export-slot=\"cele-jmena\"].match-rating-names-full-poster"
+                : "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
+              : slot === "cele-dresy"
+                ? "[data-export-slot=\"cele-dresy\"].match-lineup-full-jersey-poster"
+                : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
         const node = stage.querySelector<HTMLElement>(selector);
         if (!node) {
           toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
@@ -292,6 +302,9 @@ export function MatchLineupImageExportButton({
           siteUrl={siteOrigin}
           jerseyRatingExport={jerseyRatingExport}
         />
+        {!ratingSnapshot ? (
+          <MatchPowerPlayExportPoster lineupTitle={titleLine} lineup={lineup} players={players} />
+        ) : null}
         {SEGMENTS.map((g) => (
           <MatchLineupJerseyExportPoster
             key={g}

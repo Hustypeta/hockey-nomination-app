@@ -1,7 +1,13 @@
-import type { LineupStructure } from "@/types";
+import type { LineupStructure, PowerPlayRole } from "@/types";
 import type { Player } from "@/types";
 import { POSITION_LIMITS } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
+import {
+  ensurePowerPlayLineup,
+  powerPlayPlayerIds,
+  setPowerPlaySlot,
+  stripPlayerFromPowerPlay,
+} from "@/lib/powerPlayLineup";
 
 function cloneLineup(l: LineupStructure): LineupStructure {
   return {
@@ -16,11 +22,20 @@ function cloneLineup(l: LineupStructure): LineupStructure {
     extraForwards: [l.extraForwards[0] ?? null] as LineupStructure["extraForwards"],
     extraDefensemen: [...(l.extraDefensemen ?? [])].slice(0, 1),
     assistantIds: [...(l.assistantIds ?? [])],
+    powerPlay: l.powerPlay
+      ? {
+          units: [
+            { ...l.powerPlay.units[0] },
+            { ...l.powerPlay.units[1] },
+          ],
+        }
+      : undefined,
   };
 }
 
 export function lineupPlayerIds(lineup: LineupStructure): Set<string> {
   const s = new Set<string>();
+  powerPlayPlayerIds(lineup).forEach((id) => s.add(id));
   lineup.goalies.forEach((g) => g && s.add(g));
   lineup.forwardLines.forEach((l) => {
     if (l.lw) s.add(l.lw);
@@ -73,7 +88,7 @@ function stripPlayerFromLineup(lineup: LineupStructure, playerId: string): Lineu
   ) as LineupStructure["extraForwards"];
   next.extraDefensemen = next.extraDefensemen.filter((id) => id !== playerId);
   next.assistantIds = (next.assistantIds ?? []).filter((id) => id !== playerId);
-  return next;
+  return stripPlayerFromPowerPlay(next, playerId);
 }
 
 export function removePlayerFromLineup(lineup: LineupStructure, playerId: string): LineupStructure {
@@ -162,7 +177,8 @@ export type DropTarget =
   | { type: "forward"; lineIndex: number; role: "lw" | "c" | "rw" | "x" }
   | { type: "defense"; pairIndex: number; role: "lb" | "rb" }
   | { type: "extraForward"; slotIndex: 0 }
-  | { type: "extraDefenseman"; slotIndex: 0 };
+  | { type: "extraDefenseman"; slotIndex: 0 }
+  | { type: "powerPlay"; unitIndex: 0 | 1; role: PowerPlayRole };
 
 /** Přiřadí hráče na konkrétní slot (DnD). Odstraní ho z předchozího místa v sestavě. */
 export function assignPlayerToTarget(
@@ -234,11 +250,20 @@ export function assignPlayerToTarget(
   }
 
 
-  if (target.type !== "extraForward") return null;
-  if (player.position !== "F") return null;
-  if (target.slotIndex !== 0) return null;
-  next.extraForwards = [player.id];
-  return next;
+  if (target.type === "extraForward") {
+    if (player.position !== "F") return null;
+    if (target.slotIndex !== 0) return null;
+    next.extraForwards = [player.id];
+    return next;
+  }
+
+  if (target.type === "powerPlay") {
+    if (player.position === "G") return null;
+    if (target.unitIndex !== 0 && target.unitIndex !== 1) return null;
+    return setPowerPlaySlot(ensurePowerPlayLineup(next), target.unitIndex, target.role, player.id);
+  }
+
+  return null;
 }
 
 function shuffle<T>(arr: T[]): T[] {

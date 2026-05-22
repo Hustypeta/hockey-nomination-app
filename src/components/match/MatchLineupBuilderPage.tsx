@@ -17,8 +17,9 @@ import {
   tryAutoAssignPlayer,
   assignPlayerToTarget,
   buildRandomMatchLineup,
+  lineupPlayerIds,
 } from "@/lib/lineupAssign";
-import { parseDroppableId } from "@/lib/dndSlotIds";
+import { droppableIdFromSelectedSlot, parseDroppableId } from "@/lib/dndSlotIds";
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { poolToSlotCollision } from "@/lib/dndCollision";
@@ -95,22 +96,7 @@ export function MatchLineupBuilderPage() {
   );
 
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
-  const usedIds = useMemo(() => {
-    const ids = new Set<string>();
-    lineup.forwardLines.forEach((l) => {
-      if (l.lw) ids.add(l.lw);
-      if (l.c) ids.add(l.c);
-      if (l.rw) ids.add(l.rw);
-    });
-    lineup.defensePairs.forEach((p) => {
-      if (p.lb) ids.add(p.lb);
-      if (p.rb) ids.add(p.rb);
-    });
-    if (lineup.goalies[0]) ids.add(lineup.goalies[0]);
-    if (lineup.goalies[1]) ids.add(lineup.goalies[1]);
-    if (allowExtraForward && lineup.extraForwards[0]) ids.add(lineup.extraForwards[0]);
-    return ids;
-  }, [lineup, allowExtraForward]);
+  const usedIds = useMemo(() => lineupPlayerIds(lineup), [lineup]);
 
   const counts = useMemo(() => {
     const g = (lineup.goalies[0] ? 1 : 0) + (lineup.goalies[1] ? 1 : 0);
@@ -235,18 +221,14 @@ export function MatchLineupBuilderPage() {
 
   const onAddFromPool = (player: Player) => {
     if (selectedSlot) {
-      const target = parseDroppableId(
-        selectedSlot.type === "goalie"
-          ? `slot-goalie-${selectedSlot.lineIndex ?? 0}`
-          : selectedSlot.type === "extraForward"
-            ? "slot-xf-0"
-            : selectedSlot.type === "defense"
-              ? `slot-def-${selectedSlot.lineIndex ?? 0}-${selectedSlot.role ?? "lb"}`
-              : `slot-fwd-${selectedSlot.lineIndex ?? 0}-${selectedSlot.role ?? "lw"}`
-      );
+      const dndId = droppableIdFromSelectedSlot(selectedSlot);
+      const target = dndId ? parseDroppableId(dndId) : null;
       if (target) {
         const next = assignPlayerToTarget(lineup, player, target, { mode: "match" });
         if (next) setLineup(next);
+        else if (target.type === "powerPlay" && player.position === "G") {
+          toast.error("Do přesilovky nejde zařadit brankáře.");
+        }
       }
       setSelectedSlot(null);
       return;
@@ -390,9 +372,11 @@ export function MatchLineupBuilderPage() {
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"
       ? "G"
-      : selectedSlot.type === "defense"
-        ? "D"
-        : "F"
+      : selectedSlot.type === "powerPlay"
+        ? null
+        : selectedSlot.type === "defense"
+          ? "D"
+          : "F"
     : null;
 
   const content = (
