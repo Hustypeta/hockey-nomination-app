@@ -14,6 +14,14 @@ export type HtmlToImageOptions = NonNullable<Parameters<typeof toCanvas>[1]>;
  * – `skipFonts: false` vynutí embed Google Fonts z odkazů v dokumentu.
  */
 /** Bezpečný pixelRatio — canvas ≈ (w×pr) × (h×pr) musí vejít do limitů WebKit (mobil). */
+function isCoarsePointerOrNarrow(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.matchMedia("(max-width: 1023px)").matches ||
+    window.matchMedia("(pointer: coarse)").matches
+  );
+}
+
 export function safePosterCapturePixelRatio(
   element: HTMLElement,
   desired: number = SHARE_POSTER_CAPTURE_PIXEL_RATIO
@@ -22,11 +30,20 @@ export function safePosterCapturePixelRatio(
   const h = Math.max(1, Math.ceil(element.scrollHeight || element.offsetHeight));
   const maxE = SHARE_POSTER_MAX_CANVAS_EDGE_PX;
   const byEdge = Math.min(maxE / w, maxE / h);
-  const maxArea = maxE * maxE;
+  const maxArea = isCoarsePointerOrNarrow() ? maxE * 3072 : maxE * maxE;
   const byArea = Math.sqrt(maxArea / (w * h));
-  const raw = Math.min(desired, byEdge, byArea);
+  const mobileCap = isCoarsePointerOrNarrow() ? Math.min(desired, 2) : desired;
+  const raw = Math.min(mobileCap, byEdge, byArea);
   const rounded = Math.floor(raw * 1000) / 1000;
-  return Math.max(0.6, Math.min(desired, rounded));
+  return Math.max(0.75, Math.min(mobileCap, rounded));
+}
+
+/** Po zobrazení off-screen plakátu nechat WebKit spočítat layout před html-to-image. */
+export async function preparePosterCapture(): Promise<void> {
+  await document.fonts.ready.catch(() => undefined);
+  await new Promise<void>((resolve) =>
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+  );
 }
 
 export async function buildHtmlToImageOptions(
@@ -57,15 +74,25 @@ export async function captureElementToCanvas(
   options?: { scale?: number; backgroundColor?: string | null }
 ): Promise<HTMLCanvasElement> {
   const desired = options?.scale ?? SHARE_POSTER_CAPTURE_PIXEL_RATIO;
-  const pixelRatio = safePosterCapturePixelRatio(element, desired);
   const rawBg = options?.backgroundColor;
   const backgroundColor =
     rawBg === undefined ? "#e8ecf2" : rawBg === null ? "rgba(0,0,0,0)" : rawBg;
-  const opts = await buildHtmlToImageOptions(element, {
-    pixelRatio,
-    backgroundColor,
-  });
-  return toCanvas(element, opts);
+  const scales = [desired, 2, 1.25].filter((v, i, a) => a.indexOf(v) === i);
+  let lastErr: unknown;
+  for (const scale of scales) {
+    const pixelRatio = safePosterCapturePixelRatio(element, scale);
+    try {
+      const opts = await buildHtmlToImageOptions(element, {
+        pixelRatio,
+        backgroundColor,
+      });
+      return await toCanvas(element, opts);
+    } catch (err) {
+      lastErr = err;
+      if (scale === scales[scales.length - 1]) break;
+    }
+  }
+  throw lastErr;
 }
 
 export type PosterLetterboxTheme = "light" | "dark";

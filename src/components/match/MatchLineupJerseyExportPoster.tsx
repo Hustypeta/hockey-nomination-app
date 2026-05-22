@@ -21,7 +21,7 @@ import {
 } from "@/lib/matchRatingExportDisplay";
 import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
 
-const LINE_JERSEY_SLOT_MAX_W = 220;
+const LINE_JERSEY_SLOT_MAX_W = 196;
 
 function MatchLineupPosterDecorativeBg() {
   return (
@@ -31,7 +31,7 @@ function MatchLineupPosterDecorativeBg() {
         style={{
           borderTopLeftRadius: "110px",
           borderBottomLeftRadius: "110px",
-          transform: "translateX(12%)",
+          transform: "translateX(6%)",
         }}
         aria-hidden
       />
@@ -85,7 +85,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
     const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
     const cols = 2;
 
-    const posterJerseyScale = jerseyRatingExport ? 1.14 : 1.38;
+    const posterJerseyScale = jerseyRatingExport ? 1.06 : 1.18;
     const ratingExtraShellPx = jerseyRatingExport ? 10 : 0;
     const jerseyFrame = matchPosterJerseyFrameStyles(posterJerseyScale, ratingExtraShellPx);
 
@@ -129,15 +129,16 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             </div>
           </div>
 
-          <div style={{ width: "100%", textAlign: "center", paddingLeft: 4, paddingRight: 4 }}>
+          <div style={{ width: "100%", maxWidth: "100%", textAlign: "center", paddingLeft: 2, paddingRight: 2 }}>
             <div
               style={{
-                fontSize: jerseyRatingExport ? 22 : 34,
+                fontSize: jerseyRatingExport ? 22 : 30,
                 fontWeight: 900,
                 color: "white",
                 textShadow: "0 2px 12px rgba(0,0,0,0.65)",
                 lineHeight: jerseyRatingExport ? 1.12 : 1.08,
                 letterSpacing: "-0.01em",
+                wordBreak: "break-word",
                 ...(jerseyRatingExport
                   ? {
                       overflow: "hidden",
@@ -257,7 +258,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
     };
 
     const iceUid = useId().replace(/:/g, "");
-    const rinkScale = jerseyRatingExport ? 0.86 : 0.94;
+    const rinkScale = jerseyRatingExport ? 0.82 : 0.88;
     const rinkTransform = `perspective(920px) rotateX(5deg) scale(${rinkScale}) translateZ(0)`;
 
     const wrapOnIce = (content: ReactNode) => (
@@ -294,8 +295,8 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
           transform={rinkTransform}
           innerClassName={
             jerseyRatingExport
-              ? "relative z-10 flex flex-col items-stretch px-2 pb-3 pt-7"
-              : "relative z-10 flex flex-col items-stretch px-3 pb-4 pt-8"
+              ? "relative z-10 flex w-full min-w-0 flex-col items-stretch px-3 pb-3 pt-7"
+              : "relative z-10 flex w-full min-w-0 flex-col items-stretch px-4 pb-4 pt-8"
           }
         >
           {content}
@@ -317,12 +318,15 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              gap: jerseyRatingExport ? 8 : 12,
+              gap: jerseyRatingExport ? 6 : 8,
               alignItems: "start",
+              justifyItems: "center",
             }}
           >
             {lineChunks.forwards.filter(Boolean).map((pid) => (
-              <div key={pid}>{renderPlayerCard(pid)}</div>
+              <div key={pid} style={{ minWidth: 0, width: "100%" }}>
+                {renderPlayerCard(pid)}
+              </div>
             ))}
           </div>
         ) : null}
@@ -332,12 +336,15 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: jerseyRatingExport ? 8 : 12,
+              gap: jerseyRatingExport ? 6 : 8,
               alignItems: "start",
+              justifyItems: "center",
             }}
           >
             {lineChunks.defense.filter(Boolean).map((pid) => (
-              <div key={pid}>{renderPlayerCard(pid)}</div>
+              <div key={pid} style={{ minWidth: 0, width: "100%" }}>
+                {renderPlayerCard(pid)}
+              </div>
             ))}
           </div>
         ) : null}
@@ -354,12 +361,15 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: jerseyRatingExport ? 8 : 12,
+                gap: jerseyRatingExport ? 6 : 8,
                 alignItems: "start",
+                justifyItems: "center",
               }}
             >
               {lineChunks.bottom.filter(Boolean).map((pid) => (
-                <div key={pid}>{renderPlayerCard(pid)}</div>
+                <div key={pid} style={{ minWidth: 0, width: "100%" }}>
+                  {renderPlayerCard(pid)}
+                </div>
               ))}
             </div>
           )
@@ -374,7 +384,11 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
           alignContent: "space-evenly",
         }}
       >
-        {ids.map((pid) => renderPlayerCard(pid))}
+        {ids.map((pid) => (
+          <div key={pid} style={{ minWidth: 0, width: "100%" }}>
+            {renderPlayerCard(pid)}
+          </div>
+        ))}
       </div>
     );
 

@@ -8,6 +8,7 @@ import {
   canvasToPngDataUrl,
   downloadDataUrl,
   letterboxCanvas,
+  preparePosterCapture,
 } from "@/lib/captureSharePoster";
 import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 import type { LineupStructure, Player } from "@/types";
@@ -201,6 +202,19 @@ export function MatchLineupImageExportButton({
           toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
           return;
         }
+        const stagePrev = {
+          top: stage.style.top,
+          left: stage.style.left,
+          opacity: stage.style.opacity,
+          visibility: stage.style.visibility,
+          zIndex: stage.style.zIndex,
+        };
+        stage.style.top = "0";
+        stage.style.left = "0";
+        stage.style.opacity = "0.001";
+        stage.style.visibility = "visible";
+        stage.style.zIndex = "-1";
+        await preparePosterCapture();
         const prevHeight = node.style.height;
         const prevMaxHeight = node.style.maxHeight;
         const prevOverflow = node.style.overflow;
@@ -220,12 +234,27 @@ export function MatchLineupImageExportButton({
           node.style.overflow = prevOverflow;
           canvas = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme: "light" });
         }
+        stage.style.top = stagePrev.top;
+        stage.style.left = stagePrev.left;
+        stage.style.opacity = stagePrev.opacity;
+        stage.style.visibility = stagePrev.visibility;
+        stage.style.zIndex = stagePrev.zIndex;
         downloadDataUrl(canvasToPngDataUrl(canvas), filenameLineupSlot(slot, baseSlug, ratingSnapshot));
         toast.success("Staženo 1 PNG.");
       } catch (e) {
         console.error("export match lineup:", e);
-        toast.error("Export se nepovedl.");
+        toast.error(
+          "Export se nepovedl. Na mobilu zkus zavřít jiné karty nebo obnovit stránku a stáhnout znovu."
+        );
       } finally {
+        const stage = stageRef.current;
+        if (stage) {
+          stage.style.top = "-100000px";
+          stage.style.left = "-100000px";
+          stage.style.opacity = "0";
+          stage.style.visibility = "";
+          stage.style.zIndex = "";
+        }
         setBusyKey(null);
       }
     },

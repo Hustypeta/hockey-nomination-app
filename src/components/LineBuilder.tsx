@@ -338,7 +338,11 @@ export function LineBuilder({
                 e.stopPropagation();
                 onClear();
               }}
-              className="absolute -right-0.5 -top-0.5 z-40 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-950 text-sm font-bold text-white opacity-0 shadow-lg transition-opacity group-hover/slot:opacity-100 group-focus-within/slot:opacity-100"
+              className={`absolute -right-0.5 -top-0.5 z-40 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-950 text-sm font-bold text-white shadow-lg touch-manipulation sm:h-6 sm:w-6 ${
+                mode === "match"
+                  ? "opacity-100"
+                  : "opacity-0 transition-opacity group-hover/slot:opacity-100 group-focus-within/slot:opacity-100"
+              }`}
               aria-label="Odebrat hráče"
             >
               ×

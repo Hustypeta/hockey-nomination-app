@@ -501,7 +501,7 @@ export function MatchLineupBuilderPage() {
               </h2>
               <span className="w-[5.5rem] shrink-0" aria-hidden />
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-4 sm:px-4">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-6 sm:px-4">
               <div
                 className={`rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 sm:p-4 ${
                   isNarrowLayout ? "" : "backdrop-blur-sm"
@@ -522,14 +522,17 @@ export function MatchLineupBuilderPage() {
                 />
               </div>
             </div>
-            <div className="relative z-[1] flex shrink-0 justify-center border-t border-white/[0.1] bg-[#05080f]/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <div className="relative z-[1] flex shrink-0 justify-center border-t border-white/[0.1] bg-[#05080f] px-3 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-4">
               <button
                 type="button"
                 onClick={() => setSelectedSlot(null)}
-                className="flex w-full max-w-md min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3 text-sm font-bold text-white shadow-lg shadow-black/40 touch-manipulation active:scale-[0.99]"
+                className="flex w-full min-w-0 max-w-md min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3 text-sm font-bold text-white shadow-lg shadow-black/40 touch-manipulation active:scale-[0.99]"
               >
                 <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
-                Hotovo — zpět do sestavy
+                <span className="min-w-0 truncate">
+                  <span className="sm:hidden">Hotovo</span>
+                  <span className="hidden sm:inline">Hotovo — zpět do sestavy</span>
+                </span>
               </button>
             </div>
           </div>
