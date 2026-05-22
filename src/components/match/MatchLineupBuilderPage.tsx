@@ -107,6 +107,26 @@ export function MatchLineupBuilderPage() {
     return { G: g, D: d, F: f };
   }, [lineup, allowExtraForward]);
 
+  const mobilePoolTitle = useMemo(() => {
+    if (!selectedSlot) return "Výběr hráče";
+    if (selectedSlot.type === "powerPlay" && selectedSlot.role != null) {
+      const ix = selectedSlot.lineIndex === 0 || selectedSlot.lineIndex === 1 ? selectedSlot.lineIndex : 0;
+      return powerPlaySlotPickerLabel(ix, selectedSlot.role);
+    }
+    if (selectedSlot.type === "goalie") return "Brankář";
+    if (selectedSlot.type === "defense") return "Obránce";
+    if (selectedSlot.type === "forward" || selectedSlot.type === "extraForward") return "Útočník";
+    return "Výběr hráče";
+  }, [selectedSlot]);
+
+  const mobilePoolHint = useMemo(() => {
+    if (!selectedSlot) return "Klepni na hráče — doplní se vybraný slot.";
+    if (selectedSlot.type === "powerPlay") {
+      return "Přesilovka — útočník nebo obránce (ne brankář).";
+    }
+    return "Klepni na hráče — doplní se vybraný slot.";
+  }, [selectedSlot]);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -370,26 +390,6 @@ export function MatchLineupBuilderPage() {
     );
   }
 
-  const mobilePoolTitle = useMemo(() => {
-    if (!selectedSlot) return "Výběr hráče";
-    if (selectedSlot.type === "powerPlay" && selectedSlot.role != null) {
-      const ix = selectedSlot.lineIndex === 0 || selectedSlot.lineIndex === 1 ? selectedSlot.lineIndex : 0;
-      return powerPlaySlotPickerLabel(ix, selectedSlot.role);
-    }
-    if (selectedSlot.type === "goalie") return "Brankář";
-    if (selectedSlot.type === "defense") return "Obránce";
-    if (selectedSlot.type === "forward" || selectedSlot.type === "extraForward") return "Útočník";
-    return "Výběr hráče";
-  }, [selectedSlot]);
-
-  const mobilePoolHint = useMemo(() => {
-    if (!selectedSlot) return "Klepni na hráče — doplní se vybraný slot.";
-    if (selectedSlot.type === "powerPlay") {
-      return "Přesilovka — útočník nebo obránce (ne brankář).";
-    }
-    return "Klepni na hráče — doplní se vybraný slot.";
-  }, [selectedSlot]);
-
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"
       ? "G"
@@ -507,9 +507,7 @@ export function MatchLineupBuilderPage() {
                   isNarrowLayout ? "" : "backdrop-blur-sm"
                 }`}
               >
-                <p className="mb-3 text-[11px] leading-snug text-white/55">
-                  Klepni na hráče — doplní se vybraný slot.
-                </p>
+                <p className="mb-3 text-[11px] leading-snug text-white/55">{mobilePoolHint}</p>
                 {/* Tap-only varianta: na mobile sheetu vypneme drag, jinak by celá karta
                     dostala `touch-action: none` a uvnitř by nešlo scrollovat. */}
                 <PlayerPoolPanel
