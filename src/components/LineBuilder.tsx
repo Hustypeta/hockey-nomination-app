@@ -330,7 +330,7 @@ export function LineBuilder({
           ${readOnly ? "cursor-default" : "cursor-pointer"}
         `}
       >
-        <div className="relative flex w-full min-w-0 justify-center">
+        <div className="relative flex w-full min-w-0 justify-center overflow-visible py-0.5">
           {player && onClear && !nhl && (
             <button
               type="button"
@@ -338,7 +338,7 @@ export function LineBuilder({
                 e.stopPropagation();
                 onClear();
               }}
-              className={`absolute -right-0.5 -top-0.5 z-40 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-950 text-sm font-bold text-white shadow-lg touch-manipulation sm:h-6 sm:w-6 ${
+              className={`absolute -right-1 -top-1 z-50 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-950 text-sm font-bold text-white shadow-lg ring-2 ring-[#05080f]/80 touch-manipulation sm:h-6 sm:w-6 sm:-right-0.5 sm:-top-0.5 ${
                 mode === "match"
                   ? "opacity-100"
                   : "opacity-0 transition-opacity group-hover/slot:opacity-100 group-focus-within/slot:opacity-100"

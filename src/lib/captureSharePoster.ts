@@ -216,6 +216,37 @@ export function downloadDataUrl(dataUrl: string, filename: string) {
   a.remove();
 }
 
+/** Stažení PNG přes Blob — na iOS spolehlivější než obří data: URL z `toDataURL`. */
+export function downloadCanvasPng(canvas: HTMLCanvasElement, filename: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          try {
+            downloadDataUrl(canvasToPngDataUrl(canvas), filename);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 5000);
+        resolve();
+      },
+      "image/png",
+      1
+    );
+  });
+}
+
 export function canvasToPngDataUrl(canvas: HTMLCanvasElement, quality = 1): string {
   return canvas.toDataURL("image/png", quality);
 }

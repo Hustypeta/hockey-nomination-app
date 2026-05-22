@@ -5,8 +5,7 @@ import { toast } from "sonner";
 import { Share2 } from "lucide-react";
 import {
   captureElementToCanvas,
-  canvasToPngDataUrl,
-  downloadDataUrl,
+  downloadCanvasPng,
   letterboxCanvas,
   preparePosterCapture,
 } from "@/lib/captureSharePoster";
@@ -219,27 +218,36 @@ export function MatchLineupImageExportButton({
         const prevMaxHeight = node.style.maxHeight;
         const prevOverflow = node.style.overflow;
         const letterboxRatingJerseys = ratingSnapshot && slot === "cele-dresy";
+        const letterboxLineJerseys = slot.startsWith("line-");
         if (letterboxRatingJerseys) {
           node.style.height = "auto";
           node.style.maxHeight = "none";
           node.style.overflow = "visible";
         }
-        let canvas = await captureElementToCanvas(node, {
-          scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
-          backgroundColor: bg,
-        });
+        let canvas: HTMLCanvasElement;
+        try {
+          canvas = await captureElementToCanvas(node, {
+            scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
+            backgroundColor: bg,
+          });
+        } finally {
+          if (letterboxRatingJerseys) {
+            node.style.height = prevHeight;
+            node.style.maxHeight = prevMaxHeight;
+            node.style.overflow = prevOverflow;
+          }
+        }
         if (letterboxRatingJerseys) {
-          node.style.height = prevHeight;
-          node.style.maxHeight = prevMaxHeight;
-          node.style.overflow = prevOverflow;
           canvas = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme: "light" });
+        } else if (letterboxLineJerseys) {
+          canvas = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme: "dark" });
         }
         stage.style.top = stagePrev.top;
         stage.style.left = stagePrev.left;
         stage.style.opacity = stagePrev.opacity;
         stage.style.visibility = stagePrev.visibility;
         stage.style.zIndex = stagePrev.zIndex;
-        downloadDataUrl(canvasToPngDataUrl(canvas), filenameLineupSlot(slot, baseSlug, ratingSnapshot));
+        await downloadCanvasPng(canvas, filenameLineupSlot(slot, baseSlug, ratingSnapshot));
         toast.success("Staženo 1 PNG.");
       } catch (e) {
         console.error("export match lineup:", e);

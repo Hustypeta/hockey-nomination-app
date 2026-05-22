@@ -478,7 +478,7 @@ export function MatchLineupBuilderPage() {
             (fullscreen flex sloupec, ne částečně visící panel — iOS Safari má pak spolehlivý scroll). */}
         {mobilePlayerSheetOpen ? (
           <div
-            className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
+            className="fixed inset-0 z-[52] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
             role="dialog"
             aria-modal="true"
             aria-labelledby="mobile-match-pool-title"
@@ -522,11 +522,11 @@ export function MatchLineupBuilderPage() {
                 />
               </div>
             </div>
-            <div className="relative z-[1] flex shrink-0 justify-center border-t border-white/[0.1] bg-[#05080f] px-3 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-4">
+            <div className="relative z-[2] flex shrink-0 justify-center border-t border-white/[0.12] bg-[#05080f] px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-12px_32px_rgba(0,0,0,0.45)] sm:px-4">
               <button
                 type="button"
                 onClick={() => setSelectedSlot(null)}
-                className="flex w-full min-w-0 max-w-md min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3 text-sm font-bold text-white shadow-lg shadow-black/40 touch-manipulation active:scale-[0.99]"
+                className="flex w-full min-w-0 max-w-md min-h-[3rem] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3.5 text-sm font-bold text-white shadow-lg shadow-black/40 touch-manipulation active:scale-[0.99]"
               >
                 <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
                 <span className="min-w-0 truncate">

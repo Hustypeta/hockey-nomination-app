@@ -258,8 +258,9 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
     };
 
     const iceUid = useId().replace(/:/g, "");
-    const rinkScale = jerseyRatingExport ? 0.82 : 0.88;
-    const rinkTransform = `perspective(920px) rotateX(5deg) scale(${rinkScale}) translateZ(0)`;
+    const rinkScale = jerseyRatingExport ? 0.84 : 0.9;
+    /** Bez rotateX — perspektiva při exportu ořezávala pravou stranu kluziště. */
+    const rinkTransform = `scale(${rinkScale})`;
 
     const wrapOnIce = (content: ReactNode) => (
       <div
@@ -288,11 +289,12 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
           Sestava na ledě
         </p>
         <IceRinkShell
-          className="mx-auto w-full border-cyan-400/30 shadow-[0_0_48px_rgba(0,180,255,0.14),0_20px_56px_rgba(0,0,0,0.55)]"
+          className="mx-auto w-full max-w-[96%] border-cyan-400/30 shadow-[0_0_48px_rgba(0,180,255,0.14),0_20px_56px_rgba(0,0,0,0.55)]"
           iceMood="arena"
           noiseFilterId={`${iceUid}-noise`}
           scratchPatternId={`${iceUid}-ice`}
           transform={rinkTransform}
+          transformOrigin="50% 50%"
           innerClassName={
             jerseyRatingExport
               ? "relative z-10 flex w-full min-w-0 flex-col items-stretch px-3 pb-3 pt-7"

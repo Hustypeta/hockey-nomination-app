@@ -110,6 +110,7 @@ export type IceRinkShellProps = {
   className?: string;
   /** Vlastní CSS transform (default = fantasy editor). */
   transform?: CSSProperties["transform"];
+  transformOrigin?: CSSProperties["transformOrigin"];
   /** Vnitřní zóna nad ledem (padding kolem řad karet). */
   innerClassName?: string;
   /** `arena` = tmavší led, více kontrastu (fantasy editor); `bright` = výchozí světlejší led (export plakátů). */
@@ -125,6 +126,7 @@ export function IceRinkShell({
   children,
   className = "",
   transform = "perspective(920px) rotateX(4deg) scale(0.88) translateZ(0)",
+  transformOrigin = "50% 38%",
   innerClassName = "relative z-10 flex flex-col items-stretch px-1.5 pb-4 pt-[2.35rem] sm:px-3 sm:pb-5 sm:pt-[2.5rem]",
   iceMood = "bright",
 }: IceRinkShellProps) {
@@ -133,7 +135,7 @@ export function IceRinkShell({
       className={`relative overflow-hidden rounded-[1.35rem] border border-cyan-200/25 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.08)_inset] sm:rounded-[1.5rem] [backface-visibility:hidden] ${className}`}
       style={{
         transform,
-        transformOrigin: "50% 38%",
+        transformOrigin,
       }}
     >
       <ArenaBackdrop />
