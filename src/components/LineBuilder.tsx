@@ -12,6 +12,7 @@ import { PremiumJerseySlotCard, type PremiumJerseySize } from "@/components/sest
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { PowerPlayLineEditor } from "@/components/match/PowerPlayLineEditor";
+import { POWER_PLAY_UI_ENABLED } from "@/lib/powerPlayLineup";
 
 interface LineBuilderProps {
   lineup: LineupStructure;
@@ -369,15 +370,19 @@ export function LineBuilder({
               isSelected={selected}
               className={
                 mode === "match"
-                  ? readOnly
-                    ? "origin-top max-sm:mx-auto max-sm:max-w-[9.5rem] sm:scale-[1.05] md:scale-[1.08]"
-                    : "origin-top scale-[1.05] sm:scale-[1.08]"
+                  ? type === "powerPlay"
+                    ? readOnly
+                      ? "origin-top mx-auto max-w-[5.25rem] scale-[0.9] sm:max-w-[6.5rem] sm:scale-[1]"
+                      : "origin-top mx-auto max-w-[5.25rem] scale-[0.92] sm:max-w-[6.75rem] sm:scale-[1]"
+                    : readOnly
+                      ? "origin-top max-sm:mx-auto max-sm:max-w-[9.5rem] sm:scale-[1.05] md:scale-[1.08]"
+                      : "origin-top scale-[1.05] sm:scale-[1.08]"
                   : ""
               }
               showPositionBadge={mode !== "match"}
               showRoleBadge={mode !== "match"}
               overlayVariant={mode === "match" ? "lower" : "default"}
-              nameplateScale={mode === "match" ? 0.92 : 1}
+              nameplateScale={mode === "match" ? (type === "powerPlay" ? 0.82 : 0.92) : 1}
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
           )}
@@ -905,7 +910,7 @@ export function LineBuilder({
           </div>
         </SectionShell>
 
-        {!readOnly ? (
+        {POWER_PLAY_UI_ENABLED && !readOnly ? (
           <PowerPlayLineEditor
             lineup={lineup}
             onLineupChange={onLineupChange}
@@ -918,7 +923,7 @@ export function LineBuilder({
                 lineIndex={props.lineIndex}
                 role={props.role}
                 dndId={props.dndId}
-                jerseySize="skater"
+                jerseySize={props.jerseySize ?? "skater"}
                 onClear={props.onClear}
               />
             )}

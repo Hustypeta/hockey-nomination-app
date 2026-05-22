@@ -17,6 +17,7 @@ import { MatchPowerPlayExportPoster } from "@/components/match/MatchPowerPlayExp
 import { MatchLineupNamesFullPoster, MatchRatingNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
 import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 import type { MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
+import { POWER_PLAY_UI_ENABLED } from "@/lib/powerPlayLineup";
 import type { MatchRatingAggregateMap, MatchRatingMyMap } from "@/lib/matchRatingExportDisplay";
 
 const SEGMENTS: MatchLineupPosterGroup[] = ["line-1", "line-2", "line-3", "line-4"];
@@ -117,13 +118,17 @@ export function MatchLineupImageExportButton({
     if (disabled) setModalOpen(false);
   }, [disabled, setModalOpen]);
 
-  const choices = useMemo(
-    () => [
-      {
-        key: "power-play",
-        title: "Přesilovka — 2 pětky na ledě",
-        hint: "Plakát 3:4 — 1. pětka nahoře, 2. pětka dole, rozestavení 1:3:1 na kluzišti.",
-      },
+  const choices = useMemo(() => {
+    const all = [
+      ...(POWER_PLAY_UI_ENABLED
+        ? [
+            {
+              key: "power-play",
+              title: "Přesilovka — 2 pětky na ledě",
+              hint: "Plakát 3:4 — 1. pětka nahoře, 2. pětka dole, rozestavení 1:3:1 na kluzišti.",
+            },
+          ]
+        : []),
       {
         key: "cele-jmena",
         title: ratingSnapshot ? "Celá sestava — jména a známky" : "Celá sestava — jen jména",
@@ -166,9 +171,9 @@ export function MatchLineupImageExportButton({
           ? "Formát 3:4 — dresy na ledě; dole 13. útočník a 2. gólman."
           : "Tři útočníci a dva obránci jako výš; dole vedle sebe 13. útočník a 2. gólman (pokud jsou v sestavě).",
       },
-    ],
-    [ratingSnapshot]
-  );
+    ];
+    return all;
+  }, [ratingSnapshot, ratingHint]);
 
   const runExport = useCallback(
     async (slot: string) => {
@@ -302,7 +307,7 @@ export function MatchLineupImageExportButton({
           siteUrl={siteOrigin}
           jerseyRatingExport={jerseyRatingExport}
         />
-        {!ratingSnapshot ? (
+        {POWER_PLAY_UI_ENABLED && !ratingSnapshot ? (
           <MatchPowerPlayExportPoster lineupTitle={titleLine} lineup={lineup} players={players} />
         ) : null}
         {SEGMENTS.map((g) => (

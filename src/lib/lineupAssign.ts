@@ -4,6 +4,7 @@ import { POSITION_LIMITS } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import {
   ensurePowerPlayLineup,
+  POWER_PLAY_UI_ENABLED,
   powerPlayPlayerIds,
   setPowerPlaySlot,
   stripPlayerFromPowerPlay,
@@ -35,7 +36,9 @@ function cloneLineup(l: LineupStructure): LineupStructure {
 
 export function lineupPlayerIds(lineup: LineupStructure): Set<string> {
   const s = new Set<string>();
-  powerPlayPlayerIds(lineup).forEach((id) => s.add(id));
+  if (POWER_PLAY_UI_ENABLED) {
+    powerPlayPlayerIds(lineup).forEach((id) => s.add(id));
+  }
   lineup.goalies.forEach((g) => g && s.add(g));
   lineup.forwardLines.forEach((l) => {
     if (l.lw) s.add(l.lw);

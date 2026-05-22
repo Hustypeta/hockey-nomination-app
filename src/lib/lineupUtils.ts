@@ -1,6 +1,6 @@
 import type { LineupStructure } from "@/types";
 import type { Player } from "@/types";
-import { ensurePowerPlayLineup } from "@/lib/powerPlayLineup";
+import { ensurePowerPlayLineup, POWER_PLAY_UI_ENABLED } from "@/lib/powerPlayLineup";
 
 type ForwardLineLike = {
   lw: string | null;
@@ -50,7 +50,10 @@ export function normalizeLineupStructure(
   opts?: { mode?: "nomination" | "match" }
 ): LineupStructure {
   const mode = opts?.mode ?? "nomination";
-  const next = mode === "match" ? ensurePowerPlayLineup(cloneLineup(lineup)) : cloneLineup(lineup);
+  const next =
+    mode === "match" && POWER_PLAY_UI_ENABLED
+      ? ensurePowerPlayLineup(cloneLineup(lineup))
+      : cloneLineup(lineup);
 
   for (let i = 0; i < 3; i++) {
     const line = next.forwardLines[i];

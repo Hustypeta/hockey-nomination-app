@@ -20,6 +20,7 @@ import {
   lineupPlayerIds,
 } from "@/lib/lineupAssign";
 import { droppableIdFromSelectedSlot, parseDroppableId } from "@/lib/dndSlotIds";
+import { powerPlaySlotPickerLabel } from "@/lib/powerPlayLineup";
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { poolToSlotCollision } from "@/lib/dndCollision";
@@ -369,6 +370,26 @@ export function MatchLineupBuilderPage() {
     );
   }
 
+  const mobilePoolTitle = useMemo(() => {
+    if (!selectedSlot) return "Výběr hráče";
+    if (selectedSlot.type === "powerPlay" && selectedSlot.role != null) {
+      const ix = selectedSlot.lineIndex === 0 || selectedSlot.lineIndex === 1 ? selectedSlot.lineIndex : 0;
+      return powerPlaySlotPickerLabel(ix, selectedSlot.role);
+    }
+    if (selectedSlot.type === "goalie") return "Brankář";
+    if (selectedSlot.type === "defense") return "Obránce";
+    if (selectedSlot.type === "forward" || selectedSlot.type === "extraForward") return "Útočník";
+    return "Výběr hráče";
+  }, [selectedSlot]);
+
+  const mobilePoolHint = useMemo(() => {
+    if (!selectedSlot) return "Klepni na hráče — doplní se vybraný slot.";
+    if (selectedSlot.type === "powerPlay") {
+      return "Přesilovka — útočník nebo obránce (ne brankář).";
+    }
+    return "Klepni na hráče — doplní se vybraný slot.";
+  }, [selectedSlot]);
+
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"
       ? "G"
@@ -473,9 +494,10 @@ export function MatchLineupBuilderPage() {
               </button>
               <h2
                 id="mobile-match-pool-title"
-                className="min-w-0 flex-1 truncate text-center font-sans text-base font-bold text-white"
+                className="min-w-0 flex-1 truncate text-center font-sans text-sm font-bold text-white sm:text-base"
+                title={mobilePoolTitle}
               >
-                Výběr hráče
+                {mobilePoolTitle}
               </h2>
               <span className="w-[5.5rem] shrink-0" aria-hidden />
             </div>

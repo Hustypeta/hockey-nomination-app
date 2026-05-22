@@ -1,5 +1,8 @@
 import type { LineupStructure, PowerPlayRole, PowerPlayUnit } from "@/types";
 
+/** Dočasně vypnuto — editor a export na stránce zápasové sestavy. */
+export const POWER_PLAY_UI_ENABLED = false;
+
 export const POWER_PLAY_UNIT_LABELS = ["1. pětka", "2. pětka"] as const;
 
 export const POWER_PLAY_ROLE_LABELS: Record<PowerPlayRole, string> = {
@@ -83,4 +86,14 @@ export function stripPlayerFromPowerPlay(lineup: LineupStructure, playerId: stri
 
 export function powerPlayFilledCount(lineup: LineupStructure): number {
   return powerPlayPlayerIds(lineup).size;
+}
+
+/** Popisek slotu pro mobilní sheet výběru hráče. */
+export function powerPlaySlotPickerLabel(unitIndex: number, role: string): string {
+  const unit = POWER_PLAY_UNIT_LABELS[unitIndex === 0 ? 0 : 1] ?? "Pětka";
+  const roleLabel =
+    role in POWER_PLAY_ROLE_LABELS
+      ? POWER_PLAY_ROLE_LABELS[role as PowerPlayRole]
+      : role;
+  return `${unit} · ${roleLabel}`;
 }
