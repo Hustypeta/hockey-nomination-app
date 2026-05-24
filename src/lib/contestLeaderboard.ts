@@ -19,7 +19,6 @@ export type ContestLeaderboardRow = {
   nominationId: string;
   userId: string;
   displayName: string;
-  image: string | null;
   points: number;
   createdAt: string;
   breakdown: ContestLeaderboardBreakdown;
@@ -73,7 +72,7 @@ export async function computeContestLeaderboard(): Promise<{
       contestEntryForUser: { isNot: null },
     },
     include: {
-      user: { select: { id: true, leaderboardNickname: true, image: true } },
+      user: { select: { id: true, leaderboardNickname: true } },
     },
     orderBy: { createdAt: "asc" },
   });
@@ -100,7 +99,6 @@ export async function computeContestLeaderboard(): Promise<{
         userId: n.userId,
         nickname: n.user.leaderboardNickname,
       }),
-      image: n.user.image ?? null,
       points: breakdown.totalPoints,
       createdAt: n.createdAt.toISOString(),
       breakdown: {

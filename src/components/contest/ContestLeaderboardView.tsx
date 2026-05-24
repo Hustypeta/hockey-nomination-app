@@ -93,17 +93,6 @@ export function ContestLeaderboardView() {
                 {row.rank === 1 ? "🏆" : emoji ?? row.rank}
               </div>
 
-              {row.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={row.image}
-                  alt=""
-                  width={40}
-                  height={40}
-                  className="hidden h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-white/15 sm:block"
-                />
-              ) : null}
-
               <div className="min-w-0 flex-1">
                 <p className="truncate font-display text-base font-bold text-white sm:text-lg">
                   <span className="sr-only">{contestRankLabel(row.rank)} </span>
