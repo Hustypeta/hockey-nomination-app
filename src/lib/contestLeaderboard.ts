@@ -34,25 +34,34 @@ function isRemoteDeployment(): boolean {
   );
 }
 
-/** Zapne fanouškovské čtení žebříčku (`CONTEST_LEADERBOARD_PUBLIC=true`). */
-export function contestLeaderboardWantsPublic(): boolean {
-  return process.env.CONTEST_LEADERBOARD_PUBLIC?.trim().toLowerCase() === "true";
-}
-
 export function contestLeaderboardForceOff(): boolean {
   return process.env.CONTEST_LEADERBOARD_FORCE_OFF?.trim().toLowerCase() === "true";
 }
 
-export function contestLeaderboardLiveGateOk(): boolean {
-  if (!isRemoteDeployment()) return true;
-  return process.env.CONTEST_LEADERBOARD_LIVE?.trim().toLowerCase() === "true";
+function envFlag(name: string): boolean | null {
+  const v = process.env[name]?.trim().toLowerCase();
+  if (v === "true") return true;
+  if (v === "false") return false;
+  return null;
 }
 
-/** Veřejné zobrazení bez admin cookie. */
+/**
+ * Veřejné zobrazení žebříčku a výsledku v účtu.
+ * Na Railway / produkci je zapnuto automaticky — nepotřebuješ žádné extra proměnné.
+ * Skrytí: `CONTEST_LEADERBOARD_PUBLIC=false` nebo `CONTEST_LEADERBOARD_FORCE_OFF=true`.
+ */
 export function contestLeaderboardIsPublic(): boolean {
   if (contestLeaderboardForceOff()) return false;
-  if (!contestLeaderboardLiveGateOk()) return false;
-  return contestLeaderboardWantsPublic();
+
+  const pub = envFlag("CONTEST_LEADERBOARD_PUBLIC");
+  if (pub === false) return false;
+  if (pub === true) return true;
+
+  // Výchozí: na produkci veřejné (žebříček po vyhodnocení)
+  if (isRemoteDeployment()) return true;
+
+  // Lokálně: bez env skryto, v .env.local stačí PUBLIC=true pro test
+  return false;
 }
 
 export async function computeContestLeaderboard(): Promise<{
