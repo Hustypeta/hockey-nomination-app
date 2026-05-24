@@ -93,10 +93,10 @@ export function buildContestResultsThankYouHtml({
                         <div style="text-align:center; margin-bottom:18px;">
                           <img
                             src="${LOGO_URL}"
-                            width="96"
-                            height="96"
+                            width="140"
+                            height="140"
                             alt="Lineup"
-                            style="display:block; margin:0 auto; width:96px; height:96px; border-radius:16px;"
+                            style="display:block; margin:0 auto; width:140px; height:140px; border-radius:20px;"
                           />
                         </div>
 
