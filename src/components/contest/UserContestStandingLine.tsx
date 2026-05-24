@@ -1,6 +1,6 @@
 "use client";
 
-import { contestRankEmoji } from "@/lib/contestRankDisplay";
+import { contestRankEmoji, formatContestPointsOfMax } from "@/lib/contestRankDisplay";
 import { useContestStanding } from "@/hooks/useContestStanding";
 
 type UserContestStandingLineProps = {
@@ -18,6 +18,11 @@ export function UserContestStandingLine({ className = "", multiline = false }: U
   }
 
   if (standing.rank == null || standing.points == null) return null;
+
+  const pointsLabel =
+    standing.maxPoints != null
+      ? formatContestPointsOfMax(standing.points, standing.maxPoints)
+      : `${standing.points} bodů`;
 
   const emoji = contestRankEmoji(standing.rank);
   const isPodium = standing.rank <= 3;
@@ -41,7 +46,7 @@ export function UserContestStandingLine({ className = "", multiline = false }: U
       <span
         className={`block text-left font-semibold tabular-nums leading-snug ${isPodium ? "text-[#f1e6a8]" : "text-sky-200/95"} ${className}`}
       >
-        <span className="block text-sm">{standing.points} bodů</span>
+        <span className="block text-sm">{pointsLabel}</span>
         <span className="block text-xs opacity-90">
           {rankPart}
           <span className="text-white/50"> · z {standing.totalParticipants}</span>
@@ -56,7 +61,7 @@ export function UserContestStandingLine({ className = "", multiline = false }: U
         isPodium ? "text-[#f1e6a8]" : "text-sky-200/95"
       } ${className}`}
     >
-      {standing.points} bodů · {rankPart}
+      {pointsLabel} · {rankPart}
     </span>
   );
 }

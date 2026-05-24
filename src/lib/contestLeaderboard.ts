@@ -1,4 +1,4 @@
-import { scoreNominationAgainstOfficial } from "@/lib/contestScoring";
+import { computeContestMaxAchievablePoints, scoreNominationAgainstOfficial } from "@/lib/contestScoring";
 import { prisma } from "@/lib/prisma";
 import { publicLeaderboardDisplayName } from "@/lib/publicUserLabel";
 import { isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
@@ -57,14 +57,16 @@ export function contestLeaderboardIsPublic(): boolean {
 
 export async function computeContestLeaderboard(): Promise<{
   officialUpdatedAt: string | null;
+  maxAchievablePoints: number | null;
   leaderboard: ContestLeaderboardRow[];
 }> {
   const official = await prisma.officialLineup.findUnique({ where: { id: OFFICIAL_ID } });
   if (!official?.lineupStructure) {
-    return { officialUpdatedAt: null, leaderboard: [] };
+    return { officialUpdatedAt: null, maxAchievablePoints: null, leaderboard: [] };
   }
 
   const officialLineup = normalizeLineupStructure(official.lineupStructure as unknown as LineupStructure);
+  const maxAchievablePoints = computeContestMaxAchievablePoints(officialLineup, official.captainId);
 
   const nominations = await prisma.nomination.findMany({
     where: {
@@ -118,6 +120,7 @@ export async function computeContestLeaderboard(): Promise<{
 
   return {
     officialUpdatedAt: official.updatedAt.toISOString(),
+    maxAchievablePoints,
     leaderboard: rows.map((r, i) => ({ rank: i + 1, ...r })),
   };
 }

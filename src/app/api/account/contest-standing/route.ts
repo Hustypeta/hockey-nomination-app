@@ -18,11 +18,12 @@ export async function GET() {
         participant: false,
         rank: null,
         points: null,
+        maxPoints: null,
         totalParticipants: 0,
       });
     }
 
-    const { leaderboard } = await computeContestLeaderboard();
+    const { leaderboard, maxAchievablePoints } = await computeContestLeaderboard();
     const mine = leaderboard.find((r) => r.userId === userId);
     if (!mine) {
       return NextResponse.json({
@@ -30,6 +31,7 @@ export async function GET() {
         participant: false,
         rank: null,
         points: null,
+        maxPoints: maxAchievablePoints,
         totalParticipants: leaderboard.length,
       });
     }
@@ -39,6 +41,7 @@ export async function GET() {
       participant: true,
       rank: mine.rank,
       points: mine.points,
+      maxPoints: maxAchievablePoints,
       totalParticipants: leaderboard.length,
       displayName: mine.displayName,
     });

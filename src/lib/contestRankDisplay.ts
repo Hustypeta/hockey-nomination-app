@@ -18,3 +18,8 @@ export function contestRankHeadline(rank: number): string {
   if (rank === 3) return "🥉 3. místo";
   return `${rank}. místo`;
 }
+
+/** Např. „129 z 193 bodů“. */
+export function formatContestPointsOfMax(points: number, maxPoints: number): string {
+  return `${points} z ${maxPoints} bodů`;
+}

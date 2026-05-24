@@ -8,6 +8,7 @@ export type ContestStanding = {
   participant: boolean;
   rank: number | null;
   points: number | null;
+  maxPoints: number | null;
   totalParticipants: number;
   displayName?: string | null;
 };
@@ -17,6 +18,7 @@ const EMPTY: ContestStanding = {
   participant: false,
   rank: null,
   points: null,
+  maxPoints: null,
   totalParticipants: 0,
 };
 
@@ -44,6 +46,7 @@ export function useContestStanding() {
           participant: Boolean(o.participant),
           rank: typeof o.rank === "number" ? o.rank : null,
           points: typeof o.points === "number" ? o.points : null,
+          maxPoints: typeof o.maxPoints === "number" ? o.maxPoints : null,
           totalParticipants: typeof o.totalParticipants === "number" ? o.totalParticipants : 0,
           displayName: typeof o.displayName === "string" ? o.displayName : null,
         });

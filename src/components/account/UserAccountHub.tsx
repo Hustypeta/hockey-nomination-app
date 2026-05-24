@@ -87,6 +87,8 @@ export function UserAccountHub() {
         </button>
       </div>
 
+      <UserContestStandingCard />
+
       <div className="mt-8 rounded-2xl border border-white/12 bg-[#0f172a]/85 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
         <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Veřejný žebříček</p>
         <h2 className="mt-1 font-display text-lg font-black text-white">Zobrazované jméno</h2>
@@ -142,8 +144,6 @@ export function UserAccountHub() {
           </p>
         ) : null}
       </div>
-
-      <UserContestStandingCard />
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         <Link

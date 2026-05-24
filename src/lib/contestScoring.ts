@@ -99,3 +99,21 @@ export function scoreNominationAgainstOfficial(
     timeBonusPercent: pct,
   };
 }
+
+/** Nejvyšší možný časový bonus při odeslání nominace. */
+export const CONTEST_MAX_TIME_BONUS_PERCENT = 40;
+
+/** Teoretické maximum (perfektní shoda + max. časový bonus + kapitán + 2 asistenti). */
+export function computeContestMaxAchievablePoints(
+  officialLineup: LineupStructure,
+  officialCaptainId: string | null | undefined
+): number {
+  const lineup = normalizeLineupStructure(officialLineup);
+  return scoreNominationAgainstOfficial(
+    lineup,
+    lineup,
+    officialCaptainId,
+    officialCaptainId,
+    CONTEST_MAX_TIME_BONUS_PERCENT
+  ).totalPoints;
+}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Trophy } from "lucide-react";
 import { useContestStanding } from "@/hooks/useContestStanding";
-import { contestRankHeadline } from "@/lib/contestRankDisplay";
+import { contestRankHeadline, formatContestPointsOfMax } from "@/lib/contestRankDisplay";
 
 export function UserContestStandingCard() {
   const { standing, loading, isAuthenticated } = useContestStanding();
@@ -12,12 +12,17 @@ export function UserContestStandingCard() {
   if (!standing.published || !standing.participant) return null;
   if (standing.rank == null || standing.points == null) return null;
 
+  const pointsLabel =
+    standing.maxPoints != null
+      ? formatContestPointsOfMax(standing.points, standing.maxPoints)
+      : `${standing.points} bodů`;
+
   const podium = standing.rank <= 3;
 
   return (
     <div
       className={`
-        mt-8 rounded-2xl border p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]
+        mt-6 rounded-2xl border p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]
         ${
           podium
             ? "border-[#f1c40f]/40 bg-gradient-to-br from-[#f1c40f]/12 via-[#0f172a]/90 to-[#c8102e]/10"
@@ -39,10 +44,11 @@ export function UserContestStandingCard() {
             )}
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Nominační soutěž</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Soutěž o dres</p>
             <h2 className="mt-1 font-display text-lg font-black text-white">{contestRankHeadline(standing.rank)}</h2>
             <p className="mt-1 text-sm text-white/70">
-              <span className="font-bold tabular-nums text-white">{standing.points}</span> bodů ·{" "}
+              <span className="font-bold tabular-nums text-white">{pointsLabel}</span>
+              <span className="text-white/55"> · </span>
               {standing.rank}. z {standing.totalParticipants} účastníků
             </p>
           </div>
