@@ -22,15 +22,6 @@ export async function GET() {
     const admin = await isAdmin();
     const isPublic = contestLeaderboardIsPublic();
 
-    if (!isPublic && !admin) {
-      return noStoreJson({
-        published: false,
-        hidden: true,
-        updatedAt: null as string | null,
-        leaderboard: [],
-      });
-    }
-
     const { officialUpdatedAt, leaderboard } = await computeContestLeaderboard();
 
     if (!officialUpdatedAt) {

@@ -24,16 +24,6 @@ export type ContestLeaderboardRow = {
   breakdown: ContestLeaderboardBreakdown;
 };
 
-function isRemoteDeployment(): boolean {
-  return Boolean(
-    process.env.VERCEL ||
-      process.env.RAILWAY_ENVIRONMENT ||
-      process.env.RAILWAY_PROJECT_ID ||
-      process.env.RENDER ||
-      process.env.FLY_APP_NAME
-  );
-}
-
 export function contestLeaderboardForceOff(): boolean {
   return process.env.CONTEST_LEADERBOARD_FORCE_OFF?.trim().toLowerCase() === "true";
 }
@@ -46,22 +36,13 @@ function envFlag(name: string): boolean | null {
 }
 
 /**
- * Veřejné zobrazení žebříčku a výsledku v účtu.
- * Na Railway / produkci je zapnuto automaticky — nepotřebuješ žádné extra proměnné.
- * Skrytí: `CONTEST_LEADERBOARD_PUBLIC=false` nebo `CONTEST_LEADERBOARD_FORCE_OFF=true`.
+ * Veřejné zobrazení žebříčku a výsledku v účtu (výchozí zapnuto).
+ * Skrytí jen explicitně: `CONTEST_LEADERBOARD_PUBLIC=false` nebo `CONTEST_LEADERBOARD_FORCE_OFF=true`.
  */
 export function contestLeaderboardIsPublic(): boolean {
   if (contestLeaderboardForceOff()) return false;
-
-  const pub = envFlag("CONTEST_LEADERBOARD_PUBLIC");
-  if (pub === false) return false;
-  if (pub === true) return true;
-
-  // Výchozí: na produkci veřejné (žebříček po vyhodnocení)
-  if (isRemoteDeployment()) return true;
-
-  // Lokálně: bez env skryto, v .env.local stačí PUBLIC=true pro test
-  return false;
+  if (envFlag("CONTEST_LEADERBOARD_PUBLIC") === false) return false;
+  return true;
 }
 
 export async function computeContestLeaderboard(): Promise<{

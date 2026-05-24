@@ -21,6 +21,7 @@ const NAV: NavItem[] = [
   { href: "/bracket", label: "Pick’em" },
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
   { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
+  { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
 ];
 
