@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ClipboardList, Sparkles, Star, Trophy, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { UserContestStandingCard } from "@/components/contest/UserContestStandingCard";
 
 export type NominationListItem = {
   id: string;
@@ -142,6 +143,8 @@ export function UserAccountHub() {
         ) : null}
       </div>
 
+      <UserContestStandingCard />
+
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         <Link
           href="/sestava"
@@ -195,6 +198,17 @@ export function UserAccountHub() {
           <span className="text-lg font-bold text-white">Hodnocení hráčů</span>
           <span className="max-w-[14rem] text-xs font-normal leading-snug text-slate-400">
             Tvoje známky hráčů v jednotlivých zápasech
+          </span>
+        </Link>
+
+        <Link
+          href="/zebricek"
+          className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-white/12 bg-[#0f172a]/85 px-6 py-10 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-[#f1c40f]/35 hover:bg-[#0f172a] sm:col-span-2"
+        >
+          <Trophy className="h-9 w-9 text-[#f1c40f]" aria-hidden />
+          <span className="text-lg font-bold text-white">Žebříček nominace</span>
+          <span className="max-w-[18rem] text-xs font-normal leading-snug text-slate-400">
+            Veřejné pořadí a body všech účastníků soutěže
           </span>
         </Link>
       </div>

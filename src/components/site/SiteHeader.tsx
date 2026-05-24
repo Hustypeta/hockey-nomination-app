@@ -7,6 +7,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
+import { UserContestStandingBadge } from "@/components/contest/UserContestStandingBadge";
 
 type NavItem = { href: string; label: string; shortLabel?: string };
 
@@ -20,6 +21,7 @@ const NAV: NavItem[] = [
   { href: "/bracket", label: "Pick’em" },
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
   { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
+  { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
 ];
 
@@ -235,6 +237,7 @@ export function SiteHeader() {
             <div className="flex w-full shrink-0 flex-none flex-wrap items-center justify-end gap-2 border-white/[0.08] sm:gap-2.5 md:w-auto md:border-l md:pl-3 xl:pl-4">
               {status === "authenticated" && user ? (
                 <div className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
+                  <UserContestStandingBadge compact className="hidden lg:inline-flex" />
                   <Link
                     href="/ucet"
                     className="group/avatar flex min-w-0 items-center gap-2 rounded-full py-1 pl-1 pr-1 transition-all duration-200 hover:bg-white/[0.06]"
@@ -391,6 +394,9 @@ export function SiteHeader() {
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold text-white">{user.name?.trim() || "Můj účet"}</span>
                     <span className="block truncate text-xs text-slate-400">{user.email}</span>
+                    <span className="mt-2 block">
+                      <UserContestStandingBadge />
+                    </span>
                   </span>
                 </Link>
                 {showLineupEditorCta ? (

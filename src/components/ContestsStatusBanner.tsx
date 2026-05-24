@@ -4,8 +4,15 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Check, Lock, Trophy } from "lucide-react";
 
-const NOMINATION_CLOSED_TEXT =
-  "Nominační soutěž ukončena. Aktuálně se čeká na oficiální soupisku k prvnímu zápasu.";
+const NOMINATION_CLOSED_TEXT = (
+  <>
+    Nominační soutěž ukončena — výsledky jsou zveřejněné v{" "}
+    <Link href="/zebricek" className="font-semibold text-sky-300 underline-offset-2 hover:text-sky-200 hover:underline">
+      žebříčku nominace
+    </Link>
+    .
+  </>
+);
 
 type ContestsStatusBannerProps = {
   pickemSubmissionOpen: boolean;
