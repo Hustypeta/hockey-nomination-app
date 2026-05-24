@@ -17,8 +17,8 @@ const LINEUP_EDITOR_HREF = "/zapasy/sestava";
 const NAV: NavItem[] = [
   { href: "/", label: "Úvod" },
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
-  { href: LINEUP_EDITOR_HREF, label: "Editor sestavy", shortLabel: "Editor sestavy" },
-  { href: "/bracket", label: "Pick’em" },
+  { href: LINEUP_EDITOR_HREF, label: "Editor sestavy", shortLabel: "Sestavy" },
+  { href: "/bracket", label: "Pick’em", shortLabel: "Pick’em" },
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
   { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
   { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
@@ -30,11 +30,11 @@ function isNominationEditorPath(pathname: string) {
 }
 
 function DesktopNavLabel({ item }: { item: NavItem }) {
-  if (!item.shortLabel) return <>{item.label}</>;
+  if (!item.shortLabel || item.shortLabel === item.label) return <>{item.label}</>;
   return (
     <>
-      <span className="hidden xl:inline">{item.label}</span>
-      <span className="xl:hidden">{item.shortLabel}</span>
+      <span className="hidden 2xl:inline">{item.label}</span>
+      <span className="2xl:hidden">{item.shortLabel}</span>
     </>
   );
 }
@@ -166,10 +166,10 @@ export function SiteHeader() {
           </div>
 
           {/* Desktop / tablet: logo vlevo — odděleně od položky „Úvod“ v menu */}
-          <div className="hidden w-full min-w-0 items-center gap-6 md:flex xl:gap-10">
+          <div className="hidden w-full min-w-0 items-center gap-3 md:flex lg:gap-4 xl:gap-6 2xl:gap-10">
             <Link
               href="/"
-              className="group/brand flex shrink-0 items-center pr-1"
+              className="group/brand flex w-[5.5rem] shrink-0 items-center pr-0.5 sm:w-[6.5rem] lg:w-[7.5rem] xl:w-auto xl:pr-1"
               aria-label={`${SITE_BRAND} — úvod`}
             >
               <div className="relative shrink-0">
@@ -185,14 +185,17 @@ export function SiteHeader() {
                   height={168}
                   decoding="async"
                   fetchPriority="high"
-                  className="relative h-12 w-auto object-contain object-left transition duration-300 group-hover/brand:scale-[1.03] md:h-14 xl:h-[4rem] 2xl:h-[4.75rem]"
+                  className="relative h-10 w-full max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.03] lg:h-11 xl:h-12 2xl:h-[3.75rem]"
                 />
               </div>
             </Link>
 
             <div className="flex min-w-0 flex-1 flex-row flex-nowrap items-center gap-x-2 md:justify-end xl:gap-x-3">
-            <nav className="isolate min-w-0 flex-1 overflow-x-auto md:min-w-[12rem]" aria-label="Hlavní navigace">
-              <div className="flex flex-nowrap items-center justify-end gap-x-0.5">
+            <nav
+              className="isolate min-w-0 flex-1 overflow-x-auto overflow-y-hidden md:min-w-0 lg:min-w-[8rem]"
+              aria-label="Hlavní navigace"
+            >
+              <div className="flex flex-nowrap items-center justify-end gap-x-0 lg:gap-x-0.5">
                 {NAV.map((item) => {
                   const { href } = item;
                   const active = href === activeHrefForPath(pathname);
@@ -201,7 +204,7 @@ export function SiteHeader() {
                       key={href}
                       href={href}
                       className={`
-                    group/nav relative shrink-0 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-[0.8125rem] font-semibold leading-tight tracking-wide sm:px-2 sm:text-[0.875rem] md:px-1.5 md:text-[0.8125rem] xl:px-2 xl:text-[0.875rem] 2xl:px-2 2xl:text-[0.9375rem]
+                    group/nav relative shrink-0 whitespace-nowrap rounded-lg px-1 py-1.5 text-[0.75rem] font-semibold leading-tight tracking-wide lg:px-1.5 lg:text-[0.8125rem] xl:px-2 xl:text-[0.875rem] 2xl:text-[0.9375rem]
                     transition-colors duration-200 ease-out
                     hover:text-white
                     focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
@@ -234,12 +237,12 @@ export function SiteHeader() {
               </div>
             </nav>
 
-            <div className="flex w-full shrink-0 flex-none flex-wrap items-center justify-end gap-2 border-white/[0.08] sm:gap-2.5 md:w-auto md:border-l md:pl-3 xl:pl-4">
+            <div className="flex w-full shrink-0 flex-none flex-wrap items-center justify-end gap-1.5 border-white/[0.08] md:w-auto md:border-l md:pl-2 lg:gap-2 lg:pl-3 xl:pl-4">
               {status === "authenticated" && user ? (
-                <div className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
+                <div className="flex min-w-0 shrink-0 items-center gap-1.5 lg:gap-2">
                   <Link
                     href="/ucet"
-                    className="group/avatar flex min-w-0 max-w-[14rem] items-center gap-2 rounded-xl py-1 pl-1 pr-2 transition-all duration-200 hover:bg-white/[0.06] sm:max-w-[18rem]"
+                    className="group/avatar flex min-w-0 items-center gap-1.5 rounded-xl py-1 pl-1 pr-1.5 transition-all duration-200 hover:bg-white/[0.06] lg:gap-2 lg:pr-2"
                     title={user.email ?? ""}
                   >
                     {user.image ? (
@@ -256,7 +259,8 @@ export function SiteHeader() {
                         {userInitials(user)}
                       </span>
                     )}
-                    <UserContestStandingLine className="hidden min-w-0 truncate sm:block" />
+                    <UserContestStandingLine compact className="hidden min-w-0 truncate lg:block 2xl:hidden" />
+                    <UserContestStandingLine className="hidden min-w-0 truncate 2xl:block" />
                   </Link>
                   {showLineupEditorCta ? (
                     <Link
@@ -264,14 +268,15 @@ export function SiteHeader() {
                       style={{ "--ice": ICE, "--ice-dim": ICE_DIM } as CSSProperties}
                       className={`
                     inline-flex shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-[var(--ice-dim)] to-[var(--ice)]
-                    px-2.5 py-2 font-display text-[0.625rem] font-bold uppercase tracking-[0.08em] text-[#03050a] sm:text-[0.6875rem] xl:px-3 xl:text-xs xl:tracking-[0.1em]
+                    px-2 py-1.5 font-display text-[0.625rem] font-bold uppercase tracking-[0.08em] text-[#03050a] lg:px-2.5 lg:py-2 xl:px-3 xl:text-xs xl:tracking-[0.1em]
                     shadow-[0_0_28px_rgba(0,180,255,0.45),0_6px_20px_rgba(0,0,0,0.35)]
                     ring-1 ring-white/20 transition duration-200
                     hover:brightness-110 hover:shadow-[0_0_36px_rgba(0,180,255,0.55)] md:hover:scale-100 hover:scale-[1.03]
                     active:scale-[0.98]
                   `}
                     >
-                      Do editoru sestavy
+                      <span className="2xl:hidden">Sestavy</span>
+                      <span className="hidden 2xl:inline">Do editoru sestavy</span>
                     </Link>
                   ) : null}
                 </div>

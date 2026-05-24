@@ -7,10 +7,16 @@ type UserContestStandingLineProps = {
   className?: string;
   /** Jedna řádka vedle avataru; dvě řádky v položce menu. */
   multiline?: boolean;
+  /** Kratší zápis do hlavičky (46/193 · #25). */
+  compact?: boolean;
 };
 
 /** Body a pořadí v nominaci — jen text, bez odkazu na žebříček. */
-export function UserContestStandingLine({ className = "", multiline = false }: UserContestStandingLineProps) {
+export function UserContestStandingLine({
+  className = "",
+  multiline = false,
+  compact = false,
+}: UserContestStandingLineProps) {
   const { standing, loading, isAuthenticated } = useContestStanding();
 
   if (!isAuthenticated || loading || !standing.published || !standing.participant) {
@@ -40,6 +46,20 @@ export function UserContestStandingLine({ className = "", multiline = false }: U
     ) : (
       <span>{standing.rank}. místo</span>
     );
+
+  if (compact) {
+    const max = standing.maxPoints ?? "?";
+    return (
+      <span
+        className={`whitespace-nowrap text-[11px] font-bold tabular-nums leading-tight ${
+          isPodium ? "text-[#f1e6a8]" : "text-sky-200/95"
+        } ${className}`}
+        title={`${pointsLabel} · ${standing.rank}. místo z ${standing.totalParticipants}`}
+      >
+        {standing.points}/{max} · #{standing.rank}
+      </span>
+    );
+  }
 
   if (multiline) {
     return (
