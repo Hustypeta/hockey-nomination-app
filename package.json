@@ -30,6 +30,7 @@
     "fantasy:patch-tier": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-tier.ts",
     "fantasy:replace-fin-granlund": "npx ts-node --project scripts/tsconfig.json scripts/replace-ms-fantasy-fin-granlund.ts",
     "fantasy:patch-aut": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-aut-roster.ts",
+    "fantasy:patch-den": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-den-roster.ts",
     "fantasy:deactivate": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-deactivate-player.ts",
     "postinstall": "prisma generate"
   },

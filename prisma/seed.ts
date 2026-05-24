@@ -27,7 +27,7 @@ const FANTASY_ROSTER_FILES: { team: string; file: string; note?: string }[] = [
   { team: "AUT", file: "austria-ms2026-fantasy-roster.json", note: "Platové tiery: C Zwerger, Schneider, Kickert, Tolvanen · D Nissner, M. Huber, Nickl, Wolf, Unterweger · gólman Vorauer E · zbytek E" },
   { team: "CZE", file: "czechia-ms2026-fantasy-roster.json" },
   { team: "CAN", file: "canada-ms2026-fantasy-roster.json" },
-  { team: "DEN", file: "denmark-ms2026-fantasy-roster.json", note: "Platové tiery: bez A · B Sögaard, True, Russell, Blichfeld · C Olesen, Aagaard, Storm, Bruggisser, Jensen Aabo, Lauridsen, Dichow · D From, Scheel, Wejse, M. Jensen, K. Larsen, Koch · zbytek E" },
+  { team: "DEN", file: "denmark-ms2026-fantasy-roster.json", note: "MS 2026 kádr (24) · B Sogaard, True, Russell, Blichfeld · C Olesen, Aagaard, Storm, Bruggisser, Jensen Aabo, Lauridsen · D From, Scheel, Wejse, M. Jensen, K. Larsen, Koch · zbytek E" },
   { team: "FIN", file: "finland-ms2026-fantasy-roster.json" },
   { team: "GER", file: "germany-ms2026-fantasy-roster.json" },
   { team: "GBR", file: "great-britain-ms2026-fantasy-roster.json", note: "Platové tiery: C Kirk · D Bowns, Dowd, C. Neilson, Halbert, Richardson, T. Brown · zbytek E (Archie Hazeldine O)" },
