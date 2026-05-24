@@ -201,16 +201,6 @@ export function UserAccountHub() {
           </span>
         </Link>
 
-        <Link
-          href="/zebricek"
-          className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-white/12 bg-[#0f172a]/85 px-6 py-10 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-[#f1c40f]/35 hover:bg-[#0f172a] sm:col-span-2"
-        >
-          <Trophy className="h-9 w-9 text-[#f1c40f]" aria-hidden />
-          <span className="text-lg font-bold text-white">Žebříček nominace</span>
-          <span className="max-w-[18rem] text-xs font-normal leading-snug text-slate-400">
-            Veřejné pořadí a body všech účastníků soutěže
-          </span>
-        </Link>
       </div>
     </div>
   );

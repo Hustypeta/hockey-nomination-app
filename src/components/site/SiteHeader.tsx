@@ -7,7 +7,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
-import { UserContestStandingBadge } from "@/components/contest/UserContestStandingBadge";
+import { UserContestStandingLine } from "@/components/contest/UserContestStandingLine";
 
 type NavItem = { href: string; label: string; shortLabel?: string };
 
@@ -21,7 +21,6 @@ const NAV: NavItem[] = [
   { href: "/bracket", label: "Pick’em" },
   { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
   { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
-  { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
 ];
 
@@ -237,10 +236,9 @@ export function SiteHeader() {
             <div className="flex w-full shrink-0 flex-none flex-wrap items-center justify-end gap-2 border-white/[0.08] sm:gap-2.5 md:w-auto md:border-l md:pl-3 xl:pl-4">
               {status === "authenticated" && user ? (
                 <div className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
-                  <UserContestStandingBadge compact className="hidden lg:inline-flex" />
                   <Link
                     href="/ucet"
-                    className="group/avatar flex min-w-0 items-center gap-2 rounded-full py-1 pl-1 pr-1 transition-all duration-200 hover:bg-white/[0.06]"
+                    className="group/avatar flex min-w-0 max-w-[14rem] items-center gap-2 rounded-xl py-1 pl-1 pr-2 transition-all duration-200 hover:bg-white/[0.06] sm:max-w-[18rem]"
                     title={user.email ?? ""}
                   >
                     {user.image ? (
@@ -250,13 +248,14 @@ export function SiteHeader() {
                         alt=""
                         width={36}
                         height={36}
-                        className="h-9 w-9 rounded-full object-cover ring-2 ring-[#00B4FF]/35 transition duration-200 group-hover/avatar:ring-[#00B4FF]/70"
+                        className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-[#00B4FF]/35 transition duration-200 group-hover/avatar:ring-[#00B4FF]/70"
                       />
                     ) : (
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-slate-600 to-slate-900 text-xs font-bold text-white ring-2 ring-[#00B4FF]/40">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-slate-600 to-slate-900 text-xs font-bold text-white ring-2 ring-[#00B4FF]/40">
                         {userInitials(user)}
                       </span>
                     )}
+                    <UserContestStandingLine className="hidden min-w-0 truncate sm:block" />
                   </Link>
                   {showLineupEditorCta ? (
                     <Link
@@ -354,19 +353,27 @@ export function SiteHeader() {
             <ul className="flex flex-col gap-1">
               {NAV.map(({ href, label }) => {
                 const active = href === activeHrefForPath(pathname);
+                const isAccount = href === "/ucet";
                 return (
                   <li key={href}>
                     <Link
                       href={href}
                       onClick={() => setMobileNavOpen(false)}
                       className={`
-                        flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-semibold tracking-wide transition duration-200
+                        flex items-center justify-between gap-3 rounded-xl px-4 py-3.5 transition duration-200
                         ${active ? "bg-white/[0.1] text-white shadow-[inset_0_0_0_1px_rgba(0,180,255,0.25)]" : "text-slate-300 hover:bg-white/[0.06] hover:text-white"}
                       `}
                     >
-                      {label}
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-base font-semibold tracking-wide">{label}</span>
+                        {isAccount && status === "authenticated" ? (
+                          <span className="mt-1 block">
+                            <UserContestStandingLine multiline />
+                          </span>
+                        ) : null}
+                      </span>
                       {active ? (
-                        <span className="h-2 w-2 rounded-full bg-[#00B4FF] shadow-[0_0_10px_#00B4FF]" aria-hidden />
+                        <span className="h-2 w-2 shrink-0 rounded-full bg-[#00B4FF] shadow-[0_0_10px_#00B4FF]" aria-hidden />
                       ) : null}
                     </Link>
                   </li>
@@ -393,10 +400,10 @@ export function SiteHeader() {
                   )}
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold text-white">{user.name?.trim() || "Můj účet"}</span>
-                    <span className="block truncate text-xs text-slate-400">{user.email}</span>
-                    <span className="mt-2 block">
-                      <UserContestStandingBadge />
+                    <span className="mt-1 block">
+                      <UserContestStandingLine multiline />
                     </span>
+                    <span className="mt-1 block truncate text-xs text-slate-400">{user.email}</span>
                   </span>
                 </Link>
                 {showLineupEditorCta ? (
