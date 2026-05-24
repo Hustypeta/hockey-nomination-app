@@ -145,12 +145,12 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     sortOrder: 9,
     lockAt: "2026-05-23T10:20:00.000Z",
     matches: [
-      { startAt: "2026-05-23T10:20:00.000Z", home: "LAT", away: "USA", group: "A" },
-      { startAt: "2026-05-23T10:20:00.000Z", home: "DEN", away: "SLO", group: "B" },
-      { startAt: "2026-05-23T14:20:00.000Z", home: "SUI", away: "HUN", group: "A" },
-      { startAt: "2026-05-23T14:20:00.000Z", home: "SVK", away: "CZE", group: "B" },
-      { startAt: "2026-05-23T18:20:00.000Z", home: "AUT", away: "GER", group: "A" },
-      { startAt: "2026-05-23T18:20:00.000Z", home: "NOR", away: "SWE", group: "B" },
+      { startAt: "2026-05-23T10:20:00.000Z", home: "LAT", away: "USA", group: "A", homeScore: 4, awayScore: 2 },
+      { startAt: "2026-05-23T10:20:00.000Z", home: "DEN", away: "SLO", group: "B", homeScore: 4, awayScore: 0 },
+      { startAt: "2026-05-23T14:20:00.000Z", home: "SUI", away: "HUN", group: "A", homeScore: 9, awayScore: 0 },
+      { startAt: "2026-05-23T14:20:00.000Z", home: "SVK", away: "CZE", group: "B", homeScore: 2, awayScore: 3 },
+      { startAt: "2026-05-23T18:20:00.000Z", home: "AUT", away: "GER", group: "A", homeScore: 2, awayScore: 6 },
+      { startAt: "2026-05-23T18:20:00.000Z", home: "NOR", away: "SWE", group: "B", homeScore: 3, awayScore: 2 },
     ],
   },
   {
