@@ -840,7 +840,7 @@ const PLAYERS: Array<{ player: Player }> = [
       role: "LW",
       club: "—",
       league: "—",
-      jerseyNumber: 95,
+      jerseyNumber: 81,
       pick_rate: 0,
     },
   },
