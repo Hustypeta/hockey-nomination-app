@@ -35,6 +35,7 @@
     "fantasy:patch-sui": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-sui-roster.ts",
     "fantasy:patch-fin": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-fin-roster.ts",
     "fantasy:patch-ger": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-ger-roster.ts",
+    "fantasy:patch-lat": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-lat-roster.ts",
     "fantasy:deactivate": "npx ts-node --project scripts/tsconfig.json scripts/patch-ms-fantasy-deactivate-player.ts",
     "postinstall": "prisma generate"
   },
