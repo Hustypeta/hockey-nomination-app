@@ -320,7 +320,6 @@ export function SiteHeader() {
               )}
             </div>
           </div>
-          </div>
         </div>
       </header>
 
