@@ -638,3 +638,10 @@ html.social-cover body {
     transform: perspective(880px) rotateX(2.5deg) scale(0.86) translateZ(0) !important;
   }
 }
+
+/* Jeden svislý scroll v soupisce — bez vnořených posuvníků vedle sebe */
+.ms-fantasy-roster-scroll {
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+}

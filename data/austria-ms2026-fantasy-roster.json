@@ -72,14 +72,6 @@
     "tier": "E"
   },
   {
-    "code": "AUT26-D67-WIMMER",
-    "name": "Philipp Wimmer",
-    "team": "AUT",
-    "jerseyNumber": 67,
-    "position": "D",
-    "tier": "E"
-  },
-  {
     "code": "AUT26-D78-NICKL",
     "name": "Thimo Nickl",
     "team": "AUT",
@@ -142,6 +134,14 @@
     "jerseyNumber": 17,
     "position": "F",
     "tier": "E"
+  },
+  {
+    "code": "AUT26-F19-ROHRER",
+    "name": "Vinzenz Rohrer",
+    "team": "AUT",
+    "jerseyNumber": 19,
+    "position": "F",
+    "tier": "B"
   },
   {
     "code": "AUT26-F40-HARNIS",

@@ -151,10 +151,7 @@ function MsFantasyRosterPanel({
   picksIds,
   addPlayer,
 }: MsFantasyRosterPanelProps) {
-  const listScrollClass =
-    layout === "sidebar" ? "max-h-[min(70vh,28rem)] overflow-y-auto" : "overflow-visible";
-
-  return (
+  const filters = (
     <>
       <div className="border-b border-cyan-500/15 pb-3 sm:pb-4">
         <h2 className="font-display text-base font-bold uppercase tracking-[0.14em] text-white sm:text-lg lg:text-xl">
@@ -189,7 +186,7 @@ function MsFantasyRosterPanel({
       <div className="mt-3 space-y-3 sm:mt-4">
         <div>
           <span className="mb-1.5 block text-[0.65rem] font-bold uppercase tracking-wider text-slate-500 sm:mb-2">Repre</span>
-          <div className="-mx-0.5 flex max-w-full gap-1.5 overflow-x-auto px-0.5 pb-1 pt-0.5 [scrollbar-width:thin]">
+          <div className="-mx-0.5 flex max-w-full flex-wrap gap-1.5 px-0.5 pb-1 pt-0.5">
             <button
               type="button"
               onClick={() => setTeamFilter("")}
@@ -290,11 +287,16 @@ function MsFantasyRosterPanel({
         autoCorrect="off"
         enterKeyHint="search"
       />
+    </>
+  );
 
+  const playerList = (
       <div
         className={[
-          "mt-3 space-y-2 rounded-2xl border border-cyan-500/15 bg-slate-950/40 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_12px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl",
-          listScrollClass,
+          "space-y-2 rounded-2xl border border-cyan-500/15 bg-slate-950/40 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_12px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl",
+          layout === "sheet"
+            ? "ms-fantasy-roster-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain"
+            : "mt-3",
         ].join(" ")}
       >
         {rosterLoading && roster.length === 0 ? (
@@ -370,6 +372,21 @@ function MsFantasyRosterPanel({
           </>
         )}
       </div>
+  );
+
+  if (layout === "sheet") {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="shrink-0">{filters}</div>
+        {playerList}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {filters}
+      {playerList}
     </>
   );
 }
@@ -520,10 +537,15 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
   useEffect(() => {
     if (!mobileRosterOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtml = html.style.overflow;
+    const prevBody = body.style.overflow;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = prev;
+      html.style.overflow = prevHtml;
+      body.style.overflow = prevBody;
     };
   }, [mobileRosterOpen]);
 
@@ -866,9 +888,9 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
       <aside
         ref={rosterPanelRef}
-        className="hidden w-full shrink-0 lg:block lg:max-w-[22.5rem] lg:border-l lg:border-cyan-500/15 lg:pl-6"
+        className="hidden w-full shrink-0 lg:flex lg:max-w-[22.5rem] lg:flex-col lg:self-start lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6rem)] lg:border-l lg:border-cyan-500/15 lg:pl-6"
       >
-        <div className="lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto lg:pb-4 lg:pr-1">
+        <div className="ms-fantasy-roster-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain lg:pb-4 lg:pr-1">
           <MsFantasyGlassPanel glow="cyan" className="p-4 shadow-[0_0_48px_rgba(0,180,255,0.1)] sm:p-5">
             <MsFantasyRosterPanel
               day={day}
@@ -934,7 +956,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               Hotovo
             </button>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-4 sm:px-4">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-3 pt-2 pb-2 sm:px-4">
             <MsFantasyRosterPanel
               day={day}
               layout="sheet"

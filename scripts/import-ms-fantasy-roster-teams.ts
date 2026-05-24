@@ -14,6 +14,7 @@ import { importMsFantasyRosterJson } from "../src/lib/msFantasyRosterImport";
 config({ path: join(process.cwd(), ".env.local"), override: true });
 
 const TEAM_FILES: Record<string, string> = {
+  AUT: "austria-ms2026-fantasy-roster.json",
   FIN: "finland-ms2026-fantasy-roster.json",
   GER: "germany-ms2026-fantasy-roster.json",
   SWE: "sweden-ms2026-fantasy-roster.json",

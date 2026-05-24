@@ -121,3 +121,29 @@ export async function patchMsFantasyRosterPlayerTier(
   });
   return { code, tier: normalized, name: row.name };
 }
+
+/**
+ * Skryje hráče z výběru pro nové sestavy (`active: false`), ale řádek v DB zůstane —
+ * `pickIds` v uzamčených lineupech a snímky tier/platu zůstanou platné.
+ */
+export async function deactivateMsFantasyRosterPlayerByCode(
+  prisma: PrismaClient,
+  code: string
+): Promise<{ id: string; name: string; lineupCount: number } | null> {
+  const row = await prisma.msFantasyRosterPlayer.findUnique({
+    where: { code },
+    select: { id: true, name: true },
+  });
+  if (!row) return null;
+
+  await prisma.msFantasyRosterPlayer.update({
+    where: { code },
+    data: { active: false },
+  });
+
+  const lineupCount = await prisma.msFantasyLineup.count({
+    where: { pickIds: { has: row.id } },
+  });
+
+  return { id: row.id, name: row.name, lineupCount };
+}

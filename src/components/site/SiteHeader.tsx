@@ -14,8 +14,10 @@ type NavItem = { href: string; label: string; shortLabel?: string };
 /** shortLabel = kratší text na úzkém desktopu (pod xl), aby se vešly všechny položky bez skrytého scrollu */
 const LINEUP_EDITOR_HREF = "/zapasy/sestava";
 
+const NAV_HOME: NavItem = { href: "/", label: "Úvod" };
+
 const NAV: NavItem[] = [
-  { href: "/", label: "Úvod" },
+  NAV_HOME,
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
   { href: LINEUP_EDITOR_HREF, label: "Editor sestavy", shortLabel: "Sestavy" },
   { href: "/bracket", label: "Pick’em", shortLabel: "Pick’em" },
@@ -36,6 +38,43 @@ function DesktopNavLabel({ item }: { item: NavItem }) {
       <span className="hidden 2xl:inline">{item.label}</span>
       <span className="2xl:hidden">{item.shortLabel}</span>
     </>
+  );
+}
+
+function desktopNavLinkClass(active: boolean) {
+  return `
+    group/nav relative shrink-0 whitespace-nowrap rounded-lg px-1 py-1.5 text-[0.75rem] font-semibold leading-tight tracking-wide lg:px-1.5 lg:text-[0.8125rem] xl:px-2 xl:text-[0.875rem] 2xl:text-[0.9375rem]
+    transition-colors duration-200 ease-out
+    hover:text-white
+    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
+    ${active ? "text-white" : "text-slate-300"}
+  `;
+}
+
+function DesktopNavLink({ item, active }: { item: NavItem; active: boolean }) {
+  return (
+    <Link href={item.href} className={desktopNavLinkClass(active)}>
+      <span className="relative z-10 inline-flex items-center">
+        <DesktopNavLabel item={item} />
+      </span>
+      {active ? (
+        <span
+          className="absolute inset-x-2 bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-[#00B4FF] via-cyan-300 to-[#00B4FF] shadow-[0_0_12px_rgba(0,180,255,0.65)]"
+          aria-hidden
+        />
+      ) : (
+        <span
+          className="absolute inset-x-2 bottom-0.5 h-0.5 scale-x-0 rounded-full bg-gradient-to-r from-[#00B4FF] to-cyan-200 opacity-0 transition-all duration-200 group-hover/nav:scale-x-100 group-hover/nav:opacity-100"
+          aria-hidden
+        />
+      )}
+      {!active ? (
+        <span
+          className="absolute inset-0 -z-0 rounded-xl bg-white/[0.04] opacity-0 transition-opacity duration-200 group-hover/nav:opacity-100"
+          aria-hidden
+        />
+      ) : null}
+    </Link>
   );
 }
 
@@ -169,7 +208,7 @@ export function SiteHeader() {
           <div className="hidden w-full min-w-0 items-center gap-3 md:flex lg:gap-4 xl:gap-6 2xl:gap-10">
             <Link
               href="/"
-              className="group/brand flex w-[5.5rem] shrink-0 items-center pr-0.5 sm:w-[6.5rem] lg:w-[7.5rem] xl:w-auto xl:pr-1"
+              className="group/brand flex w-[5.5rem] max-w-[5.5rem] shrink-0 items-center overflow-hidden pr-0.5 sm:w-[6.5rem] sm:max-w-[6.5rem] lg:w-[7rem] lg:max-w-[7rem] xl:w-[7.25rem] xl:max-w-[7.25rem] 2xl:w-[8rem] 2xl:max-w-[8rem]"
               aria-label={`${SITE_BRAND} — úvod`}
             >
               <div className="relative shrink-0">
@@ -190,52 +229,27 @@ export function SiteHeader() {
               </div>
             </Link>
 
-            <div className="flex min-w-0 flex-1 flex-row flex-nowrap items-center gap-x-2 md:justify-end xl:gap-x-3">
-            <nav
-              className="isolate min-w-0 flex-1 overflow-x-auto overflow-y-hidden md:min-w-0 lg:min-w-[8rem]"
-              aria-label="Hlavní navigace"
-            >
-              <div className="flex flex-nowrap items-center justify-end gap-x-0 lg:gap-x-0.5">
-                {NAV.map((item) => {
-                  const { href } = item;
-                  const active = href === activeHrefForPath(pathname);
-                  return (
-                    <Link
-                      key={href}
-                      href={href}
-                      className={`
-                    group/nav relative shrink-0 whitespace-nowrap rounded-lg px-1 py-1.5 text-[0.75rem] font-semibold leading-tight tracking-wide lg:px-1.5 lg:text-[0.8125rem] xl:px-2 xl:text-[0.875rem] 2xl:text-[0.9375rem]
-                    transition-colors duration-200 ease-out
-                    hover:text-white
-                    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
-                    ${active ? "text-white" : "text-slate-300"}
-                  `}
-                    >
-                      <span className="relative z-10 inline-flex items-center">
-                        <DesktopNavLabel item={item} />
-                      </span>
-                      {active ? (
-                        <span
-                          className="absolute inset-x-2 bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-[#00B4FF] via-cyan-300 to-[#00B4FF] shadow-[0_0_12px_rgba(0,180,255,0.65)]"
-                          aria-hidden
-                        />
-                      ) : (
-                        <span
-                          className="absolute inset-x-2 bottom-0.5 h-0.5 scale-x-0 rounded-full bg-gradient-to-r from-[#00B4FF] to-cyan-200 opacity-0 transition-all duration-200 group-hover/nav:scale-x-100 group-hover/nav:opacity-100"
-                          aria-hidden
-                        />
-                      )}
-                      {!active ? (
-                        <span
-                          className="absolute inset-0 -z-0 rounded-xl bg-white/[0.04] opacity-0 transition-opacity duration-200 group-hover/nav:opacity-100"
-                          aria-hidden
-                        />
-                      ) : null}
-                    </Link>
-                  );
-                })}
-              </div>
-            </nav>
+            <div className="flex min-w-0 flex-1 flex-row flex-nowrap items-center gap-x-1 md:gap-x-2 xl:gap-x-3">
+            <div className="flex min-w-0 flex-1 items-center gap-0.5 lg:gap-1">
+              <DesktopNavLink
+                item={NAV_HOME}
+                active={activeHrefForPath(pathname) === NAV_HOME.href}
+              />
+              <nav
+                className="isolate min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth [scrollbar-width:thin]"
+                aria-label="Hlavní navigace"
+              >
+                <div className="flex w-max flex-nowrap items-center justify-start gap-x-0 pr-1 lg:gap-x-0.5">
+                  {NAV.slice(1).map((item) => (
+                    <DesktopNavLink
+                      key={item.href}
+                      item={item}
+                      active={item.href === activeHrefForPath(pathname)}
+                    />
+                  ))}
+                </div>
+              </nav>
+            </div>
 
             <div className="flex w-full shrink-0 flex-none flex-wrap items-center justify-end gap-1.5 border-white/[0.08] md:w-auto md:border-l md:pl-2 lg:gap-2 lg:pl-3 xl:pl-4">
               {status === "authenticated" && user ? (
@@ -259,7 +273,7 @@ export function SiteHeader() {
                         {userInitials(user)}
                       </span>
                     )}
-                    <UserContestStandingLine compact className="hidden min-w-0 truncate lg:block 2xl:hidden" />
+                    <UserContestStandingLine compact className="hidden min-w-0 max-w-[9.5rem] truncate xl:block 2xl:hidden" />
                     <UserContestStandingLine className="hidden min-w-0 truncate 2xl:block" />
                   </Link>
                   {showLineupEditorCta ? (
