@@ -100,19 +100,7 @@ export function buildContestResultsThankYouHtml({
                           />
                         </div>
 
-                        <div style="margin:0 0 18px 0; padding:14px 16px; border-radius:14px; border:1px solid rgba(241,196,15,0.35); background:linear-gradient(90deg, rgba(241,196,15,0.12) 0%, rgba(200,16,46,0.10) 100%); text-align:center;">
-                          <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:11px; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:rgba(241,230,168,0.9);">
-                            Soutěž o hokejový dres
-                          </div>
-                          <div style="margin-top:8px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:26px; font-weight:900; color:#ffffff; line-height:1.2;">
-                            ${pointsStr} bodů
-                          </div>
-                          <div style="margin-top:4px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:15px; font-weight:700; color:rgba(255,255,255,0.88);">
-                            ${rankStr}
-                          </div>
-                        </div>
-
-                        <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.88); text-align:left;">
+                        <div style="margin-top:16px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.88); text-align:left;">
                           <p style="margin:0 0 14px 0;">Vážený uživateli,</p>
                           <p style="margin:0 0 14px 0;">
                             v soutěži o hokejový dres na platformě <strong style="color:#ffffff;">Lineup</strong> jste získal
