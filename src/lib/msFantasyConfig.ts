@@ -70,14 +70,7 @@ export type MsFantasyNotice = {
   body: string;
 };
 
-export const MS_FANTASY_ACTIVE_NOTICES: MsFantasyNotice[] = [
-  {
-    id: "fin-teravainen-granlund-2026",
-    title: "Změna soupisky Finska",
-    body:
-      "Z důvodu zranění nahradil Michael Granlund (útočník, tier A) Teuvo Teräväinen v poolu MS Fantasy.",
-  },
-];
+export const MS_FANTASY_ACTIVE_NOTICES: MsFantasyNotice[] = [];
 
 /** Dny kalendáře MS bez zápasů — v přehledu nezobrazujeme řádek „uzávěrka = první zápas dne“ (u těchto dnů se nehraje). */
 export function isMsFantasySchedulePauseDaySlug(slug: string): boolean {

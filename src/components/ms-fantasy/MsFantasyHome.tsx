@@ -239,7 +239,7 @@ export function MsFantasyHome() {
                         <MsFantasyMatchSchedule
                           matchesRaw={d.matches}
                           omitEmptyDayDeadlineHint={pauseDay}
-                          className="mt-1.5 max-h-40 overflow-y-auto overscroll-contain pr-0.5 sm:max-h-48"
+                          className="ms-fantasy-scroll mt-1.5 max-h-40 overflow-y-auto overscroll-contain pr-0.5 sm:max-h-48"
                         />
                       </div>
                       <p className="mt-1.5">

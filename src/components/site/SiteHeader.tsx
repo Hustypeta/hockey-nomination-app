@@ -35,8 +35,8 @@ function DesktopNavLabel({ item }: { item: NavItem }) {
   if (!item.shortLabel || item.shortLabel === item.label) return <>{item.label}</>;
   return (
     <>
-      <span className="hidden 2xl:inline">{item.label}</span>
-      <span className="2xl:hidden">{item.shortLabel}</span>
+      <span className="hidden xl:inline">{item.label}</span>
+      <span className="xl:hidden">{item.shortLabel}</span>
     </>
   );
 }
@@ -229,27 +229,18 @@ export function SiteHeader() {
               </div>
             </Link>
 
-            <div className="flex min-w-0 flex-1 flex-row flex-nowrap items-center gap-x-1 md:gap-x-2 xl:gap-x-3">
-            <div className="flex min-w-0 flex-1 items-center gap-0.5 lg:gap-1">
-              <DesktopNavLink
-                item={NAV_HOME}
-                active={activeHrefForPath(pathname) === NAV_HOME.href}
-              />
-              <nav
-                className="isolate min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth [scrollbar-width:thin]"
-                aria-label="Hlavní navigace"
-              >
-                <div className="flex w-max flex-nowrap items-center justify-start gap-x-0 pr-1 lg:gap-x-0.5">
-                  {NAV.slice(1).map((item) => (
-                    <DesktopNavLink
-                      key={item.href}
-                      item={item}
-                      active={item.href === activeHrefForPath(pathname)}
-                    />
-                  ))}
-                </div>
-              </nav>
-            </div>
+            <nav
+              className="site-header-desktop-nav isolate flex min-w-0 flex-1 flex-nowrap items-center gap-x-0 overflow-hidden lg:gap-x-0.5"
+              aria-label="Hlavní navigace"
+            >
+              {NAV.filter((item) => item.href !== "/ucet" || status !== "authenticated").map((item) => (
+                <DesktopNavLink
+                  key={item.href}
+                  item={item}
+                  active={item.href === activeHrefForPath(pathname)}
+                />
+              ))}
+            </nav>
 
             <div className="flex w-full shrink-0 flex-none flex-wrap items-center justify-end gap-1.5 border-white/[0.08] md:w-auto md:border-l md:pl-2 lg:gap-2 lg:pl-3 xl:pl-4">
               {status === "authenticated" && user ? (
