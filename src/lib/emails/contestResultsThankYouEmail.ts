@@ -1,4 +1,4 @@
-import { MERKURXTIP_PROMO_HREF_LANDING, MERKURXTIP_PROMO_IMAGE_SRC } from "@/lib/merkurXtipPromo";
+import { MERKURXTIP_PROMO_HREF_LANDING } from "@/lib/merkurXtipPromo";
 import { SITE_CANONICAL_HOST } from "@/lib/siteBranding";
 
 const SITE_URL = `https://${SITE_CANONICAL_HOST}`;
@@ -144,20 +144,6 @@ export function buildContestResultsThankYouHtml({
                             </td>
                           </tr>
                         </table>
-
-                        <div style="margin-top:18px; text-align:center;">
-                          <a href="${MERKURXTIP_PROMO_HREF_LANDING}" style="text-decoration:none;">
-                            <img
-                              src="${MERKURXTIP_PROMO_IMAGE_SRC}"
-                              alt="MerkurXtip — partnerská nabídka"
-                              width="560"
-                              style="display:block; margin:0 auto; max-width:100%; width:100%; height:auto; border-radius:12px; border:1px solid rgba(255,255,255,0.12);"
-                            />
-                          </a>
-                          <p style="margin:10px 0 0 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:12px; color:rgba(255,255,255,0.55);">
-                            Klikněte na banner <a href="${MERKURXTIP_PROMO_HREF_LANDING}" style="color:#f1c40f; font-weight:700;">MerkurXtip</a> — registrace nebo sázka projekt podpoří.
-                          </p>
-                        </div>
 
                         <div style="margin-top:18px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.52); text-align:center;">
                           Pokud tento e‑mail nechcete dostávat, odpovězte „odhlásit“.
