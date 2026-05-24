@@ -30,3 +30,21 @@ export async function listDailyFantasyPromoRecipients(): Promise<DailyFantasyPro
 
   return out;
 }
+
+/** Pro `only=` test — najde uživatele i když je v nominační soutěži. */
+export async function findDailyFantasyPromoRecipientByEmail(
+  email: string
+): Promise<DailyFantasyPromoRecipient | null> {
+  const trimmed = email.trim();
+  if (!trimmed) return null;
+
+  const user = await prisma.user.findFirst({
+    where: { email: { equals: trimmed, mode: "insensitive" } },
+    select: { id: true, email: true },
+  });
+
+  const resolved = (user?.email ?? "").trim();
+  if (!user || !resolved) return null;
+
+  return { email: resolved, userId: user.id };
+}

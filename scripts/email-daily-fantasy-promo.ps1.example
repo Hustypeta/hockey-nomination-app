@@ -10,7 +10,7 @@ $Headers = @{
   "Content-Type"   = "application/json"
 }
 
-# 1) Test — jeden e-mail (musí být registrovaný, ale BEZ odevzdané nominace do soutěže)
+# 1) Test — jeden e-mail (funguje i u účtu v nominační soutěži, když je only=)
 Invoke-RestMethod -Uri "$Base/api/admin/email/daily-fantasy-promo?mode=send&only=petr.hustak263@gmail.com&campaignId=test-daily-fantasy-1" -Method Post -Headers $Headers -Body "{}"
 
 # 2) Dry-run — kolik příjemců + seznam

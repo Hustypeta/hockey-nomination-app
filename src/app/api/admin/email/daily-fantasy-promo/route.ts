@@ -3,7 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { parseAdminEmailSendParams, sliceRecipients } from "@/lib/adminEmailApiParams";
 import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
-import { listDailyFantasyPromoRecipients } from "@/lib/emails/dailyFantasyPromoRecipients";
+import {
+  findDailyFantasyPromoRecipientByEmail,
+  listDailyFantasyPromoRecipients,
+} from "@/lib/emails/dailyFantasyPromoRecipients";
 import {
   DAILY_FANTASY_PROMO_EMAIL_SUBJECT,
   buildDailyFantasyPromoHtml,
@@ -42,9 +45,17 @@ export async function POST(req: NextRequest) {
   });
 
   const all = await listDailyFantasyPromoRecipients();
-  const byOnly = params.only
+  let byOnly = params.only
     ? all.filter((r) => r.email.toLowerCase() === params.only)
     : all;
+  let testOverride = false;
+  if (params.only && !byOnly.length) {
+    const forced = await findDailyFantasyPromoRecipientByEmail(params.only);
+    if (forced) {
+      byOnly = [forced];
+      testOverride = true;
+    }
+  }
   const filtered = sliceRecipients(byOnly, params.offset, params.limit);
 
   if (params.mode === "dry-run") {
@@ -58,6 +69,7 @@ export async function POST(req: NextRequest) {
       offset: params.offset,
       limit: params.limit,
       recipients: filtered.map((r) => ({ email: r.email, userId: r.userId })),
+      testOverride,
     });
   }
 
@@ -134,5 +146,6 @@ export async function POST(req: NextRequest) {
     skipped,
     failed,
     errors: errors.slice(0, 20),
+    testOverride,
   });
 }

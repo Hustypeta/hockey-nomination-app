@@ -14,7 +14,10 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env.local"), override: false
 dotenv.config({ path: path.resolve(process.cwd(), ".env"), override: false });
 
 import { prisma } from "@/lib/prisma";
-import { listDailyFantasyPromoRecipients } from "@/lib/emails/dailyFantasyPromoRecipients";
+import {
+  findDailyFantasyPromoRecipientByEmail,
+  listDailyFantasyPromoRecipients,
+} from "@/lib/emails/dailyFantasyPromoRecipients";
 import {
   DAILY_FANTASY_PROMO_EMAIL_SUBJECT,
   buildDailyFantasyPromoHtml,
@@ -47,9 +50,16 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
 
   const recipients = await listDailyFantasyPromoRecipients();
-  const filtered = args.only
+  let filtered = args.only
     ? recipients.filter((r) => r.email.toLowerCase() === args.only!.toLowerCase())
     : recipients;
+  if (args.only && !filtered.length) {
+    const forced = await findDailyFantasyPromoRecipientByEmail(args.only);
+    if (forced) {
+      console.log("[daily-fantasy-promo] test override — účet je v nominační soutěži, posílám jen na --only");
+      filtered = [forced];
+    }
+  }
 
   console.log(`[daily-fantasy-promo] recipients=${filtered.length} mode=${args.send ? "SEND" : "DRY-RUN"}`);
 
