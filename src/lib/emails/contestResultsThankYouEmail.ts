@@ -5,7 +5,7 @@ const SITE_URL = `https://${SITE_CANONICAL_HOST}`;
 const FANTASY_URL = `${SITE_URL}/fantasy`;
 const LOGO_URL = `${SITE_URL}/images/logo.png`;
 
-export const CONTEST_RESULTS_EMAIL_SUBJECT = "Výsledek nominační soutěže Lineup";
+export const CONTEST_RESULTS_EMAIL_SUBJECT = "Výsledek soutěže o dres — Lineup";
 
 export type ContestResultsEmailPersonalization = {
   points: number;
@@ -28,16 +28,15 @@ export function buildContestResultsThankYouText({ points, rank }: ContestResults
   return [
     "Vážený uživateli,",
     "",
-    `v nominační soutěži od Lineupu jste získal ${points} bodů a umístil jste se na ${rankPhrase(rank)}.`,
+    `v soutěži o hokejový dres na platformě Lineup jste získal ${points} bodů a umístil jste se na ${rankPhrase(rank)}. Velmi si vážíme, že využíváte naši platformu a děkujeme za Vaši účast v soutěži.`,
     "",
-    "Rád bych Vás také informoval, že stále běží Daily Fantasy, ve které hrajeme o finanční odměny. Celkový vítěz získá 500 Kč a navíc na konci náhodně vylosujeme 5 dalších soutěžících, z nichž každý obdrží 200 Kč.",
+    "Rádi bychom Vás informovali, že stále probíhá soutěž Daily Fantasy, ve které celkový vítěz obdrží 500 Kč. Po skončení bude navíc náhodně vylosováno dalších 5 soutěžících, z nichž každý obdrží 200 Kč. Stále je o co hrát!",
     "",
-    `Jelikož na celém tomto projektu pracuji sám, chtěl bych Vás poprosit, zda byste si nenašel čas navštívit náš web (${SITE_URL}), kliknout na banner MerkurXtip a zaregistrovat se (případně si i vsadit). Každá taková aktivita mi pomůže projekt dále rozvíjet. Budu také velmi vděčný, pokud tuto platformu doporučíte svým známým a přátelům.`,
+    `Jelikož je náš tým zatím malý a teprve s projektem začínáme, chtěli bychom Vás požádat, zda byste si nenašel čas navštívit náš web (${SITE_URL}), kliknout na banner MerkurXtip a zaregistrovat se (případně si i vsadit). Každá taková aktivita nám pomůže projekt dále rozvíjet. Budeme také velmi vděční, pokud tuto platformu doporučíte svým známým a přátelům.`,
     "",
-    "Moc Vám děkuji za podporu.",
+    "Moc Vám děkujeme za veškerou podporu a přejeme hodně štěstí v Daily Fantasy.",
     "",
-    "S pozdravem",
-    "Lineup",
+    "Tým Lineup",
     "",
     `Fantasy: ${FANTASY_URL}`,
     `Web: ${SITE_URL}`,
@@ -49,7 +48,7 @@ export function buildContestResultsThankYouHtml({
   points,
   rank,
 }: ContestResultsEmailPersonalization): string {
-  const preheader = `Nominační soutěž: ${points} bodů, ${rank}. místo — Daily Fantasy a podpora projektu.`;
+  const preheader = `Soutěž o dres: ${points} bodů, ${rank}. místo — Daily Fantasy a podpora projektu.`;
   const pointsStr = escapeHtml(String(points));
   const rankStr = escapeHtml(rankPhrase(rank));
 
@@ -103,7 +102,7 @@ export function buildContestResultsThankYouHtml({
 
                         <div style="margin:0 0 18px 0; padding:14px 16px; border-radius:14px; border:1px solid rgba(241,196,15,0.35); background:linear-gradient(90deg, rgba(241,196,15,0.12) 0%, rgba(200,16,46,0.10) 100%); text-align:center;">
                           <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:11px; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:rgba(241,230,168,0.9);">
-                            Nominační soutěž MS 2026
+                            Soutěž o hokejový dres
                           </div>
                           <div style="margin-top:8px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:26px; font-weight:900; color:#ffffff; line-height:1.2;">
                             ${pointsStr} bodů
@@ -116,25 +115,29 @@ export function buildContestResultsThankYouHtml({
                         <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.88); text-align:left;">
                           <p style="margin:0 0 14px 0;">Vážený uživateli,</p>
                           <p style="margin:0 0 14px 0;">
-                            v nominační soutěži od <strong style="color:#ffffff;">Lineupu</strong> jste získal
-                            <strong style="color:#f1e6a8;"> ${pointsStr} bodů</strong> a umístil jste se na
-                            <strong style="color:#f1e6a8;"> ${rankStr}</strong>.
+                            v soutěži o hokejový dres na platformě <strong style="color:#ffffff;">Lineup</strong> jste získal
+                            <strong style="color:#f1e6a8;">${pointsStr} bodů</strong> a umístil jste se na
+                            <strong style="color:#f1e6a8;">${rankStr}</strong>.
+                            Velmi si vážíme, že využíváte naši platformu a děkujeme za Vaši účast v soutěži.
                           </p>
                           <p style="margin:0 0 14px 0;">
-                            Rád bych Vás také informoval, že stále běží <strong style="color:#ffffff;">Daily Fantasy</strong>,
-                            ve které hrajeme o finanční odměny. Celkový vítěz získá <strong style="color:#ffffff;">500&nbsp;Kč</strong>
-                            a navíc na konci náhodně vylosujeme <strong style="color:#ffffff;">5</strong> dalších soutěžících,
+                            Rádi bychom Vás informovali, že stále probíhá soutěž <strong style="color:#ffffff;">Daily Fantasy</strong>,
+                            ve které celkový vítěz obdrží <strong style="color:#ffffff;">500&nbsp;Kč</strong>.
+                            Po skončení bude navíc náhodně vylosováno dalších <strong style="color:#ffffff;">5</strong> soutěžících,
                             z nichž každý obdrží <strong style="color:#ffffff;">200&nbsp;Kč</strong>.
+                            <strong style="color:#ffffff;"> Stále je o co hrát!</strong>
                           </p>
                           <p style="margin:0 0 14px 0;">
-                            Jelikož na celém tomto projektu pracuji sám, chtěl bych Vás poprosit, zda byste si nenašel čas
+                            Jelikož je náš tým zatím malý a teprve s projektem začínáme, chtěli bychom Vás požádat, zda byste si nenašel čas
                             <a href="${SITE_URL}" style="color:#7dd3fc; font-weight:700; text-decoration:underline;">navštívit náš web</a>,
                             kliknout na banner <strong style="color:#f1c40f;">MerkurXtip</strong> a zaregistrovat se (případně si i vsadit).
-                            Každá taková aktivita mi pomůže projekt dále rozvíjet. Budu také velmi vděčný, pokud tuto platformu
+                            Každá taková aktivita nám pomůže projekt dále rozvíjet. Budeme také velmi vděční, pokud tuto platformu
                             doporučíte svým známým a přátelům.
                           </p>
-                          <p style="margin:0 0 6px 0;">Moc Vám děkuji za podporu.</p>
-                          <p style="margin:0;">S pozdravem<br /><strong style="color:#ffffff;">Lineup</strong></p>
+                          <p style="margin:0 0 6px 0;">
+                            Moc Vám děkujeme za veškerou podporu a přejeme hodně štěstí v Daily Fantasy.
+                          </p>
+                          <p style="margin:0;"><strong style="color:#ffffff;">Tým Lineup</strong></p>
                         </div>
 
                         <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:22px 0 0 0;">
