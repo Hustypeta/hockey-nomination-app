@@ -25,6 +25,8 @@ import { assignPlayerToTarget, tryAutoAssignPlayer } from "@/lib/lineupAssign";
 import { parseDroppableId } from "@/lib/dndSlotIds";
 import { findPreviousMatchForLineupCopy } from "@/lib/matchAdminLineupCopy";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
+import { AdminPasswordLoginForm } from "@/components/admin/AdminPasswordLoginForm";
+import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 
 type MatchRow = {
   id: string;
@@ -107,6 +109,9 @@ function parseMatchRowsFromPayload(data: unknown): MatchRow[] {
 }
 
 export function MatchesAdminPage() {
+  const [authChecked, setAuthChecked] = useState(false);
+  const [authorized, setAuthorized] = useState(false);
+
   const [players, setPlayers] = useState<Player[]>([]);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
 
@@ -215,16 +220,42 @@ export function MatchesAdminPage() {
     return { G: g, D: d, F: f };
   }, [lineup, allowExtraForward]);
 
-  async function reloadMatches() {
+  async function reloadMatches(): Promise<boolean> {
     const r = await fetch("/api/admin/matches", { credentials: "include", cache: "no-store" });
     const data: unknown = await r.json().catch(() => ({}));
+    if (r.status === 401) {
+      setAuthorized(false);
+      return false;
+    }
     if (!r.ok) {
       toast.error(readAdminJsonError(data) ?? "Nelze načíst zápasy.");
-      return;
+      setAuthorized(true);
+      return false;
     }
+    setAuthorized(true);
     const list = parseMatchRowsFromPayload(data);
     setMatches(list);
+    return true;
   }
+
+  async function probeAdminSession(): Promise<boolean> {
+    const r = await fetch("/api/admin/session", { credentials: "include", cache: "no-store" });
+    if (r.status === 401) {
+      setAuthorized(false);
+      return false;
+    }
+    if (!r.ok) return false;
+    setAuthorized(true);
+    return true;
+  }
+
+  const handleLogout = async () => {
+    await fetch("/api/admin/logout", { method: "POST", credentials: "include" });
+    setAuthorized(false);
+    setMatches([]);
+    setActiveId("");
+    toast.message("Odhlášeno.");
+  };
 
   /** Drží `activeId` v souladu s načteným seznamem — jinak je řízený <select> „prázdný“ a nedá se přepínat. */
   useEffect(() => {
@@ -262,6 +293,10 @@ export function MatchesAdminPage() {
       cache: "no-store",
     });
     const data: unknown = await r.json().catch(() => ({}));
+    if (r.status === 401) {
+      setAuthorized(false);
+      return;
+    }
     if (!r.ok) {
       toast.error(readAdminJsonError(data) ?? "Nelze načíst zápas.");
       return;
@@ -323,10 +358,15 @@ export function MatchesAdminPage() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const r = await fetch("/api/players");
-      const data: unknown = await r.json().catch(() => []);
-      if (!cancelled) setPlayers(Array.isArray(data) ? (data as Player[]) : []);
-      await reloadMatches();
+      const authed = await probeAdminSession();
+      if (cancelled) return;
+      if (authed) {
+        const r = await fetch("/api/players");
+        const data: unknown = await r.json().catch(() => []);
+        if (!cancelled) setPlayers(Array.isArray(data) ? (data as Player[]) : []);
+        await reloadMatches();
+      }
+      if (!cancelled) setAuthChecked(true);
     })();
     return () => {
       cancelled = true;
@@ -526,6 +566,25 @@ export function MatchesAdminPage() {
     }
   };
 
+  if (!authChecked) {
+    return <AppLoadingScreen message="Kontroluji přístup…" />;
+  }
+
+  if (!authorized) {
+    return (
+      <AdminPasswordLoginForm
+        title="Admin — zápasy"
+        description="Tajná URL stránky nestačí — API vyžaduje přihlášení admin heslem (stejné jako u oficiální soupisky)."
+        onLoggedIn={async () => {
+          const r = await fetch("/api/players");
+          const data: unknown = await r.json().catch(() => []);
+          setPlayers(Array.isArray(data) ? (data as Player[]) : []);
+          await reloadMatches();
+        }}
+      />
+    );
+  }
+
   return (
     <DndContext
       sensors={sensors}
@@ -540,9 +599,18 @@ export function MatchesAdminPage() {
         </div>
 
         <main className="relative z-10 mx-auto max-w-[90rem] px-4 py-6">
-        <div className="mb-5 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <h1 className="font-display text-2xl font-black">Admin — zápasy</h1>
-          <p className="mt-1 text-sm text-white/60">Vytvoř zápas, naklikej oficiální sestavu a publikuj.</p>
+        <div className="mb-5 flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="font-display text-2xl font-black">Admin — zápasy</h1>
+            <p className="mt-1 text-sm text-white/60">Vytvoř zápas, naklikej oficiální sestavu a publikuj.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void handleLogout()}
+            className="shrink-0 self-start rounded-xl border border-white/15 bg-white/[0.04] px-3 py-2 text-xs font-bold text-white/80 hover:bg-white/[0.08]"
+          >
+            Odhlásit
+          </button>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,8fr)_minmax(0,12fr)] lg:items-start">
