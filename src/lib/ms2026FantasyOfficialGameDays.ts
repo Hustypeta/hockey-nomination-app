@@ -196,7 +196,8 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     title: "MS 2026 — středa 27. 5. (pauza)",
     sortOrder: 13,
     matches: [],
-    lockAt: "2026-05-28T14:20:00.000Z",
+    /** Pauza — bez zápasů; uzávěrka na začátku dne (žádné odevzdání sestavy v tento kalendářní slot). */
+    lockAt: "2026-05-26T22:00:00.000Z",
   },
   {
     slug: "2026-05-28",
