@@ -23,6 +23,5 @@
   { "code": "USA26-F27-CORONAT", "name": "Matt Coronato", "team": "USA", "jerseyNumber": 27, "position": "F", "tier": "C" },
   { "code": "USA26-F47-COTTER", "name": "Paul Cotter", "team": "USA", "jerseyNumber": 47, "position": "F", "tier": "D" },
   { "code": "USA26-F63-SASSON", "name": "Max Sasson", "team": "USA", "jerseyNumber": 63, "position": "F", "tier": "E" },
-  { "code": "USA26-F82-NELSON", "name": "Danny Nelson", "team": "USA", "jerseyNumber": 82, "position": "F", "tier": "E" },
-  { "code": "USA26-F86-LEE", "name": "Ryker Lee", "team": "USA", "jerseyNumber": 86, "position": "F", "tier": "E" }
+  { "code": "USA26-F82-NELSON", "name": "Danny Nelson", "team": "USA", "jerseyNumber": 82, "position": "F", "tier": "E" }
 ]
