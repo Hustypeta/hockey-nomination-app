@@ -30,6 +30,7 @@ const LEGACY_DEACTIVATE = [
   "DEN26-F05-KJAER",
   "DEN26-F00-SSVEJSTR",
   "DEN26-F00-DMADSEN",
+  "DEN26-F42-BRUGGIS",
 ];
 
 async function main() {
