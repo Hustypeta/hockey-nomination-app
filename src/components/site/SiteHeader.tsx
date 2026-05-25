@@ -11,7 +11,7 @@ import { UserContestStandingLine } from "@/components/contest/UserContestStandin
 
 type NavItem = { href: string; label: string; shortLabel?: string };
 
-/** shortLabel = kratší text na úzkém desktopu (pod xl), aby se vešly všechny položky bez skrytého scrollu */
+/** shortLabel = kratší text na desktopu pod 2xl, aby se vešly všechny položky včetně „Žebříček“ */
 const LINEUP_EDITOR_HREF = "/zapasy/sestava";
 
 const NAV_HOME: NavItem = { href: "/", label: "Úvod" };
@@ -35,15 +35,15 @@ function DesktopNavLabel({ item }: { item: NavItem }) {
   if (!item.shortLabel || item.shortLabel === item.label) return <>{item.label}</>;
   return (
     <>
-      <span className="hidden xl:inline">{item.label}</span>
-      <span className="xl:hidden">{item.shortLabel}</span>
+      <span className="hidden 2xl:inline">{item.label}</span>
+      <span className="2xl:hidden">{item.shortLabel}</span>
     </>
   );
 }
 
 function desktopNavLinkClass(active: boolean) {
   return `
-    group/nav relative shrink-0 whitespace-nowrap rounded-lg px-1 py-1.5 text-[0.75rem] font-semibold leading-tight tracking-wide lg:px-1.5 lg:text-[0.8125rem] xl:px-2 xl:text-[0.875rem] 2xl:text-[0.9375rem]
+    group/nav relative shrink-0 whitespace-nowrap rounded-lg px-0.5 py-1.5 text-[0.75rem] font-semibold leading-tight tracking-normal lg:px-1 lg:text-[0.8125rem] xl:px-1.5 xl:text-[0.875rem] 2xl:px-2 2xl:tracking-wide 2xl:text-[0.9375rem]
     transition-colors duration-200 ease-out
     hover:text-white
     focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00B4FF]/70
@@ -205,7 +205,7 @@ export function SiteHeader() {
           </div>
 
           {/* Desktop / tablet: logo vlevo — odděleně od položky „Úvod“ v menu */}
-          <div className="hidden w-full min-w-0 items-center gap-3 md:flex lg:gap-4 xl:gap-6 2xl:gap-10">
+          <div className="hidden w-full min-w-0 items-center gap-2 md:flex lg:gap-3 xl:gap-4 2xl:gap-10">
             <Link
               href="/"
               className="group/brand flex w-[5.5rem] max-w-[5.5rem] shrink-0 items-center overflow-hidden pr-0.5 sm:w-[6.5rem] sm:max-w-[6.5rem] lg:w-[7rem] lg:max-w-[7rem] xl:w-[7.25rem] xl:max-w-[7.25rem] 2xl:w-[8rem] 2xl:max-w-[8rem]"
@@ -264,8 +264,7 @@ export function SiteHeader() {
                         {userInitials(user)}
                       </span>
                     )}
-                    <UserContestStandingLine compact className="hidden min-w-0 max-w-[9.5rem] truncate xl:block 2xl:hidden" />
-                    <UserContestStandingLine className="hidden min-w-0 truncate 2xl:block" />
+                    <UserContestStandingLine className="hidden min-w-0 max-w-[10rem] truncate 2xl:block" />
                   </Link>
                   {showLineupEditorCta ? (
                     <Link

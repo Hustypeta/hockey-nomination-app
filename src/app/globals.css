@@ -84,9 +84,9 @@ body {
   animation: site-header-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Desktop menu — žádný horizontální scroll / posuvník */
+/* Desktop menu — bez viditelného posuvníku; při přetečení lze posunout (např. touchpad) */
 .site-header-desktop-nav {
-  overflow-x: hidden;
+  overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
