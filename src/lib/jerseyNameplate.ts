@@ -19,6 +19,11 @@ function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n));
 }
 
+/** „M. Kovařčík“ — iniciála + příjmení, vždy jedna řádka (ne dělit po mezeře). */
+function isInitialPlusSurname(raw: string): boolean {
+  return /^[\p{L}]\.\s+\S+/u.test(raw.trim());
+}
+
 /**
  * Dvouřádkový potisk jen tam, kde je to v příjmeních běžné (pomlčka, mezera).
  * Bez „useknutí“ uprostřed jednoho slova — tam řeší šířku jen zmenšení písma.
@@ -26,6 +31,7 @@ function clamp(n: number, min: number, max: number) {
 export function splitNameplateLines(lastName: string): string[] {
   const raw = lastName.trim();
   if (!raw) return [];
+  if (isInitialPlusSurname(raw)) return [raw];
   const hyphen = raw.indexOf("-");
   if (hyphen > 0 && hyphen < raw.length - 1) {
     return [raw.slice(0, hyphen), raw.slice(hyphen + 1)]
@@ -56,6 +62,7 @@ function splitNameplateLinesForPoster(lastName: string): string[] {
   const base = splitNameplateLines(lastName);
   if (base.length !== 1) return base;
   const line = base[0]!;
+  if (isInitialPlusSurname(line)) return base;
   const score = nameplateWidthScore(line);
   /** Časněji než na kartě — na úzkém yoku PNG udržet dvě kratší řádky místo jedné ultra dlouhé. */
   if (score <= 11.8 || line.length < 8) return base;

@@ -198,7 +198,7 @@ export function PremiumJerseySlotCard({
         <div
           className={`
             pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1
-            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start px-1 pb-[18%] pt-[31%] sm:pb-[16%] sm:pt-[32%]"}
+            ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start gap-1.5 px-1 pb-[18%] pt-[28%] sm:pb-[16%] sm:pt-[29%]"}
           `}
         >
           {!empty ? (
@@ -218,7 +218,7 @@ export function PremiumJerseySlotCard({
               ) : null}
               {numStr ? (
                 <span
-                  className={`mt-1.5 max-w-[92%] text-center text-[18px] min-[380px]:text-[20px] sm:text-[23px] lg:text-[26px] xl:text-[28px] jersey-back-number-text ${lightRinkSurface ? "jersey-back-number-text--on-light-ice" : "jersey-back-number-text--woven"}`}
+                  className={`max-w-[92%] text-center text-[18px] min-[380px]:text-[20px] sm:text-[22px] lg:text-[25px] xl:text-[27px] jersey-back-number-text ${lightRinkSurface ? "jersey-back-number-text--on-light-ice" : "jersey-back-number-text--woven"}`}
                   style={jerseyNumberStyle(ln, "premium")}
                 >
                   {numStr}

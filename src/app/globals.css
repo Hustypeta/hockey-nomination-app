@@ -182,7 +182,6 @@ body {
 .nhl25-share-poster-capture[data-poster-surface="dark"] .nhl25-poster-jersey-hem-name span {
   /* Světle modrá pro čitelnost na černém / tmavě modrém pozadí plakátu. */
   color: #7dd3fc;
-  font-size: clamp(16px, 2.15vw, 20px);
   letter-spacing: 0.024em;
   line-height: 1.18;
   text-shadow:
@@ -191,14 +190,22 @@ body {
     0 0 6px rgba(0, 0, 0, 0.45);
 }
 
+.nhl25-share-poster-capture[data-poster-surface="dark"] .nhl25-poster-jersey-hem-name span:not([style*="font-size"]) {
+  font-size: clamp(14px, 2vw, 18px);
+}
+
 .nhl25-share-poster-capture[data-poster-surface="light"] .nhl25-poster-jersey-hem-name span {
   color: #003087;
-  font-size: clamp(16px, 2.15vw, 20px);
   letter-spacing: 0.018em;
   line-height: 1.18;
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.65),
     0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+/* Velikost jména pod dresem řídí inline style z jerseyNameplateNameProps (poster). */
+.nhl25-share-poster-capture[data-poster-surface="light"] .nhl25-poster-jersey-hem-name span:not([style*="font-size"]) {
+  font-size: clamp(14px, 2vw, 18px);
 }
 
 /**

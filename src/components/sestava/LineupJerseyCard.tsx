@@ -30,9 +30,15 @@ const numberClass: Record<LineupJerseySize, string> = {
 
 /** Stejné vertikální zarovnání jako `PremiumJerseySlotCard` / exportní `Nhl25JerseyCard`. */
 const overlayTopClass: Record<LineupJerseySize, string> = {
-  compact: LINEUP_CARD_UNIFIED.overlayTop,
-  skater: LINEUP_CARD_UNIFIED.overlayTop,
-  goalie: LINEUP_CARD_UNIFIED.overlayTop,
+  compact: "justify-start px-1.5 pt-[24%] gap-1",
+  skater: "justify-start px-1.5 pt-[24%] gap-1",
+  goalie: "justify-start px-1.5 pt-[24%] gap-1",
+};
+
+const overlayTopLowerClass: Record<LineupJerseySize, string> = {
+  compact: "justify-start px-1.5 pt-[28%] gap-1.5",
+  skater: "justify-start px-1.5 pt-[28%] gap-1.5",
+  goalie: "justify-start px-1.5 pt-[28%] gap-1.5",
 };
 
 export interface LineupJerseyCardProps {
@@ -83,10 +89,7 @@ export function LineupJerseyCard({
   const w = widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = numberClass[size];
-  const topOverlay =
-    overlayVariant === "lower"
-      ? overlayTopClass[size].replace("pt-[25%]", "pt-[34%]")
-      : overlayTopClass[size];
+  const topOverlay = overlayVariant === "lower" ? overlayTopLowerClass[size] : overlayTopClass[size];
   const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
   const namePlate =
     !empty && nameOnJersey ? jerseyNameplateNameProps(ln) : { lines: [] as string[], className: "", style: {} };
@@ -201,10 +204,7 @@ export function LineupJerseyCard({
                   </span>
                 ) : null}
                 {numStr ? (
-                  <span
-                    className={`${nameOnJersey ? "mt-px" : "mt-[18%]"} ${numCls}`}
-                    style={jerseyNumberStyle(ln, "card")}
-                  >
+                  <span className={`${nameOnJersey ? "" : "mt-[18%]"} ${numCls}`} style={jerseyNumberStyle(ln, "card")}>
                     {numStr}
                   </span>
                 ) : null}

@@ -441,7 +441,7 @@ export function MatchLineupBuilderPage() {
           ) : null}
 
           <section className="min-w-0">
-            <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
+            <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:pt-1 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
               <div
                 className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
                   isNarrowLayout ? "" : "backdrop-blur-sm"

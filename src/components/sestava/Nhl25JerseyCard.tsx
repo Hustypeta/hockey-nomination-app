@@ -2,11 +2,7 @@
 
 import type { Player } from "@/types";
 import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
-import {
-  jerseyNameplateNameProps,
-  jerseyNumberStyle,
-  splitNameplateLines,
-} from "@/lib/jerseyNameplate";
+import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
 import { JerseyCornerFlagCz, JerseyFlagCzInline } from "@/components/sestava/JerseyCornerFlagCz";
@@ -89,8 +85,8 @@ export function Nhl25JerseyCard({
   const npVar = nameplateVariant === "poster" ? "poster" : "card";
   const namePlate =
     !empty && nameplateVariant !== "poster" ? jerseyNameplateNameProps(ln, npVar) : null;
-  const hemLines =
-    !empty && nameplateVariant === "poster" && ln ? splitNameplateLines(ln) : [];
+  const hemPlate =
+    !empty && nameplateVariant === "poster" && ln ? jerseyNameplateNameProps(ln, "poster") : null;
 
   const scaledNameplateStyle =
     namePlate && typographyScale !== 1
@@ -177,7 +173,7 @@ export function Nhl25JerseyCard({
         {nameplateVariant === "poster" ? (
           <div className="relative w-full bg-transparent">
             <div
-              className={`relative w-full overflow-hidden rounded-md bg-transparent ${hemLines.length > 0 ? "rounded-b-none" : ""}`}
+              className={`relative w-full overflow-visible rounded-md bg-transparent ${hemPlate && hemPlate.lines.length > 0 ? "rounded-b-none" : ""}`}
             >
               <div
                 className={`relative aspect-[100/120] w-full bg-transparent ${empty ? "ring-1 ring-inset ring-white/20" : ""}`}
@@ -206,14 +202,11 @@ export function Nhl25JerseyCard({
                 </div>
               </div>
             </div>
-            {hemLines.length > 0 ? (
-              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center gap-2.5 pt-2.5">
+            {hemPlate && hemPlate.lines.length > 0 ? (
+              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center gap-2.5 px-0.5 pb-1 pt-2.5">
                 <span className="nhl25-poster-jersey-hem-name flex min-w-0 max-w-full flex-col items-center justify-center gap-0.5 text-center leading-snug">
-                  {hemLines.map((line, idx) => (
-                    <span
-                      key={idx}
-                      className="block w-full whitespace-nowrap text-center font-display text-[16px] font-black uppercase leading-[1.15] sm:text-[19px]"
-                    >
+                  {hemPlate.lines.map((line, idx) => (
+                    <span key={idx} className={hemPlate.className} style={hemPlate.style}>
                       {line}
                     </span>
                   ))}

@@ -97,7 +97,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
     const sectionHeading = `mb-0.5 border-b pb-0.5 font-display text-[${compact ? "11px" : "13px"}] font-extrabold uppercase tracking-[0.12em] ${heading}`;
 
     const renderSlot = (pid: string | null, positionLabel: string, reactKey: string) => (
-      <div key={reactKey} className={`${JERSEY_SLOT_MAX_W} flex min-w-0 flex-col gap-0`}>
+      <div key={reactKey} className={`${JERSEY_SLOT_MAX_W} flex min-w-0 flex-col gap-0 pb-0.5`}>
         <PosterJerseyWrap>
           <Nhl25JerseyCard
             player={getPlayer(pid)}
@@ -137,7 +137,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           </div>
         </header>
 
-        <div className={`relative flex min-h-0 flex-1 flex-col px-2 pt-0 sm:px-2 ${compact ? "overflow-visible pb-2" : "overflow-hidden pb-1"}`}>
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-visible px-2 pb-2 pt-0 sm:px-2">
           <div className={`grid min-h-0 flex-1 grid-cols-2 ${compact ? "gap-x-2" : "gap-x-3"}`}>
             <div className={`flex min-h-0 flex-col justify-between ${compact ? "gap-0.5" : "gap-1"}`}>
               <section className="shrink-0">
@@ -233,9 +233,9 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           </div>
         </div>
 
-        <footer className="relative z-[2] mt-auto flex shrink-0 flex-col gap-0.5 border-t border-slate-200/90 bg-slate-100/95 px-2 py-1.5 sm:flex-row sm:items-end sm:justify-between sm:px-2">
+        <footer className="relative z-[2] mt-auto flex shrink-0 flex-col gap-1 border-t border-slate-200/90 bg-slate-100/95 px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5">
           <div className="max-w-[48%] text-left text-[12px] font-medium leading-snug text-slate-600">
-            <p className="font-display text-[13px] font-extrabold tracking-wide text-[#c8102e]">
+            <p className="font-display text-[13px] font-extrabold leading-normal tracking-wide text-[#c8102e] sm:text-[14px]">
               {jerseyRatingExport ? "Hodnocení zápasu" : "Sestava na zápas"}
             </p>
           </div>
