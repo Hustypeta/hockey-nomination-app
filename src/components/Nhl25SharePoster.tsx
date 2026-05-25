@@ -4,7 +4,7 @@ import { forwardRef, useMemo, useState, type ReactNode } from "react";
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
-import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_3X4_STYLE } from "@/lib/sharePosterLayout";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
 
@@ -93,14 +93,8 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
       <div
         ref={ref}
         data-poster-surface={dark ? "dark" : "light"}
-        className={`nhl25-share-poster-capture relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 antialiased subpixel-antialiased [text-rendering:optimizeLegibility] ${shell}`}
-        style={{
-          width: SHARE_POSTER_3X4_W,
-          height: SHARE_POSTER_3X4_H,
-          minHeight: SHARE_POSTER_3X4_H,
-          maxHeight: SHARE_POSTER_3X4_H,
-          maxWidth: SHARE_POSTER_3X4_W,
-        }}
+        className={`nhl25-share-poster-capture relative flex shrink-0 flex-col overflow-visible rounded-none border-0 antialiased subpixel-antialiased [text-rendering:optimizeLegibility] ${shell}`}
+        style={SHARE_POSTER_3X4_STYLE}
       >
         <div className="nhl25-moje-sestava-accent mx-2 mt-1.5 shrink-0 rounded-full sm:mx-2 sm:mt-2" aria-hidden />
 
@@ -122,8 +116,8 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
           </div>
         </header>
 
-        <div className={`relative mx-0 mb-1 mt-0.5 min-h-0 flex-1 px-2 py-0 sm:mb-1 sm:px-2 ${innerChrome}`}>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:gap-x-5 sm:gap-y-3">
+        <div className={`relative mx-0 mb-1 mt-0.5 shrink-0 flex-none px-2 py-0 sm:mb-1 sm:px-2 ${innerChrome}`}>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 sm:gap-x-4 sm:gap-y-2">
             <div className="min-w-0 space-y-2 sm:space-y-2.5">
               <section>
                 <h2 className={`mb-1 border-b pb-1 font-display text-[15px] font-extrabold uppercase tracking-[0.12em] sm:mb-1.5 sm:pb-1.5 sm:text-[17px] ${heading}`}>
@@ -160,7 +154,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                   {lineup.forwardLines.map((line, i) => (
                     <div
                       key={i}
-                      className={`flex min-w-0 flex-col gap-0 overflow-hidden rounded-lg border px-1 py-1 sm:gap-0.5 sm:px-1.5 sm:py-1.5 ${lineBox}`}
+                      className={`flex min-w-0 flex-col gap-0 overflow-visible rounded-lg border px-1 py-0.5 sm:gap-0.5 sm:px-1.5 sm:py-1 ${lineBox}`}
                     >
                       <span className={`shrink-0 font-display text-[14px] font-bold uppercase tracking-wide sm:text-[15px] ${subheading}`}>
                         {i + 1}. lajna
@@ -355,7 +349,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
         </div>
 
         <footer
-          className={`mt-auto flex shrink-0 flex-col gap-1 border-t px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5 ${
+          className={`mt-1 flex shrink-0 flex-col gap-1 border-t px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5 ${
             dark ? "border-white/10 bg-black/35" : "border-slate-200/90 bg-slate-100/80"
           }`}
         >

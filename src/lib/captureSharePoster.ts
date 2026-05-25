@@ -73,10 +73,13 @@ export async function captureElementToCanvas(
   element: HTMLElement,
   options?: { scale?: number; backgroundColor?: string | null }
 ): Promise<HTMLCanvasElement> {
+  await preparePosterCapture();
   const desired = options?.scale ?? SHARE_POSTER_CAPTURE_PIXEL_RATIO;
   const rawBg = options?.backgroundColor;
   const backgroundColor =
     rawBg === undefined ? "#e8ecf2" : rawBg === null ? "rgba(0,0,0,0)" : rawBg;
+  const captureW = Math.max(1, Math.ceil(element.scrollWidth || element.offsetWidth));
+  const captureH = Math.max(1, Math.ceil(element.scrollHeight || element.offsetHeight));
   const scales = [desired, 2, 1.25].filter((v, i, a) => a.indexOf(v) === i);
   let lastErr: unknown;
   for (const scale of scales) {
@@ -85,6 +88,10 @@ export async function captureElementToCanvas(
       const opts = await buildHtmlToImageOptions(element, {
         pixelRatio,
         backgroundColor,
+        width: captureW,
+        height: captureH,
+        canvasWidth: Math.ceil(captureW * pixelRatio),
+        canvasHeight: Math.ceil(captureH * pixelRatio),
       });
       return await toCanvas(element, opts);
     } catch (err) {

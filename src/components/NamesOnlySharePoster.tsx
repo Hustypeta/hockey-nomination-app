@@ -3,7 +3,7 @@
 import { forwardRef, useMemo, useState, type ReactNode } from "react";
 import type { Player, LineupStructure } from "@/types";
 import { buildNamesOnlyRoster } from "@/lib/namesOnlyRoster";
-import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_3X4_STYLE } from "@/lib/sharePosterLayout";
 
 export interface NamesOnlySharePosterProps {
   players: Player[];
@@ -55,14 +55,8 @@ export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePos
     return (
       <div
         ref={ref}
-        className="names-only-share-poster relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]"
-        style={{
-          width: SHARE_POSTER_3X4_W,
-          height: SHARE_POSTER_3X4_H,
-          minHeight: SHARE_POSTER_3X4_H,
-          maxHeight: SHARE_POSTER_3X4_H,
-          maxWidth: SHARE_POSTER_3X4_W,
-        }}
+        className="names-only-share-poster relative flex shrink-0 flex-col overflow-visible rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]"
+        style={SHARE_POSTER_3X4_STYLE}
       >
         <div
           className="pointer-events-none absolute inset-y-0 right-0 w-[42%] bg-gradient-to-br from-[#c8102e] via-[#8f0b22] to-[#003087]"

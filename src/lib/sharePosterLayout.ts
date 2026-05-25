@@ -15,13 +15,15 @@ export const NOMINATION_WEB_POSTER_H = 1440;
 export const SHARE_POSTER_3X4_W = NOMINATION_WEB_POSTER_W;
 export const SHARE_POSTER_3X4_H = NOMINATION_WEB_POSTER_H;
 
-/** Fixní rozměry plakátu 3 : 4 pro inline `style` u exportních DOM uzlů. */
+/**
+ * Rozměry plakátu 3 : 4 — šířka fixní, výška podle obsahu (capture nesmí ořezávat soupisku).
+ * Finální PNG 1080×1440 doplní {@link letterboxCanvas} při stažení.
+ */
 export const SHARE_POSTER_3X4_STYLE = {
   width: SHARE_POSTER_3X4_W,
-  height: SHARE_POSTER_3X4_H,
-  minHeight: SHARE_POSTER_3X4_H,
-  maxHeight: SHARE_POSTER_3X4_H,
+  minWidth: SHARE_POSTER_3X4_W,
   maxWidth: SHARE_POSTER_3X4_W,
+  minHeight: SHARE_POSTER_3X4_H,
 } as const;
 
 /**

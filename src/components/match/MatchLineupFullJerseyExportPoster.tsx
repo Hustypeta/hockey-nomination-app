@@ -122,7 +122,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
         ref={ref}
         data-export-slot="cele-dresy"
         data-poster-surface="light"
-        className="match-lineup-full-jersey-poster nhl25-share-poster-capture relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 bg-gradient-to-b from-white via-[#f4f6f9] to-[#e8ecf2] antialiased subpixel-antialiased shadow-[0_20px_50px_rgba(15,23,42,0.12)] [text-rendering:optimizeLegibility]"
+        className="match-lineup-full-jersey-poster nhl25-share-poster-capture relative flex shrink-0 flex-col overflow-visible rounded-none border-0 bg-gradient-to-b from-white via-[#f4f6f9] to-[#e8ecf2] antialiased subpixel-antialiased shadow-[0_20px_50px_rgba(15,23,42,0.12)] [text-rendering:optimizeLegibility]"
         style={SHARE_POSTER_3X4_STYLE}
       >
         <div className="nhl25-moje-sestava-accent mx-2 mt-1.5 shrink-0 rounded-full sm:mx-2 sm:mt-2" aria-hidden />
@@ -137,8 +137,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           </div>
         </header>
 
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-visible px-2 pb-2 pt-0 sm:px-2">
-          <div className={`grid min-h-0 flex-1 grid-cols-2 ${compact ? "gap-x-2" : "gap-x-3"}`}>
+        <div className="relative flex shrink-0 flex-none flex-col overflow-visible px-2 pb-2 pt-0 sm:px-2">
+          <div className={`grid shrink-0 grid-cols-2 ${compact ? "gap-x-2" : "gap-x-3"}`}>
             <div className={`flex min-h-0 flex-col justify-between ${compact ? "gap-0.5" : "gap-1"}`}>
               <section className="shrink-0">
                 <h2 className={sectionHeading}>Brankáři</h2>
@@ -233,7 +233,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           </div>
         </div>
 
-        <footer className="relative z-[2] mt-auto flex shrink-0 flex-col gap-1 border-t border-slate-200/90 bg-slate-100/95 px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5">
+        <footer className="relative z-[2] mt-1 flex shrink-0 flex-col gap-1 border-t border-slate-200/90 bg-slate-100/95 px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5">
           <div className="max-w-[48%] text-left text-[12px] font-medium leading-snug text-slate-600">
             <p className="font-display text-[13px] font-extrabold leading-normal tracking-wide text-[#c8102e] sm:text-[14px]">
               {jerseyRatingExport ? "Hodnocení zápasu" : "Sestava na zápas"}
