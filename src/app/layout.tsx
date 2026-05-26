@@ -4,6 +4,7 @@ import { FrozenArenaAmbientBackground } from "@/components/site/FrozenArenaAmbie
 import { AuthProvider } from "@/components/AuthProvider";
 import { CompleteRegistrationTracker } from "@/components/CompleteRegistrationTracker";
 import { MetaPixel } from "@/components/MetaPixel";
+import { UmamiAnalytics } from "@/components/UmamiAnalytics";
 import { Toaster } from "sonner";
 import {
   SITE_ICON_URL,
@@ -94,6 +95,9 @@ export default function RootLayout({
 
   return (
     <html lang="cs">
+      <head>
+        <UmamiAnalytics />
+      </head>
       <body className="relative antialiased min-h-screen bg-[#020408] font-sans text-white">
         <FrozenArenaAmbientBackground />
         <script
