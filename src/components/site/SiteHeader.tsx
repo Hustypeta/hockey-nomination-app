@@ -21,7 +21,6 @@ const NAV: NavItem[] = [
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
   { href: LINEUP_EDITOR_HREF, label: "Editor sestavy", shortLabel: "Sestavy" },
   { href: "/bracket", label: "Pick’em", shortLabel: "Pick’em" },
-  { href: "/zapasy", label: "Zápasy", shortLabel: "Zápasy" },
   { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
   { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },

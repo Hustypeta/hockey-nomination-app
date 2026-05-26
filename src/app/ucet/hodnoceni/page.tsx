@@ -136,10 +136,10 @@ export default async function MyMatchRatingsPage() {
           {grouped.length === 0 ? (
             <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center text-sm text-white/65">
               Zatím jsi neohodnotil žádný zápas. Otevři{" "}
-              <Link href="/zapasy" className="font-semibold text-sky-300 hover:underline">
-                přehled zápasů
+              <Link href="/fantasy" className="font-semibold text-sky-300 hover:underline">
+                fantasy program
               </Link>{" "}
-              a po zápase udělej hodnocení sestavy.
+              a po zápase otevři stránku zápasu pro hodnocení sestavy.
             </div>
           ) : (
             <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
