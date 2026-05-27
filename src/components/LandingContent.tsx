@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -91,21 +92,25 @@ export function LandingContent() {
     return () => io.disconnect();
   }, []);
   return (
-    <main>
-      {/* ——— Hero ——— */}
-      <section className="relative overflow-hidden border-b border-white/[0.08]">
+    <main className="bg-[#05060f]">
+      {/* ——— Hero (fotka jen nahoře ~70vh, zbytek stránky pevná barva) ——— */}
+      <section className="relative overflow-hidden border-b border-white/[0.08] bg-[#05060f]">
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#05070f]/25 via-[#05070f]/55 to-[#05070f]/88]"
+          className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[70vh] min-h-[28rem] max-h-[52rem] overflow-hidden relative"
           aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute -left-1/3 top-0 h-[min(90vw,600px)] w-[min(90vw,600px)] rounded-full bg-[#00e0ff]/12 blur-[120px]"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute -right-1/4 top-1/4 h-[min(80vw,520px)] w-[min(80vw,520px)] rounded-full bg-[#ff2d55]/10 blur-[100px]"
-          aria-hidden
-        />
+        >
+          <Image
+            src="/images/promo/pozadi.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            quality={80}
+            className="object-cover object-[center_58%]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#05060f]/55 via-[#05060f]/35 to-[#05060f]" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-transparent to-[#05060f]" />
+        </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
@@ -200,7 +205,7 @@ export function LandingContent() {
             <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-6 sm:mt-12 sm:gap-8">
               <div
                 data-reveal
-                className="reveal group relative flex min-h-0 min-w-0 w-full overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)]"
+                className="reveal group relative flex min-h-0 min-w-0 w-full overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e] via-[#080f1a] to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)]"
               >
                 <div
                   className="pointer-events-none absolute -left-1/4 top-0 h-[140%] w-[70%] bg-[radial-gradient(ellipse_at_30%_0%,rgba(56,189,248,0.22),transparent_58%)]"
