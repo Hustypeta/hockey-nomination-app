@@ -12,6 +12,7 @@
   { "code": "NOR26-F24-BERGLND", "name": "Jacob Berglund", "team": "NOR", "jerseyNumber": 24, "position": "F", "tier": "E" },
   { "code": "NOR26-F26-ELVSVEEN", "name": "Patrick Elvsveen", "team": "NOR", "jerseyNumber": 26, "position": "F", "tier": "E" },
   { "code": "NOR26-F27-MARTINS", "name": "Andreas Martinsen", "team": "NOR", "jerseyNumber": 27, "position": "F", "tier": "D" },
+  { "code": "NOR26-F28-BRANDNYG", "name": "Michael Brandsegg-Nygård", "team": "NOR", "jerseyNumber": 28, "position": "F", "tier": "B" },
   { "code": "NOR26-D00-OSTBY", "name": "Kristian Østby", "team": "NOR", "jerseyNumber": 29, "position": "D", "tier": "E" },
   { "code": "NOR26-G30-NORMANN", "name": "Tobias Normann", "team": "NOR", "jerseyNumber": 30, "position": "G", "tier": "D" },
   { "code": "NOR26-G32-ARNKVAR", "name": "Mathias Schjerpen Arnkværn", "team": "NOR", "jerseyNumber": 32, "position": "G", "tier": "E" },
