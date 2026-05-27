@@ -173,7 +173,7 @@ export function SiteHeader() {
                   height={168}
                   decoding="async"
                   fetchPriority="high"
-                  className="relative h-[5rem] w-auto max-h-[min(46vh,15rem)] max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[6.5rem]"
+                  className="relative h-[6.5rem] w-auto max-h-[min(46vh,18rem)] max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.04] sm:h-[8.25rem]"
                 />
               </div>
             </Link>
@@ -207,7 +207,7 @@ export function SiteHeader() {
           <div className="hidden w-full min-w-0 items-center gap-2 md:flex lg:gap-3 xl:gap-4 2xl:gap-10">
             <Link
               href="/"
-              className="group/brand flex w-[5.5rem] max-w-[5.5rem] shrink-0 items-center overflow-hidden pr-0.5 sm:w-[6.5rem] sm:max-w-[6.5rem] lg:w-[7rem] lg:max-w-[7rem] xl:w-[7.25rem] xl:max-w-[7.25rem] 2xl:w-[8rem] 2xl:max-w-[8rem]"
+              className="group/brand flex w-[7.25rem] max-w-[7.25rem] shrink-0 items-center overflow-hidden pr-0.5 sm:w-[8.5rem] sm:max-w-[8.5rem] lg:w-[9.25rem] lg:max-w-[9.25rem] xl:w-[10rem] xl:max-w-[10rem] 2xl:w-[11.5rem] 2xl:max-w-[11.5rem]"
               aria-label={`${SITE_BRAND} — úvod`}
             >
               <div className="relative shrink-0">
@@ -223,7 +223,7 @@ export function SiteHeader() {
                   height={168}
                   decoding="async"
                   fetchPriority="high"
-                  className="relative h-10 w-full max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.03] lg:h-11 xl:h-12 2xl:h-[3.75rem]"
+                  className="relative h-12 w-full max-w-full object-contain object-left transition duration-300 group-hover/brand:scale-[1.03] lg:h-14 xl:h-16 2xl:h-[4.75rem]"
                 />
               </div>
             </Link>
