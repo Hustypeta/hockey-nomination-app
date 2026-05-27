@@ -13,6 +13,8 @@ export async function withAdminJson(
     return await handler({ userId });
   } catch (e: unknown) {
     const status = getThrownStatus(e) ?? 500;
+    // Důležité pro Railway logy při ladění 500.
+    console.error("/api/admin/komunita error:", e);
     const message =
       status === 401
         ? "Neautorizováno — nejdřív admin heslo."
