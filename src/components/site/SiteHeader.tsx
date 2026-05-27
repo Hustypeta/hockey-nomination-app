@@ -18,7 +18,6 @@ const NAV_HOME: NavItem = { href: "/", label: "Úvod" };
 
 const NAV: NavItem[] = [
   NAV_HOME,
-  { href: "/komunita", label: "Komunita", shortLabel: "Komunita" },
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
   { href: LINEUP_EDITOR_HREF, label: "Editor sestavy", shortLabel: "Sestavy" },
   { href: "/bracket", label: "Pick’em", shortLabel: "Pick’em" },
