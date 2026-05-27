@@ -9,6 +9,21 @@ type TipsportPartnerBannerProps = {
   compact?: boolean;
 };
 
+function TipsportPromoHeading({ compact }: { compact: boolean }) {
+  return (
+    <p
+      id="tipsport-promo-heading"
+      className={`mx-auto max-w-md text-pretty text-center font-medium leading-snug text-slate-300/95 ${
+        compact ? "mb-3 text-[12px]" : "text-[13px] sm:text-sm sm:leading-relaxed"
+      }`}
+    >
+      Rád tipuješ? Vsaď si u{" "}
+      <span className="font-semibold text-[#4ade80]/95">Tipsportu</span> na zápas české hokejové reprezentace a
+      získej <span className="font-semibold text-white">1000 Kč</span> jako vstupní bonus zdarma.
+    </p>
+  );
+}
+
 function TipsportVisualFallback({ compact }: { compact: boolean }) {
   return (
     <div
@@ -37,30 +52,19 @@ export function TipsportPartnerBanner({ className = "", compact = false }: Tipsp
   return (
     <div className={className}>
       {!compact ? (
-        <>
-          <div
-            className="mx-auto mb-5 h-px w-full max-w-[12rem] bg-gradient-to-r from-transparent via-[#00a550]/55 to-transparent sm:mb-6"
-            aria-hidden
-          />
-          <p
-            id="tipsport-promo-heading"
-            className="mx-auto max-w-md text-pretty text-center text-[13px] font-medium leading-snug text-slate-300/95 sm:text-sm sm:leading-relaxed"
-          >
-            Rád tipuješ? Zaregistruj se u{" "}
-            <span className="font-semibold text-[#4ade80]/95">Tipsport</span> přes partnerský odkaz.
-          </p>
-        </>
+        <div
+          className="mx-auto mb-5 h-px w-full max-w-[12rem] bg-gradient-to-r from-transparent via-[#00a550]/55 to-transparent sm:mb-6"
+          aria-hidden
+        />
       ) : null}
+      <TipsportPromoHeading compact={compact} />
 
       <a
         href={TIPSPORT_PARTNER_HREF}
         target="_blank"
         rel="noopener noreferrer nofollow sponsored"
-        aria-labelledby={compact ? undefined : "tipsport-promo-heading"}
-        aria-label={compact ? "Partnerská nabídka Tipsport" : undefined}
-        className={`block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] transition hover:border-[#00a550]/40 hover:shadow-[0_12px_40px_rgba(0,165,80,0.15)] ${
-          compact ? "" : "mt-4 sm:mt-5"
-        }`}
+        aria-labelledby="tipsport-promo-heading"
+        className={`mt-4 block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] transition hover:border-[#00a550]/40 hover:shadow-[0_12px_40px_rgba(0,165,80,0.15)] sm:mt-5`}
       >
         {showImage ? (
           // eslint-disable-next-line @next/next/no-img-element -- partner asset v /public nebo vlastní URL
