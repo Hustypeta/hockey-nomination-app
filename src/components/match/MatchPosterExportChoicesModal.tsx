@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 
 export function MatchPosterExportChoicesModal({
   open,
@@ -89,6 +90,7 @@ export function MatchPosterExportChoicesModal({
             })}
           </ul>
 
+          <TipsportPartnerBanner compact className="mt-4 shrink-0 border-t border-white/10 pt-4" />
 
           <button
             type="button"

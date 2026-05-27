@@ -13,6 +13,7 @@ import {
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
+import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import {
   NOMINATION_WEB_POSTER_H,
   NOMINATION_WEB_POSTER_W,
@@ -676,6 +677,8 @@ export function SaveShareModal({
               </button>
             </div>
           )}
+
+          <TipsportPartnerBanner compact className="mt-6 border-t border-white/10 pt-6" />
 
           <button
             type="button"

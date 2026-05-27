@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Copy, X } from "lucide-react";
+import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 import type { LineupStructure, Player } from "@/types";
 
@@ -206,6 +207,7 @@ export function MatchRatingSaveShareModal({
             </div>
           </div>
 
+          <TipsportPartnerBanner compact className="mt-6 border-t border-white/10 pt-6" />
         </div>
       </div>
     </div>
