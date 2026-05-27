@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FlagMark } from "@/components/flags/FlagMark";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { ArrowLeft, ArrowRight, Check, Loader2, Lock, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   MS_FANTASY_CAP,
@@ -895,19 +895,6 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
         </div>
       </aside>
 
-      <div
-        className={`pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-3 pb-[max(0.65rem,env(safe-area-inset-bottom,0px))] pt-2 lg:hidden ${mobileRosterOpen ? "hidden" : ""}`}
-      >
-        <button
-          type="button"
-          onClick={() => setMobileRosterOpen(true)}
-          className="pointer-events-auto flex w-full max-w-md min-h-[3.25rem] touch-manipulation items-center justify-center gap-2 rounded-2xl border border-cyan-400/35 bg-gradient-to-r from-[#0a1628]/95 via-[#0c1a2e]/98 to-[#05080f]/95 px-4 py-3 text-sm font-bold text-white shadow-[0_-8px_40px_rgba(0,0,0,0.45),0_0_28px_rgba(0,180,255,0.2)] backdrop-blur-md active:scale-[0.99]"
-        >
-          <Users className="h-5 w-5 shrink-0 text-cyan-200" aria-hidden />
-          Soupiska MS — vybrat hráče
-        </button>
-      </div>
-
       {mobileRosterOpen ? (
         <div
           className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
@@ -930,10 +917,9 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
             <button
               type="button"
               onClick={() => setMobileRosterOpen(false)}
-              className="rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
-              aria-label="Zavřít"
+              className="max-w-[42%] shrink-0 rounded-xl border border-white/12 bg-white/[0.06] px-2 py-2 text-[11px] font-semibold leading-tight text-slate-200 hover:bg-white/10 sm:max-w-none sm:px-3 sm:text-sm"
             >
-              Hotovo
+              Zpět do editoru fantasy
             </button>
           </div>
           <div className="ms-fantasy-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-4 sm:px-4">
@@ -964,7 +950,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               className="flex w-full max-w-md min-h-12 touch-manipulation items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3 text-sm font-bold text-white shadow-lg shadow-black/40 active:scale-[0.99]"
             >
               <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
-              Hotovo — zpět k sestavě na ledu
+              Zpět do editoru fantasy
             </button>
           </div>
         </div>
