@@ -87,12 +87,6 @@ export function LandingContent() {
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-            <p className="mx-auto max-w-4xl text-pretty px-1">
-              <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-sky-200/90 bg-clip-text text-transparent text-[clamp(1rem,3.3vw,1.55rem)] font-semibold leading-snug tracking-[0.01em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-[clamp(1.05rem,2.9vw,1.75rem)] sm:leading-snug md:text-[clamp(1.1rem,2.5vw,1.95rem)]">
-                Platforma pro fanoušky hokeje
-              </span>
-            </p>
-
             <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-10">
               <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
                 Zpestři si sledování hokeje a pošli svůj tým na led
