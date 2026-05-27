@@ -106,11 +106,6 @@ export function LandingContent() {
             </p>
 
             <div className="mx-auto mt-10 max-w-xl sm:mt-12">
-              <p className="mx-auto mb-4 max-w-xl text-center">
-                <span className="inline-block rounded-full border border-[#00B4FF]/20 bg-[#00B4FF]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-100/90 shadow-[0_0_32px_rgba(0,180,255,0.12)]">
-                  Aktuálně běží Fantasy na MS 2026!
-                </span>
-              </p>
               <Link
                 href="/fantasy"
                 className="landing-cta-pulse group relative flex min-h-[4.25rem] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#e01e3c] to-[#9e0c24] px-6 py-5 text-center font-display text-xl font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(125,211,252,0.45),0_12px_56px_rgba(200,16,46,0.55),0_0_80px_rgba(200,16,46,0.35),0_0_48px_rgba(0,180,255,0.2)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(125,211,252,0.55),0_16px_64px_rgba(200,16,46,0.65),0_0_56px_rgba(0,180,255,0.28)] active:scale-[0.99] sm:min-h-[4.75rem] sm:text-2xl"
