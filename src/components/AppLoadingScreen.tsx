@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { SITE_BRAND } from "@/lib/siteBranding";
 import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
+import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import { ContestsStatusBanner } from "@/components/ContestsStatusBanner";
 import { useContestStats } from "@/hooks/useContestStats";
 
@@ -60,7 +61,10 @@ export function AppLoadingScreen({
           </p>
 
           <div className="mt-6 w-full sm:mt-8">
-            <LoadingScreenUsefulLinks />
+            <TipsportPartnerBanner compact />
+            <div className="mt-4 flex justify-center">
+              <LoadingScreenUsefulLinks />
+            </div>
           </div>
 
           <ContestsStatusBanner

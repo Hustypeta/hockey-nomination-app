@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { MerkurXtipPromoBanner } from "@/components/marketing/MerkurXtipPromoBanner";
 
 export function MatchPosterExportChoicesModal({
   open,
@@ -90,7 +89,6 @@ export function MatchPosterExportChoicesModal({
             })}
           </ul>
 
-          <MerkurXtipPromoBanner compact className="mt-4 shrink-0" />
 
           <button
             type="button"

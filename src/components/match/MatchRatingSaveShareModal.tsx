@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Copy, X } from "lucide-react";
-import { MerkurXtipPromoBanner } from "@/components/marketing/MerkurXtipPromoBanner";
 import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 import type { LineupStructure, Player } from "@/types";
 
@@ -207,7 +206,6 @@ export function MatchRatingSaveShareModal({
             </div>
           </div>
 
-          <MerkurXtipPromoBanner compact />
         </div>
       </div>
     </div>

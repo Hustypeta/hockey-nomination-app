@@ -1,4 +1,3 @@
-import { MERKURXTIP_PROMO_HREF_LANDING } from "@/lib/merkurXtipPromo";
 import { SITE_CANONICAL_HOST } from "@/lib/siteBranding";
 
 const SITE_URL = `https://${SITE_CANONICAL_HOST}`;
@@ -32,7 +31,7 @@ export function buildContestResultsThankYouText({ points, rank }: ContestResults
     "",
     "Rádi bychom Vás informovali, že stále probíhá soutěž Daily Fantasy, ve které celkový vítěz obdrží 500 Kč. Po skončení bude navíc náhodně vylosováno dalších 5 soutěžících, z nichž každý obdrží 200 Kč. Stále je o co hrát!",
     "",
-    `Jelikož je náš tým zatím malý a teprve s projektem začínáme, chtěli bychom Vás požádat, zda byste si nenašel čas navštívit náš web (${SITE_URL}), kliknout na banner MerkurXtip a zaregistrovat se (případně si i vsadit). Každá taková aktivita nám pomůže projekt dále rozvíjet. Budeme také velmi vděční, pokud tuto platformu doporučíte svým známým a přátelům.`,
+    `Budeme velmi vděční, pokud navštívíte náš web (${SITE_URL}) a platformu doporučíte svým známým a přátelům.`,
     "",
     "Moc Vám děkujeme za veškerou podporu a přejeme hodně štěstí v Daily Fantasy.",
     "",
@@ -40,7 +39,6 @@ export function buildContestResultsThankYouText({ points, rank }: ContestResults
     "",
     `Fantasy: ${FANTASY_URL}`,
     `Web: ${SITE_URL}`,
-    `MerkurXtip: ${MERKURXTIP_PROMO_HREF_LANDING}`,
   ].join("\n");
 }
 
@@ -116,11 +114,9 @@ export function buildContestResultsThankYouHtml({
                             <strong style="color:#ffffff;"> Stále je o co hrát!</strong>
                           </p>
                           <p style="margin:0 0 14px 0;">
-                            Jelikož je náš tým zatím malý a teprve s projektem začínáme, chtěli bychom Vás požádat, zda byste si nenašel čas
-                            <a href="${SITE_URL}" style="color:#7dd3fc; font-weight:700; text-decoration:underline;">navštívit náš web</a>,
-                            kliknout na banner <strong style="color:#f1c40f;">MerkurXtip</strong> a zaregistrovat se (případně si i vsadit).
-                            Každá taková aktivita nám pomůže projekt dále rozvíjet. Budeme také velmi vděční, pokud tuto platformu
-                            doporučíte svým známým a přátelům.
+                            Budeme velmi vděční, pokud
+                            <a href="${SITE_URL}" style="color:#7dd3fc; font-weight:700; text-decoration:underline;">navštívíte náš web</a>
+                            a platformu doporučíte svým známým a přátelům.
                           </p>
                           <p style="margin:0 0 6px 0;">
                             Moc Vám děkujeme za veškerou podporu a přejeme hodně štěstí v Daily Fantasy.
