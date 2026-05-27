@@ -98,7 +98,7 @@ export default function RootLayout({
       <head>
         <UmamiAnalytics />
       </head>
-      <body className="relative antialiased min-h-screen bg-[#020408] font-sans text-white">
+      <body className="relative antialiased min-h-screen bg-[#05060f] font-sans text-white">
         <FrozenArenaAmbientBackground />
         <script
           type="application/ld+json"

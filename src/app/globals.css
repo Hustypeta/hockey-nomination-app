@@ -46,25 +46,22 @@
 }
 
 body {
-  background: var(--background);
+  background-color: #05060f;
   color: var(--foreground);
   font-family: var(--font-ui);
   min-height: 100vh;
 }
 
-/* Cinematic / premium background: ice neon + subtle grain */
+/* Jemné neonové akcenty nad fotkou v `FrozenArenaAmbientBackground` */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 1;
   background:
     radial-gradient(ellipse 70% 60% at 16% 0%, rgba(0, 224, 255, 0.08), transparent 58%),
-    radial-gradient(ellipse 60% 55% at 86% 10%, rgba(255, 45, 85, 0.06), transparent 58%),
-    radial-gradient(ellipse 70% 80% at 50% 115%, rgba(255, 255, 255, 0.03), transparent 60%),
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0px, rgba(255, 255, 255, 0.10) 1px, transparent 1px, transparent 12px);
+    radial-gradient(ellipse 60% 55% at 86% 10%, rgba(255, 45, 85, 0.06), transparent 58%);
   mix-blend-mode: screen;
 }
 

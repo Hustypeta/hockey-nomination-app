@@ -20,7 +20,6 @@ import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks"
 import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 import { SVET_HOKEJE_INSTAGRAM_URL } from "@/lib/siteBranding";
-import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { useContestStats } from "@/hooks/useContestStats";
 
 /** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
@@ -96,26 +95,22 @@ export function LandingContent() {
       {/* ——— Hero ——— */}
       <section className="relative overflow-hidden border-b border-white/[0.08]">
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0a1628] via-[#05080f] to-[#03050a]"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#05070f]/25 via-[#05070f]/55 to-[#05070f]/88]"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute -left-1/3 top-0 h-[min(90vw,600px)] w-[min(90vw,600px)] rounded-full bg-[#c8102e]/25 blur-[120px]"
+          className="pointer-events-none absolute -left-1/3 top-0 h-[min(90vw,600px)] w-[min(90vw,600px)] rounded-full bg-[#00e0ff]/12 blur-[120px]"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute -right-1/4 bottom-0 h-[min(80vw,520px)] w-[min(80vw,520px)] rounded-full bg-[#003087]/30 blur-[100px]"
+          className="pointer-events-none absolute -right-1/4 top-1/4 h-[min(80vw,520px)] w-[min(80vw,520px)] rounded-full bg-[#ff2d55]/10 blur-[100px]"
           aria-hidden
         />
-
-        <div className="absolute bottom-0 left-0 right-0 h-[min(70vh,560px)] opacity-[0.85] sm:h-[min(65vh,520px)]">
-          <LandingHeroVisual className="h-full w-full" />
-        </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
             <p className="mx-auto max-w-4xl text-pretty px-1">
-              <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-sky-200/90 bg-clip-text text-transparent text-[clamp(1rem,3.3vw,1.55rem)] font-semibold leading-snug tracking-[0.01em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-[clamp(1.05rem,2.9vw,1.75rem)] sm:leading-snug md:text-[clamp(1.1rem,2.5vw,1.95rem)]">
+              <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-sky-200/90 bg-clip-text text-transparent text-[clamp(1rem,3.3vw,1.55rem)] font-semibold leading-snug tracking-[0.01em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.65)] sm:text-[clamp(1.05rem,2.9vw,1.75rem)] sm:leading-snug md:text-[clamp(1.1rem,2.5vw,1.95rem)]">
                 Zpestři si sledování hokeje a pošli svůj tým na led
                 <br />
                 Zapoj se do soutěží, vytvářej vlastní sestavy a sdílej je s ostatními fanoušky
@@ -123,7 +118,7 @@ export function LandingContent() {
             </p>
 
             <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-10">
-              <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
+              <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent drop-shadow-[0_4px_48px_rgba(0,0,0,0.75)]">
                 Zahraj si Daily Fantasy na MS 2026
               </span>
             </h1>
