@@ -103,6 +103,10 @@ export function LandingContent() {
               Zapoj se do soutěží, vytvářej vlastní sestavy a sdílej je s ostatními fanoušky
             </p>
 
+            <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-relaxed text-slate-200/80 sm:text-base">
+              Každý den si naklikej svůj tým a soutěž s ostatními o poukazy na herní účet v celkové hodnotě 1500 Kč.
+            </p>
+
             <div className="mx-auto mt-10 max-w-xl sm:mt-12">
               <Link
                 href="/fantasy"
