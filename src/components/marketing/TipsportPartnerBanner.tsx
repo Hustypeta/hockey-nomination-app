@@ -65,14 +65,26 @@ export function TipsportPartnerBanner({ className = "", compact = false }: Tipsp
         target="_blank"
         rel="noopener noreferrer nofollow sponsored"
         aria-labelledby={headingId}
-        className={`mt-4 block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] transition hover:border-[#00a550]/40 hover:shadow-[0_12px_40px_rgba(0,165,80,0.15)] sm:mt-5`}
+        className={`group relative mt-4 block overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-black/30 shadow-[0_18px_70px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.06] transition duration-200 hover:-translate-y-0.5 hover:border-[#00a550]/40 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_70px_rgba(0,165,80,0.16)] sm:mt-5`}
       >
+        <span
+          className="pointer-events-none absolute inset-0 opacity-[0.08]"
+          aria-hidden
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0px, rgba(255,255,255,0.16) 1px, transparent 1px, transparent 12px)",
+          }}
+        />
+        <span
+          className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-[#00a550]/20 blur-3xl transition-opacity duration-300 group-hover:opacity-90"
+          aria-hidden
+        />
         {showImage ? (
           // eslint-disable-next-line @next/next/no-img-element -- partner asset v /public nebo vlastní URL
           <img
             src={TIPSPORT_BANNER_IMAGE_SRC}
             alt="Tipsport — partnerská nabídka"
-            className="mx-auto block h-auto w-full max-w-full object-contain"
+            className="relative mx-auto block h-auto w-full max-w-full object-contain"
             loading="lazy"
             decoding="async"
             onError={() => setImgFailed(true)}

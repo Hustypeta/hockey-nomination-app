@@ -64,6 +64,33 @@ export function LandingContent() {
   const pickemCount = contestStats.pickemCount;
   const fantasyPlayersCount = contestStats.fantasyPlayersCount;
   const cd = useCountdown(MS_2026_KICKOFF);
+
+  // Premium micro-animace: fade-in při scrollu (bez vlivu na obsah).
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (els.length === 0) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+    if (reduce || typeof IntersectionObserver === "undefined") {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { root: null, rootMargin: "0px 0px -12% 0px", threshold: 0.12 }
+    );
+    els.forEach((el, i) => {
+      el.style.transitionDelay = `${Math.min(180, i * 45)}ms`;
+      io.observe(el);
+    });
+    return () => io.disconnect();
+  }, []);
   return (
     <main>
       {/* ——— Hero ——— */}
@@ -176,7 +203,10 @@ export function LandingContent() {
 
             {/* Sociální důkaz + stav nominace (nominace pod komunitou) */}
             <div className="mx-auto mt-10 flex w-full max-w-5xl flex-col gap-6 sm:mt-12 sm:gap-8">
-              <div className="group relative flex min-h-0 min-w-0 w-full overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)]">
+              <div
+                data-reveal
+                className="reveal group relative flex min-h-0 min-w-0 w-full overflow-hidden rounded-3xl border border-sky-400/15 bg-gradient-to-br from-[#0c182e]/95 via-[#080f1a]/98 to-[#03050a] shadow-[0_0_0_1px_rgba(56,189,248,0.06),0_24px_48px_-16px_rgba(0,48,135,0.45),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-xl transition duration-300 hover:border-sky-400/25 hover:shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_28px_56px_-12px_rgba(0,48,135,0.55),inset_0_1px_0_rgba(255,255,255,0.09)]"
+              >
                 <div
                   className="pointer-events-none absolute -left-1/4 top-0 h-[140%] w-[70%] bg-[radial-gradient(ellipse_at_30%_0%,rgba(56,189,248,0.22),transparent_58%)]"
                   aria-hidden
@@ -254,10 +284,12 @@ export function LandingContent() {
                 </div>
               </div>
 
-              <ContestsStatusBanner pickemSubmissionOpen={contestStats.pickemSubmissionOpen} />
+              <div data-reveal className="reveal">
+                <ContestsStatusBanner pickemSubmissionOpen={contestStats.pickemSubmissionOpen} />
+              </div>
 
               {/* MS je tady! — vizuálně nejsilnější sekce (bez countdownu) */}
-              <div className="w-full">
+              <div data-reveal className="reveal w-full">
                 <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#0a0f1c]/92 via-[#05070f]/86 to-black/70 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_26px_80px_rgba(0,0,0,0.55)] sm:p-8">
                   <div
                     className="pointer-events-none absolute inset-0 opacity-[0.85]"
@@ -301,7 +333,7 @@ export function LandingContent() {
               Proč to zkusit
             </h2>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4 xl:gap-6">
-              <div className="group relative rounded-3xl border border-[#003087]/28 bg-gradient-to-b from-[#0f172a]/95 to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(0,48,135,0.10)] transition duration-200 hover:-translate-y-1 hover:border-[#003087]/40 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(0,200,255,0.10)]">
+              <div data-reveal className="reveal group relative rounded-3xl border border-[#003087]/28 bg-gradient-to-b from-[#0f172a]/95 to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(0,48,135,0.10)] transition duration-200 hover:-translate-y-1 hover:border-[#003087]/40 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(0,200,255,0.10)]">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#003087]/28 text-sky-200 ring-1 ring-[#003087]/40 shadow-[0_0_36px_rgba(0,48,135,0.18)] transition group-hover:shadow-[0_0_46px_rgba(0,200,255,0.16)]">
                   <Users className="h-6 w-6 drop-shadow-[0_0_10px_rgba(125,211,252,0.35)]" aria-hidden />
                 </div>
@@ -317,7 +349,7 @@ export function LandingContent() {
                   <ChevronRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>
-              <div className="group relative rounded-3xl border border-[#c8102e]/28 bg-gradient-to-b from-[#c8102e]/[0.14] to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(200,16,46,0.10)] transition duration-200 hover:-translate-y-1 hover:border-[#c8102e]/40 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(255,45,85,0.12)]">
+              <div data-reveal className="reveal group relative rounded-3xl border border-[#c8102e]/28 bg-gradient-to-b from-[#c8102e]/[0.14] to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(200,16,46,0.10)] transition duration-200 hover:-translate-y-1 hover:border-[#c8102e]/40 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(255,45,85,0.12)]">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#c8102e]/22 text-[#ffb4c0] ring-1 ring-[#c8102e]/40 shadow-[0_0_36px_rgba(200,16,46,0.18)] transition group-hover:shadow-[0_0_46px_rgba(255,45,85,0.16)]">
                   <Trophy className="h-6 w-6 drop-shadow-[0_0_10px_rgba(255,180,192,0.22)]" aria-hidden />
                 </div>
@@ -332,7 +364,7 @@ export function LandingContent() {
                   Pravidla soutěže
                 </Link>
               </div>
-              <div className="group relative rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-black/35 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] transition duration-200 hover:-translate-y-1 hover:border-white/15 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_52px_rgba(0,200,255,0.08)]">
+              <div data-reveal className="reveal group relative rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-black/35 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] transition duration-200 hover:-translate-y-1 hover:border-white/15 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_52px_rgba(0,200,255,0.08)]">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white ring-1 ring-white/15 shadow-[0_0_36px_rgba(255,255,255,0.08)] transition group-hover:shadow-[0_0_46px_rgba(0,200,255,0.12)]">
                   <LayoutGrid className="h-6 w-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.16)]" aria-hidden />
                 </div>
@@ -348,7 +380,7 @@ export function LandingContent() {
                   <ChevronRight className="h-4 w-4 opacity-70" aria-hidden />
                 </Link>
               </div>
-              <div className="group relative rounded-3xl border border-sky-400/22 bg-gradient-to-b from-[#0c182e]/90 to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(56,189,248,0.12)] transition duration-200 hover:-translate-y-1 hover:border-sky-400/32 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(0,200,255,0.14)]">
+              <div data-reveal className="reveal group relative rounded-3xl border border-sky-400/22 bg-gradient-to-b from-[#0c182e]/90 to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(56,189,248,0.12)] transition duration-200 hover:-translate-y-1 hover:border-sky-400/32 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(0,200,255,0.14)]">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/18 text-sky-100 ring-1 ring-sky-400/35 shadow-[0_0_36px_rgba(56,189,248,0.18)] transition group-hover:shadow-[0_0_46px_rgba(0,200,255,0.18)]">
                   <Sparkles className="h-6 w-6 drop-shadow-[0_0_12px_rgba(56,189,248,0.35)]" aria-hidden />
                 </div>
