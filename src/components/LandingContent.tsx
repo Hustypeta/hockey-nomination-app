@@ -88,26 +88,29 @@ export function LandingContent() {
         <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
             <p className="mx-auto max-w-4xl text-pretty px-1">
-              <span className="inline-block rounded-full border border-[#00B4FF]/20 bg-[#00B4FF]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-100/90 shadow-[0_0_32px_rgba(0,180,255,0.12)]">
-                Aktuálně běží Fantasy na MS 2026!
+              <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-sky-200/90 bg-clip-text text-transparent text-[clamp(1rem,3.3vw,1.55rem)] font-semibold leading-snug tracking-[0.01em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)] sm:text-[clamp(1.05rem,2.9vw,1.75rem)] sm:leading-snug md:text-[clamp(1.1rem,2.5vw,1.95rem)]">
+                Zpestři si sledování hokeje a pošli svůj tým na led
+                <br />
+                Zapoj se do soutěží, vytvářej vlastní sestavy a sdílej je s ostatními fanoušky
               </span>
             </p>
 
-            <h1 className="mx-auto mt-6 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-8">
+            <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-10">
               <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
-                Zpestři si sledování hokeje a pošli svůj tým na led
+                Zahraj si Daily Fantasy na MS 2026
               </span>
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg font-medium leading-relaxed text-slate-200/95 sm:text-xl">
-              Zapoj se do soutěží, vytvářej vlastní sestavy a sdílej je s ostatními fanoušky
-            </p>
-
-            <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-relaxed text-slate-200/80 sm:text-base">
               Každý den si naklikej svůj tým a soutěž s ostatními o poukazy na herní účet v celkové hodnotě 1500 Kč.
             </p>
 
             <div className="mx-auto mt-10 max-w-xl sm:mt-12">
+              <p className="mx-auto mb-4 max-w-xl text-center">
+                <span className="inline-block rounded-full border border-[#00B4FF]/20 bg-[#00B4FF]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-100/90 shadow-[0_0_32px_rgba(0,180,255,0.12)]">
+                  Aktuálně běží Fantasy na MS 2026!
+                </span>
+              </p>
               <Link
                 href="/fantasy"
                 className="landing-cta-pulse group relative flex min-h-[4.25rem] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#e01e3c] to-[#9e0c24] px-6 py-5 text-center font-display text-xl font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(125,211,252,0.45),0_12px_56px_rgba(200,16,46,0.55),0_0_80px_rgba(200,16,46,0.35),0_0_48px_rgba(0,180,255,0.2)] transition hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(125,211,252,0.55),0_16px_64px_rgba(200,16,46,0.65),0_0_56px_rgba(0,180,255,0.28)] active:scale-[0.99] sm:min-h-[4.75rem] sm:text-2xl"
