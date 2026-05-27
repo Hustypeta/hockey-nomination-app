@@ -106,7 +106,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <AuthProvider>
-          <div className="relative z-0">
+          <div className="relative z-[1]">
           <MetaPixel />
           <CompleteRegistrationTracker />
           {children}

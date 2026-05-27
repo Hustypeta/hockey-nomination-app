@@ -58,7 +58,7 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
   background:
     radial-gradient(ellipse 70% 60% at 16% 0%, rgba(0, 224, 255, 0.08), transparent 58%),
     radial-gradient(ellipse 60% 55% at 86% 10%, rgba(255, 45, 85, 0.06), transparent 58%);
@@ -70,7 +70,7 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
   opacity: 0.06;
   background-image:
     repeating-linear-gradient(0deg, rgba(255,255,255,0.55) 0px, rgba(255,255,255,0.55) 1px, transparent 1px, transparent 3px);

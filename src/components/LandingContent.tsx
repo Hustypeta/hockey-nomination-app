@@ -94,25 +94,27 @@ export function LandingContent() {
   return (
     <main className="bg-[#05060f]">
       {/* ——— Hero (fotka jen nahoře ~70vh, zbytek stránky pevná barva) ——— */}
-      <section className="relative overflow-hidden border-b border-white/[0.08] bg-[#05060f]">
+      <section className="relative isolate overflow-hidden border-b border-white/[0.08] bg-[#05060f]">
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[70vh] min-h-[28rem] max-h-[52rem] overflow-hidden relative"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[70vh] min-h-[28rem] max-h-[52rem] overflow-hidden"
           aria-hidden
         >
-          <Image
-            src="/images/promo/pozadi.png"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            quality={80}
-            className="object-cover object-[center_58%]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#05060f]/55 via-[#05060f]/35 to-[#05060f]" />
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-transparent to-[#05060f]" />
+          <div className="relative size-full">
+            <Image
+              src="/images/promo/pozadi.png"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              quality={80}
+              className="object-cover object-[center_58%]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#05060f]/55 via-[#05060f]/35 to-[#05060f]" />
+            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-transparent to-[#05060f]" />
+          </div>
         </div>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
+        <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
             <p className="mx-auto max-w-4xl text-pretty px-1">
               <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-sky-200/90 bg-clip-text text-transparent text-[clamp(1rem,3.3vw,1.55rem)] font-semibold leading-snug tracking-[0.01em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.65)] sm:text-[clamp(1.05rem,2.9vw,1.75rem)] sm:leading-snug md:text-[clamp(1.1rem,2.5vw,1.95rem)]">
