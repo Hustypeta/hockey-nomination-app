@@ -136,3 +136,33 @@ export async function allocateMatchShareLinkSlug(
     }
   }
 }
+
+/** Slug příspěvku v komunitě (preview v adminu). */
+export async function allocateCommunityPostSlug(
+  prisma: PrismaClient,
+  title: string,
+  excludePostId: string | null
+): Promise<string> {
+  let base = slugifyNominationTitle(title);
+  if (!base || base.length < 2) {
+    base = `prispevek-${randomSlugSuffix(8)}`;
+  }
+
+  let candidate = base;
+  let n = 0;
+  for (;;) {
+    const clash = await prisma.communityPost.findFirst({
+      where: {
+        slug: candidate,
+        ...(excludePostId ? { NOT: { id: excludePostId } } : {}),
+      },
+      select: { id: true },
+    });
+    if (!clash) return candidate;
+    n += 1;
+    candidate = `${base}-${n}`;
+    if (n > 200) {
+      return `${base}-${randomSlugSuffix(6)}`;
+    }
+  }
+}
