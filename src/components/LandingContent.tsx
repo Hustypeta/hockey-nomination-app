@@ -238,14 +238,16 @@ export function LandingContent() {
                     ].map((x) => (
                       <div
                         key={x.label}
-                        className="flex min-h-[6.25rem] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-white/12 bg-white/[0.05] px-2 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:min-h-[6.5rem] sm:px-3 sm:py-4"
+                        className="group/stat relative flex min-h-[6.75rem] min-w-0 flex-col items-center justify-center gap-2.5 rounded-2xl border border-white/12 bg-gradient-to-b from-white/[0.07] to-black/30 px-2 py-4 shadow-[0_18px_60px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.07)] transition duration-200 hover:-translate-y-0.5 hover:border-sky-300/20 hover:shadow-[0_24px_70px_rgba(0,0,0,0.38),0_0_44px_rgba(0,200,255,0.10),inset_0_1px_0_rgba(255,255,255,0.09)] sm:min-h-[7.25rem] sm:px-3 sm:py-5"
                       >
                         <span
-                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ring-1 ${x.tone}`}
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ring-1 shadow-[0_0_30px_rgba(0,200,255,0.12)] transition group-hover/stat:shadow-[0_0_40px_rgba(0,200,255,0.18)] ${x.tone}`}
                         >
-                          <span className="text-[15px] leading-none">{x.icon}</span>
+                          <span className="text-[16px] leading-none drop-shadow-[0_0_10px_rgba(255,255,255,0.18)]">
+                            {x.icon}
+                          </span>
                         </span>
-                        <span className="font-display text-[1.65rem] font-black tabular-nums leading-none tracking-tight text-white sm:text-[1.85rem]">
+                        <span className="font-display text-[1.9rem] font-black tabular-nums leading-none tracking-tight text-white drop-shadow-[0_4px_28px_rgba(0,0,0,0.55)] sm:text-[2.15rem]">
                           {x.value === null ? "—" : formatCs(Number(x.value))}
                         </span>
                         <p className="max-w-[12rem] text-center text-[10px] font-black uppercase leading-snug tracking-[0.12em] text-white/60">
@@ -259,48 +261,33 @@ export function LandingContent() {
 
               <ContestsStatusBanner pickemSubmissionOpen={contestStats.pickemSubmissionOpen} />
 
-              {/* Odpočet — národní barvy (stejná šířka jako Komunita / soutěž) */}
+              {/* MS je tady! — vizuálně nejsilnější sekce (bez countdownu) */}
               <div className="w-full">
-                <div className="rounded-2xl border border-[#c8102e]/25 bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 p-5 shadow-[0_0_48px_rgba(200,16,46,0.15)] sm:p-6">
-                  <div className="flex items-center justify-center gap-2 text-white/90">
-                    <Clock className="h-5 w-5 text-sky-300" aria-hidden />
-                    <span className="font-display text-sm font-bold uppercase tracking-[0.22em]">
-                      Odpočet do šampionátu
-                    </span>
-                  </div>
-                  {!cd ? (
-                    <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4" aria-label="Odpočet se načítá">
-                      {["dní", "hod", "min", "sek"].map((l) => (
-                        <div key={l} className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4">
-                          <div className="font-display text-3xl font-bold tabular-nums text-white/70 sm:text-4xl">—</div>
-                          <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-300/85">{l}</div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : cd.ended ? (
-                    <p className="mt-5 py-2 text-center font-display text-3xl font-black tracking-wide text-white sm:mt-6 sm:text-4xl md:text-5xl">
-                      MS je tady!
+                <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#0a0f1c]/92 via-[#05070f]/86 to-black/70 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_26px_80px_rgba(0,0,0,0.55)] sm:p-8">
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.85]"
+                    aria-hidden
+                    style={{
+                      background:
+                        "radial-gradient(ellipse 110% 95% at 20% 0%, rgba(0,200,255,0.18), transparent 55%), radial-gradient(ellipse 95% 80% at 82% 12%, rgba(200,16,46,0.18), transparent 55%), radial-gradient(ellipse 75% 70% at 50% 105%, rgba(255,255,255,0.06), transparent 55%)",
+                    }}
+                  />
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.06]"
+                    aria-hidden
+                    style={{
+                      backgroundImage:
+                        "repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0px, rgba(255,255,255,0.16) 1px, transparent 1px, transparent 12px)",
+                    }}
+                  />
+                  <div className="relative z-10 text-center">
+                    <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.22em] text-cyan-100/90 shadow-[0_0_44px_rgba(0,200,255,0.12)]">
+                      <span aria-hidden>🏒</span> MS je tady!
                     </p>
-                  ) : (
-                    <div className="mt-5 grid grid-cols-4 gap-2 text-center sm:gap-4">
-                      {[
-                        { v: cd.d, l: "dní" },
-                        { v: cd.h, l: "hod" },
-                        { v: cd.m, l: "min" },
-                        { v: cd.s, l: "sek" },
-                      ].map((x) => (
-                        <div
-                          key={x.l}
-                          className="rounded-xl border border-white/10 bg-black/40 py-3 shadow-inner sm:py-4"
-                        >
-                          <div className="font-display text-3xl font-bold tabular-nums text-white sm:text-4xl">{x.v}</div>
-                          <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-300/85">
-                            {x.l}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                    <h2 className="mx-auto mt-5 max-w-3xl text-balance font-display text-[clamp(2.25rem,6.5vw,4.25rem)] font-black leading-[1.02] tracking-[0.02em] text-white drop-shadow-[0_8px_64px_rgba(0,0,0,0.6)]">
+                      MS je tady!
+                    </h2>
+                  </div>
                 </div>
               </div>
             </div>
@@ -319,9 +306,9 @@ export function LandingContent() {
               Proč to zkusit
             </h2>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4 xl:gap-6">
-              <div className="rounded-2xl border border-[#003087]/30 bg-gradient-to-b from-[#0f172a]/95 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(0,48,135,0.15)]">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#003087]/30 text-sky-200 ring-1 ring-[#003087]/40">
-                  <Users className="h-5 w-5" aria-hidden />
+              <div className="group relative rounded-3xl border border-[#003087]/28 bg-gradient-to-b from-[#0f172a]/95 to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(0,48,135,0.10)] transition duration-200 hover:-translate-y-1 hover:border-[#003087]/40 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(0,200,255,0.10)]">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#003087]/28 text-sky-200 ring-1 ring-[#003087]/40 shadow-[0_0_36px_rgba(0,48,135,0.18)] transition group-hover:shadow-[0_0_46px_rgba(0,200,255,0.16)]">
+                  <Users className="h-6 w-6 drop-shadow-[0_0_10px_rgba(125,211,252,0.35)]" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
                   V editoru sestavy můžeš vybírat z více než 130 hráčů. Po sestavení nominace lze také grafiku sdílet jako
@@ -335,9 +322,9 @@ export function LandingContent() {
                   <ChevronRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>
-              <div className="rounded-2xl border border-[#c8102e]/30 bg-gradient-to-b from-[#c8102e]/[0.12] to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(200,16,46,0.12)]">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#c8102e]/25 text-[#ffb4c0] ring-1 ring-[#c8102e]/40">
-                  <Trophy className="h-5 w-5" aria-hidden />
+              <div className="group relative rounded-3xl border border-[#c8102e]/28 bg-gradient-to-b from-[#c8102e]/[0.14] to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(200,16,46,0.10)] transition duration-200 hover:-translate-y-1 hover:border-[#c8102e]/40 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(255,45,85,0.12)]">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#c8102e]/22 text-[#ffb4c0] ring-1 ring-[#c8102e]/40 shadow-[0_0_36px_rgba(200,16,46,0.18)] transition group-hover:shadow-[0_0_46px_rgba(255,45,85,0.16)]">
+                  <Trophy className="h-6 w-6 drop-shadow-[0_0_10px_rgba(255,180,192,0.22)]" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
                   Svoji nominaci můžeš odeslat do soutěže o zajímavé hokejové ceny.
@@ -350,9 +337,9 @@ export function LandingContent() {
                   Pravidla soutěže
                 </Link>
               </div>
-              <div className="rounded-2xl border border-white/[0.1] bg-[#0f172a]/80 p-6 shadow-inner">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/15">
-                  <LayoutGrid className="h-5 w-5" aria-hidden />
+              <div className="group relative rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-black/35 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] transition duration-200 hover:-translate-y-1 hover:border-white/15 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_52px_rgba(0,200,255,0.08)]">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white ring-1 ring-white/15 shadow-[0_0_36px_rgba(255,255,255,0.08)] transition group-hover:shadow-[0_0_46px_rgba(0,200,255,0.12)]">
+                  <LayoutGrid className="h-6 w-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.16)]" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
                   Svoje predikční schopnosti si můžeš ověřit také v Pick’emu na MS 2026, kde lze tipovat výsledky
@@ -366,9 +353,9 @@ export function LandingContent() {
                   <ChevronRight className="h-4 w-4 opacity-70" aria-hidden />
                 </Link>
               </div>
-              <div className="rounded-2xl border border-sky-400/25 bg-gradient-to-b from-[#0c182e]/90 to-[#05080f]/90 p-6 shadow-[0_0_40px_rgba(56,189,248,0.14)]">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500/20 text-sky-100 ring-1 ring-sky-400/35">
-                  <Sparkles className="h-5 w-5" aria-hidden />
+              <div className="group relative rounded-3xl border border-sky-400/22 bg-gradient-to-b from-[#0c182e]/90 to-[#05070f]/85 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),0_0_46px_rgba(56,189,248,0.12)] transition duration-200 hover:-translate-y-1 hover:border-sky-400/32 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_60px_rgba(0,200,255,0.14)]">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/18 text-sky-100 ring-1 ring-sky-400/35 shadow-[0_0_36px_rgba(56,189,248,0.18)] transition group-hover:shadow-[0_0_46px_rgba(0,200,255,0.18)]">
+                  <Sparkles className="h-6 w-6 drop-shadow-[0_0_12px_rgba(56,189,248,0.35)]" aria-hidden />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-200">
                   Spustili jsme také Fantasy soutěž, kde můžeš soutěžit o atraktivní hokejové ceny.

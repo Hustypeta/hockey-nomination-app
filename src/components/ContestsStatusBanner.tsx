@@ -23,13 +23,29 @@ function ContestRow({
   title,
   children,
   status,
+  accentClassName = "",
 }: {
   title: string;
   children: ReactNode;
   status: ReactNode;
+  accentClassName?: string;
 }) {
   return (
-    <div className="flex gap-3 rounded-xl border border-white/10 bg-black/25 px-3.5 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:gap-4 sm:px-4 sm:py-4">
+    <div
+      className={`group/row relative flex gap-3 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-black/30 px-3.5 py-3.5 shadow-[0_12px_36px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.06)] transition duration-200 hover:-translate-y-0.5 hover:border-white/15 hover:bg-white/[0.07] sm:gap-4 sm:px-4 sm:py-4 ${accentClassName}`}
+    >
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-transparent via-white/25 to-transparent opacity-60"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        aria-hidden
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(135deg, rgba(255,255,255,0.18) 0px, rgba(255,255,255,0.18) 1px, transparent 1px, transparent 12px)",
+        }}
+      />
       <div className="min-w-0 flex-1">
         <p className="font-display text-[11px] font-bold uppercase tracking-[0.18em] text-sky-200/90 sm:text-xs">
           {title}
@@ -43,7 +59,7 @@ function ContestRow({
 
 function ClosedBadge() {
   return (
-    <span className="inline-flex items-center gap-1 rounded-lg border border-rose-400/30 bg-rose-500/10 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-rose-200/95">
+    <span className="inline-flex items-center gap-1 rounded-xl border border-rose-400/30 bg-rose-500/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-rose-200/95 shadow-[0_0_28px_rgba(255,45,85,0.10)]">
       <Lock className="h-3 w-3 shrink-0" aria-hidden />
       Uzavřeno
     </span>
@@ -52,7 +68,7 @@ function ClosedBadge() {
 
 function OpenBadge() {
   return (
-    <span className="inline-flex items-center gap-1 rounded-lg border border-emerald-400/35 bg-emerald-500/12 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-100">
+    <span className="inline-flex items-center gap-1 rounded-xl border border-emerald-400/35 bg-emerald-500/12 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-100 shadow-[0_0_28px_rgba(16,185,129,0.10)]">
       <Check className="h-3.5 w-3.5 shrink-0 text-emerald-300" aria-hidden />
       Otevřeno
     </span>
@@ -88,11 +104,19 @@ export function ContestsStatusBanner({ pickemSubmissionOpen, className = "" }: C
         </div>
 
         <div className="mt-4 flex flex-col gap-2.5">
-          <ContestRow title="Nominační soutěž" status={<ClosedBadge />}>
+          <ContestRow
+            title="Nominační soutěž"
+            status={<ClosedBadge />}
+            accentClassName="border-[#003087]/18 hover:border-[#003087]/28"
+          >
             {NOMINATION_CLOSED_TEXT}
           </ContestRow>
 
-          <ContestRow title="Pick'em" status={pickemSubmissionOpen ? <OpenBadge /> : <ClosedBadge />}>
+          <ContestRow
+            title="Pick'em"
+            status={pickemSubmissionOpen ? <OpenBadge /> : <ClosedBadge />}
+            accentClassName="border-[#00B4FF]/18 hover:border-[#00B4FF]/28"
+          >
             {pickemSubmissionOpen ? (
               <>
                 Tipni play-off a bonusy v{" "}
@@ -106,7 +130,11 @@ export function ContestsStatusBanner({ pickemSubmissionOpen, className = "" }: C
             )}
           </ContestRow>
 
-          <ContestRow title="Fantasy" status={<OpenBadge />}>
+          <ContestRow
+            title="Fantasy"
+            status={<OpenBadge />}
+            accentClassName="border-emerald-400/18 hover:border-emerald-400/28"
+          >
             <span className="inline-flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-200">
                 <Check className="h-4 w-4 shrink-0 text-emerald-400" aria-hidden />
