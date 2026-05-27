@@ -87,7 +87,13 @@ export function LandingContent() {
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-            <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-10">
+            <p className="mx-auto max-w-4xl text-pretty px-1">
+              <span className="inline-block rounded-full border border-[#00B4FF]/20 bg-[#00B4FF]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-100/90 shadow-[0_0_32px_rgba(0,180,255,0.12)]">
+                Aktuálně běží Fantasy na MS 2026!
+              </span>
+            </p>
+
+            <h1 className="mx-auto mt-6 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-8">
               <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent drop-shadow-[0_4px_48px_rgba(0,0,0,0.55)]">
                 Zpestři si sledování hokeje a pošli svůj tým na led
               </span>
