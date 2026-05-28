@@ -59,14 +59,21 @@ export default async function FantasyIndexPage() {
   });
 
   const now = Date.now();
-  const nextOpen = rows.find((d) => {
+  const candidates = rows.filter((d) => !isMsFantasySchedulePauseDaySlug(d.slug));
+
+  const nextOpen = candidates.find((d) => {
     if (isMsFantasySchedulePauseDaySlug(d.slug)) return false;
     const lockIso = ms2026FantasyOfficialLockAtIso(d.slug) ?? d.lockAt.toISOString();
     return new Date(lockIso).getTime() > now;
   });
 
-  if (nextOpen?.slug) {
-    redirect(`/fantasy/${encodeURIComponent(nextOpen.slug)}`);
+  // Fallback: pokud je vše locked (nebo jsme v pauze), stejně pošli uživatele
+  // na nejbližší dostupný den, aby se nevracel na seznam.
+  const fallback = candidates.at(-1) ?? candidates[0];
+
+  const targetSlug = nextOpen?.slug ?? fallback?.slug;
+  if (targetSlug) {
+    redirect(`/fantasy/${encodeURIComponent(targetSlug)}`);
   }
 
   return (
