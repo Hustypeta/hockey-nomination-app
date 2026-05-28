@@ -796,14 +796,20 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
           </div>
 
           <MsFantasyGlassPanel className="mt-4 border-t border-white/[0.08] p-4 sm:mt-5 sm:p-5" glow="subtle">
-            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-              <Link href="/fantasy?dny=1" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
+            <p className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:text-base">
+              <Link
+                href="/fantasy?dny=1"
+                className="rounded-lg px-2 py-1 font-semibold text-cyan-200 hover:bg-white/5 hover:text-cyan-100 hover:underline"
+              >
                 ← Hrací dny
               </Link>
               <span className="text-slate-600" aria-hidden>
                 ·
               </span>
-              <Link href="/fantasy/pravidla" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
+              <Link
+                href="/fantasy/pravidla"
+                className="rounded-lg px-2 py-1 font-semibold text-cyan-200 hover:bg-white/5 hover:text-cyan-100 hover:underline"
+              >
                 Pravidla a body
               </Link>
             </p>
