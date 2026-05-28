@@ -9,7 +9,7 @@ import {
   captureElementToCanvas,
   canvasToPngDataUrl,
   letterboxCanvas,
-  downloadDataUrl,
+  downloadCanvasPng,
   type PosterLetterboxTheme,
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
@@ -193,7 +193,7 @@ export function SaveShareModal({
     const base = baseCanvasRef.current;
     if (!base) return;
     const out = letterboxCanvas(base, w, h, { theme: exportLetterboxTheme });
-    downloadDataUrl(canvasToPngDataUrl(out), `ms2026-nominace-${suffix}.png`);
+    void downloadCanvasPng(out, `ms2026-nominace-${suffix}.png`);
   };
 
   const webSharePng = async (w: number, h: number, filename: string) => {

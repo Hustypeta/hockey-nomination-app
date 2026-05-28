@@ -7,6 +7,7 @@ import {
   captureElementToCanvas,
   canvasToPngDataUrl,
   downloadDataUrl,
+  downloadCanvasPng,
   letterboxCanvas,
   preparePosterCapture,
 } from "@/lib/captureSharePoster";
@@ -96,6 +97,7 @@ export function MatchLineupImageExportButton({
   const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
   const [previewFilename, setPreviewFilename] = useState<string | null>(null);
   const [previewTitle, setPreviewTitle] = useState<string | null>(null);
+  const [previewCanvas, setPreviewCanvas] = useState<HTMLCanvasElement | null>(null);
   const controlled = typeof modalOpenControlled === "boolean" && typeof onModalOpenChange === "function";
   const modalOpen = controlled ? modalOpenControlled : modalOpenInternal;
   const setModalOpen = controlled ? onModalOpenChange! : setModalOpenInternal;
@@ -127,6 +129,7 @@ export function MatchLineupImageExportButton({
       setPreviewDataUrl(null);
       setPreviewFilename(null);
       setPreviewTitle(null);
+      setPreviewCanvas(null);
     }
   }, [modalOpen]);
 
@@ -198,6 +201,7 @@ export function MatchLineupImageExportButton({
       setPreviewDataUrl(null);
       setPreviewFilename(null);
       setPreviewTitle(null);
+      setPreviewCanvas(null);
       try {
         const bg =
           slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? "#e8ecf2" : "#05080f";
@@ -265,6 +269,7 @@ export function MatchLineupImageExportButton({
         const filename = filenameLineupSlot(slot, baseSlug, ratingSnapshot);
         setPreviewDataUrl(canvasToPngDataUrl(canvas));
         setPreviewFilename(filename);
+        setPreviewCanvas(canvas);
         const label = choices.find((c) => c.key === slot)?.title ?? "Export";
         setPreviewTitle(label);
         toast.success("Náhled připraven. Teď klikni na „Stáhnout PNG“.");
@@ -323,10 +328,11 @@ export function MatchLineupImageExportButton({
           setPreviewDataUrl(null);
           setPreviewFilename(null);
           setPreviewTitle(null);
+          setPreviewCanvas(null);
         }}
         onDownloadPreview={() => {
-          if (!previewDataUrl || !previewFilename) return;
-          downloadDataUrl(previewDataUrl, previewFilename);
+          if (!previewCanvas || !previewFilename) return;
+          void downloadCanvasPng(previewCanvas, previewFilename);
         }}
       />
 
