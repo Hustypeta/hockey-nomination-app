@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { Share2 } from "lucide-react";
 import {
   captureElementToCanvas,
-  downloadCanvasPng,
+  canvasToPngDataUrl,
+  downloadDataUrl,
   letterboxCanvas,
   preparePosterCapture,
 } from "@/lib/captureSharePoster";
@@ -92,6 +93,9 @@ export function MatchLineupImageExportButton({
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [busyKey, setBusyKey] = useState<string | null>(null);
   const [modalOpenInternal, setModalOpenInternal] = useState(false);
+  const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
+  const [previewFilename, setPreviewFilename] = useState<string | null>(null);
+  const [previewTitle, setPreviewTitle] = useState<string | null>(null);
   const controlled = typeof modalOpenControlled === "boolean" && typeof onModalOpenChange === "function";
   const modalOpen = controlled ? modalOpenControlled : modalOpenInternal;
   const setModalOpen = controlled ? onModalOpenChange! : setModalOpenInternal;
@@ -117,6 +121,14 @@ export function MatchLineupImageExportButton({
   useEffect(() => {
     if (disabled) setModalOpen(false);
   }, [disabled, setModalOpen]);
+
+  useEffect(() => {
+    if (!modalOpen) {
+      setPreviewDataUrl(null);
+      setPreviewFilename(null);
+      setPreviewTitle(null);
+    }
+  }, [modalOpen]);
 
   const choices = useMemo(() => {
     const all = [
@@ -183,6 +195,9 @@ export function MatchLineupImageExportButton({
         return;
       }
       setBusyKey(slot);
+      setPreviewDataUrl(null);
+      setPreviewFilename(null);
+      setPreviewTitle(null);
       try {
         const bg =
           slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? "#e8ecf2" : "#05080f";
@@ -247,8 +262,12 @@ export function MatchLineupImageExportButton({
         stage.style.opacity = stagePrev.opacity;
         stage.style.visibility = stagePrev.visibility;
         stage.style.zIndex = stagePrev.zIndex;
-        await downloadCanvasPng(canvas, filenameLineupSlot(slot, baseSlug, ratingSnapshot));
-        toast.success("Staženo 1 PNG.");
+        const filename = filenameLineupSlot(slot, baseSlug, ratingSnapshot);
+        setPreviewDataUrl(canvasToPngDataUrl(canvas));
+        setPreviewFilename(filename);
+        const label = choices.find((c) => c.key === slot)?.title ?? "Export";
+        setPreviewTitle(label);
+        toast.success("Náhled připraven. Teď klikni na „Stáhnout PNG“.");
       } catch (e) {
         console.error("export match lineup:", e);
         toast.error(
@@ -266,7 +285,7 @@ export function MatchLineupImageExportButton({
         setBusyKey(null);
       }
     },
-    [baseSlug, ratingSnapshot]
+    [baseSlug, ratingSnapshot, choices]
   );
 
   return (
@@ -297,6 +316,17 @@ export function MatchLineupImageExportButton({
         choices={choices}
         onPick={async (key) => {
           await runExport(key);
+        }}
+        previewDataUrl={previewDataUrl}
+        previewTitle={previewTitle}
+        onClearPreview={() => {
+          setPreviewDataUrl(null);
+          setPreviewFilename(null);
+          setPreviewTitle(null);
+        }}
+        onDownloadPreview={() => {
+          if (!previewDataUrl || !previewFilename) return;
+          downloadDataUrl(previewDataUrl, previewFilename);
         }}
       />
 

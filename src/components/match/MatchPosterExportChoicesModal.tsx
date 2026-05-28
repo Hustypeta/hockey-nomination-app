@@ -13,6 +13,10 @@ export function MatchPosterExportChoicesModal({
   busyKey,
   choices,
   onPick,
+  previewDataUrl,
+  previewTitle,
+  onDownloadPreview,
+  onClearPreview,
 }: {
   open: boolean;
   onClose: () => void;
@@ -22,6 +26,10 @@ export function MatchPosterExportChoicesModal({
   busyKey: string | null;
   choices: Array<{ key: string; title: string; hint?: string }>;
   onPick: (key: string) => void | Promise<void>;
+  previewDataUrl?: string | null;
+  previewTitle?: string | null;
+  onDownloadPreview?: () => void;
+  onClearPreview?: () => void;
 }) {
   const [mounted, setMounted] = useState(false);
 
@@ -80,7 +88,7 @@ export function MatchPosterExportChoicesModal({
                     <span className="flex items-center justify-between gap-3">
                       <span className="font-display text-sm font-black uppercase tracking-wide text-white">{c.title}</span>
                       <span className="shrink-0 font-display text-[11px] font-bold uppercase tracking-wider text-[#f1c40f]/80">
-                        {loading ? "…" : "Stáhnout"}
+                        {loading ? "…" : "Náhled"}
                       </span>
                     </span>
                     {c.hint ? <p className="mt-2 text-[11px] leading-snug text-white/45">{c.hint}</p> : null}
@@ -89,6 +97,45 @@ export function MatchPosterExportChoicesModal({
               );
             })}
           </ul>
+
+          {previewDataUrl ? (
+            <div className="mt-2 rounded-2xl border border-white/10 bg-black/25 p-3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Náhled</p>
+                  {previewTitle ? (
+                    <p className="mt-1 line-clamp-2 text-xs font-semibold text-white/80">{previewTitle}</p>
+                  ) : null}
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  {onClearPreview ? (
+                    <button
+                      type="button"
+                      onClick={onClearPreview}
+                      className="rounded-lg border border-white/12 bg-white/[0.04] px-2.5 py-1.5 text-[11px] font-bold text-white/70 hover:bg-white/[0.07]"
+                    >
+                      Zrušit
+                    </button>
+                  ) : null}
+                  {onDownloadPreview ? (
+                    <button
+                      type="button"
+                      onClick={onDownloadPreview}
+                      className="rounded-lg bg-gradient-to-r from-[#f1c40f] to-[#c8102e] px-3 py-1.5 text-[11px] font-black text-[#03050a] shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
+                    >
+                      Stáhnout PNG
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewDataUrl}
+                alt="Náhled exportu"
+                className="mt-3 w-full rounded-xl border border-white/10 bg-black/40"
+              />
+            </div>
+          ) : null}
 
           <TipsportPartnerBanner compact className="mt-4 shrink-0 border-t border-white/10 pt-4" />
 
