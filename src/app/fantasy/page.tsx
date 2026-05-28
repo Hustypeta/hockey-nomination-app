@@ -4,6 +4,9 @@ import { notFound, redirect } from "next/navigation";
 import { MsFantasyHome } from "@/components/ms-fantasy/MsFantasyHome";
 import { SiteShell } from "@/components/site/SiteShell";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { isMsFantasySchedulePauseDaySlug } from "@/lib/msFantasyConfig";
+import { ms2026FantasyOfficialLockAtIso } from "@/lib/ms2026FantasyOfficialGameDays";
 import {
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
@@ -46,6 +49,24 @@ export default async function FantasyIndexPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     redirect("/auth/signin?callbackUrl=%2Ffantasy");
+  }
+
+  // UX: /fantasy rovnou otevře "aktuální" (nejbližší neuzamčený) den,
+  // aby uživatel nemusel hledat v seznamu.
+  const rows = await prisma.msFantasyGameDay.findMany({
+    orderBy: [{ sortOrder: "asc" }, { lockAt: "asc" }],
+    select: { slug: true, lockAt: true },
+  });
+
+  const now = Date.now();
+  const nextOpen = rows.find((d) => {
+    if (isMsFantasySchedulePauseDaySlug(d.slug)) return false;
+    const lockIso = ms2026FantasyOfficialLockAtIso(d.slug) ?? d.lockAt.toISOString();
+    return new Date(lockIso).getTime() > now;
+  });
+
+  if (nextOpen?.slug) {
+    redirect(`/fantasy/${encodeURIComponent(nextOpen.slug)}`);
   }
 
   return (
