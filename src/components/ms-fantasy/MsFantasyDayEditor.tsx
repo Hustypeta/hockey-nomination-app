@@ -275,10 +275,6 @@ function MsFantasyRosterPanel({
         </button>
       ) : null}
 
-      <p className="mt-2 text-[0.65rem] leading-relaxed text-slate-600">
-        Klubová liga u fantasy poolu zatím v datech není — jen reprezentace, tier a pozice z importu MS.
-      </p>
-
       <input
         type="search"
         value={q}
