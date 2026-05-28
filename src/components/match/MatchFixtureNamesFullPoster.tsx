@@ -15,6 +15,7 @@ import {
   type MatchRatingAggregateMap,
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
+import styles from "./MatchFixtureNamesFullPoster.module.css";
 
 const formatCsDate = (d: Date) =>
   new Intl.DateTimeFormat("cs-CZ", {
@@ -23,18 +24,97 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-function SectionTitle({ children }: { children: ReactNode }) {
+function IconGoalie() {
   return (
-    <h3 className="mb-4 text-center font-display text-[14px] font-bold uppercase tracking-[0.26em] text-white/92 antialiased sm:mb-5 sm:text-[15px]">
-      {children}
-    </h3>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 3c3.9 0 7 3.1 7 7v2.3c0 4.7-3.3 8.8-7 8.8s-7-4.1-7-8.8V10c0-3.9 3.1-7 7-7Z"
+        stroke="rgba(226,232,240,0.9)"
+        strokeWidth="1.6"
+      />
+      <path
+        d="M8.8 11.2c1.2-1 2.6-1.5 3.2-1.5.7 0 2 .5 3.2 1.5"
+        stroke="rgba(226,232,240,0.9)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M9.2 16.7h5.6"
+        stroke="rgba(226,232,240,0.9)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
-function NameOnlyPill({ children }: { children: string }) {
+function IconDefense() {
   return (
-    <div className="flex min-h-[3.1rem] items-center justify-center rounded-xl bg-white/[0.96] px-3 py-2.5 text-center font-sans text-[18px] font-bold leading-snug tracking-wide text-[#0a1628] shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[3.35rem] sm:text-[19px]">
-      <span className="line-clamp-2 break-words">{children}</span>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 3l7 3v7c0 5-3.7 8.7-7 9-3.3-.3-7-4-7-9V6l7-3Z"
+        stroke="rgba(226,232,240,0.9)"
+        strokeWidth="1.6"
+      />
+    </svg>
+  );
+}
+
+function IconForwards() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M7 17l10-10"
+        stroke="rgba(226,232,240,0.9)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M6 9l4 4"
+        stroke="rgba(226,232,240,0.9)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M14 15l4 4"
+        stroke="rgba(226,232,240,0.9)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function SectionLabel({
+  icon,
+  children,
+}: {
+  icon: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <div className={styles.sectionLabelRow}>
+      <span className={styles.sectionRule} aria-hidden />
+      <span className={styles.sectionChip}>
+        <span className={styles.sectionIcon} aria-hidden>
+          {icon}
+        </span>
+        {children}
+      </span>
+      <span className={styles.sectionRule} aria-hidden />
+    </div>
+  );
+}
+
+function NameTile({ nameLine, markIcon }: { nameLine: string; markIcon: ReactNode }) {
+  return (
+    <div className={styles.tile}>
+      <div className={styles.tileInner}>
+        <span className={styles.tileMark} aria-hidden>
+          {markIcon}
+        </span>
+        <span className={`${styles.tileName} line-clamp-1`}>{nameLine}</span>
+      </div>
     </div>
   );
 }
@@ -58,10 +138,12 @@ function RatingNamePill({
 }) {
   const hue = matchRatingHue(display);
   return (
-    <div className="flex min-h-[3.35rem] flex-col items-center justify-center gap-1.5 rounded-xl bg-white/[0.96] px-3 py-2.5 text-center shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[3.6rem]">
-      <span className="line-clamp-2 w-full break-words font-sans text-[17px] font-bold leading-snug tracking-wide text-[#0a1628] sm:text-[18px]">
-        {nameLine}
-      </span>
+    <div className={styles.tile}>
+      <div className={styles.tileInner} style={{ gridTemplateColumns: "1fr" }}>
+        <span className={`${styles.tileName} line-clamp-1`} style={{ fontSize: 19 }}>
+          {nameLine}
+        </span>
+      </div>
       <span
         className="inline-flex items-baseline gap-1 rounded-lg px-2.5 py-0.5 font-display text-[15px] font-black tabular-nums sm:text-[16px]"
         style={{ background: hue.bg, color: hue.text, boxShadow: `0 0 0 1px rgba(255,255,255,0.85) inset` }}
@@ -94,10 +176,10 @@ interface BaseFixtureNamesFullPosterProps {
 type RatingMap = Record<string, { avg: number; count: number } | undefined>;
 
 const lineupSharedRoot =
-  "match-lineup-names-full-poster relative flex shrink-0 flex-col overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]";
+  `${styles.root} match-lineup-names-full-poster ${styles.poster}`;
 
 const ratingSharedRoot =
-  "match-rating-names-full-poster relative shrink-0 overflow-hidden rounded-none border-0 bg-[#060b14] shadow-[0_24px_70px_rgba(0,0,0,0.45)] antialiased [text-rendering:optimizeLegibility]";
+  `${styles.root} match-rating-names-full-poster ${styles.poster}`;
 
 export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixtureNamesFullPosterProps>(
   function MatchLineupNamesFullPoster(
@@ -128,41 +210,61 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
 
     return (
       <div ref={ref} data-export-slot="cele-jmena" className={lineupSharedRoot} style={SHARE_POSTER_3X4_STYLE}>
-        <DecorativeBg />
-        <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-2 pt-8 sm:px-10 sm:pt-9">
-          <PosterHeader titleLine={titleLine} subline={subline} />
+        <div className={styles.bg} aria-hidden />
+        <div className={styles.inner}>
+          <header className={styles.header}>
+            <p className={styles.kicker}>SESTAVA NA ZÁPAS</p>
+            <h1 className={`${styles.title} line-clamp-3`}>{titleLine || "Moje sestava na zápas"}</h1>
+            {subline ? <p className={styles.subline}>{subline}</p> : null}
+          </header>
 
-          <div className="mt-6 flex min-h-0 flex-1 flex-col justify-between py-3 sm:mt-7 sm:py-5">
-            <section className="flex shrink-0 flex-col justify-center">
-              <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionTitle>
-              <div className="mx-auto grid w-full max-w-[520px] grid-cols-2 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
+          <div className={styles.field}>
+            <section>
+              <SectionLabel icon={<IconGoalie />}>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionLabel>
+              <div className={styles.gridGoalies}>
                 {goalies.map((n, i) => (
-                  <NameOnlyPill key={`goalies-${i}`}>{n}</NameOnlyPill>
+                  <NameTile key={`goalies-${i}`} nameLine={n} markIcon={<IconGoalie />} />
                 ))}
               </div>
             </section>
 
-            <section className="flex min-h-0 flex-[1.15] flex-col justify-center">
-              <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionTitle>
-              <div className="mx-auto grid w-full max-w-[640px] grid-cols-2 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
+            <section>
+              <SectionLabel icon={<IconDefense />}>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionLabel>
+              <div className={styles.gridDefense}>
                 {defense.map((n, i) => (
-                  <NameOnlyPill key={`defense-${i}`}>{n}</NameOnlyPill>
+                  <NameTile key={`defense-${i}`} nameLine={n} markIcon={<IconDefense />} />
                 ))}
               </div>
             </section>
 
-            <section className="flex min-h-0 flex-[1.55] flex-col justify-center">
-              <SectionTitle>Útočníci</SectionTitle>
-              <div className="mx-auto grid w-full max-w-[920px] grid-cols-3 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
+            <section>
+              <SectionLabel icon={<IconForwards />}>Útočníci</SectionLabel>
+              <div className={styles.gridForwards}>
                 {forwards.map((n, i) => (
-                  <NameOnlyPill key={`forwards-${i}`}>{n}</NameOnlyPill>
+                  <NameTile key={`forwards-${i}`} nameLine={n} markIcon={<IconForwards />} />
                 ))}
               </div>
             </section>
           </div>
         </div>
 
-        <NamesFooter dateLabel={dateLabel} host={host} footerTag="Soupiska zápasu" />
+        <footer className={styles.footer}>
+          <div className={`${styles.footerItem}`} style={{ justifyContent: "flex-start" }}>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M7 3h10v18H7z" stroke="rgba(226,232,240,0.85)" strokeWidth="1.6" />
+              <path d="M9 7h6M9 11h6M9 15h6" stroke="rgba(226,232,240,0.85)" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+            Soupiska zápasu
+          </div>
+          <div className={styles.footerItem}>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M7 4v2M17 4v2M5 9h14" stroke="rgba(226,232,240,0.85)" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M6 6h12a1 1 0 0 1 1 1v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a1 1 0 0 1 1-1Z" stroke="rgba(226,232,240,0.85)" strokeWidth="1.6" />
+            </svg>
+            {dateLabel}
+          </div>
+          <div className={`${styles.footerItem} ${styles.brand}`}>{host || "hokejlineup.cz"}</div>
+        </footer>
       </div>
     );
   }
@@ -230,57 +332,53 @@ export const MatchRatingNamesFullPoster = forwardRef<
 
   return (
     <div ref={ref} data-export-slot="cele-jmena" className={`${ratingSharedRoot} flex flex-col`} style={SHARE_POSTER_3X4_STYLE}>
-      <DecorativeBg />
-      <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-8 pb-2 pt-8 sm:px-10 sm:pt-9">
-        <PosterHeader eyebrow="Hodnocení hráčů" titleLine={titleLine} subline={subline} />
+      <div className={styles.bg} aria-hidden />
+      <div className={styles.inner}>
+        <header className={styles.header}>
+          <p className={styles.kicker}>HODNOCENÍ ZÁPASU</p>
+          <h1 className={`${styles.title} line-clamp-3`}>{titleLine || "Moje sestava na zápas"}</h1>
+          {subline ? <p className={styles.subline}>{subline}</p> : null}
+        </header>
 
-        <div className="mt-6 flex min-h-0 flex-1 flex-col justify-between py-3 sm:mt-7 sm:py-5">
-          <section className="flex shrink-0 flex-col justify-center">
-            <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionTitle>
-            <div className="mx-auto grid w-full max-w-[520px] grid-cols-2 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
-              {renderPills(goalieIds)}
-            </div>
+        <div className={styles.field}>
+          <section>
+            <SectionLabel icon={<IconGoalie />}>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionLabel>
+            <div className={styles.gridGoalies}>{renderPills(goalieIds)}</div>
           </section>
 
-          <section className="flex min-h-0 flex-[1.15] flex-col justify-center">
-            <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionTitle>
-            <div className="mx-auto grid w-full max-w-[640px] grid-cols-2 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
-              {renderPills(defenseIds)}
-            </div>
+          <section>
+            <SectionLabel icon={<IconDefense />}>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionLabel>
+            <div className={styles.gridDefense}>{renderPills(defenseIds)}</div>
           </section>
 
-          <section className="flex min-h-0 flex-[1.55] flex-col justify-center">
-            <SectionTitle>Útočníci</SectionTitle>
-            <div className="mx-auto grid w-full max-w-[920px] grid-cols-3 gap-x-3 gap-y-3.5 sm:gap-x-4 sm:gap-y-4">
-              {renderPills(forwardIds)}
-            </div>
+          <section>
+            <SectionLabel icon={<IconForwards />}>Útočníci</SectionLabel>
+            <div className={styles.gridForwards}>{renderPills(forwardIds)}</div>
           </section>
         </div>
       </div>
 
-      <NamesFooter dateLabel={dateLabel} host={host} footerTag="Hodnocení zápasu" />
+      <footer className={styles.footer}>
+        <div className={`${styles.footerItem}`} style={{ justifyContent: "flex-start" }}>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M7 3h10v18H7z" stroke="rgba(226,232,240,0.85)" strokeWidth="1.6" />
+            <path d="M9 7h6M9 11h6M9 15h6" stroke="rgba(226,232,240,0.85)" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+          Hodnocení zápasu
+        </div>
+        <div className={styles.footerItem}>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M7 4v2M17 4v2M5 9h14" stroke="rgba(226,232,240,0.85)" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M6 6h12a1 1 0 0 1 1 1v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a1 1 0 0 1 1-1Z" stroke="rgba(226,232,240,0.85)" strokeWidth="1.6" />
+          </svg>
+          {dateLabel}
+        </div>
+        <div className={`${styles.footerItem} ${styles.brand}`}>{host || "hokejlineup.cz"}</div>
+      </footer>
     </div>
   );
 }
-);function DecorativeBg() {
-  return (
-    <>
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-[42%] bg-gradient-to-br from-[#c8102e] via-[#8f0b22] to-[#003087]"
-        style={{
-          borderTopLeftRadius: "110px",
-          borderBottomLeftRadius: "110px",
-          transform: "translateX(12%)",
-        }}
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-y-8 right-[36%] w-px bg-gradient-to-b from-transparent via-white/25 to-transparent opacity-70"
-        aria-hidden
-      />
-    </>
-  );
-}
+);
 
 function PosterHeader({
   eyebrow,
