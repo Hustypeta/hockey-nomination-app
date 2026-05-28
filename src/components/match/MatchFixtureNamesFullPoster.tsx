@@ -17,15 +17,6 @@ import {
 } from "@/lib/matchRatingExportDisplay";
 import styles from "./MatchFixtureNamesFullPoster.module.css";
 
-/**
- * Layout concepts considered:
- * - Concept A: "Two-rail" (Defense+Goalies rails, Forwards center hero grid)
- * - Concept B: "Rink zones" (big header + field with 3 zones; Forwards as dominant tiles)
- * - Concept C: "Stacked cards" (Forwards mega-card, Defense/Goalies compact bands)
- *
- * Selected: Concept B ("Rink zones") — strongest matchday feel + clear hierarchy.
- */
-
 const formatCsDate = (d: Date) =>
   new Intl.DateTimeFormat("cs-CZ", {
     day: "numeric",
@@ -36,15 +27,16 @@ const formatCsDate = (d: Date) =>
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <div className={styles.sectionLabelRow}>
-      <span className={styles.sectionChip}>{children}</span>
+      <span className={styles.sectionRule} aria-hidden />
+      <h3 className={styles.sectionLabel}>{children}</h3>
       <span className={styles.sectionRule} aria-hidden />
     </div>
   );
 }
 
-function PlayerTile({ nameLine, tone }: { nameLine: string; tone: "primary" | "secondary" | "tertiary" }) {
+function PlayerCard({ nameLine }: { nameLine: string }) {
   return (
-    <div className={`${styles.playerTile} ${styles[`tile_${tone}`]}`}>
+    <div className={styles.playerCard}>
       <span className={`${styles.playerName} line-clamp-2 break-words`}>{nameLine}</span>
     </div>
   );
@@ -69,8 +61,8 @@ function RatingNamePill({
 }) {
   const hue = matchRatingHue(display);
   return (
-    <div className={`${styles.playerTile} ${styles.tile_secondary} flex-col gap-1.5`}>
-      <span className={`${styles.playerName} line-clamp-2 w-full break-words`} style={{ fontSize: 18 }}>
+    <div className={`${styles.playerCard} flex-col gap-1.5`} style={{ paddingTop: 10, paddingBottom: 10 }}>
+      <span className={`${styles.playerName} line-clamp-2 w-full break-words`} style={{ fontSize: 17 }}>
         {nameLine}
       </span>
       <span
@@ -143,37 +135,35 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
       <div ref={ref} data-export-slot="cele-jmena" className={lineupSharedRoot} style={SHARE_POSTER_3X4_STYLE}>
         <div className={styles.bg} aria-hidden />
         <div className={styles.inner}>
-          <PosterHeader eyebrow="Matchday lineup" titleLine={titleLine} subline={subline} />
+          <PosterHeader titleLine={titleLine} subline={subline} />
 
-          <div className={styles.field}>
-            <div className={styles.zonePrimary}>
-              <SectionLabel>Útočníci</SectionLabel>
-              <div className={styles.gridForwards}>
-                {forwards.map((n, i) => (
-                  <PlayerTile key={`forwards-${i}`} nameLine={n} tone="primary" />
+          <div className={styles.sections}>
+            <section className={styles.section}>
+              <SectionLabel>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionLabel>
+              <div className={styles.grid2}>
+                {goalies.map((n, i) => (
+                  <PlayerCard key={`goalies-${i}`} nameLine={n} />
                 ))}
               </div>
-            </div>
+            </section>
 
-            <div className={styles.zoneRow}>
-              <div className={styles.zoneSecondary}>
-                <SectionLabel>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionLabel>
-                <div className={styles.gridDefense}>
-                  {defense.map((n, i) => (
-                    <PlayerTile key={`defense-${i}`} nameLine={n} tone="secondary" />
-                  ))}
-                </div>
+            <section className={styles.section} style={{ flex: 1.08 }}>
+              <SectionLabel>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionLabel>
+              <div className={styles.grid2} style={{ maxWidth: 700 }}>
+                {defense.map((n, i) => (
+                  <PlayerCard key={`defense-${i}`} nameLine={n} />
+                ))}
               </div>
+            </section>
 
-              <div className={styles.zoneTertiary}>
-                <SectionLabel>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionLabel>
-                <div className={styles.gridGoalies}>
-                  {goalies.map((n, i) => (
-                    <PlayerTile key={`goalies-${i}`} nameLine={n} tone="tertiary" />
-                  ))}
-                </div>
+            <section className={styles.section} style={{ flex: 1.32 }}>
+              <SectionLabel>Útočníci</SectionLabel>
+              <div className={styles.grid3}>
+                {forwards.map((n, i) => (
+                  <PlayerCard key={`forwards-${i}`} nameLine={n} />
+                ))}
               </div>
-            </div>
+            </section>
           </div>
         </div>
 
@@ -249,29 +239,27 @@ export const MatchRatingNamesFullPoster = forwardRef<
       <div className={styles.inner}>
         <PosterHeader eyebrow="Hodnocení hráčů" titleLine={titleLine} subline={subline} />
 
-        <div className={styles.field}>
-          <div className={styles.zonePrimary}>
+        <div className={styles.sections}>
+          <section className={styles.section}>
+            <SectionLabel>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionLabel>
+            <div className={styles.grid2}>
+              {renderPills(goalieIds)}
+            </div>
+          </section>
+
+          <section className={styles.section} style={{ flex: 1.08 }}>
+            <SectionLabel>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionLabel>
+            <div className={styles.grid2} style={{ maxWidth: 700 }}>
+              {renderPills(defenseIds)}
+            </div>
+          </section>
+
+          <section className={styles.section} style={{ flex: 1.32 }}>
             <SectionLabel>Útočníci</SectionLabel>
-            <div className={styles.gridForwards}>
+            <div className={styles.grid3}>
               {renderPills(forwardIds)}
             </div>
-          </div>
-
-          <div className={styles.zoneRow}>
-            <div className={styles.zoneSecondary}>
-              <SectionLabel>{MATCH_LINEUP_POSTER_GROUP_TITLE.defense}</SectionLabel>
-              <div className={styles.gridDefense}>
-                {renderPills(defenseIds)}
-              </div>
-            </div>
-
-            <div className={styles.zoneTertiary}>
-              <SectionLabel>{MATCH_LINEUP_POSTER_GROUP_TITLE.goalies}</SectionLabel>
-              <div className={styles.gridGoalies}>
-                {renderPills(goalieIds)}
-              </div>
-            </div>
-          </div>
+          </section>
         </div>
       </div>
 
@@ -296,11 +284,10 @@ function PosterHeader({
 }) {
   return (
     <header className={styles.titleBlock}>
-      <div className={styles.titleTopRow}>
-        <p className={styles.eyebrow}>{eyebrow ?? "Matchday lineup"}</p>
-        <span className={styles.scorebug} aria-hidden />
-      </div>
-      {titleLine ? <h1 className={`${styles.title} line-clamp-3`}>{titleLine}</h1> : null}
+      <p className={styles.eyebrow}>{eyebrow ?? "Matchday lineup"}</p>
+      {titleLine ? (
+        <h1 className={`${styles.title} line-clamp-3`}>{titleLine}</h1>
+      ) : null}
       {subline ? <p className={styles.subline}>{subline}</p> : null}
     </header>
   );

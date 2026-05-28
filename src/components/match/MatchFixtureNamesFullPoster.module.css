@@ -1,16 +1,19 @@
 .root {
   --ink: #05060f;
   --ink2: #060b14;
-  --navy: #0a1628;
-  --navy2: #0c1c33;
+  --graphite: #0b1220;
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass2: rgba(255, 255, 255, 0.085);
+  --stroke: rgba(255, 255, 255, 0.12);
+  --stroke2: rgba(125, 211, 252, 0.18);
   --cyan: #7dd3fc;
   --cyan2: #00b4ff;
-  --wine: rgba(200, 16, 46, 0.42);
-  --stroke: rgba(255, 255, 255, 0.12);
-  --shadow: 0 26px 90px rgba(0, 0, 0, 0.58);
-  --shadow2: 0 16px 56px rgba(0, 0, 0, 0.38);
-  --r: 22px;
-  --r2: 16px;
+  --wine: rgba(200, 16, 46, 0.38);
+  --wine2: rgba(158, 12, 36, 0.22);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  --shadow2: 0 18px 60px rgba(0, 0, 0, 0.38);
+  --radius: 18px;
+  --radius2: 14px;
 }
 
 .poster {
@@ -29,18 +32,30 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(1100px 640px at 16% -12%, rgba(0, 180, 255, 0.22), transparent 62%),
-    radial-gradient(980px 560px at 108% 10%, var(--wine), transparent 60%),
-    radial-gradient(900px 640px at 50% 116%, rgba(255, 255, 255, 0.06), transparent 64%),
-    linear-gradient(180deg, rgba(5, 6, 15, 0.70) 0%, rgba(5, 6, 15, 0.35) 32%, rgba(5, 6, 15, 0.88) 78%, rgba(5, 6, 15, 0.96) 100%),
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0px, rgba(255, 255, 255, 0.09) 1px, transparent 1px, transparent 18px);
+    radial-gradient(1000px 620px at 18% -10%, rgba(0, 180, 255, 0.18), transparent 60%),
+    radial-gradient(900px 520px at 100% 0%, var(--wine), transparent 58%),
+    radial-gradient(780px 620px at 60% 110%, rgba(255, 255, 255, 0.05), transparent 62%),
+    linear-gradient(180deg, rgba(5, 6, 15, 0.65) 0%, rgba(5, 6, 15, 0.35) 34%, rgba(5, 6, 15, 0.8) 76%, rgba(5, 6, 15, 0.95) 100%),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0px, rgba(255, 255, 255, 0.08) 1px, transparent 1px, transparent 14px);
+  opacity: 1;
+}
+
+.bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 120% 85% at 20% 8%, rgba(0, 180, 255, 0.11), transparent 58%),
+    radial-gradient(ellipse 95% 75% at 82% 18%, var(--wine2), transparent 58%);
+  mix-blend-mode: screen;
+  opacity: 0.8;
 }
 
 .bg::before {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.05;
+  opacity: 0.055;
   background-image:
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.55) 0px, rgba(255, 255, 255, 0.55) 1px, transparent 1px, transparent 3px);
   transform: rotate(6deg) scale(1.25);
@@ -54,46 +69,31 @@
   min-height: 0;
   flex: 1;
   flex-direction: column;
-  padding: 42px 42px 10px;
+  padding: 44px 44px 10px;
 }
 
 .titleBlock {
-  max-width: 82%;
-}
-
-.titleTopRow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.scorebug {
-  height: 10px;
-  width: 92px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(0, 48, 135, 0.9), rgba(0, 180, 255, 0.65), rgba(200, 16, 46, 0.75));
-  box-shadow: 0 10px 30px rgba(0, 180, 255, 0.16);
-  opacity: 0.85;
+  max-width: 78%;
 }
 
 .eyebrow {
   font-family: var(--font-display, ui-sans-serif);
   font-size: 11px;
-  letter-spacing: 0.34em;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  font-weight: 900;
-  color: rgba(125, 211, 252, 0.86);
+  font-weight: 800;
+  color: rgba(125, 211, 252, 0.85);
 }
 
 .title {
-  margin-top: 12px;
+  margin-top: 10px;
   font-family: var(--font-display, ui-sans-serif);
-  font-weight: 950;
+  font-weight: 900;
   letter-spacing: 0.02em;
-  line-height: 1.03;
-  font-size: 38px;
-  color: rgba(255, 255, 255, 0.97);
-  text-shadow: 0 12px 64px rgba(0, 0, 0, 0.62);
+  line-height: 1.06;
+  font-size: 34px;
+  color: rgba(255, 255, 255, 0.96);
+  text-shadow: 0 10px 56px rgba(0, 0, 0, 0.55);
 }
 
 .subline {
@@ -102,127 +102,87 @@
   color: rgba(255, 255, 255, 0.62);
 }
 
-.field {
-  margin-top: 22px;
-  flex: 1;
-  min-height: 0;
+.sections {
+  margin-top: 28px;
   display: flex;
+  min-height: 0;
+  flex: 1;
   flex-direction: column;
-  gap: 16px;
+  justify-content: space-between;
+  gap: 18px;
   padding: 10px 0 16px;
 }
 
-.zonePrimary {
-  border-radius: var(--r);
-  border: 1px solid rgba(125, 211, 252, 0.18);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  padding: 16px 16px 14px;
-}
-
-.zoneRow {
-  display: grid;
-  grid-template-columns: 1.45fr 0.95fr;
-  gap: 14px;
-  min-height: 0;
-  flex: 1;
-}
-
-.zoneSecondary,
-.zoneTertiary {
-  border-radius: var(--r);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
-  box-shadow: var(--shadow2), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  padding: 14px 14px 12px;
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .sectionLabelRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
-.sectionChip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 11px;
-  letter-spacing: 0.22em;
+.sectionLabel {
+  font-size: 12px;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  font-weight: 950;
-  color: rgba(255, 255, 255, 0.86);
-  background: rgba(0, 48, 135, 0.22);
-  border: 1px solid rgba(125, 211, 252, 0.22);
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .sectionRule {
   height: 1px;
-  flex: 1;
-  background: linear-gradient(90deg, rgba(125, 211, 252, 0.35), transparent);
-  opacity: 0.85;
+  width: 86px;
+  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.35), transparent);
+  opacity: 0.9;
 }
 
-.gridForwards {
+.grid2 {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 620px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 14px;
+}
+
+.grid3 {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 980px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 14px 14px;
 }
 
-.gridDefense {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.gridGoalies {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.playerTile {
+.playerCard {
   position: relative;
   display: flex;
+  min-height: 56px;
   align-items: center;
   justify-content: center;
-  border-radius: var(--r2);
-  padding: 16px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: radial-gradient(120% 120% at 30% 0%, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.045));
-  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.045));
+  border: 1px solid var(--stroke);
+  box-shadow: var(--shadow2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.playerTile::after {
+.playerCard::before {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: var(--r2);
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 55%);
-  opacity: 0.35;
-}
-
-.tile_primary {
-  min-height: 92px;
+  border-radius: var(--radius);
   background:
-    radial-gradient(120% 120% at 30% 0%, rgba(0, 180, 255, 0.18), rgba(255, 255, 255, 0.05)),
-    radial-gradient(120% 120% at 92% 10%, rgba(200, 16, 46, 0.12), transparent 62%);
-  border-color: rgba(125, 211, 252, 0.22);
-}
-
-.tile_secondary {
-  min-height: 82px;
-  opacity: 0.98;
-}
-
-.tile_tertiary {
-  min-height: 82px;
-  opacity: 0.92;
-  filter: saturate(0.96);
+    radial-gradient(ellipse 90% 110% at 20% 0%, rgba(0, 180, 255, 0.14), transparent 58%),
+    radial-gradient(ellipse 90% 110% at 85% 10%, rgba(200, 16, 46, 0.1), transparent 60%);
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .playerName {
@@ -230,12 +190,11 @@
   z-index: 1;
   width: 100%;
   text-align: center;
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.95);
-  line-height: 1.10;
-  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.94);
+  line-height: 1.12;
 }
 
 .ratingBadge {
