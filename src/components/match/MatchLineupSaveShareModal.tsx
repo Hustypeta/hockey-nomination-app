@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
-import { Copy, Share2, X } from "lucide-react";
+import { useMemo } from "react";
+import { X } from "lucide-react";
 import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 import type { LineupStructure, Player } from "@/types";
@@ -16,7 +15,6 @@ export function MatchLineupSaveShareModal({
   saving,
   valid,
   onSave,
-  onShareLink,
   posterModalOpen,
   onPosterModalOpenChange,
   lineup,
@@ -34,7 +32,6 @@ export function MatchLineupSaveShareModal({
   saving: boolean;
   valid: boolean;
   onSave: () => Promise<string | null>;
-  onShareLink: () => Promise<void>;
   posterModalOpen: boolean;
   onPosterModalOpenChange: (open: boolean) => void;
   lineup: LineupStructure;
@@ -44,9 +41,6 @@ export function MatchLineupSaveShareModal({
   shareSlug?: string | null;
   siteOrigin: string;
 }) {
-  const [copied, setCopied] = useState(false);
-
-  const url = shareUrl || "";
   const canShare = valid && !saving;
 
   const titleHint = useMemo(() => {
@@ -97,7 +91,7 @@ export function MatchLineupSaveShareModal({
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-2">
             <button
               type="button"
               onClick={() => void onSave()}
@@ -106,44 +100,7 @@ export function MatchLineupSaveShareModal({
             >
               {saving ? "Ukládám…" : "Uložit"}
             </button>
-            <button
-              type="button"
-              onClick={() => void onShareLink()}
-              disabled={!canShare}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#f1c40f]/40 bg-gradient-to-b from-[#f1c40f]/15 to-[#f1c40f]/5 px-4 py-2.5 text-sm font-black text-[#f1e6a8] hover:from-[#f1c40f]/25 hover:to-[#f1c40f]/10 disabled:opacity-50"
-            >
-              <Share2 className="h-4 w-4" aria-hidden />
-              Sdílet odkaz
-            </button>
           </div>
-
-          {url ? (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Odkaz</p>
-              <p className="mt-2 break-all rounded-xl border border-white/10 bg-black/20 px-3 py-2 font-mono text-xs text-white">
-                {url}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      await navigator.clipboard.writeText(url);
-                      setCopied(true);
-                      setTimeout(() => setCopied(false), 900);
-                      toast.success("Odkaz zkopírován do schránky.");
-                    } catch {
-                      toast.error("Nepodařilo se zkopírovat.");
-                    }
-                  }}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-3 py-2 text-xs font-bold text-white/85 hover:bg-white/[0.08]"
-                >
-                  <Copy className="h-4 w-4" aria-hidden />
-                  {copied ? "Zkopírováno" : "Kopírovat"}
-                </button>
-              </div>
-            </div>
-          ) : null}
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Plakát</p>

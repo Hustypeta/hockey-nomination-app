@@ -569,7 +569,6 @@ export function MatchLineupBuilderPage() {
         saving={saving}
         valid={valid}
         onSave={saveShare}
-        onShareLink={handleShare}
         posterModalOpen={lineupPosterModalOpen}
         onPosterModalOpenChange={setLineupPosterModalOpen}
         lineup={lineup}
