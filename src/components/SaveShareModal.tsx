@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { signIn } from "next-auth/react";
-import { Download, Share2, Link2, Copy, ChevronLeft } from "lucide-react";
+import { Download, Share2, ChevronLeft } from "lucide-react";
 import { sharePngDataUrl } from "@/lib/sharePosterImage";
 import {
   captureElementToCanvas,
@@ -77,7 +77,6 @@ export function SaveShareModal({
   const [shareBusy, setShareBusy] = useState(false);
   const [shareHint, setShareHint] = useState<string | null>(null);
   const [savedId, setSavedId] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
   const [previewFrame, setPreviewFrame] = useState<"original" | "1x1" | "9x16" | "16x9">("original");
   /** Téma pozadí letterboxu — podle okamžiku generování plakátu. */
@@ -85,7 +84,7 @@ export function SaveShareModal({
   const [framedPreviewUrl, setFramedPreviewUrl] = useState<string | null>(null);
   const baseCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const linkForSocial = shareLinkHref || "";
+  // Odkaz zde nezobrazujeme — ponecháváme jen generování a stažení grafiky.
   const ensureTitle = useCallback((): string | null => {
     const t = nominationTitle.trim();
     if (t) return t;
@@ -189,6 +188,7 @@ export function SaveShareModal({
     }
   };
 
+  // Odkaz v tomto modalu nezobrazujeme (ponecháváme jen grafiku).
   const downloadAspect = (w: number, h: number, suffix: string) => {
     const base = baseCanvasRef.current;
     if (!base) return;
@@ -205,7 +205,7 @@ export function SaveShareModal({
       filename,
       title: SHARE_TITLE,
       text: SHARE_TEXT,
-      url: linkForSocial || undefined,
+      url: undefined,
     });
     if (result.ok && result.method === "clipboard") {
       setShareHint(
@@ -213,38 +213,9 @@ export function SaveShareModal({
       );
     } else if (!result.ok && result.reason !== "cancelled") {
       setShareHint(
-        "Systémové sdílení obrázku tady nejde — použij „Stáhnout PNG“ níže, nebo zkopíruj odkaz. Na iPhonu jde obrázek často jen uložit do Fotek a odtud sdílet."
+        "Systémové sdílení obrázku tady nejde — použij „Stáhnout PNG“ níže. Na iPhonu jde obrázek často jen uložit do Fotek a odtud sdílet."
       );
     }
-  };
-
-  const handleShareLink = async () => {
-    if (!nominationTitle.trim()) return;
-    const url = linkForSocial;
-    if (!url) return;
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: SHARE_TITLE,
-          text: "Podívej se na moji nominaci.",
-          url,
-        });
-        return;
-      }
-    } catch (e) {
-      if ((e as Error).name === "AbortError") return;
-    }
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleCopyLink = async () => {
-    const url = linkForSocial;
-    if (!url) return;
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleSaveNomination = async () => {
@@ -303,10 +274,7 @@ export function SaveShareModal({
                 className="w-full rounded-xl border border-white/12 bg-[#0a0c10] px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-[#c8102e]/45 focus:outline-none focus:ring-1 focus:ring-[#c8102e]/30 disabled:opacity-50"
               />
             </label>
-            <p className="mt-2 text-[11px] leading-snug text-white/45">
-              Určuje text na plakátu a veřejnou adresu odkazu ve tvaru{" "}
-              <span className="text-sky-300/90">…/váš-název</span>.
-            </p>
+            <p className="mt-2 text-[11px] leading-snug text-white/45">Určuje text na plakátu.</p>
           </div>
 
           {!previewDataUrl ? (
@@ -405,37 +373,6 @@ export function SaveShareModal({
                     {shareBusy ? "Generuji plakát…" : "Sdílet obrázek"}
                   </span>
                 </button>
-
-                <button
-                  type="button"
-                  onClick={handleShareLink}
-                  className="w-full rounded-xl border-2 border-[#003087]/80 bg-[#003087]/25 py-3.5 font-display text-base font-bold tracking-wide text-white transition-colors hover:bg-[#003087]/40 disabled:cursor-not-allowed disabled:opacity-45 sm:py-4 sm:text-lg"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    <Link2 className="h-5 w-5 shrink-0 opacity-90" aria-hidden />
-                    Sdílet odkaz
-                  </span>
-                </button>
-              </div>
-
-              <div className="mt-5 rounded-xl border border-white/10 bg-black/25 p-3 sm:p-4">
-                <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-white/40">Odkaz</p>
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
-                  <input
-                    type="text"
-                    readOnly
-                    value={linkForSocial}
-                    className="min-w-0 flex-1 truncate rounded-lg border border-white/10 bg-[#0a0c10] px-3 py-2.5 text-xs text-white/90"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleCopyLink}
-                    className="flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#003087] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0040a8] disabled:cursor-not-allowed disabled:opacity-45"
-                  >
-                    <Copy className="h-4 w-4" aria-hidden />
-                    {copied ? "Zkopírováno" : "Kopírovat"}
-                  </button>
-                </div>
               </div>
             </>
           ) : (
@@ -605,24 +542,6 @@ export function SaveShareModal({
                 </button>
               )}
 
-              <div className="flex flex-col gap-2 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
-                <button
-                  type="button"
-                  onClick={handleCopyLink}
-                  className="flex items-center justify-center gap-2 rounded-lg border border-white/15 px-4 py-2 text-sm text-white/85 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-45"
-                >
-                  <Copy className="h-4 w-4" aria-hidden />
-                  {copied ? "Odkaz zkopírován" : "Kopírovat odkaz"}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleShareLink}
-                  className="text-sm font-semibold text-sky-300/90 underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-45"
-                >
-                  Sdílet odkaz…
-                </button>
-              </div>
-
               <button
                 type="button"
                 onClick={resetPreview}
@@ -644,8 +563,8 @@ export function SaveShareModal({
               </p>
               {!contestSubmissionOpen ? (
                 <p className="mb-3 rounded-lg border border-amber-600/35 bg-amber-950/25 px-3 py-2.5 text-center text-xs leading-relaxed text-amber-100/90">
-                  Uzávěrka odeslání do soutěže už proběhla — koncepty u účtu můžeš dál ukládat. Odkaz a plakát pořád
-                  můžeš sdílet.
+                  Uzávěrka odeslání do soutěže už proběhla — koncepty u účtu můžeš dál ukládat. Plakát pořád můžeš
+                  generovat a stáhnout.
                 </p>
               ) : null}
               <button
