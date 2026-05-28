@@ -43,12 +43,31 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function FantasyIndexPage() {
+export default async function FantasyIndexPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   if (!isMsFantasyVisibleToUsers()) notFound();
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     redirect("/auth/signin?callbackUrl=%2Ffantasy");
+  }
+
+  const sp = (await searchParams) ?? {};
+  const dnyParam = sp.dny;
+  const showDays =
+    dnyParam === "1" ||
+    dnyParam === "true" ||
+    (Array.isArray(dnyParam) && (dnyParam.includes("1") || dnyParam.includes("true")));
+
+  if (showDays) {
+    return (
+      <SiteShell>
+        <MsFantasyHome />
+      </SiteShell>
+    );
   }
 
   // UX: /fantasy rovnou otevře "aktuální" (nejbližší neuzamčený) den,

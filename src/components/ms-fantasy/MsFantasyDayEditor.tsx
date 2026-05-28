@@ -667,7 +667,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
     return (
       <div className="mx-auto max-w-xl px-4 py-14 text-center">
         <p className="text-slate-300">{dayErr}</p>
-        <Link href="/fantasy" className="mt-6 inline-flex text-[#00B4FF] hover:underline">
+        <Link href="/fantasy?dny=1" className="mt-6 inline-flex text-[#00B4FF] hover:underline">
           Zpět na fantasy přehled
         </Link>
       </div>
@@ -797,7 +797,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
           <MsFantasyGlassPanel className="mt-4 border-t border-white/[0.08] p-4 sm:mt-5 sm:p-5" glow="subtle">
             <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-              <Link href="/fantasy" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
+              <Link href="/fantasy?dny=1" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
                 ← Hrací dny
               </Link>
               <span className="text-slate-600" aria-hidden>
