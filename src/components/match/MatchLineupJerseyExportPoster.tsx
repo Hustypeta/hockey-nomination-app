@@ -20,7 +20,6 @@ import {
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
 import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
-import styles from "./MatchLineupJerseyExportPoster.module.css";
 
 const LINE_JERSEY_SLOT_MAX_W = 196;
 
@@ -307,83 +306,76 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       </div>
     );
 
-    const lineIndex =
-      group === "line-1" ? 0 : group === "line-2" ? 1 : group === "line-3" ? 2 : group === "line-4" ? 3 : null;
-
-    const mainGoalieId = lineup.goalies[0] ?? null;
-    const extraGoalieId = lineup.goalies[1] ?? null;
-    const extraForwardId = allowExtraForward ? (lineup.extraForwards[0] ?? null) : null;
-
-    // Jednotná logika: hlavní karta = vždy 3F + 2D + 1G (gólman #1).
-    // Extra hráči (13. útočník / 2. gólman) jen jako secondary slot mimo hlavní grid.
-    const mainLineupGrid = lineIndex != null ? (
-      <div className={styles.posterRoot}>
-        <div className={styles.mainGrid}>
-          <div className={styles.row3}>
-            {[
-              lineup.forwardLines[lineIndex]?.lw ?? null,
-              lineup.forwardLines[lineIndex]?.c ?? null,
-              lineup.forwardLines[lineIndex]?.rw ?? null,
-            ].map((pid, i) => (
-              <div key={`f-${lineIndex}-${i}`} style={{ minWidth: 0, width: "100%" }}>
-                {pid ? renderPlayerCard(pid) : null}
+    const lineFormation = lineChunks ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: jerseyRatingExport ? 8 : 12,
+          justifyContent: "space-evenly",
+        }}
+      >
+        {lineChunks.forwards.filter(Boolean).length > 0 ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              gap: jerseyRatingExport ? 6 : 8,
+              alignItems: "start",
+              justifyItems: "center",
+            }}
+          >
+            {lineChunks.forwards.filter(Boolean).map((pid) => (
+              <div key={pid} style={{ minWidth: 0, width: "100%" }}>
+                {renderPlayerCard(pid)}
               </div>
             ))}
-          </div>
-
-          <div className={styles.row2}>
-            {[
-              lineup.defensePairs[lineIndex]?.lb ?? null,
-              lineup.defensePairs[lineIndex]?.rb ?? null,
-            ].map((pid, i) => (
-              <div key={`d-${lineIndex}-${i}`} style={{ minWidth: 0, width: "100%" }}>
-                {pid ? renderPlayerCard(pid) : null}
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.row1}>
-            <div style={{ width: "100%", maxWidth: LINE_JERSEY_SLOT_MAX_W }}>
-              {mainGoalieId ? renderPlayerCard(mainGoalieId) : null}
-            </div>
-          </div>
-        </div>
-
-        {group === "line-4" && (extraForwardId || extraGoalieId) ? (
-          <div className={styles.extraSlot}>
-            <div className={styles.extraGrid}>
-              {extraForwardId ? (
-                <div className={styles.extraCardWrap} style={{ minWidth: 0, width: "100%" }}>
-                  <div className={styles.extraLabel}>13. útočník</div>
-                  {renderPlayerCard(extraForwardId)}
-                </div>
-              ) : (
-                <div />
-              )}
-              {extraGoalieId ? (
-                <div className={styles.extraCardWrap} style={{ minWidth: 0, width: "100%" }}>
-                  <div className={styles.extraLabel}>2. gólman</div>
-                  {renderPlayerCard(extraGoalieId)}
-                </div>
-              ) : (
-                <div />
-              )}
-            </div>
           </div>
         ) : null}
-      </div>
-    ) : null;
 
-    const lineFormation = mainLineupGrid ?? (lineChunks ? (
-      <div className={styles.mainGrid}>
-        {/* fallback pro jiné skupiny */}
-        <div className={styles.row2}>
-          {lineChunks.forwards.filter(Boolean).slice(0, 2).map((pid) => (
-            <div key={pid} style={{ minWidth: 0, width: "100%" }}>
-              {renderPlayerCard(pid)}
+        {lineChunks.defense.filter(Boolean).length > 0 ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: jerseyRatingExport ? 6 : 8,
+              alignItems: "start",
+              justifyItems: "center",
+            }}
+          >
+            {lineChunks.defense.filter(Boolean).map((pid) => (
+              <div key={pid} style={{ minWidth: 0, width: "100%" }}>
+                {renderPlayerCard(pid)}
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        {lineChunks.bottom.filter(Boolean).length > 0 ? (
+          lineChunks.bottom.filter(Boolean).length === 1 ? (
+            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+              <div style={{ width: "100%", maxWidth: LINE_JERSEY_SLOT_MAX_W }}>
+                {renderPlayerCard(lineChunks.bottom.filter(Boolean)[0]!)}
+              </div>
             </div>
-          ))}
-        </div>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gap: jerseyRatingExport ? 6 : 8,
+                alignItems: "start",
+                justifyItems: "center",
+              }}
+            >
+              {lineChunks.bottom.filter(Boolean).map((pid) => (
+                <div key={pid} style={{ minWidth: 0, width: "100%" }}>
+                  {renderPlayerCard(pid)}
+                </div>
+              ))}
+            </div>
+          )
+        ) : null}
       </div>
     ) : (
       <div
@@ -400,7 +392,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
           </div>
         ))}
       </div>
-    ));
+    );
 
     return (
       <div ref={ref} data-export-slot={group} className="match-lineup-jersey-export-poster" style={rootStyle}>
