@@ -295,9 +295,9 @@ export function MatchLineupImageExportButton({
           type="button"
           disabled={disabled}
           onClick={() => !disabled && setModalOpen(true)}
-          className="inline-flex items-center gap-2 rounded-xl border border-sky-400/45 bg-sky-500/12 px-4 py-2 text-sm font-bold text-sky-50 hover:bg-sky-500/22 disabled:opacity-50"
+          className="inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-sky-300/55 bg-gradient-to-r from-sky-500/25 via-cyan-400/20 to-sky-500/25 px-6 py-4 font-display text-lg font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(125,211,252,0.22),0_18px_60px_rgba(0,180,255,0.18)] transition hover:brightness-110 hover:shadow-[0_0_0_1px_rgba(125,211,252,0.35),0_24px_80px_rgba(0,180,255,0.22)] disabled:opacity-50 sm:py-5"
         >
-          <Share2 className="h-4 w-4 shrink-0" aria-hidden />
+          <Share2 className="h-6 w-6 shrink-0 text-cyan-100" aria-hidden />
           Plakáty / grafika
         </button>
       ) : null}
