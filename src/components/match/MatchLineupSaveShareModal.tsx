@@ -104,9 +104,6 @@ export function MatchLineupSaveShareModal({
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Plakát</p>
-            <p className="mt-1 text-xs text-white/60">
-              Jako u nominace: celá soupiska jen jména nebo s dresy, případně řezy po lajnách (dresy).
-            </p>
             <div className="mt-3">
               <MatchLineupImageExportButton
                 modalOpen={posterModalOpen}
