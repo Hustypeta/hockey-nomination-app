@@ -7,10 +7,17 @@ import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCar
 import { IceRinkShell } from "@/components/shared/IceRinkShell";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
+  pickMatchLineupForwards34ExtraSlot,
+  pickMatchLineupLineExtraSlots,
   pickMatchLineupSegmentPlayerIds,
   splitMatchLineupLinePosterChunks,
+  type MatchLineupLineExtraSlot,
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
+import {
+  ExtraPlayerSlotBand,
+  MatchLineupPosterLineLayout,
+} from "@/components/match/lineup-poster/MatchLineupPosterLineLayout";
 import { matchPosterJerseyFrameStyles } from "@/lib/matchLineupPosterJerseyFrame";
 import {
   fmtMatchRating,
@@ -83,6 +90,14 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       [lineup, group, defenseCount, allowExtraForward]
     );
     const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
+    const lineExtraSlots = useMemo(
+      () => pickMatchLineupLineExtraSlots(lineup, group, allowExtraForward),
+      [lineup, group, allowExtraForward]
+    );
+    const forwards34Extra = useMemo(
+      () => pickMatchLineupForwards34ExtraSlot(lineup, group, allowExtraForward),
+      [lineup, group, allowExtraForward]
+    );
     const cols = 2;
 
     const posterJerseyScale = jerseyRatingExport ? 1.06 : 1.18;
@@ -306,91 +321,44 @@ export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLin
       </div>
     );
 
+    const renderExtraCard = (slot: MatchLineupLineExtraSlot) => renderPlayerCard(slot.playerId);
+
     const lineFormation = lineChunks ? (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: jerseyRatingExport ? 8 : 12,
-          justifyContent: "space-evenly",
-        }}
-      >
-        {lineChunks.forwards.filter(Boolean).length > 0 ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              gap: jerseyRatingExport ? 6 : 8,
-              alignItems: "start",
-              justifyItems: "center",
-            }}
-          >
-            {lineChunks.forwards.filter(Boolean).map((pid) => (
-              <div key={pid} style={{ minWidth: 0, width: "100%" }}>
-                {renderPlayerCard(pid)}
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        {lineChunks.defense.filter(Boolean).length > 0 ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: jerseyRatingExport ? 6 : 8,
-              alignItems: "start",
-              justifyItems: "center",
-            }}
-          >
-            {lineChunks.defense.filter(Boolean).map((pid) => (
-              <div key={pid} style={{ minWidth: 0, width: "100%" }}>
-                {renderPlayerCard(pid)}
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        {lineChunks.bottom.filter(Boolean).length > 0 ? (
-          lineChunks.bottom.filter(Boolean).length === 1 ? (
-            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-              <div style={{ width: "100%", maxWidth: LINE_JERSEY_SLOT_MAX_W }}>
-                {renderPlayerCard(lineChunks.bottom.filter(Boolean)[0]!)}
-              </div>
-            </div>
-          ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: jerseyRatingExport ? 6 : 8,
-                alignItems: "start",
-                justifyItems: "center",
-              }}
-            >
-              {lineChunks.bottom.filter(Boolean).map((pid) => (
-                <div key={pid} style={{ minWidth: 0, width: "100%" }}>
-                  {renderPlayerCard(pid)}
-                </div>
-              ))}
-            </div>
-          )
-        ) : null}
-      </div>
+      <MatchLineupPosterLineLayout
+        compact={Boolean(jerseyRatingExport)}
+        forwards={lineChunks.forwards.filter(Boolean).map((pid) => renderPlayerCard(pid))}
+        defense={lineChunks.defense.filter(Boolean).map((pid) => renderPlayerCard(pid))}
+        goalie={
+          lineChunks.bottom[0]
+            ? renderPlayerCard(lineChunks.bottom[0])
+            : null
+        }
+        extraSlots={lineExtraSlots}
+        renderExtraCard={renderExtraCard}
+      />
     ) : (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gap: jerseyRatingExport ? 10 : 14,
-          alignContent: "space-evenly",
-        }}
-      >
-        {ids.map((pid) => (
-          <div key={pid} style={{ minWidth: 0, width: "100%" }}>
-            {renderPlayerCard(pid)}
-          </div>
-        ))}
+      <div style={{ display: "flex", flexDirection: "column", gap: jerseyRatingExport ? 10 : 14 }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${cols}, 1fr)`,
+            gap: jerseyRatingExport ? 10 : 14,
+            alignContent: "space-evenly",
+          }}
+        >
+          {ids.map((pid) => (
+            <div key={pid} style={{ minWidth: 0, width: "100%" }}>
+              {renderPlayerCard(pid)}
+            </div>
+          ))}
+        </div>
+        {forwards34Extra ? (
+          <ExtraPlayerSlotBand
+            compact={Boolean(jerseyRatingExport)}
+            extraSlots={[forwards34Extra]}
+            renderExtraCard={renderExtraCard}
+          />
+        ) : null}
       </div>
     );
 

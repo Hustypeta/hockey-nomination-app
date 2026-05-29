@@ -5,6 +5,8 @@ import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
 import { SHARE_POSTER_3X4_STYLE } from "@/lib/sharePosterLayout";
+import { pickMatchLineupFullPosterExtraSlots } from "@/lib/matchLineupPosterSegments";
+import { ExtraPlayerSlotBand } from "@/components/match/lineup-poster/MatchLineupPosterLineLayout";
 import {
   fmtMatchRating,
   matchRatingHue,
@@ -83,6 +85,10 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
     ref
   ) {
     const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
+    const extraSlots = useMemo(
+      () => pickMatchLineupFullPosterExtraSlots(lineup, allowExtraForward),
+      [lineup, allowExtraForward]
+    );
     const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) ?? null : null);
     const host = siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
     const titleLine = lineupTitle.trim();
@@ -142,9 +148,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
             <div className={`flex min-h-0 flex-col justify-between ${compact ? "gap-0.5" : "gap-1"}`}>
               <section className="shrink-0">
                 <h2 className={sectionHeading}>Brankáři</h2>
-                <div className="grid min-w-0 grid-cols-2 gap-x-3.5 gap-y-1 sm:gap-x-4">
-                  {renderSlot(lineup.goalies[0], "G", "g1")}
-                  {renderSlot(lineup.goalies[1], "G", "g2")}
+                <div className="grid min-w-0 grid-cols-3 gap-x-3.5 gap-y-1 sm:gap-x-4">
+                  <div className="col-start-2">{renderSlot(lineup.goalies[0], "G", "g1")}</div>
                 </div>
               </section>
 
@@ -217,21 +222,24 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                 </div>
               </section>
 
-              {allowExtraForward && lineup.extraForwards[0] ? (
-                <div className={`min-w-0 rounded-lg border px-1 py-0.5 ${lineBox}`}>
-                  <p
-                    className={`mb-0.5 text-center font-display text-[12px] font-extrabold uppercase tracking-[0.1em] sm:text-[13px] ${pairTitle}`}
-                  >
-                    13. útočník
-                  </p>
-                  <div className="grid grid-cols-3 gap-x-3.5">
-                    <div className="col-start-2">{renderSlot(lineup.extraForwards[0], "F", "xf")}</div>
-                  </div>
-                </div>
-              ) : null}
             </div>
           </div>
         </div>
+
+        {extraSlots.length > 0 ? (
+          <div className="relative shrink-0 px-2 pb-1 pt-0 sm:px-2">
+            <ExtraPlayerSlotBand
+              variant="light"
+              compact={compact}
+              extraSlots={extraSlots}
+              renderExtraCard={(slot) => {
+                const label = slot.kind === "second-goalie" ? "G" : "F";
+                const key = slot.kind === "second-goalie" ? "g2-extra" : "xf-extra";
+                return renderSlot(slot.playerId, label, key);
+              }}
+            />
+          </div>
+        ) : null}
 
         <footer className="relative z-[2] mt-1 flex shrink-0 flex-col gap-1 border-t border-slate-200/90 bg-slate-100/95 px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5">
           <div className="max-w-[48%] text-left text-[12px] font-medium leading-snug text-slate-600">

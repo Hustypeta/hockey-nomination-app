@@ -8,10 +8,17 @@ import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCar
 import {
   jerseyPosterExportRowMeta,
   MATCH_LINEUP_POSTER_GROUP_TITLE,
+  pickMatchLineupForwards34ExtraSlot,
+  pickMatchLineupLineExtraSlots,
   pickMatchLineupSegmentPlayerIds,
   splitMatchLineupLinePosterChunks,
+  type MatchLineupLineExtraSlot,
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
+import {
+  ExtraPlayerSlotBand,
+  MatchLineupPosterLineLayout,
+} from "@/components/match/lineup-poster/MatchLineupPosterLineLayout";
 import { fmtMatchRating, matchRatingHue } from "@/lib/matchRatingExportDisplay";
 
 /** @deprecated importuj z @/lib/matchLineupPosterSegments jako MatchLineupPosterGroup */
@@ -35,8 +42,8 @@ interface MatchRatingPosterProps {
 }
 
 /**
- * Off-screen plakát pro export hodnocení do PNG. U řezů line-1…line-4 je rozložení jako na ledě (3 útočníci,
- * 2 obránci, spodek u 1. lajny 1× gólman / u 4. lajny až 2 hráči vedle sebe). Ostatní segmenty: 2 sloupce karet.
+ * Off-screen plakát pro export hodnocení do PNG. U řezů line-1…line-4 je rozložení 3F+2D+1G;
+ * 13. útočník a 2. gólman jsou v secondary slotu pod hlavním gridem. Ostatní segmenty: 2 sloupce karet.
  */
 export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterProps>(
   function MatchRatingPoster(
@@ -61,6 +68,14 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
       [lineup, group, defenseCount, allowExtraForward]
     );
     const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
+    const lineExtraSlots = useMemo(
+      () => pickMatchLineupLineExtraSlots(lineup, group, allowExtraForward),
+      [lineup, group, allowExtraForward]
+    );
+    const forwards34Extra = useMemo(
+      () => pickMatchLineupForwards34ExtraSlot(lineup, group, allowExtraForward),
+      [lineup, group, allowExtraForward]
+    );
     const cols = 2;
 
     const cardShell: CSSProperties = {
@@ -207,7 +222,7 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
       );
     };
 
-    const bottomIds = lineChunks?.bottom.filter(Boolean) ?? [];
+    const renderExtraCard = (slot: MatchLineupLineExtraSlot) => renderRatingCard(slot.playerId);
 
     return (
       <div
@@ -289,79 +304,31 @@ export const MatchRatingPoster = forwardRef<HTMLDivElement, MatchRatingPosterPro
         </div>
 
         {lineChunks ? (
-          <div
-            style={{
-              marginTop: 28,
-              display: "flex",
-              flexDirection: "column",
-              gap: 20,
-            }}
-          >
-            {lineChunks.forwards.filter(Boolean).length > 0 ? (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                  gap: 16,
-                  alignItems: "stretch",
-                }}
-              >
-                {lineChunks.forwards.filter(Boolean).map((pid) => (
-                  <div key={pid}>{renderRatingCard(pid)}</div>
-                ))}
-              </div>
-            ) : null}
-
-            {lineChunks.defense.filter(Boolean).length > 0 ? (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  gap: 16,
-                  alignItems: "stretch",
-                }}
-              >
-                {lineChunks.defense.filter(Boolean).map((pid) => (
-                  <div key={pid}>{renderRatingCard(pid)}</div>
-                ))}
-              </div>
-            ) : null}
-
-            {bottomIds.length > 0 ? (
-              bottomIds.length === 1 ? (
-                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                  <div style={{ width: "100%", maxWidth: 520 }}>
-                    {renderRatingCard(bottomIds[0]!)}
-                  </div>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                    gap: 16,
-                    alignItems: "stretch",
-                  }}
-                >
-                  {bottomIds.map((pid) => (
-                    <div key={pid}>{renderRatingCard(pid)}</div>
-                  ))}
-                </div>
-              )
-            ) : null}
+          <div style={{ marginTop: 28 }}>
+            <MatchLineupPosterLineLayout
+              forwards={lineChunks.forwards.filter(Boolean).map((pid) => renderRatingCard(pid))}
+              defense={lineChunks.defense.filter(Boolean).map((pid) => renderRatingCard(pid))}
+              goalie={lineChunks.bottom[0] ? renderRatingCard(lineChunks.bottom[0]) : null}
+              extraSlots={lineExtraSlots}
+              renderExtraCard={renderExtraCard}
+            />
           </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${cols}, 1fr)`,
-              gap: 22,
-              marginTop: 28,
-            }}
-          >
-            {ids.map((pid) => (
-              <div key={pid}>{renderRatingCard(pid)}</div>
-            ))}
+          <div style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 20 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                gap: 22,
+              }}
+            >
+              {ids.map((pid) => (
+                <div key={pid}>{renderRatingCard(pid)}</div>
+              ))}
+            </div>
+            {forwards34Extra ? (
+              <ExtraPlayerSlotBand extraSlots={[forwards34Extra]} renderExtraCard={renderExtraCard} />
+            ) : null}
           </div>
         )}
 

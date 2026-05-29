@@ -31,8 +31,8 @@ export function isMatchLineupLinePosterGroup(
 }
 
 /**
- * Pořadí z `pickMatchLineupSegmentPlayerIds` u line-*: 3× F, 2× D, pak volitelně spodek
- * (1. lajna: 1. gólman; 4. lajna: 13. útočník + 2. gólman).
+ * Pořadí z `pickMatchLineupSegmentPlayerIds` u line-*: 3× F, 2× D, spodek jen 1. gólman (1. lajna).
+ * Extra hráči (13. útočník, 2. gólman) viz `pickMatchLineupLineExtraSlots`.
  */
 export function splitMatchLineupLinePosterChunks(
   ids: string[],
@@ -74,10 +74,6 @@ export function pickMatchLineupSegmentPlayerIds(
     // - 1. obrázek: přidat 1. gólmana
     // - 4. obrázek: přidat 2. gólmana + 13. útočníka (pokud povolen)
     if (group === "line-1" && lineup.goalies[0]) ids.push(lineup.goalies[0]);
-    if (group === "line-4") {
-      if (allowExtraForward && lineup.extraForwards[0]) ids.push(lineup.extraForwards[0]);
-      if (lineup.goalies[1]) ids.push(lineup.goalies[1]);
-    }
 
     return ids;
   }
@@ -109,10 +105,78 @@ export function pickMatchLineupSegmentPlayerIds(
     if (l.c) ids.push(l.c);
     if (l.rw) ids.push(l.rw);
   }
-  if (group === "forwards-34" && allowExtraForward && lineup.extraForwards[0]) {
-    ids.push(lineup.extraForwards[0]);
-  }
   return ids;
+}
+
+export const MATCH_LINEUP_EXTRA_FORWARD_LABEL = "13. útočník";
+export const MATCH_LINEUP_SECOND_GOALIE_LABEL = "2. gólman";
+
+export type MatchLineupLineExtraSlot = {
+  playerId: string;
+  label: string;
+  kind: "extra-forward" | "second-goalie";
+};
+
+/** Extra hráči mimo hlavní 3F+2D+G grid — jen u 4. lajny (export po lajnách). */
+export function pickMatchLineupLineExtraSlots(
+  lineup: LineupStructure,
+  group: MatchLineupPosterGroup,
+  allowExtraForward: boolean
+): MatchLineupLineExtraSlot[] {
+  if (group !== "line-4") return [];
+  const out: MatchLineupLineExtraSlot[] = [];
+  if (allowExtraForward && lineup.extraForwards[0]) {
+    out.push({
+      playerId: lineup.extraForwards[0],
+      label: MATCH_LINEUP_EXTRA_FORWARD_LABEL,
+      kind: "extra-forward",
+    });
+  }
+  if (lineup.goalies[1]) {
+    out.push({
+      playerId: lineup.goalies[1],
+      label: MATCH_LINEUP_SECOND_GOALIE_LABEL,
+      kind: "second-goalie",
+    });
+  }
+  return out;
+}
+
+/** 13. útočník pro segment „útok 3.+4. lajna“ — mimo hlavní grid. */
+export function pickMatchLineupForwards34ExtraSlot(
+  lineup: LineupStructure,
+  group: MatchLineupPosterGroup,
+  allowExtraForward: boolean
+): MatchLineupLineExtraSlot | null {
+  if (group !== "forwards-34" || !allowExtraForward || !lineup.extraForwards[0]) return null;
+  return {
+    playerId: lineup.extraForwards[0],
+    label: MATCH_LINEUP_EXTRA_FORWARD_LABEL,
+    kind: "extra-forward",
+  };
+}
+
+/** Celá soupiska s dresy: doplňkoví hráči mimo hlavní sekce. */
+export function pickMatchLineupFullPosterExtraSlots(
+  lineup: LineupStructure,
+  allowExtraForward: boolean
+): MatchLineupLineExtraSlot[] {
+  const out: MatchLineupLineExtraSlot[] = [];
+  if (allowExtraForward && lineup.extraForwards[0]) {
+    out.push({
+      playerId: lineup.extraForwards[0],
+      label: MATCH_LINEUP_EXTRA_FORWARD_LABEL,
+      kind: "extra-forward",
+    });
+  }
+  if (lineup.goalies[1]) {
+    out.push({
+      playerId: lineup.goalies[1],
+      label: MATCH_LINEUP_SECOND_GOALIE_LABEL,
+      kind: "second-goalie",
+    });
+  }
+  return out;
 }
 
 /**

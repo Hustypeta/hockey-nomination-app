@@ -5,9 +5,17 @@ import type { LineupStructure, Player } from "@/types";
 import { SHARE_POSTER_3X4_STYLE } from "@/lib/sharePosterLayout";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
+  pickMatchLineupForwards34ExtraSlot,
+  pickMatchLineupLineExtraSlots,
   pickMatchLineupSegmentPlayerIds,
+  splitMatchLineupLinePosterChunks,
+  type MatchLineupLineExtraSlot,
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
+import {
+  ExtraPlayerSlotBand,
+  MatchLineupPosterLineLayout,
+} from "@/components/match/lineup-poster/MatchLineupPosterLineLayout";
 import { rosterLastDisplay } from "@/lib/namesOnlyRoster";
 
 const formatCsDate = (d: Date) =>
@@ -66,10 +74,32 @@ export const MatchLineupNamesSegmentPoster = forwardRef<HTMLDivElement, MatchLin
     const host = siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
     const titleLine = lineupTitle?.trim() ?? "";
 
-    const names = useMemo(() => {
-      const ids = pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward);
-      return ids.map((id) => rosterLastDisplay(players, id));
-    }, [players, lineup, group, defenseCount, allowExtraForward]);
+    const ids = useMemo(
+      () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
+      [lineup, group, defenseCount, allowExtraForward]
+    );
+    const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
+    const lineExtraSlots = useMemo(
+      () => pickMatchLineupLineExtraSlots(lineup, group, allowExtraForward),
+      [lineup, group, allowExtraForward]
+    );
+    const forwards34Extra = useMemo(
+      () => pickMatchLineupForwards34ExtraSlot(lineup, group, allowExtraForward),
+      [lineup, group, allowExtraForward]
+    );
+
+    const names = useMemo(
+      () => ids.map((id) => rosterLastDisplay(players, id)),
+      [ids, players]
+    );
+
+    const renderNamePill = (playerId: string) => (
+      <NamePill key={playerId}>{rosterLastDisplay(players, playerId)}</NamePill>
+    );
+
+    const renderExtraName = (slot: MatchLineupLineExtraSlot) => (
+      <NamePill>{rosterLastDisplay(players, slot.playerId)}</NamePill>
+    );
 
     const gridCols =
       group === "goalies" ? "grid-cols-2" : group.startsWith("line-") ? "grid-cols-3" : "grid-cols-2";
@@ -111,11 +141,33 @@ export const MatchLineupNamesSegmentPoster = forwardRef<HTMLDivElement, MatchLin
           <div className="flex min-h-0 flex-1 flex-col justify-center py-6">
             <section>
               <SectionTitle>{MATCH_LINEUP_POSTER_GROUP_TITLE[group]}</SectionTitle>
-              <div className={`mx-auto grid w-full max-w-3xl gap-3 ${gridCols} sm:gap-3.5`}>
-                {names.map((name, i) => (
-                  <NamePill key={`${group}-${i}`}>{name}</NamePill>
-                ))}
-              </div>
+              {lineChunks ? (
+                <div className="mx-auto w-full max-w-3xl">
+                  <MatchLineupPosterLineLayout
+                    forwards={lineChunks.forwards.filter(Boolean).map((pid) => renderNamePill(pid))}
+                    defense={lineChunks.defense.filter(Boolean).map((pid) => renderNamePill(pid))}
+                    goalie={lineChunks.bottom[0] ? renderNamePill(lineChunks.bottom[0]) : null}
+                    extraSlots={lineExtraSlots}
+                    renderExtraCard={renderExtraName}
+                  />
+                </div>
+              ) : (
+                <div className="mx-auto w-full max-w-3xl">
+                  <div className={`grid w-full gap-3 ${gridCols} sm:gap-3.5`}>
+                    {names.map((name, i) => (
+                      <NamePill key={`${group}-${i}`}>{name}</NamePill>
+                    ))}
+                  </div>
+                  {forwards34Extra ? (
+                    <div className="mt-3">
+                      <ExtraPlayerSlotBand
+                        extraSlots={[forwards34Extra]}
+                        renderExtraCard={renderExtraName}
+                      />
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </section>
           </div>
         </div>
