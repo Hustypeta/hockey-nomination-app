@@ -248,8 +248,20 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
     sortOrder: 16,
     lockAt: "2026-05-30T13:20:00.000Z",
     matches: [
-      { startAt: "2026-05-30T13:20:00.000Z", phase: "Semifinále", label: "Semifinále 1 (Swiss Life Arena, Zürich)" },
-      { startAt: "2026-05-30T18:00:00.000Z", phase: "Semifinále", label: "Semifinále 2 (Swiss Life Arena, Zürich)" },
+      {
+        startAt: "2026-05-30T13:20:00.000Z",
+        phase: "Semifinále",
+        home: "SUI",
+        away: "NOR",
+        label: "Semifinále (Swiss Life Arena, Zürich)",
+      },
+      {
+        startAt: "2026-05-30T18:00:00.000Z",
+        phase: "Semifinále",
+        home: "CAN",
+        away: "FIN",
+        label: "Semifinále (Swiss Life Arena, Zürich)",
+      },
     ],
   },
   {
