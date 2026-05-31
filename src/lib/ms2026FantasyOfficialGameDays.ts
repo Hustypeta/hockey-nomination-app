@@ -8,7 +8,8 @@
  *
  * Kalendář prvních bulů (CEST) → `lockAt` UTC (CEST − 2 v květnu 2026):
  * 15. 16:20, 16. 12:20, 17. 12:20, 18.–22. 16:20, 23. 12:20, 24.–25. 16:20, 26. 12:20,
- * 27. pauza (technický lock až na 28. 16:20), 28. 16:20, 29. pauza (lock na 30. 15:20), 30. 15:20, 31. 15:30.
+ * 27. pauza (technický lock až na 28. 16:20), 28. 16:20, 29. pauza (lock na 30. 15:20), 30. 15:20,
+ * 31. 15:30 (finále) a 20:20 (o bronz).
  *
  * Kanonický zdroj: [IIHF — Schedule and Results 2026](https://www.iihf.com/en/events/2026/wm/schedule).
  * Pořadí `home` / `away` odpovídá zápisu na IIHF (první tým v „X vs Y“).
@@ -261,6 +262,8 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
         phase: "Semifinále",
         home: "SUI",
         away: "NOR",
+        homeScore: 1,
+        awayScore: 2,
         label: "Semifinále (Swiss Life Arena, Zürich)",
       },
       {
@@ -268,18 +271,32 @@ export const MS2026_FANTASY_OFFICIAL_GAME_DAYS: Ms2026FantasyOfficialGameDaySeed
         phase: "Semifinále",
         home: "CAN",
         away: "FIN",
+        homeScore: 3,
+        awayScore: 1,
         label: "Semifinále (Swiss Life Arena, Zürich)",
       },
     ],
   },
   {
     slug: "2026-05-31",
-    title: "MS 2026 — neděle 31. 5. (medaile)",
+    title: "MS 2026 — neděle 31. 5. (play-off — medaile)",
     sortOrder: 17,
     lockAt: "2026-05-31T13:30:00.000Z",
     matches: [
-      { startAt: "2026-05-31T13:30:00.000Z", phase: "O bronz", label: "Zápas o bronz (Swiss Life Arena, Zürich)" },
-      { startAt: "2026-05-31T18:20:00.000Z", phase: "Finále", label: "Finále (Swiss Life Arena, Zürich)" },
+      {
+        startAt: "2026-05-31T13:30:00.000Z",
+        phase: "Finále",
+        home: "CAN",
+        away: "NOR",
+        label: "Finále — Kanada vs. Norsko (15:30, Swiss Life Arena, Zürich)",
+      },
+      {
+        startAt: "2026-05-31T18:20:00.000Z",
+        phase: "O bronz",
+        home: "SUI",
+        away: "FIN",
+        label: "Zápas o bronz — Švýcarsko vs. Finsko (20:20, Swiss Life Arena, Zürich)",
+      },
     ],
   },
 ];
