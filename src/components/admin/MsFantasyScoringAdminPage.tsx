@@ -8,8 +8,8 @@ import { AdminPasswordLoginForm } from "@/components/admin/AdminPasswordLoginFor
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { MS_FANTASY_POINTS } from "@/lib/msFantasyConfig";
-import { statRowToFantasyPoints } from "@/lib/msFantasyAdminScoring";
-import type { FantasyAdminLineupResult, FantasyAdminPickedPlayer } from "@/lib/msFantasyAdminScoring";
+import type { FantasyAdminLineupResult, FantasyAdminPickedPlayer } from "@/lib/msFantasyAdminTypes";
+import { statRowToFantasyPoints } from "@/lib/msFantasyStatPreview";
 
 type GameDayRow = {
   id: string | null;

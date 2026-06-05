@@ -1,5 +1,11 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import type {
+  FantasyAdminLineupResult,
+  FantasyAdminPickedPlayer,
+  FantasyAdminStatInput,
+} from "@/lib/msFantasyAdminTypes";
+import { clampFantasyStatInt, statRowToFantasyPoints } from "@/lib/msFantasyStatPreview";
 import type { MsFantasyGoalieBox, MsFantasySkaterBox } from "@/lib/msFantasyConfig";
 import {
   MS2026_FANTASY_OFFICIAL_GAME_DAYS,
@@ -8,70 +14,7 @@ import {
 } from "@/lib/ms2026FantasyOfficialGameDays";
 import { goalieFantasyPoints, lineupDayPoints, skaterFantasyPoints } from "@/lib/msFantasyScoring";
 
-export type FantasyAdminStatInput = {
-  rosterPlayerId: string;
-  goals?: number;
-  assists?: number;
-  plusMinus?: number;
-  wins?: number;
-  goalsAgainst?: number;
-  shutouts?: number;
-};
-
-export type FantasyAdminPickedPlayer = {
-  rosterPlayerId: string;
-  code: string;
-  name: string;
-  team: string;
-  position: string;
-  tier: string;
-  pickCount: number;
-  goals: number;
-  assists: number;
-  plusMinus: number;
-  wins: number;
-  goalsAgainst: number;
-  shutouts: number;
-  fantasyPoints: number;
-};
-
-export type FantasyAdminLineupResult = {
-  lineupId: string;
-  userId: string;
-  displayName: string;
-  points: number;
-  salarySpent: number;
-  breakdown: Array<{
-    rosterPlayerId: string;
-    name: string;
-    position: string;
-    points: number;
-  }>;
-};
-
-function clampInt(v: unknown, min: number, max: number): number {
-  const n = typeof v === "number" ? v : Number(v);
-  if (!Number.isFinite(n)) return min;
-  return Math.min(max, Math.max(min, Math.round(n)));
-}
-
-export function statRowToFantasyPoints(position: string, row: FantasyAdminStatInput): number {
-  const isGk = position === "G";
-  if (isGk) {
-    const box: MsFantasyGoalieBox = {
-      wins: clampInt(row.wins, 0, 9),
-      goalsAgainst: clampInt(row.goalsAgainst, 0, 99),
-      shutouts: clampInt(row.shutouts, 0, 9),
-    };
-    return goalieFantasyPoints(box);
-  }
-  const box: MsFantasySkaterBox = {
-    goals: clampInt(row.goals, 0, 99),
-    assists: clampInt(row.assists, 0, 99),
-    plusMinus: clampInt(row.plusMinus, -99, 99),
-  };
-  return skaterFantasyPoints(box);
-}
+export type { FantasyAdminLineupResult, FantasyAdminPickedPlayer, FantasyAdminStatInput };
 
 export async function ensureMsFantasyGameDayBySlug(slug: string) {
   const trimmed = slug.trim();
@@ -226,12 +169,12 @@ export async function saveMsFantasyAdminDayStats(gameDayId: string, inputs: Fant
   for (const row of inputs) {
     if (!row.rosterPlayerId) continue;
     const position = posById.get(row.rosterPlayerId) ?? "F";
-    const goals = clampInt(row.goals, 0, 99);
-    const assists = clampInt(row.assists, 0, 99);
-    const plusMinus = clampInt(row.plusMinus, -99, 99);
-    const wins = clampInt(row.wins, 0, 9);
-    const goalsAgainst = clampInt(row.goalsAgainst, 0, 99);
-    const shutouts = clampInt(row.shutouts, 0, 9);
+    const goals = clampFantasyStatInt(row.goals, 0, 99);
+    const assists = clampFantasyStatInt(row.assists, 0, 99);
+    const plusMinus = clampFantasyStatInt(row.plusMinus, -99, 99);
+    const wins = clampFantasyStatInt(row.wins, 0, 9);
+    const goalsAgainst = clampFantasyStatInt(row.goalsAgainst, 0, 99);
+    const shutouts = clampFantasyStatInt(row.shutouts, 0, 9);
     const fantasyPoints = statRowToFantasyPoints(position, row);
 
     await prisma.msFantasyPlayerDayStat.upsert({
