@@ -283,10 +283,55 @@ model MsFantasyGameDay {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  lineups MsFantasyLineup[]
+  lineups           MsFantasyLineup[]
+  playerDayStats    MsFantasyPlayerDayStat[]
+  lineupDayResults  MsFantasyLineupDayResult[]
 
   @@index([lockAt])
   @@map("ms_fantasy_game_days")
+}
+
+/// Statistiky hráče z poolu za jeden fantasy den (admin vyplní → body dle pravidel).
+model MsFantasyPlayerDayStat {
+  id             String   @id @default(cuid())
+  gameDayId      String
+  rosterPlayerId String
+  goals          Int      @default(0)
+  assists        Int      @default(0)
+  plusMinus      Int      @default(0)
+  wins           Int      @default(0)
+  goalsAgainst   Int      @default(0)
+  shutouts       Int      @default(0)
+  /// Vypočtené fantasy body za den (cache po uložení / vyhodnocení).
+  fantasyPoints  Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  gameDay MsFantasyGameDay @relation(fields: [gameDayId], references: [id], onDelete: Cascade)
+
+  @@unique([gameDayId, rosterPlayerId])
+  @@index([gameDayId])
+  @@map("ms_fantasy_player_day_stats")
+}
+
+/// Výsledek vyhodnocení jedné odevzdané sestavy za den.
+model MsFantasyLineupDayResult {
+  id        String   @id @default(cuid())
+  lineupId  String   @unique
+  gameDayId String
+  userId    String
+  points    Int
+  /// Pořadí slotů: jméno, pozice, body, statistiky.
+  breakdown Json     @default("[]")
+  scoredAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lineup  MsFantasyLineup  @relation(fields: [lineupId], references: [id], onDelete: Cascade)
+  gameDay MsFantasyGameDay @relation(fields: [gameDayId], references: [id], onDelete: Cascade)
+
+  @@index([gameDayId, points])
+  @@index([userId])
+  @@map("ms_fantasy_lineup_day_results")
 }
 
 /// Odevzdaná sestava uživatele na konkrétní den (6× id z poolu, pořadí = sloty).
@@ -305,7 +350,8 @@ model MsFantasyLineup {
 
   user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   /// RESTRICT: smazání `MsFantasyGameDay` s existujícími lineupy v DB selže — odevzdané sestavy se nikdy nesmažou kaskádou.
-  gameDay MsFantasyGameDay @relation(fields: [gameDayId], references: [id], onDelete: Restrict)
+  gameDay   MsFantasyGameDay          @relation(fields: [gameDayId], references: [id], onDelete: Restrict)
+  dayResult MsFantasyLineupDayResult?
 
   @@unique([userId, gameDayId])
   @@index([gameDayId])

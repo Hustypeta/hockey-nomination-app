@@ -132,22 +132,10 @@ export function ContestsStatusBanner({ pickemSubmissionOpen, className = "" }: C
 
           <ContestRow
             title="Fantasy"
-            status={<OpenBadge />}
-            accentClassName="border-emerald-400/18 hover:border-emerald-400/28"
+            status={<ClosedBadge />}
+            accentClassName="border-rose-400/18 hover:border-rose-400/28"
           >
-            <span className="inline-flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-200">
-                <Check className="h-4 w-4 shrink-0 text-emerald-400" aria-hidden />
-                Fantasy otevřeno
-              </span>
-              <span className="text-white/70">—</span>
-              <Link
-                href="/fantasy"
-                className="font-semibold text-sky-300 underline-offset-2 hover:text-sky-200 hover:underline"
-              >
-                Hrát fantasy
-              </Link>
-            </span>
+            Soutěž Daily Fantasy na MS 2026 uzavřena — výsledky zveřejníme po vyhodnocení.
           </ContestRow>
         </div>
       </div>

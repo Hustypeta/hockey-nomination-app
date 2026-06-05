@@ -757,7 +757,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                   {saveState === "saving"
                     ? "Odesílám…"
                     : !fantasySubmissionsEnabled
-                      ? "Odesílání vypnuto"
+                      ? "Soutěž uzavřena"
                       : salaryOverCap
                         ? "Strop překročen"
                         : "Odeslat do soutěže"}
@@ -772,7 +772,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
                   onClick={() => void signIn("google", { callbackUrl: `/fantasy/${slug}` })}
                   className="w-full touch-manipulation rounded-xl border border-[#00B4FF]/45 bg-[#00B4FF]/10 px-4 py-3 text-xs font-semibold text-[#9ae9ff] shadow-[0_0_18px_rgba(0,180,255,0.15)] transition hover:bg-[#00B4FF]/18 disabled:opacity-40 sm:w-auto sm:py-2.5"
                 >
-                  {!fantasySubmissionsEnabled ? "Přihlášení (odesílání vypnuto)" : "Přihlásit a odeslat"}
+                  {!fantasySubmissionsEnabled ? "Soutěž uzavřena" : "Přihlásit a odeslat"}
                 </button>
               )}
               {saveState === "ok" ? <span className="text-xs text-emerald-400">Odesláno.</span> : null}
@@ -845,17 +845,15 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
               {day.isLocked ? (
                 <span className="text-amber-200">Den je uzavřený.</span>
               ) : !fantasySubmissionsEnabled ? (
-                <span className="text-amber-200">
-                  Den je otevřený jen k prohlížení — odesílání sestav je vypnuté.
-                </span>
+                <span className="text-rose-200">Soutěž je uzavřená — nové sestavy už nejdou odeslat.</span>
               ) : (
                 <span className="text-emerald-200">Můžeš upravovat sestavu.</span>
               )}
             </p>
             {!day.isLocked && !fantasySubmissionsEnabled ? (
-              <p className="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-                Odevzdávání fantasy sestav na server je zatím vypnuté (správce prostředí). Skládání v prohlížeči můžeš
-                zkoušet; tlačítko odeslání zůstane neaktivní, dokud se funkce nezapne.
+              <p className="mt-3 rounded-lg border border-rose-500/35 bg-rose-500/10 px-3 py-2 text-xs text-rose-100">
+                Daily Fantasy na MS 2026 je uzavřená. Uložené sestavy zůstávají v účtu; výsledky zveřejníme po
+                vyhodnocení.
               </p>
             ) : null}
             {slots.some((s) => s?.id) && goalieCount !== 1 ? (

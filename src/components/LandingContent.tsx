@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import {
   Users,
-  Clock,
   ChevronRight,
   Sparkles,
   Trophy,
@@ -17,38 +16,9 @@ import {
 import { signIn } from "next-auth/react";
 import { AuthorBriefTeaser } from "@/components/AuthorBriefTeaser";
 import { ContestsStatusBanner } from "@/components/ContestsStatusBanner";
-import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
 import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
-import { SVET_HOKEJE_INSTAGRAM_URL } from "@/lib/siteBranding";
 import { useContestStats } from "@/hooks/useContestStats";
-
-/** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
-const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
-
-function useCountdown(target: Date) {
-  // Pozor: Client Component se renderuje i na serveru. `Date.now()` při SSR způsobí hydration mismatch.
-  // Proto první render držíme deterministický a čas doplníme až po mountu.
-  const [now, setNow] = useState<number | null>(null);
-  useEffect(() => {
-    const tick = () => setNow(Date.now());
-    const raf = requestAnimationFrame(tick);
-    const t = setInterval(tick, 1000);
-    return () => {
-      cancelAnimationFrame(raf);
-      clearInterval(t);
-    };
-  }, []);
-  return useMemo(() => {
-    if (now === null) return null;
-    const diff = Math.max(0, target.getTime() - now);
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    return { d, h, m, s, ended: diff <= 0 };
-  }, [now, target]);
-}
 
 function formatCs(n: number) {
   return new Intl.NumberFormat("cs-CZ").format(n);
@@ -63,7 +33,6 @@ export function LandingContent() {
   const communityUsersCount = contestStats.communityUsersCount;
   const pickemCount = contestStats.pickemCount;
   const fantasyPlayersCount = contestStats.fantasyPlayersCount;
-  const cd = useCountdown(MS_2026_KICKOFF);
 
   // Premium micro-animace: fade-in při scrollu (bez vlivu na obsah).
   useEffect(() => {
@@ -116,15 +85,7 @@ export function LandingContent() {
 
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-14 lg:pt-20">
           <div className="mx-auto max-w-2xl text-center lg:max-w-3xl">
-            <p className="mx-auto max-w-4xl text-pretty px-1">
-              <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-sky-200/90 bg-clip-text text-transparent text-[clamp(1rem,3.3vw,1.55rem)] font-semibold leading-snug tracking-[0.01em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.65)] sm:text-[clamp(1.05rem,2.9vw,1.75rem)] sm:leading-snug md:text-[clamp(1.1rem,2.5vw,1.95rem)]">
-                Zpestři si sledování hokeje a pošli svůj tým na led
-                <br />
-                Zapoj se do soutěží, vytvářej vlastní sestavy a sdílej je s ostatními fanoušky
-              </span>
-            </p>
-
-            <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em] sm:mt-10">
+            <h1 className="mx-auto max-w-5xl text-balance font-display text-[clamp(2rem,6.5vw,3.75rem)] font-black leading-[1.08] tracking-[0.02em]">
               <span className="inline-block bg-gradient-to-br from-white via-sky-100 to-[#7dd3fc] bg-clip-text text-transparent drop-shadow-[0_4px_48px_rgba(0,0,0,0.75)]">
                 Zahraj si Daily Fantasy na MS 2026
               </span>
@@ -150,23 +111,6 @@ export function LandingContent() {
 
               <div className="mx-auto mt-8 w-full max-w-xl border-t border-white/12 pt-8 sm:mt-10 sm:pt-9">
                 <TipsportPartnerBanner />
-              </div>
-
-              <p className="mx-auto mt-8 max-w-xl text-center text-pretty text-sm leading-relaxed text-slate-200/95 sm:mt-10 sm:text-[15px]">
-                Pro novinky z hokeje a mnohem více sledujte instagram{" "}
-                <Link
-                  href={SVET_HOKEJE_INSTAGRAM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-[#f1c40f] underline decoration-[#f1c40f]/45 underline-offset-2 transition hover:text-amber-200 hover:decoration-amber-200/70"
-                >
-                  Svět Hokeje
-                </Link>
-                .
-              </p>
-
-              <div className="mx-auto mt-4 flex w-full max-w-xl justify-center">
-                <LoadingScreenUsefulLinks />
               </div>
 
               <p className="mt-8 text-pretty text-sm leading-relaxed text-slate-200/95 sm:text-[15px]">
@@ -289,41 +233,7 @@ export function LandingContent() {
               <div data-reveal className="reveal">
                 <ContestsStatusBanner pickemSubmissionOpen={contestStats.pickemSubmissionOpen} />
               </div>
-
-              {/* MS je tady! — vizuálně nejsilnější sekce (bez countdownu) */}
-              <div data-reveal className="reveal w-full">
-                <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#0a0f1c]/92 via-[#05070f]/86 to-black/70 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_26px_80px_rgba(0,0,0,0.55)] sm:p-8">
-                  <div
-                    className="pointer-events-none absolute inset-0 opacity-[0.85]"
-                    aria-hidden
-                    style={{
-                      background:
-                        "radial-gradient(ellipse 110% 95% at 20% 0%, rgba(0,200,255,0.18), transparent 55%), radial-gradient(ellipse 95% 80% at 82% 12%, rgba(200,16,46,0.18), transparent 55%), radial-gradient(ellipse 75% 70% at 50% 105%, rgba(255,255,255,0.06), transparent 55%)",
-                    }}
-                  />
-                  <div
-                    className="pointer-events-none absolute inset-0 opacity-[0.06]"
-                    aria-hidden
-                    style={{
-                      backgroundImage:
-                        "repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0px, rgba(255,255,255,0.16) 1px, transparent 1px, transparent 12px)",
-                    }}
-                  />
-                  <div className="relative z-10 text-center">
-                    <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.22em] text-cyan-100/90 shadow-[0_0_44px_rgba(0,200,255,0.12)]">
-                      <span aria-hidden>🏒</span> MS je tady!
-                    </p>
-                    <h2 className="mx-auto mt-5 max-w-3xl text-balance font-display text-[clamp(2.25rem,6.5vw,4.25rem)] font-black leading-[1.02] tracking-[0.02em] text-white drop-shadow-[0_8px_64px_rgba(0,0,0,0.6)]">
-                      MS je tady!
-                    </h2>
-                  </div>
-                </div>
-              </div>
             </div>
-
-          <p className="mx-auto mt-8 max-w-lg text-center text-xs leading-relaxed text-slate-500">
-            Fanouškovská soutěž inspirovaná reálnou nominací — není oficiálním produktem ČSLH.
-          </p>
 
           <div className="mt-10">
             <AuthorBriefTeaser />

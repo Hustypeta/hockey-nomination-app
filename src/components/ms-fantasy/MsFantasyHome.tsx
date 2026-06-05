@@ -64,8 +64,8 @@ export function MsFantasyHome() {
                   2x obránci a 3x útočníci) a poslat je do soutěže. Nezapomeň dodržet budget a že uzávěrka je vždy před
                   prvním zápasem dne.
                   {!fantasySubmissionsEnabled ? (
-                    <span className="mt-2 block rounded-lg border border-amber-400/25 bg-amber-500/10 px-2.5 py-1.5 text-[0.8125rem] text-amber-100 sm:px-3 sm:py-2 sm:text-sm">
-                      Odesílání sestav na server je zatím vypnuté — fantasy jde jen vyzkoušet v rozhraní.
+                    <span className="mt-2 block rounded-lg border border-rose-400/30 bg-rose-500/10 px-2.5 py-1.5 text-[0.8125rem] text-rose-100 sm:px-3 sm:py-2 sm:text-sm">
+                      Soutěž je uzavřená — nové sestavy už nejdou odeslat. Výsledky zveřejníme po vyhodnocení.
                     </span>
                   ) : null}
                 </p>

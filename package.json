@@ -12,7 +12,7 @@
     "start": "prisma db push --accept-data-loss && next start --hostname 0.0.0.0",
     "lint": "eslint",
     "db:generate": "prisma generate",
-    "db:push": "prisma db push",
+    "db:push": "node scripts/prisma-with-env.mjs db push",
     "db:seed": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json prisma/seed.ts",
     "inject:league": "npx ts-node --project scripts/tsconfig.json scripts/inject-league-json.ts",
     "sort:candidates": "npx ts-node --project scripts/tsconfig.json scripts/sort-ms-candidates.ts",

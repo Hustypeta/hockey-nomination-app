@@ -45,12 +45,12 @@ export function isMsFantasyVisibleToUsers(): boolean {
 
 /**
  * Uložení sestavy na server (`POST /api/fantasy/my-lineup`) = účast u daného hracího dne.
- * Vypnutím necháš fantasy stránky zapnuté, ale bez přijímání „odevzdání“ (např. před ostrým startem).
+ * Výchozí: vypnuto (soutěž uzavřena). Zapnutí: `NEXT_PUBLIC_MS_FANTASY_SUBMISSION_ENABLED=true`.
  */
 export function isMsFantasyLineupSubmissionEnabled(): boolean {
   const v = process.env.NEXT_PUBLIC_MS_FANTASY_SUBMISSION_ENABLED?.trim().toLowerCase();
-  if (v === "false" || v === "0" || v === "no" || v === "off") return false;
-  return true;
+  if (v === "true" || v === "1" || v === "yes" || v === "on") return true;
+  return false;
 }
 
 export const MS_FANTASY_TIERS = ["A", "B", "C", "D", "E"] as const;

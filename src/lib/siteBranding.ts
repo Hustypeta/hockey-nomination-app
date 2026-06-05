@@ -39,14 +39,19 @@ export const SITE_FACEBOOK_PAGE_URL =
 /** Instagram kanálu Svět Hokeje — tlačítko na úvodu / loading (nezaměňovat s profilem Lineupu). */
 export const SVET_HOKEJE_INSTAGRAM_URL = "https://www.instagram.com/svet_hokeje/" as const;
 
+/** Výchozí profily Lineup — přepíše `NEXT_PUBLIC_*` na Railway, pokud je nastavené. */
+const DEFAULT_SITE_INSTAGRAM_PAGE_URL = "https://www.instagram.com/hokejlineup/";
+const DEFAULT_SITE_TIKTOK_PAGE_URL = "https://www.tiktok.com/@hokejlineup";
+
 /**
  * Instagram profilu **Lineup** (ikony v patičce / „Sledujte Lineup…“).
- * Na Railway: `NEXT_PUBLIC_INSTAGRAM_PAGE_URL` (handle projektu hokejlineup, ne Svět Hokeje).
+ * Kanál Svět Hokeje je zvlášť (`SVET_HOKEJE_INSTAGRAM_URL`), ne tato konstanta.
  */
 export const SITE_INSTAGRAM_PAGE_URL =
-  process.env.NEXT_PUBLIC_INSTAGRAM_PAGE_URL?.trim() ?? "";
+  process.env.NEXT_PUBLIC_INSTAGRAM_PAGE_URL?.trim() || DEFAULT_SITE_INSTAGRAM_PAGE_URL;
 export const SITE_X_PAGE_URL = process.env.NEXT_PUBLIC_X_PAGE_URL?.trim() ?? "";
-export const SITE_TIKTOK_PAGE_URL = process.env.NEXT_PUBLIC_TIKTOK_PAGE_URL?.trim() ?? "";
+export const SITE_TIKTOK_PAGE_URL =
+  process.env.NEXT_PUBLIC_TIKTOK_PAGE_URL?.trim() || DEFAULT_SITE_TIKTOK_PAGE_URL;
 
 /**
  * Sjednotí `www.hokejlineup.cz` → `hokejlineup.cz` (Open Graph, NextAuth, sdílení).
