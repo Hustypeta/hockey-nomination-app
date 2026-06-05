@@ -2,6 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type {
   FantasyAdminLineupResult,
+  FantasyAdminOverallStanding,
   FantasyAdminPickedPlayer,
   FantasyAdminStatInput,
 } from "@/lib/msFantasyAdminTypes";
@@ -319,4 +320,95 @@ export async function evaluateMsFantasyAdminDay(gameDayId: string): Promise<{
   results.sort((a, b) => b.points - a.points || a.displayName.localeCompare(b.displayName, "cs"));
 
   return { results, missingStatPlayerIds };
+}
+
+function displayNameFromUser(user: {
+  leaderboardNickname: string | null;
+  name: string | null;
+  email: string | null;
+}): string {
+  return (
+    user.leaderboardNickname?.trim() ||
+    user.name?.trim() ||
+    user.email?.split("@")[0] ||
+    "Hráč"
+  );
+}
+
+/** Celkové pořadí — součet bodů ze všech vyhodnocených dnů. */
+export async function loadMsFantasyOverallStandings(): Promise<FantasyAdminOverallStanding[]> {
+  const rows = await prisma.msFantasyLineupDayResult.findMany({
+    include: {
+      gameDay: { select: { slug: true, title: true, sortOrder: true } },
+    },
+    orderBy: [{ gameDay: { sortOrder: "asc" } }, { points: "desc" }],
+  });
+
+  if (rows.length === 0) return [];
+
+  const userIds = [...new Set(rows.map((r) => r.userId))];
+  const users = await prisma.user.findMany({
+    where: { id: { in: userIds } },
+    select: { id: true, name: true, email: true, leaderboardNickname: true },
+  });
+  const userById = new Map(users.map((u) => [u.id, u]));
+
+  const byUser = new Map<
+    string,
+    { totalPoints: number; days: FantasyAdminOverallStanding["days"] }
+  >();
+
+  for (const row of rows) {
+    const cur = byUser.get(row.userId) ?? { totalPoints: 0, days: [] };
+    cur.totalPoints += row.points;
+    cur.days.push({
+      slug: row.gameDay.slug,
+      title: row.gameDay.title,
+      points: row.points,
+    });
+    byUser.set(row.userId, cur);
+  }
+
+  const standings: FantasyAdminOverallStanding[] = [];
+  for (const [userId, agg] of byUser) {
+    const user = userById.get(userId);
+    standings.push({
+      userId,
+      displayName: user ? displayNameFromUser(user) : "Hráč",
+      totalPoints: agg.totalPoints,
+      daysPlayed: agg.days.length,
+      days: agg.days,
+    });
+  }
+
+  standings.sort(
+    (a, b) => b.totalPoints - a.totalPoints || a.displayName.localeCompare(b.displayName, "cs"),
+  );
+  return standings;
+}
+
+/** Vyhodnotí všechny dny, kde existuje alespoň jedna odevzdaná sestava. */
+export async function evaluateMsFantasyAllDays(): Promise<{
+  daysEvaluated: number;
+  warnings: string[];
+  overall: FantasyAdminOverallStanding[];
+}> {
+  const days = await prisma.msFantasyGameDay.findMany({
+    where: { lineups: { some: {} } },
+    select: { id: true, slug: true, title: true },
+    orderBy: { sortOrder: "asc" },
+  });
+
+  const warnings: string[] = [];
+  for (const day of days) {
+    const { missingStatPlayerIds } = await evaluateMsFantasyAdminDay(day.id);
+    if (missingStatPlayerIds.length > 0) {
+      warnings.push(
+        `${day.title}: ${missingStatPlayerIds.length} hráčů bez statistik (0 bodů)`,
+      );
+    }
+  }
+
+  const overall = await loadMsFantasyOverallStandings();
+  return { daysEvaluated: days.length, warnings, overall };
 }

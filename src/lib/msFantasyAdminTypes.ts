@@ -40,3 +40,17 @@ export type FantasyAdminLineupResult = {
     points: number;
   }>;
 };
+
+export type FantasyAdminOverallDayPoints = {
+  slug: string;
+  title: string;
+  points: number;
+};
+
+export type FantasyAdminOverallStanding = {
+  userId: string;
+  displayName: string;
+  totalPoints: number;
+  daysPlayed: number;
+  days: FantasyAdminOverallDayPoints[];
+};

@@ -8,7 +8,7 @@ import { AdminPasswordLoginForm } from "@/components/admin/AdminPasswordLoginFor
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { MS_FANTASY_POINTS } from "@/lib/msFantasyConfig";
-import type { FantasyAdminLineupResult, FantasyAdminPickedPlayer } from "@/lib/msFantasyAdminTypes";
+import type { FantasyAdminOverallStanding, FantasyAdminPickedPlayer } from "@/lib/msFantasyAdminTypes";
 import { statRowToFantasyPoints } from "@/lib/msFantasyStatPreview";
 
 type GameDayRow = {
@@ -79,10 +79,28 @@ export function MsFantasyScoringAdminPage() {
   const [slug, setSlug] = useState<string>("");
   const [day, setDay] = useState<DayPayload | null>(null);
   const [draft, setDraft] = useState<PlayerDraft[]>([]);
-  const [results, setResults] = useState<FantasyAdminLineupResult[] | null>(null);
+  const [overall, setOverall] = useState<FantasyAdminOverallStanding[]>([]);
+  const [loadingOverall, setLoadingOverall] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
+  const [evaluatingAll, setEvaluatingAll] = useState(false);
+  const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
+
+  const loadOverall = useCallback(async () => {
+    setLoadingOverall(true);
+    try {
+      const res = await fetch("/api/admin/fantasy/overall", { credentials: "include" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(readError(data) ?? "Nepodařilo se načíst celkové pořadí.");
+        return;
+      }
+      setOverall((data as { overall?: FantasyAdminOverallStanding[] }).overall ?? []);
+    } finally {
+      setLoadingOverall(false);
+    }
+  }, []);
 
   const checkAuth = useCallback(async () => {
     const res = await fetch("/api/admin/fantasy/game-days", { credentials: "include" });
@@ -93,8 +111,9 @@ export function MsFantasyScoringAdminPage() {
       setDays(list);
       const withLineups = list.find((d) => d.lineupCount > 0);
       setSlug((prev) => prev || withLineups?.slug || list[0]?.slug || "");
+      void loadOverall();
     }
-  }, []);
+  }, [loadOverall]);
 
   useEffect(() => {
     void checkAuth();
@@ -103,7 +122,6 @@ export function MsFantasyScoringAdminPage() {
   const loadDay = useCallback(async (daySlug: string) => {
     if (!daySlug) return;
     setLoading(true);
-    setResults(null);
     try {
       const res = await fetch(`/api/admin/fantasy/days/${encodeURIComponent(daySlug)}`, {
         credentials: "include",
@@ -185,16 +203,47 @@ export function MsFantasyScoringAdminPage() {
         toast.error(readError(data) ?? "Vyhodnocení selhalo.");
         return;
       }
-      const payload = data as {
-        results: FantasyAdminLineupResult[];
-        warning?: string | null;
-      };
-      setResults(payload.results ?? []);
+      const payload = data as { warning?: string | null };
       if (payload.warning) toast.warning(payload.warning);
-      else toast.success("Vyhodnoceno a uloženo do databáze.");
+      else toast.success("Den vyhodnocen a uložen do databáze.");
       void loadDay(slug);
+      void loadOverall();
     } finally {
       setEvaluating(false);
+    }
+  };
+
+  const runEvaluateAll = async () => {
+    setEvaluatingAll(true);
+    try {
+      const res = await fetch("/api/admin/fantasy/evaluate-all", {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(readError(data) ?? "Hromadné vyhodnocení selhalo.");
+        return;
+      }
+      const payload = data as {
+        daysEvaluated: number;
+        warnings: string[];
+        overall: FantasyAdminOverallStanding[];
+      };
+      setOverall(payload.overall ?? []);
+      if (payload.warnings?.length) {
+        toast.warning(`Vyhodnoceno ${payload.daysEvaluated} dnů. ${payload.warnings.join(" · ")}`);
+      } else {
+        toast.success(`Vyhodnoceno ${payload.daysEvaluated} herních dnů.`);
+      }
+      const resDays = await fetch("/api/admin/fantasy/game-days", { credentials: "include" });
+      if (resDays.ok) {
+        const daysData = (await resDays.json()) as { days: GameDayRow[] };
+        setDays(daysData.days ?? []);
+      }
+      if (slug) void loadDay(slug);
+    } finally {
+      setEvaluatingAll(false);
     }
   };
 
@@ -238,6 +287,101 @@ export function MsFantasyScoringAdminPage() {
             Úvod
           </Link>
         </div>
+
+        <section className="mb-8 rounded-2xl border border-[#f1c40f]/25 bg-[#f1c40f]/[0.04] p-4 sm:p-5">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="flex items-center gap-2 font-display text-lg font-bold text-white">
+                <Trophy className="h-5 w-5 text-[#f1c40f]" aria-hidden />
+                Celkové vyhodnocení MS 2026
+              </h2>
+              <p className="mt-1 text-xs text-slate-400">
+                Součet bodů ze všech vyhodnocených herních dnů. Po uložení statistik klikni na vyhodnocení.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={evaluatingAll || loadingOverall}
+                onClick={() => void loadOverall()}
+                className="rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-slate-300 hover:border-white/30 disabled:opacity-40"
+              >
+                {loadingOverall ? "Načítám…" : "Obnovit"}
+              </button>
+              <button
+                type="button"
+                disabled={evaluatingAll || days.every((d) => d.lineupCount === 0)}
+                onClick={() => void runEvaluateAll()}
+                className="inline-flex items-center gap-2 rounded-xl bg-[#f1c40f] px-4 py-2 text-xs font-bold text-[#05060f] disabled:opacity-40"
+              >
+                <Calculator className="h-4 w-4" aria-hidden />
+                {evaluatingAll ? "Vyhodnocuji vše…" : "Vyhodnotit všechny dny"}
+              </button>
+            </div>
+          </div>
+
+          {loadingOverall && overall.length === 0 ? (
+            <p className="text-sm text-slate-500">Načítám celkové pořadí…</p>
+          ) : overall.length === 0 ? (
+            <p className="rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-slate-400">
+              Zatím není vyhodnocen žádný den. Doplň statistiky a spusť vyhodnocení.
+            </p>
+          ) : (
+            <div className="overflow-x-auto rounded-xl border border-white/10">
+              <table className="w-full min-w-[560px] text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/[0.04] text-[10px] uppercase tracking-wider text-slate-500">
+                    <th className="px-3 py-2 text-left">#</th>
+                    <th className="px-3 py-2 text-left">Hráč</th>
+                    <th className="px-3 py-2 text-right">Celkem bodů</th>
+                    <th className="px-3 py-2 text-right">Dnů</th>
+                    <th className="px-3 py-2 text-left">Rozpis</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {overall.map((row, i) => {
+                    const expanded = expandedUserId === row.userId;
+                    return (
+                      <tr key={row.userId} className="border-b border-white/[0.06] align-top">
+                        <td className="px-3 py-2.5 text-slate-500">{i + 1}</td>
+                        <td className="px-3 py-2.5 font-medium text-white">{row.displayName}</td>
+                        <td className="px-3 py-2.5 text-right font-display text-lg font-bold tabular-nums text-[#f1c40f]">
+                          {row.totalPoints}
+                        </td>
+                        <td className="px-3 py-2.5 text-right tabular-nums text-slate-400">{row.daysPlayed}</td>
+                        <td className="px-3 py-2.5">
+                          <button
+                            type="button"
+                            onClick={() => setExpandedUserId(expanded ? null : row.userId)}
+                            className="text-xs font-semibold text-cyan-400/90 hover:text-cyan-300"
+                          >
+                            {expanded ? "Skrýt" : "Zobrazit"}
+                          </button>
+                          {expanded ? (
+                            <ul className="mt-2 space-y-1 text-xs text-slate-400">
+                              {row.days.map((d) => (
+                                <li key={d.slug} className="flex justify-between gap-4 tabular-nums">
+                                  <span>{d.title}</span>
+                                  <span className="font-semibold text-cyan-200/90">{d.points}b</span>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="mt-1 text-[10px] text-slate-600">
+                              {row.days.map((d) => `${d.title} ${d.points}b`).join(" · ")}
+                            </p>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-slate-500">Statistiky po dnech</h2>
 
         <div className="mb-4 flex flex-wrap gap-2">
           {days.map((d) => (
@@ -288,7 +432,7 @@ export function MsFantasyScoringAdminPage() {
             className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-40"
           >
             <Calculator className="h-4 w-4" aria-hidden />
-            {evaluating ? "Počítám…" : "Vyhodnotit sestavy"}
+            {evaluating ? "Počítám…" : "Vyhodnotit tento den"}
           </button>
         </div>
 
@@ -361,36 +505,6 @@ export function MsFantasyScoringAdminPage() {
           </div>
         )}
 
-        {(results?.length || day?.lineups.some((l) => l.points != null)) ? (
-          <section className="mt-10">
-            <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-white">
-              <Trophy className="h-5 w-5 text-[#f1c40f]" aria-hidden />
-              Pořadí dne
-            </h2>
-            <div className="overflow-x-auto rounded-2xl border border-white/10">
-              <table className="w-full min-w-[480px] text-sm">
-                <thead>
-                  <tr className="border-b border-white/10 bg-white/[0.04] text-[10px] uppercase tracking-wider text-slate-500">
-                    <th className="px-3 py-2 text-left">#</th>
-                    <th className="px-3 py-2 text-left">Hráč</th>
-                    <th className="px-3 py-2 text-right">Body</th>
-                    <th className="px-3 py-2 text-right">Kapitál</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(results ?? []).map((row, i) => (
-                    <tr key={row.lineupId} className="border-b border-white/[0.06]">
-                      <td className="px-3 py-2 text-slate-500">{i + 1}</td>
-                      <td className="px-3 py-2 font-medium text-white">{row.displayName}</td>
-                      <td className="px-3 py-2 text-right font-bold tabular-nums text-cyan-200">{row.points}</td>
-                      <td className="px-3 py-2 text-right tabular-nums text-slate-500">{row.salarySpent}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        ) : null}
       </main>
     </div>
   );
