@@ -56,7 +56,7 @@ export function AppLoadingScreen({
 
           {status === "authenticated" ? (
             <div className="mt-4 flex justify-center">
-              <UserStandingsInMenu variant="loading" multiline className="text-center" />
+              <UserStandingsInMenu multiline className="text-center" />
             </div>
           ) : null}
 

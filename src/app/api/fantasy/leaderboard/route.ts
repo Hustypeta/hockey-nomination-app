@@ -1,10 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { CONTEST_ADMIN_COOKIE, verifyAdminToken } from "@/lib/adminSession";
-import {
-  computeMsFantasyLeaderboard,
-  msFantasyLeaderboardIsPublic,
-} from "@/lib/msFantasyLeaderboard";
+import { computeMsFantasyLeaderboard, msFantasyLeaderboardIsPublic } from "@/lib/msFantasyLeaderboard";
 
 function noStoreJson(data: object, init?: { status?: number }) {
   const res = NextResponse.json(data, init);

@@ -70,6 +70,7 @@ export function FantasyLeaderboardView() {
           const podium = row.rank <= 3;
           const emoji = contestRankEmoji(row.rank);
           const expanded = expandedUserId === row.userId;
+          const hasDays = row.days.length > 0;
 
           return (
             <li
@@ -102,14 +103,6 @@ export function FantasyLeaderboardView() {
                     <span className="sr-only">{contestRankLabel(row.rank)} </span>
                     {row.displayName}
                   </p>
-                  <p className="mt-0.5 text-[11px] text-white/50 sm:text-xs">
-                    {row.daysPlayed} {row.daysPlayed === 1 ? "den" : row.daysPlayed < 5 ? "dny" : "dnů"}
-                    {expanded
-                      ? null
-                      : row.days.length > 0
-                        ? ` · ${row.days.map((d) => `${d.title} ${d.points}b`).join(" · ")}`
-                        : null}
-                  </p>
                 </div>
 
                 <div className="shrink-0 text-right">
@@ -118,17 +111,18 @@ export function FantasyLeaderboardView() {
                 </div>
               </div>
 
-              {row.days.length > 0 ? (
+              {hasDays ? (
                 <button
                   type="button"
                   onClick={() => setExpandedUserId(expanded ? null : row.userId)}
                   className="mt-2 text-[11px] font-semibold text-cyan-300/90 hover:text-cyan-200"
+                  aria-expanded={expanded}
                 >
-                  {expanded ? "Skrýt rozpis dnů" : "Rozpis po dnech"}
+                  {expanded ? "Skrýt rozpis po dnech" : "Rozpis po dnech"}
                 </button>
               ) : null}
 
-              {expanded ? (
+              {expanded && hasDays ? (
                 <ul className="mt-2 space-y-1 border-t border-white/[0.08] pt-2 text-xs text-white/60">
                   {row.days.map((d) => (
                     <li key={d.slug} className="flex justify-between gap-3 tabular-nums">

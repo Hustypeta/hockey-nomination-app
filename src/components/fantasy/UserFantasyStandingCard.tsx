@@ -45,12 +45,6 @@ export function UserFantasyStandingCard() {
               <span className="font-bold tabular-nums text-white">{standing.points} bodů</span>
               <span className="text-white/55"> · </span>
               {standing.rank}. z {standing.totalParticipants} účastníků
-              {standing.daysPlayed != null ? (
-                <>
-                  <span className="text-white/55"> · </span>
-                  {standing.daysPlayed} {standing.daysPlayed === 1 ? "den" : standing.daysPlayed < 5 ? "dny" : "dnů"}
-                </>
-              ) : null}
             </p>
           </div>
         </div>
