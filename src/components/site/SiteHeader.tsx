@@ -32,10 +32,11 @@ function isNominationEditorPath(pathname: string) {
 
 function DesktopNavLabel({ item }: { item: NavItem }) {
   if (!item.shortLabel || item.shortLabel === item.label) return <>{item.label}</>;
+  // Plné názvy až na velmi širokém monitoru — jinak kratší varianty, aby „Žebříček“ nebyl oříznutý.
   return (
     <>
-      <span className="hidden 2xl:inline">{item.label}</span>
-      <span className="2xl:hidden">{item.shortLabel}</span>
+      <span className="hidden min-[1800px]:inline">{item.label}</span>
+      <span className="min-[1800px]:hidden">{item.shortLabel}</span>
     </>
   );
 }
@@ -229,7 +230,7 @@ export function SiteHeader() {
             </Link>
 
             <nav
-              className="site-header-desktop-nav isolate flex min-w-0 flex-1 flex-nowrap items-center gap-x-0 overflow-hidden lg:gap-x-0.5"
+              className="site-header-desktop-nav isolate flex min-w-0 flex-1 flex-nowrap items-center gap-x-0 lg:gap-x-0.5"
               aria-label="Hlavní navigace"
             >
               {NAV.filter((item) => item.href !== "/ucet" || status !== "authenticated").map((item) => (
@@ -263,7 +264,7 @@ export function SiteHeader() {
                         {userInitials(user)}
                       </span>
                     )}
-                    <UserStandingsInMenu className="hidden min-w-0 max-w-[12rem] 2xl:block" compact />
+                    <UserStandingsInMenu className="hidden min-w-0 max-w-[9rem] min-[1800px]:block" compact />
                   </Link>
                   {showLineupEditorCta ? (
                     <Link
@@ -278,8 +279,8 @@ export function SiteHeader() {
                     active:scale-[0.98]
                   `}
                     >
-                      <span className="2xl:hidden">Sestavy</span>
-                      <span className="hidden 2xl:inline">Do editoru sestavy</span>
+                      <span className="min-[1800px]:hidden">Sestavy</span>
+                      <span className="hidden min-[1800px]:inline">Do editoru sestavy</span>
                     </Link>
                   ) : null}
                 </div>
