@@ -11,11 +11,11 @@ import {
 } from "@/lib/siteBranding";
 
 export const metadata: Metadata = {
-  title: "Žebříčky MS 2026",
+  title: "Žebříček soutěží MS 2026",
   description: "Výsledky nominační soutěže a Fantasy MS 2026 — body a pořadí účastníků.",
   alternates: { canonical: "/zebricek" },
   openGraph: {
-    title: "Žebříčky MS 2026",
+    title: "Žebříček soutěží MS 2026",
     description: "Výsledky nominační soutěže a Fantasy MS 2026 — body a pořadí účastníků.",
     url: "/zebricek",
     type: "website",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Žebříčky MS 2026",
+    title: "Žebříček soutěží MS 2026",
     description: "Výsledky nominační soutěže a Fantasy MS 2026.",
     images: [SITE_OG_DEFAULT_IMAGE_URL],
   },
@@ -40,12 +40,7 @@ export const metadata: Metadata = {
 export default function ZebricekPage() {
   return (
     <SiteShell>
-      <SitePageHero
-        kicker="MS 2026"
-        title="Žebříčky"
-        subtitle="Nominační soutěž a celkové pořadí Fantasy — přepni záložku níže."
-        align="center"
-      />
+      <SitePageHero kicker="MS 2026" title="Žebříček soutěží" align="center" />
       <main className="relative z-10 mx-auto max-w-2xl px-4 pb-24 pt-2 sm:px-6">
         <Suspense fallback={<p className="py-16 text-center text-sm text-white/55">Načítám žebříčky…</p>}>
           <ZebricekPageContent />

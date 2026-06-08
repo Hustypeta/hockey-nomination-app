@@ -33,7 +33,7 @@ export function ZebricekPageContent() {
       <div
         className="mb-6 flex rounded-2xl border border-white/12 bg-white/[0.04] p-1"
         role="tablist"
-        aria-label="Žebříčky soutěží"
+        aria-label="Žebříček soutěží"
       >
         <button
           type="button"
