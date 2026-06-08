@@ -6,7 +6,9 @@ import { SITE_BRAND } from "@/lib/siteBranding";
 import { LoadingScreenUsefulLinks } from "@/components/LoadingScreenUsefulLinks";
 import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import { ContestsStatusBanner } from "@/components/ContestsStatusBanner";
+import { UserStandingsInMenu } from "@/components/contest/UserStandingsInMenu";
 import { useContestStats } from "@/hooks/useContestStats";
+import { useSession } from "next-auth/react";
 
 const DEFAULT_INTRO =
   "Zahraj si Fantasy na MS 2026. Každý den si naklikej svůj tým a soutěž s ostatními a hraj o atraktivní hokejové ceny.";
@@ -35,6 +37,7 @@ export function AppLoadingScreen({
 }: AppLoadingScreenProps) {
   const introText = intro === undefined ? DEFAULT_INTRO : intro;
   const contestStats = useContestStats();
+  const { status } = useSession();
 
   const handleSignIn = () => {
     const cb =
@@ -50,6 +53,12 @@ export function AppLoadingScreen({
             {SITE_BRAND}
           </h1>
           <p className="mt-1 font-display text-sm tracking-[0.18em] text-[#c41e3a]/90">{tagline}</p>
+
+          {status === "authenticated" ? (
+            <div className="mt-4 flex justify-center">
+              <UserStandingsInMenu variant="loading" multiline className="text-center" />
+            </div>
+          ) : null}
 
           <p className="mt-4 text-center">
             <Link

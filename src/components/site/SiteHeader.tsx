@@ -7,7 +7,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SITE_BRAND, SITE_LOGO_URL } from "@/lib/siteBranding";
-import { UserContestStandingLine } from "@/components/contest/UserContestStandingLine";
+import { UserStandingsInMenu } from "@/components/contest/UserStandingsInMenu";
 
 type NavItem = { href: string; label: string; shortLabel?: string };
 
@@ -263,7 +263,7 @@ export function SiteHeader() {
                         {userInitials(user)}
                       </span>
                     )}
-                    <UserContestStandingLine className="hidden min-w-0 max-w-[10rem] truncate 2xl:block" />
+                    <UserStandingsInMenu className="hidden min-w-0 max-w-[12rem] 2xl:block" compact />
                   </Link>
                   {showLineupEditorCta ? (
                     <Link
@@ -376,7 +376,7 @@ export function SiteHeader() {
                         <span className="block text-base font-semibold tracking-wide">{label}</span>
                         {isAccount && status === "authenticated" ? (
                           <span className="mt-1 block">
-                            <UserContestStandingLine multiline />
+                            <UserStandingsInMenu multiline />
                           </span>
                         ) : null}
                       </span>
@@ -409,7 +409,7 @@ export function SiteHeader() {
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold text-white">{user.name?.trim() || "Můj účet"}</span>
                     <span className="mt-1 block">
-                      <UserContestStandingLine multiline />
+                      <UserStandingsInMenu multiline />
                     </span>
                     <span className="mt-1 block truncate text-xs text-slate-400">{user.email}</span>
                   </span>

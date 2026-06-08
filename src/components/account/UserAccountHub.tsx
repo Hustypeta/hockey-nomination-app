@@ -6,6 +6,7 @@ import { ClipboardList, Sparkles, Star, Trophy, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { UserContestStandingCard } from "@/components/contest/UserContestStandingCard";
+import { UserFantasyStandingCard } from "@/components/fantasy/UserFantasyStandingCard";
 
 export type NominationListItem = {
   id: string;
@@ -87,6 +88,7 @@ export function UserAccountHub() {
         </button>
       </div>
 
+      <UserFantasyStandingCard />
       <UserContestStandingCard />
 
       <div className="mt-8 rounded-2xl border border-white/12 bg-[#0f172a]/85 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">

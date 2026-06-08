@@ -65,7 +65,11 @@ export function MsFantasyHome() {
                   prvním zápasem dne.
                   {!fantasySubmissionsEnabled ? (
                     <span className="mt-2 block rounded-lg border border-rose-400/30 bg-rose-500/10 px-2.5 py-1.5 text-[0.8125rem] text-rose-100 sm:px-3 sm:py-2 sm:text-sm">
-                      Soutěž je uzavřená — nové sestavy už nejdou odeslat. Výsledky zveřejníme po vyhodnocení.
+                      Soutěž je uzavřená — nové sestavy už nejdou odeslat. Výsledky najdeš v{" "}
+                      <Link href="/zebricek?soutez=fantasy" className="font-semibold text-sky-300 underline-offset-2 hover:underline">
+                        žebříčku Fantasy
+                      </Link>
+                      .
                     </span>
                   ) : null}
                 </p>

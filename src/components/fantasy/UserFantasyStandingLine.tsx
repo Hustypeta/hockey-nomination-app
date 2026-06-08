@@ -1,23 +1,21 @@
 "use client";
 
-import { contestRankEmoji, formatContestPointsOfMax } from "@/lib/contestRankDisplay";
-import { useContestStanding } from "@/hooks/useContestStanding";
+import { contestRankEmoji } from "@/lib/contestRankDisplay";
+import { useFantasyStanding } from "@/hooks/useFantasyStanding";
 
-type UserContestStandingLineProps = {
+type UserFantasyStandingLineProps = {
   className?: string;
-  /** Jedna řádka vedle avataru; dvě řádky v položce menu. */
   multiline?: boolean;
-  /** Kratší zápis do hlavičky (46/193 · #25). */
   compact?: boolean;
 };
 
-/** Body a pořadí v nominaci — jen text, bez odkazu na žebříček. */
-export function UserContestStandingLine({
+/** Body a pořadí ve fantasy — jen text. */
+export function UserFantasyStandingLine({
   className = "",
   multiline = false,
   compact = false,
-}: UserContestStandingLineProps) {
-  const { standing, loading, isAuthenticated } = useContestStanding();
+}: UserFantasyStandingLineProps) {
+  const { standing, loading, isAuthenticated } = useFantasyStanding();
 
   if (!isAuthenticated || loading || !standing.published || !standing.participant) {
     return null;
@@ -25,11 +23,7 @@ export function UserContestStandingLine({
 
   if (standing.rank == null || standing.points == null) return null;
 
-  const pointsLabel =
-    standing.maxPoints != null
-      ? formatContestPointsOfMax(standing.points, standing.maxPoints)
-      : `${standing.points} bodů`;
-
+  const pointsLabel = `${standing.points} bodů`;
   const emoji = contestRankEmoji(standing.rank);
   const isPodium = standing.rank <= 3;
   const rankPart =
@@ -48,15 +42,14 @@ export function UserContestStandingLine({
     );
 
   if (compact) {
-    const max = standing.maxPoints ?? "?";
     return (
       <span
         className={`whitespace-nowrap text-[11px] font-bold tabular-nums leading-tight ${
-          isPodium ? "text-[#f1e6a8]" : "text-sky-200/95"
+          isPodium ? "text-[#f1e6a8]" : "text-amber-200/95"
         } ${className}`}
-        title={`Nominace: ${pointsLabel} · ${standing.rank}. místo z ${standing.totalParticipants}`}
+        title={`Fantasy: ${pointsLabel} · ${standing.rank}. místo z ${standing.totalParticipants}`}
       >
-        Nom {standing.points}/{max} · #{standing.rank}
+        Fantasy {standing.points}b · #{standing.rank}
       </span>
     );
   }
@@ -64,9 +57,9 @@ export function UserContestStandingLine({
   if (multiline) {
     return (
       <span
-        className={`block text-left font-semibold tabular-nums leading-snug ${isPodium ? "text-[#f1e6a8]" : "text-sky-200/95"} ${className}`}
+        className={`block text-left font-semibold tabular-nums leading-snug ${isPodium ? "text-[#f1e6a8]" : "text-amber-200/95"} ${className}`}
       >
-        <span className="block text-[10px] font-bold uppercase tracking-wider text-white/45">Nominace</span>
+        <span className="block text-[10px] font-bold uppercase tracking-wider text-white/45">Fantasy</span>
         <span className="block text-sm">{pointsLabel}</span>
         <span className="block text-xs opacity-90">
           {rankPart}
@@ -79,10 +72,10 @@ export function UserContestStandingLine({
   return (
     <span
       className={`whitespace-nowrap text-xs font-bold tabular-nums leading-tight sm:text-[13px] ${
-        isPodium ? "text-[#f1e6a8]" : "text-sky-200/95"
+        isPodium ? "text-[#f1e6a8]" : "text-amber-200/95"
       } ${className}`}
     >
-      Nominace · {pointsLabel} · {rankPart}
+      Fantasy · {pointsLabel} · {rankPart}
     </span>
   );
 }

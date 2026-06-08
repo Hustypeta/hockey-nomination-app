@@ -135,7 +135,14 @@ export function ContestsStatusBanner({ pickemSubmissionOpen, className = "" }: C
             status={<ClosedBadge />}
             accentClassName="border-rose-400/18 hover:border-rose-400/28"
           >
-            Soutěž Daily Fantasy na MS 2026 uzavřena — výsledky zveřejníme po vyhodnocení.
+            Soutěž Daily Fantasy na MS 2026 uzavřena — výsledky jsou v{" "}
+            <Link
+              href="/zebricek?soutez=fantasy"
+              className="font-semibold text-sky-300 underline-offset-2 hover:text-sky-200 hover:underline"
+            >
+              žebříčku Fantasy
+            </Link>
+            .
           </ContestRow>
         </div>
       </div>
