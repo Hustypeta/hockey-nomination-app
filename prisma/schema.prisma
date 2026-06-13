@@ -160,6 +160,15 @@ model OfficialLineup {
   @@map("official_lineup")
 }
 
+/// Oficiální výsledky Pick'em MS 2026 — zdroj pravdy pro vyhodnocení (admin).
+model OfficialPickem {
+  id        String   @id
+  payload   Json
+  updatedAt DateTime @updatedAt
+
+  @@map("official_pickem")
+}
+
 /// Zápasy (Beijir hockey games) — oficiální sestava + hodnocení hráčů.
 model Match {
   id        String   @id @default(cuid())

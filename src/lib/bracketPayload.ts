@@ -45,7 +45,15 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
   try {
     const json = decompressFromEncodedURIComponent(z);
     if (!json) return null;
-    const data = JSON.parse(json) as unknown;
+    return parseBracketPickemPayload(JSON.parse(json) as unknown);
+  } catch {
+    return null;
+  }
+}
+
+/** Normalizace JSON payloadu z DB / admin API (bez LZ komprese). */
+export function parseBracketPickemPayload(data: unknown): BracketPickemPayload | null {
+  try {
     if (!data || typeof data !== "object") return null;
     const o = data as Record<string, unknown>;
     const v = o.v;
@@ -70,7 +78,7 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
       czechTeamPim: str("czechTeamPim"),
     });
 
-    const payload: BracketPickemPayload = {
+    return {
       v: BRACKET_PAYLOAD_VERSION,
       groupAOrder:
         v === 1
@@ -88,7 +96,6 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
         ...(v === 3
           ? bonusV3()
           : {
-              // migrace starších payloadů (v1/v2) → v3
               topCzechGoalScorerId: "",
               topCzechPointsLeaderId: "",
               mostPenalizedCzechPlayerId: "",
@@ -97,8 +104,25 @@ export function decodeBracketPayload(z: string): BracketPickemPayload | null {
             }),
       },
     };
-    return payload;
   } catch {
     return null;
   }
+}
+
+export function isBracketPickemComplete(payload: BracketPickemPayload): boolean {
+  const groupsOk =
+    payload.groupAOrder.length === MS2026_GROUP_A_TEAMS.length &&
+    payload.groupBOrder.length === MS2026_GROUP_B_TEAMS.length;
+  const qfOk = payload.quarterfinals.every((m) => Boolean(m.winner));
+  const sfOk = payload.semifinals.every((m) => Boolean(m.winner));
+  const finOk = Boolean(payload.final.winner);
+  const bronzOk = Boolean(payload.bronze.winner);
+  const b = payload.bonus;
+  const bonusOk =
+    Boolean(b.topCzechGoalScorerId?.trim()) &&
+    Boolean(b.topCzechPointsLeaderId?.trim()) &&
+    Boolean(b.mostPenalizedCzechPlayerId?.trim()) &&
+    b.czechTeamGoals.trim() !== "" &&
+    b.czechTeamPim.trim() !== "";
+  return groupsOk && qfOk && sfOk && finOk && bronzOk && bonusOk;
 }

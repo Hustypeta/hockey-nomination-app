@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Calculator, ChevronLeft, Save, Trophy } from "lucide-react";
+import { Calculator, ChevronLeft, ImageIcon, Save, Trophy } from "lucide-react";
+import { MsFantasyPosterExportPanel } from "@/components/admin/MsFantasyPosterExportPanel";
 import Link from "next/link";
 import { toast } from "sonner";
 import { AdminPasswordLoginForm } from "@/components/admin/AdminPasswordLoginForm";
@@ -379,6 +380,19 @@ export function MsFantasyScoringAdminPage() {
               </table>
             </div>
           )}
+        </section>
+
+        <section className="mb-8 rounded-2xl border border-cyan-400/20 bg-cyan-500/[0.04] p-4 sm:p-5">
+          <div className="mb-4">
+            <h2 className="flex items-center gap-2 font-display text-lg font-bold text-white">
+              <ImageIcon className="h-5 w-5 text-cyan-300" aria-hidden />
+              IG plakát — nejlepší den
+            </h2>
+            <p className="mt-1 text-xs text-slate-400">
+              Export 1080×1080 ve fantasy grafice — sestava na ledě, statistiky hráčů a kapitál. Jméno vítěze doplníš před stažením.
+            </p>
+          </div>
+          <MsFantasyPosterExportPanel />
         </section>
 
         <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-slate-500">Statistiky po dnech</h2>

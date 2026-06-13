@@ -960,7 +960,16 @@ function PickemPlayerPicker({
   );
 }
 
-export function BracketPickemContent({ initialPayload }: { initialPayload?: BracketPickemPayload }) {
+export function BracketPickemContent({
+  initialPayload,
+  adminMode = false,
+  onPicksChange,
+}: {
+  initialPayload?: BracketPickemPayload;
+  /** Admin editor oficiálních výsledků — bez ukládání k účtu / soutěžních tlačítek. */
+  adminMode?: boolean;
+  onPicksChange?: (picks: BracketPickemPayload) => void;
+}) {
   const searchParams = useSearchParams();
   const { status: authStatus } = useSession();
   const [picks, setPicks] = useState<BracketPickemPayload>(() => ({ ...EMPTY_BRACKET_PICKEM }));
@@ -996,6 +1005,10 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
   }, []);
 
   useEffect(() => {
+    if (adminMode) {
+      setContestLocked(false);
+      return;
+    }
     if (authStatus !== "authenticated") {
       setContestLocked(false);
       return;
@@ -1013,7 +1026,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
     return () => {
       cancelled = true;
     };
-  }, [authStatus]);
+  }, [authStatus, adminMode]);
 
   // CZ hráči pro bonus tipy (výběr z DB kandidátů).
   useEffect(() => {
@@ -1065,6 +1078,13 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
       });
       return;
     }
+    if (adminMode) {
+      queueMicrotask(() => {
+        setPicks(ensureDefaults({ ...EMPTY_BRACKET_PICKEM }));
+        setHydrated(true);
+      });
+      return;
+    }
     const z = searchParams.get("z");
     if (z) {
       const decoded = decodeBracketPayload(z);
@@ -1079,21 +1099,29 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
       toast.error("Odkaz se nepodařilo načíst.");
     }
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
+      if (!adminMode) {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
           const parsed = JSON.parse(raw) as BracketPickemPayload;
           if (parsed && typeof parsed === "object") {
             queueMicrotask(() => setPicks(ensureDefaults(parsed)));
           }
+        }
       }
     } catch {
       /* ignore */
     }
     queueMicrotask(() => setHydrated(true));
-  }, [searchParams, ensureDefaults, initialPayload]);
+  }, [searchParams, ensureDefaults, initialPayload, adminMode]);
+
+  useEffect(() => {
+    if (!hydrated || !adminMode || !onPicksChange) return;
+    onPicksChange(picks);
+  }, [picks, hydrated, adminMode, onPicksChange]);
 
   // Načíst koncept z účtu (z /ucet/pickem nebo přímý link /bracket?loadAccount=1)
   useEffect(() => {
+    if (adminMode) return;
     const want = searchParams.get("loadAccount") === "1";
     if (!want) return;
     if (authStatus !== "authenticated") return;
@@ -1121,13 +1149,13 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
   }, [searchParams, authStatus, ensureDefaults]);
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || adminMode) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(picks));
     } catch {
       /* ignore */
     }
-  }, [picks, hydrated]);
+  }, [picks, hydrated, adminMode]);
 
   const setGroupOrder = (which: "A" | "B", next: string[]) => {
     setPicks((p) => (which === "A" ? { ...p, groupAOrder: next } : { ...p, groupBOrder: next }));
@@ -1435,7 +1463,15 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
   };
 
   return (
-    <main className="relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20">
+    <main
+      className={
+        adminMode
+          ? "relative z-10"
+          : "relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-2 sm:px-6 sm:pb-20"
+      }
+    >
+      {!adminMode ? (
+        <>
       <SitePageHero
         title="Bracket Pick’em"
         subtitle="Vítejte v Pick'emu pro MS v hokeji 2026. Zde si můžete tipnout pořadí skupin, výsledky play off a také vyzkoušet bonusové tipy."
@@ -1521,8 +1557,10 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
           </button>
         </div>
       ) : null}
+        </>
+      ) : null}
 
-      <div className="space-y-8">
+      <div className={adminMode ? "space-y-8" : "space-y-8"}>
         <Section
           title="Pořadí ve skupinách"
           hint={`Oficiální skupiny IIHF MS 2026. Přetáhni týmy a nastav pořadí ve skupině A (${MS2026_GROUP_A_VENUE}) a skupině B (${MS2026_GROUP_B_VENUE}).`}
@@ -1744,7 +1782,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         onClose={() => setPicker(null)}
       />
 
-      {authStatus === "authenticated" && contestLocked ? (
+      {authStatus === "authenticated" && contestLocked && !adminMode ? (
         <div
           className="pickem-panel mt-10 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.07] p-5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-6"
           role="status"
@@ -1759,7 +1797,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         </div>
       ) : null}
 
-      {pickemContestClosed && !contestLocked ? (
+      {pickemContestClosed && !contestLocked && !adminMode ? (
         <div
           className="pickem-panel mt-10 rounded-2xl border border-rose-400/30 bg-rose-500/[0.08] p-5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:p-6"
           role="status"
@@ -1771,6 +1809,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
         </div>
       ) : null}
 
+      {!adminMode ? (
       <div className="pickem-panel mt-10 flex flex-col items-center gap-3 rounded-2xl p-6 text-center ring-1 ring-[#00E5FF]/18 shadow-[0_0_48px_rgba(0,229,255,0.06)]">
         <Trophy className="h-8 w-8 text-[#00E5FF]/85" aria-hidden />
         <p className="text-sm text-white/78">
@@ -1837,6 +1876,7 @@ export function BracketPickemContent({ initialPayload }: { initialPayload?: Brac
           </Link>
         </p>
       </div>
+      ) : null}
     </main>
   );
 }

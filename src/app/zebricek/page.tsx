@@ -12,11 +12,11 @@ import {
 
 export const metadata: Metadata = {
   title: "Žebříček soutěží MS 2026",
-  description: "Výsledky nominační soutěže a Fantasy MS 2026 — body a pořadí účastníků.",
+  description: "Výsledky nominace, Fantasy a Pick'em MS 2026 — body a pořadí účastníků.",
   alternates: { canonical: "/zebricek" },
   openGraph: {
     title: "Žebříček soutěží MS 2026",
-    description: "Výsledky nominační soutěže a Fantasy MS 2026 — body a pořadí účastníků.",
+    description: "Výsledky nominace, Fantasy a Pick'em MS 2026 — body a pořadí účastníků.",
     url: "/zebricek",
     type: "website",
     locale: "cs_CZ",
