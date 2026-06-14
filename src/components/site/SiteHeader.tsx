@@ -11,7 +11,7 @@ import { UserStandingsInMenu } from "@/components/contest/UserStandingsInMenu";
 
 type NavItem = { href: string; label: string; shortLabel?: string };
 
-/** shortLabel = kratší text na desktopu pod 2xl, aby se vešly všechny položky včetně „Žebříček“ */
+/** Plné názvy v menu — po skrytí Pick'em žebříčku se vejdou i delší položky. */
 const LINEUP_EDITOR_HREF = "/zapasy/sestava";
 
 const NAV_HOME: NavItem = { href: "/", label: "Úvod" };
@@ -19,9 +19,9 @@ const NAV_HOME: NavItem = { href: "/", label: "Úvod" };
 const NAV: NavItem[] = [
   NAV_HOME,
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
-  { href: LINEUP_EDITOR_HREF, label: "Editor sestavy", shortLabel: "Sestavy" },
+  { href: LINEUP_EDITOR_HREF, label: "Editor sestavy" },
   { href: "/bracket", label: "Pick’em", shortLabel: "Pick’em" },
-  { href: "/sestava", label: "Editor nominace", shortLabel: "Nominace" },
+  { href: "/sestava", label: "Editor nominace" },
   { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
 ];
@@ -279,8 +279,7 @@ export function SiteHeader() {
                     active:scale-[0.98]
                   `}
                     >
-                      <span className="min-[1800px]:hidden">Sestavy</span>
-                      <span className="hidden min-[1800px]:inline">Do editoru sestavy</span>
+                      <span>Editor sestavy</span>
                     </Link>
                   ) : null}
                 </div>
