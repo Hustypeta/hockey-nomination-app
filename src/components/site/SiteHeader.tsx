@@ -20,7 +20,6 @@ const NAV: NavItem[] = [
   NAV_HOME,
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
   { href: LINEUP_EDITOR_HREF, label: "Editor sestavy" },
-  { href: "/bracket", label: "Pick’em", shortLabel: "Pick’em" },
   { href: "/sestava", label: "Editor nominace" },
   { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
@@ -233,7 +232,7 @@ export function SiteHeader() {
               className="site-header-desktop-nav isolate flex min-w-0 flex-1 flex-nowrap items-center gap-x-0 lg:gap-x-0.5"
               aria-label="Hlavní navigace"
             >
-              {NAV.filter((item) => item.href !== "/ucet" || status !== "authenticated").map((item) => (
+              {NAV.map((item) => (
                 <DesktopNavLink
                   key={item.href}
                   item={item}
