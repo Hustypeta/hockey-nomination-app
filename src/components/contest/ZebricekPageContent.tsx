@@ -4,13 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ContestLeaderboardView } from "@/components/contest/ContestLeaderboardView";
 import { FantasyLeaderboardView } from "@/components/fantasy/FantasyLeaderboardView";
-import { PickemLeaderboardView } from "@/components/pickem/PickemLeaderboardView";
 
-type TabId = "nominace" | "fantasy" | "pickem";
+type TabId = "nominace" | "fantasy";
 
 function tabFromParam(raw: string | null): TabId {
   if (raw === "fantasy" || raw === "f") return "fantasy";
-  if (raw === "pickem" || raw === "p") return "pickem";
   return "nominace";
 }
 
@@ -26,7 +24,6 @@ export function ZebricekPageContent() {
     setTab(next);
     const url = new URL(window.location.href);
     if (next === "fantasy") url.searchParams.set("soutez", "fantasy");
-    else if (next === "pickem") url.searchParams.set("soutez", "pickem");
     else url.searchParams.delete("soutez");
     window.history.replaceState(null, "", `${url.pathname}${url.search}`);
   }, []);
@@ -64,19 +61,6 @@ export function ZebricekPageContent() {
         >
           Fantasy
         </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={tab === "pickem"}
-          onClick={() => selectTab("pickem")}
-          className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
-            tab === "pickem"
-              ? "bg-cyan-500/20 text-cyan-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-              : "text-white/55 hover:text-white/85"
-          }`}
-        >
-          Pick&apos;em
-        </button>
       </div>
 
       <div role="tabpanel" hidden={tab !== "nominace"} className={tab === "nominace" ? undefined : "hidden"}>
@@ -84,9 +68,6 @@ export function ZebricekPageContent() {
       </div>
       <div role="tabpanel" hidden={tab !== "fantasy"} className={tab === "fantasy" ? undefined : "hidden"}>
         {tab === "fantasy" ? <FantasyLeaderboardView /> : null}
-      </div>
-      <div role="tabpanel" hidden={tab !== "pickem"} className={tab === "pickem" ? undefined : "hidden"}>
-        {tab === "pickem" ? <PickemLeaderboardView /> : null}
       </div>
     </div>
   );

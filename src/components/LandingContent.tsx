@@ -31,7 +31,6 @@ export function LandingContent() {
   const contestStats = useContestStats();
   const nominationCount = contestStats.nominationCount;
   const communityUsersCount = contestStats.communityUsersCount;
-  const pickemCount = contestStats.pickemCount;
   const fantasyPlayersCount = contestStats.fantasyPlayersCount;
 
   // Premium micro-animace: fade-in při scrollu (bez vlivu na obsah).
@@ -180,7 +179,7 @@ export function LandingContent() {
                     </div>
                   </div>
 
-                  <div className="grid w-full min-w-0 grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+                  <div className="grid w-full min-w-0 grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
                     {[
                       {
                         tone: "bg-[#FF1E2E]/10 ring-[#FF1E2E]/22",
@@ -193,12 +192,6 @@ export function LandingContent() {
                         icon: "👥",
                         value: communityUsersCount,
                         label: "V komunitě",
-                      },
-                      {
-                        tone: "bg-[#00E5FF]/10 ring-[#00E5FF]/22",
-                        icon: "🏒",
-                        value: pickemCount,
-                        label: "Pick’emů",
                       },
                       {
                         tone: "bg-[#f1c40f]/10 ring-[#f1c40f]/25",
