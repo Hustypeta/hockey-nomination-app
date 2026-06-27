@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap&subset=latin,latin-ext');
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap&subset=latin,latin-ext');
 @import "tailwindcss";
+@import "./fifa-design-system.css";
 
 :root {
   --background: #05080f;
@@ -745,5 +746,3 @@ html.social-cover body {
 .ms-fantasy-scroll::-webkit-scrollbar-corner {
   background: transparent;
 }
-
-@import "./fifa-design-system.css";

@@ -2257,9 +2257,12 @@ body:has(.fifa-design-viewport) {
     gap: 0.5rem;
   }
 
-  --fifa-pool-card-h: 2.5rem;
-  --fifa-pool-grid-gap: 0.125rem;
-  --fifa-editor-mobile-inset: 0.5rem;
+  .fifa-app-viewport,
+  .fifa-design-viewport {
+    --fifa-pool-card-h: 2.5rem;
+    --fifa-pool-grid-gap: 0.125rem;
+    --fifa-editor-mobile-inset: 0.5rem;
+  }
 
   .fifa-editor-mobile-pool {
     display: flex;
