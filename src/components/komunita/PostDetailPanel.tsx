@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import type { CommunityCommentDto, CommunityPostDto } from "@/lib/community/types";
 import { CommunityBody } from "@/components/komunita/CommunityBody";
 import { CommunityLineupEmbed } from "@/components/komunita/CommunityLineupEmbed";
+import { FIFA_BTN_PRIMARY, FIFA_BTN_SECONDARY, FIFA_INPUT } from "@/lib/fifa/fifaUiClasses";
 import type { Player } from "@/types";
 
 export function PostDetailPanel({
@@ -14,11 +15,13 @@ export function PostDetailPanel({
   players,
   onPostUpdated,
   onDeleted,
+  fifaUi = false,
 }: {
   slug: string;
   players: Player[];
   onPostUpdated: (post: CommunityPostDto) => void;
   onDeleted: () => void;
+  fifaUi?: boolean;
 }) {
   const { data: session } = useSession();
   const [post, setPost] = useState<CommunityPostDto | null>(null);
@@ -130,14 +133,14 @@ export function PostDetailPanel({
 
   if (loading) {
     return (
-      <div className="flex h-48 items-center justify-center text-white/50">
+      <div className={`flex h-48 items-center justify-center ${fifaUi ? "text-[var(--fifa-text-muted)]" : "text-white/50"}`}>
         <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     );
   }
 
   if (!post) {
-    return <p className="text-sm text-white/50">Vyber příspěvek ze seznamu.</p>;
+    return <p className={`text-sm ${fifaUi ? "text-[var(--fifa-text-muted)]" : "text-white/50"}`}>Vyber příspěvek ze seznamu.</p>;
   }
 
   const topLevel = comments.filter((c) => !c.parentId);
@@ -147,6 +150,22 @@ export function PostDetailPanel({
     return acc;
   }, {});
 
+  const actionBtn = fifaUi ? FIFA_BTN_SECONDARY : "inline-flex items-center gap-1 rounded-lg border border-white/15 px-3 py-1.5 text-xs text-white/80 hover:bg-white/10";
+  const deleteBtn = fifaUi
+    ? "inline-flex items-center gap-1 rounded-[var(--fifa-radius-md)] border border-red-500/30 px-3 py-1.5 text-xs text-red-300 hover:bg-red-950/40"
+    : "inline-flex items-center gap-1 rounded-lg border border-rose-500/30 px-3 py-1.5 text-xs text-rose-300 hover:bg-rose-950/40";
+  const headingClass = fifaUi ? "text-xl font-bold text-[var(--fifa-text)]" : "text-xl font-bold text-white";
+  const sectionBorder = fifaUi ? "border-[var(--fifa-border)]" : "border-white/10";
+  const commentShell = fifaUi
+    ? "rounded-xl border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] px-3 py-2"
+    : "rounded-xl bg-white/5 px-3 py-2";
+  const commentMeta = fifaUi ? "text-[11px] text-[var(--fifa-text-muted)]" : "text-[11px] text-white/45";
+  const commentsHeading = fifaUi ? "text-sm font-semibold text-[var(--fifa-text-secondary)]" : "text-sm font-semibold text-white/80";
+  const textareaClass = fifaUi
+    ? `${FIFA_INPUT} min-h-[44px] flex-1 resize-none py-2`
+    : "min-h-[44px] flex-1 rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-white";
+  const sendBtn = fifaUi ? FIFA_BTN_PRIMARY : "self-end rounded-xl bg-cyan-600 px-3 py-2 text-white disabled:opacity-40";
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
@@ -154,7 +173,7 @@ export function PostDetailPanel({
           type="button"
           disabled={pinBusy}
           onClick={() => void togglePin()}
-          className="inline-flex items-center gap-1 rounded-lg border border-white/15 px-3 py-1.5 text-xs text-white/80 hover:bg-white/10"
+          className={actionBtn}
         >
           <Pin className="h-3.5 w-3.5" />
           {post.pinnedAt ? "Odepnout" : "Připnout"}
@@ -163,7 +182,7 @@ export function PostDetailPanel({
           <button
             type="button"
             onClick={() => void deletePost()}
-            className="inline-flex items-center gap-1 rounded-lg border border-rose-500/30 px-3 py-1.5 text-xs text-rose-300 hover:bg-rose-950/40"
+            className={deleteBtn}
           >
             <Trash2 className="h-3.5 w-3.5" />
             Smazat
@@ -171,18 +190,18 @@ export function PostDetailPanel({
         ) : null}
       </div>
 
-      <h2 className="text-xl font-bold text-white">{post.title}</h2>
+      <h2 className={headingClass}>{post.title}</h2>
       <CommunityBody text={post.bodyMd} />
       {post.attachments.map((a) => (
         <CommunityLineupEmbed key={a.id} snapshot={a.snapshot} players={players} />
       ))}
 
-      <div className="border-t border-white/10 pt-4">
-        <h3 className="text-sm font-semibold text-white/80">Komentáře ({post.commentCount})</h3>
+      <div className={`border-t ${sectionBorder} pt-4`}>
+        <h3 className={commentsHeading}>Komentáře ({post.commentCount})</h3>
         <ul className="mt-3 space-y-3">
           {topLevel.map((c) => (
-            <li key={c.id} className="rounded-xl bg-white/5 px-3 py-2">
-              <p className="text-[11px] text-white/45">
+            <li key={c.id} className={commentShell}>
+              <p className={commentMeta}>
                 {c.author.name ?? "Hráč"} ·{" "}
                 {new Date(c.createdAt).toLocaleString("cs-CZ", {
                   day: "numeric",
@@ -193,8 +212,8 @@ export function PostDetailPanel({
               </p>
               <CommunityBody text={c.bodyMd} className="mt-1" />
               {(repliesByParent[c.id] ?? []).map((r) => (
-                <div key={r.id} className="ml-4 mt-2 border-l border-white/10 pl-3">
-                  <p className="text-[11px] text-white/45">{r.author.name ?? "Hráč"}</p>
+                <div key={r.id} className={`ml-4 mt-2 border-l ${sectionBorder} pl-3`}>
+                  <p className={commentMeta}>{r.author.name ?? "Hráč"}</p>
                   <CommunityBody text={r.bodyMd} />
                 </div>
               ))}
@@ -208,13 +227,13 @@ export function PostDetailPanel({
             onChange={(e) => setCommentText(e.target.value)}
             rows={2}
             placeholder="Napsat komentář…"
-            className="min-h-[44px] flex-1 rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-white"
+            className={textareaClass}
           />
           <button
             type="button"
             disabled={commentBusy || !commentText.trim()}
             onClick={() => void submitComment()}
-            className="self-end rounded-xl bg-cyan-600 px-3 py-2 text-white disabled:opacity-40"
+            className={`${sendBtn} self-end disabled:opacity-40`}
           >
             <Send className="h-4 w-4" />
           </button>

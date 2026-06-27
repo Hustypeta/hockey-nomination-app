@@ -189,8 +189,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                         {i + 1}. pár
                       </p>
                       <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
-                        {renderSlot(pair.lb, "LD", `pair-${i}-lb`)}
-                        {renderSlot(pair.rb, "RD", `pair-${i}-rb`)}
+                        {renderSlot(pair.lb, "LB", `pair-${i}-lb`)}
+                        {renderSlot(pair.rb, "RB", `pair-${i}-rb`)}
                       </div>
                     </div>
                   ))}
@@ -202,8 +202,8 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                         4. pár
                       </p>
                       <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
-                        {renderSlot(p3.lb, "LD", "pair-4-lb")}
-                        {renderSlot(p3.rb, "RD", "pair-4-rb")}
+                        {renderSlot(p3.lb, "LB", "pair-4-lb")}
+                        {renderSlot(p3.rb, "RB", "pair-4-rb")}
                       </div>
                     </div>
                   ) : null}

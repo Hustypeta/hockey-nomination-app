@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { SitePageHero } from "@/components/site/SitePageHero";
 import { ZebricekPageContent } from "@/components/contest/ZebricekPageContent";
+import { ZebricekHubContent } from "@/components/zebricek/ZebricekHubContent";
+import { isFifaDesignEnabled } from "@/lib/fifa/fifaDesignEnabled";
 import {
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
@@ -38,6 +40,16 @@ export const metadata: Metadata = {
 };
 
 export default function ZebricekPage() {
+  if (isFifaDesignEnabled()) {
+    return (
+      <SiteShell>
+        <Suspense fallback={<p className="py-16 text-center text-sm text-slate-500">Načítám žebříčky…</p>}>
+          <ZebricekHubContent />
+        </Suspense>
+      </SiteShell>
+    );
+  }
+
   return (
     <SiteShell>
       <SitePageHero kicker="MS 2026" title="Žebříček soutěží" align="center" />

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { LandingContent } from "@/components/LandingContent";
+import { FifaHomeContent } from "@/components/fifa/FifaHomeContent";
 import { SocialCoverPage } from "@/components/social/SocialCoverPage";
 import { SiteShell } from "@/components/site/SiteShell";
+import { isFifaDesignEnabled } from "@/lib/fifa/fifaDesignEnabled";
 import {
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
@@ -70,8 +72,8 @@ export default async function HomePage({
   }
 
   return (
-    <SiteShell>
-      <LandingContent />
+    <SiteShell showFooter={!isFifaDesignEnabled()}>
+      {isFifaDesignEnabled() ? <FifaHomeContent /> : <LandingContent />}
     </SiteShell>
   );
 }

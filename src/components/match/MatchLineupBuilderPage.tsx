@@ -1,11 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
+import { FifaAppPage } from "@/components/fifa/FifaAppPage";
 import { SiteHeader } from "@/components/site/SiteHeader";
+import { isFifaDesignEnabled } from "@/lib/fifa/fifaDesignEnabled";
+import { FIFA_BTN_PRIMARY } from "@/lib/fifa/fifaUiClasses";
+import {
+  FIFA_EDITOR_SCROLL,
+  FIFA_EDITOR_SURFACE,
+  FIFA_EDITOR_SURFACE_CANVAS,
+  FIFA_EDITOR_SURFACE_POOL,
+} from "@/lib/fifa/fifaEditorClasses";
 import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerPoolPanel } from "@/components/sestava/PlayerPoolPanel";
 import { FloatingSestavaBar } from "@/components/sestava/FloatingSestavaBar";
@@ -18,10 +27,12 @@ import {
   assignPlayerToTarget,
   buildRandomMatchLineup,
   lineupPlayerIds,
+  removePlayerFromLineup,
+  swapWithinLine,
 } from "@/lib/lineupAssign";
 import { droppableIdFromSelectedSlot, parseDroppableId } from "@/lib/dndSlotIds";
 import { powerPlaySlotPickerLabel } from "@/lib/powerPlayLineup";
-import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragOverlay, PointerSensor, TouchSensor, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { poolToSlotCollision } from "@/lib/dndCollision";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -49,6 +60,21 @@ function isMatchLineupValid(
   return fBase === fTarget && dCount === opts.defenseCount && gCount === 2;
 }
 
+/** Drop zóna nad výběrem hráčů — přetažení dresu z plochy sem hráče odebere ze sestavy. */
+function PoolRemoveDropZone({ children, className }: { children: ReactNode; className?: string }) {
+  const { setNodeRef, isOver } = useDroppable({ id: "pool-remove" });
+  return (
+    <div
+      ref={setNodeRef}
+      className={`${className ?? ""} ${
+        isOver ? "ring-2 ring-red-400/70 ring-offset-2 ring-offset-[var(--fifa-bg-base)]" : ""
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function MatchLineupBuilderPage() {
   const searchParams = useSearchParams();
   const loadEditCode = useMemo(() => {
@@ -64,6 +90,8 @@ export function MatchLineupBuilderPage() {
   const needDraftImport = Boolean(loadEditCode);
   const [draftImportReady, setDraftImportReady] = useState(!needDraftImport);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
+  const fifaEnabled = isFifaDesignEnabled();
+  const fifaMobileInlinePool = fifaEnabled && isNarrowLayout;
   const [lineupPosterModalOpen, setLineupPosterModalOpen] = useState(false);
   const [saveShareModalOpen, setSaveShareModalOpen] = useState(false);
   /** Široký layout (≥ lg): DnD z poolu zapnuté. Úzký: jen klepnutí, bez přetahování. */
@@ -79,9 +107,9 @@ export function MatchLineupBuilderPage() {
   const [captainId, setCaptainId] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<{ type: string; lineIndex?: number; role?: string } | null>(null);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
-  const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
-  /** Na úzkém layoutu schovat pool, dokud se nevybere slot (pool je ve fullscreen sheetu). */
-  const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
+  const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null && !fifaEnabled;
+  /** Desktop sloupec poolu; na mobilu FIFA je pool dole inline. */
+  const showDesktopPoolColumn = !isNarrowLayout;
 
   const [defenseCount, setDefenseCount] = useState<6 | 7 | 8>(8);
   const [allowExtraForward, setAllowExtraForward] = useState(false);
@@ -90,6 +118,8 @@ export function MatchLineupBuilderPage() {
   const [shareSlug, setShareSlug] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [siteOrigin, setSiteOrigin] = useState("");
+  /** Loader ukázat až po krátké prodlevě — rychlé načtení tak neprobliká celou úvodní obrazovkou. */
+  const [showLoader, setShowLoader] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -120,12 +150,16 @@ export function MatchLineupBuilderPage() {
   }, [selectedSlot]);
 
   const mobilePoolHint = useMemo(() => {
-    if (!selectedSlot) return "Klepni na hráče — doplní se vybraný slot.";
+    if (!selectedSlot) {
+      return fifaMobileInlinePool
+        ? "Nejdřív klepni na slot na ledě, pak vyber hráče níže."
+        : "Klepni na hráče — doplní se vybraný slot.";
+    }
     if (selectedSlot.type === "powerPlay") {
       return "Přesilovka — útočník nebo obránce (ne brankář).";
     }
     return "Klepni na hráče — doplní se vybraný slot.";
-  }, [selectedSlot]);
+  }, [selectedSlot, fifaMobileInlinePool]);
 
   useEffect(() => {
     let cancelled = false;
@@ -216,6 +250,16 @@ export function MatchLineupBuilderPage() {
     };
   }, [mobilePlayerSheetOpen]);
 
+  const isLoadingView = loading || (needDraftImport && !draftImportReady);
+  useEffect(() => {
+    if (!isLoadingView) {
+      setShowLoader(false);
+      return;
+    }
+    const t = setTimeout(() => setShowLoader(true), 240);
+    return () => clearTimeout(t);
+  }, [isLoadingView]);
+
   const handleRandom = () => {
     const next = buildRandomMatchLineup(players, { defenseCount, allowExtraForward });
     if (!next) {
@@ -251,7 +295,7 @@ export function MatchLineupBuilderPage() {
           toast.error("Do přesilovky nejde zařadit brankáře.");
         }
       }
-      setSelectedSlot(null);
+      if (!fifaMobileInlinePool) setSelectedSlot(null);
       return;
     }
     const next = tryAutoAssignPlayer(lineup, player, { mode: "match" });
@@ -265,16 +309,45 @@ export function MatchLineupBuilderPage() {
   const handleDragStart = (e: DragStartEvent) => {
     const id = e.active.id.toString();
     if (typeof window !== "undefined") console.info("[dnd:match-builder] start", { activeId: id });
-    if (!id.startsWith("drag-player-")) return;
-    const pid = id.replace("drag-player-", "");
-    setPoolDragPlayer(players.find((p) => p.id === pid) ?? null);
+    if (id.startsWith("drag-player-")) {
+      const pid = id.replace("drag-player-", "");
+      setPoolDragPlayer(players.find((p) => p.id === pid) ?? null);
+    } else if (id.startsWith("move-")) {
+      setPoolDragPlayer((e.active.data.current?.player as Player | undefined) ?? null);
+    }
   };
   const handleDragEnd = (e: DragEndEvent) => {
     setPoolDragPlayer(null);
     const overId = e.over?.id?.toString();
     const activeId = e.active.id.toString();
     if (typeof window !== "undefined") console.info("[dnd:match-builder] end", { activeId, overId });
-    if (!overId || !activeId.startsWith("drag-player-")) return;
+    if (!overId) return;
+
+    // Přesun přímo na ploše.
+    if (activeId.startsWith("move-")) {
+      const movedPlayer = (e.active.data.current?.player as Player | undefined) ?? null;
+
+      // Přetažení dresu zpět do výběru hráčů = odebrání ze sestavy.
+      if (overId === "pool-remove") {
+        if (movedPlayer) {
+          setLineup(removePlayerFromLineup(lineup, movedPlayer.id));
+          if (captainId === movedPlayer.id) setCaptainId(null);
+        }
+        return;
+      }
+
+      // Prohození v rámci jedné lajny (F↔F, D↔D).
+      const fromId = (e.active.data.current?.fromSlotId as string | undefined) ?? null;
+      if (!fromId) return;
+      const from = parseDroppableId(fromId);
+      const to = parseDroppableId(overId);
+      if (!from || !to) return;
+      const next = swapWithinLine(lineup, from, to);
+      if (next) setLineup(next);
+      return;
+    }
+
+    if (!activeId.startsWith("drag-player-")) return;
     const pid = activeId.replace("drag-player-", "");
     const player = players.find((p) => p.id === pid);
     const target = parseDroppableId(overId);
@@ -376,7 +449,10 @@ export function MatchLineupBuilderPage() {
     }
   };
 
-  if (loading || (needDraftImport && !draftImportReady)) {
+  if (isLoadingView) {
+    if (!showLoader) {
+      return <div className="min-h-[60vh] w-full" aria-hidden />;
+    }
     return (
       <AppLoadingScreen
         tagline="Editor sestavy"
@@ -400,7 +476,184 @@ export function MatchLineupBuilderPage() {
           : "F"
     : null;
 
-  const content = (
+  const content = fifaEnabled ? (
+    <FifaAppPage className="!p-0" fillMobile>
+      <div className={`flex min-h-0 flex-1 flex-col max-lg:px-0 px-3 pt-0 text-white lg:px-4 lg:pb-[4.25rem] ${fifaMobileInlinePool ? "fifa-editor-match-page--mobile max-lg:overflow-hidden" : "max-lg:pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))]"}`}>
+        <div className={`grid min-h-0 flex-1 grid-cols-1 gap-2 lg:grid-cols-[minmax(0,9fr)_minmax(0,16fr)] lg:gap-3 ${fifaMobileInlinePool ? "max-lg:overflow-hidden" : ""}`}>
+          {showDesktopPoolColumn ? (
+            <section className="hidden min-h-0 min-w-0 lg:flex lg:flex-col">
+              <PoolRemoveDropZone className={`${FIFA_EDITOR_SURFACE_POOL} flex min-h-0 flex-1 flex-col overflow-hidden p-2`}>
+                <PlayerPoolPanel
+                  players={players}
+                  usedIds={usedIds}
+                  counts={counts}
+                  onAddPlayer={onAddFromPool}
+                  onPreview={setPreviewPlayer}
+                  enableDnd={enableDnd}
+                  forcedPosition={forcedPoolPosition}
+                  onClearSelectedSlot={() => setSelectedSlot(null)}
+                  simplePickList
+                  uiVariant="fifa"
+                  gridColumns={2}
+                />
+              </PoolRemoveDropZone>
+            </section>
+          ) : null}
+
+          <section
+            className={`flex min-h-0 min-w-0 flex-1 flex-col ${fifaMobileInlinePool ? "fifa-editor-mobile-split max-lg:overflow-hidden" : ""}`}
+          >
+            <div
+              className={`${FIFA_EDITOR_SURFACE_CANVAS}${
+                fifaMobileInlinePool ? " fifa-editor-surface--canvas-inline-pool" : ""
+              } flex min-h-0 flex-col overflow-hidden p-0 ${fifaMobileInlinePool ? "max-lg:min-h-0 max-lg:flex-1" : "flex-1"}`}
+            >
+              <LineBuilder
+                mode="match"
+                lineup={lineup}
+                players={players}
+                captainId={captainId}
+                onLineupChange={setLineup}
+                onCaptainChange={setCaptainId}
+                selectedSlot={selectedSlot}
+                onSelectSlot={setSelectedSlot}
+                enableDnd={enableDnd}
+                layoutVariant="classic"
+                matchDefenseCount={defenseCount}
+                matchAllowExtraForward={allowExtraForward}
+                onMatchDefenseCountChange={setDefenseCount}
+                onMatchAllowExtraForwardChange={setAllowExtraForward}
+                uiVariant="fifa"
+              />
+            </div>
+
+            {fifaMobileInlinePool ? (
+              <PoolRemoveDropZone
+                className={`${FIFA_EDITOR_SURFACE_POOL} fifa-editor-mobile-pool mt-0 flex min-h-0 flex-col overflow-hidden lg:hidden`}
+              >
+                {!selectedSlot ? (
+                  <p className="fifa-editor-mobile-pool__intro shrink-0">Klepni na slot na ledě, pak vyber hráče.</p>
+                ) : null}
+                <PlayerPoolPanel
+                  players={players}
+                  usedIds={usedIds}
+                  counts={counts}
+                  onAddPlayer={onAddFromPool}
+                  onPreview={setPreviewPlayer}
+                  enableDnd={enableDnd}
+                  forcedPosition={forcedPoolPosition}
+                  onClearSelectedSlot={() => setSelectedSlot(null)}
+                  simplePickList
+                  compactInline
+                  uiVariant="fifa"
+                  gridColumns={3}
+                />
+              </PoolRemoveDropZone>
+            ) : null}
+          </section>
+        </div>
+
+        {mobilePlayerSheetOpen ? (
+          <div
+            className="fixed inset-0 z-[52] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-match-pool-title"
+          >
+            <div className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+              <button
+                type="button"
+                onClick={() => setSelectedSlot(null)}
+                className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/[0.1]"
+              >
+                <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+                Zpět k sestavě
+              </button>
+              <h2
+                id="mobile-match-pool-title"
+                className="min-w-0 flex-1 truncate text-center font-sans text-sm font-bold text-white sm:text-base"
+                title={mobilePoolTitle}
+              >
+                {mobilePoolTitle}
+              </h2>
+              <span className="w-[5.5rem] shrink-0" aria-hidden />
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-3 pt-2 pb-6 sm:px-4">
+              <div className={`${FIFA_EDITOR_SURFACE} flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl p-3.5 sm:p-4`}>
+                <p className="mb-3 shrink-0 text-[11px] leading-snug text-[var(--fifa-text-muted)]">{mobilePoolHint}</p>
+                <PlayerPoolPanel
+                  players={players}
+                  usedIds={usedIds}
+                  counts={counts}
+                  onAddPlayer={onAddFromPool}
+                  onPreview={setPreviewPlayer}
+                  enableDnd={enableDnd}
+                  forcedPosition={forcedPoolPosition}
+                  onClearSelectedSlot={() => setSelectedSlot(null)}
+                  simplePickList
+                  uiVariant="fifa"
+                />
+              </div>
+            </div>
+            <div className="relative z-[2] flex shrink-0 justify-center border-t border-[var(--fifa-border)] bg-[var(--fifa-bg-base)] px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] sm:px-4">
+              <button
+                type="button"
+                onClick={() => setSelectedSlot(null)}
+                className={`${FIFA_BTN_PRIMARY} flex w-full min-w-0 max-w-md min-h-[3rem] items-center justify-center gap-2 px-3 py-3.5 touch-manipulation`}
+              >
+                <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
+                <span className="min-w-0 truncate">
+                  <span className="sm:hidden">Hotovo</span>
+                  <span className="hidden sm:inline">Hotovo — zpět do sestavy</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      <DragOverlay dropAnimation={null}>
+        {poolDragPlayer ? (
+          <div className="pointer-events-none flex max-w-[20rem] items-center gap-3 rounded-2xl border border-white/15 bg-black/80 px-4 py-3">
+            <span className="font-bold">{poolDragPlayer.name}</span>
+          </div>
+        ) : null}
+      </DragOverlay>
+
+      <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
+
+      <FloatingSestavaBar
+        uiVariant="fifa"
+        onShare={() => setSaveShareModalOpen(true)}
+        onRandom={handleRandom}
+        onReset={handleReset}
+        onUndo={handleUndo}
+        undoDisabled={!canUndo}
+        shareDisabled={saving || !valid}
+        shareLabel={saving ? "Ukládám…" : shareUrl ? "Sdílet" : "Uložit & sdílet"}
+        className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+      />
+
+      <MatchLineupSaveShareModal
+        open={saveShareModalOpen}
+        onClose={() => setSaveShareModalOpen(false)}
+        shareTitle={shareTitle}
+        onShareTitleChange={setShareTitle}
+        shareUrl={shareUrl}
+        saving={saving}
+        valid={valid}
+        onSave={saveShare}
+        posterModalOpen={lineupPosterModalOpen}
+        onPosterModalOpenChange={setLineupPosterModalOpen}
+        lineup={lineup}
+        players={players}
+        defenseCount={defenseCount}
+        allowExtraForward={allowExtraForward}
+        shareSlug={shareSlug}
+        siteOrigin={siteOrigin}
+      />
+    </FifaAppPage>
+  ) : (
     <div className="sestava-page-ambient min-h-screen pb-[calc(10.75rem+env(safe-area-inset-bottom,0px))] text-white sm:pb-[calc(11rem+env(safe-area-inset-bottom,0px))] lg:pb-[calc(9rem+env(safe-area-inset-bottom,0px))]">
       <div className="sticky top-0 z-40">
         <SiteHeader />
@@ -434,7 +687,9 @@ export function MatchLineupBuilderPage() {
                   onPreview={setPreviewPlayer}
                   enableDnd={enableDnd}
                   forcedPosition={forcedPoolPosition}
+                  onClearSelectedSlot={() => setSelectedSlot(null)}
                   simplePickList
+                  gridColumns={3}
                 />
               </div>
             </section>
@@ -478,7 +733,7 @@ export function MatchLineupBuilderPage() {
             (fullscreen flex sloupec, ne částečně visící panel — iOS Safari má pak spolehlivý scroll). */}
         {mobilePlayerSheetOpen ? (
           <div
-            className="fixed inset-0 z-[52] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
+            className="fixed inset-0 z-[52] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg:hidden"
             role="dialog"
             aria-modal="true"
             aria-labelledby="mobile-match-pool-title"
@@ -518,6 +773,7 @@ export function MatchLineupBuilderPage() {
                   onPreview={setPreviewPlayer}
                   enableDnd={enableDnd}
                   forcedPosition={forcedPoolPosition}
+                  onClearSelectedSlot={() => setSelectedSlot(null)}
                   simplePickList
                 />
               </div>

@@ -24,6 +24,7 @@ import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import { NamesOnlySharePoster } from "@/components/NamesOnlySharePoster";
 import { NominationWebStyleSharePoster } from "@/components/NominationWebStyleSharePoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
+import { FifaAppPage } from "@/components/fifa/FifaAppPage";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
@@ -43,6 +44,16 @@ import {
   isLeadershipComplete,
   normalizeLineupStructure,
 } from "@/lib/lineupUtils";
+import { isFifaDesignEnabled } from "@/lib/fifa/fifaDesignEnabled";
+import {
+  FIFA_EDITOR_BANNER_INFO,
+  FIFA_EDITOR_BANNER_SUCCESS,
+  FIFA_EDITOR_BANNER_WARN,
+  FIFA_EDITOR_SCROLL,
+  FIFA_EDITOR_SURFACE_CANVAS,
+  FIFA_EDITOR_SURFACE_POOL,
+} from "@/lib/fifa/fifaEditorClasses";
+import { FIFA_BTN_PRIMARY, FIFA_KICKER } from "@/lib/fifa/fifaUiClasses";
 import { useContestStats } from "@/hooks/useContestStats";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
@@ -70,7 +81,7 @@ export function NominationBuilderPage() {
   const [sharePosterVariant, setSharePosterVariant] = useState<"jerseys" | "names" | "names-web">("names");
   const [savedNominationSlug, setSavedNominationSlug] = useState<string | null>(null);
   const [guestShareCode, setGuestShareCode] = useState<string | null>(null);
-  /** Veřejná část URL /v/{slug} z hostovského sdílení (stejný tvar jako u uložené nominace). */
+  /** Ve┼Öejn├í ─Ź├íst URL /v/{slug} z hostovsk├ęho sd├şlen├ş (stejn├Ż tvar jako u ulo┼żen├ę nominace). */
   const [guestShareSlug, setGuestShareSlug] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [lineup, setLineup] = useState<LineupStructure>(EMPTY_LINEUP);
@@ -86,7 +97,7 @@ export function NominationBuilderPage() {
   const [saving, setSaving] = useState(false);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
   const shareCaptureRef = useRef<HTMLDivElement>(null);
-  /** Aktualizuje datum ve footeru plakátu těsně před html-to-image capture (ref zůstane na stejném uzlu). */
+  /** Aktualizuje datum ve footeru plak├ítu t─Ťsn─Ť p┼Öed html-to-image capture (ref z┼»stane na stejn├ęm uzlu). */
   const [sharePosterFooterIso, setSharePosterFooterIso] = useState<string | null>(null);
   const [siteOrigin, setSiteOrigin] = useState("");
   const wasCompleteRef = useRef(false);
@@ -98,9 +109,9 @@ export function NominationBuilderPage() {
   const [contestSubmitted, setContestSubmitted] = useState(false);
   const [contestConfirmOpen, setContestConfirmOpen] = useState(false);
   const [submitContestBusy, setSubmitContestBusy] = useState(false);
-  /** Načteno z /sestava?nominace=… — uložení provede PUT místo nového POST. */
+  /** Na─Źteno z /sestava?nominace=ÔÇŽ ÔÇö ulo┼żen├ş provede PUT m├şsto nov├ęho POST. */
   const [editingNominationId, setEditingNominationId] = useState<string | null>(null);
-  /** Název na plakátu a v modalu uložení (synchronizované). */
+  /** N├ízev na plak├ítu a v modalu ulo┼żen├ş (synchronizovan├ę). */
   const [shareNominationTitle, setShareNominationTitle] = useState("");
 
   const longGuestShareUrl = useMemo(() => {
@@ -124,7 +135,7 @@ export function NominationBuilderPage() {
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
   const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
-  /** Na úzkém layoutu schovat sloupec poolu jen při otevřeném výběru (pool je ve fullscreen sheetu). */
+  /** Na ├║zk├ęm layoutu schovat sloupec poolu jen p┼Öi otev┼Öen├ęm v├Żb─Ťru (pool je ve fullscreen sheetu). */
   const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
 
   const sensors = useSensors(
@@ -136,7 +147,7 @@ export function NominationBuilderPage() {
     })
   );
 
-  /** Široký layout (≥ lg / 1024px): přetahování z poolu zapnuté. Úzký: jen klepnutí — bez DnD. */
+  /** ┼áirok├Ż layout (Ôëą lg / 1024px): p┼Öetahov├ín├ş z poolu zapnut├ę. ├Üzk├Ż: jen klepnut├ş ÔÇö bez DnD. */
   const enableDnd = !isNarrowLayout;
 
   const selectedPlayers = useMemo(() => lineupToPlayers(lineup, players), [lineup, players]);
@@ -175,7 +186,7 @@ export function NominationBuilderPage() {
     }
   }, [shareNominationTitle]);
 
-  /** Hostovský záznam: /v/{slug} z názvu — vyžaduje plnou sestavu a vyplněný název. */
+  /** Hostovsk├Ż z├íznam: /v/{slug} z n├ízvu ÔÇö vy┼żaduje plnou sestavu a vypln─Ťn├Ż n├ízev. */
   useEffect(() => {
     if (!modalOpen) return;
     if (savedNominationSlug) {
@@ -302,12 +313,12 @@ export function NominationBuilderPage() {
           setShareNominationTitle(typeof data.title === "string" ? data.title : "");
           setSavedNominationSlug(typeof data.slug === "string" ? data.slug : null);
           setEditingNominationId(id);
-          toast.success("Nominace načtena do editoru.");
+          toast.success("Nominace na─Źtena do editoru.");
           if (openShareAfterLoad) setModalOpen(true);
         }
         router.replace("/sestava", { scroll: false });
       } catch {
-        if (!cancelled) toast.error("Nominaci se nepodařilo načíst.");
+        if (!cancelled) toast.error("Nominaci se nepoda┼Öilo na─Ź├şst.");
       }
     })();
     return () => {
@@ -349,7 +360,7 @@ export function NominationBuilderPage() {
         origin: { y: 0.65 },
         colors: ["#c8102e", "#003087", "#ffffff", "#d4af37"],
       });
-      toast.success("Plná nominace — můžeš sdílet!", { duration: 5000 });
+      toast.success("Pln├í nominace ÔÇö m┼»┼że┼í sd├şlet!", { duration: 5000 });
     }
     wasCompleteRef.current = isComplete;
   }, [isComplete]);
@@ -444,20 +455,20 @@ export function NominationBuilderPage() {
     (player: Player) => {
       if (selectedSlot) {
         if (!canAssignPlayer(player)) {
-          toast.error("Tenhle hráč nejde do vybraného slotu.");
+          toast.error("Tenhle hr├í─Ź nejde do vybran├ęho slotu.");
           return;
         }
         assignPlayerToSlot(player);
-        toast.success(`${player.name} je ve sestavě`);
+        toast.success(`${player.name} je ve sestav─Ť`);
         return;
       }
       const next = tryAutoAssignPlayer(lineup, player);
       if (!next) {
-        toast.error("Už není volné místo pro tuto pozici, nebo je hráč už v nominaci.");
+        toast.error("U┼ż nen├ş voln├ę m├şsto pro tuto pozici, nebo je hr├í─Ź u┼ż v nominaci.");
         return;
       }
       setLineup(next);
-      toast.success(`${player.name} přidán do nominace`);
+      toast.success(`${player.name} p┼Öid├ín do nominace`);
     },
     [lineup, selectedSlot, canAssignPlayer, assignPlayerToSlot]
   );
@@ -486,11 +497,11 @@ export function NominationBuilderPage() {
       if (!player || !target) return;
       const next = assignPlayerToTarget(lineup, player, target);
       if (!next) {
-        toast.error("Sem tohohle hráče nelze dát.");
+        toast.error("Sem tohohle hr├í─Źe nelze d├ít.");
         return;
       }
       setLineup(next);
-      toast.success(`${player.name} → sestava`);
+      toast.success(`${player.name} Ôćĺ sestava`);
     },
     [lineup, players]
   );
@@ -502,7 +513,7 @@ export function NominationBuilderPage() {
   const handleRandom = useCallback(() => {
     const next = buildRandomLineup(players);
     if (!next) {
-      toast.error("V databázi není dost hráčů (potřeba 3G + 8D + 14F).");
+      toast.error("V datab├ízi nen├ş dost hr├í─Ź┼» (pot┼Öeba 3G + 8D + 14F).");
       return;
     }
     setLineup(next);
@@ -513,7 +524,7 @@ export function NominationBuilderPage() {
     setSavedNominationSlug(null);
     setGuestShareCode(null);
     setGuestShareSlug(null);
-    toast.success("Náhodná nominace je hotová — uprav si ji, jak chceš.");
+    toast.success("N├íhodn├í nominace je hotov├í ÔÇö uprav si ji, jak chce┼í.");
   }, [players]);
 
   const handleReset = useCallback(() => {
@@ -525,7 +536,7 @@ export function NominationBuilderPage() {
     setSavedNominationSlug(null);
     setGuestShareCode(null);
     setGuestShareSlug(null);
-    toast.message("Sestava byla resetována.");
+    toast.message("Sestava byla resetov├ína.");
   }, []);
 
   const handleSave = useCallback(
@@ -538,7 +549,7 @@ export function NominationBuilderPage() {
       const normalizedTitle = (rawTitle ?? "").trim();
       let titleToUse = normalizedTitle;
       if (!titleToUse) {
-        const ok = window.confirm("Přejete si pokračovat bez vyplnění jména?");
+        const ok = window.confirm("P┼Öejete si pokra─Źovat bez vypln─Ťn├ş jm├ęna?");
         if (!ok) return null;
         try {
           const key = "lineup:autoTitle:sestava";
@@ -566,14 +577,14 @@ export function NominationBuilderPage() {
       );
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error || "Chyba při ukládání");
+        toast.error(data.error || "Chyba p┼Öi ukl├íd├ín├ş");
         return null;
       }
       if (typeof data.slug === "string" && data.slug) {
         setSavedNominationSlug(data.slug);
       }
       toast.success(
-        updating ? "Změny uloženy." : "Nominace uložena u účtu jako koncept."
+        updating ? "Zm─Ťny ulo┼żeny." : "Nominace ulo┼żena u ├║─Źtu jako koncept."
       );
       metaTrack("trackCustom", "SaveNomination", {
         is_update: updating,
@@ -581,7 +592,7 @@ export function NominationBuilderPage() {
       });
       return data.id ?? null;
     } catch {
-      toast.error("Chyba při ukládání — zkus to znovu.");
+      toast.error("Chyba p┼Öi ukl├íd├ín├ş ÔÇö zkus to znovu.");
       return null;
     } finally {
       setSaving(false);
@@ -591,26 +602,26 @@ export function NominationBuilderPage() {
 
   const handleSubmitToContest = useCallback(async () => {
     if (authStatus !== "authenticated") {
-      toast.error("Pro odeslání do soutěže se musíš přihlásit přes Google.");
+      toast.error("Pro odesl├ín├ş do sout─Ť┼że se mus├ş┼í p┼Öihl├ísit p┼Öes Google.");
       return;
     }
     if (contestSubmitted) {
-      toast.message("Z tohoto účtu už je nominace do soutěže odeslaná.");
+      toast.message("Z tohoto ├║─Źtu u┼ż je nominace do sout─Ť┼że odeslan├í.");
       return;
     }
     if (!isComplete) {
-      toast.error("Nejdřív doplň celou nominaci (25 hráčů), pak můžeš odeslat do soutěže.");
+      toast.error("Nejd┼Ö├şv dopl┼ł celou nominaci (25 hr├í─Ź┼»), pak m┼»┼że┼í odeslat do sout─Ť┼że.");
       return;
     }
     if (!leadershipOk) {
       const ok = window.confirm(
-        "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+        "Nevybrali jste je┼ít─Ť kapit├ína a 2 asistenty. Chcete i tak pokra─Źovat?"
       );
       if (!ok) return;
     }
     let titleToUse = shareNominationTitle.trim();
     if (!titleToUse) {
-      const ok = window.confirm("Přejete si pokračovat bez vyplnění jména?");
+      const ok = window.confirm("P┼Öejete si pokra─Źovat bez vypln─Ťn├ş jm├ęna?");
       if (!ok) return;
       try {
         const key = "lineup:autoTitle:sestava";
@@ -624,7 +635,7 @@ export function NominationBuilderPage() {
       setShareNominationTitle(titleToUse);
     }
     if (!contestSubmissionOpen) {
-      toast.error("Uzávěrka odeslání do soutěže už proběhla.");
+      toast.error("Uz├ív─Ťrka odesl├ín├ş do sout─Ť┼że u┼ż prob─Ťhla.");
       return;
     }
     setSubmitContestBusy(true);
@@ -642,14 +653,14 @@ export function NominationBuilderPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        toast.error(typeof data.error === "string" ? data.error : "Odeslání do soutěže se nepovedlo.");
+        toast.error(typeof data.error === "string" ? data.error : "Odesl├ín├ş do sout─Ť┼że se nepovedlo.");
         return;
       }
       const bp = data.timeBonusPercent as number | undefined;
       toast.success(
         typeof bp === "number" && bp > 0
-          ? `Nominace je v soutěži — časový bonus +${bp} % k bodům.`
-          : "Nominace je v soutěži."
+          ? `Nominace je v sout─Ť┼żi ÔÇö ─Źasov├Ż bonus +${bp} % k bod┼»m.`
+          : "Nominace je v sout─Ť┼żi."
       );
       metaTrack("trackCustom", "SubmitNomination", {
         player_count: selectedPlayers.length,
@@ -659,7 +670,7 @@ export function NominationBuilderPage() {
       setContestConfirmOpen(false);
       refreshContestStats();
     } catch {
-      toast.error("Spojení se serverem selhalo — zkus odeslat znovu za chvíli.");
+      toast.error("Spojen├ş se serverem selhalo ÔÇö zkus odeslat znovu za chv├şli.");
     } finally {
       setSubmitContestBusy(false);
     }
@@ -678,22 +689,22 @@ export function NominationBuilderPage() {
 
   const handleContestSubmitClick = useCallback(() => {
     if (!isComplete) {
-      toast.error("Nejdřív doplň celou nominaci (25 hráčů), pak můžeš odeslat do soutěže.");
+      toast.error("Nejd┼Ö├şv dopl┼ł celou nominaci (25 hr├í─Ź┼»), pak m┼»┼że┼í odeslat do sout─Ť┼że.");
       return;
     }
     if (!leadershipOk) {
       const ok = window.confirm(
-        "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+        "Nevybrali jste je┼ít─Ť kapit├ína a 2 asistenty. Chcete i tak pokra─Źovat?"
       );
       if (!ok) return;
     }
     if (!shareNominationTitle.trim()) {
-      const ok = window.confirm("Přejete si pokračovat bez vyplnění jména?");
+      const ok = window.confirm("P┼Öejete si pokra─Źovat bez vypln─Ťn├ş jm├ęna?");
       if (!ok) return;
-      // Název se vygeneruje až při samotném odeslání (handleSubmitToContest / handleSave).
+      // N├ízev se vygeneruje a┼ż p┼Öi samotn├ęm odesl├ín├ş (handleSubmitToContest / handleSave).
     }
     if (!contestSubmissionOpen) {
-      toast.error("Uzávěrka odeslání do soutěže už proběhla.");
+      toast.error("Uz├ív─Ťrka odesl├ín├ş do sout─Ť┼że u┼ż prob─Ťhla.");
       return;
     }
     setContestConfirmOpen(true);
@@ -701,7 +712,7 @@ export function NominationBuilderPage() {
 
   if (loading) {
     return (
-      <AppLoadingScreen message="Načítám hráče…" showSignInCta={authStatus !== "authenticated"} />
+      <AppLoadingScreen message="Na─Ź├şt├ím hr├í─ŹeÔÇŽ" showSignInCta={authStatus !== "authenticated"} />
     );
   }
 
@@ -717,6 +728,8 @@ export function NominationBuilderPage() {
         : "F"
     : null;
 
+  const fifaEnabled = isFifaDesignEnabled();
+
   return (
     <DndContext
       sensors={sensors}
@@ -725,412 +738,805 @@ export function NominationBuilderPage() {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <div className="sestava-page-ambient min-h-screen pb-[calc(10.75rem+env(safe-area-inset-bottom,0px))] text-white sm:pb-[calc(11rem+env(safe-area-inset-bottom,0px))] lg:pb-[calc(9rem+env(safe-area-inset-bottom,0px))]">
-        <div className="sticky top-0 z-40">
-          <SiteHeader />
-          <SestavaHero filled={filled} />
-        </div>
-
-        <div className="relative z-10 mx-auto max-w-[90rem] px-3 pb-5 pt-2 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
-          <div className="mb-3 rounded-2xl border border-white/10 bg-gradient-to-r from-[#003087]/18 via-white/[0.03] to-[#c8102e]/14 p-4 shadow-[0_0_34px_rgba(0,48,135,0.14)] sm:mb-4 sm:p-5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="min-w-0">
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">
-                  Článek
-                </p>
-                <p className="mt-1 font-display text-lg font-black text-white sm:text-xl">
-                  Rady k nominaci
-                </p>
-                <p className="mt-1 text-[11px] leading-snug text-white/70 sm:text-sm">
-                  Tipy k nominaci pro MS 2026 (NHL posily, AHL, brankáři a další).
-                </p>
-              </div>
-              <div className="flex shrink-0 items-center gap-2">
-                <Link
-                  href="/clanky/rady-k-nominaci"
-                  className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2.5 text-sm font-black text-white shadow-[0_16px_44px_rgba(0,0,0,0.22)] ring-1 ring-white/15 hover:brightness-110"
-                >
-                  Číst článek
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {isAuthenticated && (
-            <div className="mb-3 rounded-xl border border-emerald-500/30 bg-emerald-950/25 px-3 py-2 text-center text-[11px] text-emerald-50/95 shadow-[0_0_24px_rgba(16,185,129,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
-              {contestSubmitted ? (
-                <>
-                  Tvoje sestava už je <strong className="font-semibold">jednou odeslaná do soutěže</strong>. Koncepty
-                  můžeš dál ukládat — přehled v{" "}
-                  <a href="/ucet/nominace" className="font-semibold text-[#f1c40f] underline-offset-2 hover:underline">
-                    Moje nominace
-                  </a>
-                  .
-                </>
-              ) : (
-                <>
-                  Jsi přihlášen — <strong className="font-semibold">Dokončit nominaci</strong> uloží koncept u účtu,{" "}
-                  <strong className="font-semibold">Odeslat do soutěže</strong> (jednou) tě zařadí do vyhodnocení.{" "}
-                  <a href="/ucet/nominace" className="font-semibold text-[#f1c40f] underline-offset-2 hover:underline">
-                    Moje nominace
-                  </a>
-                </>
-              )}
-            </div>
-          )}
-          {!isComplete && (
-            <div className="mb-3 rounded-xl border border-[#003087]/40 bg-gradient-to-r from-[#003087]/20 via-[#0f172a]/90 to-[#c8102e]/15 px-3 py-2 text-center text-[11px] text-slate-100 shadow-[0_0_32px_rgba(0,48,135,0.15)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
-              {remaining > 0 ? (
-                <>
-                  Ještě <span className="font-semibold text-[#f1c40f]">{remaining}</span>{" "}
-                  {remaining === 1 ? "místo" : remaining < 5 ? "místa" : "míst"} do plné nominace.
-                </>
-              ) : (
-                <>Doplň poslední detaily — nominace skoro hotová.</>
-              )}
-            </div>
-          )}
-          {isComplete && !leadershipOk ? (
-                  <div className="mb-3 rounded-xl border border-amber-500/35 bg-amber-950/30 px-3 py-2 text-center text-[11px] text-amber-100/95 shadow-[0_0_28px_rgba(245,158,11,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
-                    Ještě zvol <strong className="font-semibold">kapitána</strong> (tlačítko C) a přesně{" "}
-                    <strong className="font-semibold">dva asistenty</strong> (A) u hráčů v soupisce — bez toho bude
-                    nominace vypadat neúplně.
-                  </div>
-          ) : null}
-
-          <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
-            {showDesktopPoolColumn ? (
-              <section className="min-w-0 hidden lg:block">
-                <div
-                  className={`sestava-premium-panel-dark rounded-2xl p-3.5 sm:p-5 ${
-                    isNarrowLayout ? "" : "backdrop-blur-sm"
-                  }`}
-                >
-                  <div className="mb-4">
-                    <div>
-                      <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
-                        Výběr hráčů
-                      </p>
-                      <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-white sm:text-2xl">
-                        Dostupní hráči
-                      </h2>
-                      <p className="mt-1.5 max-w-prose text-[11px] leading-snug text-white/55 sm:text-xs sm:text-white/55">
-                        Přetáhni kartu na slot vpravo, nebo klepni na jméno — doplní se první volné místo pro pozici.
-                      </p>
+      {fifaEnabled ? (
+        <FifaAppPage className="!p-0">
+                <div className="flex h-full min-h-0 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] text-white lg:pb-[4.25rem]">
+                <div className="shrink-0">
+                  <SestavaHero filled={filled} uiVariant="fifa" />
+                </div>
+        
+                <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[90rem] flex-1 flex-col px-3 pt-2 sm:px-4 lg:px-5">
+                  <div className="mb-2 rounded-xl border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] p-3 sm:mb-3 sm:p-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0">
+                        <p className={FIFA_KICKER}>Článek</p>
+                        <p className="mt-1 font-display text-lg text-[var(--fifa-text)] sm:text-xl">
+                          Rady k nominaci
+                        </p>
+                        <p className="mt-1 text-[11px] leading-snug text-[var(--fifa-text-muted)] sm:text-sm">
+                          Tipy k nominaci pro MS 2026 (NHL posily, AHL, brankáři a další).
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <Link href="/clanky/rady-k-nominaci" className={`${FIFA_BTN_PRIMARY} px-4 py-2.5`}>
+                          Číst článek
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                  <PlayerPoolPanel
-                    players={players}
-                    usedIds={usedIds}
-                    counts={counts}
-                    onAddPlayer={handleAddFromPool}
-                    onPreview={setPreviewPlayer}
-                    enableDnd={enableDnd}
-                    forcedPosition={forcedPoolPosition}
-                    assignableFilter={selectedSlot ? canAssignPlayer : undefined}
-                    simplePickList
-                    slotHint={
-                      selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
-                        ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
-                        : null
+        
+                  {isAuthenticated && (
+                    <div className={`mb-2 text-center sm:mb-3 ${FIFA_EDITOR_BANNER_SUCCESS}`}>
+                      {contestSubmitted ? (
+                        <>
+                          Tvoje sestava už je <strong className="font-semibold">jednou odeslaná do soutěže</strong>. Koncepty
+                          můžeš dál ukládat — přehled v{" "}
+                          <a href="/ucet/nominace" className="font-semibold text-[var(--fifa-accent-text)] underline-offset-2 hover:underline">
+                            Moje nominace
+                          </a>
+                          .
+                        </>
+                      ) : (
+                        <>
+                          Jsi přihlášen — <strong className="font-semibold">Dokončit nominaci</strong> uloží koncept u účtu,{" "}
+                          <strong className="font-semibold">Odeslat do soutěže</strong> (jednou) tě zařadí do vyhodnocení.{" "}
+                          <a href="/ucet/nominace" className="font-semibold text-[var(--fifa-accent-text)] underline-offset-2 hover:underline">
+                            Moje nominace
+                          </a>
+                        </>
+                      )}
+                    </div>
+                  )}
+                  {!isComplete && (
+                    <div className={`mb-2 text-center sm:mb-3 ${FIFA_EDITOR_BANNER_INFO}`}>
+                      {remaining > 0 ? (
+                        <>
+                          Ještě <span className="font-semibold text-[var(--fifa-accent-text)]">{remaining}</span>{" "}
+                          {remaining === 1 ? "místo" : remaining < 5 ? "místa" : "míst"} do plné nominace.
+                        </>
+                      ) : (
+                        <>Doplň poslední detaily — nominace skoro hotová.</>
+                      )}
+                    </div>
+                  )}
+                  {isComplete && !leadershipOk ? (
+                          <div className={`mb-3 text-center sm:mb-4 ${FIFA_EDITOR_BANNER_WARN}`}>
+                            Ještě zvol <strong className="font-semibold">kapitána</strong> (tlačítko C) a přesně{" "}
+                            <strong className="font-semibold">dva asistenty</strong> (A) u hráčů v soupisce — bez toho bude
+                            nominace vypadat neúplně.
+                          </div>
+                  ) : null}
+        
+                  <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,11fr)_minmax(0,14fr)] lg:gap-4">
+                    {showDesktopPoolColumn ? (
+                      <section className="hidden min-h-0 min-w-0 lg:flex lg:flex-col">
+                        <div className={`${FIFA_EDITOR_SURFACE_POOL} flex min-h-0 flex-1 flex-col overflow-hidden p-3 lg:p-4`}>
+                          <div className="mb-3 shrink-0">
+                            <div>
+                              <p className={FIFA_KICKER}>Výběr hráčů</p>
+                              <h2 className="mt-1 font-display text-lg text-[var(--fifa-text)] lg:text-xl">
+                                Dostupní hráči
+                              </h2>
+                              <p className="mt-1.5 max-w-prose text-[11px] leading-snug text-[var(--fifa-text-muted)] sm:text-xs">
+                                Přetáhni kartu na slot vpravo, nebo klepni na jméno — doplní se první volné místo pro pozici.
+                              </p>
+                            </div>
+                          </div>
+                          <PlayerPoolPanel
+                            players={players}
+                            usedIds={usedIds}
+                            counts={counts}
+                            onAddPlayer={handleAddFromPool}
+                            onPreview={setPreviewPlayer}
+                            enableDnd={enableDnd}
+                            forcedPosition={forcedPoolPosition}
+                            onClearSelectedSlot={() => setSelectedSlot(null)}
+                            assignableFilter={selectedSlot ? canAssignPlayer : undefined}
+                            simplePickList
+                            uiVariant="fifa"
+                            slotHint={
+                              selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
+                                ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
+                                : null
+                            }
+                          />
+                        </div>
+                      </section>
+                    ) : null}
+        
+                    <section className="flex min-h-0 min-w-0 flex-col">
+                      <div className={`${FIFA_EDITOR_SURFACE_CANVAS} ${FIFA_EDITOR_SCROLL} min-h-0 flex-1 p-3 lg:p-4`}>
+                        <p className={FIFA_KICKER}>Soupiska</p>
+                        <h2 className="mt-1 font-display text-lg text-[var(--fifa-text)] lg:text-xl">Moje sestava</h2>
+                        <div className="mt-2">
+                          <RosterUniquenessScore selectedPlayers={selectedPlayers} />
+                        </div>
+                        <div className="mt-3">
+                          <LineBuilder
+                            lineup={lineup}
+                            players={players}
+                            captainId={captainId}
+                            onLineupChange={setLineup}
+                            onCaptainChange={setCaptainId}
+                            selectedSlot={selectedSlot}
+                            onSelectSlot={setSelectedSlot}
+                            enableDnd={enableDnd}
+                            layoutVariant="classic"
+                            uiVariant="fifa"
+                          />
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+        
+                  {mobilePlayerSheetOpen ? (
+                    <div
+                      className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg:hidden"
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="mobile-player-pool-title"
+                    >
+                      <div className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedSlot(null)}
+                          className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/[0.1]"
+                        >
+                          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+                          Zpět k sestavě
+                        </button>
+                        <h2
+                          id="mobile-player-pool-title"
+                          className="min-w-0 flex-1 truncate text-center font-sans text-base font-bold text-white"
+                        >
+                          Výběr hráče
+                        </h2>
+                        <span className="w-[5.5rem] shrink-0" aria-hidden />
+                      </div>
+                      <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-3 pt-2 pb-4 sm:px-4">
+                        <div className="fifa-editor-surface flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl p-3.5 sm:p-4">
+                          <p className="mb-3 shrink-0 text-[11px] leading-snug text-white/55">
+                            Klepni na hráče — doplní se vybraný slot.
+                          </p>
+                          <PlayerPoolPanel
+                            players={players}
+                            usedIds={usedIds}
+                            counts={counts}
+                            onAddPlayer={handleAddFromPool}
+                            onPreview={setPreviewPlayer}
+                            enableDnd={enableDnd}
+                            forcedPosition={forcedPoolPosition}
+                            onClearSelectedSlot={() => setSelectedSlot(null)}
+                            assignableFilter={canAssignPlayer}
+                            simplePickList
+                            uiVariant="fifa"
+                            slotHint={
+                              selectedSlot.type === "extraDefenseman" && !lineup.defensePairs[3].lb
+                                ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
+                                : null
+                            }
+                          />
+                        </div>
+                      </div>
+                      {/* Spodní lišta musí být v běžném flex sloupci (ne druhé `position: fixed` uvnitř modalu) — jinak iOS
+                          Safari často nedoručí tap na tlačítko. */}
+                      <div className="relative z-[1] flex shrink-0 justify-center border-t border-white/[0.08] bg-[#0a0b10] px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedSlot(null)}
+                          className={`${FIFA_BTN_PRIMARY} flex w-full max-w-md min-h-12 items-center justify-center gap-2 px-3 py-3 touch-manipulation`}
+                        >
+                          <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
+                          Hotovo — zpět do soupisky
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+        
+                  <div className="mt-6 hidden justify-center lg:flex">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!isComplete) return;
+                        if (!leadershipOk) {
+                          const ok = window.confirm(
+                            "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+                          );
+                          if (!ok) return;
+                        }
+                        setModalOpen(true);
+                      }}
+                      disabled={!canOpenShareModal}
+                      className={`
+                        rounded-2xl px-12 py-4 font-display text-xl font-bold tracking-wide transition-all
+                        ${
+                          canOpenShareModal
+                            ? "bg-[#1e6bff] text-white shadow-[0_12px_36px_rgba(30,107,255,0.4)] ring-1 ring-[#1e6bff]/40 hover:bg-[#3d82ff]"
+                            : "cursor-not-allowed bg-white/[0.06] text-white/35 ring-1 ring-white/[0.08]"
+                        }
+                      `}
+                    >
+                      {isAuthenticated ? "Dokončit nominaci" : "Složit nominaci"}
+                    </button>
+                  </div>
+                </div>
+                </div>
+        
+                <FloatingSestavaBar
+                  uiVariant="fifa"
+                  onShare={() => {
+                    if (!isComplete) return;
+                    if (!leadershipOk) {
+                      const ok = window.confirm(
+                        "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
+                      );
+                      if (!ok) return;
                     }
-                  />
-                </div>
-              </section>
-            ) : null}
-
-            <section className="min-w-0">
-              <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
-                <div className="nhl25-moje-sestava-panel rounded-2xl p-3 sm:p-5 lg:p-6">
-                  <div className="nhl25-moje-sestava-accent mb-2 sm:mb-3" aria-hidden />
-                  <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
-                    Soupiska
-                  </p>
-                  <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-slate-900 sm:text-2xl">
-                    Moje sestava
-                  </h2>
-                  <div className="mt-3">
-                    <RosterUniquenessScore selectedPlayers={selectedPlayers} />
-                  </div>
-                  <div className="mt-4">
-                    <LineBuilder
-                      lineup={lineup}
-                      players={players}
-                      captainId={captainId}
-                      onLineupChange={setLineup}
-                      onCaptainChange={setCaptainId}
-                      selectedSlot={selectedSlot}
-                      onSelectSlot={setSelectedSlot}
-                      enableDnd={enableDnd}
-                      layoutVariant="nhl25"
-                    />
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          {mobilePlayerSheetOpen ? (
-            <div
-              className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="mobile-player-pool-title"
-            >
-              <div className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
-                <button
-                  type="button"
-                  onClick={() => setSelectedSlot(null)}
-                  className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/[0.1]"
-                >
-                  <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
-                  Zpět k sestavě
-                </button>
-                <h2
-                  id="mobile-player-pool-title"
-                  className="min-w-0 flex-1 truncate text-center font-sans text-base font-bold text-white"
-                >
-                  Výběr hráče
-                </h2>
-                <span className="w-[5.5rem] shrink-0" aria-hidden />
-              </div>
-              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-4 sm:px-4">
+                    setModalOpen(true);
+                  }}
+                  onRandom={handleRandom}
+                  onReset={handleReset}
+                  shareDisabled={!canOpenShareModal}
+                  shareLabel={isAuthenticated ? "Dokončit nominaci" : "Složit nominaci"}
+                  showContestSubmit={isAuthenticated && !contestSubmitted}
+                  onContestSubmit={handleContestSubmitClick}
+                  contestSubmitBusy={submitContestBusy}
+                  contestSubmitInactive={
+                    !isComplete || !shareNominationTitle.trim() || !contestSubmissionOpen
+                  }
+                  className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+                />
+        
                 <div
-                  className={`sestava-premium-panel-dark rounded-2xl p-3.5 sm:p-4 ${
-                    isNarrowLayout ? "" : "backdrop-blur-sm"
-                  }`}
+                  className={
+                    shareCaptureVisible
+                      ? "pointer-events-none fixed inset-0 z-[40] flex items-start justify-center pt-6"
+                      : "pointer-events-none fixed left-0 top-0 z-[-1] -translate-x-full"
+                  }
+                  style={{
+                    width: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
+                    maxWidth: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
+                  }}
+                  aria-hidden
                 >
-                  <p className="mb-3 text-[11px] leading-snug text-white/55">
-                    Klepni na hráče — doplní se vybraný slot.
-                  </p>
-                  <PlayerPoolPanel
-                    players={players}
-                    usedIds={usedIds}
-                    counts={counts}
-                    onAddPlayer={handleAddFromPool}
-                    onPreview={setPreviewPlayer}
-                    enableDnd={enableDnd}
-                    forcedPosition={forcedPoolPosition}
-                    assignableFilter={canAssignPlayer}
-                    simplePickList
-                    slotHint={
-                      selectedSlot.type === "extraDefenseman" && !lineup.defensePairs[3].lb
-                        ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
-                        : null
-                    }
-                  />
+                  {sharePosterVariant === "jerseys" ? (
+                    <Nhl25SharePoster
+                      ref={shareCaptureRef}
+                      players={players}
+                      lineup={lineup}
+                      captainId={captainId}
+                      assistantIds={lineup.assistantIds ?? []}
+                      nominationTitle={shareNominationTitle}
+                      siteUrl={siteOrigin}
+                      footerInstantIso={sharePosterFooterIso}
+                      posterTheme={sharePosterTheme}
+                      watermarkUserLabel={shareWatermarkLabel}
+                    />
+                  ) : sharePosterVariant === "names-web" ? (
+                    <NominationWebStyleSharePoster
+                      ref={shareCaptureRef}
+                      players={players}
+                      lineup={lineup}
+                      nominationTitle={shareNominationTitle}
+                      siteUrl={siteOrigin}
+                      footerInstantIso={sharePosterFooterIso}
+                    />
+                  ) : (
+                    <NamesOnlySharePoster
+                      ref={shareCaptureRef}
+                      players={players}
+                      lineup={lineup}
+                      nominationTitle={shareNominationTitle}
+                      siteUrl={siteOrigin}
+                      footerInstantIso={sharePosterFooterIso}
+                    />
+                  )}
                 </div>
-              </div>
-              {/* Spodní lišta musí být v běžném flex sloupci (ne druhé `position: fixed` uvnitř modalu) — jinak iOS
-                  Safari často nedoručí tap na tlačítko. */}
-              <div className="relative z-[1] flex shrink-0 justify-center border-t border-white/[0.1] bg-[#05080f]/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-                <button
-                  type="button"
-                  onClick={() => setSelectedSlot(null)}
-                  className="flex w-full max-w-md min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3 text-sm font-bold text-white shadow-lg shadow-black/40 touch-manipulation active:scale-[0.99]"
+        
+                <SaveShareModal
+                  isOpen={modalOpen}
+                  onClose={() => {
+                    setModalOpen(false);
+                    setShareCaptureVisible(false);
+                  }}
+                  captureRef={shareCaptureRef}
+                  onBeforeCapture={() => {
+                    setShareCaptureVisible(true);
+                    setSharePosterFooterIso(new Date().toISOString());
+                  }}
+                  onAfterCapture={() => setShareCaptureVisible(false)}
+                  isAuthenticated={isAuthenticated}
+                  nominationTitle={shareNominationTitle}
+                  onNominationTitleChange={setShareNominationTitle}
+                  shareLinkHref={shareUrlForModal || longGuestShareUrl}
+                  onSave={handleSave}
+                  isSaving={saving}
+                  contestSubmissionOpen={contestSubmissionOpen}
+                  contestTimeBonusPercent={bonusPercent}
+                  posterTheme={sharePosterTheme}
+                  onPosterThemeChange={setSharePosterTheme}
+                  posterVariant={sharePosterVariant}
+                  onPosterVariantChange={setSharePosterVariant}
+                />
+        
+                <DragOverlay dropAnimation={null}>
+                  {poolDragPlayer ? (
+                    <div className="pointer-events-none flex max-w-[min(100vw-2rem,20rem)] items-center gap-3 rounded-2xl border-2 border-[#f1c40f]/70 bg-gradient-to-br from-[#0a1428]/98 to-[#05080f]/98 px-4 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.65),0_0_0_1px_rgba(200,16,46,0.35)] ring-2 ring-[#c8102e]/50 backdrop-blur-md">
+                      <PlayerAvatar
+                        name={poolDragPlayer.name}
+                        position={poolDragPlayer.position}
+                        role={poolDragPlayer.role}
+                        imageUrl={poolDragPlayer.imageUrl}
+                        size="md"
+                      />
+                      <div className="min-w-0">
+                        <p className="truncate font-bold text-white">{poolDragPlayer.name}</p>
+                        <p className="text-[11px] font-semibold text-sky-200/90">Pusť na slot soupisky</p>
+                      </div>
+                    </div>
+                  ) : null}
+                </DragOverlay>
+        
+                {contestConfirmOpen ? (
+                  <div
+                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+                    onClick={() => !submitContestBusy && setContestConfirmOpen(false)}
+                  >
+                    <div
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="contest-submit-title"
+                      className="max-h-[min(90vh,520px)] w-full max-w-md overflow-y-auto rounded-2xl border border-white/12 bg-[#12151f] p-6 shadow-2xl"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <h2 id="contest-submit-title" className="font-display text-xl font-bold text-white">
+                        Odeslat do soutěže?
+                      </h2>
+                      <p className="mt-3 text-sm leading-relaxed text-white/75">
+                        Potvrzuješ <strong className="text-white">aktuální sestavu v editoru</strong> jako svou jedinou
+                        nominaci ve vyhodnocení soutěže. Tuto akci nelze vzít zpět ani ji zopakovat — z účtu jde odeslat jen
+                        jednou.
+                      </p>
+                      {!contestSubmissionOpen ? (
+                        <p className="mt-3 rounded-lg border border-rose-500/35 bg-rose-950/30 px-3 py-2 text-sm text-rose-100/90">
+                          Uzávěrka odeslání už proběhla.
+                        </p>
+                      ) : null}
+                      <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setContestConfirmOpen(false)}
+                          disabled={submitContestBusy}
+                          className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-white/85 hover:bg-white/5"
+                        >
+                          Zrušit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void handleSubmitToContest()}
+                          disabled={submitContestBusy}
+                          className="rounded-xl bg-gradient-to-r from-[#f1c40f] to-[#c8102e] px-4 py-2.5 text-sm font-bold text-[#0a0c10] shadow-lg disabled:opacity-40"
+                        >
+                          {submitContestBusy ? "Odesílám…" : "Ano, odeslat do soutěže"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+        
+                <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
+              </FifaAppPage>
+      ) : (
+        <div className="sestava-page-ambient min-h-screen pb-[calc(10.75rem+env(safe-area-inset-bottom,0px))] text-white sm:pb-[calc(11rem+env(safe-area-inset-bottom,0px))] lg:pb-[calc(9rem+env(safe-area-inset-bottom,0px))]">
+                <div className="sticky top-0 z-40">
+                  <SiteHeader />
+                  <SestavaHero filled={filled} />
+                </div>
+        
+                <div className="relative z-10 mx-auto max-w-[90rem] px-3 pb-5 pt-2 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
+                  <div className="mb-3 rounded-2xl border border-white/10 bg-gradient-to-r from-[#003087]/18 via-white/[0.03] to-[#c8102e]/14 p-4 shadow-[0_0_34px_rgba(0,48,135,0.14)] sm:mb-4 sm:p-5">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">
+                          ─îl├ínek
+                        </p>
+                        <p className="mt-1 font-display text-lg font-black text-white sm:text-xl">
+                          Rady k nominaci
+                        </p>
+                        <p className="mt-1 text-[11px] leading-snug text-white/70 sm:text-sm">
+                          Tipy k nominaci pro MS 2026 (NHL posily, AHL, brank├í┼Öi a dal┼í├ş).
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <Link
+                          href="/clanky/rady-k-nominaci"
+                          className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2.5 text-sm font-black text-white shadow-[0_16px_44px_rgba(0,0,0,0.22)] ring-1 ring-white/15 hover:brightness-110"
+                        >
+                          ─î├şst ─Źl├ínek
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+        
+                  {isAuthenticated && (
+                    <div className="mb-3 rounded-xl border border-emerald-500/30 bg-emerald-950/25 px-3 py-2 text-center text-[11px] text-emerald-50/95 shadow-[0_0_24px_rgba(16,185,129,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
+                      {contestSubmitted ? (
+                        <>
+                          Tvoje sestava u┼ż je <strong className="font-semibold">jednou odeslan├í do sout─Ť┼że</strong>. Koncepty
+                          m┼»┼że┼í d├íl ukl├ídat ÔÇö p┼Öehled v{" "}
+                          <a href="/ucet/nominace" className="font-semibold text-[#f1c40f] underline-offset-2 hover:underline">
+                            Moje nominace
+                          </a>
+                          .
+                        </>
+                      ) : (
+                        <>
+                          Jsi p┼Öihl├í┼íen ÔÇö <strong className="font-semibold">Dokon─Źit nominaci</strong> ulo┼ż├ş koncept u ├║─Źtu,{" "}
+                          <strong className="font-semibold">Odeslat do sout─Ť┼że</strong> (jednou) t─Ť za┼Öad├ş do vyhodnocen├ş.{" "}
+                          <a href="/ucet/nominace" className="font-semibold text-[#f1c40f] underline-offset-2 hover:underline">
+                            Moje nominace
+                          </a>
+                        </>
+                      )}
+                    </div>
+                  )}
+                  {!isComplete && (
+                    <div className="mb-3 rounded-xl border border-[#003087]/40 bg-gradient-to-r from-[#003087]/20 via-[#0f172a]/90 to-[#c8102e]/15 px-3 py-2 text-center text-[11px] text-slate-100 shadow-[0_0_32px_rgba(0,48,135,0.15)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
+                      {remaining > 0 ? (
+                        <>
+                          Je┼ít─Ť <span className="font-semibold text-[#f1c40f]">{remaining}</span>{" "}
+                          {remaining === 1 ? "m├şsto" : remaining < 5 ? "m├şsta" : "m├şst"} do pln├ę nominace.
+                        </>
+                      ) : (
+                        <>Dopl┼ł posledn├ş detaily ÔÇö nominace skoro hotov├í.</>
+                      )}
+                    </div>
+                  )}
+                  {isComplete && !leadershipOk ? (
+                          <div className="mb-3 rounded-xl border border-amber-500/35 bg-amber-950/30 px-3 py-2 text-center text-[11px] text-amber-100/95 shadow-[0_0_28px_rgba(245,158,11,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
+                            Je┼ít─Ť zvol <strong className="font-semibold">kapit├ína</strong> (tla─Ź├ştko C) a p┼Öesn─Ť{" "}
+                            <strong className="font-semibold">dva asistenty</strong> (A) u hr├í─Ź┼» v soupisce ÔÇö bez toho bude
+                            nominace vypadat ne├║pln─Ť.
+                          </div>
+                  ) : null}
+        
+                  <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
+                    {showDesktopPoolColumn ? (
+                      <section className="min-w-0 hidden lg:block">
+                        <div
+                          className={`sestava-premium-panel-dark rounded-2xl p-3.5 sm:p-5 ${
+                            isNarrowLayout ? "" : "backdrop-blur-sm"
+                          }`}
+                        >
+                          <div className="mb-4">
+                            <div>
+                              <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#c8102e]">
+                                V├Żb─Ťr hr├í─Ź┼»
+                              </p>
+                              <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-white sm:text-2xl">
+                                Dostupn├ş hr├í─Źi
+                              </h2>
+                              <p className="mt-1.5 max-w-prose text-[11px] leading-snug text-white/55 sm:text-xs sm:text-white/55">
+                                P┼Öet├íhni kartu na slot vpravo, nebo klepni na jm├ęno ÔÇö dopln├ş se prvn├ş voln├ę m├şsto pro pozici.
+                              </p>
+                            </div>
+                          </div>
+                          <PlayerPoolPanel
+                            players={players}
+                            usedIds={usedIds}
+                            counts={counts}
+                            onAddPlayer={handleAddFromPool}
+                            onPreview={setPreviewPlayer}
+                            enableDnd={enableDnd}
+                            forcedPosition={forcedPoolPosition}
+                            onClearSelectedSlot={() => setSelectedSlot(null)}
+                            assignableFilter={selectedSlot ? canAssignPlayer : undefined}
+                            simplePickList
+                            uiVariant="fifa"
+                            slotHint={
+                              selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
+                                ? "Nejd┼Ö├şv dopl┼ł sedm├ęho beka ve 4. obrann├ęm ┼Ö├ídku ÔÇö pak p┼»jde vybrat n├íhradn├şho obr├ínce."
+                                : null
+                            }
+                          />
+                        </div>
+                      </section>
+                    ) : null}
+        
+                    <section className="min-w-0">
+                      <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
+                        <div className="nhl25-moje-sestava-panel rounded-2xl p-3 sm:p-5 lg:p-6">
+                          <div className="nhl25-moje-sestava-accent mb-2 sm:mb-3" aria-hidden />
+                          <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
+                            Soupiska
+                          </p>
+                          <h2 className="mt-1 font-sans text-xl font-bold leading-snug tracking-normal text-slate-900 sm:text-2xl">
+                            Moje sestava
+                          </h2>
+                          <div className="mt-3">
+                            <RosterUniquenessScore selectedPlayers={selectedPlayers} />
+                          </div>
+                          <div className="mt-4">
+                            <LineBuilder
+                              lineup={lineup}
+                              players={players}
+                              captainId={captainId}
+                              onLineupChange={setLineup}
+                              onCaptainChange={setCaptainId}
+                              selectedSlot={selectedSlot}
+                              onSelectSlot={setSelectedSlot}
+                              enableDnd={enableDnd}
+                              layoutVariant="nhl25"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+        
+                  {mobilePlayerSheetOpen ? (
+                    <div
+                      className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="mobile-player-pool-title"
+                    >
+                      <div className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedSlot(null)}
+                          className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/[0.1]"
+                        >
+                          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+                          Zp─Ťt k sestav─Ť
+                        </button>
+                        <h2
+                          id="mobile-player-pool-title"
+                          className="min-w-0 flex-1 truncate text-center font-sans text-base font-bold text-white"
+                        >
+                          V├Żb─Ťr hr├í─Źe
+                        </h2>
+                        <span className="w-[5.5rem] shrink-0" aria-hidden />
+                      </div>
+                      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-2 pb-4 sm:px-4">
+                        <div
+                          className={`sestava-premium-panel-dark rounded-2xl p-3.5 sm:p-4 ${
+                            isNarrowLayout ? "" : "backdrop-blur-sm"
+                          }`}
+                        >
+                          <p className="mb-3 text-[11px] leading-snug text-white/55">
+                            Klepni na hr├í─Źe ÔÇö dopln├ş se vybran├Ż slot.
+                          </p>
+                          <PlayerPoolPanel
+                            players={players}
+                            usedIds={usedIds}
+                            counts={counts}
+                            onAddPlayer={handleAddFromPool}
+                            onPreview={setPreviewPlayer}
+                            enableDnd={enableDnd}
+                            forcedPosition={forcedPoolPosition}
+                            onClearSelectedSlot={() => setSelectedSlot(null)}
+                            assignableFilter={canAssignPlayer}
+                            simplePickList
+                            slotHint={
+                              selectedSlot.type === "extraDefenseman" && !lineup.defensePairs[3].lb
+                                ? "Nejd┼Ö├şv dopl┼ł sedm├ęho beka ve 4. obrann├ęm ┼Ö├ídku ÔÇö pak p┼»jde vybrat n├íhradn├şho obr├ínce."
+                                : null
+                            }
+                          />
+                        </div>
+                      </div>
+                      {/* Spodn├ş li┼íta mus├ş b├Żt v b─Ť┼żn├ęm flex sloupci (ne druh├ę `position: fixed` uvnit┼Ö modalu) ÔÇö jinak iOS
+                          Safari ─Źasto nedoru─Ź├ş tap na tla─Ź├ştko. */}
+                      <div className="relative z-[1] flex shrink-0 justify-center border-t border-white/[0.1] bg-[#05080f]/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedSlot(null)}
+                          className="flex w-full max-w-md min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087]/90 to-[#002056] px-3 py-3 text-sm font-bold text-white shadow-lg shadow-black/40 touch-manipulation active:scale-[0.99]"
+                        >
+                          <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
+                          Hotovo ÔÇö zp─Ťt do soupisky
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+        
+                  <div className="mt-6 hidden justify-center lg:flex">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!isComplete) return;
+                        if (!leadershipOk) {
+                          const ok = window.confirm(
+                            "Nevybrali jste je┼ít─Ť kapit├ína a 2 asistenty. Chcete i tak pokra─Źovat?"
+                          );
+                          if (!ok) return;
+                        }
+                        setModalOpen(true);
+                      }}
+                      disabled={!canOpenShareModal}
+                      className={`
+                        rounded-2xl px-12 py-4 font-display text-xl font-bold tracking-wide transition-all
+                        ${
+                          canOpenShareModal
+                            ? "bg-gradient-to-r from-[#c8102e] via-[#a30d26] to-[#003087] text-white shadow-[0_12px_40px_rgba(200,16,46,0.35),0_0_0_1px_rgba(241,196,15,0.25)] ring-1 ring-white/20 hover:scale-[1.02] hover:shadow-[0_16px_48px_rgba(200,16,46,0.45)]"
+                            : "cursor-not-allowed bg-white/[0.06] text-white/35 ring-1 ring-white/[0.08]"
+                        }
+                      `}
+                    >
+                      {isAuthenticated ? "Dokon─Źit nominaci" : "Slo┼żit nominaci"}
+                    </button>
+                  </div>
+                </div>
+        
+                <div className="relative z-10">
+                  <SiteFooter />
+                </div>
+        
+                <FloatingSestavaBar
+                  onShare={() => {
+                    if (!isComplete) return;
+                    if (!leadershipOk) {
+                      const ok = window.confirm(
+                        "Nevybrali jste je┼ít─Ť kapit├ína a 2 asistenty. Chcete i tak pokra─Źovat?"
+                      );
+                      if (!ok) return;
+                    }
+                    setModalOpen(true);
+                  }}
+                  onRandom={handleRandom}
+                  onReset={handleReset}
+                  shareDisabled={!canOpenShareModal}
+                  shareLabel={isAuthenticated ? "Dokon─Źit nominaci" : "Slo┼żit nominaci"}
+                  showContestSubmit={isAuthenticated && !contestSubmitted}
+                  onContestSubmit={handleContestSubmitClick}
+                  contestSubmitBusy={submitContestBusy}
+                  contestSubmitInactive={
+                    !isComplete || !shareNominationTitle.trim() || !contestSubmissionOpen
+                  }
+                  className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+                />
+        
+                <div
+                  className={
+                    shareCaptureVisible
+                      ? "pointer-events-none fixed inset-0 z-[40] flex items-start justify-center pt-6"
+                      : "pointer-events-none fixed left-0 top-0 z-[-1] -translate-x-full"
+                  }
+                  style={{
+                    width: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
+                    maxWidth: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
+                  }}
+                  aria-hidden
                 >
-                  <ArrowLeft className="h-5 w-5 shrink-0" aria-hidden />
-                  Hotovo — zpět do soupisky
-                </button>
+                  {sharePosterVariant === "jerseys" ? (
+                    <Nhl25SharePoster
+                      ref={shareCaptureRef}
+                      players={players}
+                      lineup={lineup}
+                      captainId={captainId}
+                      assistantIds={lineup.assistantIds ?? []}
+                      nominationTitle={shareNominationTitle}
+                      siteUrl={siteOrigin}
+                      footerInstantIso={sharePosterFooterIso}
+                      posterTheme={sharePosterTheme}
+                      watermarkUserLabel={shareWatermarkLabel}
+                    />
+                  ) : sharePosterVariant === "names-web" ? (
+                    <NominationWebStyleSharePoster
+                      ref={shareCaptureRef}
+                      players={players}
+                      lineup={lineup}
+                      nominationTitle={shareNominationTitle}
+                      siteUrl={siteOrigin}
+                      footerInstantIso={sharePosterFooterIso}
+                    />
+                  ) : (
+                    <NamesOnlySharePoster
+                      ref={shareCaptureRef}
+                      players={players}
+                      lineup={lineup}
+                      nominationTitle={shareNominationTitle}
+                      siteUrl={siteOrigin}
+                      footerInstantIso={sharePosterFooterIso}
+                    />
+                  )}
+                </div>
+        
+                <SaveShareModal
+                  isOpen={modalOpen}
+                  onClose={() => {
+                    setModalOpen(false);
+                    setShareCaptureVisible(false);
+                  }}
+                  captureRef={shareCaptureRef}
+                  onBeforeCapture={() => {
+                    setShareCaptureVisible(true);
+                    setSharePosterFooterIso(new Date().toISOString());
+                  }}
+                  onAfterCapture={() => setShareCaptureVisible(false)}
+                  isAuthenticated={isAuthenticated}
+                  nominationTitle={shareNominationTitle}
+                  onNominationTitleChange={setShareNominationTitle}
+                  shareLinkHref={shareUrlForModal || longGuestShareUrl}
+                  onSave={handleSave}
+                  isSaving={saving}
+                  contestSubmissionOpen={contestSubmissionOpen}
+                  contestTimeBonusPercent={bonusPercent}
+                  posterTheme={sharePosterTheme}
+                  onPosterThemeChange={setSharePosterTheme}
+                  posterVariant={sharePosterVariant}
+                  onPosterVariantChange={setSharePosterVariant}
+                />
+        
+                <DragOverlay dropAnimation={null}>
+                  {poolDragPlayer ? (
+                    <div className="pointer-events-none flex max-w-[min(100vw-2rem,20rem)] items-center gap-3 rounded-2xl border-2 border-[#f1c40f]/70 bg-gradient-to-br from-[#0a1428]/98 to-[#05080f]/98 px-4 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.65),0_0_0_1px_rgba(200,16,46,0.35)] ring-2 ring-[#c8102e]/50 backdrop-blur-md">
+                      <PlayerAvatar
+                        name={poolDragPlayer.name}
+                        position={poolDragPlayer.position}
+                        role={poolDragPlayer.role}
+                        imageUrl={poolDragPlayer.imageUrl}
+                        size="md"
+                      />
+                      <div className="min-w-0">
+                        <p className="truncate font-bold text-white">{poolDragPlayer.name}</p>
+                        <p className="text-[11px] font-semibold text-sky-200/90">Pus┼ą na slot soupisky</p>
+                      </div>
+                    </div>
+                  ) : null}
+                </DragOverlay>
+        
+                {contestConfirmOpen ? (
+                  <div
+                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+                    onClick={() => !submitContestBusy && setContestConfirmOpen(false)}
+                  >
+                    <div
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="contest-submit-title"
+                      className="max-h-[min(90vh,520px)] w-full max-w-md overflow-y-auto rounded-2xl border border-white/12 bg-[#12151f] p-6 shadow-2xl"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <h2 id="contest-submit-title" className="font-display text-xl font-bold text-white">
+                        Odeslat do sout─Ť┼że?
+                      </h2>
+                      <p className="mt-3 text-sm leading-relaxed text-white/75">
+                        Potvrzuje┼í <strong className="text-white">aktu├íln├ş sestavu v editoru</strong> jako svou jedinou
+                        nominaci ve vyhodnocen├ş sout─Ť┼że. Tuto akci nelze vz├şt zp─Ťt ani ji zopakovat ÔÇö z ├║─Źtu jde odeslat jen
+                        jednou.
+                      </p>
+                      {!contestSubmissionOpen ? (
+                        <p className="mt-3 rounded-lg border border-rose-500/35 bg-rose-950/30 px-3 py-2 text-sm text-rose-100/90">
+                          Uz├ív─Ťrka odesl├ín├ş u┼ż prob─Ťhla.
+                        </p>
+                      ) : null}
+                      <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setContestConfirmOpen(false)}
+                          disabled={submitContestBusy}
+                          className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-white/85 hover:bg-white/5"
+                        >
+                          Zru┼íit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void handleSubmitToContest()}
+                          disabled={submitContestBusy}
+                          className="rounded-xl bg-gradient-to-r from-[#f1c40f] to-[#c8102e] px-4 py-2.5 text-sm font-bold text-[#0a0c10] shadow-lg disabled:opacity-40"
+                        >
+                          {submitContestBusy ? "Odes├şl├ímÔÇŽ" : "Ano, odeslat do sout─Ť┼że"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+        
+                <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
               </div>
-            </div>
-          ) : null}
-
-          <div className="mt-6 hidden justify-center lg:flex">
-            <button
-              type="button"
-              onClick={() => {
-                if (!isComplete) return;
-                if (!leadershipOk) {
-                  const ok = window.confirm(
-                    "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
-                  );
-                  if (!ok) return;
-                }
-                setModalOpen(true);
-              }}
-              disabled={!canOpenShareModal}
-              className={`
-                rounded-2xl px-12 py-4 font-display text-xl font-bold tracking-wide transition-all
-                ${
-                  canOpenShareModal
-                    ? "bg-gradient-to-r from-[#c8102e] via-[#a30d26] to-[#003087] text-white shadow-[0_12px_40px_rgba(200,16,46,0.35),0_0_0_1px_rgba(241,196,15,0.25)] ring-1 ring-white/20 hover:scale-[1.02] hover:shadow-[0_16px_48px_rgba(200,16,46,0.45)]"
-                    : "cursor-not-allowed bg-white/[0.06] text-white/35 ring-1 ring-white/[0.08]"
-                }
-              `}
-            >
-              {isAuthenticated ? "Dokončit nominaci" : "Složit nominaci"}
-            </button>
-          </div>
-        </div>
-
-        <div className="relative z-10">
-          <SiteFooter />
-        </div>
-
-        <FloatingSestavaBar
-          onShare={() => {
-            if (!isComplete) return;
-            if (!leadershipOk) {
-              const ok = window.confirm(
-                "Nevybrali jste ještě kapitána a 2 asistenty. Chcete i tak pokračovat?"
-              );
-              if (!ok) return;
-            }
-            setModalOpen(true);
-          }}
-          onRandom={handleRandom}
-          onReset={handleReset}
-          shareDisabled={!canOpenShareModal}
-          shareLabel={isAuthenticated ? "Dokončit nominaci" : "Složit nominaci"}
-          showContestSubmit={isAuthenticated && !contestSubmitted}
-          onContestSubmit={handleContestSubmitClick}
-          contestSubmitBusy={submitContestBusy}
-          contestSubmitInactive={
-            !isComplete || !shareNominationTitle.trim() || !contestSubmissionOpen
-          }
-          className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
-        />
-
-        <div
-          className={
-            shareCaptureVisible
-              ? "pointer-events-none fixed inset-0 z-[40] flex items-start justify-center pt-6"
-              : "pointer-events-none fixed left-0 top-0 z-[-1] -translate-x-full"
-          }
-          style={{
-            width: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
-            maxWidth: sharePosterVariant === "names-web" ? NOMINATION_WEB_POSTER_W : SHARE_POSTER_3X4_W,
-          }}
-          aria-hidden
-        >
-          {sharePosterVariant === "jerseys" ? (
-            <Nhl25SharePoster
-              ref={shareCaptureRef}
-              players={players}
-              lineup={lineup}
-              captainId={captainId}
-              assistantIds={lineup.assistantIds ?? []}
-              nominationTitle={shareNominationTitle}
-              siteUrl={siteOrigin}
-              footerInstantIso={sharePosterFooterIso}
-              posterTheme={sharePosterTheme}
-              watermarkUserLabel={shareWatermarkLabel}
-            />
-          ) : sharePosterVariant === "names-web" ? (
-            <NominationWebStyleSharePoster
-              ref={shareCaptureRef}
-              players={players}
-              lineup={lineup}
-              nominationTitle={shareNominationTitle}
-              siteUrl={siteOrigin}
-              footerInstantIso={sharePosterFooterIso}
-            />
-          ) : (
-            <NamesOnlySharePoster
-              ref={shareCaptureRef}
-              players={players}
-              lineup={lineup}
-              nominationTitle={shareNominationTitle}
-              siteUrl={siteOrigin}
-              footerInstantIso={sharePosterFooterIso}
-            />
-          )}
-        </div>
-
-        <SaveShareModal
-          isOpen={modalOpen}
-          onClose={() => {
-            setModalOpen(false);
-            setShareCaptureVisible(false);
-          }}
-          captureRef={shareCaptureRef}
-          onBeforeCapture={() => {
-            setShareCaptureVisible(true);
-            setSharePosterFooterIso(new Date().toISOString());
-          }}
-          onAfterCapture={() => setShareCaptureVisible(false)}
-          isAuthenticated={isAuthenticated}
-          nominationTitle={shareNominationTitle}
-          onNominationTitleChange={setShareNominationTitle}
-          shareLinkHref={shareUrlForModal || longGuestShareUrl}
-          onSave={handleSave}
-          isSaving={saving}
-          contestSubmissionOpen={contestSubmissionOpen}
-          contestTimeBonusPercent={bonusPercent}
-          posterTheme={sharePosterTheme}
-          onPosterThemeChange={setSharePosterTheme}
-          posterVariant={sharePosterVariant}
-          onPosterVariantChange={setSharePosterVariant}
-        />
-
-        <DragOverlay dropAnimation={null}>
-          {poolDragPlayer ? (
-            <div className="pointer-events-none flex max-w-[min(100vw-2rem,20rem)] items-center gap-3 rounded-2xl border-2 border-[#f1c40f]/70 bg-gradient-to-br from-[#0a1428]/98 to-[#05080f]/98 px-4 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.65),0_0_0_1px_rgba(200,16,46,0.35)] ring-2 ring-[#c8102e]/50 backdrop-blur-md">
-              <PlayerAvatar
-                name={poolDragPlayer.name}
-                position={poolDragPlayer.position}
-                role={poolDragPlayer.role}
-                imageUrl={poolDragPlayer.imageUrl}
-                size="md"
-              />
-              <div className="min-w-0">
-                <p className="truncate font-bold text-white">{poolDragPlayer.name}</p>
-                <p className="text-[11px] font-semibold text-sky-200/90">Pusť na slot soupisky</p>
-              </div>
-            </div>
-          ) : null}
-        </DragOverlay>
-
-        {contestConfirmOpen ? (
-          <div
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-            onClick={() => !submitContestBusy && setContestConfirmOpen(false)}
-          >
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="contest-submit-title"
-              className="max-h-[min(90vh,520px)] w-full max-w-md overflow-y-auto rounded-2xl border border-white/12 bg-[#12151f] p-6 shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2 id="contest-submit-title" className="font-display text-xl font-bold text-white">
-                Odeslat do soutěže?
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-white/75">
-                Potvrzuješ <strong className="text-white">aktuální sestavu v editoru</strong> jako svou jedinou
-                nominaci ve vyhodnocení soutěže. Tuto akci nelze vzít zpět ani ji zopakovat — z účtu jde odeslat jen
-                jednou.
-              </p>
-              {!contestSubmissionOpen ? (
-                <p className="mt-3 rounded-lg border border-rose-500/35 bg-rose-950/30 px-3 py-2 text-sm text-rose-100/90">
-                  Uzávěrka odeslání už proběhla.
-                </p>
-              ) : null}
-              <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
-                <button
-                  type="button"
-                  onClick={() => setContestConfirmOpen(false)}
-                  disabled={submitContestBusy}
-                  className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-white/85 hover:bg-white/5"
-                >
-                  Zrušit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void handleSubmitToContest()}
-                  disabled={submitContestBusy}
-                  className="rounded-xl bg-gradient-to-r from-[#f1c40f] to-[#c8102e] px-4 py-2.5 text-sm font-bold text-[#0a0c10] shadow-lg disabled:opacity-40"
-                >
-                  {submitContestBusy ? "Odesílám…" : "Ano, odeslat do soutěže"}
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : null}
-
-        <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
-      </div>
+      )}
     </DndContext>
   );
 }

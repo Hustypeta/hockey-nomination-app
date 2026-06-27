@@ -218,7 +218,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(pair.lb)}
-                            positionLabel="LD"
+                            positionLabel="LB"
                             size="compact"
                             nameplateVariant="poster"
                             isCaptain={pair.lb ? captainId === pair.lb : false}
@@ -230,7 +230,7 @@ export const Nhl25SharePoster = forwardRef<HTMLDivElement, Nhl25SharePosterProps
                         <PosterJerseyWrap>
                           <Nhl25JerseyCard
                             player={getPlayer(pair.rb)}
-                            positionLabel="RD"
+                            positionLabel="RB"
                             size="compact"
                             nameplateVariant="poster"
                             isCaptain={pair.rb ? captainId === pair.rb : false}

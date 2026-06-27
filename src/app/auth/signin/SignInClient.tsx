@@ -6,14 +6,15 @@ import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { LogIn } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
-import { SitePageHero } from "@/components/site/SitePageHero";
+import { FifaAppPage } from "@/components/fifa/FifaAppPage";
+import { FifaPageHeader } from "@/components/fifa/FifaPageHeader";
+import { FIFA_LINK, FIFA_META } from "@/lib/fifa/fifaUiClasses";
 import {
   DEV_GOOGLE_OAUTH_REDIRECT_URI,
   SITE_CANONICAL_HOST,
   SITE_GOOGLE_OAUTH_REDIRECT_URI,
 } from "@/lib/siteBranding";
 
-/** NextAuth error kódy → krátká vysvětlení (viz node_modules/next-auth/core/pages/signin.js). */
 function errorExplanation(code: string | null): string | null {
   if (!code) return null;
   const map: Record<string, string> = {
@@ -59,43 +60,45 @@ function SignInBody() {
 
   return (
     <SiteShell>
-      <SitePageHero title="Přihlášení" subtitle="Google účet" align="center" />
-      <div className="mx-auto max-w-lg px-4 pb-16">
-        {hint ? (
-          <div
-            role="alert"
-            className="mb-6 rounded-xl border border-red-500/35 bg-red-950/40 px-4 py-3 text-sm leading-relaxed text-red-100/95"
-          >
-            <p className="font-semibold text-red-100">Přihlášení se nepovedlo</p>
-            <p className="mt-2 text-red-100/90">{hint}</p>
-            {errorCode ? (
-              <p className="mt-2 font-mono text-xs text-red-200/70">
-                Technický kód: <span className="select-all">{errorCode}</span>
-              </p>
-            ) : null}
-          </div>
-        ) : null}
+      <FifaAppPage fitViewport={false}>
+        <div className="mx-auto w-full max-w-lg">
+          <FifaPageHeader title="Přihlášení" subtitle="Google účet" align="center" />
+          {hint ? (
+            <div
+              role="alert"
+              className="mb-6 rounded-xl border border-red-500/35 bg-red-950/40 px-4 py-3 text-sm leading-relaxed text-red-100/95"
+            >
+              <p className="font-semibold text-red-100">Přihlášení se nepovedlo</p>
+              <p className="mt-2 text-red-100/90">{hint}</p>
+              {errorCode ? (
+                <p className="mt-2 font-mono text-xs text-red-200/70">
+                  Technický kód: <span className="select-all">{errorCode}</span>
+                </p>
+              ) : null}
+            </div>
+          ) : null}
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-          <button
-            type="button"
-            onClick={() => void signIn("google", { callbackUrl })}
-            className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/15 bg-white px-4 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50"
-          >
-            <LogIn className="h-5 w-5 shrink-0 text-slate-600" aria-hidden />
-            Pokračovat s Google
-          </button>
-          <p className="mt-4 text-center text-xs text-white/45">
-            Po kliknutí otevře Google výběr účtu (kvůli bezpečnosti máme zapnutý výběr účtu při každém pokusu).
+          <div className="fifa-panel rounded-2xl p-6">
+            <button
+              type="button"
+              onClick={() => void signIn("google", { callbackUrl })}
+              className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--fifa-border)] bg-[var(--fifa-bg-surface)] px-4 py-3.5 text-sm font-semibold text-[var(--fifa-text)] transition hover:bg-[var(--fifa-bg-hover)]"
+            >
+              <LogIn className="h-5 w-5 shrink-0 text-[var(--fifa-text-secondary)]" aria-hidden />
+              Pokračovat s Google
+            </button>
+            <p className={`${FIFA_META} mt-4 text-center`}>
+              Po kliknutí otevře Google výběr účtu (kvůli bezpečnosti máme zapnutý výběr účtu při každém pokusu).
+            </p>
+          </div>
+
+          <p className={`${FIFA_META} mt-8 text-center`}>
+            <Link href="/" className={FIFA_LINK}>
+              Zpět na úvod
+            </Link>
           </p>
         </div>
-
-        <p className="mt-8 text-center text-sm text-white/55">
-          <Link href="/" className="text-sky-300/90 underline-offset-4 hover:underline">
-            Zpět na úvod
-          </Link>
-        </p>
-      </div>
+      </FifaAppPage>
     </SiteShell>
   );
 }
@@ -105,7 +108,9 @@ export function SignInClient() {
     <Suspense
       fallback={
         <SiteShell>
-          <div className="mx-auto max-w-lg px-4 py-24 text-center text-sm text-white/55">Načítám…</div>
+          <FifaAppPage fitViewport={false}>
+            <div className="py-24 text-center text-sm text-[var(--fifa-text-muted)]">Načítám…</div>
+          </FifaAppPage>
         </SiteShell>
       }
     >

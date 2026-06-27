@@ -125,7 +125,7 @@ function PosterLineBlock({
             {lb && (
               <PosterPlayerCard
                 player={lb}
-                positionLabel={isFourth ? "7. B" : "LD"}
+                positionLabel={isFourth ? "7. B" : "LB"}
                 size="compact"
                 captainId={captainId}
                 assistantIds={assistantIds}
@@ -139,7 +139,7 @@ function PosterLineBlock({
             {rb && !isFourth && (
               <PosterPlayerCard
                 player={rb}
-                positionLabel="RD"
+                positionLabel="RB"
                 size="compact"
                 captainId={captainId}
                 assistantIds={assistantIds}

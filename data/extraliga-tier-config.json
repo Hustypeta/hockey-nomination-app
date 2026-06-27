@@ -1,0 +1,35 @@
+{
+  "weights": {
+    "season_2024_25_ppg": 0.35,
+    "season_2025_26_ppg": 0.35,
+    "season_2023_24_ppg": 0.15,
+    "form_l10_ppg": 0.15
+  },
+  "min_gp_for_rate": 10,
+  "pool_counts": {
+    "C": 9,
+    "LW": 9,
+    "RW": 9,
+    "D": 12,
+    "G": 9,
+    "WC": 6
+  },
+  "triplets_per_group": {
+    "C": 3,
+    "LW": 3,
+    "RW": 3,
+    "D": 4,
+    "G": 3,
+    "WC": 2
+  },
+  "tier_letters": ["A", "B", "C"],
+  "tier_slots": [1, 2, 3],
+  "tier_slot_labels": {
+    "A": ["Elite", "Very Good", "High risk / high reward"],
+    "B": ["Very Good", "Solid", "Sleeper"],
+    "C": ["Solid", "Good", "Boom or bust"]
+  },
+  "pedigree_bonus_ppg": {
+    "NHL": 0.08
+  }
+}

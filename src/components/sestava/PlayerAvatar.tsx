@@ -10,8 +10,13 @@ function positionAccentClass(position: Position) {
 }
 
 /** Stejná velikost „dlaždice“; délka štítku (G / LW/RW / …) řídí jen velikost písma — přehledné v poolu. */
-function positionTileTextClass(size: "sm" | "md" | "lg", label: string) {
+function positionTileTextClass(size: "xs" | "sm" | "md" | "lg", label: string) {
   const L = label.length;
+  if (size === "xs") {
+    if (L <= 2) return "text-[10px] font-bold tracking-wide";
+    if (L <= 4) return "text-[7px] font-bold leading-tight tracking-wide";
+    return "max-w-full px-0.5 text-center text-[6px] font-bold leading-tight tracking-wide";
+  }
   if (size === "sm") {
     if (L <= 2) return "text-lg font-bold tracking-wide";
     if (L <= 4) return "text-[11px] font-bold leading-tight tracking-wide";
@@ -38,15 +43,27 @@ export function PlayerAvatar({
   position: Position;
   /** LW, C, RW, … */
   role?: string | null;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   imageUrl?: string | null;
 }) {
   const label = poolPositionSquareLabel({ position, role });
   const szBox =
-    size === "sm" ? "h-10 w-10" : size === "lg" ? "h-12 w-12" : "h-11 w-11";
+    size === "xs"
+      ? "h-5 w-5 rounded-md"
+      : size === "sm"
+        ? "h-10 w-10"
+        : size === "lg"
+          ? "h-12 w-12"
+          : "h-11 w-11";
   const L = label.length;
   const overlayLabelClass =
-    size === "sm"
+    size === "xs"
+      ? L <= 2
+        ? "text-[6px] leading-none"
+        : L <= 4
+          ? "text-[5px] leading-tight"
+          : "px-0.5 text-[4px] leading-tight"
+      : size === "sm"
       ? L <= 2
         ? "text-[10px] leading-none"
         : L <= 4
@@ -67,7 +84,7 @@ export function PlayerAvatar({
   if (imageUrl) {
     return (
       <div
-        className={`relative shrink-0 overflow-hidden rounded-xl bg-[#0a0e17] shadow-[0_4px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/15 ${szBox}`}
+        className={`relative shrink-0 overflow-hidden ${size === "xs" ? "rounded-md" : "rounded-xl"} bg-[#0a0e17] shadow-[0_4px_20px_rgba(0,0,0,0.35)] ring-1 ring-white/15 ${szBox}`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -94,7 +111,7 @@ export function PlayerAvatar({
       role="img"
       aria-label={`${name}, ${label}`}
       className={`
-        flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white/[0.07] to-[#05070c]
+        flex shrink-0 items-center justify-center overflow-hidden ${size === "xs" ? "rounded-md" : "rounded-xl"} bg-gradient-to-b from-white/[0.07] to-[#05070c]
         shadow-[0_4px_16px_rgba(0,0,0,0.45)] ring-1 ring-inset ${positionAccentClass(position)} ${szBox}
       `}
     >

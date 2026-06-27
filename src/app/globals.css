@@ -745,3 +745,5 @@ html.social-cover body {
 .ms-fantasy-scroll::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+@import "./fifa-design-system.css";

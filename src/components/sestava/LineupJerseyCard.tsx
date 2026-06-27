@@ -53,7 +53,7 @@ export interface LineupJerseyCardProps {
   disableMotion?: boolean;
   /** Zda kreslit příjmení (a roli F / štítek G) na dresu; `false` = jen číslo (+ C/A). */
   nameOnJersey?: boolean;
-  /** Horní štítek pozice (LW/C/RW/LD/…) nad dresem. */
+  /** Horní štítek pozice (LW/C/RW/LB/…) nad dresem. */
   showPositionBadge?: boolean;
   /** Doplňkové badge na dresu (role u F / písmeno G). */
   showRoleBadge?: boolean;
@@ -63,6 +63,8 @@ export interface LineupJerseyCardProps {
   nameplateScale?: number;
   /** Duplicitní příjmení v soupisce → iniciála („M. Kovařčík“). */
   ambiguousJerseyLastKeys?: ReadonlySet<string> | null;
+  /** Přesná pozice na šabloně ledu — bez rámečku karty, vyplní rodiče. */
+  overlayMode?: "default" | "rink";
 }
 
 export function LineupJerseyCard({
@@ -80,7 +82,9 @@ export function LineupJerseyCard({
   overlayVariant = "default",
   nameplateScale = 1,
   ambiguousJerseyLastKeys,
+  overlayMode = "default",
 }: LineupJerseyCardProps) {
+  const onRink = overlayMode === "rink";
   const empty = !player;
   const emptyUnfocused = empty && !isSelected;
   const kind: "skater" | "goalie" =
@@ -92,9 +96,9 @@ export function LineupJerseyCard({
   const topOverlay = overlayVariant === "lower" ? overlayTopLowerClass[size] : overlayTopClass[size];
   const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
   const namePlate =
-    !empty && nameOnJersey ? jerseyNameplateNameProps(ln) : { lines: [] as string[], className: "", style: {} };
+    !empty && nameOnJersey ? jerseyNameplateNameProps(ln, onRink ? "rink" : "card") : { lines: [] as string[], className: "", style: {} };
   const namePlateStyle =
-    nameOnJersey && namePlate.lines.length > 0 && Number.isFinite(nameplateScale) && nameplateScale !== 1
+    nameOnJersey && namePlate.lines.length > 0 && Number.isFinite(nameplateScale) && nameplateScale !== 1 && !onRink
       ? {
           ...namePlate.style,
           fontSize:
@@ -112,15 +116,75 @@ export function LineupJerseyCard({
     ? ""
     : "group-hover/jersey:scale-[1.03] group-hover/jersey:shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_16px_40px_rgba(0,0,0,0.6),0_0_28px_rgba(34,211,238,0.12)]";
 
+  if (onRink) {
+    const rinkNumCls =
+      size === "goalie"
+        ? "fifa-rink-jersey__number jersey-back-number-text max-w-[92%] text-center leading-none"
+        : "fifa-rink-jersey__number jersey-back-number-text max-w-[92%] text-center leading-none";
+    const rinkOverlay = nameOnJersey
+      ? "justify-center px-[5%] pt-[6%] gap-[0.04em]"
+      : "justify-center px-[6%] pt-[6%] gap-0";
+
+    return (
+      <div
+        className={`
+          jersey-slot-root fifa-rink-jersey relative h-full w-full min-h-0 min-w-0 ${className}
+          ${isSelected ? "jersey-slot-selected ring-1 ring-cyan-400/80 ring-inset rounded-[4px]" : "rounded-[4px]"}
+        `}
+      >
+        <div className="fifa-rink-jersey__figure relative h-full w-full min-h-0 overflow-visible">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={CZ_JERSEY_BACK_BLANK_SRC}
+            alt=""
+            width={400}
+            height={480}
+            decoding="async"
+            data-jersey-kind={kind}
+            className={`${CZ_JERSEY_CARD_IMG_BASE} h-full w-full object-contain object-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]`}
+          />
+          {!empty && numStr ? (
+            <div className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center ${rinkOverlay}`}>
+              {nameOnJersey && namePlate.lines.length > 0 ? (
+                <span className="flex w-full max-w-full flex-col items-center gap-[0.06em]">
+                  {namePlate.lines.map((line, idx) => (
+                    <span
+                      key={idx}
+                      className={`fifa-rink-jersey__name ${namePlate.className} !leading-tight`}
+                      style={namePlateStyle}
+                    >
+                      {line}
+                    </span>
+                  ))}
+                </span>
+              ) : null}
+              <span className={rinkNumCls} style={jerseyNumberStyle(ln, "rink")}>
+                {numStr}
+              </span>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`
-        jersey-slot-root relative mx-auto min-w-0 w-full ${w} ${motionCls} ${className}
-        ${isSelected ? "jersey-slot-selected rounded-xl ring-2 ring-cyan-400/75 ring-offset-2 ring-offset-[#080d14]" : "rounded-xl"}
+        jersey-slot-root relative min-w-0 ${onRink ? "h-full w-full" : `mx-auto w-full ${w}`} ${motionCls} ${className}
+        ${
+          isSelected
+            ? onRink
+              ? "jersey-slot-selected rounded-[6px] ring-1 ring-cyan-400/80 ring-inset"
+              : "jersey-slot-selected rounded-xl ring-2 ring-cyan-400/75 ring-offset-2 ring-offset-[#080d14]"
+            : onRink
+              ? "rounded-[6px]"
+              : "rounded-xl"
+        }
         ${enterCls}
       `}
     >
-      {isCaptain && !empty && (
+      {isCaptain && !empty && !onRink && (
         <span
           className={`
             absolute z-30 flex items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#7a0a1c]
@@ -133,7 +197,7 @@ export function LineupJerseyCard({
         </span>
       )}
 
-      {showAssistant && (
+      {showAssistant && !onRink && (
         <span
           className={`
             absolute z-30 flex items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001233]

@@ -79,8 +79,8 @@ function SocialIconPlaceholder({
 }
 
 export type SocialSiteIconsProps = {
-  /** Větší kruhy — např. hero (odkazové bloky jako u brand Instagramu). Patička ponechává výchozí. */
-  size?: "default" | "lg";
+  /** Větší kruhy — např. hero. `compact` — horní menu FIFA shell. */
+  size?: "default" | "lg" | "compact";
   /**
    * Instagram profilu Lineup (`NEXT_PUBLIC_INSTAGRAM_PAGE_URL` na Railway).
    * Kanál Svět Hokeje je zvlášť (text / tlačítko na úvodu), ne tato ikona.
@@ -94,11 +94,14 @@ export function SocialSiteIcons({ size = "default", showInstagram = true }: Soci
   const tt = SITE_TIKTOK_PAGE_URL.trim();
 
   const lg = size === "lg";
+  const compact = size === "compact";
   const circleClassName = lg
     ? "h-14 w-14 border-[1.5px] sm:h-[4.25rem] sm:w-[4.25rem]"
-    : "h-10 w-10";
-  const iconCls = lg ? "h-7 w-7 sm:h-8 sm:w-8" : "h-[1.125rem] w-[1.125rem]";
-  const navGap = lg ? "gap-4 sm:gap-6" : "gap-3";
+    : compact
+      ? "h-7 w-7 lg:h-8 lg:w-8"
+      : "h-10 w-10";
+  const iconCls = lg ? "h-7 w-7 sm:h-8 sm:w-8" : compact ? "h-3.5 w-3.5" : "h-[1.125rem] w-[1.125rem]";
+  const navGap = lg ? "gap-4 sm:gap-6" : compact ? "gap-1.5 sm:gap-2" : "gap-3";
 
   return (
     <nav aria-label="Sociální sítě" className={`flex justify-center ${navGap}`}>

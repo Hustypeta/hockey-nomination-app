@@ -1,0 +1,162 @@
+{
+  "generated_from": {
+    "players_with_stats": 1,
+    "players_total": 356,
+    "pool_size": 1,
+    "triplet_count": 18
+  },
+  "warnings": [
+    "355 hráčů bez statistik — do poolu nepůjdou.",
+    "Pozice C: jen 1 hráčů se statistikami (potřeba 9).",
+    "Pozice LW: jen 0 hráčů se statistikami (potřeba 9).",
+    "Pozice RW: jen 0 hráčů se statistikami (potřeba 9).",
+    "Pozice D: jen 0 hráčů se statistikami (potřeba 12).",
+    "Pozice G: jen 0 hráčů se statistikami (potřeba 9).",
+    "WC: jen 0 náhradníků (potřeba 6)."
+  ],
+  "pool": [
+    {
+      "player_id": "elh_a866c62fcb43151a51ea4284",
+      "name": "Roman Červenka",
+      "club": "HC Dynamo Pardubice",
+      "fantasy_position": "C",
+      "pool_group": "C",
+      "kvalita_skore": 1.183,
+      "tier_label": "A1 Elite"
+    }
+  ],
+  "triplets": [
+    {
+      "id": "C-1",
+      "group": "C",
+      "index": 1,
+      "players": [
+        {
+          "player_id": "elh_a866c62fcb43151a51ea4284",
+          "name": "Roman Červenka",
+          "club": "HC Dynamo Pardubice",
+          "tier_label": "A1 Elite",
+          "kvalita_skore": 1.183
+        }
+      ]
+    },
+    {
+      "id": "C-2",
+      "group": "C",
+      "index": 2,
+      "players": [
+        {
+          "player_id": "elh_a866c62fcb43151a51ea4284",
+          "name": "Roman Červenka",
+          "club": "HC Dynamo Pardubice",
+          "tier_label": "A1 Elite",
+          "kvalita_skore": 1.183
+        }
+      ]
+    },
+    {
+      "id": "C-3",
+      "group": "C",
+      "index": 3,
+      "players": [
+        {
+          "player_id": "elh_a866c62fcb43151a51ea4284",
+          "name": "Roman Červenka",
+          "club": "HC Dynamo Pardubice",
+          "tier_label": "A1 Elite",
+          "kvalita_skore": 1.183
+        }
+      ]
+    },
+    {
+      "id": "LW-1",
+      "group": "LW",
+      "index": 1,
+      "players": []
+    },
+    {
+      "id": "LW-2",
+      "group": "LW",
+      "index": 2,
+      "players": []
+    },
+    {
+      "id": "LW-3",
+      "group": "LW",
+      "index": 3,
+      "players": []
+    },
+    {
+      "id": "RW-1",
+      "group": "RW",
+      "index": 1,
+      "players": []
+    },
+    {
+      "id": "RW-2",
+      "group": "RW",
+      "index": 2,
+      "players": []
+    },
+    {
+      "id": "RW-3",
+      "group": "RW",
+      "index": 3,
+      "players": []
+    },
+    {
+      "id": "D-1",
+      "group": "D",
+      "index": 1,
+      "players": []
+    },
+    {
+      "id": "D-2",
+      "group": "D",
+      "index": 2,
+      "players": []
+    },
+    {
+      "id": "D-3",
+      "group": "D",
+      "index": 3,
+      "players": []
+    },
+    {
+      "id": "D-4",
+      "group": "D",
+      "index": 4,
+      "players": []
+    },
+    {
+      "id": "G-1",
+      "group": "G",
+      "index": 1,
+      "players": []
+    },
+    {
+      "id": "G-2",
+      "group": "G",
+      "index": 2,
+      "players": []
+    },
+    {
+      "id": "G-3",
+      "group": "G",
+      "index": 3,
+      "players": []
+    },
+    {
+      "id": "WC-1",
+      "group": "WC",
+      "index": 1,
+      "players": []
+    },
+    {
+      "id": "WC-2",
+      "group": "WC",
+      "index": 2,
+      "players": []
+    }
+  ]
+}

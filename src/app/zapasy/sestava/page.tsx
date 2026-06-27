@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { MatchLineupBuilderPage } from "@/components/match/MatchLineupBuilderPage";
+import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata = {
   title: "Editor sestavy",
@@ -22,9 +23,11 @@ export default async function MatchLineupBuilderRoute() {
     redirect("/auth/signin?callbackUrl=/zapasy/sestava");
   }
   return (
-    <Suspense fallback={<SestavaFallback />}>
-      <MatchLineupBuilderPage />
-    </Suspense>
+    <SiteShell showFooter={false}>
+      <Suspense fallback={<SestavaFallback />}>
+        <MatchLineupBuilderPage />
+      </Suspense>
+    </SiteShell>
   );
 }
 

@@ -1,0 +1,20 @@
+import { FifaImageAccentGlow, FifaImageTextScrim } from "@/components/fifa/FifaImageTextScrim";
+
+/** Pozadí karty Česká reprezentace — hráč s trofejí + scrim pro čitelnost textu. */
+export function FifaCeskaReprezentaceCardArt({ className = "" }: { className?: string }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/souteze-ceska-reprezentace.png"
+        alt=""
+        className={`fifa-image-art-photo object-[68%_center] brightness-[1.06] ${className}`}
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+      />
+      <FifaImageTextScrim variant="hero-left" />
+      <FifaImageAccentGlow tone="accent" className="-right-[8%] top-[8%] h-[55%] w-[50%] blur-[60px]" />
+    </div>
+  );
+}

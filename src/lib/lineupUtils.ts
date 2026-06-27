@@ -40,9 +40,9 @@ function cloneLineup(l: LineupStructure): LineupStructure {
  * Migrace starých nominací: druhý náhradní útočník → doplnění 4. lajny (x / RW / C / LW), jinak sloučení do jednoho slotu.
  * Dříve 3 náhradní útočníci → třetí do 4. lajny (slot x).
  * Staré nominace: bek jen v náhradnících bez sedmého v řádku → přesune do defensePairs[3].lb. U 4. páru vždy RB = null.
- * Pokud jsou vyplněné LD i RD ve 4. páru (zápasový export), RD se přesune do náhradního obránce.
+ * Pokud jsou vyplněné LB i RB ve 4. páru (zápasový export), RB se přesune do náhradního obránce.
  *
- * V `mode = 'match'` (zápasová sestava) ponecháme RD v `defensePairs[3].rb` — režim připouští 8 obránců (LD+RD ve 4. páru),
+ * V `mode = 'match'` (zápasová sestava) ponecháme RB v `defensePairs[3].rb` — režim připouští 8 obránců (LB+RB ve 4. páru),
  * žádný `extraDefensemen` slot v UI není.
  */
 export function normalizeLineupStructure(
@@ -98,7 +98,7 @@ export function normalizeLineupStructure(
   let rb = p3Raw.rb ?? null;
 
   if (mode === "match") {
-    // V zápasové sestavě je 4. pár plnohodnotný (LD + RD = 8 obránců); na nic nesaháme.
+    // V zápasové sestavě je 4. pár plnohodnotný (LB + RB = 8 obránců); na nic nesaháme.
     next.defensePairs[3] = { lb, rb };
     return next;
   }
@@ -109,7 +109,7 @@ export function normalizeLineupStructure(
   }
 
   if (lb && rb) {
-    // Čtvrtý pár ve formátu zápasu (LD+RD): v nominaci je jen jeden „7. bek“ v řádku; RD = 8. bek → náhradník.
+    // Čtvrtý pár ve formátu zápasu (LB+RB): v nominaci je jen jeden „7. bek“ v řádku; RB = 8. bek → náhradník.
     if (!next.extraDefensemen[0]) {
       next.extraDefensemen = [rb];
     }

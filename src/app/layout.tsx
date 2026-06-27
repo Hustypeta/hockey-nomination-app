@@ -95,11 +95,14 @@ export default function RootLayout({
   } as const;
 
   return (
-    <html lang="cs">
+    <html lang="cs" suppressHydrationWarning>
       <head>
         <UmamiAnalytics />
       </head>
-      <body className="relative antialiased min-h-screen bg-[#05060f] font-sans text-white">
+      <body
+        suppressHydrationWarning
+        className="relative antialiased min-h-screen bg-[#05060f] font-sans text-white"
+      >
         <FrozenArenaAmbientBackground />
         <script
           type="application/ld+json"

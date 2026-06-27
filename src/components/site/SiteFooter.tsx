@@ -1,14 +1,10 @@
 import Link from "next/link";
-import { SITE_BRAND } from "@/lib/siteBranding";
 import { SocialSiteIcons } from "@/components/site/SocialSiteIcons";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-white/[0.06] py-8 text-center text-xs text-white/40">
-      <p>
-        {SITE_BRAND} · Neoficiální fanouškovský nástroj
-      </p>
-      <div className="mt-5">
+      <div>
         <SocialSiteIcons />
       </div>
       <nav

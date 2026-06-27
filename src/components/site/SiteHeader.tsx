@@ -20,7 +20,6 @@ const NAV: NavItem[] = [
   NAV_HOME,
   { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
   { href: LINEUP_EDITOR_HREF, label: "Editor sestavy" },
-  { href: "/sestava", label: "Editor nominace" },
   { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
 ];

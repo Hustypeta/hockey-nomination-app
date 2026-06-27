@@ -4,15 +4,17 @@
  * Vnitřní <Slot /> zavírá nad většinou props LineBuilder; vytažení ven by znamenalo desítky props bez zisku.
  */
 import type { ReactNode } from "react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { Player, LineupStructure } from "@/types";
+import { useDraggable } from "@dnd-kit/core";
 import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/LineupJerseyCard";
 import { PremiumJerseySlotCard, type PremiumJerseySize } from "@/components/sestava/PremiumJerseySlotCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
-import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { PowerPlayLineEditor } from "@/components/match/PowerPlayLineEditor";
 import { POWER_PLAY_UI_ENABLED } from "@/lib/powerPlayLineup";
+import { FifaMatchLineRink } from "@/components/fifa/FifaMatchLineRink";
 
 interface LineBuilderProps {
   lineup: LineupStructure;
@@ -54,6 +56,8 @@ interface LineBuilderProps {
    * Jen `mode="match"` + `readOnly`: kompaktní seznam jmen (bez dresů) — méně scrollování na stránkách zápasu.
    */
   matchPublicNamesOnly?: boolean;
+  /** FIFA design — čistší bloky lajn, modrý accent, bez glow. */
+  uiVariant?: "classic" | "fifa";
 }
 
 /** Jemný akcent u nadpisu lajny – červená (repre), žádná „pruhovaná vlajka“. */
@@ -66,7 +70,29 @@ function LineHeaderAccent({ className = "" }: { className?: string }) {
   );
 }
 
-function SectionShell({ title, kicker, children }: { title: string; kicker?: string; children: ReactNode }) {
+function SectionShell({
+  title,
+  kicker,
+  children,
+  variant = "classic",
+}: {
+  title: string;
+  kicker?: string;
+  children: ReactNode;
+  variant?: "classic" | "fifa";
+}) {
+  if (variant === "fifa") {
+    return (
+      <section className="min-w-0 w-full">
+        <div className="fifa-editor-section__head">
+          <h3 className="fifa-editor-section__title">{title}</h3>
+          {kicker ? <span className="fifa-editor-section__kicker">{kicker}</span> : null}
+        </div>
+        {children}
+      </section>
+    );
+  }
+
   return (
     <section className="min-w-0 w-full">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] pb-2.5">
@@ -117,8 +143,12 @@ export function LineBuilder({
   jerseyBadgesPreferFanAverage = false,
   onPlayerClick,
   matchPublicNamesOnly = false,
+  uiVariant = "classic",
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
+  const fifa = uiVariant === "fifa";
+  const fifaRinkMode = fifa && mode === "match" && !readOnly && !matchPublicNamesOnly;
+  const [activeMatchLine, setActiveMatchLine] = useState(0);
   const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
 
   /** Lehce sjednocený formát hodnocení (1.0–10.0, vždy 1 desetina, čárka místo tečky). */
@@ -262,8 +292,11 @@ export function LineBuilder({
     onLineupChange(next);
   };
 
-  const isSlotSelected = (type: string, lineIndex?: number, role?: string) =>
-    selectedSlot?.type === type && selectedSlot?.lineIndex === lineIndex && selectedSlot?.role === role;
+  const isSlotSelected = (type: string, lineIndex?: number, role?: string) => {
+    if (!selectedSlot || selectedSlot.type !== type || selectedSlot.lineIndex !== lineIndex) return false;
+    if (type === "goalie") return true;
+    return selectedSlot.role === role;
+  };
 
   const toggleAssistant = (playerId: string) => {
     if (captainId === playerId) return;
@@ -288,6 +321,7 @@ export function LineBuilder({
     onClear,
     jerseySize = "skater" as LineupJerseySize,
     dndId,
+    rinkSlot = false,
   }: {
     playerId: string | null;
     label: string;
@@ -297,16 +331,32 @@ export function LineBuilder({
     onClear?: () => void;
     jerseySize?: LineupJerseySize;
     dndId?: string;
+    rinkSlot?: boolean;
   }) => {
     const player = getPlayer(playerId);
     const selected = isSlotSelected(type, lineIndex, role);
     const isAsst = player ? assistantIds.includes(player.id) : false;
+    const effectiveJerseySize: LineupJerseySize =
+      rinkSlot && jerseySize === "skater" ? "compact" : jerseySize;
     const premiumKind: "skater" | "goalie" =
       jerseySize === "goalie" || player?.position === "G" ? "goalie" : "skater";
     const premiumSize: PremiumJerseySize =
       jerseySize === "goalie" ? "goalie" : jerseySize === "compact" ? "compact" : "skater";
 
-    const renderSlotBody = (isDragOver: boolean) => (
+    /** Přesun hráče přímo na ploše — jen obsazené sloty ledu, jen útočníci/obránci v rámci lajny. */
+    const canMoveOnRink =
+      rinkSlot && enableDnd && !!dndId && !!player && !readOnly && (type === "forward" || type === "defense");
+    const moveDrag = useDraggable({
+      id: `move-${rinkSlot ? "rink" : "list"}-${dndId ?? `${type}-${lineIndex ?? 0}-${role ?? ""}`}`,
+      disabled: !canMoveOnRink,
+      data: { kind: "move", fromSlotId: dndId, player },
+    });
+
+    const renderSlotBody = (isDragOver: boolean) => {
+      const rinkCaptionName =
+        player && rinkSlot ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : null;
+
+      return (
       <div
         onClick={() => {
           if (readOnly) {
@@ -316,32 +366,58 @@ export function LineBuilder({
           onSelectSlot(selected ? null : { type, lineIndex: lineIndex ?? 0, role });
         }}
         className={`
-          group/slot flex w-full min-w-0 flex-col items-center rounded-xl px-0.5 transition-[background-color,box-shadow] duration-200
-          ${nhl ? "gap-1 py-1" : "gap-2 py-2"}
+          group/slot flex w-full min-w-0 transition-[background-color,box-shadow] duration-200
+          ${rinkSlot ? "fifa-rink-slot relative h-full w-full" : "flex-col items-center rounded-xl px-0.5"}
+          ${rinkSlot ? "" : nhl ? "gap-1 py-1" : fifa ? "gap-1.5 py-1.5" : "gap-2 py-2"}
           ${
-            nhl
+            rinkSlot
+              ? selected
+                ? ""
+                : ""
+              : nhl
               ? selected
                 ? "bg-sky-100/95 shadow-[inset_0_0_0_1px_rgba(14,165,233,0.25)] ring-2 ring-sky-500/40"
                 : "hover:bg-slate-200/60"
-              : selected
-                ? "bg-[#c8102e]/15 ring-2 ring-[#c8102e]/35 shadow-[inset_0_0_0_1px_rgba(200,16,46,0.12)]"
-                : "hover:bg-white/[0.03]"
+              : fifa
+                ? selected
+                  ? "bg-[var(--fifa-accent-muted)] ring-1 ring-[var(--fifa-accent)]/35"
+                  : "hover:bg-[var(--fifa-bg-hover)]"
+                : selected
+                  ? "bg-[#c8102e]/15 ring-2 ring-[#c8102e]/35 shadow-[inset_0_0_0_1px_rgba(200,16,46,0.12)]"
+                  : "hover:bg-white/[0.03]"
           }
           ${readOnly ? "cursor-default" : "cursor-pointer"}
+          ${rinkSlot ? "fifa-rink-slot relative" : ""}
+          ${rinkSlot && selected ? "fifa-rink-slot--selected" : ""}
         `}
       >
-        <div className="relative flex w-full min-w-0 justify-center overflow-visible px-1 py-1">
-          {player && onClear && !nhl && (
+        <div
+          ref={canMoveOnRink ? moveDrag.setNodeRef : undefined}
+          className={`${rinkSlot ? "fifa-rink-slot__jersey" : "relative flex w-full min-w-0 justify-center overflow-hidden px-1 py-1"} ${
+            canMoveOnRink ? "cursor-grab touch-none active:cursor-grabbing" : ""
+          } ${canMoveOnRink && moveDrag.isDragging ? "opacity-40" : ""}`}
+          {...(canMoveOnRink ? moveDrag.listeners : {})}
+          {...(canMoveOnRink ? moveDrag.attributes : {})}
+        >
+          {player && onClear && !nhl && !rinkSlot && (
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onClear();
               }}
-              className={`absolute right-0 top-0 z-50 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-950 text-sm font-bold text-white shadow-lg ring-2 ring-[#05080f]/80 touch-manipulation sm:h-6 sm:w-6 ${
-                mode === "match"
-                  ? "opacity-100"
-                  : "opacity-0 transition-opacity group-hover/slot:opacity-100 group-focus-within/slot:opacity-100"
+              className={`absolute right-0 top-0 z-50 flex items-center justify-center rounded-full font-bold touch-manipulation ${
+                rinkSlot
+                  ? "h-5 w-5 text-[10px] -translate-y-1 translate-x-1"
+                  : "h-7 w-7 text-sm sm:h-6 sm:w-6"
+              } ${
+                fifa
+                  ? "border border-[var(--fifa-border-strong)] bg-[var(--fifa-bg-elevated)] text-[var(--fifa-text-secondary)] hover:border-red-400/50 hover:text-red-300"
+                  : `bg-gradient-to-br from-red-600 to-red-950 text-white shadow-lg ring-2 ring-[#05080f]/80 ${
+                      mode === "match"
+                        ? "opacity-100"
+                        : "opacity-0 transition-opacity group-hover/slot:opacity-100 group-focus-within/slot:opacity-100"
+                    }`
               }`}
               aria-label="Odebrat hráče"
             >
@@ -363,42 +439,129 @@ export function LineBuilder({
               lightRinkSurface
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
-          ) : (
+          ) : rinkSlot && !player ? null : (
             <LineupJerseyCard
               key={playerId ?? `empty-${dndId ?? label}`}
               player={player}
               positionLabel={label}
-              size={jerseySize}
+              size={effectiveJerseySize}
               isCaptain={player ? captainId === player.id : false}
               isAssistant={isAsst}
               isSelected={selected}
+              disableMotion={rinkSlot}
+              overlayMode={rinkSlot ? "rink" : "default"}
+              nameOnJersey={!rinkSlot}
               className={
-                mode === "match"
-                  ? type === "powerPlay"
-                    ? readOnly
-                      ? "origin-top mx-auto max-w-[5.25rem] scale-[0.9] sm:max-w-[6.5rem] sm:scale-[1]"
-                      : "origin-top mx-auto max-w-[5.25rem] scale-[0.92] sm:max-w-[6.75rem] sm:scale-[1]"
-                    : readOnly
-                      ? "origin-top max-sm:mx-auto max-sm:max-w-[9.5rem] sm:scale-[1.05] md:scale-[1.08]"
-                      : "origin-top scale-[1.05] sm:scale-[1.08]"
-                  : ""
+                rinkSlot
+                  ? "fifa-rink-jersey h-full w-full"
+                  : mode === "match"
+                    ? type === "powerPlay"
+                      ? readOnly
+                        ? "origin-top mx-auto max-w-[5.25rem] scale-[0.9] sm:max-w-[6.5rem] sm:scale-[1]"
+                        : "origin-top mx-auto max-w-[5.25rem] scale-[0.92] sm:max-w-[6.75rem] sm:scale-[1]"
+                      : readOnly
+                        ? "origin-top max-sm:mx-auto max-sm:max-w-[9.5rem] sm:scale-[1.05] md:scale-[1.08]"
+                        : "origin-top scale-[1.05] sm:scale-[1.08]"
+                    : ""
               }
-              showPositionBadge={mode !== "match"}
-              showRoleBadge={mode !== "match"}
+              showPositionBadge={rinkSlot ? false : mode !== "match"}
+              showRoleBadge={rinkSlot ? false : mode !== "match"}
               overlayVariant={mode === "match" ? "lower" : "default"}
-              nameplateScale={mode === "match" ? (type === "powerPlay" ? 0.82 : 0.92) : 1}
+              nameplateScale={rinkSlot ? 1 : mode === "match" ? (type === "powerPlay" ? 0.82 : 0.92) : 1}
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
           )}
-          {player ? <RatingBadge playerId={player.id} /> : null}
+          {player && !rinkSlot ? <RatingBadge playerId={player.id} /> : null}
         </div>
 
-        {player && !readOnly ? (
+        {rinkSlot && player && !readOnly ? (
+          <div className="fifa-rink-slot__controls">
+            <div className="fifa-rink-slot__ctrl-group">
+              <button
+                type="button"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (captainId === player.id) {
+                    onCaptainChange(null);
+                  } else {
+                    onCaptainChange(player.id);
+                    const aids = lineup.assistantIds ?? [];
+                    if (aids.includes(player.id)) {
+                      onLineupChange({ ...lineup, assistantIds: aids.filter((id) => id !== player.id) });
+                    }
+                  }
+                }}
+                className={`fifa-rink-slot__ctrl ${captainId === player.id ? "fifa-rink-slot__ctrl--captain" : ""}`}
+                aria-label="Kapitán"
+                aria-pressed={captainId === player.id}
+              >
+                C
+              </button>
+              <button
+                type="button"
+                onPointerDown={(e) => e.stopPropagation()}
+                disabled={captainId === player.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleAssistant(player.id);
+                }}
+                className={`fifa-rink-slot__ctrl ${isAsst ? "fifa-rink-slot__ctrl--assistant" : ""}`}
+                aria-label="Asistent"
+                aria-pressed={isAsst}
+              >
+                A
+              </button>
+            </div>
+            {onClear ? (
+              <button
+                type="button"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClear();
+                }}
+                className="fifa-rink-slot__ctrl fifa-rink-slot__ctrl--remove"
+                aria-label="Odebrat hráče"
+              >
+                ×
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+
+        {rinkSlot ? (
+          <div
+            className={`fifa-rink-slot__caption pointer-events-none ${player ? "" : "fifa-rink-slot__caption--empty"}`}
+            aria-hidden={!player}
+          >
+            <div className="fifa-rink-slot__caption-plate">
+              {player && rinkCaptionName ? (
+                <>
+                  <span className="fifa-rink-slot__caption-name" title={player.name}>
+                    {rinkCaptionName}
+                  </span>
+                  {captainId === player.id ? (
+                    <span className="fifa-rink-slot__caption-badge fifa-rink-slot__caption-badge--captain">C</span>
+                  ) : isAsst ? (
+                    <span className="fifa-rink-slot__caption-badge fifa-rink-slot__caption-badge--assistant">A</span>
+                  ) : null}
+                </>
+              ) : (
+                <span className="fifa-rink-slot__caption-label">{label}</span>
+              )}
+            </div>
+          </div>
+        ) : null}
+
+        {player && !readOnly && !rinkSlot ? (
           <div
             className={
               nhl
                 ? "flex shrink-0 flex-wrap justify-center gap-1 rounded-lg border border-slate-200/95 bg-gradient-to-b from-slate-50 to-slate-100/90 px-1.5 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]"
-                : "flex shrink-0 flex-wrap justify-center gap-1"
+                : fifa
+                  ? "flex shrink-0 flex-wrap justify-center gap-1 rounded-md border border-[var(--fifa-border)] bg-[var(--fifa-bg-base)] px-1 py-0.5"
+                  : "flex shrink-0 flex-wrap justify-center gap-1"
             }
           >
             <button
@@ -417,15 +580,19 @@ export function LineBuilder({
               }}
               className={`
                 rounded-md border px-2 py-0.5 font-bold uppercase tracking-wide
-                ${nhl ? "min-h-[26px] px-2.5 text-[10px]" : "px-2 py-0.5 text-[9px]"}
+                ${nhl ? "min-h-[26px] px-2.5 text-[10px]" : fifa ? "px-2 py-0.5 text-[9px]" : "px-2 py-0.5 text-[9px]"}
                 ${
                   captainId === player.id
                     ? nhl
                       ? "border-red-400/60 bg-gradient-to-b from-[#c8102e] to-[#8a0b20] text-white shadow-sm"
-                      : "border-red-500/50 bg-gradient-to-b from-red-600/90 to-red-900/90 text-white"
+                      : fifa
+                        ? "border-[var(--fifa-accent)]/40 bg-[var(--fifa-accent-muted)] text-[var(--fifa-text)]"
+                        : "border-red-500/50 bg-gradient-to-b from-red-600/90 to-red-900/90 text-white"
                     : nhl
                       ? "border-slate-300/90 bg-white text-slate-600 hover:border-[#c8102e]/40 hover:text-slate-900"
-                      : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-white/30 hover:text-white"
+                      : fifa
+                        ? "border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] text-[var(--fifa-text-muted)] hover:border-[var(--fifa-border-strong)] hover:text-[var(--fifa-text)]"
+                        : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-white/30 hover:text-white"
                 }
               `}
             >
@@ -440,35 +607,46 @@ export function LineBuilder({
               }}
               className={`
                 rounded-md border px-2 py-0.5 font-bold uppercase tracking-wide
-                ${nhl ? "min-h-[26px] px-2.5 text-[10px]" : "px-2 py-0.5 text-[9px]"}
+                ${nhl ? "min-h-[26px] px-2.5 text-[10px]" : fifa ? "px-2 py-0.5 text-[9px]" : "px-2 py-0.5 text-[9px]"}
                 ${
                   captainId === player.id
                     ? nhl
                       ? "cursor-not-allowed border-slate-200 text-slate-300 opacity-40"
-                      : "cursor-not-allowed border-white/5 text-white/25 opacity-40"
+                      : fifa
+                        ? "cursor-not-allowed border-[var(--fifa-border)] text-[var(--fifa-text-muted)] opacity-40"
+                        : "cursor-not-allowed border-white/5 text-white/25 opacity-40"
                     : isAsst
                       ? nhl
                         ? "border-[#003087]/50 bg-gradient-to-b from-[#003087] to-[#001a4d] text-white shadow-sm"
-                        : "border-[#003087]/55 bg-gradient-to-b from-[#003087]/95 to-[#001233] text-white"
+                        : fifa
+                          ? "border-[var(--fifa-accent)]/35 bg-[var(--fifa-accent-muted)] text-[var(--fifa-accent-text)]"
+                          : "border-[#003087]/55 bg-gradient-to-b from-[#003087]/95 to-[#001233] text-white"
                       : nhl
                         ? "border-slate-300/90 bg-white text-slate-600 hover:border-[#003087]/35 hover:text-slate-900"
-                        : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-[#c8102e]/35 hover:text-white"
+                        : fifa
+                          ? "border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] text-[var(--fifa-text-muted)] hover:border-[var(--fifa-border-strong)] hover:text-[var(--fifa-text)]"
+                          : "border-white/15 bg-[#0a1018]/95 text-white/60 hover:border-[#c8102e]/35 hover:text-white"
                 }
               `}
             >
               {isAsst ? "A" : "A?"}
             </button>
           </div>
-        ) : (
+        ) : !rinkSlot ? (
           <div className={`shrink-0 ${nhl ? "h-[34px]" : "h-[22px]"}`} aria-hidden />
-        )}
+        ) : null}
+        {rinkSlot && !player ? (
+          <div className="fifa-rink-slot__hitarea absolute inset-0 z-[1]" aria-hidden />
+        ) : null}
       </div>
     );
+    };
 
     const wrapped =
       enableDnd && dndId ? (
         <DroppableSlotWrap
           id={dndId}
+          fill={rinkSlot}
           className="min-w-0 w-full"
           lightSurface={nhl}
           renderContent={({ isOver }) => renderSlotBody(isOver)}
@@ -477,17 +655,17 @@ export function LineBuilder({
         renderSlotBody(false)
       );
 
-    return <div className="group min-w-0 w-full">{wrapped}</div>;
+    return (
+      <div className={`group min-w-0 w-full ${rinkSlot ? "fifa-rink-slot-host" : ""}`}>
+        {wrapped}
+      </div>
+    );
   };
 
   if (mode === "match") {
     const defCount = matchDefenseCount;
     const showD4Pair = defCount === 8;
     const showD7 = defCount === 7;
-    const showD6Only = defCount === 6;
-
-    const defenseHeader =
-      defCount === 8 ? "Obrana (8)" : defCount === 7 ? "Obrana (7)" : "Obrana (6)";
 
     function MatchNameRow({ playerId, pos }: { playerId: string | null; pos: string }) {
       const player = getPlayer(playerId);
@@ -540,10 +718,299 @@ export function LineBuilder({
       );
     }
 
+    const matchForwardGridClass = readOnly
+      ? "mx-auto grid w-full grid-cols-1 gap-y-3 sm:max-w-md sm:grid-cols-3 sm:gap-x-6 sm:gap-y-2 md:max-w-none"
+      : "mx-auto grid w-full max-w-md grid-cols-3 gap-x-3 gap-y-4 sm:max-w-none sm:gap-x-6 sm:gap-y-2";
+
+    const matchDefenseGridClass =
+      "mx-auto grid w-full max-w-sm grid-cols-2 gap-x-4 gap-y-4 sm:max-w-md sm:gap-x-6 sm:gap-y-5";
+
+    const matchLineBlockClass = fifa
+      ? "fifa-line-block"
+      : "min-w-0 w-full space-y-4 rounded-xl border border-white/[0.07] bg-gradient-to-b from-[#0a0f18]/95 to-[#05080d]/98 px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-4";
+
+    const matchLineDividerClass = fifa ? "fifa-line-block__divider" : "border-t border-white/[0.06] pt-4";
+
+    const matchLinesKicker = matchAllowExtraForward
+      ? `4× LW–C–RW · ${defCount} obránců · 13. útočník`
+      : `4× LW–C–RW · ${defCount} obránců`;
+
+    const matchLineBlock = (i: number) => {
+      const line = lineup.forwardLines[i];
+      const pair = lineup.defensePairs[i];
+      const n = i + 1;
+
+      return (
+        <article key={i} className={matchLineBlockClass}>
+          {fifa ? (
+            <div className="fifa-line-block__head">
+              <span className="fifa-line-block__label">{n}. lajna</span>
+            </div>
+          ) : (
+            <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50 sm:text-left">
+              {n}. lajna
+            </p>
+          )}
+
+          <div className={matchForwardGridClass}>
+            <Slot
+              playerId={line.lw}
+              label="LW"
+              type="forward"
+              lineIndex={i}
+              role="lw"
+              dndId={`slot-fwd-${i}-lw`}
+              jerseySize="skater"
+              onClear={
+                line.lw
+                  ? () => {
+                      setForwardLine(i, "lw", null);
+                      onSelectSlot(null);
+                    }
+                  : undefined
+              }
+            />
+            <Slot
+              playerId={line.c}
+              label="C"
+              type="forward"
+              lineIndex={i}
+              role="c"
+              dndId={`slot-fwd-${i}-c`}
+              jerseySize="skater"
+              onClear={
+                line.c
+                  ? () => {
+                      setForwardLine(i, "c", null);
+                      onSelectSlot(null);
+                    }
+                  : undefined
+              }
+            />
+            <Slot
+              playerId={line.rw}
+              label="RW"
+              type="forward"
+              lineIndex={i}
+              role="rw"
+              dndId={`slot-fwd-${i}-rw`}
+              jerseySize="skater"
+              onClear={
+                line.rw
+                  ? () => {
+                      setForwardLine(i, "rw", null);
+                      onSelectSlot(null);
+                    }
+                  : undefined
+              }
+            />
+          </div>
+
+          {i < 3 ? (
+            <div className={matchLineDividerClass}>
+              <p className={fifa ? "fifa-line-block__sub" : "mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40"}>
+                Obranný pár
+              </p>
+              <div className={matchDefenseGridClass}>
+                <Slot
+                  playerId={pair.lb}
+                  label="LB"
+                  type="defense"
+                  lineIndex={i}
+                  role="lb"
+                  dndId={`slot-def-${i}-lb`}
+                  jerseySize="skater"
+                  onClear={
+                    pair.lb
+                      ? () => {
+                          setDefensePair(i, "lb", null);
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+                <Slot
+                  playerId={pair.rb}
+                  label="RB"
+                  type="defense"
+                  lineIndex={i}
+                  role="rb"
+                  dndId={`slot-def-${i}-rb`}
+                  jerseySize="skater"
+                  onClear={
+                    pair.rb
+                      ? () => {
+                          setDefensePair(i, "rb", null);
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+            </div>
+          ) : null}
+
+          {i === 3 && showD4Pair ? (
+            <div className={matchLineDividerClass}>
+              <p className={fifa ? "fifa-line-block__sub" : "mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40"}>
+                4. obranný pár
+              </p>
+              <div className={matchDefenseGridClass}>
+                <Slot
+                  playerId={lineup.defensePairs[3].lb}
+                  label="LB"
+                  type="defense"
+                  lineIndex={3}
+                  role="lb"
+                  dndId="slot-def-3-lb"
+                  jerseySize="skater"
+                  onClear={
+                    lineup.defensePairs[3].lb
+                      ? () => {
+                          setDefensePair(3, "lb", null);
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+                <Slot
+                  playerId={lineup.defensePairs[3].rb}
+                  label="RB"
+                  type="defense"
+                  lineIndex={3}
+                  role="rb"
+                  dndId="slot-def-3-rb"
+                  jerseySize="skater"
+                  onClear={
+                    lineup.defensePairs[3].rb
+                      ? () => {
+                          setDefensePair(3, "rb", null);
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+            </div>
+          ) : null}
+
+          {i === 3 && showD7 ? (
+            <div className={matchLineDividerClass}>
+              <p className={fifa ? "fifa-line-block__sub" : "mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40"}>
+                7. obránce
+              </p>
+              <div className="mx-auto flex max-w-[10rem] justify-center">
+                <Slot
+                  playerId={lineup.defensePairs[3].lb}
+                  label="D"
+                  type="defense"
+                  lineIndex={3}
+                  role="lb"
+                  dndId="slot-def-3-lb"
+                  jerseySize="skater"
+                  onClear={
+                    lineup.defensePairs[3].lb
+                      ? () => {
+                          setDefensePair(3, "lb", null);
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+            </div>
+          ) : null}
+
+          {i === 3 && matchAllowExtraForward ? (
+            <div className={matchLineDividerClass}>
+              <p className={fifa ? "fifa-line-block__sub" : "mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40"}>
+                13. útočník
+              </p>
+              <div className="mx-auto flex max-w-[10rem] justify-center">
+                <Slot
+                  playerId={lineup.extraForwards[0] ?? null}
+                  label="F"
+                  type="extraForward"
+                  lineIndex={0}
+                  dndId="slot-xf-0"
+                  jerseySize="skater"
+                  onClear={
+                    lineup.extraForwards[0]
+                      ? () => {
+                          removeExtraForward();
+                          onSelectSlot(null);
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+            </div>
+          ) : null}
+        </article>
+      );
+    };
+
+    const matchNameLineBlock = (i: number) => {
+      const line = lineup.forwardLines[i];
+      const pair = lineup.defensePairs[i];
+      const n = i + 1;
+
+      return (
+        <div key={i} className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
+          <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+            {n}. lajna
+          </p>
+          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3 sm:gap-2">
+            <MatchNameRow playerId={line.lw} pos="LW" />
+            <MatchNameRow playerId={line.c} pos="C" />
+            <MatchNameRow playerId={line.rw} pos="RW" />
+          </div>
+          {i < 3 ? (
+            <div className="mt-2 border-t border-white/[0.06] pt-2">
+              <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">
+                Obranný pár
+              </p>
+              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
+                <MatchNameRow playerId={pair.lb} pos="LB" />
+                <MatchNameRow playerId={pair.rb} pos="RB" />
+              </div>
+            </div>
+          ) : null}
+          {i === 3 && showD4Pair ? (
+            <div className="mt-2 border-t border-white/[0.06] pt-2">
+              <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">
+                4. pár
+              </p>
+              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
+                <MatchNameRow playerId={lineup.defensePairs[3].lb} pos="LB" />
+                <MatchNameRow playerId={lineup.defensePairs[3].rb} pos="RB" />
+              </div>
+            </div>
+          ) : null}
+          {i === 3 && showD7 ? (
+            <div className="mt-2 border-t border-white/[0.06] pt-2">
+              <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">
+                Obránce navíc
+              </p>
+              <MatchNameRow playerId={lineup.defensePairs[3].lb} pos="D" />
+            </div>
+          ) : null}
+          {i === 3 && matchAllowExtraForward ? (
+            <div className="mt-2 border-t border-white/[0.06] pt-2">
+              <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">
+                13. útočník
+              </p>
+              <MatchNameRow playerId={lineup.extraForwards[0] ?? null} pos="F" />
+            </div>
+          ) : null}
+        </div>
+      );
+    };
+
     if (readOnly && matchPublicNamesOnly) {
       return (
         <div className="min-w-0 w-full space-y-3 sm:space-y-4">
-          <SectionShell title="Brankáři" kicker="2 × G">
+          <SectionShell variant={fifa ? "fifa" : "classic"} title="Brankáři" kicker="2 × G">
             <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
               {[0, 1].map((i) => (
                 <MatchNameRow key={i} playerId={lineup.goalies[i]} pos="G" />
@@ -551,71 +1018,9 @@ export function LineBuilder({
             </div>
           </SectionShell>
 
-          <SectionShell title="Útočné lajny" kicker={matchAllowExtraForward ? "4×3 + 13. útočník" : "4×3"}>
+          <SectionShell variant={fifa ? "fifa" : "classic"} title="Lajny" kicker={matchLinesKicker}>
             <div className="grid grid-cols-1 gap-2 sm:gap-2.5">
-              {[0, 1, 2, 3].map((i) => {
-                const line = lineup.forwardLines[i];
-                return (
-                  <div key={i} className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
-                    <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-                      {i + 1}. lajna
-                    </p>
-                    <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3 sm:gap-2">
-                      <MatchNameRow playerId={line.lw} pos="LW" />
-                      <MatchNameRow playerId={line.c} pos="C" />
-                      <MatchNameRow playerId={line.rw} pos="RW" />
-                    </div>
-                  </div>
-                );
-              })}
-              {matchAllowExtraForward ? (
-                <div className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
-                  <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-                    13. útočník
-                  </p>
-                  <MatchNameRow playerId={lineup.extraForwards[0] ?? null} pos="F" />
-                </div>
-              ) : null}
-            </div>
-          </SectionShell>
-
-          <SectionShell title={defenseHeader} kicker={showD4Pair ? "4× pár" : showD7 ? "3× pár + 1" : "3× pár"}>
-            <div className="space-y-2">
-              {[0, 1, 2].map((i) => {
-                const pair = lineup.defensePairs[i];
-                return (
-                  <div key={i} className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
-                    <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-                      {i + 1}. pár
-                    </p>
-                    <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
-                      <MatchNameRow playerId={pair.lb} pos="LD" />
-                      <MatchNameRow playerId={pair.rb} pos="RD" />
-                    </div>
-                  </div>
-                );
-              })}
-
-              {showD4Pair ? (
-                <div className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
-                  <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-                    4. pár
-                  </p>
-                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
-                    <MatchNameRow playerId={lineup.defensePairs[3].lb} pos="LD" />
-                    <MatchNameRow playerId={lineup.defensePairs[3].rb} pos="RD" />
-                  </div>
-                </div>
-              ) : null}
-
-              {showD7 ? (
-                <div className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-2 py-2 sm:px-3">
-                  <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-                    Obránce navíc
-                  </p>
-                  <MatchNameRow playerId={lineup.defensePairs[3].lb} pos="D" />
-                </div>
-              ) : null}
+              {[0, 1, 2, 3].map((i) => matchNameLineBlock(i))}
             </div>
           </SectionShell>
         </div>
@@ -624,26 +1029,248 @@ export function LineBuilder({
 
     const controlsDisabled = readOnly || !onMatchDefenseCountChange || !onMatchAllowExtraForwardChange;
 
+    const starterGoalieSlot = (
+      <Slot
+        rinkSlot
+        playerId={lineup.goalies[0]}
+        label="G"
+        type="goalie"
+        lineIndex={0}
+        jerseySize="goalie"
+        dndId="slot-goalie-0"
+        onClear={
+          lineup.goalies[0]
+            ? () => {
+                setGoalie(0, null);
+                onSelectSlot(null);
+              }
+            : undefined
+        }
+      />
+    );
+
+    const slotsForLine = (i: number) => {
+      const line = lineup.forwardLines[i];
+      const pair = lineup.defensePairs[i];
+
+      const mkFwd = (role: "lw" | "c" | "rw", slotLabel: string) => (
+        <Slot
+          rinkSlot
+          playerId={line[role]}
+          label={slotLabel}
+          type="forward"
+          lineIndex={i}
+          role={role}
+          dndId={`slot-fwd-${i}-${role}`}
+          jerseySize="skater"
+          onClear={
+            line[role]
+              ? () => {
+                  setForwardLine(i, role, null);
+                  onSelectSlot(null);
+                }
+              : undefined
+          }
+        />
+      );
+
+      let defense: ReactNode[] | null = null;
+      if (i < 3) {
+        defense = [
+          <Slot
+            rinkSlot
+            key={`def-${i}-lb`}
+            playerId={pair.lb}
+            label="LB"
+            type="defense"
+            lineIndex={i}
+            role="lb"
+            dndId={`slot-def-${i}-lb`}
+            jerseySize="skater"
+            onClear={
+              pair.lb
+                ? () => {
+                    setDefensePair(i, "lb", null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />,
+          <Slot
+            rinkSlot
+            key={`def-${i}-rb`}
+            playerId={pair.rb}
+            label="RB"
+            type="defense"
+            lineIndex={i}
+            role="rb"
+            dndId={`slot-def-${i}-rb`}
+            jerseySize="skater"
+            onClear={
+              pair.rb
+                ? () => {
+                    setDefensePair(i, "rb", null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />,
+        ];
+      } else if (i === 3 && showD4Pair) {
+        defense = [
+          <Slot
+            rinkSlot
+            key="def-3-lb"
+            playerId={lineup.defensePairs[3].lb}
+            label="LB"
+            type="defense"
+            lineIndex={3}
+            role="lb"
+            dndId="slot-def-3-lb"
+            jerseySize="skater"
+            onClear={
+              lineup.defensePairs[3].lb
+                ? () => {
+                    setDefensePair(3, "lb", null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />,
+          <Slot
+            rinkSlot
+            key="def-3-rb"
+            playerId={lineup.defensePairs[3].rb}
+            label="RB"
+            type="defense"
+            lineIndex={3}
+            role="rb"
+            dndId="slot-def-3-rb"
+            jerseySize="skater"
+            onClear={
+              lineup.defensePairs[3].rb
+                ? () => {
+                    setDefensePair(3, "rb", null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />,
+        ];
+      } else if (i === 3 && showD7) {
+        defense = [
+          <Slot
+            rinkSlot
+            key="def-3-solo"
+            playerId={lineup.defensePairs[3].lb}
+            label="D"
+            type="defense"
+            lineIndex={3}
+            role="lb"
+            dndId="slot-def-3-lb"
+            jerseySize="skater"
+            onClear={
+              lineup.defensePairs[3].lb
+                ? () => {
+                    setDefensePair(3, "lb", null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />,
+        ];
+      }
+
+      let benchLeft: ReactNode | null = null;
+      let benchRight: ReactNode | null = null;
+      if (i === 3) {
+        const backupG = lineup.goalies[1];
+        benchLeft = (
+          <Slot
+            rinkSlot
+            key="bench-g2"
+            playerId={backupG}
+            label="Náhr. G"
+            type="goalie"
+            lineIndex={1}
+            jerseySize="goalie"
+            dndId="slot-goalie-1"
+            onClear={
+              backupG
+                ? () => {
+                    setGoalie(1, null);
+                    onSelectSlot(null);
+                  }
+                : undefined
+            }
+          />
+        );
+        if (matchAllowExtraForward) {
+          benchRight = (
+            <Slot
+              rinkSlot
+              key="bench-xf"
+              playerId={lineup.extraForwards[0] ?? null}
+              label="13. F"
+              type="extraForward"
+              lineIndex={0}
+              dndId="slot-xf-0"
+              jerseySize="skater"
+              onClear={
+                lineup.extraForwards[0]
+                  ? () => {
+                      removeExtraForward();
+                      onSelectSlot(null);
+                    }
+                  : undefined
+              }
+            />
+          );
+        }
+      }
+
+      return {
+        forwards: { lw: mkFwd("lw", "LW"), c: mkFwd("c", "C"), rw: mkFwd("rw", "RW") },
+        defense,
+        bench: { left: benchLeft, right: benchRight },
+      };
+    };
+
+    const handleActiveMatchLineChange = (next: number) => {
+      setActiveMatchLine(next);
+    };
+
     return (
-      <div className="min-w-0 w-full space-y-6">
+      <div className={`min-w-0 w-full ${fifaRinkMode ? "flex min-h-0 flex-1 flex-col gap-1.5 lg:gap-2" : "space-y-6"}`}>
         {!readOnly ? (
-          <div className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3 sm:flex-row sm:items-center sm:justify-between">
+          <div
+            className={
+              fifa
+                ? "fifa-editor-match-controls shrink-0"
+                : "flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3 sm:flex-row sm:items-center sm:justify-between"
+            }
+          >
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/55">
+              <span className={fifa ? "fifa-editor-match-controls__label" : "text-[10px] font-bold uppercase tracking-[0.22em] text-white/55"}>
                 Nastavení zápasu
               </span>
-              <div className="flex gap-2">
+              <div className={fifa ? "fifa-editor-segment" : "flex gap-2"}>
                 {([8, 7, 6] as const).map((n) => (
                   <button
                     key={n}
                     type="button"
                     disabled={controlsDisabled}
+                    onPointerDown={(e) => e.stopPropagation()}
                     onClick={() => onMatchDefenseCountChange?.(n)}
-                    className={`rounded-xl border px-3 py-2 text-xs font-bold ${
-                      defCount === n
-                        ? "border-[#f1c40f]/40 bg-[#f1c40f]/15 text-[#f1e6a8]"
-                        : "border-white/10 bg-white/[0.02] text-white/70 hover:bg-white/[0.05]"
-                    } disabled:opacity-40`}
+                    className={
+                      fifa
+                        ? `fifa-editor-segment__btn ${defCount === n ? "fifa-editor-segment__btn--active" : ""}`
+                        : `rounded-xl border px-3 py-2 text-xs font-bold ${
+                            defCount === n
+                              ? "border-[#f1c40f]/40 bg-[#f1c40f]/15 text-[#f1e6a8]"
+                              : "border-white/10 bg-white/[0.02] text-white/70 hover:bg-white/[0.05]"
+                          } disabled:opacity-40`
+                    }
                   >
                     {n} D
                   </button>
@@ -651,7 +1278,13 @@ export function LineBuilder({
               </div>
             </div>
 
-            <label className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5 text-xs font-semibold text-white/80 sm:justify-start">
+            <label
+              className={
+                fifa
+                  ? "flex items-center justify-between gap-3 rounded-md border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] px-3 py-2 text-xs font-medium text-[var(--fifa-text-secondary)] sm:justify-start"
+                  : "flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5 text-xs font-semibold text-white/80 sm:justify-start"
+              }
+            >
               <span>13. útočník</span>
               <input
                 type="checkbox"
@@ -663,256 +1296,69 @@ export function LineBuilder({
           </div>
         ) : null}
 
-        <SectionShell title="Brankáři" kicker="2 × G">
-          <div className="grid w-full grid-cols-2 gap-4 sm:gap-6">
-            {[0, 1].map((i) => {
-              const gid = lineup.goalies[i];
-              return (
-                <Slot
-                  key={i}
-                  playerId={gid}
-                  label="G"
-                  type="goalie"
-                  lineIndex={i}
-                  jerseySize="goalie"
-                  dndId={`slot-goalie-${i}`}
-                  onClear={
-                    gid
-                      ? () => {
-                          setGoalie(i, null);
-                          onSelectSlot(null);
-                        }
-                      : undefined
-                  }
-                />
-              );
-            })}
+        {fifaRinkMode ? (
+          <div className="fifa-editor-canvas-shell fifa-editor-canvas-shell--rink flex min-h-0 flex-1 flex-col overflow-hidden">
+            <FifaMatchLineRink
+              activeLine={activeMatchLine}
+              onActiveLineChange={handleActiveMatchLineChange}
+              defCount={defCount}
+              allowExtraForward={matchAllowExtraForward}
+              slotsForLine={slotsForLine}
+              starterGoalie={starterGoalieSlot}
+            />
           </div>
-        </SectionShell>
+        ) : (
+        <div
+          className={
+            fifa
+              ? "fifa-editor-canvas-shell space-y-4"
+              : "space-y-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 sm:p-5"
+          }
+        >
+          <p
+            className={
+              fifa
+                ? "fifa-editor-canvas-shell__kicker text-center sm:text-left"
+                : "text-center font-display text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 sm:text-left"
+            }
+          >
+            Sestava na zápas
+          </p>
 
-        <SectionShell title="Útočné lajny" kicker={matchAllowExtraForward ? "4×3 + 13. útočník" : "4×3"}>
-          <div className="grid grid-cols-1 gap-4 sm:gap-5">
-            {[0, 1, 2, 3].map((i) => {
-              const line = lineup.forwardLines[i];
-              return (
-                <div key={i} className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3">
-                  <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
-                    {i + 1}. lajna
-                  </p>
-                  <div
-                    className={
-                      readOnly
-                        ? "mx-auto grid w-full grid-cols-1 gap-y-3 sm:max-w-md sm:grid-cols-3 sm:gap-x-6 sm:gap-y-2 md:max-w-none"
-                        : "mx-auto grid w-full max-w-md grid-cols-3 gap-x-3 gap-y-4 sm:max-w-none sm:gap-x-6 sm:gap-y-2"
-                    }
-                  >
-                    <Slot
-                      playerId={line.lw}
-                      label="LW"
-                      type="forward"
-                      lineIndex={i}
-                      role="lw"
-                      dndId={`slot-fwd-${i}-lw`}
-                      jerseySize="skater"
-                      onClear={
-                        line.lw
-                          ? () => {
-                              setForwardLine(i, "lw", null);
-                              onSelectSlot(null);
-                            }
-                          : undefined
-                      }
-                    />
-                    <Slot
-                      playerId={line.c}
-                      label="C"
-                      type="forward"
-                      lineIndex={i}
-                      role="c"
-                      dndId={`slot-fwd-${i}-c`}
-                      jerseySize="skater"
-                      onClear={
-                        line.c
-                          ? () => {
-                              setForwardLine(i, "c", null);
-                              onSelectSlot(null);
-                            }
-                          : undefined
-                      }
-                    />
-                    <Slot
-                      playerId={line.rw}
-                      label="RW"
-                      type="forward"
-                      lineIndex={i}
-                      role="rw"
-                      dndId={`slot-fwd-${i}-rw`}
-                      jerseySize="skater"
-                      onClear={
-                        line.rw
-                          ? () => {
-                              setForwardLine(i, "rw", null);
-                              onSelectSlot(null);
-                            }
-                          : undefined
-                      }
-                    />
-                  </div>
-                </div>
-              );
-            })}
-
-            {matchAllowExtraForward ? (
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3">
-                <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
-                  13. útočník
-                </p>
-                <div className="mx-auto flex max-w-[12rem] justify-center">
+          <SectionShell variant={fifa ? "fifa" : "classic"} title="Brankáři" kicker="2 × G">
+            <div className="grid w-full grid-cols-2 gap-4 sm:gap-6">
+              {[0, 1].map((i) => {
+                const gid = lineup.goalies[i];
+                return (
                   <Slot
-                    playerId={lineup.extraForwards[0] ?? null}
-                    label="F"
-                    type="extraForward"
-                    lineIndex={0}
-                    dndId="slot-xf-0"
-                    jerseySize="skater"
+                    key={i}
+                    playerId={gid}
+                    label="G"
+                    type="goalie"
+                    lineIndex={i}
+                    jerseySize="goalie"
+                    dndId={`slot-goalie-${i}`}
                     onClear={
-                      lineup.extraForwards[0]
+                      gid
                         ? () => {
-                            removeExtraForward();
+                            setGoalie(i, null);
                             onSelectSlot(null);
                           }
                         : undefined
                     }
                   />
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </SectionShell>
+                );
+              })}
+            </div>
+          </SectionShell>
 
-        <SectionShell title={defenseHeader} kicker={showD4Pair ? "4× pár" : showD7 ? "3× pár + 1" : "3× pár"}>
-          <div className="space-y-4">
-            {[0, 1, 2].map((i) => {
-              const pair = lineup.defensePairs[i];
-              return (
-                <div key={i} className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3">
-                  <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
-                    {i + 1}. pár
-                  </p>
-                  <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-x-4 gap-y-4 sm:max-w-md sm:gap-x-6 sm:gap-y-5">
-                    <Slot
-                      playerId={pair.lb}
-                      label="LD"
-                      type="defense"
-                      lineIndex={i}
-                      role="lb"
-                      dndId={`slot-def-${i}-lb`}
-                      jerseySize="skater"
-                      onClear={
-                        pair.lb
-                          ? () => {
-                              setDefensePair(i, "lb", null);
-                              onSelectSlot(null);
-                            }
-                          : undefined
-                      }
-                    />
-                    <Slot
-                      playerId={pair.rb}
-                      label="RD"
-                      type="defense"
-                      lineIndex={i}
-                      role="rb"
-                      dndId={`slot-def-${i}-rb`}
-                      jerseySize="skater"
-                      onClear={
-                        pair.rb
-                          ? () => {
-                              setDefensePair(i, "rb", null);
-                              onSelectSlot(null);
-                            }
-                          : undefined
-                      }
-                    />
-                  </div>
-                </div>
-              );
-            })}
-
-            {showD4Pair ? (
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3">
-                <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
-                  4. pár
-                </p>
-                <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-x-4 gap-y-4 sm:max-w-md sm:gap-x-6 sm:gap-y-5">
-                  <Slot
-                    playerId={lineup.defensePairs[3].lb}
-                    label="LD"
-                    type="defense"
-                    lineIndex={3}
-                    role="lb"
-                    dndId="slot-def-3-lb"
-                    jerseySize="skater"
-                    onClear={
-                      lineup.defensePairs[3].lb
-                        ? () => {
-                            setDefensePair(3, "lb", null);
-                            onSelectSlot(null);
-                          }
-                        : undefined
-                    }
-                  />
-                  <Slot
-                    playerId={lineup.defensePairs[3].rb}
-                    label="RD"
-                    type="defense"
-                    lineIndex={3}
-                    role="rb"
-                    dndId="slot-def-3-rb"
-                    jerseySize="skater"
-                    onClear={
-                      lineup.defensePairs[3].rb
-                        ? () => {
-                            setDefensePair(3, "rb", null);
-                            onSelectSlot(null);
-                          }
-                        : undefined
-                    }
-                  />
-                </div>
-              </div>
-            ) : null}
-
-            {showD7 ? (
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3">
-                <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white/50">
-                  Obránce navíc
-                </p>
-                <div className="mx-auto flex max-w-[12rem] justify-center">
-                  <Slot
-                    playerId={lineup.defensePairs[3].lb}
-                    label="D"
-                    type="defense"
-                    lineIndex={3}
-                    role="lb"
-                    dndId="slot-def-3-lb"
-                    jerseySize="skater"
-                    onClear={
-                      lineup.defensePairs[3].lb
-                        ? () => {
-                            setDefensePair(3, "lb", null);
-                            onSelectSlot(null);
-                          }
-                        : undefined
-                    }
-                  />
-                </div>
-              </div>
-            ) : null}
-
-            {showD6Only ? null : null}
-          </div>
-        </SectionShell>
+          <SectionShell variant={fifa ? "fifa" : "classic"} title="Lajny" kicker={matchLinesKicker}>
+            <div className={`flex min-w-0 w-full flex-col ${fifa ? "gap-3" : "gap-6 sm:gap-7"}`}>
+              {[0, 1, 2, 3].map((i) => matchLineBlock(i))}
+            </div>
+          </SectionShell>
+        </div>
+        )}
 
         {POWER_PLAY_UI_ENABLED && !readOnly ? (
           <PowerPlayLineEditor
@@ -944,19 +1390,29 @@ export function LineBuilder({
     return (
       <article
         key={i}
-        className="min-w-0 w-full space-y-4 rounded-xl border border-white/[0.07] bg-gradient-to-b from-[#0a0f18]/95 to-[#05080d]/98 px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-4"
+        className={
+          fifa
+            ? "fifa-line-block"
+            : "min-w-0 w-full space-y-4 rounded-xl border border-white/[0.07] bg-gradient-to-b from-[#0a0f18]/95 to-[#05080d]/98 px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-4"
+        }
       >
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-between">
-          <div className="flex items-center gap-2.5">
-            <LineHeaderAccent />
-            <span className="font-display text-lg font-bold tracking-[0.06em] text-white sm:text-xl">
-              {n}. LAJNA
+        {fifa ? (
+          <div className="fifa-line-block__head">
+            <span className="fifa-line-block__label">{n}. lajna</span>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-between">
+            <div className="flex items-center gap-2.5">
+              <LineHeaderAccent />
+              <span className="font-display text-lg font-bold tracking-[0.06em] text-white sm:text-xl">
+                {n}. LAJNA
+              </span>
+            </div>
+            <span className="rounded border border-white/10 bg-white/[0.04] px-2 py-0.5 font-display text-[9px] font-bold uppercase tracking-[0.18em] text-white/45">
+              Line {n}
             </span>
           </div>
-          <span className="rounded border border-white/10 bg-white/[0.04] px-2 py-0.5 font-display text-[9px] font-bold uppercase tracking-[0.18em] text-white/45">
-            Line {n}
-          </span>
-        </div>
+        )}
 
         <div className="mx-auto grid w-full max-w-md grid-cols-1 gap-x-2 gap-y-4 sm:max-w-none sm:grid-cols-3 sm:gap-y-1 sm:gap-x-4">
           <Slot
@@ -1013,8 +1469,8 @@ export function LineBuilder({
         </div>
 
         {i === 3 ? (
-          <div className="border-t border-white/[0.06] pt-4">
-            <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.2em] text-white/40">
+          <div className={fifa ? "fifa-line-block__divider" : "border-t border-white/[0.06] pt-4"}>
+            <p className={fifa ? "fifa-line-block__sub" : "mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.2em] text-white/40"}>
               13. útočník (X) — součást základních 20 bruslařů
             </p>
             <div className="mx-auto flex max-w-[10rem] justify-center">
@@ -1036,21 +1492,21 @@ export function LineBuilder({
                 }
               />
             </div>
-            <p className="mt-2 text-center text-[10px] leading-relaxed text-white/35">
+            <p className={`mt-2 text-center text-[10px] leading-relaxed ${fifa ? "text-[var(--fifa-text-muted)]" : "text-white/35"}`}>
               Čtrnáctý útočník je náhradník v sekci pod základem — tady máš třináctého v základní dvacítce bruslařů.
             </p>
           </div>
         ) : null}
 
         {i < 3 ? (
-          <div className="border-t border-white/[0.06] pt-4">
-            <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40">
+          <div className={fifa ? "fifa-line-block__divider" : "border-t border-white/[0.06] pt-4"}>
+            <p className={fifa ? "fifa-line-block__sub" : "mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40"}>
               Obranný pár
             </p>
             <div className="mx-auto grid w-full max-w-sm grid-cols-1 gap-x-4 gap-y-4 sm:max-w-md sm:grid-cols-2">
               <Slot
                 playerId={pair.lb}
-                label="LD"
+                label="LB"
                 type="defense"
                 lineIndex={i}
                 role="lb"
@@ -1067,7 +1523,7 @@ export function LineBuilder({
               />
               <Slot
                 playerId={pair.rb}
-                label="RD"
+                label="RB"
                 type="defense"
                 lineIndex={i}
                 role="rb"
@@ -1085,8 +1541,8 @@ export function LineBuilder({
             </div>
           </div>
         ) : (
-          <div className="border-t border-white/[0.06] pt-4">
-            <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40">
+          <div className={fifa ? "fifa-line-block__divider" : "border-t border-white/[0.06] pt-4"}>
+            <p className={fifa ? "fifa-line-block__sub" : "mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/40"}>
               4. obranný řádek — sedmý bek
             </p>
             <div className="mx-auto flex max-w-[10rem] justify-center">
@@ -1108,7 +1564,7 @@ export function LineBuilder({
                 }
               />
             </div>
-            <p className="mt-3 text-center text-[10px] leading-relaxed text-white/35">
+            <p className={`mt-3 text-center text-[10px] leading-relaxed ${fifa ? "text-[var(--fifa-text-muted)]" : "text-white/35"}`}>
               Sedmý bek patří do základních 20 bruslařů. Osmého (náhradní na soupisce) doplň v sekci náhradníků níže.
             </p>
           </div>
@@ -1272,7 +1728,7 @@ export function LineBuilder({
                   <div className="mx-auto grid max-w-lg grid-cols-2 gap-2 sm:gap-3">
                     <Slot
                       playerId={pair.lb}
-                      label="LD"
+                      label="LB"
                       type="defense"
                       lineIndex={i}
                       role="lb"
@@ -1289,7 +1745,7 @@ export function LineBuilder({
                     />
                     <Slot
                       playerId={pair.rb}
-                      label="RD"
+                      label="RB"
                       type="defense"
                       lineIndex={i}
                       role="rb"
@@ -1425,12 +1881,24 @@ export function LineBuilder({
   }
 
   return (
-    <div className="min-w-0 w-full space-y-8 sm:space-y-9">
-      <div className="space-y-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 sm:space-y-9 sm:p-5">
-        <p className="text-center font-display text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 sm:text-left">
+    <div className={`min-w-0 w-full ${fifa ? "space-y-5" : "space-y-8 sm:space-y-9"}`}>
+      <div
+        className={
+          fifa
+            ? "fifa-editor-canvas-shell"
+            : "space-y-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 sm:space-y-9 sm:p-5"
+        }
+      >
+        <p
+          className={
+            fifa
+              ? "fifa-editor-canvas-shell__kicker text-center sm:text-left"
+              : "text-center font-display text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 sm:text-left"
+          }
+        >
           Základ (20 + 2)
         </p>
-        <SectionShell title="Brankáři — základ" kicker="2 × G">
+        <SectionShell variant={fifa ? "fifa" : "classic"} title="Brankáři — základ" kicker="2 × G">
           <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
             {[0, 1].map((i) => {
               const gid = lineup.goalies[i];
@@ -1461,20 +1929,26 @@ export function LineBuilder({
           title="Lajny"
           kicker="4× LW–C–RW · 13. útok u 4. lajny · u každé řady obrana — 20 bruslařů celkem"
         >
-          <div className="flex min-w-0 w-full flex-col gap-6 sm:gap-7">
+          <div className={`flex min-w-0 w-full flex-col ${fifa ? "gap-3" : "gap-6 sm:gap-7"}`}>
             {[0, 1, 2, 3].map((i) => lineBlock(i))}
           </div>
         </SectionShell>
       </div>
 
-      <div className="space-y-4">
-        <p className="text-center font-display text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 sm:text-left">
+      <div className={fifa ? "space-y-3" : "space-y-4"}>
+        <p
+          className={
+            fifa
+              ? "fifa-editor-canvas-shell__kicker text-center sm:text-left"
+              : "text-center font-display text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 sm:text-left"
+          }
+        >
           Náhradníci (3)
         </p>
-        <SectionShell title="Mimo základ 20 + 2" kicker="3. G · náhr. F · 8. bek">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-4">
-            <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
-              <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+        <SectionShell variant={fifa ? "fifa" : "classic"} title="Mimo základ 20 + 2" kicker="3. G · náhr. F · 8. bek">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
+            <div className={fifa ? "fifa-editor-slot-group" : "min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4"}>
+              <p className={fifa ? "fifa-editor-slot-group__label" : "mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45"}>
                 3. brankář
               </p>
               <div className="flex justify-center">
@@ -1496,8 +1970,8 @@ export function LineBuilder({
                 />
               </div>
             </div>
-            <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
-              <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+            <div className={fifa ? "fifa-editor-slot-group" : "min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4"}>
+              <p className={fifa ? "fifa-editor-slot-group__label" : "mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45"}>
                 Náhr. útočník
               </p>
               <div className="flex justify-center">
@@ -1519,8 +1993,8 @@ export function LineBuilder({
                 />
               </div>
             </div>
-            <div className="min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4">
-              <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+            <div className={fifa ? "fifa-editor-slot-group" : "min-w-0 rounded-lg border border-white/[0.06] bg-black/20 p-3 sm:p-4"}>
+              <p className={fifa ? "fifa-editor-slot-group__label" : "mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45"}>
                 Náhr. obránce
               </p>
               <div className="flex justify-center">
@@ -1541,7 +2015,7 @@ export function LineBuilder({
                   }
                 />
               </div>
-              <p className="mt-2 text-center text-[9px] leading-snug text-white/30">
+              <p className={`mt-2 text-center text-[9px] leading-snug ${fifa ? "text-[var(--fifa-text-muted)]" : "text-white/30"}`}>
                 Vyplň až po sedmém bekovi ve 4. obranném řádku v základu.
               </p>
             </div>
@@ -1549,9 +2023,16 @@ export function LineBuilder({
         </SectionShell>
       </div>
 
-      <p className="border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/32">
-        Klikni na slot · přidej zleva nebo přetáhni · <span className="text-[#c8102e]/85">C?</span> kapitán ·{" "}
-        <span className="text-[#003087]/90">A?</span> asistent
+      <p
+        className={
+          fifa
+            ? "text-center text-[10px] leading-relaxed text-[var(--fifa-text-muted)]"
+            : "border-t border-white/[0.06] pt-4 text-center text-[10px] leading-relaxed text-white/32"
+        }
+      >
+        Klikni na slot · přidej zleva nebo přetáhni ·{" "}
+        <span className={fifa ? "font-semibold text-[var(--fifa-accent-text)]" : "text-[#c8102e]/85"}>C?</span> kapitán ·{" "}
+        <span className={fifa ? "font-semibold text-[var(--fifa-accent-text)]" : "text-[#003087]/90"}>A?</span> asistent
       </p>
     </div>
   );

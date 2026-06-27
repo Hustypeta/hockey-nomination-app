@@ -30,21 +30,13 @@ export function ZebricekPageContent() {
 
   return (
     <div>
-      <div
-        className="mb-6 flex rounded-2xl border border-white/12 bg-white/[0.04] p-1"
-        role="tablist"
-        aria-label="Žebříček soutěží"
-      >
+      <div className="fifa-tabs" role="tablist" aria-label="Žebříček soutěží">
         <button
           type="button"
           role="tab"
           aria-selected={tab === "nominace"}
           onClick={() => selectTab("nominace")}
-          className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
-            tab === "nominace"
-              ? "bg-[#003087]/80 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
-              : "text-white/55 hover:text-white/85"
-          }`}
+          className={`fifa-tab ${tab === "nominace" ? "fifa-tab--active" : ""}`}
         >
           Nominace
         </button>
@@ -53,11 +45,7 @@ export function ZebricekPageContent() {
           role="tab"
           aria-selected={tab === "fantasy"}
           onClick={() => selectTab("fantasy")}
-          className={`flex-1 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
-            tab === "fantasy"
-              ? "bg-[#f1c40f]/20 text-[#f1e6a8] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-              : "text-white/55 hover:text-white/85"
-          }`}
+          className={`fifa-tab ${tab === "fantasy" ? "fifa-tab--active" : ""}`}
         >
           Fantasy
         </button>

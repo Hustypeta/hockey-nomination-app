@@ -75,7 +75,7 @@ function splitNameplateLinesForPoster(lastName: string): string[] {
 
 export function jerseyNameplateNameProps(
   lastName: string,
-  variant: "card" | "premium" | "poster" = "card"
+  variant: "card" | "premium" | "poster" | "rink" = "card"
 ): {
   lines: string[];
   className: string;
@@ -96,9 +96,9 @@ export function jerseyNameplateNameProps(
   const score = layoutWidthScore(lines);
   /** Dvě kratší řádky = méně horizontálního stresu → mírně větší písmo než jedna ultraúzká řádka. */
   const multilineEase = lineCount > 1 ? 1.09 : 1;
-  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = plakát — vyšší měřítko kvůli čitelnosti exportu. */
+  /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = plakát. `rink` = šablona ledu (cqh). */
   const scale =
-    variant === "premium" ? 1.12 : variant === "poster" ? 1.72 : 1.24;
+    variant === "premium" ? 1.12 : variant === "poster" ? 1.72 : variant === "rink" ? 1.38 : 1.24;
 
   /** Na exportním PNG je yoke úzký — nižší strop + nižší podlaha, aby dlouhá jména zůstala uvnitř siluety. */
   const minFs =
@@ -106,13 +106,17 @@ export function jerseyNameplateNameProps(
       ? 3.75 * scale * multilineEase
       : variant === "poster"
         ? 4.28 * scale * multilineEase
-        : 4.05 * scale * multilineEase;
+        : variant === "rink"
+          ? 5.5 * scale * multilineEase
+          : 4.05 * scale * multilineEase;
   const maxFs =
     variant === "premium"
       ? 10.2 * scale * multilineEase
       : variant === "poster"
         ? 11.65 * scale * multilineEase
-        : 11.35 * scale * multilineEase;
+        : variant === "rink"
+          ? 15.5 * scale * multilineEase
+          : 11.35 * scale * multilineEase;
 
   const low = variant === "poster" ? 2.28 : 2.85;
   const high = variant === "poster" ? 15.95 : 21.5;
@@ -157,8 +161,9 @@ export function jerseyNameplateNameProps(
  */
 export function jerseyNumberStyle(
   lastName: string,
-  variant: "card" | "premium" | "poster" = "card"
+  variant: "card" | "premium" | "poster" | "rink" = "card"
 ): CSSProperties {
+  if (variant === "rink") return {};
   const lines =
     variant === "poster" ? splitNameplateLinesForPoster(lastName.trim()) : splitNameplateLines(lastName.trim());
   const score = layoutWidthScore(lines);

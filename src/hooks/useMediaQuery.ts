@@ -2,9 +2,14 @@
 
 import { useSyncExternalStore } from "react";
 
+function getMediaQuerySnapshot(query: string): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia(query).matches;
+}
+
 /**
  * Sleduje `window.matchMedia` — pro rozvržení editoru (např. max-lg).
- * Na serveru vrací `false` (getServerSnapshot).
+ * getServerSnapshot na klientu čte skutečný viewport (kvůli hydrataci na mobilu).
  */
 export function useMediaQuery(query: string): boolean {
   return useSyncExternalStore(
@@ -14,7 +19,7 @@ export function useMediaQuery(query: string): boolean {
       mq.addEventListener("change", onStoreChange);
       return () => mq.removeEventListener("change", onStoreChange);
     },
-    () => (typeof window !== "undefined" ? window.matchMedia(query).matches : false),
-    () => false
+    () => getMediaQuerySnapshot(query),
+    () => getMediaQuerySnapshot(query)
   );
 }

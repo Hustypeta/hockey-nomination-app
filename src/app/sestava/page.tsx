@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { NominationBuilderPage } from "@/components/NominationBuilderPage";
+import { SiteShell } from "@/components/site/SiteShell";
 import {
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
@@ -39,8 +40,10 @@ export const metadata: Metadata = {
 
 export default function SestavaPage() {
   return (
-    <Suspense fallback={<SestavaLoadingFallback />}>
-      <NominationBuilderPage />
-    </Suspense>
+    <SiteShell showFooter={false}>
+      <Suspense fallback={<SestavaLoadingFallback />}>
+        <NominationBuilderPage />
+      </Suspense>
+    </SiteShell>
   );
 }

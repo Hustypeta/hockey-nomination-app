@@ -209,7 +209,7 @@ export function assignPlayerToTarget(
     const p = target.pairIndex;
     if (p < 0 || p > 3) return null;
     if (p === 3) {
-      // V nominaci je 4. pár jen LB (7. bek), RD je extraDefenseman.
+      // V nominaci je 4. pár jen LB (7. bek), RB je extraDefenseman.
       // V zápasové sestavě je 4. pár LB + RB (až 8 obránců).
       if (mode === "nomination" && target.role !== "lb") return null;
       next.defensePairs = [...next.defensePairs] as LineupStructure["defensePairs"];
@@ -390,4 +390,39 @@ export function clearPositionGroup(
   const used = lineupPlayerIds(next);
   next.assistantIds = (next.assistantIds ?? []).filter((id) => used.has(id));
   return next;
+}
+
+/**
+ * Prohodí dva hráče přímo na ploše — POUZE v rámci jedné lajny a stejného typu
+ * (útočník↔útočník v téže forwardLine, obránce↔obránce v témže páru). Jinak `null`.
+ * Záměrně nepovoluje přesun mezi lajnami, aby se sestava „nebugovala“.
+ */
+export function swapWithinLine(
+  lineup: LineupStructure,
+  from: DropTarget,
+  to: DropTarget
+): LineupStructure | null {
+  if (from.type === "forward" && to.type === "forward") {
+    if (from.lineIndex !== to.lineIndex || from.role === to.role) return null;
+    const next = cloneLineup(lineup);
+    const line = next.forwardLines[from.lineIndex];
+    if (!line) return null;
+    const a = line[from.role];
+    const b = line[to.role];
+    line[from.role] = b;
+    line[to.role] = a;
+    return next;
+  }
+  if (from.type === "defense" && to.type === "defense") {
+    if (from.pairIndex !== to.pairIndex || from.role === to.role) return null;
+    const next = cloneLineup(lineup);
+    const pair = next.defensePairs[from.pairIndex];
+    if (!pair) return null;
+    const a = pair[from.role];
+    const b = pair[to.role];
+    pair[from.role] = b;
+    pair[to.role] = a;
+    return next;
+  }
+  return null;
 }

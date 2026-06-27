@@ -4,6 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { FantasyLeaderboardRow } from "@/lib/msFantasyLeaderboard";
 import { contestRankEmoji, contestRankLabel } from "@/lib/contestRankDisplay";
+import { FIFA_LINK } from "@/lib/fifa/fifaUiClasses";
+
+function lbRowClass(rank: number, panel: boolean): string {
+  const size = panel ? "gap-2 px-2 py-2" : "gap-3 rounded-2xl px-3 py-3 sm:gap-4 sm:px-4 sm:py-3.5";
+  const podium = rank <= 3 ? "fifa-lb-row--podium" : "";
+  const first = rank === 1 ? "fifa-lb-row--first" : "";
+  return `fifa-lb-row ${size} ${podium} ${first}`.trim();
+}
 
 type LeaderboardPayload = {
   published: boolean;
@@ -13,7 +21,12 @@ type LeaderboardPayload = {
   error?: string;
 };
 
-export function FantasyLeaderboardView() {
+type FantasyLeaderboardViewProps = {
+  variant?: "page" | "panel";
+};
+
+export function FantasyLeaderboardView({ variant = "page" }: FantasyLeaderboardViewProps) {
+  const panel = variant === "panel";
   const [data, setData] = useState<LeaderboardPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
@@ -37,12 +50,18 @@ export function FantasyLeaderboardView() {
   }, []);
 
   if (loading) {
-    return <p className="py-16 text-center text-sm text-white/55">Načítám fantasy žebříček…</p>;
+    return (
+      <p className={`text-[var(--fifa-text-muted)] ${panel ? "py-10 text-xs text-center" : "py-16 text-sm text-center"}`}>
+        Načítám fantasy žebříček…
+      </p>
+    );
   }
 
   if (data?.hidden) {
     return (
-      <div className="rounded-2xl border border-white/12 bg-white/[0.03] px-6 py-10 text-center text-sm text-white/65">
+      <div
+        className={`text-center text-[var(--fifa-text-secondary)] ${panel ? "fifa-empty-state !py-8 text-[11px]" : "fifa-empty-state text-sm"}`}
+      >
         Fantasy žebříček zatím není zveřejněný.
       </div>
     );
@@ -50,7 +69,9 @@ export function FantasyLeaderboardView() {
 
   if (!data?.published || !data.updatedAt) {
     return (
-      <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-6 py-10 text-center text-sm text-amber-50">
+      <div
+        className={`text-center text-[var(--fifa-text-secondary)] ${panel ? "fifa-empty-state !py-8 text-[11px] leading-relaxed" : "fifa-empty-state text-sm"}`}
+      >
         Fantasy výsledky se zobrazí po vyhodnocení všech herních dnů.
       </div>
     );
@@ -60,12 +81,18 @@ export function FantasyLeaderboardView() {
   const updated = new Date(data.updatedAt).toLocaleString("cs-CZ");
 
   return (
-    <div className="space-y-4">
-      <p className="text-center text-xs text-white/50">
-        Celkové pořadí MS 2026 · aktualizace {updated} · {rows.length} účastníků
+    <div className={panel ? "space-y-2" : "space-y-4"}>
+      <p className={`text-[var(--fifa-text-muted)] ${panel ? "text-[10px] leading-snug" : "text-center text-xs"}`}>
+        {panel ? (
+          <>
+            {rows.length} účastníků · {updated}
+          </>
+        ) : (
+          <>Celkové pořadí MS 2026 · aktualizace {updated} · {rows.length} účastníků</>
+        )}
       </p>
 
-      <ol className="space-y-2">
+      <ol className={panel ? "space-y-1.5" : "space-y-2"}>
         {rows.map((row) => {
           const podium = row.rank <= 3;
           const emoji = contestRankEmoji(row.rank);
@@ -73,61 +100,49 @@ export function FantasyLeaderboardView() {
           const hasDays = row.days.length > 0;
 
           return (
-            <li
-              key={row.userId}
-              className={`
-                rounded-2xl border px-3 py-3 sm:px-4 sm:py-3.5
-                ${
-                  row.rank === 1
-                    ? "border-[#f1c40f]/50 bg-gradient-to-r from-[#f1c40f]/18 via-amber-500/8 to-[#c8102e]/12 shadow-[0_0_32px_rgba(241,196,15,0.12)]"
-                    : row.rank === 2
-                      ? "border-slate-300/35 bg-gradient-to-r from-slate-400/12 to-white/[0.04]"
-                      : row.rank === 3
-                        ? "border-amber-700/35 bg-gradient-to-r from-amber-800/15 to-white/[0.03]"
-                        : "border-white/10 bg-white/[0.03]"
-                }
-              `}
-            >
-              <div className="flex items-center gap-3 sm:gap-4">
+            <li key={row.userId} className={lbRowClass(row.rank, panel)}>
+              <div className={`flex items-center ${panel ? "gap-2" : "gap-3 sm:gap-4"}`}>
                 <div
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg font-black sm:h-12 sm:w-12 ${
-                    podium ? "bg-black/25" : "bg-black/20 text-white/70"
-                  }`}
+                  className={`flex shrink-0 items-center justify-center font-black ${
+                    panel ? "h-8 w-8 rounded-lg text-sm" : "h-11 w-11 rounded-xl text-lg sm:h-12 sm:w-12"
+                  } ${podium ? "bg-[var(--fifa-bg-base)] text-[var(--fifa-text)]" : "bg-[var(--fifa-bg-base)] text-[var(--fifa-text-muted)]"}`}
                   aria-hidden
                 >
                   {row.rank === 1 ? "🏆" : emoji ?? row.rank}
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-display text-base font-bold text-white sm:text-lg">
+                  <p className={`truncate font-semibold text-[var(--fifa-text)] ${panel ? "text-xs font-display" : "font-display text-base sm:text-lg"}`}>
                     <span className="sr-only">{contestRankLabel(row.rank)} </span>
                     {row.displayName}
                   </p>
                 </div>
 
                 <div className="shrink-0 text-right">
-                  <p className="font-display text-2xl font-black tabular-nums text-white sm:text-3xl">{row.totalPoints}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/45">bodů</p>
+                  <p className={`font-display font-bold tabular-nums text-[var(--fifa-text)] ${panel ? "text-lg leading-none" : "text-2xl sm:text-3xl"}`}>
+                    {row.totalPoints}
+                  </p>
+                  {!panel ? <p className="fifa-meta font-semibold uppercase tracking-wide">bodů</p> : null}
                 </div>
               </div>
 
-              {hasDays ? (
+              {!panel && hasDays ? (
                 <button
                   type="button"
                   onClick={() => setExpandedUserId(expanded ? null : row.userId)}
-                  className="mt-2 text-[11px] font-semibold text-cyan-300/90 hover:text-cyan-200"
+                  className="fifa-btn-ghost mt-2 !px-0 text-[var(--fifa-accent-text)]"
                   aria-expanded={expanded}
                 >
                   {expanded ? "Skrýt rozpis po dnech" : "Rozpis po dnech"}
                 </button>
               ) : null}
 
-              {expanded && hasDays ? (
-                <ul className="mt-2 space-y-1 border-t border-white/[0.08] pt-2 text-xs text-white/60">
+              {!panel && expanded && hasDays ? (
+                <ul className="mt-2 space-y-1 border-t border-[var(--fifa-border)] pt-2 text-xs text-[var(--fifa-text-secondary)]">
                   {row.days.map((d) => (
                     <li key={d.slug} className="flex justify-between gap-3 tabular-nums">
                       <span>{d.title}</span>
-                      <span className="font-semibold text-cyan-200/90">{d.points} b</span>
+                      <span className="font-semibold text-[var(--fifa-accent-text)]">{d.points} b</span>
                     </li>
                   ))}
                 </ul>
@@ -137,12 +152,20 @@ export function FantasyLeaderboardView() {
         })}
       </ol>
 
-      <p className="text-center text-xs text-white/45">
-        Chceš upravit přezdívku ve výsledcích?{" "}
-        <Link href="/ucet" className="text-cyan-200/90 underline-offset-2 hover:underline">
-          Můj účet
-        </Link>
-      </p>
+      {!panel ? (
+        <p className="fifa-meta text-center">
+          Chceš upravit přezdívku ve výsledcích?{" "}
+          <Link href="/ucet" className={FIFA_LINK}>
+            Můj účet
+          </Link>
+        </p>
+      ) : (
+        <p className="fifa-meta text-center">
+          <Link href="/ucet" className={FIFA_LINK}>
+            Přezdívka v účtu
+          </Link>
+        </p>
+      )}
     </div>
   );
 }
