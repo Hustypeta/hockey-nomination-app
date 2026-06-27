@@ -41,6 +41,8 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
   const navItems = buildFifaAppNav(designPreview);
   const panelId = "fifa-top-nav-mobile-panel";
   const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const activeItem = navItems.find((item) => isFifaNavItemActive(pathname, item)) ?? navItems[0]!;
@@ -49,6 +51,15 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
+
+  // Blur any focused element inside the panel before it becomes aria-hidden
+  useEffect(() => {
+    if (!mobileOpen && panelRef.current) {
+      const focused = panelRef.current.querySelector<HTMLElement>(":focus");
+      if (focused) focused.blur();
+      toggleRef.current?.focus({ preventScroll: true });
+    }
+  }, [mobileOpen]);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -93,6 +104,7 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
     <div ref={rootRef} className="relative z-[50] shrink-0 border-t border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)]">
       <div className="fifa-top-nav-mobile lg:hidden">
         <button
+          ref={toggleRef}
           type="button"
           className="fifa-top-nav-mobile__toggle"
           aria-expanded={mobileOpen}
@@ -112,6 +124,7 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
         </button>
 
         <div
+          ref={panelRef}
           id={panelId}
           className={`fifa-top-nav-mobile__panel ${mobileOpen ? "fifa-top-nav-mobile__panel--open" : ""}`}
           aria-hidden={!mobileOpen}
