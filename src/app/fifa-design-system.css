@@ -1921,16 +1921,10 @@ body:has(.fifa-design-viewport) {
 }
 
 /* ─── Soutěže hub grid ─── */
+/* Sloupce jsou řízeny Tailwind utility třídami (grid-cols-*), tady jen gap/výška */
 .fifa-souteze-hub-grid {
-  display: grid;
-  gap: 0.75rem;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 1024px) {
-  .fifa-souteze-hub-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  min-height: 0;
+  flex: 1 1 0;
 }
 
 /* ─── Tabulka ─── */
@@ -2938,4 +2932,146 @@ body:has(.fifa-design-viewport) {
 /* ─── Skryj ambient za FIFA viewportem ─── */
 body:has(.fifa-app-viewport) .frozen-arena-ambient {
   visibility: hidden;
+}
+
+/* ─── Rink template slot — jersey overrides ─── */
+.fifa-rink-template__slot--bench .fifa-rink-slot__caption-name {
+  font-size: clamp(0.58rem, 14cqh, 0.82rem);
+}
+
+.fifa-rink-template__slot--bench .fifa-rink-slot__caption-label {
+  font-size: clamp(0.5rem, 11cqh, 0.68rem);
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey.jersey-slot-root {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey .fifa-rink-jersey__figure {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey .squad-ice-fill {
+  gap: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  height: 100%;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey .squad-ice-fill > div:first-child {
+  display: none;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+  transform: scale(1.06);
+  transform-origin: center 40%;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey__name {
+  font-size: clamp(1.1rem, 12cqh, 2rem) !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.02 !important;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey__number {
+  font-size: clamp(1.9rem, 30cqh, 4rem) !important;
+  line-height: 0.92 !important;
+}
+
+.fifa-rink-template__slot--goalie .fifa-rink-jersey__number {
+  font-size: clamp(1.7rem, 27cqh, 3.6rem) !important;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey__empty-label {
+  font-size: clamp(0.9rem, 9cqh, 1.5rem);
+}
+
+/* ─── Bench slot ─── */
+.fifa-rink-template__slot--bench {
+  z-index: 4;
+}
+
+.fifa-rink-template__slot--bench::before {
+  content: attr(data-bench-label);
+  position: absolute;
+  bottom: calc(100% + 3px);
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  padding: 0.18em 0.55em;
+  border: 1px solid rgba(34, 211, 238, 0.38);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(10, 16, 30, 0.96) 0%, rgba(4, 8, 18, 0.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(30, 107, 255, 0.1) inset,
+    0 2px 6px rgba(0, 0, 0, 0.45),
+    0 0 8px rgba(34, 211, 238, 0.1);
+  font-size: clamp(0.42rem, 2.4cqw, 0.58rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(34, 211, 238, 0.88);
+  pointer-events: none;
+}
+
+/* ─── Match rink bench area ─── */
+.fifa-match-rink__bench {
+  display: none;
+}
+
+.fifa-match-rink__bench-label {
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-match-rink__bench-slots {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.fifa-match-rink__bench-slots--multi {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 18rem;
+  margin-inline: auto;
+}
+
+.fifa-match-rink__bench .fifa-rink-slot-host {
+  width: auto;
+  height: auto;
+  max-width: 5.5rem;
+}
+
+.fifa-match-rink__bench .fifa-rink-jersey.jersey-slot-root {
+  max-width: 5.5rem !important;
+}
+
+.fifa-match-rink__bench .fifa-rink-jersey .squad-ice-fill {
+  padding: 0.25rem;
+  border: 1px solid var(--fifa-border);
+  background: var(--fifa-bg-base);
+}
+
+.fifa-match-rink__bench .fifa-rink-jersey .squad-ice-fill > div:first-child {
+  display: flex;
 }
