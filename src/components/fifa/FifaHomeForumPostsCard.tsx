@@ -69,7 +69,7 @@ export function FifaHomeForumPostsCard() {
   };
 
   return (
-    <div className="fifa-card fifa-card--interactive relative flex h-full min-h-0 flex-col overflow-hidden">
+    <div className="fifa-card fifa-card--interactive fifa-home-forum-card relative flex h-full min-h-0 flex-col overflow-hidden">
       <MessagesSquare className="fifa-card-watermark h-24 w-24" aria-hidden />
       <div className="fifa-card-header relative z-10">
         <p className="fifa-kicker flex items-center gap-2">

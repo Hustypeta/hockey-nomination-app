@@ -101,7 +101,7 @@ export function FifaGlobalSearch() {
   };
 
   return (
-    <div ref={wrapRef} className="relative mx-auto hidden min-w-0 max-w-xs flex-1 md:block lg:max-w-sm">
+    <div ref={wrapRef} className="fifa-global-search relative mx-auto hidden min-w-0 max-w-xs flex-1 md:block lg:max-w-sm">
       <div className="flex items-center gap-2 rounded-[var(--fifa-radius-md)] border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] px-3 py-2 text-xs text-[var(--fifa-text-muted)] focus-within:border-[var(--fifa-border-strong)]">
         <Search className="h-3.5 w-3.5 shrink-0 opacity-60" aria-hidden />
         <input
@@ -121,7 +121,7 @@ export function FifaGlobalSearch() {
       </div>
 
       {open && results.length > 0 ? (
-        <div className="absolute left-0 right-0 top-[calc(100%+0.4rem)] z-50 overflow-hidden rounded-[var(--fifa-radius-md)] border border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)] shadow-xl">
+        <div className="fifa-global-search__panel absolute left-0 right-0 top-[calc(100%+0.4rem)] overflow-hidden rounded-[var(--fifa-radius-md)] border border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)] shadow-xl">
           <ul className="max-h-[60vh] overflow-y-auto py-1">
             {results.map((r, i) => {
               const Icon = r.icon ?? Search;

@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 
-import { useCallback, useEffect, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 
 import { ChevronRight, Flag } from "lucide-react";
 
@@ -123,8 +123,7 @@ const SOUTEZE_PREVIEWS: SoutezPreview[] = [
 
 
 const ROTATE_MS = 5500;
-
-
+const HOVER_DELAY_MS = 380;
 
 function SoutezSlideArt({
 
@@ -203,57 +202,56 @@ function SoutezSlideArt({
 export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean }) {
 
   const [index, setIndex] = useState(0);
-
   const [fade, setFade] = useState(true);
-
   const [paused, setPaused] = useState(false);
-
   const [repreMenuOpen, setRepreMenuOpen] = useState(false);
-
+  const [hoverActive, setHoverActive] = useState(false);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const showArrows = SOUTEZE_PREVIEWS.length > 1;
 
+  const cancelHoverTimer = useCallback(() => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  }, []);
 
+  const clearHover = useCallback(() => {
+    cancelHoverTimer();
+    setHoverActive(false);
+  }, [cancelHoverTimer]);
+
+  const scheduleHover = useCallback(() => {
+    cancelHoverTimer();
+    hoverTimerRef.current = setTimeout(() => {
+      setHoverActive(true);
+    }, HOVER_DELAY_MS);
+  }, [cancelHoverTimer]);
 
   const goToIndex = useCallback(
-
     (next: number) => {
-
       const i = ((next % SOUTEZE_PREVIEWS.length) + SOUTEZE_PREVIEWS.length) % SOUTEZE_PREVIEWS.length;
-
       if (i === index) return;
 
+      clearHover();
       setFade(false);
-
       setTimeout(() => {
-
         setIndex(i);
-
         setFade(true);
-
       }, 200);
-
     },
-
-    [index],
-
+    [clearHover, index],
   );
 
-
-
   const step = useCallback(
-
     (delta: number) => (e: MouseEvent<HTMLButtonElement>) => {
-
       e.preventDefault();
-
       e.stopPropagation();
-
+      e.currentTarget.blur();
+      clearHover();
       goToIndex(index + delta);
-
     },
-
-    [goToIndex, index],
-
+    [clearHover, goToIndex, index],
   );
 
 
@@ -291,10 +289,11 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
 
   useEffect(() => {
-
     setRepreMenuOpen(false);
+    clearHover();
+  }, [clearHover, index]);
 
-  }, [index]);
+  useEffect(() => () => cancelHoverTimer(), [cancelHoverTimer]);
 
 
 
@@ -317,16 +316,17 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
       className={`fifa-card fifa-card--interactive fifa-home-souteze-carousel group relative flex h-full min-h-[5.5rem] flex-col overflow-hidden lg:min-h-0 ${
 
         hasHeroLayout
-
-          ? `fifa-card-hero fifa-repre-hub-card fifa-hub-menu-card fifa-home-souteze-repre fifa-home-souteze-repre--touch${isPreparing ? " fifa-hub-menu-card--preparing" : ""}${repreMenuOpen ? " fifa-hub-menu-card--menu-open" : ""}`
-
+          ? `fifa-card-hero fifa-repre-hub-card fifa-hub-menu-card fifa-home-souteze-repre${hasHoverMenu ? " fifa-home-souteze-repre--touch" : ""}${isPreparing ? " fifa-hub-menu-card--preparing" : ""}${repreMenuOpen ? " fifa-hub-menu-card--menu-open" : ""}${hoverActive ? " fifa-hub-menu-card--hover-active" : ""}`
           : ""
-
       } ${compact ? "p-3" : "p-4 lg:p-5"}`}
-
-      onMouseEnter={() => setPaused(true)}
-
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => {
+        setPaused(true);
+        if (hasHoverMenu) scheduleHover();
+      }}
+      onMouseLeave={() => {
+        setPaused(false);
+        clearHover();
+      }}
 
     >
 
@@ -403,18 +403,16 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
       >
 
         <div className="fifa-home-souteze-chrome">
-
-          <p className="fifa-kicker fifa-home-souteze-kicker flex items-center gap-2">
-
-            <span className="fifa-icon-chip">
-
-              <Flag className="h-3.5 w-3.5" aria-hidden />
-
+          <Link
+            href="/souteze"
+            className="fifa-home-souteze-kicker-cta"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="fifa-home-souteze-kicker-cta__icon" aria-hidden>
+              <Flag className="h-3.5 w-3.5" />
             </span>
-
             Soutěže
-
-          </p>
+          </Link>
 
           {showArrows ? (
 

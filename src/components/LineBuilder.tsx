@@ -1250,7 +1250,7 @@ export function LineBuilder({
                 : "flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3 sm:flex-row sm:items-center sm:justify-between"
             }
           >
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-nowrap items-center gap-2 min-w-0">
               <span className={fifa ? "fifa-editor-match-controls__label" : "text-[10px] font-bold uppercase tracking-[0.22em] text-white/55"}>
                 Nastavení zápasu
               </span>
@@ -1278,21 +1278,31 @@ export function LineBuilder({
               </div>
             </div>
 
-            <label
-              className={
-                fifa
-                  ? "flex items-center justify-between gap-3 rounded-md border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] px-3 py-2 text-xs font-medium text-[var(--fifa-text-secondary)] sm:justify-start"
-                  : "flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5 text-xs font-semibold text-white/80 sm:justify-start"
-              }
-            >
-              <span>13. útočník</span>
-              <input
-                type="checkbox"
-                disabled={controlsDisabled}
-                checked={matchAllowExtraForward}
-                onChange={(e) => onMatchAllowExtraForwardChange?.(e.target.checked)}
-              />
-            </label>
+            {fifa ? (
+              <label className="fifa-editor-match-toggle">
+                <input
+                  type="checkbox"
+                  className="fifa-editor-match-toggle__input sr-only"
+                  disabled={controlsDisabled}
+                  checked={matchAllowExtraForward}
+                  onChange={(e) => onMatchAllowExtraForwardChange?.(e.target.checked)}
+                />
+                <span className="fifa-editor-match-toggle__track" aria-hidden>
+                  <span className="fifa-editor-match-toggle__thumb" />
+                </span>
+                <span>13. útočník</span>
+              </label>
+            ) : (
+              <label className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5 text-xs font-semibold text-white/80 sm:justify-start">
+                <span>13. útočník</span>
+                <input
+                  type="checkbox"
+                  disabled={controlsDisabled}
+                  checked={matchAllowExtraForward}
+                  onChange={(e) => onMatchAllowExtraForwardChange?.(e.target.checked)}
+                />
+              </label>
+            )}
           </div>
         ) : null}
 

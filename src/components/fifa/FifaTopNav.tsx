@@ -101,7 +101,7 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
         onClick={() => setMobileOpen(false)}
       />
 
-    <div ref={rootRef} className="relative z-[50] shrink-0 border-t border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)]">
+    <div ref={rootRef} className="relative z-40 shrink-0 border-t border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)]">
       <div className="fifa-top-nav-mobile lg:hidden">
         <button
           ref={toggleRef}

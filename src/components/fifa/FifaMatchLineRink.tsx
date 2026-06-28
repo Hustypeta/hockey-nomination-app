@@ -95,8 +95,8 @@ export function FifaMatchLineRink({
     [hasDefense, defenseSolo]
   );
 
-  const goPrev = () => onActiveLineChange(Math.max(0, activeLine - 1));
-  const goNext = () => onActiveLineChange(Math.min(lineCount - 1, activeLine + 1));
+  const goPrev = () => onActiveLineChange((activeLine - 1 + lineCount) % lineCount);
+  const goNext = () => onActiveLineChange((activeLine + 1) % lineCount);
 
   return (
     <div className="fifa-match-rink flex min-h-0 flex-1 flex-col">
@@ -105,7 +105,6 @@ export function FifaMatchLineRink({
           type="button"
           className="fifa-line-pager__arrow"
           onClick={goPrev}
-          disabled={activeLine === 0}
           aria-label="Předchozí lajna"
         >
           <ChevronLeft className="h-5 w-5" aria-hidden />
@@ -128,7 +127,6 @@ export function FifaMatchLineRink({
           type="button"
           className="fifa-line-pager__arrow"
           onClick={goNext}
-          disabled={activeLine === lineCount - 1}
           aria-label="Další lajna"
         >
           <ChevronRight className="h-5 w-5" aria-hidden />
