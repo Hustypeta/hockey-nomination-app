@@ -213,6 +213,23 @@ export function sideCropCanvas(
   return out;
 }
 
+export function resizeCanvasTo(
+  source: HTMLCanvasElement,
+  targetW: number,
+  targetH: number
+): HTMLCanvasElement {
+  if (source.width === targetW && source.height === targetH) return source;
+  const out = document.createElement("canvas");
+  out.width = targetW;
+  out.height = targetH;
+  const ctx = out.getContext("2d");
+  if (!ctx) return source;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(source, 0, 0, targetW, targetH);
+  return out;
+}
+
 export function downloadDataUrl(dataUrl: string, filename: string) {
   const a = document.createElement("a");
   a.href = dataUrl;

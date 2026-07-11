@@ -35,12 +35,16 @@ export function parseLivesportHokejNews(html: string, pageUrl: string): ParsedRs
     const title = decodeHtmlEntities(titleRaw);
     if (!title) continue;
 
+    const block = match[0];
+    const imgMatch = block.match(/<img[^>]+src=["']([^"']+)["']/i);
+    const imageUrl = imgMatch?.[1] ? toAbsoluteUrl(pageUrl, imgMatch[1]) : null;
+
     items.push({
       title,
       link: toAbsoluteUrl(pageUrl, href),
-      description: title,
+      description: "",
       pubDate: new Date(Date.now() - items.length * 60_000).toISOString(),
-      imageUrl: null,
+      imageUrl,
     });
   }
 
@@ -77,12 +81,17 @@ export function parseNhlCsCzechPlayersNews(html: string, pageUrl: string): Parse
     const title = decodeHtmlEntities(titleRaw);
     if (!title) continue;
 
+    const imgMatch =
+      block.match(/<img[^>]+src=["']([^"']+)["']/i) ??
+      block.match(/data-src=["']([^"']+)["']/i);
+    const imageUrl = imgMatch?.[1] ? toAbsoluteUrl(pageUrl, imgMatch[1]) : null;
+
     items.push({
       title,
       link: toAbsoluteUrl(pageUrl, href),
-      description: title,
+      description: "",
       pubDate: new Date(Date.now() - items.length * 60_000).toISOString(),
-      imageUrl: null,
+      imageUrl,
     });
   }
 

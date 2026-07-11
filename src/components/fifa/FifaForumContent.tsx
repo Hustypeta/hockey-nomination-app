@@ -1,14 +1,23 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import { Loader2, MessagesSquare, Plus, RefreshCw } from "lucide-react";
+import {
+  Clock,
+  Loader2,
+  MessagesSquare,
+  PenLine,
+  Plus,
+  RefreshCw,
+  Search,
+  Tags,
+} from "lucide-react";
 import { toast } from "sonner";
 import { FifaAppPage } from "@/components/fifa/FifaAppPage";
-import { CommunityPostCard } from "@/components/komunita/CommunityPostCard";
+import { ForumFeedCarousel } from "@/components/fifa/ForumFeedCarousel";
+import { CommunityPostCard, COMMUNITY_SORT_ICONS } from "@/components/komunita/CommunityPostCard";
+import { CommunityPostDetailModal } from "@/components/komunita/CommunityPostDetailModal";
 import { NewPostModal } from "@/components/komunita/NewPostModal";
-import { PostDetailPanel } from "@/components/komunita/PostDetailPanel";
 import {
   COMMUNITY_CATEGORY_LABELS,
   COMMUNITY_CATEGORY_ORDER,
@@ -16,37 +25,60 @@ import {
   type CommunitySortMode,
 } from "@/lib/community/categories";
 import type { CommunityPostCategory } from "@prisma/client";
-import type { CommunityPostDto } from "@/lib/community/types";
+import type { CommunityCommentDto, CommunityPostDto } from "@/lib/community/types";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
-import {
-  FIFA_BTN_PRIMARY,
-  FIFA_BTN_SECONDARY,
-  FIFA_INPUT,
-  FIFA_KICKER,
-  FIFA_SELECT,
-} from "@/lib/fifa/fifaUiClasses";
+import { useContestStats } from "@/hooks/useContestStats";
+import { FIFA_BTN_SECONDARY } from "@/lib/fifa/fifaUiClasses";
 import type { Player } from "@/types";
 
 const FORUM_API = "/api/forum";
 
-export function FifaForumContent() {
-  const searchParams = useSearchParams();
-  const initialPost = searchParams.get("post")?.trim() || null;
+function formatCs(n: number): string {
+  return new Intl.NumberFormat("cs-CZ").format(n);
+}
 
-  const { status } = useSession();
+export function FifaForumContent() {
+  const { data: session, status } = useSession();
+  const { communityUsersCount } = useContestStats();
+
   const [posts, setPosts] = useState<CommunityPostDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState<CommunitySortMode>("new");
   const [category, setCategory] = useState<CommunityPostCategory | "">("");
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(initialPost);
+  const [detailSlug, setDetailSlug] = useState<string | null>(null);
+  const [commentsBySlug, setCommentsBySlug] = useState<Record<string, CommunityCommentDto[]>>({});
+  const [commentsLoadingSlug, setCommentsLoadingSlug] = useState<string | null>(null);
+  const [commentTexts, setCommentTexts] = useState<Record<string, string>>({});
+  const [commentBusySlug, setCommentBusySlug] = useState<string | null>(null);
   const [newOpen, setNewOpen] = useState(false);
   const [likeBusySlug, setLikeBusySlug] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [q, setQ] = useState("");
+  const [postsThisWeek, setPostsThisWeek] = useState<number | null>(null);
+  const [adminOk, setAdminOk] = useState(false);
+
+  const detailPost = detailSlug ? posts.find((p) => p.slug === detailSlug) ?? null : null;
+
+  const pinnedPosts = useMemo(() => posts.filter((p) => p.pinnedAt), [posts]);
+  const regularPosts = useMemo(() => posts.filter((p) => !p.pinnedAt), [posts]);
+
+  const renderPostCard = (post: CommunityPostDto) => (
+    <CommunityPostCard
+      key={post.id}
+      post={post}
+      players={players}
+      onOpenDetail={() => openDetail(post.slug)}
+      onToggleLike={() => void toggleLike(post.slug)}
+      likeBusy={likeBusySlug === post.slug}
+      fifaUi
+    />
+  );
 
   useEffect(() => {
-    if (initialPost) setSelectedSlug(initialPost);
-  }, [initialPost]);
+    fetch("/api/admin/session", { credentials: "include", cache: "no-store" })
+      .then((res) => setAdminOk(res.ok))
+      .catch(() => setAdminOk(false));
+  }, []);
 
   useEffect(() => {
     fetch("/api/players")
@@ -58,6 +90,15 @@ export function FifaForumContent() {
       })
       .catch(() => setPlayers([]));
   }, []);
+
+  useEffect(() => {
+    fetch(`${FORUM_API}/stats`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d: { postsThisWeek?: number }) => {
+        setPostsThisWeek(typeof d.postsThisWeek === "number" ? d.postsThisWeek : null);
+      })
+      .catch(() => setPostsThisWeek(null));
+  }, [posts.length]);
 
   const loadPosts = useCallback(async () => {
     setLoading(true);
@@ -71,12 +112,7 @@ export function FifaForumContent() {
         toast.error(data.error ?? "Feed se nenačetl.");
         return;
       }
-      const list = data.posts ?? [];
-      setPosts(list);
-      setSelectedSlug((cur) => {
-        if (cur && list.some((p) => p.slug === cur)) return cur;
-        return list[0]?.slug ?? null;
-      });
+      setPosts(data.posts ?? []);
     } finally {
       setLoading(false);
     }
@@ -86,16 +122,58 @@ export function FifaForumContent() {
     void loadPosts();
   }, [loadPosts]);
 
-  const updatePostInList = (updated: CommunityPostDto) => {
-    setPosts((prev) =>
-      prev
-        .map((p) => (p.slug === updated.slug ? updated : p))
-        .sort((a, b) => {
-          if (a.pinnedAt && !b.pinnedAt) return -1;
-          if (!a.pinnedAt && b.pinnedAt) return 1;
-          return 0;
-        })
-    );
+  const loadComments = useCallback(async (slug: string, force = false) => {
+    if (!force && slug in commentsBySlug) return;
+    setCommentsLoadingSlug(slug);
+    try {
+      const res = await fetch(`${FORUM_API}/posts/${encodeURIComponent(slug)}/comments`, {
+        credentials: "include",
+      });
+      const data = (await res.json()) as { comments?: CommunityCommentDto[] };
+      setCommentsBySlug((prev) => ({ ...prev, [slug]: data.comments ?? [] }));
+    } finally {
+      setCommentsLoadingSlug(null);
+    }
+  }, [commentsBySlug]);
+
+  const openDetail = (slug: string) => {
+    setDetailSlug(slug);
+    void loadComments(slug);
+  };
+
+  const closeDetail = () => setDetailSlug(null);
+
+  const submitComment = async (slug: string) => {
+    const text = commentTexts[slug]?.trim();
+    if (!text) return;
+    if (status !== "authenticated") {
+      toast.error("Pro komentář se přihlas.");
+      return;
+    }
+    setCommentBusySlug(slug);
+    try {
+      const res = await fetch(`${FORUM_API}/posts/${encodeURIComponent(slug)}/comments`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bodyMd: text }),
+      });
+      const data = (await res.json()) as { comment?: CommunityCommentDto; error?: string };
+      if (!res.ok || !data.comment) {
+        toast.error(data.error ?? "Komentář se nepodařil.");
+        return;
+      }
+      setCommentsBySlug((prev) => ({
+        ...prev,
+        [slug]: [...(prev[slug] ?? []), data.comment!],
+      }));
+      setCommentTexts((prev) => ({ ...prev, [slug]: "" }));
+      setPosts((prev) =>
+        prev.map((p) => (p.slug === slug ? { ...p, commentCount: p.commentCount + 1 } : p)),
+      );
+    } finally {
+      setCommentBusySlug(null);
+    }
   };
 
   const toggleLike = async (slug: string) => {
@@ -117,147 +195,247 @@ export function FifaForumContent() {
       setPosts((prev) =>
         prev.map((p) =>
           p.slug === slug
-            ? {
-                ...p,
-                likedByMe: !!data.liked,
-                likeCount: data.likeCount ?? p.likeCount,
-              }
-            : p
-        )
+            ? { ...p, likedByMe: !!data.liked, likeCount: data.likeCount ?? p.likeCount }
+            : p,
+        ),
       );
     } finally {
       setLikeBusySlug(null);
     }
   };
 
+  const deletePost = async (slug: string) => {
+    if (!confirm("Smazat tento příspěvek?")) return;
+    const res = await fetch(`${FORUM_API}/posts/${encodeURIComponent(slug)}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      toast.error("Smazání selhalo.");
+      return;
+    }
+    toast.success("Příspěvek smazán.");
+    setPosts((prev) => prev.filter((p) => p.slug !== slug));
+    closeDetail();
+  };
+
   return (
-    <FifaAppPage className="!py-2 lg:!py-2.5">
-      <div className="fifa-viewport-page w-full max-w-none">
-        <div className="fifa-viewport-page-header flex shrink-0 flex-wrap items-end justify-between gap-2">
-          <div className="fifa-page-heading min-w-0">
-            <p className={`${FIFA_KICKER} flex items-center gap-1.5`}>
-              <MessagesSquare className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              Komunita
-            </p>
-            <h1>Fórum</h1>
-            <p>Sdílení nominací, fantasy sestav a diskuze k MS 2026.</p>
-          </div>
-          <div className="flex shrink-0 flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => void loadPosts()}
-              className={FIFA_BTN_SECONDARY}
-              aria-label="Obnovit feed"
-            >
-              <RefreshCw className={`inline h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-            </button>
-            {status === "authenticated" ? (
-              <button type="button" onClick={() => setNewOpen(true)} className={FIFA_BTN_PRIMARY}>
-                <Plus className="mr-1 inline h-4 w-4" aria-hidden />
-                Nový příspěvek
-              </button>
-            ) : (
-              <button type="button" onClick={() => void signIn("google", { callbackUrl: "/forum" })} className={FIFA_BTN_SECONDARY}>
-                Přihlásit se
-              </button>
-            )}
-          </div>
-        </div>
+    <FifaAppPage className="!p-0" fillMobile fitViewport>
+      <div className="fifa-forum-page">
+        <h1 className="sr-only">Fórum</h1>
 
-        <div className="fifa-forum-toolbar mt-2 flex shrink-0 flex-wrap gap-2">
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as CommunitySortMode)}
-            className={FIFA_SELECT}
-            aria-label="Řazení"
-          >
-            {(Object.keys(COMMUNITY_SORT_LABELS) as CommunitySortMode[]).map((s) => (
-              <option key={s} value={s}>
-                {COMMUNITY_SORT_LABELS[s]}
-              </option>
-            ))}
-          </select>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value as CommunityPostCategory | "")}
-            className={FIFA_SELECT}
-            aria-label="Kategorie"
-          >
-            <option value="">Všechny kategorie</option>
-            {COMMUNITY_CATEGORY_ORDER.map((c) => (
-              <option key={c} value={c}>
-                {COMMUNITY_CATEGORY_LABELS[c]}
-              </option>
-            ))}
-          </select>
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Hledat…"
-            className={`${FIFA_INPUT} min-w-[10rem] flex-1`}
-          />
-        </div>
-
-        <div className="fifa-forum-grid fifa-viewport-page-body--scroll-mobile mt-2 min-h-0 flex-1">
-          <div className="fifa-panel-scroll min-h-0 space-y-2 pr-0.5 lg:pr-1">
-            {loading && posts.length === 0 ? (
-              <div className="flex items-center justify-center py-16 text-[var(--fifa-text-muted)]">
-                <Loader2 className="h-6 w-6 animate-spin" />
+        <div className="fifa-forum-layout">
+          <main className="fifa-forum-feed">
+            <div className="fifa-forum-feed-stage">
+              <div className="fifa-forum-feed-stage__toolbar">
+                <button
+                  type="button"
+                  onClick={() => void loadPosts()}
+                  className={`${FIFA_BTN_SECONDARY} fifa-forum-stage-tool !px-2.5 !py-2`}
+                  aria-label="Obnovit feed"
+                >
+                  <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+                </button>
               </div>
-            ) : posts.length === 0 ? (
-              <div className="fifa-empty-state">
-                <MessagesSquare className="mx-auto h-8 w-8 text-[var(--fifa-text-muted)]" aria-hidden />
-                <p className="mt-2 text-sm">Zatím žádné příspěvky.</p>
-                {status === "authenticated" ? (
-                  <button type="button" onClick={() => setNewOpen(true)} className={`mt-4 ${FIFA_BTN_PRIMARY}`}>
-                    Vytvořit první příspěvek
-                  </button>
-                ) : null}
-              </div>
-            ) : (
-              posts.map((post) => (
-                <CommunityPostCard
-                  key={post.id}
-                  post={post}
-                  players={players}
-                  selected={selectedSlug === post.slug}
-                  onSelect={() => setSelectedSlug(post.slug)}
-                  onToggleLike={() => void toggleLike(post.slug)}
-                  likeBusy={likeBusySlug === post.slug}
-                  fifaUi
-                />
-              ))
-            )}
-          </div>
 
-          <aside className="fifa-card flex min-h-0 min-w-0 flex-col overflow-hidden">
-            <div className="fifa-card-header">
-              <p className={FIFA_KICKER}>Detail příspěvku</p>
+              <div className="fifa-forum-feed-stage__body">
+                {loading && posts.length === 0 ? (
+                  <div className="fifa-forum-feed-stage__column fifa-forum-feed-stage__column--fit">
+                    <div className="fifa-forum-empty">
+                      <Loader2 className="h-6 w-6 animate-spin text-[var(--fifa-text-muted)]" />
+                    </div>
+                  </div>
+                ) : posts.length === 0 ? (
+                  status === "authenticated" && !q.trim() && !category ? (
+                    <div className="fifa-forum-feed-stage__column fifa-forum-feed-stage__column--fit">
+                      <button type="button" onClick={() => setNewOpen(true)} className="fifa-forum-compose-frame">
+                        <span className="fifa-forum-compose-frame__icon" aria-hidden>
+                          <PenLine className="h-6 w-6" />
+                        </span>
+                        <span className="fifa-forum-compose-frame__label">Nový příspěvek</span>
+                        <span className="fifa-forum-compose-frame__hint">Sdílej sestavu, nominaci nebo diskuzi</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="fifa-forum-feed-stage__column fifa-forum-feed-stage__column--fit">
+                      <div className="fifa-forum-empty">
+                        <MessagesSquare className="h-8 w-8 text-[var(--fifa-accent-text)]" aria-hidden />
+                        <p className="mt-3 font-display text-base font-semibold text-[var(--fifa-text)]">
+                          {q.trim() || category ? "Nic nenalezeno" : "Zatím žádné příspěvky"}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                ) : (
+                  <div className="fifa-forum-feed-stage__split">
+                    <section className="fifa-forum-feed-column fifa-forum-feed-column--pinned" aria-label="Připnuté příspěvky">
+                      <p className="fifa-forum-feed-column__label">Připnuto</p>
+                      {pinnedPosts.length === 0 ? (
+                        <div className="fifa-forum-feed-column__empty">
+                          <p>Žádné připnuté příspěvky</p>
+                        </div>
+                      ) : (
+                        <ForumFeedCarousel itemCount={pinnedPosts.length} ariaLabel="Připnuté příspěvky">
+                          {pinnedPosts.map(renderPostCard)}
+                        </ForumFeedCarousel>
+                      )}
+                    </section>
+
+                    <section className="fifa-forum-feed-column fifa-forum-feed-column--feed" aria-label="Příspěvky">
+                      <p className="fifa-forum-feed-column__label">Příspěvky</p>
+                      {regularPosts.length === 0 ? (
+                        <div className="fifa-forum-feed-column__empty">
+                          <p>Všechny příspěvky jsou připnuté</p>
+                        </div>
+                      ) : (
+                        <ForumFeedCarousel itemCount={regularPosts.length} ariaLabel="Příspěvky">
+                          {regularPosts.map(renderPostCard)}
+                        </ForumFeedCarousel>
+                      )}
+                    </section>
+
+                    {status === "authenticated" ? (
+                      <button
+                        type="button"
+                        onClick={() => setNewOpen(true)}
+                        className="fifa-forum-stage-fab xl:hidden"
+                        aria-label="Nový příspěvek"
+                      >
+                        <Plus className="h-5 w-5" aria-hidden />
+                      </button>
+                    ) : null}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="fifa-panel-scroll min-h-0 flex-1 p-3 lg:p-4">
-              {selectedSlug ? (
-                <PostDetailPanel
-                  slug={selectedSlug}
-                  players={players}
-                  onPostUpdated={updatePostInList}
-                  onDeleted={() => {
-                    setSelectedSlug(null);
-                    void loadPosts();
-                  }}
-                  fifaUi
-                />
-              ) : (
-                <p className="text-sm text-[var(--fifa-text-muted)]">Vyber příspěvek ze seznamu vlevo.</p>
-              )}
+          </main>
+
+          <aside className="fifa-forum-sidebar">
+            <div className="fifa-forum-sidebar__sticky">
+              <div className="fifa-forum-sidebar__section">
+                <h2 className="fifa-forum-sidebar__heading">
+                  <Search className="h-3.5 w-3.5 text-[var(--fifa-accent-text)]" aria-hidden />
+                  Hledat
+                </h2>
+                <div className="fifa-forum-search">
+                  <Search className="fifa-forum-search__icon" aria-hidden />
+                  <input
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    placeholder="Hledat na fóru…"
+                    className="fifa-forum-search__input fifa-forum-search__input--round"
+                    aria-label="Hledat"
+                  />
+                </div>
+              </div>
+
+              <div className="fifa-forum-sidebar__section">
+                <h2 className="fifa-forum-sidebar__heading">
+                  <Clock className="h-3.5 w-3.5 text-[var(--fifa-accent-text)]" aria-hidden />
+                  Řazení
+                </h2>
+                <div className="fifa-forum-sidebar__list">
+                  {(Object.keys(COMMUNITY_SORT_LABELS) as CommunitySortMode[]).map((s) => {
+                    const Icon = COMMUNITY_SORT_ICONS[s];
+                    return (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setSort(s)}
+                        className={`fifa-forum-sidebar__item ${sort === s ? "fifa-forum-sidebar__item--active" : ""}`}
+                      >
+                        <Icon className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                        {COMMUNITY_SORT_LABELS[s]}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="fifa-forum-sidebar__section">
+                <h2 className="fifa-forum-sidebar__heading">
+                  <Tags className="h-3.5 w-3.5 text-[var(--fifa-accent-text)]" aria-hidden />
+                  Kategorie
+                </h2>
+                <div className="fifa-forum-sidebar__list">
+                  <button
+                    type="button"
+                    onClick={() => setCategory("")}
+                    className={`fifa-forum-sidebar__item ${category === "" ? "fifa-forum-sidebar__item--active" : ""}`}
+                  >
+                    Vše
+                  </button>
+                  {COMMUNITY_CATEGORY_ORDER.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setCategory(c)}
+                      className={`fifa-forum-sidebar__item ${category === c ? "fifa-forum-sidebar__item--active" : ""}`}
+                    >
+                      {COMMUNITY_CATEGORY_LABELS[c]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {communityUsersCount !== null || postsThisWeek !== null ? (
+                <p className="fifa-forum-sidebar__meta">
+                  {communityUsersCount !== null ? `${formatCs(communityUsersCount)} aktivních členů` : null}
+                  {communityUsersCount !== null && postsThisWeek !== null ? " • " : null}
+                  {postsThisWeek !== null ? `${formatCs(postsThisWeek)} příspěvků tento týden` : null}
+                </p>
+              ) : null}
+
+              <div className="fifa-forum-sidebar__cta">
+                {status === "authenticated" ? (
+                  <button type="button" onClick={() => setNewOpen(true)} className="fifa-forum-new-post-btn">
+                    <Plus className="h-4 w-4" aria-hidden />
+                    Nový příspěvek
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => void signIn("google", { callbackUrl: "/forum" })}
+                    className={`${FIFA_BTN_SECONDARY} fifa-forum-sidebar__cta-login`}
+                  >
+                    Přihlásit se
+                  </button>
+                )}
+              </div>
             </div>
           </aside>
         </div>
+
       </div>
+
+      <CommunityPostDetailModal
+        post={detailPost}
+        players={players}
+        open={!!detailSlug && !!detailPost}
+        onClose={closeDetail}
+        comments={detailSlug ? (commentsBySlug[detailSlug] ?? []) : []}
+        commentsLoading={detailSlug ? commentsLoadingSlug === detailSlug : false}
+        commentText={detailSlug ? (commentTexts[detailSlug] ?? "") : ""}
+        onCommentTextChange={(v) => detailSlug && setCommentTexts((prev) => ({ ...prev, [detailSlug]: v }))}
+        onSubmitComment={() => detailSlug && void submitComment(detailSlug)}
+        commentBusy={detailSlug ? commentBusySlug === detailSlug : false}
+        canComment={status === "authenticated"}
+        canDelete={
+          !!detailPost &&
+          (adminOk || (!!session?.user?.id && session.user.id === detailPost.author.id))
+        }
+        onDelete={() => detailSlug && void deletePost(detailSlug)}
+        onToggleLike={() => detailSlug && void toggleLike(detailSlug)}
+        likeBusy={detailSlug ? likeBusySlug === detailSlug : false}
+      />
 
       <NewPostModal
         open={newOpen}
         onClose={() => setNewOpen(false)}
         onCreated={() => void loadPosts()}
+        apiBase={FORUM_API}
+        fifaUi
+        players={players}
       />
     </FifaAppPage>
   );

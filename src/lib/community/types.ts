@@ -28,7 +28,10 @@ export type CommunityPostDto = {
     id: string;
     name: string | null;
     image: string | null;
+    displayName: string;
+    isStaff: boolean;
   };
+  isStaffPost: boolean;
   tags: { slug: string; label: string }[];
   attachments: {
     id: string;
@@ -50,6 +53,8 @@ export type CommunityCommentDto = {
     id: string;
     name: string | null;
     image: string | null;
+    displayName: string;
+    isStaff: boolean;
   };
 };
 

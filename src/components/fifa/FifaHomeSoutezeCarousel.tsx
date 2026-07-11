@@ -454,7 +454,7 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
           className={`fifa-home-souteze-body flex min-h-0 flex-1 flex-col ${
 
-            hasHeroLayout ? "justify-start gap-0" : "justify-between pt-7"
+            hasHeroLayout ? "justify-end gap-0" : "justify-between pt-7"
 
           } ${showArrows ? "fifa-home-carousel-content--nav" : ""}`}
 
@@ -466,7 +466,7 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
             hasHeroLayout
 
-              ? "fifa-repre-hero-headline fifa-repre-hero-headline--top fifa-home-souteze-repre__headline fifa-image-text-layer shrink-0 px-2"
+              ? "fifa-repre-hero-headline fifa-home-souteze-repre__headline fifa-image-text-layer shrink-0 px-2"
 
               : "min-h-0 shrink-0"
 
@@ -536,21 +536,7 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
 
 
-        {hasHoverMenu ? (
-
-          <FifaRepreMenuNav
-
-            items={CESKA_REPREZENTACE_MENU_ITEMS}
-
-            ariaLabel="Kategorie české reprezentace"
-
-            className="fifa-home-souteze-repre__menu !max-w-[min(100%,15rem)] sm:!max-w-[58%]"
-
-            onNavigate={() => setRepreMenuOpen(false)}
-
-          />
-
-        ) : isPreparing ? (
+        {hasHoverMenu ? null : isPreparing ? (
 
           <FifaPreparingHint className="fifa-home-souteze-preparing" />
 
@@ -580,6 +566,26 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
 
 
+      {hasHoverMenu ? (
+
+        <div className="fifa-home-souteze-repre__menu">
+
+          <FifaRepreMenuNav
+
+            items={CESKA_REPREZENTACE_MENU_ITEMS}
+
+            ariaLabel="Kategorie české reprezentace"
+
+            onNavigate={() => setRepreMenuOpen(false)}
+
+          />
+
+        </div>
+
+      ) : null}
+
+
+
       {showArrows ? (
 
         <FifaHomeCarouselNav
@@ -587,6 +593,8 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
           onPrev={step(-1)}
 
           onNext={step(1)}
+
+          onMouseEnter={clearHover}
 
           prevLabel="Předchozí soutěž"
 

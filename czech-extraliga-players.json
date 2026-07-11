@@ -338,7 +338,7 @@
   {
     "name": "Jan Mandát",
     "position": "F",
-    "role": "C",
+    "role": "RW",
     "club": "HC Dynamo Pardubice"
   },
   {
@@ -356,7 +356,7 @@
   {
     "name": "Tomas Vondracek",
     "position": "F",
-    "role": "LW",
+    "role": "RW",
     "club": "HC Dynamo Pardubice"
   },
   {
@@ -384,9 +384,33 @@
     "club": "HC Dynamo Pardubice"
   },
   {
+    "name": "Milos Kelemen",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
     "name": "Jiri Smejkal",
     "position": "F",
-    "role": "C",
+    "role": "LW",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Matej Stransky",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "David Tomasek",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Hunter Fejes",
+    "position": "F",
+    "role": "LW",
     "club": "HC Dynamo Pardubice"
   },
   {
@@ -410,7 +434,7 @@
   {
     "name": "Tomas Dvorak",
     "position": "D",
-    "role": "RB",
+    "role": "LB",
     "club": "HC Dynamo Pardubice"
   },
   {

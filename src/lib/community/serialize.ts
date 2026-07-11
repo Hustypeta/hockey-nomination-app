@@ -1,8 +1,39 @@
 import type { Prisma } from "@prisma/client";
 import type { CommunityAttachmentSnapshotV1, CommunityCommentDto, CommunityPostDto } from "@/lib/community/types";
+import { publicLeaderboardDisplayName } from "@/lib/publicUserLabel";
+
+export const communityAuthorSelect = {
+  id: true,
+  name: true,
+  image: true,
+  leaderboardNickname: true,
+} as const;
+
+export type CommunityAuthorRow = {
+  id: string;
+  name: string | null;
+  image: string | null;
+  leaderboardNickname: string | null;
+};
+
+export function serializeAuthor(author: CommunityAuthorRow, opts?: { isStaffPost?: boolean }) {
+  const isStaff = !!opts?.isStaffPost;
+  return {
+    id: author.id,
+    name: author.name,
+    image: isStaff ? null : author.image,
+    displayName: isStaff
+      ? "Admin"
+      : publicLeaderboardDisplayName({
+          userId: author.id,
+          nickname: author.leaderboardNickname,
+        }),
+    isStaff,
+  };
+}
 
 const postInclude = {
-  author: { select: { id: true, name: true, image: true } },
+  author: { select: communityAuthorSelect },
   tags: { include: { tag: { select: { slug: true, label: true } } } },
   attachments: { orderBy: { sortOrder: "asc" as const } },
 } satisfies Prisma.CommunityPostInclude;
@@ -17,6 +48,7 @@ export function parseSnapshot(json: unknown): CommunityAttachmentSnapshotV1 {
 }
 
 export function serializePost(row: CommunityPostRow, likedByMe: boolean): CommunityPostDto {
+  const isStaffPost = row.isStaffPost;
   return {
     id: row.id,
     slug: row.slug,
@@ -29,7 +61,8 @@ export function serializePost(row: CommunityPostRow, likedByMe: boolean): Commun
     score: row.score,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
-    author: row.author,
+    isStaffPost,
+    author: serializeAuthor(row.author, { isStaffPost }),
     tags: row.tags.map((t) => ({ slug: t.tag.slug, label: t.tag.label })),
     attachments: row.attachments.map((a) => ({
       id: a.id,
@@ -48,7 +81,7 @@ export function serializeComment(row: {
   bodyMd: string;
   likeCount: number;
   createdAt: Date;
-  author: { id: string; name: string | null; image: string | null };
+  author: CommunityAuthorRow;
 }): CommunityCommentDto {
   return {
     id: row.id,
@@ -56,7 +89,7 @@ export function serializeComment(row: {
     bodyMd: row.bodyMd,
     likeCount: row.likeCount,
     createdAt: row.createdAt.toISOString(),
-    author: row.author,
+    author: serializeAuthor(row.author, { isStaffPost: false }),
   };
 }
 

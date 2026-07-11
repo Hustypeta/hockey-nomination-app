@@ -374,8 +374,6 @@ enum CommunityPostCategory {
   FANTASY
   GENERAL
   Q_AND_A
-  MEMES
-  OFF_TOPIC
 }
 
 enum CommunityPostStatus {
@@ -399,6 +397,7 @@ model CommunityPost {
   title         String                @db.VarChar(120)
   bodyMd        String                @db.Text
   status        CommunityPostStatus   @default(PUBLISHED)
+  isStaffPost   Boolean               @default(false)
   pinnedAt      DateTime?
   likeCount     Int                   @default(0)
   commentCount  Int                   @default(0)

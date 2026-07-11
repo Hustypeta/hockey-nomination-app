@@ -7,9 +7,14 @@ export function getThrownStatus(e: unknown): number | undefined {
   const status = (e as { status?: unknown }).status;
   return typeof status === "number" ? status : undefined;
 }
-export async function requireAdminOrThrow(): Promise<void> {
+
+export async function isAdminAuthenticated(): Promise<boolean> {
   const token = (await cookies()).get(CONTEST_ADMIN_COOKIE)?.value;
-  if (!verifyAdminToken(token)) {
+  return verifyAdminToken(token);
+}
+
+export async function requireAdminOrThrow(): Promise<void> {
+  if (!(await isAdminAuthenticated())) {
     throw Object.assign(new Error("Unauthorized"), { status: 401 });
   }
 }

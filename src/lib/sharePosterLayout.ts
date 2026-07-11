@@ -11,6 +11,42 @@ export const SHARE_POSTER_WIDTH_PX = 1120;
 export const NOMINATION_WEB_POSTER_W = 1080;
 export const NOMINATION_WEB_POSTER_H = 1440;
 
+/** Instagram příspěvek — poměr 4 : 5 (1080 × 1350 px). */
+export const SHARE_POSTER_4X5_W = NOMINATION_WEB_POSTER_W;
+export const SHARE_POSTER_4X5_H = 1350;
+
+/** Forum feed — Instagram portrait 4 : 5 (referenční šířka 351 px). */
+export const FORUM_POST_FRAME_W = 351;
+export const FORUM_POST_FRAME_H = Math.round(
+  (FORUM_POST_FRAME_W * SHARE_POSTER_4X5_H) / SHARE_POSTER_4X5_W
+);
+export const FORUM_POST_FRAME_ASPECT = "4 / 5" as const;
+
+/** Měřítko plakátu tak, aby vyplnil celé forum okno (cover, mírný ořez okrajů). */
+export function computeForumPosterCoverScale(
+  frameW: number,
+  frameH: number,
+  posterW = NOMINATION_WEB_POSTER_W,
+  posterH = NOMINATION_WEB_POSTER_H
+): number {
+  if (frameW <= 0 || frameH <= 0) return 0.22;
+  return Math.max(frameW / posterW, frameH / posterH);
+}
+
+/** Měřítko plakátu tak, aby se vešel celý do forum okna (contain, bez ořezu). */
+export function computeForumPosterContainScale(
+  frameW: number,
+  frameH: number,
+  posterW = NOMINATION_WEB_POSTER_W,
+  posterH = NOMINATION_WEB_POSTER_H
+): number {
+  if (frameW <= 0 || frameH <= 0 || posterW <= 0 || posterH <= 0) return 0.22;
+  return Math.min(frameW / posterW, frameH / posterH);
+}
+
+/** Export PNG rámu fóra — 2× referenční rozměr kvůli ostrosti na Retině. */
+export const FORUM_POSTER_EXPORT_PIXEL_RATIO = 2;
+
 /** Instagram / sdílení — poměr 3 : 4 (šířka × výška). */
 export const SHARE_POSTER_3X4_W = NOMINATION_WEB_POSTER_W;
 export const SHARE_POSTER_3X4_H = NOMINATION_WEB_POSTER_H;
@@ -24,6 +60,24 @@ export const SHARE_POSTER_3X4_STYLE = {
   minWidth: SHARE_POSTER_3X4_W,
   maxWidth: SHARE_POSTER_3X4_W,
   minHeight: SHARE_POSTER_3X4_H,
+} as const;
+
+/** Celá soupiska s dresy — fixní plátno 4 : 5 pro Instagram feed. */
+export const SHARE_POSTER_ROSTER_4X5_STYLE = {
+  width: SHARE_POSTER_4X5_W,
+  height: SHARE_POSTER_4X5_H,
+  minWidth: SHARE_POSTER_4X5_W,
+  maxWidth: SHARE_POSTER_4X5_W,
+  minHeight: SHARE_POSTER_4X5_H,
+  maxHeight: SHARE_POSTER_4X5_H,
+  boxSizing: "border-box" as const,
+} as const;
+
+/** @deprecated Použij {@link SHARE_POSTER_ROSTER_4X5_STYLE}. */
+export const SHARE_POSTER_ROSTER_FLOW_STYLE = {
+  width: SHARE_POSTER_4X5_W,
+  minWidth: SHARE_POSTER_4X5_W,
+  maxWidth: SHARE_POSTER_4X5_W,
 } as const;
 
 /**

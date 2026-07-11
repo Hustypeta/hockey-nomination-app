@@ -61,7 +61,9 @@ export function FifaDailyNewsPage() {
                   <h2 className="mt-2 font-display text-lg leading-tight text-[var(--fifa-text)] group-hover:text-[var(--fifa-accent-text)]">
                     {item.title}
                   </h2>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--fifa-text-secondary)]">{item.summary}</p>
+                  {item.summary ? (
+                    <p className="mt-1.5 text-sm leading-relaxed text-[var(--fifa-text-secondary)]">{item.summary}</p>
+                  ) : null}
                   {item.publishedAt ? (
                     <p className={`${FIFA_META} mt-2`}>{new Date(item.publishedAt).toLocaleString("cs-CZ")}</p>
                   ) : null}

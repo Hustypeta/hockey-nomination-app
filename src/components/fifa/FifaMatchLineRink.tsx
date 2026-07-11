@@ -24,6 +24,8 @@ type FifaMatchLineRinkProps = {
   onActiveLineChange: (index: number) => void;
   defCount: 6 | 7 | 8;
   allowExtraForward: boolean;
+  /** Statický náhled — bez pageru, nápovědy a swipe. */
+  preview?: boolean;
   slotsForLine: (lineIndex: number) => {
     forwards: { lw: ReactNode; c: ReactNode; rw: ReactNode };
     defense: ReactNode[] | null;
@@ -71,12 +73,14 @@ export function FifaMatchLineRink({
   onActiveLineChange,
   defCount,
   allowExtraForward,
+  preview = false,
   slotsForLine,
   starterGoalie,
 }: FifaMatchLineRinkProps) {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const isMobileLayout = useMediaQuery("(max-width: 1023px)");
-  const slotLayout = isMobileLayout ? FIFA_RINK_TEMPLATE_SLOTS_MOBILE : FIFA_RINK_TEMPLATE_SLOTS;
+  const useMobileTemplate = !preview && isMobileLayout;
+  const slotLayout = useMobileTemplate ? FIFA_RINK_TEMPLATE_SLOTS_MOBILE : FIFA_RINK_TEMPLATE_SLOTS;
 
   const lineCount = 4;
   const slots = slotsForLine(activeLine);
@@ -99,7 +103,8 @@ export function FifaMatchLineRink({
   const goNext = () => onActiveLineChange((activeLine + 1) % lineCount);
 
   return (
-    <div className="fifa-match-rink flex min-h-0 flex-1 flex-col">
+    <div className={`fifa-match-rink flex min-h-0 flex-1 flex-col${preview ? " fifa-match-rink--preview" : ""}`}>
+      {!preview ? (
       <div className="fifa-line-pager shrink-0">
         <button
           type="button"
@@ -132,34 +137,45 @@ export function FifaMatchLineRink({
           <ChevronRight className="h-5 w-5" aria-hidden />
         </button>
       </div>
+      ) : null}
 
       <div
         className="fifa-match-rink__stage min-h-0 flex-1 touch-pan-y"
-        onTouchStart={(e) => setTouchStartX(e.touches[0]?.clientX ?? null)}
-        onTouchEnd={(e) => {
-          if (touchStartX == null) return;
-          const dx = (e.changedTouches[0]?.clientX ?? touchStartX) - touchStartX;
-          if (Math.abs(dx) > 48) {
-            if (dx < 0) goNext();
-            else goPrev();
-          }
-          setTouchStartX(null);
-        }}
+        onTouchStart={
+          preview
+            ? undefined
+            : (e) => setTouchStartX(e.touches[0]?.clientX ?? null)
+        }
+        onTouchEnd={
+          preview
+            ? undefined
+            : (e) => {
+                if (touchStartX == null) return;
+                const dx = (e.changedTouches[0]?.clientX ?? touchStartX) - touchStartX;
+                if (Math.abs(dx) > 48) {
+                  if (dx < 0) goNext();
+                  else goPrev();
+                }
+                setTouchStartX(null);
+              }
+        }
       >
         <div className="fifa-rink-board">
           <div className="fifa-rink-template">
             <div className="fifa-rink-template__frame">
               {/* eslint-disable-next-line @next/next/no-img-element -- pixel-perfect overlay se šablonou */}
               <picture>
-                <source
-                  media="(max-width: 1023px)"
-                  srcSet={FIFA_RINK_TEMPLATE_MOBILE_SRC}
-                />
+                {!preview ? (
+                  <source
+                    media="(max-width: 1023px)"
+                    srcSet={FIFA_RINK_TEMPLATE_MOBILE_SRC}
+                  />
+                ) : null}
                 <img
-                  src={FIFA_RINK_TEMPLATE_SRC}
+                  src={useMobileTemplate ? FIFA_RINK_TEMPLATE_MOBILE_SRC : FIFA_RINK_TEMPLATE_SRC}
                   alt=""
-                  width={isMobileLayout ? FIFA_RINK_TEMPLATE_MOBILE_WIDTH : FIFA_RINK_TEMPLATE_WIDTH}
-                  height={isMobileLayout ? FIFA_RINK_TEMPLATE_MOBILE_HEIGHT : FIFA_RINK_TEMPLATE_HEIGHT}
+                  width={useMobileTemplate ? FIFA_RINK_TEMPLATE_MOBILE_WIDTH : FIFA_RINK_TEMPLATE_WIDTH}
+                  height={useMobileTemplate ? FIFA_RINK_TEMPLATE_MOBILE_HEIGHT : FIFA_RINK_TEMPLATE_HEIGHT}
                   className="fifa-rink-template__img"
                   draggable={false}
                 />
@@ -214,11 +230,13 @@ export function FifaMatchLineRink({
         </div>
       </div>
 
-      <p className="fifa-match-rink__hint shrink-0 text-center text-[10px] leading-relaxed text-[var(--fifa-text-muted)] sm:text-[11px]">
-        {defCount} obránců
-        {allowExtraForward ? " · 13. F na 4. lajně" : ""}
-        {activeLine === 3 ? " · náhradníci po stranách" : ""}
-      </p>
+      {!preview ? (
+        <p className="fifa-match-rink__hint shrink-0 text-center text-[10px] leading-relaxed text-[var(--fifa-text-muted)] sm:text-[11px]">
+          {defCount} obránců
+          {allowExtraForward ? " · 13. F na 4. lajně" : ""}
+          {activeLine === 3 ? " · náhradníci po stranách" : ""}
+        </p>
+      ) : null}
     </div>
   );
 }

@@ -10,11 +10,7 @@ export const metadata = {
 };
 
 function SestavaFallback() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-transparent text-sm text-white/70">
-      Načítám editor…
-    </div>
-  );
+  return null;
 }
 
 export default async function MatchLineupBuilderRoute() {

@@ -103,25 +103,42 @@ export function FifaHomeNovinkyCard({
       />
     ) : null;
 
-  const preview = (entry: SiteNewsItem) => (
+  const preview = (entry: SiteNewsItem) => {
+    const promoVisual = entry.homeImageOnly || entry.homeImageContain;
+
+    return (
     <div
       className={`relative flex h-full min-h-0 w-full flex-col transition-opacity duration-300 ${
         fade ? "opacity-100" : "opacity-0"
       }`}
     >
-      <div className="relative min-h-0 flex-1 overflow-hidden">
+      <div
+        className={`relative min-h-0 flex-1 overflow-hidden${
+          promoVisual ? " fifa-home-novinky-promo-frame" : ""
+        }`}
+      >
         {entry.imageUrl ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={entry.imageUrl}
               alt=""
-              className="fifa-image-art-photo object-[center_42%] brightness-[1.08] contrast-[1.03] saturate-[1.04] fifa-home-tile-media"
+              className={`fifa-image-art-photo fifa-home-tile-media ${
+                promoVisual ? "fifa-home-novinky-promo" : "object-[center_42%]"
+              }`}
               loading="lazy"
               decoding="async"
               draggable={false}
             />
-            <FifaImageTextScrim variant="media-bottom" />
+            {entry.homeImageOnly ? (
+              <button
+                type="button"
+                onClick={openDetail}
+                className="absolute inset-0 z-10 cursor-pointer"
+                aria-label={`${entry.title} — číst více`}
+              />
+            ) : null}
+            {entry.homeImageOnly ? null : <FifaImageTextScrim variant="media-bottom" />}
           </>
         ) : (
           <>
@@ -148,28 +165,30 @@ export function FifaHomeNovinkyCard({
           ) : null}
         </div>
 
-        <div
-          className={`fifa-image-text-zone fifa-image-text-zone--bottom px-2.5 pb-2 pt-10 lg:px-3 lg:pb-2.5 ${
-            showArrows ? "fifa-home-carousel-content--nav" : ""
-          } ${entry.imageUrl ? "pointer-events-auto" : "pointer-events-none"}`}
-        >
-          {entry.imageUrl ? (
-            <>
-              <p className="font-display fifa-image-text-shadow line-clamp-2 text-sm font-semibold leading-snug text-white lg:text-base">
-                {entry.summary}
-              </p>
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <button type="button" onClick={openDetail} className="fifa-btn-ghost text-[var(--fifa-accent-text)]">
-                  Číst více
-                  <ArrowUpRight className="h-3 w-3" aria-hidden />
-                </button>
-                <span className="fifa-meta text-[var(--fifa-text-secondary)]">{formatDate(entry.publishedAt)}</span>
-              </div>
-            </>
-          ) : (
-            <span className="fifa-badge">{entry.tag}</span>
-          )}
-        </div>
+        {!entry.homeImageOnly ? (
+          <div
+            className={`fifa-image-text-zone fifa-image-text-zone--bottom px-2.5 pb-2 pt-10 lg:px-3 lg:pb-2.5 ${
+              showArrows ? "fifa-home-carousel-content--nav" : ""
+            } ${entry.imageUrl ? "pointer-events-auto" : "pointer-events-none"}`}
+          >
+            {entry.imageUrl ? (
+              <>
+                <p className="font-display fifa-image-text-shadow line-clamp-2 text-sm font-semibold leading-snug text-white lg:text-base">
+                  {entry.summary}
+                </p>
+                <div className="mt-2 flex items-center justify-between gap-2">
+                  <button type="button" onClick={openDetail} className="fifa-btn-ghost text-[var(--fifa-accent-text)]">
+                    Číst více
+                    <ArrowUpRight className="h-3 w-3" aria-hidden />
+                  </button>
+                  <span className="fifa-meta text-[var(--fifa-text-secondary)]">{formatDate(entry.publishedAt)}</span>
+                </div>
+              </>
+            ) : (
+              <span className="fifa-badge">{entry.tag}</span>
+            )}
+          </div>
+        ) : null}
       </div>
 
       {!entry.imageUrl ? (
@@ -187,7 +206,8 @@ export function FifaHomeNovinkyCard({
         </div>
       ) : null}
     </div>
-  );
+    );
+  };
 
   const body = (
     <>
@@ -233,7 +253,7 @@ export function FifaHomeNovinkyCard({
   }
 
   return (
-    <article className="fifa-card fifa-card--interactive group relative h-full min-h-0 overflow-hidden">
+    <article className="fifa-card fifa-card--interactive fifa-home-novinky-card group relative h-full min-h-0 overflow-hidden">
       {body}
     </article>
   );

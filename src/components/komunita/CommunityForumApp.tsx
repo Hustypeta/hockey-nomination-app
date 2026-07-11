@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { Loader2, Plus, RefreshCw } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { AdminPasswordLoginForm } from "@/components/admin/AdminPasswordLoginForm";
 import { SiteHeader } from "@/components/site/SiteHeader";
@@ -10,11 +10,17 @@ import { CommunityPostCard } from "@/components/komunita/CommunityPostCard";
 import { NewPostModal } from "@/components/komunita/NewPostModal";
 import { PostDetailPanel } from "@/components/komunita/PostDetailPanel";
 import {
+  ForumLineupPosterCaptureStage,
+  type ForumLineupPosterCaptureHandle,
+} from "@/components/komunita/ForumLineupPosterCaptureStage";
+import {
   COMMUNITY_CATEGORY_LABELS,
   COMMUNITY_CATEGORY_ORDER,
   COMMUNITY_SORT_LABELS,
   type CommunitySortMode,
 } from "@/lib/community/categories";
+import { fetchNominationCapturePayloadById } from "@/lib/community/fetchLineupCapturePayload";
+import { uploadForumPosterFrame } from "@/lib/community/uploadForumPosterFrame";
 import type { CommunityPostCategory } from "@prisma/client";
 import type { CommunityPostDto } from "@/lib/community/types";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
@@ -33,6 +39,9 @@ export function CommunityForumApp() {
   const [likeBusySlug, setLikeBusySlug] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [q, setQ] = useState("");
+  const [contestWinnerBusy, setContestWinnerBusy] = useState(false);
+  const [fantasyWinnerBusy, setFantasyWinnerBusy] = useState(false);
+  const captureRef = useRef<ForumLineupPosterCaptureHandle>(null);
 
   const checkAdmin = useCallback(async () => {
     const res = await fetch("/api/admin/session", { credentials: "include", cache: "no-store" });
@@ -92,6 +101,130 @@ export function CommunityForumApp() {
           return 0;
         })
     );
+  };
+
+  const publishContestWinner = async () => {
+    if (status !== "authenticated") {
+      toast.error("Pro publikování se přihlas Google účtem.");
+      return;
+    }
+
+    setContestWinnerBusy(true);
+    try {
+      const previewRes = await fetch("/api/admin/komunita/posts?contestWinnerPreview=1", {
+        credentials: "include",
+      });
+      const preview = (await previewRes.json()) as {
+        winner?: { displayName: string; points: number; nominationId: string } | null;
+        draft?: { title: string; nominationId: string } | null;
+        error?: string;
+      };
+      if (!previewRes.ok || !preview.winner || !preview.draft) {
+        toast.error(preview.error ?? "Vítěz nominací není k dispozici.");
+        return;
+      }
+
+      const ok = confirm(
+        `Publikovat vítěze nominací na fórum?\n\n${preview.winner.displayName} · ${preview.winner.points} bodů\n\n${preview.draft.title}`,
+      );
+      if (!ok) return;
+
+      let forumFrameImageUrl: string | undefined;
+      const capturePayload = await fetchNominationCapturePayloadById(
+        preview.winner.nominationId,
+        players
+      );
+      if (capturePayload) {
+        const blob = await captureRef.current?.captureForumFrame(capturePayload);
+        if (blob) {
+          forumFrameImageUrl = await uploadForumPosterFrame(blob);
+        }
+      }
+
+      const res = await fetch("/api/admin/komunita/posts", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contestWinner: true,
+          pin: true,
+          asStaff: true,
+          ...(forumFrameImageUrl ? { forumFrameImageUrl } : {}),
+        }),
+      });
+      const data = (await res.json()) as { post?: CommunityPostDto; error?: string };
+      if (!res.ok || !data.post) {
+        toast.error(data.error ?? "Publikování selhalo.");
+        return;
+      }
+      toast.success("Vítězná nominace je na fóru.");
+      setPosts((prev) =>
+        [data.post!, ...prev].sort((a, b) => {
+          if (a.pinnedAt && !b.pinnedAt) return -1;
+          if (!a.pinnedAt && b.pinnedAt) return 1;
+          return 0;
+        }),
+      );
+      setSelectedSlug(data.post.slug);
+    } finally {
+      setContestWinnerBusy(false);
+    }
+  };
+
+  const publishFantasyWinner = async () => {
+    if (status !== "authenticated") {
+      toast.error("Pro publikování se přihlas Google účtem.");
+      return;
+    }
+
+    setFantasyWinnerBusy(true);
+    try {
+      const previewRes = await fetch("/api/admin/komunita/posts?fantasyWinnerPreview=1", {
+        credentials: "include",
+      });
+      const preview = (await previewRes.json()) as {
+        winner?: { displayName: string; totalPoints: number } | null;
+        draft?: { title: string; imageUrl?: string } | null;
+        error?: string;
+      };
+      if (!previewRes.ok || !preview.winner || !preview.draft) {
+        toast.error(preview.error ?? "Vítěz fantasy není k dispozici.");
+        return;
+      }
+
+      const ok = confirm(
+        `Publikovat vítěze Daily Fantasy na fórum?\n\n${preview.winner.displayName} · ${preview.winner.totalPoints} bodů\n\n${preview.draft.title}`,
+      );
+      if (!ok) return;
+
+      const res = await fetch("/api/admin/komunita/posts", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fantasyWinner: true,
+          pin: true,
+          asStaff: true,
+          imageUrl: preview.draft.imageUrl,
+        }),
+      });
+      const data = (await res.json()) as { post?: CommunityPostDto; error?: string };
+      if (!res.ok || !data.post) {
+        toast.error(data.error ?? "Publikování selhalo.");
+        return;
+      }
+      toast.success("Vítěz Daily Fantasy je na fóru.");
+      setPosts((prev) =>
+        [data.post!, ...prev].sort((a, b) => {
+          if (a.pinnedAt && !b.pinnedAt) return -1;
+          if (!a.pinnedAt && b.pinnedAt) return 1;
+          return 0;
+        }),
+      );
+      setSelectedSlug(data.post.slug);
+    } finally {
+      setFantasyWinnerBusy(false);
+    }
   };
 
   const toggleLike = async (slug: string) => {
@@ -172,14 +305,42 @@ export function CommunityForumApp() {
               Obnovit
             </button>
             {status === "authenticated" ? (
-              <button
-                type="button"
-                onClick={() => setNewOpen(true)}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2 text-sm font-bold"
-              >
-                <Plus className="h-4 w-4" />
-                Nový příspěvek
-              </button>
+              <>
+                <button
+                  type="button"
+                  disabled={contestWinnerBusy}
+                  onClick={() => void publishContestWinner()}
+                  className="inline-flex items-center gap-2 rounded-xl border border-amber-400/35 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-100 hover:bg-amber-500/20 disabled:opacity-60"
+                >
+                  {contestWinnerBusy ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trophy className="h-4 w-4" />
+                  )}
+                  Vítěz nominací
+                </button>
+                <button
+                  type="button"
+                  disabled={fantasyWinnerBusy}
+                  onClick={() => void publishFantasyWinner()}
+                  className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/35 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20 disabled:opacity-60"
+                >
+                  {fantasyWinnerBusy ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trophy className="h-4 w-4" />
+                  )}
+                  Vítěz fantasy
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setNewOpen(true)}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2 text-sm font-bold"
+                >
+                  <Plus className="h-4 w-4" />
+                  Nový příspěvek
+                </button>
+              </>
             ) : (
               <button
                 type="button"
@@ -239,6 +400,7 @@ export function CommunityForumApp() {
                   post={post}
                   players={players}
                   selected={selectedSlug === post.slug}
+                  onOpenDetail={() => setSelectedSlug(post.slug)}
                   onSelect={() => setSelectedSlug(post.slug)}
                   onToggleLike={() => void toggleLike(post.slug)}
                   likeBusy={likeBusySlug === post.slug}
@@ -253,6 +415,7 @@ export function CommunityForumApp() {
                 slug={selectedSlug}
                 players={players}
                 onPostUpdated={updatePostInList}
+                allowDeleteAny
                 onDeleted={() => {
                   setSelectedSlug(null);
                   void loadPosts();
@@ -265,7 +428,15 @@ export function CommunityForumApp() {
         </div>
       </div>
 
-      <NewPostModal open={newOpen} onClose={() => setNewOpen(false)} onCreated={() => void loadPosts()} />
+      <NewPostModal
+        open={newOpen}
+        onClose={() => setNewOpen(false)}
+        onCreated={() => void loadPosts()}
+        apiBase="/api/admin/komunita"
+        staffPost
+        players={players}
+      />
+      <ForumLineupPosterCaptureStage ref={captureRef} />
     </div>
   );
 }

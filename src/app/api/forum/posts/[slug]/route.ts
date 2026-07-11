@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isAdminAuthenticated } from "@/lib/matchAdmin";
 import { withForumJson, requireForumUser } from "@/lib/community/forumRoute";
 import { postInclude, serializePost } from "@/lib/community/serialize";
 import { prisma } from "@/lib/prisma";
@@ -34,8 +35,8 @@ export async function DELETE(_req: NextRequest, ctx: Ctx) {
     if (!row) {
       return NextResponse.json({ error: "Příspěvek nenalezen." }, { status: 404 });
     }
-    if (row.authorId !== uid) {
-      return NextResponse.json({ error: "Smazat může jen autor." }, { status: 403 });
+    if (row.authorId !== uid && !(await isAdminAuthenticated())) {
+      return NextResponse.json({ error: "Smazat může jen autor nebo admin." }, { status: 403 });
     }
     await prisma.communityPost.update({
       where: { id: row.id },

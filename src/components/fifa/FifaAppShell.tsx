@@ -20,11 +20,11 @@ export function FifaAppShell({ children, designPreview = false }: { children: Re
         </p>
       ) : null}
       <header className="z-50 shrink-0 border-b border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)]">
-        <div className="flex items-center gap-3 px-4 py-2.5 lg:px-5">
+        <div className="flex items-center gap-3 px-4 py-1.5 lg:px-5">
           <div className="flex shrink-0 items-center gap-2.5">
             <Link href={designPreview ? "/design/home" : "/"} className="flex items-center" aria-label="Hokej Lineup">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={SITE_LOGO_URL} alt="Hokej Lineup" width={56} height={56} className="h-12 w-12 object-contain lg:h-14 lg:w-14" />
+              <img src={SITE_LOGO_URL} alt="Hokej Lineup" width={40} height={40} className="h-9 w-9 object-contain lg:h-10 lg:w-10" />
             </Link>
             <SocialSiteIcons size="compact" />
           </div>

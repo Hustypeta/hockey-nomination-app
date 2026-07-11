@@ -6,12 +6,18 @@ import {
   snapshotKindToAttachmentKind,
 } from "@/lib/community/snapshots";
 import type { CommunityAttachmentSnapshotV1 } from "@/lib/community/types";
+import { withForumFrameImageMeta } from "@/lib/community/forumPosterImage";
 
 export type AttachmentInput =
-  | { kind: "NOMINATION"; nominationId: string }
-  | { kind: "MATCH_LINEUP"; code: string }
+  | { kind: "NOMINATION"; nominationId: string; forumFrameImageUrl?: string }
+  | { kind: "MATCH_LINEUP"; code: string; forumFrameImageUrl?: string }
   | { kind: "FANTASY_LINEUP"; lineupId: string }
   | { kind: "INLINE_SNAPSHOT"; snapshot: CommunityAttachmentSnapshotV1 };
+
+function readForumFrameImageUrl(item: object): string | undefined {
+  const raw = (item as { forumFrameImageUrl?: string }).forumFrameImageUrl;
+  return typeof raw === "string" && raw.trim() ? raw.trim() : undefined;
+}
 
 export function parseAttachmentInputs(raw: unknown): AttachmentInput[] {
   if (!Array.isArray(raw)) return [];
@@ -20,11 +26,24 @@ export function parseAttachmentInputs(raw: unknown): AttachmentInput[] {
     if (typeof item !== "object" || item === null) continue;
     const kind = (item as { kind?: string }).kind;
     if (kind === "NOMINATION" && typeof (item as { nominationId?: string }).nominationId === "string") {
-      out.push({ kind: "NOMINATION", nominationId: (item as { nominationId: string }).nominationId });
+      out.push({
+        kind: "NOMINATION",
+        nominationId: (item as { nominationId: string }).nominationId,
+        forumFrameImageUrl: readForumFrameImageUrl(item),
+      });
     } else if (kind === "MATCH_LINEUP" && typeof (item as { code?: string }).code === "string") {
-      out.push({ kind: "MATCH_LINEUP", code: (item as { code: string }).code });
+      out.push({
+        kind: "MATCH_LINEUP",
+        code: (item as { code: string }).code,
+        forumFrameImageUrl: readForumFrameImageUrl(item),
+      });
     } else if (kind === "FANTASY_LINEUP" && typeof (item as { lineupId?: string }).lineupId === "string") {
       out.push({ kind: "FANTASY_LINEUP", lineupId: (item as { lineupId: string }).lineupId });
+    } else if (kind === "INLINE_SNAPSHOT" && typeof (item as { snapshot?: unknown }).snapshot === "object") {
+      const snapshot = (item as { snapshot: CommunityAttachmentSnapshotV1 }).snapshot;
+      if (snapshot?.version === 1 && snapshot.kind) {
+        out.push({ kind: "INLINE_SNAPSHOT", snapshot });
+      }
     }
     if (out.length >= 3) break;
   }
@@ -65,7 +84,11 @@ export async function resolveAttachmentsForUser(
         },
       });
       if (!nom) continue;
-      const snapshot = buildNominationSnapshot(nom);
+      const snapshot = withForumFrameImageMeta(
+        buildNominationSnapshot(nom),
+        input.forumFrameImageUrl,
+        nom.title
+      );
       resolved.push({
         kind: snapshotKindToAttachmentKind(snapshot.kind),
         nominationId: nom.id,
@@ -87,7 +110,11 @@ export async function resolveAttachmentsForUser(
         },
       });
       if (!link) continue;
-      const snapshot = buildMatchLineupSnapshot(link);
+      const snapshot = withForumFrameImageMeta(
+        buildMatchLineupSnapshot(link),
+        input.forumFrameImageUrl,
+        link.title
+      );
       resolved.push({
         kind: "MATCH_LINEUP",
         nominationId: null,
@@ -112,6 +139,109 @@ export async function resolveAttachmentsForUser(
         kind: "FANTASY_LINEUP",
         nominationId: null,
         snapshot,
+        sortOrder: order++,
+      });
+    }
+  }
+  return resolved;
+}
+
+/** Admin endpoint — může připojit cizí nominace / sestavy bez kontroly vlastnictví. */
+export async function resolveAttachmentsForAdmin(
+  prisma: PrismaClient,
+  inputs: AttachmentInput[]
+): Promise<
+  {
+    kind: CommunityAttachmentKind;
+    nominationId: string | null;
+    snapshot: CommunityAttachmentSnapshotV1;
+    sortOrder: number;
+  }[]
+> {
+  const resolved: {
+    kind: CommunityAttachmentKind;
+    nominationId: string | null;
+    snapshot: CommunityAttachmentSnapshotV1;
+    sortOrder: number;
+  }[] = [];
+
+  let order = 0;
+  for (const input of inputs) {
+    if (input.kind === "NOMINATION") {
+      const nom = await prisma.nomination.findFirst({
+        where: { id: input.nominationId },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          captainId: true,
+          lineupStructure: true,
+          createdAt: true,
+        },
+      });
+      if (!nom) continue;
+      const snapshot = withForumFrameImageMeta(
+        buildNominationSnapshot(nom),
+        input.forumFrameImageUrl,
+        nom.title
+      );
+      resolved.push({
+        kind: snapshotKindToAttachmentKind(snapshot.kind),
+        nominationId: nom.id,
+        snapshot,
+        sortOrder: order++,
+      });
+    } else if (input.kind === "MATCH_LINEUP") {
+      const link = await prisma.matchShareLink.findFirst({
+        where: { code: input.code },
+        select: {
+          code: true,
+          slug: true,
+          title: true,
+          captainId: true,
+          lineupStructure: true,
+          createdAt: true,
+          defenseCount: true,
+          allowExtraForward: true,
+        },
+      });
+      if (!link) continue;
+      const snapshot = withForumFrameImageMeta(
+        buildMatchLineupSnapshot(link),
+        input.forumFrameImageUrl,
+        link.title
+      );
+      resolved.push({
+        kind: "MATCH_LINEUP",
+        nominationId: null,
+        snapshot,
+        sortOrder: order++,
+      });
+    } else if (input.kind === "FANTASY_LINEUP") {
+      const lineup = await prisma.msFantasyLineup.findFirst({
+        where: { id: input.lineupId },
+        include: { gameDay: { select: { id: true, title: true } } },
+      });
+      if (!lineup) continue;
+      const snapshot = buildFantasySnapshot({
+        gameDayLabel: lineup.gameDay.title,
+        pickIds: lineup.pickIds,
+        pickTiers: lineup.pickTiers,
+        salarySpent: lineup.salarySpent,
+        createdAt: lineup.createdAt,
+        gameDayId: lineup.gameDayId,
+      });
+      resolved.push({
+        kind: "FANTASY_LINEUP",
+        nominationId: null,
+        snapshot,
+        sortOrder: order++,
+      });
+    } else if (input.kind === "INLINE_SNAPSHOT") {
+      resolved.push({
+        kind: "INLINE_SNAPSHOT",
+        nominationId: null,
+        snapshot: input.snapshot,
         sortOrder: order++,
       });
     }

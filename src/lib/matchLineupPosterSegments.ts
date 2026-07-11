@@ -108,6 +108,18 @@ export function pickMatchLineupSegmentPlayerIds(
   return ids;
 }
 
+/** Obranný pár přiřazený k útočné lajně (stejná logika jako export po lajnách). */
+export function defensePairForForwardLine(
+  lineIdx: number,
+  lineup: LineupStructure,
+  defenseCount: 6 | 7 | 8
+): { lb: string | null; rb: string | null } {
+  const maxPairIdx = defenseCount === 8 ? 3 : defenseCount === 7 ? 3 : 2;
+  const dIdx = Math.min(lineIdx, maxPairIdx);
+  const d = lineup.defensePairs[dIdx];
+  return { lb: d?.lb ?? null, rb: d?.rb ?? null };
+}
+
 export const MATCH_LINEUP_EXTRA_FORWARD_LABEL = "13. útočník";
 export const MATCH_LINEUP_SECOND_GOALIE_LABEL = "2. gólman";
 

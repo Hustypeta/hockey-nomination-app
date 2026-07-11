@@ -88,7 +88,7 @@ export function FifaHomeDailyNews() {
 
   return (
     <article
-      className="fifa-card fifa-card--interactive group relative h-full min-h-0 overflow-hidden"
+      className="fifa-card fifa-card--interactive fifa-home-lineup-news-card group relative h-full min-h-0 overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -123,54 +123,55 @@ export function FifaHomeDailyNews() {
           />
 
           <div
-            className={`relative h-full min-h-0 w-full transition-opacity duration-300 ease-out ${
+            className={`relative flex h-full min-h-0 w-full flex-col transition-opacity duration-300 ease-out ${
               fade ? "opacity-100" : "opacity-0"
             }`}
           >
-            <FifaHomeDailyNewsVisual
-              key={`${item.id}-${item.imageUrl ?? "none"}`}
-              imageUrl={item.imageUrl}
-              source={item.source}
-            />
+            <div className="relative min-h-0 flex-1 overflow-hidden">
+              <FifaHomeDailyNewsVisual
+                key={`${item.id}-${item.imageUrl ?? "none"}`}
+                imageUrl={item.imageUrl}
+                source={item.source}
+              />
 
-            <div className="fifa-image-text-zone fifa-image-text-zone--top pointer-events-none flex items-start justify-between gap-2 p-2.5 lg:p-3">
-              <span className="flex items-center gap-2">
-                <span className="fifa-icon-chip">
-                  <Newspaper className="h-3.5 w-3.5" aria-hidden />
+              <div className="fifa-image-text-zone fifa-image-text-zone--top pointer-events-none flex items-start justify-between gap-2 p-2.5 lg:p-3">
+                <span className="flex items-center gap-2">
+                  <span className="fifa-icon-chip">
+                    <Newspaper className="h-3.5 w-3.5" aria-hidden />
+                  </span>
+                  <span className="fifa-kicker fifa-image-kicker text-[var(--fifa-text)]">Lineup News</span>
                 </span>
-                <span className="fifa-kicker fifa-image-kicker text-[var(--fifa-text)]">Lineup News</span>
-              </span>
+                {showArrows ? (
+                  <span className="fifa-meta fifa-image-meta-chip tabular-nums px-1.5 py-0.5 text-[var(--fifa-text)]">
+                    {index + 1}/{items.length}
+                  </span>
+                ) : null}
+              </div>
+
+              <div className="fifa-image-text-zone fifa-image-text-zone--bottom pointer-events-none px-3 pb-3 pt-14">
+                <DailyNewsSourceBadge source={item.source} />
+                {item.summary ? (
+                  <p className="fifa-image-text-muted mt-2 line-clamp-3 max-w-[96%] text-[11px] leading-relaxed lg:text-xs">
+                    {item.summary}
+                  </p>
+                ) : null}
+                <h3 className="font-display fifa-image-text-shadow--strong mt-1.5 line-clamp-3 text-sm font-semibold leading-snug text-[var(--fifa-text)] lg:text-base">
+                  {item.title}
+                </h3>
+              </div>
+
               {showArrows ? (
-                <span className="fifa-meta fifa-image-meta-chip tabular-nums px-1.5 py-0.5 text-[var(--fifa-text)]">
-                  {index + 1}/{items.length}
-                </span>
+                <FifaHomeCarouselNav
+                  onPrev={step(-1)}
+                  onNext={step(1)}
+                  prevLabel="Předchozí zpráva"
+                  nextLabel="Další zpráva"
+                  variant="overlay"
+                  align="media"
+                />
               ) : null}
-            </div>
-
-            <div className={`fifa-image-text-zone fifa-image-text-zone--bottom pointer-events-none px-3 pb-3 pt-14 ${showArrows ? "fifa-home-carousel-content--nav" : ""}`}>
-              <DailyNewsSourceBadge source={item.source} />
-              {item.summary ? (
-                <p className="fifa-image-text-muted mt-2 line-clamp-3 max-w-[96%] text-[11px] leading-relaxed lg:text-xs">
-                  {item.summary}
-                </p>
-              ) : null}
-              <h3 className="font-display fifa-image-text-shadow--strong mt-1.5 line-clamp-3 text-sm font-semibold leading-snug text-[var(--fifa-text)] lg:text-base">
-                {item.title}
-              </h3>
             </div>
           </div>
-
-          {/* Velké navigační šipky nad prokliknutím */}
-          {showArrows ? (
-            <FifaHomeCarouselNav
-              onPrev={step(-1)}
-              onNext={step(1)}
-              prevLabel="Předchozí zpráva"
-              nextLabel="Další zpráva"
-              variant="overlay"
-              align="media"
-            />
-          ) : null}
         </>
       )}
     </article>

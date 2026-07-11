@@ -12,4 +12,8 @@ export type SiteNewsItem = {
   notificationShort: string;
   /** Volitelný obrázek v náhledu / detailu */
   imageUrl?: string;
+  /** Náhled na úvodu = jen obrázek (bez překryvného textu a scrimu). */
+  homeImageOnly?: boolean;
+  /** Náhled na úvodu — celý obrázek (contain), text a „Číst více“ zůstanou. */
+  homeImageContain?: boolean;
 };

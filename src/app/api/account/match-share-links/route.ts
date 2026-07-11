@@ -19,6 +19,7 @@ export async function GET() {
       createdAt: true,
       defenseCount: true,
       allowExtraForward: true,
+      lineupStructure: true,
     },
   });
 

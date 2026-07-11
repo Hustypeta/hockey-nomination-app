@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withAdminJson, requireUserId } from "@/lib/community/adminRoute";
-import { serializeComment } from "@/lib/community/serialize";
+import { serializeComment, communityAuthorSelect } from "@/lib/community/serialize";
 import { validateCommentBody } from "@/lib/community/validate";
 import { prisma } from "@/lib/prisma";
 
@@ -19,7 +19,7 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
     const rows = await prisma.communityComment.findMany({
       where: { postId: post.id, status: "PUBLISHED" },
       orderBy: { createdAt: "asc" },
-      include: { author: { select: { id: true, name: true, image: true } } },
+      include: { author: { select: communityAuthorSelect } },
     });
     return NextResponse.json({ comments: rows.map(serializeComment) });
   });
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
           parentId,
           bodyMd: parsed.bodyMd,
         },
-        include: { author: { select: { id: true, name: true, image: true } } },
+        include: { author: { select: communityAuthorSelect } },
       });
       await tx.communityPost.update({
         where: { id: post.id },

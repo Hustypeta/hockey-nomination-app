@@ -20,7 +20,7 @@ const FETCH_HEADERS = {
 };
 
 let cache: { at: number; v: number; items: DailyNewsItem[] } | null = null;
-const CACHE_VERSION = 10;
+const CACHE_VERSION = 11;
 
 function normalizeTitleKey(title: string): string {
   return normalizeForMatch(title)
@@ -36,6 +36,15 @@ function normalizeUrlKey(url: string): string {
   } catch {
     return url.toLowerCase();
   }
+}
+
+function isRedundantSummary(summary: string, title: string): boolean {
+  const s = summary.trim();
+  const t = title.trim();
+  if (!s) return true;
+  if (!t) return false;
+  if (areTitlesSimilar(s, t)) return true;
+  return normalizeForMatch(s) === normalizeForMatch(t);
 }
 
 function areTitlesSimilar(a: string, b: string): boolean {
@@ -137,11 +146,14 @@ function toDailyNewsItem(
       ? cleanEliteProspectsDescription(raw.description)
       : stripHtml(raw.description);
 
-  const summary =
-    truncateSummary(descriptionText) ||
-    (feed.mode === "elite_prospects"
-      ? `Potvrzený přestup — ${title}`
-      : "Krátká zpráva o českém hokeji — celý článek na webu zdroje.");
+  const truncated = descriptionText ? truncateSummary(descriptionText) : "";
+  let summary = "";
+  if (truncated && !isRedundantSummary(truncated, title)) {
+    summary = truncated;
+  } else if (feed.mode === "elite_prospects") {
+    const fallback = `Potvrzený přestup — ${title}`;
+    if (!isRedundantSummary(fallback, title)) summary = fallback;
+  }
 
   return {
     id: itemId(url, title),

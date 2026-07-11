@@ -56,6 +56,8 @@ interface LineBuilderProps {
    * Jen `mode="match"` + `readOnly`: kompaktní seznam jmen (bez dresů) — méně scrollování na stránkách zápasu.
    */
   matchPublicNamesOnly?: boolean;
+  /** Statický náhled 1. lajny na ledě (účet, karty). */
+  matchRinkPreview?: boolean;
   /** FIFA design — čistší bloky lajn, modrý accent, bez glow. */
   uiVariant?: "classic" | "fifa";
 }
@@ -143,11 +145,13 @@ export function LineBuilder({
   jerseyBadgesPreferFanAverage = false,
   onPlayerClick,
   matchPublicNamesOnly = false,
+  matchRinkPreview = false,
   uiVariant = "classic",
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
   const fifa = uiVariant === "fifa";
-  const fifaRinkMode = fifa && mode === "match" && !readOnly && !matchPublicNamesOnly;
+  const fifaRinkMode =
+    fifa && mode === "match" && !matchPublicNamesOnly && (!readOnly || matchRinkPreview);
   const [activeMatchLine, setActiveMatchLine] = useState(0);
   const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
 
@@ -1241,8 +1245,14 @@ export function LineBuilder({
     };
 
     return (
-      <div className={`min-w-0 w-full ${fifaRinkMode ? "flex min-h-0 flex-1 flex-col gap-1.5 lg:gap-2" : "space-y-6"}`}>
-        {!readOnly ? (
+      <div
+        className={
+          matchRinkPreview
+            ? "fifa-lineup-rink-preview-root flex h-full min-h-0 w-full flex-col"
+            : `min-w-0 w-full ${fifaRinkMode ? "flex min-h-0 flex-1 flex-col gap-1.5 lg:gap-2" : "space-y-6"}`
+        }
+      >
+        {!readOnly && !matchRinkPreview ? (
           <div
             className={
               fifa
@@ -1307,10 +1317,17 @@ export function LineBuilder({
         ) : null}
 
         {fifaRinkMode ? (
-          <div className="fifa-editor-canvas-shell fifa-editor-canvas-shell--rink flex min-h-0 flex-1 flex-col overflow-hidden">
+          <div
+            className={
+              matchRinkPreview
+                ? "flex h-full min-h-0 w-full flex-col overflow-hidden"
+                : "fifa-editor-canvas-shell fifa-editor-canvas-shell--rink flex min-h-0 flex-1 flex-col overflow-hidden"
+            }
+          >
             <FifaMatchLineRink
-              activeLine={activeMatchLine}
-              onActiveLineChange={handleActiveMatchLineChange}
+              activeLine={matchRinkPreview ? 0 : activeMatchLine}
+              onActiveLineChange={matchRinkPreview ? () => {} : handleActiveMatchLineChange}
+              preview={matchRinkPreview}
               defCount={defCount}
               allowExtraForward={matchAllowExtraForward}
               slotsForLine={slotsForLine}

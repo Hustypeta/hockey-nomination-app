@@ -15,6 +15,7 @@ export function MatchPosterExportChoicesModal({
   onPick,
   previewDataUrl,
   previewTitle,
+  previewLight = false,
   onDownloadPreview,
   onClearPreview,
 }: {
@@ -28,6 +29,7 @@ export function MatchPosterExportChoicesModal({
   onPick: (key: string) => void | Promise<void>;
   previewDataUrl?: string | null;
   previewTitle?: string | null;
+  previewLight?: boolean;
   onDownloadPreview?: () => void;
   onClearPreview?: () => void;
 }) {
@@ -132,7 +134,11 @@ export function MatchPosterExportChoicesModal({
               <img
                 src={previewDataUrl}
                 alt="Náhled exportu"
-                className="mt-3 w-full rounded-xl border border-white/10 bg-black/40"
+                className={`mt-3 w-full rounded-xl border border-white/10 ${
+                  previewLight
+                    ? "bg-[repeating-conic-gradient(#cbd5e1_0%_25%,#f1f5f9_0%_50%)] bg-[length:20px_20px]"
+                    : "bg-black/40"
+                }`}
               />
             </div>
           ) : null}

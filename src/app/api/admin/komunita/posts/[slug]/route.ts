@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withAdminJson, requireUserId } from "@/lib/community/adminRoute";
+import { withAdminJson } from "@/lib/community/adminRoute";
 import { postInclude, serializePost } from "@/lib/community/serialize";
 import { prisma } from "@/lib/prisma";
 
@@ -25,15 +25,11 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
 }
 
 export async function DELETE(_req: NextRequest, ctx: Ctx) {
-  return withAdminJson(async ({ userId }) => {
-    const uid = requireUserId(userId);
+  return withAdminJson(async () => {
     const { slug } = await ctx.params;
     const row = await prisma.communityPost.findFirst({ where: { slug } });
     if (!row) {
       return NextResponse.json({ error: "Příspěvek nenalezen." }, { status: 404 });
-    }
-    if (row.authorId !== uid) {
-      return NextResponse.json({ error: "Smazat může jen autor." }, { status: 403 });
     }
     await prisma.communityPost.update({
       where: { id: row.id },

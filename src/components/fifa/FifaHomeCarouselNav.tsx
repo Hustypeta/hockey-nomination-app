@@ -17,6 +17,7 @@ type FifaHomeCarouselNavProps = {
    */
   align?: "hero" | "media" | "full";
   className?: string;
+  onMouseEnter?: () => void;
 };
 
 export function FifaHomeCarouselNav({
@@ -27,6 +28,7 @@ export function FifaHomeCarouselNav({
   variant = "chrome",
   align = "hero",
   className = "",
+  onMouseEnter,
 }: FifaHomeCarouselNavProps) {
   const btnClass =
     variant === "overlay"
@@ -41,7 +43,11 @@ export function FifaHomeCarouselNav({
         : "fifa-home-carousel-nav--hero";
 
   return (
-    <div className={`fifa-home-carousel-nav ${alignClass} ${className}`.trim()} aria-hidden={false}>
+    <div
+      className={`fifa-home-carousel-nav ${alignClass} ${className}`.trim()}
+      aria-hidden={false}
+      onMouseEnter={onMouseEnter}
+    >
       <button type="button" onClick={onPrev} className={btnClass} aria-label={prevLabel}>
         <ChevronLeft className="fifa-home-carousel-nav__icon" aria-hidden />
       </button>

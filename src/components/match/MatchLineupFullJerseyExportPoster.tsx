@@ -1,12 +1,16 @@
 "use client";
 
-import { forwardRef, useMemo, type ReactNode } from "react";
+import { forwardRef, useEffect, useMemo, useState } from "react";
 import type { LineupStructure, Player } from "@/types";
 import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
 import { Nhl25JerseyCard } from "@/components/sestava/Nhl25JerseyCard";
-import { SHARE_POSTER_3X4_STYLE } from "@/lib/sharePosterLayout";
-import { pickMatchLineupFullPosterExtraSlots } from "@/lib/matchLineupPosterSegments";
-import { ExtraPlayerSlotBand } from "@/components/match/lineup-poster/MatchLineupPosterLineLayout";
+import { SHARE_POSTER_ROSTER_4X5_STYLE } from "@/lib/sharePosterLayout";
+import { SITE_CANONICAL_HOST, SITE_LOGO_URL } from "@/lib/siteBranding";
+import {
+  defensePairForForwardLine,
+  MATCH_LINEUP_EXTRA_FORWARD_LABEL,
+} from "@/lib/matchLineupPosterSegments";
+import { MainLineupGrid } from "@/components/match/lineup-poster/MatchLineupPosterLineLayout";
 import {
   fmtMatchRating,
   matchRatingHue,
@@ -14,12 +18,12 @@ import {
   type MatchRatingAggregateMap,
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
-
-const JERSEY_SLOT_MAX_W = "mx-auto w-full max-w-[8.85rem]";
-
-function PosterJerseyWrap({ children }: { children: ReactNode }) {
-  return <div className="flex w-full justify-center overflow-visible">{children}</div>;
-}
+import {
+  loadPosterIceBgAsDataUrl,
+  posterRosterIceBgUrl,
+  POSTER_ROSTER_ICE_BG_REVISION,
+} from "@/lib/posterRosterIceBg";
+import styles from "./MatchLineupFullJerseyPoster.module.css";
 
 interface MatchLineupFullJerseyExportPosterProps {
   lineupTitle: string;
@@ -54,30 +58,30 @@ function MatchJerseyRatingBadge({
   return (
     <div className="mt-0.5 flex flex-col items-center gap-0.5">
       <div
-        className="inline-flex items-baseline gap-0.5 rounded-lg border-2 border-white/90 px-2 py-0.5"
+        className="inline-flex items-baseline gap-0.5 rounded-md border border-slate-300 px-1.5 py-0.5"
         style={{
           background: hue.bg,
           color: hue.text,
-          boxShadow: `0 6px 16px ${hue.ring}, 0 0 0 2px rgba(255,255,255,0.9) inset`,
+          boxShadow: `0 2px 8px ${hue.ring}`,
         }}
       >
-        <span className="font-display text-[1.1rem] font-black tabular-nums leading-none tracking-tight">
+        <span className="font-display text-[0.9rem] font-black tabular-nums leading-none tracking-tight">
           {fmtMatchRating(display)}
         </span>
-        <span className="text-[8px] font-extrabold uppercase tracking-wider opacity-85">/10</span>
+        <span className="text-[7px] font-extrabold uppercase tracking-wider opacity-85">/10</span>
       </div>
       {mode === "community" && aggregate && aggregate.count > 0 ? (
-        <span className="text-[9px] font-semibold text-slate-500">{aggregate.count} hlasů</span>
+        <span className="text-[8px] font-semibold text-slate-600">{aggregate.count} hlasů</span>
       ) : null}
       {mode === "personal" && typeof jerseyRatingExport.myRatings[pid] !== "number" ? (
-        <span className="text-[9px] font-semibold text-slate-400">Neuloženo</span>
+        <span className="text-[8px] font-semibold text-slate-500">Neuloženo</span>
       ) : null}
     </div>
   );
 }
 
 /**
- * Celá zápasová soupiska s dresy — layout jako {@link Nhl25SharePoster} (3 : 4, dvousloupec, Nhl25JerseyCard).
+ * Celá zápasová soupiska s dresy — brankáři (+ volitelně 13. útočník) nahoře, 4 lajny ve čtvercích.
  */
 export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, MatchLineupFullJerseyExportPosterProps>(
   function MatchLineupFullJerseyExportPoster(
@@ -85,175 +89,181 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
     ref
   ) {
     const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
-    const extraSlots = useMemo(
-      () => pickMatchLineupFullPosterExtraSlots(lineup, allowExtraForward),
-      [lineup, allowExtraForward]
-    );
+    const [iceBgSrc, setIceBgSrc] = useState(posterRosterIceBgUrl());
+
+    useEffect(() => {
+      let cancelled = false;
+      loadPosterIceBgAsDataUrl(POSTER_ROSTER_ICE_BG_REVISION)
+        .then((src) => {
+          if (!cancelled) setIceBgSrc(src);
+        })
+        .catch(() => {
+          if (!cancelled) setIceBgSrc(posterRosterIceBgUrl());
+        });
+      return () => {
+        cancelled = true;
+      };
+    }, []);
+
+    const extraForwardId =
+      allowExtraForward && lineup.extraForwards[0] ? lineup.extraForwards[0] : null;
     const getPlayer = (id: string | null) => (id ? players.find((p) => p.id === id) ?? null : null);
-    const host = siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
-    const titleLine = lineupTitle.trim();
-
-    const heading = "border-slate-300 text-slate-900";
-    const subheading = "text-slate-700";
-    const lineBox = "border-slate-400/35 bg-white/[0.52]";
-    const pairTitle = "text-slate-600";
-
-    const forwardLines = lineup.forwardLines.slice(0, 4);
-    const compact = Boolean(jerseyRatingExport);
-    const sectionHeading = `mb-0.5 border-b pb-0.5 font-display text-[${compact ? "11px" : "13px"}] font-extrabold uppercase tracking-[0.12em] ${heading}`;
+    const titleLine = (() => {
+      const trimmed = lineupTitle.trim();
+      if (!trimmed) return "";
+      return trimmed.charAt(0).toLocaleUpperCase("cs-CZ") + trimmed.slice(1);
+    })();
+    const host =
+      siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "").trim() || SITE_CANONICAL_HOST;
 
     const renderSlot = (pid: string | null, positionLabel: string, reactKey: string) => (
-      <div key={reactKey} className={`${JERSEY_SLOT_MAX_W} flex min-w-0 flex-col gap-0 pb-0.5`}>
-        <PosterJerseyWrap>
-          <Nhl25JerseyCard
-            player={getPlayer(pid)}
-            positionLabel={positionLabel}
-            size="compact"
-            nameplateVariant="poster"
-            ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
-            disableMotion
-          />
-        </PosterJerseyWrap>
+      <div key={reactKey} className={`${styles.jerseyTile} flex min-w-0 flex-col gap-0`}>
+        <Nhl25JerseyCard
+          player={getPlayer(pid)}
+          positionLabel={positionLabel}
+          size="compact"
+          nameplateVariant="poster"
+          ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
+          hidePositionLabel
+          hidePosterFlag
+          disableMotion
+          posterUniformNames
+        />
         {jerseyRatingExport && pid ? (
           <MatchJerseyRatingBadge pid={pid} jerseyRatingExport={jerseyRatingExport} />
         ) : null}
       </div>
     );
 
-    const p3 = lineup.defensePairs[3];
-    const seventhDefenseId = defenseCount === 7 ? (p3?.lb ?? null) : null;
+    const renderLineCell = (lineIdx: number, heading: string) => {
+      const f = lineup.forwardLines[lineIdx];
+      const d = defensePairForForwardLine(lineIdx, lineup, defenseCount);
+      const lineToneClass =
+        lineIdx === 0
+          ? styles.cellLineTone1
+          : lineIdx === 1
+            ? styles.cellLineTone2
+            : lineIdx === 2
+              ? styles.cellLineTone3
+              : styles.cellLineTone4;
+      const forwards = [
+        renderSlot(f?.lw ?? null, "LW", `ln${lineIdx}-lw`),
+        renderSlot(f?.c ?? null, "C", `ln${lineIdx}-c`),
+        renderSlot(f?.rw ?? null, "RW", `ln${lineIdx}-rw`),
+      ];
+      const defense = [
+        renderSlot(d.lb, "LB", `ln${lineIdx}-lb`),
+        renderSlot(d.rb, "RB", `ln${lineIdx}-rb`),
+      ];
+
+      const lineFrameCornerClass =
+        lineIdx === 0
+          ? styles.lineFrameOuterTl
+          : lineIdx === 1
+            ? styles.lineFrameOuterTr
+            : lineIdx === 2
+              ? styles.lineFrameOuterBl
+              : styles.lineFrameOuterBr;
+
+      return (
+        <section className={`${styles.cell} ${styles.cellLine} ${lineToneClass}`} key={`line-${lineIdx}`}>
+          <div className={`${styles.lineFrame} ${lineFrameCornerClass}`}>
+            <h2 className={styles.cellHeading}>
+              <span className={styles.cellHeadingText}>{heading}</span>
+            </h2>
+            <div className={styles.cellBody}>
+              <div className={styles.lineGrid}>
+                <MainLineupGrid
+                  forwards={forwards}
+                  defense={defense}
+                  goalie={null}
+                  variant="light"
+                  compact
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    };
 
     return (
       <div
         ref={ref}
         data-export-slot="cele-dresy"
         data-poster-surface="light"
-        className="match-lineup-full-jersey-poster nhl25-share-poster-capture relative flex shrink-0 flex-col overflow-visible rounded-none border-0 bg-gradient-to-b from-white via-[#f4f6f9] to-[#e8ecf2] antialiased subpixel-antialiased shadow-[0_20px_50px_rgba(15,23,42,0.12)] [text-rendering:optimizeLegibility]"
-        style={SHARE_POSTER_3X4_STYLE}
+        className={`match-lineup-full-jersey-poster ${styles.posterRoot} ${styles.posterLineFramesOff}`}
+        style={SHARE_POSTER_ROSTER_4X5_STYLE}
       >
-        <div className="nhl25-moje-sestava-accent mx-2 mt-1.5 shrink-0 rounded-full sm:mx-2 sm:mt-2" aria-hidden />
+        {/* eslint-disable-next-line @next/next/no-img-element -- statické pozadí od uživatele pro export PNG */}
+        <img
+          src={iceBgSrc}
+          alt=""
+          data-poster-ice-bg=""
+          className={styles.iceBg}
+          decoding="sync"
+          draggable={false}
+        />
 
-        <header className="relative shrink-0 px-2 pb-0 pt-1.5 sm:px-2">
-          <div className="min-w-0 text-center sm:text-left">
+        <div className={styles.posterSurface}>
+          <header className={styles.topBar}>
+            <span className={styles.brandHost}>{host}</span>
             {titleLine ? (
-              <h1 className="line-clamp-2 font-display text-[1.42rem] font-extrabold leading-[1.06] tracking-tight text-slate-950 sm:text-[1.58rem]">
-                {titleLine}
+              <h1 className={styles.title}>
+                <span className={styles.titleText}>{titleLine}</span>
               </h1>
-            ) : null}
+            ) : (
+              <span className={styles.titleSpacer} aria-hidden />
+            )}
+            {/* eslint-disable-next-line @next/next/no-img-element -- statické logo pro export PNG */}
+            <img
+              src={SITE_LOGO_URL}
+              alt="Lineup"
+              width={480}
+              height={120}
+              className={styles.brandLogo}
+              decoding="sync"
+            />
+          </header>
+
+          <div className={styles.posterBody}>
+          <div className={styles.posterLanes}>
+            <section className={`${styles.goalieBlock} ${extraForwardId ? styles.goalieBlockWithExtra : ""}`}>
+              <div className={styles.goalieMain}>
+                <h2 className={styles.cellHeading}>
+                  <span className={styles.cellHeadingText}>Brankáři</span>
+                </h2>
+                <div className={styles.goaliePair}>
+                  <div className={styles.goalieSlot}>
+                    {renderSlot(lineup.goalies[0] ?? null, "G", "g1")}
+                  </div>
+                  <div className={styles.goalieSlot}>
+                    {renderSlot(lineup.goalies[1] ?? null, "G", "g2")}
+                  </div>
+                </div>
+              </div>
+              {extraForwardId ? (
+                <div className={styles.goalieExtraSlot}>
+                  <h2 className={styles.cellHeading}>
+                    <span className={styles.cellHeadingText}>{MATCH_LINEUP_EXTRA_FORWARD_LABEL}</span>
+                  </h2>
+                  {renderSlot(extraForwardId, "F", "xf-extra")}
+                </div>
+              ) : null}
+            </section>
+
+            <div className={styles.linesGridWrap}>
+              <div className={styles.rinkCenterCircle} aria-hidden />
+              <div className={styles.linesGrid}>
+                {renderLineCell(0, "1. lajna")}
+                {renderLineCell(1, "2. lajna")}
+                {renderLineCell(2, "3. lajna")}
+                {renderLineCell(3, "4. lajna")}
+              </div>
+            </div>
           </div>
-        </header>
-
-        <div className="relative flex shrink-0 flex-none flex-col overflow-visible px-2 pb-2 pt-0 sm:px-2">
-          <div className={`grid shrink-0 grid-cols-2 ${compact ? "gap-x-2" : "gap-x-3"}`}>
-            <div className={`flex min-h-0 flex-col justify-between ${compact ? "gap-0.5" : "gap-1"}`}>
-              <section className="shrink-0">
-                <h2 className={sectionHeading}>Brankáři</h2>
-                <div className="grid min-w-0 grid-cols-3 gap-x-3.5 gap-y-1 sm:gap-x-4">
-                  <div className="col-start-2">{renderSlot(lineup.goalies[0], "G", "g1")}</div>
-                </div>
-              </section>
-
-              <section className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
-                <h2 className={`${sectionHeading} shrink-0`}>Útočné řady</h2>
-                <div className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
-                  {forwardLines.map((line, i) => (
-                    <div
-                      key={`fl-${i}`}
-                      className={`flex min-w-0 flex-col gap-0 overflow-visible rounded-lg border px-1 py-0.5 ${lineBox}`}
-                    >
-                      <span
-                        className={`shrink-0 font-display text-[12px] font-bold uppercase tracking-wide sm:text-[13px] ${subheading}`}
-                      >
-                        {i + 1}. lajna
-                      </span>
-                      <div className="grid min-w-0 w-full grid-cols-3 gap-x-3.5 gap-y-0 sm:gap-x-4">
-                        {renderSlot(line.lw, "LW", `ln${i}-lw`)}
-                        {renderSlot(line.c, "C", `ln${i}-c`)}
-                        {renderSlot(line.rw, "RW", `ln${i}-rw`)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
-
-            <div className={`flex min-h-0 flex-col justify-between ${compact ? "gap-0.5" : "gap-1"}`}>
-              <section className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
-                <h2 className={`${sectionHeading} shrink-0`}>Obranné páry</h2>
-                <div className="flex min-h-0 flex-1 flex-col justify-evenly gap-0.5">
-                  {lineup.defensePairs.slice(0, 3).map((pair, i) => (
-                    <div key={`pair-${i}`} className={`min-w-0 rounded-lg border px-1 py-0.5 ${lineBox}`}>
-                      <p
-                        className={`mb-0.5 text-center font-display text-[12px] font-extrabold uppercase tracking-[0.1em] sm:text-[13px] ${pairTitle}`}
-                      >
-                        {i + 1}. pár
-                      </p>
-                      <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
-                        {renderSlot(pair.lb, "LB", `pair-${i}-lb`)}
-                        {renderSlot(pair.rb, "RB", `pair-${i}-rb`)}
-                      </div>
-                    </div>
-                  ))}
-                  {defenseCount === 8 && (p3?.lb || p3?.rb) ? (
-                    <div className={`min-w-0 rounded-lg border px-1 py-0.5 ${lineBox}`}>
-                      <p
-                        className={`mb-0.5 text-center font-display text-[12px] font-extrabold uppercase tracking-[0.1em] sm:text-[13px] ${pairTitle}`}
-                      >
-                        4. pár
-                      </p>
-                      <div className="grid min-w-0 w-full grid-cols-2 gap-x-3.5 gap-y-0 sm:gap-x-4">
-                        {renderSlot(p3.lb, "LB", "pair-4-lb")}
-                        {renderSlot(p3.rb, "RB", "pair-4-rb")}
-                      </div>
-                    </div>
-                  ) : null}
-                  {seventhDefenseId ? (
-                    <div className={`min-w-0 rounded-lg border px-1 py-0.5 ${lineBox}`}>
-                      <p
-                        className={`mb-0.5 text-center font-display text-[12px] font-extrabold uppercase tracking-[0.1em] sm:text-[13px] ${pairTitle}`}
-                      >
-                        7. bek
-                      </p>
-                      <div className="grid grid-cols-3 gap-x-3.5">
-                        <div className="col-start-2">{renderSlot(seventhDefenseId, "D", "d7")}</div>
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              </section>
-
-            </div>
           </div>
         </div>
-
-        {extraSlots.length > 0 ? (
-          <div className="relative shrink-0 px-2 pb-1 pt-0 sm:px-2">
-            <ExtraPlayerSlotBand
-              variant="light"
-              compact={compact}
-              extraSlots={extraSlots}
-              renderExtraCard={(slot) => {
-                const label = slot.kind === "second-goalie" ? "G" : "F";
-                const key = slot.kind === "second-goalie" ? "g2-extra" : "xf-extra";
-                return renderSlot(slot.playerId, label, key);
-              }}
-            />
-          </div>
-        ) : null}
-
-        <footer className="relative z-[2] mt-1 flex shrink-0 flex-col gap-1 border-t border-slate-200/90 bg-slate-100/95 px-2 py-2 sm:flex-row sm:items-end sm:justify-between sm:px-2 sm:py-2.5">
-          <div className="max-w-[48%] text-left text-[12px] font-medium leading-snug text-slate-600">
-            <p className="font-display text-[13px] font-extrabold leading-normal tracking-wide text-[#c8102e] sm:text-[14px]">
-              {jerseyRatingExport ? "Hodnocení zápasu" : "Sestava na zápas"}
-            </p>
-          </div>
-          <div className="min-w-0 flex-1 text-center">
-            <p className="font-display text-[20px] font-black tracking-[0.12em] text-[#003087] sm:text-[22px]">
-              {host || "hokejlineup.cz"}
-            </p>
-          </div>
-          <div className="hidden w-[48%] sm:block" aria-hidden />
-        </footer>
       </div>
     );
   }

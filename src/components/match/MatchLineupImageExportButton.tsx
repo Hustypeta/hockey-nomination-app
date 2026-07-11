@@ -9,8 +9,10 @@ import {
   downloadDataUrl,
   letterboxCanvas,
   preparePosterCapture,
+  resizeCanvasTo,
 } from "@/lib/captureSharePoster";
-import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
+import { ensureFreshPosterIceBackground } from "@/lib/posterRosterIceBg";
+import { SHARE_POSTER_4X5_H, SHARE_POSTER_4X5_W, SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 import type { LineupStructure, Player } from "@/types";
 import { MatchLineupJerseyExportPoster } from "@/components/match/MatchLineupJerseyExportPoster";
 import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
@@ -96,6 +98,7 @@ export function MatchLineupImageExportButton({
   const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
   const [previewFilename, setPreviewFilename] = useState<string | null>(null);
   const [previewTitle, setPreviewTitle] = useState<string | null>(null);
+  const [previewLight, setPreviewLight] = useState(false);
   const controlled = typeof modalOpenControlled === "boolean" && typeof onModalOpenChange === "function";
   const modalOpen = controlled ? modalOpenControlled : modalOpenInternal;
   const setModalOpen = controlled ? onModalOpenChange! : setModalOpenInternal;
@@ -127,6 +130,7 @@ export function MatchLineupImageExportButton({
       setPreviewDataUrl(null);
       setPreviewFilename(null);
       setPreviewTitle(null);
+      setPreviewLight(false);
     }
   }, [modalOpen]);
 
@@ -152,36 +156,36 @@ export function MatchLineupImageExportButton({
         key: "cele-dresy",
         title: "Celá sestava — dresy",
         hint:
-          "Kompletní soupiska s dresy (brankáři, 4 lajny, obrana pod počtem beků, případně 13. útočník)." +
+          "Kompletní soupiska s dresy — mřížka 2×3 (gólmani, 4 lajny po 3+2), formát 4:5 pro Instagram." +
           ratingHint,
       },
       {
         key: "line-1",
         title: ratingSnapshot ? "Hodnocení — 1. lajna" : "Dresy — 1. lajna",
         hint: ratingSnapshot
-          ? "Formát 3:4 — dresy na ledě, jména a známky jako v editoru sestavy."
-          : "Tři útočníci vedle sebe, dva obránci vedle sebe, pod nimi 1. gólman.",
+          ? "Šablona ledu z editoru — dresy ve štítech, jména a známky pod nimi."
+          : "Šablona ledu z editoru — dresy a čísla ve štítech, jména pod sloty.",
       },
       {
         key: "line-2",
         title: ratingSnapshot ? "Hodnocení — 2. lajna" : "Dresy — 2. lajna",
         hint: ratingSnapshot
-          ? "Formát 3:4 — dresy na ledě s hodnocením."
-          : "Tři útočníci vedle sebe, dva obránci vedle sebe.",
+          ? "Šablona ledu z editoru — dresy ve štítech, jména a známky pod nimi."
+          : "Šablona ledu z editoru — dresy a čísla ve štítech.",
       },
       {
         key: "line-3",
         title: ratingSnapshot ? "Hodnocení — 3. lajna" : "Dresy — 3. lajna",
         hint: ratingSnapshot
-          ? "Formát 3:4 — dresy na ledě s hodnocením."
-          : "Tři útočníci vedle sebe, dva obránci vedle sebe.",
+          ? "Šablona ledu z editoru — dresy ve štítech, jména a známky pod nimi."
+          : "Šablona ledu z editoru — dresy a čísla ve štítech.",
       },
       {
         key: "line-4",
         title: ratingSnapshot ? "Hodnocení — 4. lajna" : "Dresy — 4. lajna",
         hint: ratingSnapshot
-          ? "Formát 3:4 — dresy na ledě; dole 13. útočník a 2. gólman."
-          : "Tři útočníci a dva obránci jako výš; dole vedle sebe 13. útočník a 2. gólman (pokud jsou v sestavě).",
+          ? "Šablona ledu z editoru — dresy ve štítech; dole 13. útočník a 2. gólman."
+          : "Šablona ledu z editoru — dresy ve štítech; dole 13. útočník a 2. gólman (pokud jsou v sestavě).",
       },
     ];
     return all;
@@ -198,9 +202,10 @@ export function MatchLineupImageExportButton({
       setPreviewDataUrl(null);
       setPreviewFilename(null);
       setPreviewTitle(null);
+      setPreviewLight(false);
       try {
         const bg =
-          slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? "#e8ecf2" : "#05080f";
+          slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? null : "#05080f";
         const selector =
           slot === "power-play"
             ? "[data-export-slot=\"power-play\"].match-power-play-export-poster"
@@ -225,37 +230,37 @@ export function MatchLineupImageExportButton({
         };
         stage.style.top = "0";
         stage.style.left = "0";
-        stage.style.opacity = "0.001";
+        stage.style.opacity = "1";
         stage.style.visibility = "visible";
-        stage.style.zIndex = "-1";
+        stage.style.zIndex = "-9999";
+        stage.style.pointerEvents = "none";
         await preparePosterCapture();
-        const prevHeight = node.style.height;
-        const prevMaxHeight = node.style.maxHeight;
-        const prevOverflow = node.style.overflow;
-        const letterboxRatingJerseys = ratingSnapshot && slot === "cele-dresy";
+        if (slot === "cele-dresy") {
+          await ensureFreshPosterIceBackground(node);
+          const imgs = node.querySelectorAll("img");
+          await Promise.all(
+            [...imgs].map(
+              (img) =>
+                img.complete
+                  ? Promise.resolve()
+                  : new Promise<void>((resolve) => {
+                      img.addEventListener("load", () => resolve(), { once: true });
+                      img.addEventListener("error", () => resolve(), { once: true });
+                    })
+            )
+          );
+        }
         const letterboxLineJerseys = slot.startsWith("line-");
-        if (letterboxRatingJerseys) {
-          node.style.height = "auto";
-          node.style.maxHeight = "none";
-          node.style.overflow = "visible";
-        }
-        let canvas: HTMLCanvasElement;
-        try {
-          canvas = await captureElementToCanvas(node, {
-            scale: SHARE_POSTER_CAPTURE_PIXEL_RATIO,
-            backgroundColor: bg,
-          });
-        } finally {
-          if (letterboxRatingJerseys) {
-            node.style.height = prevHeight;
-            node.style.maxHeight = prevMaxHeight;
-            node.style.overflow = prevOverflow;
-          }
-        }
-        if (letterboxRatingJerseys) {
-          canvas = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme: "light" });
+        const captureScale = slot === "cele-dresy" ? 1 : SHARE_POSTER_CAPTURE_PIXEL_RATIO;
+        const canvas = await captureElementToCanvas(node, {
+          scale: captureScale,
+          backgroundColor: bg,
+        });
+        let out = canvas;
+        if (slot === "cele-dresy") {
+          out = resizeCanvasTo(canvas, SHARE_POSTER_4X5_W, SHARE_POSTER_4X5_H);
         } else if (letterboxLineJerseys) {
-          canvas = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme: "dark" });
+          out = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme: "dark" });
         }
         stage.style.top = stagePrev.top;
         stage.style.left = stagePrev.left;
@@ -263,10 +268,11 @@ export function MatchLineupImageExportButton({
         stage.style.visibility = stagePrev.visibility;
         stage.style.zIndex = stagePrev.zIndex;
         const filename = filenameLineupSlot(slot, baseSlug, ratingSnapshot);
-        setPreviewDataUrl(canvasToPngDataUrl(canvas));
+        setPreviewDataUrl(canvasToPngDataUrl(out));
         setPreviewFilename(filename);
         const label = choices.find((c) => c.key === slot)?.title ?? "Export";
         setPreviewTitle(label);
+        setPreviewLight(slot === "cele-dresy");
         toast.success("Náhled připraven. Teď klikni na „Stáhnout PNG“.");
       } catch (e) {
         console.error("export match lineup:", e);
@@ -319,10 +325,12 @@ export function MatchLineupImageExportButton({
         }}
         previewDataUrl={previewDataUrl}
         previewTitle={previewTitle}
+        previewLight={previewLight}
         onClearPreview={() => {
           setPreviewDataUrl(null);
           setPreviewFilename(null);
           setPreviewTitle(null);
+          setPreviewLight(false);
         }}
         onDownloadPreview={() => {
           if (!previewDataUrl || !previewFilename) return;

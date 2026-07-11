@@ -32,9 +32,8 @@ export function buildFifaAppNav(designPreview: boolean): FifaAppNavItem[] {
 
   return [
     { href: "/", label: "Domů", icon: Home },
-    { href: "/zapasy/sestava", label: "Editor sestavy", icon: LayoutGrid, matchPrefix: true },
     { href: "/ucet", label: "Můj účet", icon: UserCircle, matchPrefix: true },
-    { href: "/hraci", label: "Hráči", icon: Users, matchPrefix: true },
+    { href: "/zapasy/sestava", label: "Editor sestavy", icon: LayoutGrid, matchPrefix: true },
     { href: "/souteze", label: "Soutěže", icon: Trophy, matchPrefix: true },
     { href: "/forum", label: "Fórum", icon: MessageSquare, matchPrefix: true },
     { href: "/zebricek", label: "Žebříček", icon: BarChart3 },

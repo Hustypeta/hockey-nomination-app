@@ -1,6 +1,7 @@
 import type { CommunityPostCategory, Prisma } from "@prisma/client";
 import type { CommunitySortMode } from "@/lib/community/categories";
 import { postInclude, serializePost } from "@/lib/community/serialize";
+import { ensureWelcomeForumPostPinned, sortPostsWithWelcomeFirst } from "@/lib/community/welcomeForumPost";
 import { prisma } from "@/lib/prisma";
 
 export function parseCommunitySort(raw: string | null): CommunitySortMode {
@@ -15,6 +16,8 @@ export async function listPublishedPosts(opts: {
   take: number;
   userId: string | null;
 }) {
+  await ensureWelcomeForumPostPinned(prisma);
+
   const where: Prisma.CommunityPostWhereInput = {
     status: "PUBLISHED",
     deletedAt: null,
@@ -51,5 +54,5 @@ export async function listPublishedPosts(opts: {
     : [];
   const likedSet = new Set(liked.map((l) => l.postId));
 
-  return rows.map((r) => serializePost(r, likedSet.has(r.id)));
+  return sortPostsWithWelcomeFirst(rows.map((r) => serializePost(r, likedSet.has(r.id))));
 }

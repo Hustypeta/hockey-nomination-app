@@ -68,40 +68,37 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
       if (event.key === "Escape") setMobileOpen(false);
     };
 
-    const onPointerDown = (event: MouseEvent | TouchEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node) || !rootRef.current?.contains(target)) {
-        setMobileOpen(false);
-      }
-    };
-
     document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("touchstart", onPointerDown, { passive: true });
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("touchstart", onPointerDown);
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen || !toggleRef.current || !panelRef.current) return;
+    const syncTop = () => {
+      const rect = toggleRef.current!.getBoundingClientRect();
+      panelRef.current!.style.setProperty("--fifa-mobile-nav-top", `${rect.bottom + 6}px`);
+    };
+    syncTop();
+    window.addEventListener("resize", syncTop);
+    window.addEventListener("scroll", syncTop, true);
+    return () => {
+      window.removeEventListener("resize", syncTop);
+      window.removeEventListener("scroll", syncTop, true);
     };
   }, [mobileOpen]);
 
   return (
     <>
-      {/* Mobile backdrop scrim — outside rootRef so clicking it counts as "outside" */}
       <div
-        className="fixed inset-0 z-[49] lg:hidden"
-        style={{
-          background: "rgba(0,0,0,0.55)",
-          opacity: mobileOpen ? 1 : 0,
-          pointerEvents: mobileOpen ? "auto" : "none",
-          transition: "opacity 0.2s ease",
-        }}
+        className={`fifa-top-nav-mobile-backdrop lg:hidden ${mobileOpen ? "fifa-top-nav-mobile-backdrop--open" : ""}`}
         aria-hidden
         onClick={() => setMobileOpen(false)}
       />
 
-    <div ref={rootRef} className="relative z-40 shrink-0 border-t border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)]">
+    <div ref={rootRef} className={`fifa-top-nav-root relative shrink-0 border-t border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)] ${mobileOpen ? "fifa-top-nav-root--open" : ""}`}>
       <div className="fifa-top-nav-mobile lg:hidden">
         <button
           ref={toggleRef}
@@ -128,7 +125,7 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
           id={panelId}
           className={`fifa-top-nav-mobile__panel ${mobileOpen ? "fifa-top-nav-mobile__panel--open" : ""}`}
           aria-hidden={!mobileOpen}
-          inert={!mobileOpen ? true : undefined}
+          hidden={!mobileOpen}
         >
           <nav className="fifa-top-nav-mobile__list" aria-label="Hlavní menu">
             {navItems.map((item) => (
@@ -138,7 +135,6 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
                 active={isFifaNavItemActive(pathname, item)}
                 variant="mobile"
                 onNavigate={() => setMobileOpen(false)}
-                tabIndex={mobileOpen ? undefined : -1}
               />
             ))}
           </nav>

@@ -10,7 +10,15 @@ import type { LineupStructure } from "@/types";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
 import { SHARE_POSTER_WIDTH_PX } from "@/lib/sharePosterLayout";
-import type { NominationListItem } from "@/components/account/UserAccountHub";
+
+type NominationListItem = {
+  id: string;
+  createdAt: string;
+  timeBonusPercent: number;
+  captainId: string | null;
+  title: string | null;
+  isContestEntry?: boolean;
+};
 
 type NominationRow = NominationListItem & {
   lineupStructure: unknown;

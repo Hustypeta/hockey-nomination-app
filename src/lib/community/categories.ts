@@ -5,8 +5,6 @@ export const COMMUNITY_CATEGORY_LABELS: Record<CommunityPostCategory, string> = 
   FANTASY: "Fantasy",
   GENERAL: "Obecné",
   Q_AND_A: "Otázky a odpovědi",
-  MEMES: "Memes",
-  OFF_TOPIC: "Off-topic",
 };
 
 export const COMMUNITY_CATEGORY_ORDER: CommunityPostCategory[] = [
@@ -14,8 +12,6 @@ export const COMMUNITY_CATEGORY_ORDER: CommunityPostCategory[] = [
   "FANTASY",
   "GENERAL",
   "Q_AND_A",
-  "MEMES",
-  "OFF_TOPIC",
 ];
 
 export type CommunitySortMode = "new" | "top" | "discussed";

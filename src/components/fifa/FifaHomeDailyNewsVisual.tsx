@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FifaImageTextScrim } from "@/components/fifa/FifaImageTextScrim";
 import { getDailyNewsSourceBrand } from "@/lib/dailyNews/sourceBrand";
+import { dailyNewsThumbUrl } from "@/lib/dailyNews/thumbUrl";
 
 type Props = {
   imageUrl: string | null;
@@ -12,17 +13,20 @@ type Props = {
 export function FifaHomeDailyNewsVisual({ imageUrl, source }: Props) {
   const [imgFailed, setImgFailed] = useState(false);
   const brand = getDailyNewsSourceBrand(source);
-  const showPhoto = Boolean(imageUrl) && !imgFailed;
+  const proxied = imageUrl ? dailyNewsThumbUrl(imageUrl) : null;
+  const showPhoto = Boolean(proxied) && !imgFailed;
 
   return (
-    <div className="absolute inset-0 bg-[var(--fifa-bg-base)]">
+    <>
       {showPhoto ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={imageUrl!}
+          src={proxied!}
           alt=""
-          className="fifa-home-tile-media fifa-image-art-photo"
-          referrerPolicy="no-referrer"
+          className="fifa-home-tile-media fifa-image-art-photo object-[center_42%]"
+          loading="lazy"
+          decoding="async"
+          draggable={false}
           onError={() => setImgFailed(true)}
         />
       ) : (
@@ -52,7 +56,7 @@ export function FifaHomeDailyNewsVisual({ imageUrl, source }: Props) {
       )}
 
       <FifaImageTextScrim variant="media-bottom" />
-    </div>
+    </>
   );
 }
 

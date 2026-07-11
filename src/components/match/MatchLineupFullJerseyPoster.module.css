@@ -1,0 +1,470 @@
+/* 1080×1350 — uživatelské ledové pozadí, brankáři nahoře, 4 lajny ve čtvercích */
+.posterRoot {
+  --poster-navy: #0a2463;
+  --poster-cz-blue: #11457e;
+  --poster-cz-red: #d7141a;
+  --poster-ice: #d8e8f2;
+  --jersey-w: 128px;
+  --poster-defense-gap: 18px;
+  --poster-lanes-inset: 1%;
+  --line-frame-inner-r: 14px;
+  --poster-jerseys-shift-y: 22px;
+  /* 81px roh v PNG 879×1088 → ~100px na exportu 1080×1350; vnitřní led − ~16px */
+  --poster-outer-r: 100px;
+  --poster-ice-inner-r: calc(var(--poster-outer-r) - 16px);
+  /* boční okraj ledu v PNG (~13px @ 879px) */
+  --poster-ice-side-inset: 1.48%;
+  /* bezpečná zóna pod zaoblenými rohy nahoře */
+  --poster-header-inset-x: calc(var(--poster-outer-r) * 0.42 + 6px);
+  --poster-header-inset-y: calc(var(--poster-outer-r) * 0.34 + 2px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--poster-outer-r);
+  isolation: isolate;
+  color: var(--poster-navy);
+  font-family: "Barlow Condensed", "Inter", system-ui, sans-serif;
+  background-color: transparent;
+}
+
+.iceBg {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center top;
+  user-select: none;
+}
+
+.posterSurface {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Bílé vnější rohy — sedí na zaoblení plakátu / ledu */
+.posterSurface::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: calc(var(--poster-outer-r) + 2px);
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at top left,
+      #ffffff var(--poster-outer-r),
+      transparent calc(var(--poster-outer-r) + 1px)
+    ),
+    radial-gradient(
+      circle at top right,
+      #ffffff var(--poster-outer-r),
+      transparent calc(var(--poster-outer-r) + 1px)
+    );
+}
+
+.posterBody {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+  padding: 0 1.5% 3%;
+}
+
+.topBar {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px 14px;
+  width: calc(100% - 2 * var(--poster-ice-side-inset));
+  min-height: 0;
+  margin: 0 auto 1.2%;
+  padding: var(--poster-header-inset-y) var(--poster-header-inset-x) 1.1%;
+  background: #ffffff;
+  border-bottom: 2.5px solid rgba(215, 20, 26, 0.35);
+  border-radius: var(--poster-ice-inner-r) var(--poster-ice-inner-r) 12px 12px;
+  overflow: hidden;
+}
+
+.brandHost {
+  justify-self: start;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-wordmark, "Barlow Condensed", system-ui, sans-serif);
+  font-size: clamp(18px, 2.1vw, 24px);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: var(--poster-navy);
+  text-transform: lowercase;
+}
+
+.title {
+  justify-self: center;
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+.titleSpacer {
+  display: block;
+}
+
+.titleText {
+  display: inline-block;
+  max-width: 100%;
+  font-family: var(--font-display, "Bebas Neue", system-ui, sans-serif);
+  font-size: clamp(24px, 3.4vw, 40px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  color: var(--poster-cz-red);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brandLogo {
+  justify-self: end;
+  flex-shrink: 0;
+  width: clamp(120px, 14.5vw, 168px);
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.posterLanes {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+  padding-inline: var(--poster-lanes-inset);
+  padding-top: var(--poster-jerseys-shift-y);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.lineFrame {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  border: 3px solid var(--line-frame-border, rgba(10, 36, 99, 0.35));
+  border-radius: var(--line-frame-inner-r);
+  background: var(--line-frame-bg, rgba(255, 255, 255, 0.42));
+  box-shadow: 0 3px 12px var(--line-frame-shadow, rgba(10, 36, 99, 0.1));
+  padding: 6px 8px 10px;
+}
+
+/* Vnější roh rámečku = stejná konkávnost jako okraj plakátu */
+.lineFrameOuterTl {
+  border-radius: var(--poster-outer-r) var(--line-frame-inner-r) var(--line-frame-inner-r)
+    var(--line-frame-inner-r);
+}
+
+.lineFrameOuterTr {
+  border-radius: var(--line-frame-inner-r) var(--poster-outer-r) var(--line-frame-inner-r)
+    var(--line-frame-inner-r);
+}
+
+.lineFrameOuterBl {
+  border-radius: var(--line-frame-inner-r) var(--line-frame-inner-r) var(--line-frame-inner-r)
+    var(--poster-outer-r);
+}
+
+.lineFrameOuterBr {
+  border-radius: var(--line-frame-inner-r) var(--line-frame-inner-r) var(--poster-outer-r)
+    var(--line-frame-inner-r);
+}
+
+/* Dočasně skryté barevné rámečky — odebrat třídu posterLineFramesOff z TSX pro návrat */
+.posterLineFramesOff .lineFrame {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.goalieBlock {
+  flex-shrink: 0;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -0.2%;
+  padding: 0 0 0.5%;
+  /* stejná šířka jako dres v jedné lajně (polovina mřížky) */
+  --jersey-w: min(128px, calc((100cqw - 38px) / 6));
+}
+
+.goalieBlockWithExtra {
+  position: relative;
+  width: 100%;
+  justify-content: center;
+  min-height: 0;
+}
+
+.goalieMain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.goalieBlockWithExtra .goalieMain {
+  margin-inline: auto;
+}
+
+.goaliePair {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 28px;
+}
+
+.goalieSlot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.goalieExtraSlot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: 0;
+  padding-top: 0;
+}
+
+.linesGridWrap {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+  padding-bottom: 1.2%;
+}
+
+.rinkCenterCircle {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  width: min(22vw, 168px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 2.5px solid rgba(126, 184, 216, 0.88);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+}
+
+.rinkCenterCircle::before,
+.rinkCenterCircle::after {
+  content: "";
+  position: absolute;
+  background: rgba(126, 184, 216, 0.82);
+}
+
+.rinkCenterCircle::before {
+  left: 50%;
+  top: 14%;
+  width: 2px;
+  height: 72%;
+  transform: translateX(-50%);
+}
+
+.rinkCenterCircle::after {
+  left: 14%;
+  top: 50%;
+  width: 72%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.cellLine {
+  container-type: inline-size;
+  justify-content: stretch;
+  --jersey-w: min(128px, calc((100cqw - 12px) / 3));
+}
+
+.cellLineTone1 {
+  --line-frame-border: var(--poster-cz-red);
+  --line-frame-bg: rgba(215, 20, 26, 0.11);
+  --line-frame-shadow: rgba(215, 20, 26, 0.2);
+}
+
+.cellLineTone2 {
+  --line-frame-border: var(--poster-cz-blue);
+  --line-frame-bg: rgba(17, 69, 126, 0.12);
+  --line-frame-shadow: rgba(17, 69, 126, 0.2);
+}
+
+.cellLineTone3 {
+  --line-frame-border: var(--poster-cz-blue);
+  --line-frame-bg: rgba(17, 69, 126, 0.12);
+  --line-frame-shadow: rgba(17, 69, 126, 0.2);
+}
+
+.cellLineTone4 {
+  --line-frame-border: var(--poster-cz-red);
+  --line-frame-bg: rgba(215, 20, 26, 0.11);
+  --line-frame-shadow: rgba(215, 20, 26, 0.2);
+}
+
+.cellHeading {
+  flex-shrink: 0;
+  margin: 0 0 6px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+}
+
+.cellHeadingText {
+  display: inline-block;
+  padding: 5px 24px;
+  border: 2px solid var(--poster-navy);
+  border-radius: 999px;
+  background: var(--poster-navy);
+  box-shadow: 0 2px 8px rgba(10, 36, 99, 0.22);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  color: #fff;
+}
+
+.cellBody {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.linesGrid {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 12px 14px;
+}
+
+.lineGrid {
+  --lineup-poster-row-gap: 2px;
+  --lineup-poster-cell-gap: 0px;
+  width: 100%;
+  max-width: 100%;
+  flex-shrink: 1;
+  min-height: 0;
+}
+
+.lineGrid :global([class*="rowForwards"]) {
+  grid-template-columns: repeat(3, var(--jersey-w)) !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  width: max-content !important;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.lineGrid :global([class*="rowDefense"]) {
+  grid-template-columns: repeat(2, var(--jersey-w)) !important;
+  justify-content: center !important;
+  gap: var(--poster-defense-gap) !important;
+  width: max-content !important;
+  max-width: calc(var(--jersey-w) * 2 + var(--poster-defense-gap));
+  margin-inline: auto;
+}
+
+.jerseyTile {
+  width: var(--jersey-w);
+  max-width: var(--jersey-w);
+  min-width: 0;
+  margin-left: auto;
+  margin-right: auto;
+  flex: 0 0 auto;
+}
+
+.jerseyTile :global(.nhl25-jersey-card-root) {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.jerseyTile :global(.nhl25-jersey-card-root > div) {
+  gap: 0 !important;
+}
+
+.jerseyTile :global(.nhl25-jersey-card-root [class*="pt-1.5"]) {
+  padding-top: 2px !important;
+  padding-bottom: 0 !important;
+}
+
+.jerseyTile :global(.jersey-back-number-text) {
+  font-size: 2.65rem !important;
+  line-height: 0.9 !important;
+}
+
+.jerseyTile :global(.jersey-nameplate-text),
+.jerseyTile :global(.jersey-nameplate-text--woven),
+.jerseyTile :global(.nhl25-poster-jersey-hem-name span) {
+  color: var(--poster-navy) !important;
+  -webkit-text-stroke-width: 0 !important;
+  text-shadow: none !important;
+  font-weight: 800 !important;
+}
+
+.jerseyTile :global(.jersey-nameplate-text--poster-crop) {
+  max-width: 100% !important;
+}
+
+.jerseyTile :global(.nhl25-poster-jersey-hem-name) {
+  gap: 0 !important;
+  line-height: 1 !important;
+  padding-top: 2px !important;
+}

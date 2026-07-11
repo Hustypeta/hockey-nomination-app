@@ -6,7 +6,6 @@ import { FifaHomeKomunitaStatsCard } from "@/components/fifa/FifaHomeKomunitaSta
 export function FifaHomeKomunitaCard() {
   return (
     <article className="fifa-card fifa-card-hero fifa-card--interactive fifa-home-komunita-card group relative flex h-full min-h-0 flex-col overflow-hidden">
-      <Users className="fifa-komunita-watermark" aria-hidden />
       <div className="fifa-card-header relative z-10">
         <p className="fifa-kicker flex items-center gap-2">
           <span className="fifa-icon-chip">

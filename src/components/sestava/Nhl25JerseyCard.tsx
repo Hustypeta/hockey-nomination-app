@@ -59,6 +59,12 @@ export interface Nhl25JerseyCardProps {
   disableMotion?: boolean;
   /** Duplicitní příjmení v soupisce → iniciála („M. Kovařčík“). */
   ambiguousJerseyLastKeys?: ReadonlySet<string> | null;
+  /** Skryje štítek pozice (LW, G, …) — exportní plakát celé sestavy. */
+  hidePositionLabel?: boolean;
+  /** U varianty `poster` nezobrazí vlajku u jména pod dresem. */
+  hidePosterFlag?: boolean;
+  /** Stejná velikost jména na exportním plakátu (zmenší jen extrémně dlouhá). */
+  posterUniformNames?: boolean;
 }
 
 export function Nhl25JerseyCard({
@@ -73,6 +79,9 @@ export function Nhl25JerseyCard({
   nameplateVariant = "card",
   typographyScale = 1,
   ambiguousJerseyLastKeys,
+  hidePositionLabel = false,
+  hidePosterFlag = false,
+  posterUniformNames = false,
 }: Nhl25JerseyCardProps) {
   const empty = !player;
   const kind: "skater" | "goalie" =
@@ -84,9 +93,16 @@ export function Nhl25JerseyCard({
   const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
   const npVar = nameplateVariant === "poster" ? "poster" : "card";
   const namePlate =
-    !empty && nameplateVariant !== "poster" ? jerseyNameplateNameProps(ln, npVar) : null;
+    !empty && nameplateVariant !== "poster"
+      ? jerseyNameplateNameProps(ln, npVar)
+      : null;
   const hemPlate =
-    !empty && nameplateVariant === "poster" && ln ? jerseyNameplateNameProps(ln, "poster") : null;
+    !empty && nameplateVariant === "poster" && ln
+      ? jerseyNameplateNameProps(ln, "poster", {
+          uniformPosterSize: posterUniformNames,
+          uniformFontPx: 20,
+        })
+      : null;
 
   const scaledNameplateStyle =
     namePlate && typographyScale !== 1
@@ -159,7 +175,7 @@ export function Nhl25JerseyCard({
             : `nhl25-jersey-card-frame nhl25-jersey-card-frame--filled flex flex-col gap-1 rounded-[11px] p-[5px]`
         }
       >
-        <div className="flex min-h-[1rem] shrink-0 items-center justify-center px-0.5">
+        <div className={`flex shrink-0 items-center justify-center px-0.5 ${hidePositionLabel ? "hidden" : "min-h-[1rem]"}`}>
           <span
             className={`
               rounded border border-[#11457e]/45 bg-[#11457e] font-display font-bold uppercase tracking-[0.14em] text-white shadow-sm
@@ -203,7 +219,7 @@ export function Nhl25JerseyCard({
               </div>
             </div>
             {hemPlate && hemPlate.lines.length > 0 ? (
-              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center gap-2.5 px-0.5 pb-1 pt-2.5">
+              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center px-0.5 pb-1 pt-1.5">
                 <span className="nhl25-poster-jersey-hem-name flex min-w-0 max-w-full flex-col items-center justify-center gap-0.5 text-center leading-snug">
                   {hemPlate.lines.map((line, idx) => (
                     <span key={idx} className={hemPlate.className} style={hemPlate.style}>
@@ -211,11 +227,13 @@ export function Nhl25JerseyCard({
                     </span>
                   ))}
                 </span>
-                <JerseyFlagCzInline
-                  width={28}
-                  height={17}
-                  className="shrink-0 self-center opacity-95 drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)]"
-                />
+                {!hidePosterFlag ? (
+                  <JerseyFlagCzInline
+                    width={28}
+                    height={17}
+                    className="shrink-0 self-center opacity-95 drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)]"
+                  />
+                ) : null}
               </div>
             ) : null}
           </div>

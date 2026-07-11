@@ -46,9 +46,11 @@ export function DailyNewsArticleContent({ item, compact = false }: Props) {
         <h3 className="font-display mt-2 line-clamp-3 text-sm font-semibold leading-snug text-[var(--fifa-text)] lg:text-base">
           {item.title}
         </h3>
-        <p className="mt-2 line-clamp-4 text-[11px] leading-relaxed text-[var(--fifa-text-secondary)] lg:text-xs">
-          {item.summary}
-        </p>
+        {item.summary ? (
+          <p className="mt-2 line-clamp-4 text-[11px] leading-relaxed text-[var(--fifa-text-secondary)] lg:text-xs">
+            {item.summary}
+          </p>
+        ) : null}
       </div>
 
       <Link

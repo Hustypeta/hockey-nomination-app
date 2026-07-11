@@ -13,6 +13,7 @@
     "lint": "eslint",
     "db:generate": "prisma generate",
     "db:push": "node scripts/prisma-with-env.mjs db push",
+    "db:migrate:deploy": "node scripts/prisma-with-env.mjs migrate deploy",
     "db:seed": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json prisma/seed.ts",
     "inject:league": "npx ts-node --project scripts/tsconfig.json scripts/inject-league-json.ts",
     "sort:candidates": "npx ts-node --project scripts/tsconfig.json scripts/sort-ms-candidates.ts",

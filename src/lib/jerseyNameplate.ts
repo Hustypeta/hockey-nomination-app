@@ -73,9 +73,16 @@ function splitNameplateLinesForPoster(lastName: string): string[] {
   return [left, right];
 }
 
+export type JerseyNameplateOptions = {
+  /** Stejná velikost pro všechna jména; zmenší jen při riziku přesahu. */
+  uniformPosterSize?: boolean;
+  uniformFontPx?: number;
+};
+
 export function jerseyNameplateNameProps(
   lastName: string,
-  variant: "card" | "premium" | "poster" | "rink" = "card"
+  variant: "card" | "premium" | "poster" | "rink" = "card",
+  options?: JerseyNameplateOptions
 ): {
   lines: string[];
   className: string;
@@ -94,6 +101,35 @@ export function jerseyNameplateNameProps(
 
   const lineCount = lines.length;
   const score = layoutWidthScore(lines);
+
+  if (variant === "poster" && options?.uniformPosterSize) {
+    const uniformPx = options.uniformFontPx ?? 20;
+    const overflowScore = 12.5;
+    const minPx = 14;
+    let fontSize = uniformPx;
+    if (score > overflowScore) {
+      const t = clamp((score - overflowScore) / (16.5 - overflowScore), 0, 1);
+      fontSize = uniformPx - t * (uniformPx - minPx);
+    }
+    const woven = "jersey-nameplate-text--woven";
+    const posterClamp = "jersey-nameplate-text--poster-crop max-w-[min(100%,7.95rem)] sm:max-w-[min(100%,8.25rem)]";
+    return {
+      lines,
+      className: [
+        "jersey-nameplate-text",
+        woven,
+        posterClamp,
+        "box-border min-w-0 shrink px-0.5",
+        "block w-full max-w-full whitespace-nowrap text-center hyphens-none",
+      ].join(" "),
+      style: {
+        fontSize: `${Math.round(fontSize * 100) / 100}px`,
+        letterSpacing: score > overflowScore ? "0.02em" : "0.04em",
+        lineHeight: lineCount > 1 ? 1.06 : 1.1,
+      },
+    };
+  }
+
   /** Dvě kratší řádky = méně horizontálního stresu → mírně větší písmo než jedna ultraúzká řádka. */
   const multilineEase = lineCount > 1 ? 1.09 : 1;
   /** `premium` = menší potisk, víc „našitý“ do dresu v editoru. `poster` = plakát. `rink` = šablona ledu (cqh). */

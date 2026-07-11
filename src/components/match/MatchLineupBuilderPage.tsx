@@ -38,7 +38,6 @@ import { poolToSlotCollision } from "@/lib/dndCollision";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useUndoableState } from "@/hooks/useUndoableState";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
-import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { MatchLineupSaveShareModal } from "@/components/match/MatchLineupSaveShareModal";
 
 function isMatchLineupValid(
@@ -86,9 +85,8 @@ export function MatchLineupBuilderPage() {
   const { status: authStatus } = useSession();
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
-  /** Dokud není načten draft z ?kod=, neukazovat editor (žádný „flash“ prázdné sestavy). */
+  /** Dokud není načten draft z ?kod=, draft se aplikuje až po načtení hráčů. */
   const needDraftImport = Boolean(loadEditCode);
-  const [draftImportReady, setDraftImportReady] = useState(!needDraftImport);
   const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
   const fifaEnabled = isFifaDesignEnabled();
   const fifaMobileInlinePool = fifaEnabled && isNarrowLayout;
@@ -118,8 +116,6 @@ export function MatchLineupBuilderPage() {
   const [shareSlug, setShareSlug] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [siteOrigin, setSiteOrigin] = useState("");
-  /** Loader ukázat až po krátké prodlevě — rychlé načtení tak neprobliká celou úvodní obrazovkou. */
-  const [showLoader, setShowLoader] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -186,11 +182,7 @@ export function MatchLineupBuilderPage() {
 
   /** Načtení existující uložené sestavy z účtu (?kod=…) po načtení hráčů. */
   useEffect(() => {
-    if (!needDraftImport) {
-      setDraftImportReady(true);
-      return;
-    }
-    if (loading) return;
+    if (!needDraftImport || loading) return;
 
     let cancelled = false;
 
@@ -231,8 +223,8 @@ export function MatchLineupBuilderPage() {
         if (typeof data.code === "string") setShareCode(data.code);
         if (typeof data.slug === "string" && data.slug.length > 0) setShareSlug(data.slug);
         toast.success("Sestava načtena — můžeš ji upravit.");
-      } finally {
-        if (!cancelled) setDraftImportReady(true);
+      } catch {
+        /* ignore */
       }
     })();
 
@@ -249,16 +241,6 @@ export function MatchLineupBuilderPage() {
       document.body.style.overflow = prev;
     };
   }, [mobilePlayerSheetOpen]);
-
-  const isLoadingView = loading || (needDraftImport && !draftImportReady);
-  useEffect(() => {
-    if (!isLoadingView) {
-      setShowLoader(false);
-      return;
-    }
-    const t = setTimeout(() => setShowLoader(true), 240);
-    return () => clearTimeout(t);
-  }, [isLoadingView]);
 
   const handleRandom = () => {
     const next = buildRandomMatchLineup(players, { defenseCount, allowExtraForward });
@@ -448,23 +430,6 @@ export function MatchLineupBuilderPage() {
       toast.error("Nepodařilo se zkopírovat. Zkopíruj ho ručně níže.");
     }
   };
-
-  if (isLoadingView) {
-    if (!showLoader) {
-      return <div className="min-h-[60vh] w-full" aria-hidden />;
-    }
-    return (
-      <AppLoadingScreen
-        tagline="Editor sestavy"
-        message={
-          loading
-            ? "Načítám editor zápasové sestavy…"
-            : "Načítám uloženou sestavu…"
-        }
-        intro={null}
-      />
-    );
-  }
 
   const forcedPoolPosition: Position | null = selectedSlot
     ? selectedSlot.type === "goalie"

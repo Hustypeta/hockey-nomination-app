@@ -1,127 +1,131 @@
 "use client";
 
-import { MessageCircle, Pin, ThumbsUp } from "lucide-react";
+import { Clock, Heart, MessageCircle, Pin } from "lucide-react";
 import { COMMUNITY_CATEGORY_LABELS } from "@/lib/community/categories";
+import { authorInitials, formatRelativeTime } from "@/lib/community/display";
 import type { CommunityPostDto } from "@/lib/community/types";
 import { CommunityBody } from "@/components/komunita/CommunityBody";
-import { CommunityLineupEmbed } from "@/components/komunita/CommunityLineupEmbed";
-import { FIFA_BADGE, FIFA_META } from "@/lib/fifa/fifaUiClasses";
+import { CommunityPostMediaFrame } from "@/components/komunita/CommunityPostMediaFrame";
 import type { Player } from "@/types";
 
 export function CommunityPostCard({
   post,
   players,
-  selected,
-  onSelect,
+  onOpenDetail,
   onToggleLike,
   likeBusy,
   fifaUi = false,
+  onSelect,
 }: {
   post: CommunityPostDto;
   players: Player[];
-  selected: boolean;
-  onSelect: () => void;
+  onOpenDetail?: () => void;
   onToggleLike: () => void;
   likeBusy: boolean;
   fifaUi?: boolean;
+  /** @deprecated use onOpenDetail */
+  selected?: boolean;
+  onSelect?: () => void;
+  commentsExpanded?: boolean;
 }) {
-  const authorLabel = post.author.name?.trim() || "Hráč";
+  const authorLabel = post.author.displayName;
+  const open = onOpenDetail ?? onSelect ?? (() => {});
 
-  const shellClass = fifaUi
-    ? `fifa-forum-post ${selected ? "fifa-forum-post--selected" : ""}`
-    : `cursor-pointer rounded-2xl border p-4 transition ${
-        selected
-          ? "border-cyan-400/50 bg-cyan-950/25"
-          : "border-white/10 bg-black/25 hover:border-white/20"
-      }`;
+  if (fifaUi) {
+    return (
+      <article id={`post-${post.slug}`} className="fifa-forum-post-card">
+        <header className="fifa-forum-post-card__header">
+          <div className="fifa-forum-post-card__author-row">
+            <div className="fifa-forum-avatar" aria-hidden>
+              {post.author.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={post.author.image} alt="" className="h-full w-full object-cover" />
+              ) : (
+                authorInitials(authorLabel)
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                {post.author.isStaff || post.isStaffPost ? (
+                  <span className="fifa-forum-chip fifa-forum-chip--staff">Admin</span>
+                ) : (
+                  <span className="truncate font-semibold text-[var(--fifa-text)]">{authorLabel}</span>
+                )}
+                {post.pinnedAt ? (
+                  <span className="fifa-forum-chip fifa-forum-chip--pin">
+                    <Pin className="h-2.5 w-2.5" aria-hidden />
+                    Připnuto
+                  </span>
+                ) : null}
+              </div>
+              <time className="text-xs text-[var(--fifa-text-muted)]" dateTime={post.createdAt}>
+                {formatRelativeTime(post.createdAt)}
+              </time>
+            </div>
+          </div>
+          <span className="fifa-forum-post-card__category">{COMMUNITY_CATEGORY_LABELS[post.category]}</span>
+        </header>
 
-  const metaClass = fifaUi ? FIFA_META : "text-[11px] text-white/50";
-  const titleClass = fifaUi
-    ? "mt-2 font-sans text-lg font-bold text-[var(--fifa-text)]"
-    : "mt-2 font-sans text-lg font-bold text-white";
-  const tagClass = fifaUi
-    ? FIFA_BADGE
-    : "rounded-full bg-white/10 px-2 py-0.5";
-  const pinClass = fifaUi
-    ? "inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-amber-300"
-    : "inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-amber-200";
-  const hashTagClass = fifaUi
-    ? "rounded-full border border-[var(--fifa-border)] bg-[var(--fifa-bg-surface)] px-2 py-0.5 text-[11px] text-[var(--fifa-text-muted)]"
-    : "rounded-full bg-white/8 px-2 py-0.5 text-[11px] text-white/60";
-  const actionsClass = fifaUi
-    ? "mt-3 flex items-center gap-4 text-sm text-[var(--fifa-text-muted)]"
-    : "mt-3 flex items-center gap-4 text-sm text-white/60";
+        <button type="button" onClick={open} className="fifa-forum-post-card__frame-btn" aria-label={`Otevřít příspěvek: ${post.title}`}>
+          <CommunityPostMediaFrame post={post} players={players} />
+        </button>
 
+        <footer className="fifa-forum-post-card__footer">
+          <div className="fifa-forum-post-card__actions">
+            <button
+              type="button"
+              disabled={likeBusy}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleLike();
+              }}
+              className={`fifa-forum-post-card__action ${post.likedByMe ? "fifa-forum-post-card__action--liked" : ""}`}
+              aria-label={`Lajk (${post.likeCount})`}
+            >
+              <Heart className={`h-6 w-6 ${post.likedByMe ? "fill-current" : ""}`} aria-hidden />
+            </button>
+            <button
+              type="button"
+              onClick={open}
+              className="fifa-forum-post-card__action"
+              aria-label={`Komentáře (${post.commentCount})`}
+            >
+              <MessageCircle className="h-6 w-6" aria-hidden />
+            </button>
+          </div>
+
+          <p className="fifa-forum-post-card__counts">
+            <span>{post.likeCount} lajků</span>
+            {post.commentCount > 0 ? <span>{post.commentCount} komentářů</span> : null}
+          </p>
+
+          <button type="button" onClick={open} className="fifa-forum-post-card__caption">
+            <span className="fifa-forum-post-card__caption-author">{authorLabel}</span>
+            <span className="fifa-forum-post-card__caption-title">{post.title}</span>
+            <span className="fifa-forum-post-card__caption-more">… více</span>
+          </button>
+        </footer>
+      </article>
+    );
+  }
+
+  const shellClass = "cursor-pointer rounded-2xl border border-white/10 bg-black/25 p-4 transition hover:border-white/20";
   return (
-    <article
-      className={shellClass}
-      onClick={onSelect}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onSelect();
-        }
-      }}
-      role="button"
-      tabIndex={0}
-    >
-      <div className={`flex flex-wrap items-center gap-2 ${metaClass}`}>
-        {post.pinnedAt ? (
-          <span className={pinClass}>
-            <Pin className="h-3 w-3" />
-            Připnuto
-          </span>
-        ) : null}
-        <span className={tagClass}>{COMMUNITY_CATEGORY_LABELS[post.category]}</span>
+    <article className={shellClass} onClick={open} role="button" tabIndex={0}>
+      <div className="flex flex-wrap items-center gap-2 text-[11px] text-white/50">
+        <span className="rounded-full bg-white/10 px-2 py-0.5">{COMMUNITY_CATEGORY_LABELS[post.category]}</span>
         <span>{authorLabel}</span>
-        <span>·</span>
-        <time dateTime={post.createdAt}>
-          {new Date(post.createdAt).toLocaleString("cs-CZ", {
-            day: "numeric",
-            month: "short",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </time>
       </div>
-      <h2 className={titleClass}>{post.title}</h2>
+      <h2 className="mt-2 font-sans text-lg font-bold text-white">{post.title}</h2>
       <div className="mt-2 line-clamp-3">
         <CommunityBody text={post.bodyMd} />
-      </div>
-      {post.tags.length > 0 ? (
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {post.tags.map((t) => (
-            <span key={t.slug} className={hashTagClass}>
-              #{t.label}
-            </span>
-          ))}
-        </div>
-      ) : null}
-      {post.attachments[0] ? (
-        <div className="mt-3" onClick={(e) => e.stopPropagation()}>
-          <CommunityLineupEmbed snapshot={post.attachments[0].snapshot} players={players} />
-        </div>
-      ) : null}
-      <div className={actionsClass}>
-        <button
-          type="button"
-          disabled={likeBusy}
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleLike();
-          }}
-          className={`inline-flex items-center gap-1.5 rounded-lg px-2 py-1 transition ${
-            fifaUi ? "hover:bg-[var(--fifa-bg-hover)]" : "hover:bg-white/10"
-          } ${post.likedByMe ? "text-rose-400" : ""}`}
-        >
-          <ThumbsUp className={`h-4 w-4 ${post.likedByMe ? "fill-current" : ""}`} />
-          {post.likeCount}
-        </button>
-        <span className="inline-flex items-center gap-1.5">
-          <MessageCircle className="h-4 w-4" />
-          {post.commentCount}
-        </span>
       </div>
     </article>
   );
 }
+
+export const COMMUNITY_SORT_ICONS = {
+  new: Clock,
+  top: Heart,
+  discussed: MessageCircle,
+} as const;
