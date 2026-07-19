@@ -1328,8 +1328,6 @@ export function LineBuilder({
               activeLine={matchRinkPreview ? 0 : activeMatchLine}
               onActiveLineChange={matchRinkPreview ? () => {} : handleActiveMatchLineChange}
               preview={matchRinkPreview}
-              defCount={defCount}
-              allowExtraForward={matchAllowExtraForward}
               slotsForLine={slotsForLine}
               starterGoalie={starterGoalieSlot}
             />

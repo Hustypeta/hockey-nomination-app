@@ -1,266 +1,8 @@
 [
   {
-    "name": "Radan Lenc",
-    "position": "F",
-    "role": "RW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Adam Musil",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Jaromir Pytlik",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Tomas Galvas",
+    "name": "Adam Jánošík",
     "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Adam Najman",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Jaromír Pérez",
-    "position": "F",
-    "role": "RW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Denis Zeman",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Radim Simek",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Filip Jansa",
-    "position": "F",
-    "role": "LW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Tomas Filippi",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Ondrej Prochazka",
-    "position": "F",
-    "role": "LW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Marek Zachar",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Jaroslav Vlach",
-    "position": "F",
-    "role": "LW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Tomas Hanousek",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Petr Kolmann",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "David Aubrecht",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Martin Rysavy",
-    "position": "F",
-    "role": "LW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Vojtech Pilisek",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Adam Nemec",
-    "position": "F",
-    "role": "LW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Jakub Sedivy",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Vasyl Spilka",
-    "position": "F",
-    "role": "LW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Marek Baránek",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Tomas Mazura",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Jakub Hujer",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Lukas Kachlir",
-    "position": "D",
-    "role": "RB",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Adrien Bartovič",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Daniel Pekar",
-    "position": "F",
-    "role": "LW",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Tomas Fort",
-    "position": "F",
-    "role": "C",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Jan Buchtele",
-    "position": "F",
-    "role": "LW",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Dominik Lakatos",
-    "position": "F",
-    "role": "RW",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Filip Pyrochta",
-    "position": "D",
-    "role": "RB",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Filip Pavlík",
-    "position": "D",
-    "role": "RB",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Vojtěch Hradec",
-    "position": "F",
-    "role": "C",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Jakub Lichtag",
-    "position": "F",
-    "role": "RW",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Patrik Zdráhal",
-    "position": "F",
-    "role": "RW",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Petr Gewiese",
-    "position": "D",
-    "role": "RB",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Ales Cech",
-    "position": "D",
-    "role": "RB",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Vojtech Malinek",
-    "position": "F",
-    "role": "C",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Radek Koblizek",
-    "position": "F",
-    "role": "RW",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Jakub Klepis",
-    "position": "F",
-    "role": "C",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Karel Krepelka",
-    "position": "D",
-    "role": "RB",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Simon Kubicek",
-    "position": "D",
-    "role": "RB",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Jan Závora",
-    "position": "F",
-    "role": "C",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Pavel Musil",
-    "position": "F",
-    "role": "C",
+    "role": "D",
     "club": "BK Mladá Boleslav"
   },
   {
@@ -270,15 +12,39 @@
     "club": "BK Mladá Boleslav"
   },
   {
-    "name": "Matej Gardon",
-    "position": "F",
-    "role": "LW",
+    "name": "David Moravec",
+    "position": "D",
+    "role": "D",
     "club": "BK Mladá Boleslav"
   },
   {
-    "name": "Filip Suchý",
-    "position": "F",
-    "role": "C",
+    "name": "Filip Pavlík",
+    "position": "D",
+    "role": "RB",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Martin Skarberg",
+    "position": "D",
+    "role": "D",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Petr Zámorský",
+    "position": "D",
+    "role": "D",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Tomáš Čermák",
+    "position": "D",
+    "role": "D",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Vojtěch Budík",
+    "position": "D",
+    "role": "D",
     "club": "BK Mladá Boleslav"
   },
   {
@@ -288,15 +54,57 @@
     "club": "BK Mladá Boleslav"
   },
   {
-    "name": "Tomas Cermak",
+    "name": "Šimon Kubíček",
     "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "BK Mladá Boleslav"
   },
   {
-    "name": "David Bernad",
-    "position": "D",
-    "role": "RB",
+    "name": "Aleksi Rekonen",
+    "position": "F",
+    "role": null,
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Antoine Morand",
+    "position": "F",
+    "role": null,
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Dávid Gríger",
+    "position": "F",
+    "role": null,
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Felikss Gavars",
+    "position": "F",
+    "role": null,
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Jakub Lichtag",
+    "position": "F",
+    "role": "RW",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Jan Buchtele",
+    "position": "F",
+    "role": "LW",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Jan Závora",
+    "position": "F",
+    "role": "C",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Jordan Martel",
+    "position": "F",
+    "role": null,
     "club": "BK Mladá Boleslav"
   },
   {
@@ -306,31 +114,265 @@
     "club": "BK Mladá Boleslav"
   },
   {
-    "name": "Tomas Havlin",
-    "position": "D",
-    "role": "RB",
+    "name": "Pavol Skalický",
+    "position": "F",
+    "role": null,
     "club": "BK Mladá Boleslav"
   },
   {
-    "name": "Roman Cervenka",
+    "name": "Radek Koblížek",
     "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
+    "role": null,
+    "club": "BK Mladá Boleslav"
   },
   {
-    "name": "Lukas Sedlak",
+    "name": "Tomáš Fořt",
     "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
+    "role": null,
+    "club": "BK Mladá Boleslav"
   },
   {
-    "name": "Jan Kostalek",
+    "name": "Vojtěch Hradec",
+    "position": "F",
+    "role": "C",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Vojtěch Malínek",
+    "position": "F",
+    "role": null,
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Dominik Furch",
+    "position": "G",
+    "role": "G",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Vojtěch Mokry",
+    "position": "G",
+    "role": "G",
+    "club": "BK Mladá Boleslav"
+  },
+  {
+    "name": "Denis Zeman",
+    "position": "D",
+    "role": "RB",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Kristaps Zile",
+    "position": "D",
+    "role": "D",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Layton Ahac",
+    "position": "D",
+    "role": "D",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Lukáš Kachlíř",
+    "position": "D",
+    "role": "D",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Michal Ivan",
+    "position": "D",
+    "role": "D",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Radim Šimek",
+    "position": "D",
+    "role": "D",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Tomáš Galvas",
+    "position": "D",
+    "role": "RB",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Tomáš Hanousek",
+    "position": "D",
+    "role": "RB",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Vojtěch Pilíšek",
+    "position": "D",
+    "role": "D",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Adam Musil",
+    "position": "F",
+    "role": "C",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Adam Najman",
+    "position": "F",
+    "role": "C",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Adam Němec",
+    "position": "F",
+    "role": null,
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Filip Jansa",
+    "position": "F",
+    "role": "LW",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Filip Sandberg",
+    "position": "F",
+    "role": null,
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Jakub Hujer",
+    "position": "F",
+    "role": "C",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Jakub Rychlovský",
+    "position": "F",
+    "role": null,
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Jaromír Pytlík",
+    "position": "F",
+    "role": null,
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Jaromír Pérez",
+    "position": "F",
+    "role": "RW",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Jaroslav Vlach",
+    "position": "F",
+    "role": "LW",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Martin Faško-Rudáš",
+    "position": "F",
+    "role": null,
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Radan Lenc",
+    "position": "F",
+    "role": "RW",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Servác Petrovský",
+    "position": "F",
+    "role": null,
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Petr Kváča",
+    "position": "G",
+    "role": "G",
+    "club": "Bílí Tygři Liberec"
+  },
+  {
+    "name": "Daniel Gazda",
     "position": "D",
     "role": "RB",
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Jachym Kondelik",
+    "name": "Jan Košťálek",
+    "position": "D",
+    "role": "D",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "John Ludvig",
+    "position": "D",
+    "role": "D",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Martin Švec",
+    "position": "D",
+    "role": "D",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Miguel Tourigny",
+    "position": "D",
+    "role": "D",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Ondřej Chabada",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Ondřej Mikliš",
+    "position": "D",
+    "role": "D",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Peter Čerešňák",
+    "position": "D",
+    "role": "D",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Tomáš Dvořák",
+    "position": "D",
+    "role": "D",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Daniel Rákos",
+    "position": "F",
+    "role": "C",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "David Tomášek",
+    "position": "F",
+    "role": null,
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "František Formánek",
+    "position": "F",
+    "role": null,
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Hunter Fejes",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Jakub Lauko",
     "position": "F",
     "role": "C",
     "club": "HC Dynamo Pardubice"
@@ -342,39 +384,27 @@
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Jakub Lauko",
+    "name": "Jan Stránský",
     "position": "F",
-    "role": "C",
+    "role": null,
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Daniel Gazda",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Tomas Vondracek",
+    "name": "Jiří Smejkal",
     "position": "F",
-    "role": "RW",
+    "role": "LW",
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Libor Hájek",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Robert Kousal",
+    "name": "Jáchym Kondelík",
     "position": "F",
-    "role": "C",
+    "role": null,
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Vladimír Sobotka",
+    "name": "Lukáš Sedlák",
     "position": "F",
-    "role": "C",
+    "role": null,
     "club": "HC Dynamo Pardubice"
   },
   {
@@ -384,79 +414,55 @@
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Milos Kelemen",
+    "name": "Matúš Válek",
+    "position": "F",
+    "role": null,
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Matěj Stránský",
+    "position": "F",
+    "role": null,
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Miloš Kelemen",
     "position": "F",
     "role": "RW",
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Jiri Smejkal",
+    "name": "Patrik Poulíček",
     "position": "F",
-    "role": "LW",
+    "role": null,
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Matej Stransky",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "David Tomasek",
+    "name": "Robin Kaplan",
     "position": "F",
     "role": "RW",
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Hunter Fejes",
+    "name": "Roman Červenka",
     "position": "F",
-    "role": "LW",
+    "role": null,
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Patrik Poulicek",
+    "name": "Tomáš Urban",
     "position": "F",
     "role": "C",
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Ondrej Miklis",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Jan Stransky",
+    "name": "Tomáš Vondráček",
     "position": "F",
-    "role": "RW",
+    "role": null,
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Tomas Dvorak",
-    "position": "D",
-    "role": "LB",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Dominik Hrnicko",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Matěj Pekař",
-    "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Michal Hrádek",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Tomas Rolinek",
+    "name": "Vladimír Sobotka",
     "position": "F",
     "role": "C",
     "club": "HC Dynamo Pardubice"
@@ -468,103 +474,49 @@
     "club": "HC Dynamo Pardubice"
   },
   {
-    "name": "Vojtech Tvrdik",
+    "name": "Lukáš Matěcha",
+    "position": "G",
+    "role": "G",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Malcolm Subban",
+    "position": "G",
+    "role": "G",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Roman Will",
+    "position": "G",
+    "role": "G",
+    "club": "HC Dynamo Pardubice"
+  },
+  {
+    "name": "Daniel Brickley",
     "position": "D",
-    "role": "RB",
-    "club": "HC Dynamo Pardubice"
+    "role": "D",
+    "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Jan Kolar",
+    "name": "Elmeri Eronen",
     "position": "D",
-    "role": "RB",
-    "club": "HC Dynamo Pardubice"
+    "role": "D",
+    "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Martin Svec",
+    "name": "Janis Jaks",
     "position": "D",
-    "role": "RB",
-    "club": "HC Dynamo Pardubice"
+    "role": "D",
+    "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Tadeas Kaluzik",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Ondrej Chabada",
+    "name": "Josef Myšák",
     "position": "D",
-    "role": "RB",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Erik Pospisil",
-    "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Daniel Rákos",
-    "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Tomas Urban",
-    "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Daniel Hercik",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Frantisek Formanek",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Robin Kaplan",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Jiří Cernoch",
-    "position": "F",
-    "role": "C",
+    "role": "D",
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Ondřej Beránek",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "David Stastny",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Petr Tomek",
-    "position": "F",
-    "role": "C",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Vit Jiskra",
-    "position": "F",
-    "role": "C",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "David Moravec",
+    "name": "Kryštof Dyk",
     "position": "D",
     "role": "RB",
     "club": "HC Energie Karlovy Vary"
@@ -576,27 +528,39 @@
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Jan Bambula",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Dalimil Mikyska",
+    "name": "Roberts Mamčics",
     "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Josef Mysak",
+    "name": "Tobias Winberg",
     "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Vojtech Cihar",
+    "name": "Adam Lukošik",
     "position": "F",
-    "role": "LW",
+    "role": null,
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "David Sedláček",
+    "position": "F",
+    "role": null,
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "David Šilhán",
+    "position": "F",
+    "role": null,
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "David Šťastný",
+    "position": "F",
+    "role": null,
     "club": "HC Energie Karlovy Vary"
   },
   {
@@ -606,327 +570,105 @@
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Robin Sapousek",
+    "name": "Haralds Egle",
     "position": "F",
-    "role": "C",
+    "role": null,
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Vojtěch Mokry",
+    "name": "Jakub Minárik",
     "position": "F",
-    "role": "C",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Adam Brízgala",
-    "position": "F",
-    "role": "C",
-    "club": "Rytíři Kladno"
-  },
-  {
-    "name": "Nick Malik",
-    "position": "F",
-    "role": "C",
-    "club": "HC Plzeň"
-  },
-  {
-    "name": "Petr Kvaca",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Marek Mazanec",
-    "position": "F",
-    "role": "C",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "Dominik Frodl",
-    "position": "F",
-    "role": "C",
+    "role": null,
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Jakub Kovář",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Matěj Machovský",
-    "position": "F",
-    "role": "C",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Dominik Hrachovina",
-    "position": "F",
-    "role": "C",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Roman Will",
-    "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Ales Stezka",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Milan Kloucek",
-    "position": "F",
-    "role": "C",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Jan Strmen",
-    "position": "F",
-    "role": "C",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Pavel Cajan",
-    "position": "F",
-    "role": "C",
-    "club": "HC Litvínov"
-  },
-  {
-    "name": "Josef Korenar",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Dominik Furch",
-    "position": "F",
-    "role": "C",
-    "club": "BK Mladá Boleslav"
-  },
-  {
-    "name": "Jan Ruzicka",
-    "position": "F",
-    "role": "C",
-    "club": "HC Plzeň"
-  },
-  {
-    "name": "Daniel Král",
-    "position": "F",
-    "role": "C",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Jan Kavan",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Ondrej Kacetl",
-    "position": "F",
-    "role": "C",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "Oldrich Cichon",
-    "position": "F",
-    "role": "C",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Martin Michajlov",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Tomas Vomacka",
-    "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Jakub Soukup",
-    "position": "F",
-    "role": "C",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Petr Hamalcik",
-    "position": "F",
-    "role": "C",
-    "club": "Bílí Tygři Liberec"
-  },
-  {
-    "name": "Filip Novotný",
-    "position": "F",
-    "role": "C",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Matyas Marik",
-    "position": "F",
-    "role": "C",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Lukas Klimes",
-    "position": "F",
-    "role": "C",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Jan Kasal",
-    "position": "F",
-    "role": "C",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Adam Kubik",
-    "position": "F",
-    "role": "C",
-    "club": "HC Litvínov"
-  },
-  {
-    "name": "Lukas Matecha",
-    "position": "F",
-    "role": "C",
-    "club": "HC Dynamo Pardubice"
-  },
-  {
-    "name": "Jan Broz",
-    "position": "F",
-    "role": "C",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Lukas Pytel",
-    "position": "F",
-    "role": "C",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Tomas Redlich",
-    "position": "F",
-    "role": "C",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Matyas Vana",
-    "position": "F",
-    "role": "C",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "David Sedlacek",
-    "position": "F",
-    "role": "C",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Radek Číp",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Ondrej Dorot",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Sebastian Malat",
-    "position": "F",
-    "role": "C",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Tobias Pastor",
-    "position": "F",
-    "role": "C",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Jakub Strnad",
+    "name": "Jan Bambula",
     "position": "F",
     "role": "LW",
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "David Silhan",
+    "name": "Jiří Černoch",
+    "position": "F",
+    "role": null,
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Martin Osmík",
+    "position": "F",
+    "role": null,
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Matyáš Váňa",
+    "position": "F",
+    "role": null,
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Nick Jones",
+    "position": "F",
+    "role": null,
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Ondřej Beránek",
     "position": "F",
     "role": "RW",
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Krystof Dyk",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Adam Rulík",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Energie Karlovy Vary"
-  },
-  {
-    "name": "Jan Sir",
+    "name": "Petr Tomek",
     "position": "F",
     "role": "C",
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Ondrej Postl",
-    "position": "D",
-    "role": "RB",
+    "name": "Radek Janata",
+    "position": "F",
+    "role": null,
     "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Jakub Flek",
+    "name": "Robin Sapoušek",
     "position": "F",
-    "role": "RW",
-    "club": "HC Kometa Brno"
+    "role": null,
+    "club": "HC Energie Karlovy Vary"
   },
   {
-    "name": "Libor Zábranský",
+    "name": "Tobiáš Pastor",
+    "position": "F",
+    "role": "C",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Tomáš Redlich",
+    "position": "F",
+    "role": "C",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Vít Jiskra",
+    "position": "F",
+    "role": "C",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Daniel Král",
+    "position": "G",
+    "role": "G",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Dominik Frodl",
+    "position": "G",
+    "role": "G",
+    "club": "HC Energie Karlovy Vary"
+  },
+  {
+    "name": "Dalimil Mikyska",
     "position": "D",
-    "role": "RB",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Simon Stransky",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Tomas Zohorna",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Adam Zboril",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Hynek Zohorna",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Jan Scotka",
-    "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "HC Kometa Brno"
   },
   {
@@ -936,81 +678,15 @@
     "club": "HC Kometa Brno"
   },
   {
-    "name": "Jakub Kos",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Radim Ferda",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Michal Gulasi",
+    "name": "Jakub Zubíček",
     "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "HC Kometa Brno"
   },
   {
-    "name": "Tomas Bartejs",
+    "name": "Jan Jurný",
     "position": "D",
-    "role": "RB",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Danny Chludil",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Jan Ekrt",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Tadeas Beroun",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Michal Hartl",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Dominik Halacka",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Adam Veselsky",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Michal Furch",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Jan Süss",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Jakub Zubicek",
-    "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "HC Kometa Brno"
   },
   {
@@ -1020,105 +696,225 @@
     "club": "HC Kometa Brno"
   },
   {
-    "name": "Jakub Malý",
-    "position": "F",
-    "role": "C",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Jan Jurny",
+    "name": "Jan Ščotka",
     "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "HC Kometa Brno"
   },
   {
-    "name": "Adam Boltvan",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Kometa Brno"
-  },
-  {
-    "name": "Denis Svoboda",
+    "name": "Libor Zábranský",
     "position": "D",
     "role": "RB",
     "club": "HC Kometa Brno"
   },
   {
-    "name": "Ondrej Kase",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Litvínov"
+    "name": "Luke Witkowski",
+    "position": "D",
+    "role": "D",
+    "club": "HC Kometa Brno"
   },
   {
-    "name": "Nicolas Hlava",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Litvínov"
+    "name": "Michal Gulaši",
+    "position": "D",
+    "role": "D",
+    "club": "HC Kometa Brno"
   },
   {
-    "name": "Matej Mastalirsky",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Litvínov"
+    "name": "Radek Kučeřík",
+    "position": "D",
+    "role": "D",
+    "club": "HC Kometa Brno"
   },
   {
-    "name": "Petr Koblasa",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Litvínov"
+    "name": "Richard Nedomlel",
+    "position": "D",
+    "role": "D",
+    "club": "HC Kometa Brno"
   },
   {
-    "name": "David Kase",
-    "position": "F",
-    "role": "C",
-    "club": "HC Litvínov"
+    "name": "Stanislav Svozil",
+    "position": "D",
+    "role": "D",
+    "club": "HC Kometa Brno"
   },
   {
-    "name": "Theodor Pistek",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Litvínov"
-  },
-  {
-    "name": "Adam Polasek",
+    "name": "Tadeáš Beroun",
     "position": "D",
     "role": "RB",
-    "club": "HC Litvínov"
+    "club": "HC Kometa Brno"
   },
   {
-    "name": "Jaroslav Broz",
+    "name": "Adam Zbořil",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Andrej Kollár",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Arttu Ilomaki",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Danny Chludil",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "David Michálek",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "David Moravec",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Hynek Zohorna",
+    "position": "F",
+    "role": "C",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Jakub Brabenec",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Jakub Flek",
     "position": "F",
     "role": "RW",
-    "club": "HC Litvínov"
+    "club": "HC Kometa Brno"
   },
   {
-    "name": "Petr Senkerik",
+    "name": "Jan Ekrt",
+    "position": "F",
+    "role": "C",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Jan Süss",
+    "position": "F",
+    "role": "C",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Kristián Pospíšil",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Lukáš Cingeľ",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Maxim Vehovský",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Maxim Čajkovič",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Michal Hartl",
+    "position": "F",
+    "role": "C",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Michal Kunc",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Robert Leino",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Silvester Kusko",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Tobiáš Vehovský",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Tomáš Selic",
+    "position": "F",
+    "role": null,
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Tomáš Zohorna",
+    "position": "F",
+    "role": "C",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Aleš Stezka",
+    "position": "G",
+    "role": "G",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Eugen Rabčan",
+    "position": "G",
+    "role": "G",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Jan Kavan",
+    "position": "G",
+    "role": "G",
+    "club": "HC Kometa Brno"
+  },
+  {
+    "name": "Adam Polášek",
     "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "HC Litvínov"
   },
   {
-    "name": "Ondrej Jurcik",
-    "position": "F",
-    "role": "C",
-    "club": "HC Litvínov"
-  },
-  {
-    "name": "Michal Plutnar",
+    "name": "Kevin Czuczman",
     "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "HC Litvínov"
   },
   {
-    "name": "Josef Jícha",
-    "position": "F",
-    "role": "C",
+    "name": "Michal Moravčík",
+    "position": "D",
+    "role": "D",
     "club": "HC Litvínov"
   },
   {
-    "name": "Michal Gut",
-    "position": "F",
-    "role": "C",
+    "name": "Ondřej Baláž",
+    "position": "D",
+    "role": "D",
     "club": "HC Litvínov"
   },
   {
@@ -1128,21 +924,21 @@
     "club": "HC Litvínov"
   },
   {
-    "name": "Michal Moravcik",
+    "name": "Vít Beran",
     "position": "D",
     "role": "RB",
     "club": "HC Litvínov"
   },
   {
-    "name": "Ondrej Balaz",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Litvínov"
-  },
-  {
-    "name": "Jan Sprynar",
+    "name": "David Kaše",
     "position": "F",
-    "role": "RW",
+    "role": null,
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "David Kämpf",
+    "position": "F",
+    "role": null,
     "club": "HC Litvínov"
   },
   {
@@ -1152,21 +948,21 @@
     "club": "HC Litvínov"
   },
   {
-    "name": "Vit Beran",
-    "position": "D",
-    "role": "RB",
+    "name": "Jan Šprynar",
+    "position": "F",
+    "role": null,
     "club": "HC Litvínov"
   },
   {
-    "name": "Přemysl Svoboda",
+    "name": "Jonáš Bednařík",
+    "position": "F",
+    "role": null,
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Josef Jícha",
     "position": "F",
     "role": "C",
-    "club": "HC Litvínov"
-  },
-  {
-    "name": "Marek Berka",
-    "position": "F",
-    "role": "RW",
     "club": "HC Litvínov"
   },
   {
@@ -1176,57 +972,225 @@
     "club": "HC Litvínov"
   },
   {
-    "name": "Jonas Bednarik",
+    "name": "Matúš Sukeľ",
+    "position": "F",
+    "role": null,
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Matěj Maštalířský",
+    "position": "F",
+    "role": null,
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Michal Gut",
     "position": "F",
     "role": "C",
     "club": "HC Litvínov"
   },
   {
-    "name": "Oscar Flynn",
+    "name": "Ondřej Jurčík",
+    "position": "F",
+    "role": null,
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Ondřej Kaše",
+    "position": "F",
+    "role": null,
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Pawel Zygmunt",
+    "position": "F",
+    "role": null,
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Petr Koblasa",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Theodor Pištěk",
+    "position": "F",
+    "role": null,
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Adam Kubík",
+    "position": "G",
+    "role": "G",
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Matej Tomek",
+    "position": "G",
+    "role": "G",
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Pavel Čajan",
+    "position": "G",
+    "role": "G",
+    "club": "HC Litvínov"
+  },
+  {
+    "name": "Jan Štencel",
+    "position": "D",
+    "role": "D",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Ondřej Kachyňa",
+    "position": "D",
+    "role": "D",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Ondřej Vála",
+    "position": "D",
+    "role": "D",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Pavel Pýcha",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Roman Vráblík",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Tomáš Kundrátek",
+    "position": "D",
+    "role": "D",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Filip Ahl",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Jakub Pour",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Jakub Valský",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Jan Ordoš",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Marek Zachar",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Martin Beránek",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Matyáš Humeník",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Matěj Toman",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Michal Bulíř",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Nick Olesen",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Pavel Novák",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Róbert Lantoši",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Samuel Drančák",
+    "position": "F",
+    "role": null,
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Tomáš Chlubna",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Motor České Budějovice"
+  },
+  {
+    "name": "Štěpán Hoch",
     "position": "F",
     "role": "LW",
-    "club": "HC Oceláři Třinec"
+    "club": "HC Motor České Budějovice"
   },
   {
-    "name": "Andrej Nestrasil",
-    "position": "F",
-    "role": "C",
-    "club": "HC Oceláři Třinec"
+    "name": "Jan Strmeň",
+    "position": "G",
+    "role": "G",
+    "club": "HC Motor České Budějovice"
   },
   {
-    "name": "Michal Kovařčík",
-    "position": "F",
-    "role": "C",
-    "club": "HC Oceláři Třinec"
+    "name": "Matyáš Mařík",
+    "position": "G",
+    "role": "G",
+    "club": "HC Motor České Budějovice"
   },
   {
-    "name": "Ondrej Kovarcik",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Oceláři Třinec"
+    "name": "Milan Klouček",
+    "position": "G",
+    "role": "G",
+    "club": "HC Motor České Budějovice"
   },
   {
-    "name": "Daniel Kurovsky",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "David Cienciala",
-    "position": "F",
-    "role": "C",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "Marian Adamek",
+    "name": "David Musil",
     "position": "D",
     "role": "RB",
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Martin Ruzicka",
-    "position": "F",
-    "role": "RW",
+    "name": "Filip Pyrochta",
+    "position": "D",
+    "role": "D",
     "club": "HC Oceláři Třinec"
   },
   {
@@ -1236,148 +1200,118 @@
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Petr Sikora",
+    "name": "Marian Adámek",
+    "position": "D",
+    "role": "D",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Martin Marinčin",
+    "position": "D",
+    "role": "D",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Patrik Koch",
+    "position": "D",
+    "role": "D",
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Andrej Nestrašil",
     "position": "F",
-    "role": "C",
+    "role": null,
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Tomas Kundratek",
-    "position": "D",
-    "role": "RB",
+    "name": "Daniel Kurovský",
+    "position": "F",
+    "role": null,
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "David Musil",
-    "position": "D",
-    "role": "RB",
+    "name": "Daniel Voženílek",
+    "position": "F",
+    "role": null,
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Matej Kubiesa",
+    "name": "David Kofroň",
+    "position": "F",
+    "role": null,
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Libor Hudáček",
+    "position": "F",
+    "role": null,
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Marko Daňo",
+    "position": "F",
+    "role": null,
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Martin Růžička",
+    "position": "F",
+    "role": null,
+    "club": "HC Oceláři Třinec"
+  },
+  {
+    "name": "Matěj Kubiesa",
     "position": "F",
     "role": "RW",
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Richard Nedomlel",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "Bohumil Jank",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "Petr Vrána",
+    "name": "Michal Kovařčík",
     "position": "F",
     "role": "C",
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Dominick Byrtus",
-    "position": "D",
-    "role": "RB",
+    "name": "Miloš Roman",
+    "position": "F",
+    "role": null,
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Pavel Prusek",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "Ales Zielinski",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "Marek Hrbas",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Oceláři Třinec"
-  },
-  {
-    "name": "Stepan Machacek",
+    "name": "Ondřej Kovařčík",
     "position": "F",
     "role": "C",
     "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Petr Fridrich",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Jakub Orsava",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Jakub Navrátil",
+    "name": "Oscar Flynn",
     "position": "F",
     "role": "LW",
-    "club": "HC Olomouc"
+    "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Ondrej Matys",
+    "name": "Patrik Hrehorčák",
     "position": "F",
-    "role": "LW",
-    "club": "HC Olomouc"
+    "role": null,
+    "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Karel Plasek",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Olomouc"
+    "name": "Daniel Dolejš",
+    "position": "G",
+    "role": "G",
+    "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Lukas Nahodil",
-    "position": "F",
-    "role": "C",
-    "club": "HC Olomouc"
+    "name": "Marek Mazanec",
+    "position": "G",
+    "role": "G",
+    "club": "HC Oceláři Třinec"
   },
   {
-    "name": "Jiri Ondrusek",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Ondrej Najman",
-    "position": "F",
-    "role": "C",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Tomas Cerny",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Lukas Andel",
-    "position": "F",
-    "role": "C",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "Dalibor Reznicek",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "David Vitouch",
-    "position": "F",
-    "role": "C",
-    "club": "HC Olomouc"
+    "name": "Ondřej Kacetl",
+    "position": "G",
+    "role": "G",
+    "club": "HC Oceláři Třinec"
   },
   {
     "name": "Adam Rutar",
@@ -1386,21 +1320,69 @@
     "club": "HC Olomouc"
   },
   {
-    "name": "Jakub Doktor",
+    "name": "Dalibor Řezníček",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Evan Stella",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Jiří Ondrušek",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Michal Hrádek",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Petr Gewiese",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Ralfs Freibergs",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Rayen Petrovický",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Tomáš Černý",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Trevor Cosgrove",
+    "position": "D",
+    "role": "D",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Carl Berglund",
     "position": "F",
-    "role": "RW",
+    "role": null,
     "club": "HC Olomouc"
   },
   {
-    "name": "Alex Rasner",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Olomouc"
-  },
-  {
-    "name": "David Skurek",
-    "position": "D",
-    "role": "RB",
+    "name": "Daniel Herčík",
+    "position": "F",
+    "role": null,
     "club": "HC Olomouc"
   },
   {
@@ -1410,37 +1392,211 @@
     "club": "HC Olomouc"
   },
   {
-    "name": "Michal Tomecek",
+    "name": "David Vitouch",
     "position": "F",
     "role": "C",
     "club": "HC Olomouc"
   },
   {
-    "name": "Joshua James Mácha",
+    "name": "Jakub Kos",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Jakub Navrátil",
+    "position": "F",
+    "role": "LW",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Jakub Orsava",
     "position": "F",
     "role": "RW",
     "club": "HC Olomouc"
   },
   {
-    "name": "Marek Chvátal",
-    "position": "D",
-    "role": "RB",
+    "name": "Joshua-James Mácha",
+    "position": "F",
+    "role": "RW",
     "club": "HC Olomouc"
   },
   {
-    "name": "Adam Mechura",
+    "name": "Karel Plášek",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Lukáš Anděl",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Martin Štohanzl",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Matúš Spodniak",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Michal Tomeček",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Michal Vitouch",
+    "position": "F",
+    "role": "C",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Ondřej Matýs",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Rok Macuh",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Zachary Senyshyn",
+    "position": "F",
+    "role": null,
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Lukáš Pytel",
+    "position": "G",
+    "role": "G",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Matěj Machovský",
+    "position": "G",
+    "role": "G",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Oldřich Cichoň",
+    "position": "G",
+    "role": "G",
+    "club": "HC Olomouc"
+  },
+  {
+    "name": "Aleš Čech",
+    "position": "D",
+    "role": "D",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Carter Robertson",
+    "position": "D",
+    "role": "D",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Daniel Malák",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Dylan MacPherson",
+    "position": "D",
+    "role": "D",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Igor Merezhko",
+    "position": "D",
+    "role": "D",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Jakub Chromiak",
+    "position": "D",
+    "role": "D",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Jakub Jeřábek",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Kristians Rubins",
+    "position": "D",
+    "role": "D",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Adam Měchura",
+    "position": "F",
+    "role": null,
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Adam Titlbach",
+    "position": "F",
+    "role": null,
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Christophe Lalancette",
+    "position": "F",
+    "role": null,
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Dominik Simon",
     "position": "F",
     "role": "C",
     "club": "HC Plzeň"
   },
   {
-    "name": "Petr Zámorský",
-    "position": "D",
-    "role": "RB",
+    "name": "Ivo Sedláček",
+    "position": "F",
+    "role": "C",
     "club": "HC Plzeň"
   },
   {
-    "name": "Matyas Filip",
+    "name": "Jake Gricius",
+    "position": "F",
+    "role": null,
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Jakub Lev",
+    "position": "F",
+    "role": "C",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Jan Schleiss",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Lukáš Strnad",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Matyáš Filip",
     "position": "F",
     "role": "C",
     "club": "HC Plzeň"
@@ -1452,94 +1608,106 @@
     "club": "HC Plzeň"
   },
   {
-    "name": "Jan Schleiss",
+    "name": "Mikko Petman",
     "position": "F",
-    "role": "RW",
+    "role": null,
     "club": "HC Plzeň"
   },
   {
-    "name": "Dominik Simon",
+    "name": "Ondřej Pšenička",
     "position": "F",
-    "role": "C",
+    "role": null,
     "club": "HC Plzeň"
   },
   {
-    "name": "Lukas Strnad",
+    "name": "Ondřej Rohlík",
     "position": "F",
-    "role": "RW",
+    "role": null,
     "club": "HC Plzeň"
   },
   {
-    "name": "Jakub Lev",
+    "name": "Ville Petman",
     "position": "F",
-    "role": "C",
+    "role": null,
     "club": "HC Plzeň"
   },
   {
-    "name": "Daniel Malák",
+    "name": "Jan Růžička",
+    "position": "G",
+    "role": "G",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Nick Malík",
+    "position": "G",
+    "role": "G",
+    "club": "HC Plzeň"
+  },
+  {
+    "name": "Aaron Irving",
+    "position": "D",
+    "role": "D",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "David Němeček",
+    "position": "D",
+    "role": "D",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Dominik Mašín",
+    "position": "D",
+    "role": "D",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Jakub Krejčík",
     "position": "D",
     "role": "RB",
-    "club": "HC Plzeň"
+    "club": "HC Sparta Praha"
   },
   {
-    "name": "Jakub Jeřábek",
+    "name": "Jakub Sirota",
     "position": "D",
     "role": "RB",
-    "club": "HC Plzeň"
+    "club": "HC Sparta Praha"
   },
   {
-    "name": "Ondrej Rohlik",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Plzeň"
+    "name": "Mark Pysyk",
+    "position": "D",
+    "role": "D",
+    "club": "HC Sparta Praha"
   },
   {
-    "name": "Ivo Sedláček",
-    "position": "F",
-    "role": "C",
-    "club": "HC Plzeň"
+    "name": "Mikael Seppala",
+    "position": "D",
+    "role": "D",
+    "club": "HC Sparta Praha"
   },
   {
-    "name": "Radim Salda",
+    "name": "Niko Seppala",
+    "position": "D",
+    "role": "D",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Ronald Knot",
     "position": "D",
     "role": "RB",
-    "club": "HC Plzeň"
+    "club": "HC Sparta Praha"
   },
   {
-    "name": "Ondrej Psenicka",
+    "name": "Adam Raška",
     "position": "F",
-    "role": "RW",
-    "club": "HC Plzeň"
+    "role": null,
+    "club": "HC Sparta Praha"
   },
   {
-    "name": "David Kvasnicka",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Plzeň"
-  },
-  {
-    "name": "Adam Kubík",
+    "name": "Devin Shore",
     "position": "F",
-    "role": "LW",
-    "club": "HC Plzeň"
-  },
-  {
-    "name": "Jakub Siler",
-    "position": "F",
-    "role": "C",
-    "club": "HC Plzeň"
-  },
-  {
-    "name": "Marek Horejsi",
-    "position": "F",
-    "role": "C",
-    "club": "HC Plzeň"
-  },
-  {
-    "name": "Marek Soukup",
-    "position": "F",
-    "role": "C",
-    "club": "HC Plzeň"
+    "role": null,
+    "club": "HC Sparta Praha"
   },
   {
     "name": "Filip Chlapík",
@@ -1548,15 +1716,81 @@
     "club": "HC Sparta Praha"
   },
   {
-    "name": "Michael Spacek",
+    "name": "Filip Kuťák",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Filip Novák",
     "position": "F",
     "role": "C",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Jakub Klepiš",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Jiří Pospíšil",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Jiří Sekáč",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Kristian Vesalainen",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Kryštof Hrabík",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Martins Dzierkals",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Matěj Blümel",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Michael Špaček",
+    "position": "F",
+    "role": null,
     "club": "HC Sparta Praha"
   },
   {
     "name": "Michal Řepík",
     "position": "F",
     "role": "RW",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Ondřej Hrabík",
+    "position": "F",
+    "role": null,
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Ondřej Najman",
+    "position": "F",
+    "role": null,
     "club": "HC Sparta Praha"
   },
   {
@@ -1572,165 +1806,45 @@
     "club": "HC Sparta Praha"
   },
   {
-    "name": "Jakub Krejčík",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Tomas Hyka",
+    "name": "Tomáš Hyka",
     "position": "F",
     "role": "RW",
     "club": "HC Sparta Praha"
   },
   {
-    "name": "Dominik Masin",
+    "name": "Jakub Kovář",
+    "position": "G",
+    "role": "G",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Josef Kořenář",
+    "position": "G",
+    "role": "G",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Tomáš Volevecký",
+    "position": "G",
+    "role": "G",
+    "club": "HC Sparta Praha"
+  },
+  {
+    "name": "Jakub Zbořil",
     "position": "D",
-    "role": "RB",
-    "club": "HC Sparta Praha"
+    "role": "D",
+    "club": "HC Vítkovice"
   },
   {
-    "name": "Jakub Sirota",
+    "name": "Joe Leahy",
     "position": "D",
-    "role": "RB",
-    "club": "HC Sparta Praha"
+    "role": "D",
+    "club": "HC Vítkovice"
   },
   {
-    "name": "Krystof Hrabik",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Adam Raska",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "David Nemecek",
+    "name": "Josh Wesley",
     "position": "D",
-    "role": "RB",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Michal Vitouch",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Ronald Knot",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Jan Eberle",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Ondrej Hrabik",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Filip Kutak",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Petr Ton",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Jiri Pospisil",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Filip Novák",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Ondrej Blaha",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Jakub Zmola",
-    "position": "F",
-    "role": "C",
-    "club": "HC Sparta Praha"
-  },
-  {
-    "name": "Jindrich Abdul",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Marek Kalus",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Jan Hladonik",
-    "position": "F",
-    "role": "C",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Martin Hanzl",
-    "position": "F",
-    "role": "C",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Petr Hauser",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Jakub Zboril",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Vojtech Lednicky",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Patrik Demel",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Matej Pribyl",
-    "position": "F",
-    "role": "C",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Frantisek Rehak",
-    "position": "F",
-    "role": "C",
+    "role": "D",
     "club": "HC Vítkovice"
   },
   {
@@ -1740,9 +1854,63 @@
     "club": "HC Vítkovice"
   },
   {
-    "name": "Simon Fasner",
+    "name": "Patrik Demel",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Rhett Holland",
+    "position": "D",
+    "role": "D",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Samuel Kňažko",
+    "position": "D",
+    "role": "D",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Tomáš Pavelka",
+    "position": "D",
+    "role": "D",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Vojtěch Port",
+    "position": "D",
+    "role": "RB",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Anthony Nellis",
     "position": "F",
-    "role": "C",
+    "role": null,
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Chad Yetman",
+    "position": "F",
+    "role": null,
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "David Cienciala",
+    "position": "F",
+    "role": null,
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Dominik Petr",
+    "position": "F",
+    "role": null,
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Filip Krivošík",
+    "position": "F",
+    "role": null,
     "club": "HC Vítkovice"
   },
   {
@@ -1752,279 +1920,63 @@
     "club": "HC Vítkovice"
   },
   {
-    "name": "Matej Prcik",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Vojtech Budik",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Vojtech Port",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Jiří Fronk",
+    "name": "Jan Hladonik",
     "position": "F",
     "role": "C",
     "club": "HC Vítkovice"
   },
   {
-    "name": "Daniel Krenzelok",
-    "position": "D",
-    "role": "RB",
+    "name": "Jan Šír",
+    "position": "F",
+    "role": null,
     "club": "HC Vítkovice"
   },
   {
-    "name": "Martin Docekal",
+    "name": "Jindřich Abdul",
+    "position": "F",
+    "role": "RW",
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Krzysztof Macias",
+    "position": "F",
+    "role": null,
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Marek Hrivík",
+    "position": "F",
+    "role": null,
+    "club": "HC Vítkovice"
+  },
+  {
+    "name": "Marek Kalus",
     "position": "F",
     "role": "LW",
     "club": "HC Vítkovice"
   },
   {
-    "name": "Tomas Herman",
-    "position": "D",
-    "role": "RB",
+    "name": "Šimon Stránský",
+    "position": "F",
+    "role": null,
     "club": "HC Vítkovice"
   },
   {
-    "name": "Marek Hrabina",
-    "position": "F",
-    "role": "RW",
+    "name": "Dominik Hrachovina",
+    "position": "G",
+    "role": "G",
     "club": "HC Vítkovice"
   },
   {
-    "name": "Michael Nazad",
-    "position": "F",
-    "role": "C",
+    "name": "Patrik Švančara",
+    "position": "G",
+    "role": "G",
     "club": "HC Vítkovice"
   },
   {
-    "name": "Sebastian Glas",
-    "position": "F",
-    "role": "C",
-    "club": "HC Vítkovice"
-  },
-  {
-    "name": "Jan Stencel",
+    "name": "Anders Koch",
     "position": "D",
-    "role": "RB",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Filip Prikryl",
-    "position": "F",
-    "role": "C",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Tomas Cibulka",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Jan Ordos",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Michal Bulir",
-    "position": "F",
-    "role": "C",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Martin Beránek",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Roman Vráblík",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Pavel Pýcha",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Matej Toman",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Josef Kolacek",
-    "position": "F",
-    "role": "C",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Ondrej Vala",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Ondrej Kachyna",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Pavel Novák",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Stepan Hoch",
-    "position": "F",
-    "role": "LW",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Milan Doudera",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Tomas Chlubna",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Jakub Valsky",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Matyas Cicha",
-    "position": "D",
-    "role": "RB",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Matyas Humenik",
-    "position": "F",
-    "role": "RW",
-    "club": "HC Motor České Budějovice"
-  },
-  {
-    "name": "Lukas Radil",
-    "position": "F",
-    "role": "RW",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Ales Jergl",
-    "position": "F",
-    "role": "RW",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Martin Kohout",
-    "position": "F",
-    "role": "LW",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Radovan Pavlik",
-    "position": "F",
-    "role": "RW",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Patrik Miskar",
-    "position": "F",
-    "role": "C",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Jakub Pour",
-    "position": "F",
-    "role": "RW",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Denis Kusý",
-    "position": "F",
-    "role": "RW",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Petr Hasek",
-    "position": "F",
-    "role": "C",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Radek Pilař",
-    "position": "D",
-    "role": "RB",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Martin Pláněk",
-    "position": "D",
-    "role": "RB",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Petr Kalina",
-    "position": "D",
-    "role": "RB",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Simon Marha",
-    "position": "F",
-    "role": "C",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Tomas Pavelka",
-    "position": "D",
-    "role": "RB",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Ondrej Dlapa",
-    "position": "D",
-    "role": "RB",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Pavel Simek",
-    "position": "F",
-    "role": "LW",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Dominik Sklenář",
-    "position": "F",
-    "role": "LW",
-    "club": "Mountfield HK"
-  },
-  {
-    "name": "Jan Vyvial",
-    "position": "F",
-    "role": "C",
+    "role": "D",
     "club": "Mountfield HK"
   },
   {
@@ -2034,117 +1986,189 @@
     "club": "Mountfield HK"
   },
   {
-    "name": "Martin Stohanzl",
+    "name": "Dávid Mudrák",
+    "position": "D",
+    "role": "D",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Graeme McCormack",
+    "position": "D",
+    "role": "D",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Martin Pláněk",
+    "position": "D",
+    "role": "RB",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Michael Vukojevic",
+    "position": "D",
+    "role": "D",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Petr Kalina",
+    "position": "D",
+    "role": "RB",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "T.J. Melancon",
+    "position": "D",
+    "role": "D",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Štěpán Černý",
+    "position": "D",
+    "role": "D",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Alex Tamáši",
+    "position": "F",
+    "role": null,
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Aleš Jergl",
+    "position": "F",
+    "role": "RW",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Dominik Pavlík",
+    "position": "F",
+    "role": null,
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Jan Vyvial",
     "position": "F",
     "role": "C",
     "club": "Mountfield HK"
   },
   {
-    "name": "Lukas Kovar",
-    "position": "D",
-    "role": "RB",
+    "name": "Jordann Perret",
+    "position": "F",
+    "role": null,
     "club": "Mountfield HK"
   },
   {
-    "name": "Miroslav Forman",
+    "name": "Kevin Klíma",
+    "position": "F",
+    "role": null,
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Lukáš Radil",
     "position": "F",
     "role": "RW",
-    "club": "Rytíři Kladno"
+    "club": "Mountfield HK"
   },
   {
-    "name": "Martin Procházka",
+    "name": "Markus Nenonen",
     "position": "F",
-    "role": "RW",
-    "club": "Rytíři Kladno"
+    "role": null,
+    "club": "Mountfield HK"
   },
   {
-    "name": "Jakub Konecny",
+    "name": "Martin Kohout",
     "position": "F",
-    "role": "C",
-    "club": "Rytíři Kladno"
+    "role": "LW",
+    "club": "Mountfield HK"
   },
   {
-    "name": "Oskar Lisler",
+    "name": "Patrik Miškář",
     "position": "F",
-    "role": "RW",
-    "club": "Rytíři Kladno"
+    "role": null,
+    "club": "Mountfield HK"
   },
   {
-    "name": "Tomas Tomek",
-    "position": "D",
-    "role": "RB",
-    "club": "Rytíři Kladno"
-  },
-  {
-    "name": "Dusan Zovinec",
-    "position": "D",
-    "role": "RB",
-    "club": "Rytíři Kladno"
-  },
-  {
-    "name": "Adam Bares",
+    "name": "Patrik Zdráhal",
     "position": "F",
-    "role": "C",
-    "club": "Rytíři Kladno"
+    "role": null,
+    "club": "Mountfield HK"
   },
   {
-    "name": "Martin Jandus",
-    "position": "D",
-    "role": "RB",
-    "club": "Rytíři Kladno"
-  },
-  {
-    "name": "Antonín Melka",
+    "name": "Petr Hašek",
     "position": "F",
-    "role": "C",
-    "club": "Rytíři Kladno"
+    "role": null,
+    "club": "Mountfield HK"
   },
   {
-    "name": "Michal Houdek",
-    "position": "D",
-    "role": "RB",
-    "club": "Rytíři Kladno"
-  },
-  {
-    "name": "Tomas Vandas",
-    "position": "D",
-    "role": "RB",
-    "club": "Rytíři Kladno"
-  },
-  {
-    "name": "Jan Piskacek",
-    "position": "D",
-    "role": "RB",
-    "club": "Rytíři Kladno"
-  },
-  {
-    "name": "Jaromír Jágr",
+    "name": "Radek Pilař",
     "position": "F",
-    "role": "RW",
-    "club": "Rytíři Kladno"
+    "role": null,
+    "club": "Mountfield HK"
   },
   {
-    "name": "Marcel Barinka",
+    "name": "Radovan Pavlík",
+    "position": "F",
+    "role": null,
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Robert Kousal",
+    "position": "F",
+    "role": null,
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Viliam Čacho",
+    "position": "F",
+    "role": null,
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Šimon Marha",
     "position": "F",
     "role": "C",
-    "club": "Rytíři Kladno"
+    "club": "Mountfield HK"
   },
   {
-    "name": "Ondrej Satek",
+    "name": "Filip Růžička",
+    "position": "G",
+    "role": "G",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Jan Kasal",
+    "position": "G",
+    "role": "G",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Stanislav Škorvánek",
+    "position": "G",
+    "role": "G",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Tomáš Vomáčka",
+    "position": "G",
+    "role": "G",
+    "club": "Mountfield HK"
+  },
+  {
+    "name": "Adam Rulík",
     "position": "D",
-    "role": "RB",
+    "role": "D",
     "club": "Rytíři Kladno"
   },
   {
-    "name": "Sebastián Redlich",
-    "position": "F",
-    "role": "C",
+    "name": "Filip Westerlund",
+    "position": "D",
+    "role": "D",
     "club": "Rytíři Kladno"
   },
   {
-    "name": "Vojtech Polak",
-    "position": "F",
-    "role": "C",
+    "name": "Griffin Mendel",
+    "position": "D",
+    "role": "D",
     "club": "Rytíři Kladno"
   },
   {
@@ -2154,9 +2178,153 @@
     "club": "Rytíři Kladno"
   },
   {
-    "name": "Martin Matejicek",
+    "name": "Jérémie Blain",
+    "position": "D",
+    "role": "D",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Martin Jandus",
     "position": "D",
     "role": "RB",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Martin Matějíček",
+    "position": "D",
+    "role": "D",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Michal Houdek",
+    "position": "D",
+    "role": "RB",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Michal Kempný",
+    "position": "D",
+    "role": "D",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Phil Pietroniro",
+    "position": "D",
+    "role": "D",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Tomáš Tomek",
+    "position": "D",
+    "role": "RB",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Tomáš Vandas",
+    "position": "D",
+    "role": "RB",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Adam Bareš",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Adam Kubík",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Daniel Audette",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Filip Přikryl",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Jakub Konečný",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Kelly Klíma",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Marcel Marcel",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Martin Procházka",
+    "position": "F",
+    "role": "RW",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Martin Ryšavý",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Miroslav Forman",
+    "position": "F",
+    "role": "RW",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Nicolas Hlava",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Niko Ojamaki",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Ondřej Blaha",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Oskar Lisler",
+    "position": "F",
+    "role": "RW",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Samuel Vigneault",
+    "position": "F",
+    "role": null,
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Adam Brízgala",
+    "position": "G",
+    "role": "G",
+    "club": "Rytíři Kladno"
+  },
+  {
+    "name": "Dominik Pavlát",
+    "position": "G",
+    "role": "G",
     "club": "Rytíři Kladno"
   }
 ]

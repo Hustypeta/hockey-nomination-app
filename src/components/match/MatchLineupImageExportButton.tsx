@@ -8,11 +8,10 @@ import {
   canvasToPngDataUrl,
   downloadDataUrl,
   letterboxCanvas,
-  preparePosterCapture,
   resizeCanvasTo,
 } from "@/lib/captureSharePoster";
 import { ensureFreshPosterIceBackground } from "@/lib/posterRosterIceBg";
-import { SHARE_POSTER_4X5_H, SHARE_POSTER_4X5_W, SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_4X5_H, SHARE_POSTER_4X5_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
 import type { LineupStructure, Player } from "@/types";
 import { MatchLineupJerseyExportPoster } from "@/components/match/MatchLineupJerseyExportPoster";
 import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
@@ -29,6 +28,11 @@ export type MatchLineupImageRatingSnapshot = {
   ratings: MatchRatingAggregateMap;
   myRatings: MatchRatingMyMap;
   mode: "personal" | "community";
+};
+
+type PosterPreview = {
+  dataUrl: string;
+  light: boolean;
 };
 
 function slugifyForFile(raw: string): string {
@@ -93,18 +97,39 @@ export function MatchLineupImageExportButton({
   ratingSnapshot?: MatchLineupImageRatingSnapshot;
 }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const previewRunRef = useRef(0);
+  const posterPreviewsRef = useRef<Record<string, PosterPreview>>({});
+  const previewSignatureRef = useRef("");
+  const stageCaptureCountRef = useRef(0);
+  const stageRestoreRef = useRef<{
+    top: string;
+    left: string;
+    opacity: string;
+    visibility: string;
+    zIndex: string;
+  } | null>(null);
   const [busyKey, setBusyKey] = useState<string | null>(null);
+  const [previewsBusy, setPreviewsBusy] = useState(false);
   const [modalOpenInternal, setModalOpenInternal] = useState(false);
-  const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
-  const [previewFilename, setPreviewFilename] = useState<string | null>(null);
-  const [previewTitle, setPreviewTitle] = useState<string | null>(null);
-  const [previewLight, setPreviewLight] = useState(false);
+  const [posterPreviews, setPosterPreviews] = useState<Record<string, PosterPreview>>({});
   const controlled = typeof modalOpenControlled === "boolean" && typeof onModalOpenChange === "function";
   const modalOpen = controlled ? modalOpenControlled : modalOpenInternal;
   const setModalOpen = controlled ? onModalOpenChange! : setModalOpenInternal;
 
   const titleLine = shareTitle.trim() || "Moje sestava na zápas";
   const baseSlug = useMemo(() => slugifyForFile(shareSlug ?? shareTitle), [shareSlug, shareTitle]);
+  const previewSignature = useMemo(
+    () =>
+      JSON.stringify({
+        titleLine,
+        lineup,
+        players: players.map(({ id, name, jerseyNumber, position }) => ({ id, name, jerseyNumber, position })),
+        defenseCount,
+        allowExtraForward,
+        ratingSnapshot,
+      }),
+    [titleLine, lineup, players, defenseCount, allowExtraForward, ratingSnapshot]
+  );
 
   const footerIso = useMemo(() => new Date().toISOString(), []);
 
@@ -127,10 +152,8 @@ export function MatchLineupImageExportButton({
 
   useEffect(() => {
     if (!modalOpen) {
-      setPreviewDataUrl(null);
-      setPreviewFilename(null);
-      setPreviewTitle(null);
-      setPreviewLight(false);
+      previewRunRef.current += 1;
+      setPreviewsBusy(false);
     }
   }, [modalOpen]);
 
@@ -150,7 +173,7 @@ export function MatchLineupImageExportButton({
         title: ratingSnapshot ? "Celá sestava — jména a známky" : "Celá sestava — jen jména",
         hint: ratingSnapshot
           ? "Tmavý plakát: brankáři, obrana, útočníci — u každého jména známka (režim nahoře)."
-          : "Jako grafika „jen jména“ v editoru nominace (tmavý plakát, celá soupiska).",
+          : "Jména celé sestavy na červeno-modrém pozadí — brankáři, obránci a útočníci, formát 4:5.",
       },
       {
         key: "cele-dresy",
@@ -191,37 +214,36 @@ export function MatchLineupImageExportButton({
     return all;
   }, [ratingSnapshot, ratingHint]);
 
-  const runExport = useCallback(
-    async (slot: string) => {
+  const capturePoster = useCallback(
+    async (slot: string, previewOnly: boolean) => {
       const stage = stageRef.current;
       if (!stage) {
-        toast.error("Export nelze najít.");
-        return;
+        throw new Error("Export stage nebyl nalezen.");
       }
-      setBusyKey(slot);
-      setPreviewDataUrl(null);
-      setPreviewFilename(null);
-      setPreviewTitle(null);
-      setPreviewLight(false);
-      try {
-        const bg =
-          slot === "cele-jmena" ? "#060b14" : slot === "cele-dresy" ? null : "#05080f";
-        const selector =
-          slot === "power-play"
-            ? "[data-export-slot=\"power-play\"].match-power-play-export-poster"
-            : slot === "cele-jmena"
-              ? ratingSnapshot
-                ? "[data-export-slot=\"cele-jmena\"].match-rating-names-full-poster"
-                : "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
-              : slot === "cele-dresy"
-                ? "[data-export-slot=\"cele-dresy\"].match-lineup-full-jersey-poster"
-                : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
-        const node = stage.querySelector<HTMLElement>(selector);
-        if (!node) {
-          toast.error("Vybraný výřez nebyl v DOM připraven — zkus ještě jednou.");
-          return;
-        }
-        const stagePrev = {
+
+      const bg =
+        slot === "cele-jmena"
+          ? "#060b14"
+          : slot === "cele-dresy"
+            ? "#ffffff"
+            : "#05080f";
+      const selector =
+        slot === "power-play"
+          ? "[data-export-slot=\"power-play\"].match-power-play-export-poster"
+          : slot === "cele-jmena"
+            ? ratingSnapshot
+              ? "[data-export-slot=\"cele-jmena\"].match-rating-names-full-poster"
+              : "[data-export-slot=\"cele-jmena\"].match-lineup-names-full-poster"
+            : slot === "cele-dresy"
+              ? "[data-export-slot=\"cele-dresy\"].match-lineup-full-jersey-poster"
+              : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
+      const node = stage.querySelector<HTMLElement>(selector);
+      if (!node) {
+        throw new Error(`Plakát ${slot} nebyl v DOM připraven.`);
+      }
+
+      if (stageCaptureCountRef.current === 0) {
+        stageRestoreRef.current = {
           top: stage.style.top,
           left: stage.style.left,
           opacity: stage.style.opacity,
@@ -234,64 +256,132 @@ export function MatchLineupImageExportButton({
         stage.style.visibility = "visible";
         stage.style.zIndex = "-9999";
         stage.style.pointerEvents = "none";
-        await preparePosterCapture();
+      }
+      stageCaptureCountRef.current += 1;
+
+      try {
         if (slot === "cele-dresy") {
           await ensureFreshPosterIceBackground(node);
-          const imgs = node.querySelectorAll("img");
-          await Promise.all(
-            [...imgs].map(
-              (img) =>
-                img.complete
-                  ? Promise.resolve()
-                  : new Promise<void>((resolve) => {
-                      img.addEventListener("load", () => resolve(), { once: true });
-                      img.addEventListener("error", () => resolve(), { once: true });
-                    })
-            )
-          );
         }
-        const letterboxLineJerseys = slot.startsWith("line-");
-        const captureScale = slot === "cele-dresy" ? 1 : SHARE_POSTER_CAPTURE_PIXEL_RATIO;
+        const imgs = node.querySelectorAll("img");
+        await Promise.all(
+          [...imgs].map((img) =>
+            img.complete
+              ? Promise.resolve()
+              : new Promise<void>((resolve) => {
+                  img.addEventListener("load", () => resolve(), { once: true });
+                  img.addEventListener("error", () => resolve(), { once: true });
+                })
+          )
+        );
+
+        const lineupLine4x5 = slot.startsWith("line-");
+        const lineupNames4x5 = slot === "cele-jmena" && !ratingSnapshot;
+        const captureScale = previewOnly
+          ? 0.5
+          : slot === "cele-dresy" || lineupNames4x5 || lineupLine4x5
+            ? 1
+            : SHARE_POSTER_CAPTURE_PIXEL_RATIO;
         const canvas = await captureElementToCanvas(node, {
           scale: captureScale,
           backgroundColor: bg,
         });
         let out = canvas;
-        if (slot === "cele-dresy") {
+        if (previewOnly) {
+          out =
+            slot === "cele-dresy" || lineupNames4x5 || lineupLine4x5
+              ? resizeCanvasTo(canvas, 480, 600)
+              : letterboxCanvas(canvas, 480, 600, { theme: "dark" });
+        } else if (slot === "cele-dresy" || lineupNames4x5 || lineupLine4x5) {
           out = resizeCanvasTo(canvas, SHARE_POSTER_4X5_W, SHARE_POSTER_4X5_H);
-        } else if (letterboxLineJerseys) {
-          out = letterboxCanvas(canvas, SHARE_POSTER_3X4_W, SHARE_POSTER_3X4_H, { theme: "dark" });
         }
-        stage.style.top = stagePrev.top;
-        stage.style.left = stagePrev.left;
-        stage.style.opacity = stagePrev.opacity;
-        stage.style.visibility = stagePrev.visibility;
-        stage.style.zIndex = stagePrev.zIndex;
-        const filename = filenameLineupSlot(slot, baseSlug, ratingSnapshot);
-        setPreviewDataUrl(canvasToPngDataUrl(out));
-        setPreviewFilename(filename);
-        const label = choices.find((c) => c.key === slot)?.title ?? "Export";
-        setPreviewTitle(label);
-        setPreviewLight(slot === "cele-dresy");
-        toast.success("Náhled připraven. Teď klikni na „Stáhnout PNG“.");
+
+        return {
+          dataUrl: canvasToPngDataUrl(out),
+          filename: filenameLineupSlot(slot, baseSlug, ratingSnapshot),
+          light: slot === "cele-dresy",
+        };
+      } finally {
+        stageCaptureCountRef.current = Math.max(0, stageCaptureCountRef.current - 1);
+        if (stageCaptureCountRef.current === 0 && stageRestoreRef.current) {
+          stage.style.top = stageRestoreRef.current.top;
+          stage.style.left = stageRestoreRef.current.left;
+          stage.style.opacity = stageRestoreRef.current.opacity;
+          stage.style.visibility = stageRestoreRef.current.visibility;
+          stage.style.zIndex = stageRestoreRef.current.zIndex;
+          stageRestoreRef.current = null;
+        }
+      }
+    },
+    [baseSlug, ratingSnapshot]
+  );
+
+  useEffect(() => {
+    if (!modalOpen || disabled) return;
+    if (
+      previewSignatureRef.current === previewSignature &&
+      choices.every((choice) => posterPreviewsRef.current[choice.key])
+    ) {
+      setPreviewsBusy(false);
+      return;
+    }
+
+    const runId = ++previewRunRef.current;
+    previewSignatureRef.current = previewSignature;
+    posterPreviewsRef.current = {};
+    setPosterPreviews({});
+    setPreviewsBusy(true);
+
+    void (async () => {
+      try {
+        let failures = 0;
+        await Promise.all(
+          choices.map(async (choice) => {
+            try {
+              const preview = await capturePoster(choice.key, true);
+              if (previewRunRef.current !== runId) return;
+              const next = {
+                ...posterPreviewsRef.current,
+                [choice.key]: { dataUrl: preview.dataUrl, light: preview.light },
+              };
+              posterPreviewsRef.current = next;
+              setPosterPreviews(next);
+            } catch (error) {
+              failures += 1;
+              console.error(`poster preview ${choice.key}:`, error);
+            }
+          })
+        );
+        if (failures > 0 && previewRunRef.current === runId) {
+          toast.error("Některé náhledy se nepodařilo připravit.");
+        }
+      } finally {
+        if (previewRunRef.current === runId) setPreviewsBusy(false);
+      }
+    })();
+
+    return () => {
+      if (previewRunRef.current === runId) previewRunRef.current += 1;
+    };
+  }, [capturePoster, choices, disabled, modalOpen, previewSignature]);
+
+  const runExport = useCallback(
+    async (slot: string) => {
+      setBusyKey(slot);
+      try {
+        const poster = await capturePoster(slot, false);
+        downloadDataUrl(poster.dataUrl, poster.filename);
+        toast.success("PNG bylo staženo.");
       } catch (e) {
         console.error("export match lineup:", e);
         toast.error(
           "Export se nepovedl. Na mobilu zkus zavřít jiné karty nebo obnovit stránku a stáhnout znovu."
         );
       } finally {
-        const stage = stageRef.current;
-        if (stage) {
-          stage.style.top = "-100000px";
-          stage.style.left = "-100000px";
-          stage.style.opacity = "0";
-          stage.style.visibility = "";
-          stage.style.zIndex = "";
-        }
         setBusyKey(null);
       }
     },
-    [baseSlug, ratingSnapshot, choices]
+    [capturePoster]
   );
 
   return (
@@ -312,29 +402,21 @@ export function MatchLineupImageExportButton({
         open={modalOpen && !disabled}
         onClose={() => setModalOpen(false)}
         eyebrow={ratingSnapshot ? "Hodnocení zápasu" : "Sestava na zápas"}
-        title="Generovat plakát"
+        title="Export grafiky"
         description={
           ratingSnapshot
-            ? "Celá soupiska nebo jednotlivé lajny — jen jména se známkami (3:4). Kompletní sestava s dresy je samostatná volba. Vždy jedna PNG."
-            : "Celá soupiska jen jména nebo s dresy, případně řezy po kompletních lajnách (3F + 2D; na 1. lajně 1. gólman, na 4. též 13. útočník a 2. gólman). Vždy jedna PNG."
+            ? "Všechny varianty máš rovnou před sebou. Vyber si plakát a stáhni hotové PNG."
+            : "Zde si můžete vybrat z několika verzí plakátů Vaší sestavy, které si můžete stáhnout ve formátu .png (4:5)."
         }
         busyKey={busyKey}
-        choices={choices}
+        previewsBusy={previewsBusy}
+        choices={choices.map((choice) => ({
+          ...choice,
+          previewDataUrl: posterPreviews[choice.key]?.dataUrl,
+          previewLight: posterPreviews[choice.key]?.light,
+        }))}
         onPick={async (key) => {
           await runExport(key);
-        }}
-        previewDataUrl={previewDataUrl}
-        previewTitle={previewTitle}
-        previewLight={previewLight}
-        onClearPreview={() => {
-          setPreviewDataUrl(null);
-          setPreviewFilename(null);
-          setPreviewTitle(null);
-          setPreviewLight(false);
-        }}
-        onDownloadPreview={() => {
-          if (!previewDataUrl || !previewFilename) return;
-          downloadDataUrl(previewDataUrl, previewFilename);
         }}
       />
 
@@ -394,6 +476,7 @@ export function MatchLineupImageExportButton({
             lineup={lineup}
             defenseCount={defenseCount}
             allowExtraForward={allowExtraForward}
+            siteUrl={siteOrigin}
             jerseyRatingExport={jerseyRatingExport}
           />
         ))}

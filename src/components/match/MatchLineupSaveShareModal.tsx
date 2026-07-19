@@ -6,6 +6,8 @@ import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBan
 import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 import type { LineupStructure, Player } from "@/types";
 
+const MATCH_LINEUP_TITLE_MAX_LENGTH = "Moje sestava na zápas".length;
+
 export function MatchLineupSaveShareModal({
   open,
   onClose,
@@ -59,7 +61,7 @@ export function MatchLineupSaveShareModal({
         role="dialog"
         aria-modal="true"
         aria-label="Uložit a sdílet sestavu na zápas"
-        className="max-h-[min(92vh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/12 bg-[#0b1220] shadow-2xl"
+        className="h-[min(92dvh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/12 bg-[#0b1220] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
@@ -85,7 +87,8 @@ export function MatchLineupSaveShareModal({
             </label>
             <input
               value={shareTitle}
-              onChange={(e) => onShareTitleChange(e.target.value)}
+              maxLength={MATCH_LINEUP_TITLE_MAX_LENGTH}
+              onChange={(e) => onShareTitleChange(e.target.value.slice(0, MATCH_LINEUP_TITLE_MAX_LENGTH))}
               className="w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2.5 text-sm font-semibold text-white outline-none focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30"
               placeholder={titleHint}
             />

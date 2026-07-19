@@ -28,7 +28,7 @@ function FifaNavLink({
   return (
     <Link href={href} onClick={onNavigate} className={className} tabIndex={tabIndex}>
       <span className="flex min-w-0 items-center gap-2">
-        <Icon className={`h-4 w-4 shrink-0 ${active ? "text-white" : "opacity-90"}`} aria-hidden />
+        <Icon className={`h-4 w-4 shrink-0 ${active ? "text-[#073b4c]" : "opacity-90"}`} aria-hidden />
         <span className={variant === "desktop" ? "whitespace-nowrap" : "truncate"}>{label}</span>
       </span>
       {variant === "desktop" ? <span className="fifa-nav-link__indicator" aria-hidden /> : null}

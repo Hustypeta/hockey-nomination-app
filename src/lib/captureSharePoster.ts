@@ -4,6 +4,9 @@ import {
   SHARE_POSTER_MAX_CANVAS_EDGE_PX,
 } from "@/lib/sharePosterLayout";
 
+let cachedPosterFontEmbedCSS: string | null = null;
+let posterFontEmbedCSSPromise: Promise<string> | null = null;
+
 /** Balíček `html-to-image` exportuje `Options` jen interně — typ bereme z `toCanvas`. */
 export type HtmlToImageOptions = NonNullable<Parameters<typeof toCanvas>[1]>;
 
@@ -35,7 +38,8 @@ export function safePosterCapturePixelRatio(
   const mobileCap = isCoarsePointerOrNarrow() ? Math.min(desired, 2) : desired;
   const raw = Math.min(mobileCap, byEdge, byArea);
   const rounded = Math.floor(raw * 1000) / 1000;
-  return Math.max(0.75, Math.min(mobileCap, rounded));
+  const minimum = Math.min(0.75, desired);
+  return Math.max(minimum, Math.min(mobileCap, rounded));
 }
 
 /** Po zobrazení off-screen plakátu nechat WebKit spočítat layout před html-to-image. */
@@ -57,10 +61,16 @@ export async function buildHtmlToImageOptions(
     preferredFontFormat: "woff2",
     ...partial,
   };
+  if (cachedPosterFontEmbedCSS) {
+    return { ...base, fontEmbedCSS: cachedPosterFontEmbedCSS };
+  }
   try {
-    const fontEmbedCSS = await getFontEmbedCSS(element, base);
+    posterFontEmbedCSSPromise ??= getFontEmbedCSS(element, base);
+    const fontEmbedCSS = await posterFontEmbedCSSPromise;
+    cachedPosterFontEmbedCSS = fontEmbedCSS;
     return { ...base, fontEmbedCSS };
   } catch {
+    posterFontEmbedCSSPromise = null;
     return base;
   }
 }

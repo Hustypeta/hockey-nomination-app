@@ -22,8 +22,6 @@ import {
 type FifaMatchLineRinkProps = {
   activeLine: number;
   onActiveLineChange: (index: number) => void;
-  defCount: 6 | 7 | 8;
-  allowExtraForward: boolean;
   /** Statický náhled — bez pageru, nápovědy a swipe. */
   preview?: boolean;
   slotsForLine: (lineIndex: number) => {
@@ -71,8 +69,6 @@ function TemplateSlot({
 export function FifaMatchLineRink({
   activeLine,
   onActiveLineChange,
-  defCount,
-  allowExtraForward,
   preview = false,
   slotsForLine,
   starterGoalie,
@@ -230,13 +226,6 @@ export function FifaMatchLineRink({
         </div>
       </div>
 
-      {!preview ? (
-        <p className="fifa-match-rink__hint shrink-0 text-center text-[10px] leading-relaxed text-[var(--fifa-text-muted)] sm:text-[11px]">
-          {defCount} obránců
-          {allowExtraForward ? " · 13. F na 4. lajně" : ""}
-          {activeLine === 3 ? " · náhradníci po stranách" : ""}
-        </p>
-      ) : null}
     </div>
   );
 }

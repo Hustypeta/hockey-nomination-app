@@ -83,7 +83,7 @@ export function MatchRatingSaveShareModal({
         role="dialog"
         aria-modal="true"
         aria-label="Sdílení hodnocení zápasu"
-        className="max-h-[min(92vh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/12 bg-[#0b1220] shadow-2xl"
+        className="h-[min(92dvh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/12 bg-[#0b1220] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">

@@ -1,0 +1,273 @@
+.poster {
+  position: relative;
+  display: block;
+  width: 1080px;
+  height: 1350px;
+  min-width: 1080px;
+  max-width: 1080px;
+  min-height: 1350px;
+  max-height: 1350px;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: #fff;
+  background: #07101f;
+  font-family: "Barlow Condensed", "Inter", system-ui, sans-serif;
+  isolation: isolate;
+}
+
+.background {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+}
+
+.shade {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(2, 7, 18, 0.54) 0%, rgba(2, 7, 18, 0.06) 20%, rgba(2, 7, 18, 0.02) 73%, rgba(2, 7, 18, 0.34) 100%),
+    radial-gradient(circle at 50% 53%, transparent 35%, rgba(0, 8, 25, 0.12) 100%);
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 8;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+  min-height: 132px;
+  padding: 25px 58px 18px;
+  box-sizing: border-box;
+}
+
+.host {
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: var(--font-wordmark, "Barlow Condensed", system-ui, sans-serif);
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: 0.035em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+}
+
+.titleBlock {
+  min-width: 0;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--font-display, "Bebas Neue", "Barlow Condensed", system-ui, sans-serif);
+  font-size: 46px;
+  font-weight: 900;
+  letter-spacing: 0.025em;
+  line-height: 0.98;
+  text-overflow: ellipsis;
+  text-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.52),
+    0 0 18px rgba(255, 255, 255, 0.14);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lineLabel {
+  position: absolute;
+  top: 43%;
+  left: 50%;
+  z-index: 6;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.52),
+    0 0 14px rgba(0, 0, 0, 0.7);
+  text-transform: uppercase;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.logoFrame {
+  position: relative;
+  justify-self: end;
+  width: 205px;
+  height: 70px;
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 5px 16px rgba(0, 0, 0, 0.38);
+}
+
+.logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 245px;
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%);
+}
+
+.headerRule {
+  position: absolute;
+  top: 130px;
+  left: 72px;
+  right: 72px;
+  z-index: 7;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75) 12%, #fff 50%, rgba(255, 255, 255, 0.75) 88%, transparent);
+  box-shadow:
+    0 0 10px rgba(255, 255, 255, 0.26),
+    0 0 18px rgba(0, 153, 255, 0.2);
+}
+
+.formation {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.slot {
+  position: absolute;
+  z-index: 4;
+  display: block;
+  width: 18%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) perspective(720px) rotateX(22deg);
+  transform-style: preserve-3d;
+  overflow: visible;
+  container-type: size;
+}
+
+.benchSlot {
+  width: 16%;
+}
+
+.shield {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.shield > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.jerseyHost {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.jerseyClip {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  clip-path: polygon(17% 1%, 83% 1%, 99% 17%, 99% 83%, 83% 99%, 17% 99%, 1% 83%, 1% 17%);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
+}
+
+.caption {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 50%;
+  z-index: 6;
+  width: 130%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.captionPlate {
+  position: relative;
+  display: flex;
+  min-height: 31px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(0, 212, 255, 0.55);
+  border-radius: 5px;
+  background: rgba(12, 24, 43, 0.92);
+  box-shadow:
+    0 0 0 1px rgba(0, 212, 255, 0.1) inset,
+    0 2px 9px rgba(0, 0, 0, 0.58),
+    0 0 12px rgba(0, 212, 255, 0.14);
+  color: rgba(255, 255, 255, 0.97);
+  font-family: var(--font-display, "Barlow Condensed", system-ui, sans-serif);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+  line-height: 1;
+  padding: 5px 10px 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+  white-space: nowrap;
+}
+
+.benchLabel {
+  display: block;
+  margin-bottom: 5px;
+  color: #e3f8ff;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  line-height: 1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+  text-transform: uppercase;
+}
+
+.rating {
+  display: inline-flex;
+  margin-top: 5px;
+  align-items: baseline;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 9px;
+  padding: 3px 8px 2px;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.ratingSuffix {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.ratingMeta {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}

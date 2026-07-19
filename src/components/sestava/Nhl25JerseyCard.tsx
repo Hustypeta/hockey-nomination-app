@@ -4,7 +4,11 @@ import type { Player } from "@/types";
 import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
-import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
+import {
+  CZ_GOALIE_JERSEY_BACK_BLANK_SRC,
+  CZ_JERSEY_BACK_BLANK_SRC,
+  CZ_JERSEY_CARD_IMG_BASE,
+} from "@/lib/jerseyPhotoAsset";
 import { JerseyCornerFlagCz, JerseyFlagCzInline } from "@/components/sestava/JerseyCornerFlagCz";
 
 export type Nhl25JerseySize = "compact" | "skater" | "goalie";
@@ -86,6 +90,8 @@ export function Nhl25JerseyCard({
   const empty = !player;
   const kind: "skater" | "goalie" =
     empty ? (size === "goalie" ? "goalie" : "skater") : player.position === "G" ? "goalie" : "skater";
+  const jerseySrc = kind === "goalie" ? CZ_GOALIE_JERSEY_BACK_BLANK_SRC : CZ_JERSEY_BACK_BLANK_SRC;
+  const jerseyImageSize = kind === "goalie" ? { width: 1000, height: 675 } : { width: 400, height: 480 };
   const showAssistant = isAssistant && !empty && !isCaptain;
   const w = nameplateVariant === "poster" ? NHL25_POSTER_CARD.width : widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
@@ -196,12 +202,21 @@ export function Nhl25JerseyCard({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
                 <img
-                  src={CZ_JERSEY_BACK_BLANK_SRC}
+                  src={jerseySrc}
                   alt=""
-                  width={400}
-                  height={480}
+                  width={jerseyImageSize.width}
+                  height={jerseyImageSize.height}
                   decoding="async"
                   data-jersey-kind={kind}
+                  style={
+                    kind === "goalie"
+                      ? {
+                          objectFit: "contain",
+                          objectPosition: "center",
+                          transform: "scale(1.65)",
+                        }
+                      : undefined
+                  }
                   className={`
                 ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
                 ${empty ? "opacity-[0.55] saturate-[0.85]" : ""}
@@ -244,10 +259,10 @@ export function Nhl25JerseyCard({
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
               <img
-                src={CZ_JERSEY_BACK_BLANK_SRC}
+                src={jerseySrc}
                 alt=""
-                width={400}
-                height={480}
+                width={jerseyImageSize.width}
+                height={jerseyImageSize.height}
                 decoding="async"
                 data-jersey-kind={kind}
                 className={`
@@ -258,7 +273,7 @@ export function Nhl25JerseyCard({
 
               {!empty ? (
                 <>
-                  <JerseyCornerFlagCz />
+                  {kind !== "goalie" ? <JerseyCornerFlagCz /> : null}
                   <div
                     className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
                   >

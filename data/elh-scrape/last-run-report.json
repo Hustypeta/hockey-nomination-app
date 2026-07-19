@@ -1,0 +1,76 @@
+{
+  "scraped_at": "2026-07-19T14:06:51.399290+00:00",
+  "seasons": [
+    2025,
+    2024,
+    2023,
+    2022
+  ],
+  "competitions": {
+    "2025": {
+      "playoff": 7537,
+      "regular": 7397,
+      "baraz": 7556
+    },
+    "2024": {
+      "playoff": 7374,
+      "regular": 7230,
+      "baraz": 7375
+    },
+    "2023": {
+      "playoff": 7196,
+      "baraz": 7203,
+      "regular": 7071
+    },
+    "2022": {
+      "regular": 6877,
+      "baraz": 7055
+    }
+  },
+  "matched_players": 314,
+  "roster_size": 360,
+  "unmatched_scraped_sample": [
+    "Anthony Nellis (HC VÍTKOVICE RIDERA)",
+    "Tristen Nelson Robins (Rytíři Kladno)",
+    "Devin Shore (HC Sparta Praha)",
+    "Libor Hudáček (HC Oceláři Třinec)",
+    "Róbert Lantoši (Banes Motor Č. Budějovice)",
+    "Nick Olesen (Banes Motor Č. Budějovice)",
+    "Chad Yetman (HC VÍTKOVICE RIDERA)",
+    "Kelly Klíma (Rytíři Kladno)",
+    "Andrej Kollár (HC Kometa Brno)",
+    "Marko Daňo (HC Oceláři Třinec)",
+    "Nicholas Jones (HC Energie Karlovy Vary)",
+    "Niko Ojamäki (Rytíři Kladno)",
+    "Mikko Petman (HC Škoda Plzeň)",
+    "Brant Harris (Banes Motor Č. Budějovice)",
+    "Daniel Audette (Rytíři Kladno)",
+    "Samuel Vigneault (Rytíři Kladno)",
+    "T.J. Melancon (Mountfield HK)",
+    "Martin Faško-Rudáš (Bílí Tygři Liberec)",
+    "Servác Petrovský (Bílí Tygři Liberec)",
+    "Janis Jaks (HC Energie Karlovy Vary)",
+    "Renars Krastenbergs (HC Olomouc)",
+    "Markus Nenonen (Mountfield HK)",
+    "Matúš Sukeľ (HC VERVA Litvínov)",
+    "Ville Petman (HC Škoda Plzeň)",
+    "Jakub Minárik (HC Energie Karlovy Vary)",
+    "Haralds Egle (HC Energie Karlovy Vary)",
+    "Lukáš Cingel (HC Kometa Brno)",
+    "Filip Sandberg (Bílí Tygři Liberec)",
+    "Christophe Lalancette (HC Škoda Plzeň)",
+    "Miguël Tourigny (HC Dynamo Pardubice)",
+    "Alex Tamáši (Mountfield HK)",
+    "Aleksi Rekonen (BK Mladá Boleslav)",
+    "Kevin Klíma (Mountfield HK)",
+    "Peter Čerešňák (HC Dynamo Pardubice)",
+    "Viliam Čacho (HC Olomouc)",
+    "Markus Hännikäinen (HC VERVA Litvínov)",
+    "Martins Dzierkals (HC Sparta Praha)",
+    "Dávid Gríger (BK Mladá Boleslav)",
+    "Krzysztof Macias (HC VÍTKOVICE RIDERA)",
+    "Marek Hrivík (HC VÍTKOVICE RIDERA)"
+  ],
+  "l10_players": 314,
+  "with_l10": true
+}

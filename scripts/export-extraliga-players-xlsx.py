@@ -122,8 +122,8 @@ LEGEND_ROWS = [
     ("narodnost", "Výchozí Česko (CZE); u cizinců přepsat v extraliga-player-stats.json"),
     ("formace", "Číslo lajny v Pardubicích — více hodnot oddělených čárkou (např. 1, 2)"),
     ("bonus_tag / bonus_ppg", "NHL = +0.08 PPG k tier skóre (laditelné v extraliga-tier-config.json)"),
-    ("Statistiky", "Doplňuje se do data/extraliga-player-stats.json (chat / screenshoty)"),
-    ("gp_l10", "Součet posledních 10 zápasů — ideálně stejná liga (ELH)"),
+    ("Statistiky", "Doplňuje scrape-elh-hokej.py z Hokej.cz (základní část; L10 z game-logů)"),
+    ("gp_l10", "Součet posledních 10 zápasů ELH (vč. play-off v game-logu)"),
 ]
 
 

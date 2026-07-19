@@ -1,26 +1,24 @@
 "use client";
 
-import { forwardRef, useMemo, type CSSProperties } from "react";
+import { forwardRef, useMemo } from "react";
 import type { LineupStructure, Player } from "@/types";
-import { getAmbiguousLastNameKeys } from "@/lib/jerseyDisplayName";
-import { PremiumJerseySlotCard } from "@/components/sestava/PremiumJerseySlotCard";
+import { LineupJerseyCard } from "@/components/sestava/LineupJerseyCard";
+import { FifaRinkChemistryLines } from "@/components/fifa/FifaRinkChemistryLines";
+import { FifaRinkShieldFrame } from "@/components/fifa/FifaRinkShieldFrame";
+import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
-  pickMatchLineupForwards34ExtraSlot,
   pickMatchLineupLineExtraSlots,
   pickMatchLineupSegmentPlayerIds,
   splitMatchLineupLinePosterChunks,
-  type MatchLineupLineExtraSlot,
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
+import { fifaRinkChemistryEdges } from "@/lib/fifa/fifaRinkChemistry";
 import {
-  ExtraPlayerSlotBand,
-} from "@/components/match/lineup-poster/MatchLineupPosterLineLayout";
-import {
-  MatchLineupPosterRinkStage,
-  type MatchLineupPosterRinkPlayerSlotContent,
-} from "@/components/match/lineup-poster/MatchLineupPosterRinkStage";
-import { matchPosterJerseyFrameStyles } from "@/lib/matchLineupPosterJerseyFrame";
+  FIFA_RINK_TEMPLATE_SLOTS_MOBILE,
+  type FifaRinkSlotRect,
+  type FifaRinkTemplatePos,
+} from "@/lib/fifa/fifaRinkTemplate";
 import {
   fmtMatchRating,
   matchRatingHue,
@@ -28,39 +26,11 @@ import {
   type MatchRatingAggregateMap,
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
-import { SHARE_POSTER_3X4_H, SHARE_POSTER_3X4_W } from "@/lib/sharePosterLayout";
+import { SHARE_POSTER_ROSTER_4X5_STYLE } from "@/lib/sharePosterLayout";
+import { SITE_CANONICAL_HOST, SITE_LOGO_URL } from "@/lib/siteBranding";
+import styles from "./MatchLineupJerseyExportPoster.module.css";
 
-const LINE_JERSEY_SLOT_MAX_W = 196;
-
-function MatchLineupPosterDecorativeBg() {
-  return (
-    <>
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-[42%] bg-gradient-to-br from-[#c8102e] via-[#8f0b22] to-[#003087]"
-        style={{
-          borderTopLeftRadius: "110px",
-          borderBottomLeftRadius: "110px",
-          transform: "translateX(6%)",
-        }}
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-y-8 right-[36%] w-px bg-gradient-to-b from-transparent via-white/25 to-transparent opacity-70"
-        aria-hidden
-      />
-    </>
-  );
-}
-
-function roleForPlayerId(lineup: LineupStructure, playerId: string): { kind: "goalie" | "skater"; label: "G" | "D" | "F" } {
-  if (lineup.goalies[0] === playerId || lineup.goalies[1] === playerId) {
-    return { kind: "goalie", label: "G" };
-  }
-  for (const p of lineup.defensePairs) {
-    if (p.lb === playerId || p.rb === playerId) return { kind: "skater", label: "D" };
-  }
-  return { kind: "skater", label: "F" };
-}
+const LINE_POSTER_BACKGROUND_SRC = "/images/poster-lineup-line-rink-bg.png?v=2";
 
 interface MatchLineupJerseyExportPosterProps {
   lineupTitle: string;
@@ -69,7 +39,7 @@ interface MatchLineupJerseyExportPosterProps {
   lineup: LineupStructure;
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
-  /** Zobrazení známky pod jménem (export z modalu hodnocení). */
+  siteUrl?: string;
   jerseyRatingExport?: {
     ratings: MatchRatingAggregateMap;
     myRatings: MatchRatingMyMap;
@@ -77,373 +47,193 @@ interface MatchLineupJerseyExportPosterProps {
   };
 }
 
-/**
- * Jedna část exportu zápasové sestavy — dresy + jména; volitelně známka z hodnocení.
- */
-export const MatchLineupJerseyExportPoster = forwardRef<HTMLDivElement, MatchLineupJerseyExportPosterProps>(
-  function MatchLineupJerseyExportPoster(
-    { lineupTitle, group, players, lineup, defenseCount, allowExtraForward, jerseyRatingExport },
-    ref
-  ) {
-    const byId = useMemo(() => new Map(players.map((p) => [p.id, p])), [players]);
-    const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
-    const ids = useMemo(
-      () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
-      [lineup, group, defenseCount, allowExtraForward]
-    );
-    const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
-    const lineExtraSlots = useMemo(
-      () => pickMatchLineupLineExtraSlots(lineup, group, allowExtraForward),
-      [lineup, group, allowExtraForward]
-    );
-    const forwards34Extra = useMemo(
-      () => pickMatchLineupForwards34ExtraSlot(lineup, group, allowExtraForward),
-      [lineup, group, allowExtraForward]
-    );
-    const cols = 2;
+function roleForPlayerId(
+  lineup: LineupStructure,
+  playerId: string
+): { label: "G" | "D" | "F"; size: "goalie" | "compact" } {
+  if (lineup.goalies.includes(playerId)) return { label: "G", size: "goalie" };
+  for (const pair of lineup.defensePairs) {
+    if (pair.lb === playerId || pair.rb === playerId) return { label: "D", size: "compact" };
+  }
+  return { label: "F", size: "compact" };
+}
 
-    const posterJerseyScale = jerseyRatingExport ? 1.06 : 1.18;
-    const rinkJerseyScale = jerseyRatingExport ? 0.72 : 0.78;
-    const ratingExtraShellPx = jerseyRatingExport ? 10 : 0;
-    const jerseyFrame = matchPosterJerseyFrameStyles(posterJerseyScale, ratingExtraShellPx);
-    const rinkJerseyFrame = matchPosterJerseyFrameStyles(rinkJerseyScale, jerseyRatingExport ? 4 : 0);
+export const MatchLineupJerseyExportPoster = forwardRef<
+  HTMLDivElement,
+  MatchLineupJerseyExportPosterProps
+>(function MatchLineupJerseyExportPoster(
+  {
+    lineupTitle,
+    group,
+    players,
+    lineup,
+    defenseCount,
+    allowExtraForward,
+    siteUrl = "",
+    jerseyRatingExport,
+  },
+  ref
+) {
+  const byId = useMemo(() => new Map(players.map((player) => [player.id, player])), [players]);
+  const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
+  const ids = useMemo(
+    () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
+    [lineup, group, defenseCount, allowExtraForward]
+  );
+  const lineChunks = splitMatchLineupLinePosterChunks(ids, group);
+  const extraSlots = useMemo(
+    () => pickMatchLineupLineExtraSlots(lineup, group, allowExtraForward),
+    [lineup, group, allowExtraForward]
+  );
+  const defenseCountInLine = lineChunks?.defense.length ?? 0;
+  const chemistryEdges = fifaRinkChemistryEdges({
+    hasDefense: defenseCountInLine > 0,
+    defenseSolo: defenseCountInLine === 1,
+    showGoalie: true,
+  });
 
-    const cardShell: CSSProperties = {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "flex-start",
-      gap: jerseyRatingExport ? 4 : 10,
-      padding: jerseyRatingExport ? "0 0 4px" : "2px 0 8px",
-      width: "100%",
-      maxWidth: LINE_JERSEY_SLOT_MAX_W,
-      marginLeft: "auto",
-      marginRight: "auto",
-    };
+  if (!lineChunks) return null;
 
-    const renderJerseyOnly = (pid: string, target: "rink" | "card" = "rink") => {
-      const player = byId.get(pid) ?? null;
-      const role = roleForPlayerId(lineup, pid);
-      const frame = target === "rink" ? rinkJerseyFrame : jerseyFrame;
-      return (
-        <div style={frame.shell}>
-          <div style={frame.scaler}>
-            <PremiumJerseySlotCard
+  const host =
+    siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "").trim() || SITE_CANONICAL_HOST;
+  const starterGoalieId = lineup.goalies[0];
+  const secondGoalie = extraSlots.find((slot) => slot.kind === "second-goalie");
+  const extraForward = extraSlots.find((slot) => slot.kind === "extra-forward");
+
+  const renderRating = (playerId: string) => {
+    if (!jerseyRatingExport) return null;
+    const mode = jerseyRatingExport.snapshotMode;
+    const display = resolveMatchRatingDisplay(
+      playerId,
+      jerseyRatingExport.ratings,
+      jerseyRatingExport.myRatings,
+      mode
+    );
+    const hue = matchRatingHue(display);
+    const aggregate = jerseyRatingExport.ratings[playerId];
+    const meta =
+      mode === "community" && aggregate?.count
+        ? `${aggregate.count} ${aggregate.count === 1 ? "hlas" : aggregate.count < 5 ? "hlasy" : "hlasů"}`
+        : mode === "personal"
+          ? typeof jerseyRatingExport.myRatings[playerId] === "number"
+            ? "Tvoje"
+            : "Neuloženo"
+          : "";
+
+    return (
+      <>
+        <span
+          className={styles.rating}
+          style={{ background: hue.bg, color: hue.text, boxShadow: `0 4px 12px ${hue.ring}` }}
+        >
+          {fmtMatchRating(display)}
+          <span className={styles.ratingSuffix}>/10</span>
+        </span>
+        {meta ? <span className={styles.ratingMeta}>{meta}</span> : null}
+      </>
+    );
+  };
+
+  const renderSlot = (
+    playerId: string | null | undefined,
+    pos: FifaRinkTemplatePos,
+    options?: { benchLabel?: string }
+  ) => {
+    if (!playerId) return null;
+    const player = byId.get(playerId) ?? null;
+    const role = roleForPlayerId(lineup, playerId);
+    const slot: FifaRinkSlotRect = FIFA_RINK_TEMPLATE_SLOTS_MOBILE[pos];
+    const caption = player
+      ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys)
+      : "—";
+    const bench = Boolean(options?.benchLabel);
+
+    return (
+      <div
+        key={`${pos}-${playerId}`}
+        className={`${styles.slot} ${bench ? styles.benchSlot : ""} fifa-rink-template__slot`}
+        style={{ left: `${slot.left}%`, top: `${slot.top}%` }}
+      >
+        <div className={styles.shield} aria-hidden>
+          <FifaRinkShieldFrame />
+        </div>
+        <div className={styles.jerseyHost}>
+          <div className={`${styles.jerseyClip} fifa-rink-slot__jersey`}>
+            <LineupJerseyCard
               player={player}
               positionLabel={role.label}
-              kind={role.kind}
-              size={role.kind === "goalie" ? "goalie" : "skater"}
+              size={role.size}
               disableMotion
-              posterEmbed
-              lightRinkSurface={false}
+              overlayMode="rink"
+              nameOnJersey={false}
+              className="fifa-rink-jersey h-full w-full"
+              showPositionBadge={false}
+              showRoleBadge={false}
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
             />
           </div>
         </div>
-      );
-    };
-
-    const renderCaption = (pid: string) => {
-      const player = byId.get(pid) ?? null;
-      const mode = jerseyRatingExport?.snapshotMode;
-      const display =
-        jerseyRatingExport && mode
-          ? resolveMatchRatingDisplay(pid, jerseyRatingExport.ratings, jerseyRatingExport.myRatings, mode)
-          : null;
-      const aggregate = jerseyRatingExport?.ratings[pid];
-      const hue = display != null ? matchRatingHue(display) : matchRatingHue(null);
-      return (
-        <>
-          <div
-            style={{
-              fontSize: jerseyRatingExport ? 14 : 16,
-              fontWeight: 900,
-              color: "white",
-              textShadow: "0 2px 12px rgba(0,0,0,0.65)",
-              lineHeight: jerseyRatingExport ? 1.12 : 1.08,
-              letterSpacing: "-0.01em",
-              wordBreak: "break-word",
-              ...(jerseyRatingExport
-                ? {
-                    overflow: "hidden",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical" as const,
-                  }
-                : {}),
-            }}
-          >
-            {player ? player.name : "—"}
-          </div>
-          {jerseyRatingExport && mode ? (
-            <div
-              style={{
-                marginTop: 4,
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 6,
-                rowGap: 2,
-              }}
-            >
-              <div
-                style={{
-                  display: "inline-flex",
-                  flexDirection: "row",
-                  alignItems: "baseline",
-                  gap: 5,
-                  padding: jerseyRatingExport ? "4px 10px 3px" : "5px 12px 4px",
-                  borderRadius: 12,
-                  background: hue.bg,
-                  boxShadow: `0 6px 16px ${hue.ring}, 0 0 0 2px rgba(255,255,255,0.9) inset`,
-                  border: "2px solid rgba(255,255,255,0.9)",
-                  color: hue.text,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: jerseyRatingExport ? 18 : 28,
-                    fontWeight: 900,
-                    lineHeight: 1,
-                    letterSpacing: "-0.04em",
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {fmtMatchRating(display)}
-                </span>
-                <span
-                  style={{
-                    fontSize: jerseyRatingExport ? 9 : 10,
-                    fontWeight: 800,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    opacity: 0.88,
-                  }}
-                >
-                  /10
-                </span>
-              </div>
-              {mode === "community" && aggregate && aggregate.count > 0 ? (
-                <span
-                  style={{
-                    fontSize: 9,
-                    fontWeight: 700,
-                    color: "rgba(255,255,255,0.48)",
-                    letterSpacing: "0.03em",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {aggregate.count} {aggregate.count === 1 ? "hlas" : aggregate.count < 5 ? "hlasy" : "hlasů"}
-                </span>
-              ) : null}
-              {mode === "personal" && typeof jerseyRatingExport.myRatings[pid] === "number" ? (
-                <span
-                  style={{
-                    fontSize: 9,
-                    fontWeight: 800,
-                    color: "rgba(52, 211, 153, 0.88)",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  Tvoje
-                </span>
-              ) : mode === "personal" && typeof jerseyRatingExport.myRatings[pid] !== "number" ? (
-                <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap" }}>
-                  Neuloženo
-                </span>
-              ) : null}
-            </div>
+        <div className={styles.caption}>
+          {options?.benchLabel ? (
+            <span className={styles.benchLabel}>{options.benchLabel}</span>
           ) : null}
-        </>
-      );
-    };
-
-    const rinkSlotFromPlayer = (pid: string): MatchLineupPosterRinkPlayerSlotContent => ({
-      jersey: renderJerseyOnly(pid),
-      caption: renderCaption(pid),
-    });
-
-    const renderPlayerCard = (pid: string) => {
-      return (
-        <div key={pid} style={cardShell}>
-          {renderJerseyOnly(pid, "card")}
-          <div style={{ width: "100%", maxWidth: "100%", textAlign: "center", paddingLeft: 2, paddingRight: 2 }}>
-            {renderCaption(pid)}
-          </div>
+          <div className={styles.captionPlate}>{caption}</div>
+          {renderRating(playerId)}
         </div>
-      );
-    };
+      </div>
+    );
+  };
 
-    const pad = jerseyRatingExport ? 26 : 32;
-    const rootStyle: CSSProperties = {
-      width: SHARE_POSTER_3X4_W,
-      height: SHARE_POSTER_3X4_H,
-      minHeight: SHARE_POSTER_3X4_H,
-      maxHeight: SHARE_POSTER_3X4_H,
-      padding: pad,
-      fontFamily: "'Barlow Condensed', 'Inter', system-ui, sans-serif",
-      background: "linear-gradient(135deg, #050a18 0%, #0a1428 32%, #121c34 65%, #050a18 100%)",
-      color: "white",
-      boxSizing: "border-box",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-      position: "relative",
-    };
+  const defenseSolo = lineChunks.defense.length === 1;
 
-    const renderExtraJersey = (slot: MatchLineupLineExtraSlot) => renderJerseyOnly(slot.playerId);
+  return (
+    <div
+      ref={ref}
+      data-export-slot={group}
+      className={`match-lineup-jersey-export-poster ${styles.poster}`}
+      style={SHARE_POSTER_ROSTER_4X5_STYLE}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element -- uživatelem dodané pozadí exportu lajny */}
+      <img src={LINE_POSTER_BACKGROUND_SRC} alt="" className={styles.background} decoding="sync" />
+      <div className={styles.shade} aria-hidden />
 
-    const lineFormation = lineChunks ? (
-      <div
-        style={{
-          flex: 1,
-          minHeight: 0,
-          marginTop: jerseyRatingExport ? 4 : 8,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <MatchLineupPosterRinkStage
-          compact={Boolean(jerseyRatingExport)}
-          forwards={lineChunks.forwards.filter(Boolean).map((pid) => rinkSlotFromPlayer(pid))}
-          defense={lineChunks.defense.filter(Boolean).map((pid) => rinkSlotFromPlayer(pid))}
-          goalie={lineChunks.bottom[0] ? rinkSlotFromPlayer(lineChunks.bottom[0]) : null}
-          extraSlots={lineExtraSlots}
-          renderExtraJersey={renderExtraJersey}
+      <header className={styles.header}>
+        <span className={styles.host}>{host}</span>
+        <div className={styles.titleBlock}>
+          <h1 className={styles.title}>{lineupTitle.trim() || "Moje sestava na zápas"}</h1>
+        </div>
+        <span className={styles.logoFrame}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- statické logo pro export PNG */}
+          <img src={SITE_LOGO_URL} alt="Lineup" className={styles.logo} decoding="sync" />
+        </span>
+      </header>
+      <div className={styles.headerRule} aria-hidden />
+
+      <div className={styles.formation}>
+        <FifaRinkChemistryLines
+          edges={chemistryEdges}
+          slotLayout={FIFA_RINK_TEMPLATE_SLOTS_MOBILE}
         />
+        <span className={styles.lineLabel}>{MATCH_LINEUP_POSTER_GROUP_TITLE[group]}</span>
+        {renderSlot(lineChunks.forwards[0], "lw")}
+        {renderSlot(lineChunks.forwards[1], "c")}
+        {renderSlot(lineChunks.forwards[2], "rw")}
+        {defenseSolo
+          ? renderSlot(lineChunks.defense[0], "d")
+          : (
+              <>
+                {renderSlot(lineChunks.defense[0], "ld")}
+                {renderSlot(lineChunks.defense[1], "rd")}
+              </>
+            )}
+        {renderSlot(starterGoalieId, "g")}
+        {secondGoalie
+          ? renderSlot(secondGoalie.playerId, "benchL", { benchLabel: "2. brankář" })
+          : null}
+        {extraForward
+          ? renderSlot(extraForward.playerId, "benchR", { benchLabel: "13. útočník" })
+          : null}
       </div>
-    ) : (
-      <div style={{ display: "flex", flexDirection: "column", gap: jerseyRatingExport ? 10 : 14 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${cols}, 1fr)`,
-            gap: jerseyRatingExport ? 10 : 14,
-            alignContent: "space-evenly",
-          }}
-        >
-          {ids.map((pid) => (
-            <div key={pid} style={{ minWidth: 0, width: "100%" }}>
-              {renderPlayerCard(pid)}
-            </div>
-          ))}
-        </div>
-        {forwards34Extra ? (
-          <ExtraPlayerSlotBand
-            compact={Boolean(jerseyRatingExport)}
-            extraSlots={[forwards34Extra]}
-            renderExtraCard={(slot) => renderPlayerCard(slot.playerId)}
-          />
-        ) : null}
-      </div>
-    );
-
-    return (
-      <div ref={ref} data-export-slot={group} className="match-lineup-jersey-export-poster" style={rootStyle}>
-        <MatchLineupPosterDecorativeBg />
-        <header
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            gap: jerseyRatingExport ? 16 : 12,
-            paddingBottom: jerseyRatingExport ? 12 : 18,
-            borderBottom: "3px solid rgba(241, 196, 15, 0.6)",
-            flexShrink: 0,
-            position: "relative",
-            zIndex: 2,
-          }}
-        >
-          <div style={{ minWidth: 0, maxWidth: jerseyRatingExport ? "68%" : "72%", flex: "1 1 auto" }}>
-            <p
-              style={{
-                fontSize: jerseyRatingExport ? 11 : 16,
-                fontWeight: 800,
-                letterSpacing: jerseyRatingExport ? "0.32em" : "0.28em",
-                textTransform: "uppercase",
-                color: jerseyRatingExport ? "rgba(200, 16, 46, 0.95)" : "#f1c40f",
-                lineHeight: 1.2,
-              }}
-            >
-              {jerseyRatingExport ? "Hodnocení hráčů" : "Sestava na zápas"}
-            </p>
-            <h1
-              style={{
-                marginTop: jerseyRatingExport ? 6 : 8,
-                fontSize: jerseyRatingExport ? 34 : 42,
-                fontWeight: 900,
-                lineHeight: 1.08,
-                color: "white",
-                overflow: "hidden",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                wordBreak: "break-word",
-              }}
-            >
-              {lineupTitle.trim() || "Moje sestava"}
-            </h1>
-            {jerseyRatingExport ? (
-              <p
-                style={{
-                  marginTop: 5,
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: "rgba(255,255,255,0.52)",
-                  letterSpacing: "0.02em",
-                  lineHeight: 1.2,
-                }}
-              >
-                {jerseyRatingExport.snapshotMode === "personal"
-                  ? "Moje známky (1,0–10,0)"
-                  : "Průměr komunity v době exportu"}
-              </p>
-            ) : null}
-          </div>
-          <aside style={{ textAlign: "right", flexShrink: 0, paddingTop: jerseyRatingExport ? 2 : 0, maxWidth: "32%" }}>
-            <p
-              style={{
-                fontSize: jerseyRatingExport ? 13 : 14,
-                fontWeight: 800,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.55)",
-                lineHeight: 1.2,
-              }}
-            >
-              {MATCH_LINEUP_POSTER_GROUP_TITLE[group]}
-            </p>
-          </aside>
-        </header>
-
-        {lineFormation}
-
-        <div
-          style={{
-            marginTop: "auto",
-            paddingTop: 8,
-            flexShrink: 0,
-            textAlign: "center",
-            position: "relative",
-            zIndex: 1,
-            fontSize: jerseyRatingExport ? 22 : 24,
-            color: "rgba(126,200,255,0.95)",
-            letterSpacing: "0.12em",
-            textTransform: "none",
-            fontWeight: 900,
-            fontFamily: "var(--font-display, 'Barlow Condensed', system-ui)",
-          }}
-        >
-          hokejlineup.cz
-        </div>
-      </div>
-    );
-  }
-);
+    </div>
+  );
+});

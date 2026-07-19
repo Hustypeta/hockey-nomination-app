@@ -1,0 +1,28 @@
+{
+  "scraped_at": "2026-07-19T14:13:35.257026+00:00",
+  "source": "https://www.livesport.cz/hokej/cesko/tipsport-extraliga/",
+  "teams": 14,
+  "players": 388,
+  "roles_kept_from_previous": 82,
+  "by_position": {
+    "D": 124,
+    "F": 228,
+    "G": 36
+  },
+  "by_club": {
+    "BK Mladá Boleslav": 26,
+    "Bílí Tygři Liberec": 23,
+    "HC Dynamo Pardubice": 33,
+    "HC Energie Karlovy Vary": 29,
+    "HC Kometa Brno": 38,
+    "HC Litvínov": 24,
+    "HC Motor České Budějovice": 24,
+    "HC Oceláři Třinec": 22,
+    "HC Olomouc": 30,
+    "HC Plzeň": 25,
+    "HC Sparta Praha": 31,
+    "HC Vítkovice": 24,
+    "Mountfield HK": 30,
+    "Rytíři Kladno": 29
+  }
+}

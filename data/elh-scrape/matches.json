@@ -1,0 +1,3827 @@
+[
+  {
+    "match_id": "2927840",
+    "date": "28.4.2026",
+    "round": "6.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – PCE",
+    "score": "4:5 P",
+    "match_url": "https://www.hokej.cz/zapas/2927840"
+  },
+  {
+    "match_id": "2927839",
+    "date": "26.4.2026",
+    "round": "5.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – TRI",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2927839"
+  },
+  {
+    "match_id": "2928109",
+    "date": "25.4.2026",
+    "round": "5.",
+    "competition": "Baráž o extraligu",
+    "matchup": "LIT – JIH",
+    "score": "5:0",
+    "match_url": "https://www.hokej.cz/zapas/2928109"
+  },
+  {
+    "match_id": "2927838",
+    "date": "23.4.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – PCE",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2927838"
+  },
+  {
+    "match_id": "2927837",
+    "date": "22.4.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – PCE",
+    "score": "5:4 P",
+    "match_url": "https://www.hokej.cz/zapas/2927837"
+  },
+  {
+    "match_id": "2928108",
+    "date": "22.4.2026",
+    "round": "4.",
+    "competition": "Baráž o extraligu",
+    "matchup": "JIH – LIT",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2928108"
+  },
+  {
+    "match_id": "2928107",
+    "date": "21.4.2026",
+    "round": "3.",
+    "competition": "Baráž o extraligu",
+    "matchup": "JIH – LIT",
+    "score": "1:5",
+    "match_url": "https://www.hokej.cz/zapas/2928107"
+  },
+  {
+    "match_id": "2927836",
+    "date": "19.4.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – TRI",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2927836"
+  },
+  {
+    "match_id": "2927835",
+    "date": "18.4.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – TRI",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2927835"
+  },
+  {
+    "match_id": "2928106",
+    "date": "18.4.2026",
+    "round": "2.",
+    "competition": "Baráž o extraligu",
+    "matchup": "LIT – JIH",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2928106"
+  },
+  {
+    "match_id": "2928105",
+    "date": "17.4.2026",
+    "round": "1.",
+    "competition": "Baráž o extraligu",
+    "matchup": "LIT – JIH",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2928105"
+  },
+  {
+    "match_id": "2927833",
+    "date": "15.4.2026",
+    "round": "7.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – SPA",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2927833"
+  },
+  {
+    "match_id": "2927831",
+    "date": "13.4.2026",
+    "round": "6.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – PCE",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2927831"
+  },
+  {
+    "match_id": "2927829",
+    "date": "11.4.2026",
+    "round": "5.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – SPA",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2927829"
+  },
+  {
+    "match_id": "2927830",
+    "date": "11.4.2026",
+    "round": "5.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – KVA",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2927830"
+  },
+  {
+    "match_id": "2927827",
+    "date": "8.4.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – PCE",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2927827"
+  },
+  {
+    "match_id": "2927828",
+    "date": "8.4.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KVA – TRI",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2927828"
+  },
+  {
+    "match_id": "2927825",
+    "date": "7.4.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – PCE",
+    "score": "1:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2927825"
+  },
+  {
+    "match_id": "2927826",
+    "date": "7.4.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KVA – TRI",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2927826"
+  },
+  {
+    "match_id": "2927823",
+    "date": "4.4.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – SPA",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2927823"
+  },
+  {
+    "match_id": "2927824",
+    "date": "4.4.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – KVA",
+    "score": "5:4",
+    "match_url": "https://www.hokej.cz/zapas/2927824"
+  },
+  {
+    "match_id": "2927821",
+    "date": "3.4.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – SPA",
+    "score": "6:2",
+    "match_url": "https://www.hokej.cz/zapas/2927821"
+  },
+  {
+    "match_id": "2927822",
+    "date": "3.4.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – KVA",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2927822"
+  },
+  {
+    "match_id": "2927819",
+    "date": "31.3.2026",
+    "round": "7.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "LIB – KVA",
+    "score": "0:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2927819"
+  },
+  {
+    "match_id": "2927818",
+    "date": "30.3.2026",
+    "round": "7.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PLZ – SPA",
+    "score": "0:1",
+    "match_url": "https://www.hokej.cz/zapas/2927818"
+  },
+  {
+    "match_id": "2927815",
+    "date": "29.3.2026",
+    "round": "6.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KVA – LIB",
+    "score": "4:0",
+    "match_url": "https://www.hokej.cz/zapas/2927815"
+  },
+  {
+    "match_id": "2927814",
+    "date": "28.3.2026",
+    "round": "6.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – PLZ",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2927814"
+  },
+  {
+    "match_id": "2927811",
+    "date": "27.3.2026",
+    "round": "5.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "LIB – KVA",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2927811"
+  },
+  {
+    "match_id": "2927812",
+    "date": "27.3.2026",
+    "round": "5.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "MHK – TRI",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2927812"
+  },
+  {
+    "match_id": "2927810",
+    "date": "26.3.2026",
+    "round": "5.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PLZ – SPA",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2927810"
+  },
+  {
+    "match_id": "2927807",
+    "date": "25.3.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KVA – LIB",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2927807"
+  },
+  {
+    "match_id": "2927808",
+    "date": "25.3.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – MHK",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2927808"
+  },
+  {
+    "match_id": "2927805",
+    "date": "24.3.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KVA – LIB",
+    "score": "0:3",
+    "match_url": "https://www.hokej.cz/zapas/2927805"
+  },
+  {
+    "match_id": "2927806",
+    "date": "24.3.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – MHK",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2927806"
+  },
+  {
+    "match_id": "2927803",
+    "date": "23.3.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KOM – PCE",
+    "score": "0:1",
+    "match_url": "https://www.hokej.cz/zapas/2927803"
+  },
+  {
+    "match_id": "2927804",
+    "date": "23.3.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – PLZ",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2927804"
+  },
+  {
+    "match_id": "2927801",
+    "date": "22.3.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KOM – PCE",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2927801"
+  },
+  {
+    "match_id": "2927802",
+    "date": "22.3.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – PLZ",
+    "score": "3:4 SN",
+    "match_url": "https://www.hokej.cz/zapas/2927802"
+  },
+  {
+    "match_id": "2927799",
+    "date": "21.3.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "LIB – KVA",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2927799"
+  },
+  {
+    "match_id": "2927800",
+    "date": "21.3.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "MHK – TRI",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2927800"
+  },
+  {
+    "match_id": "2927797",
+    "date": "20.3.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "LIB – KVA",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2927797"
+  },
+  {
+    "match_id": "2927798",
+    "date": "20.3.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "MHK – TRI",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2927798"
+  },
+  {
+    "match_id": "2927795",
+    "date": "19.3.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – KOM",
+    "score": "8:4",
+    "match_url": "https://www.hokej.cz/zapas/2927795"
+  },
+  {
+    "match_id": "2927796",
+    "date": "19.3.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PLZ – SPA",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2927796"
+  },
+  {
+    "match_id": "2927793",
+    "date": "18.3.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PCE – KOM",
+    "score": "5:1",
+    "match_url": "https://www.hokej.cz/zapas/2927793"
+  },
+  {
+    "match_id": "2927794",
+    "date": "18.3.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "PLZ – SPA",
+    "score": "0:2",
+    "match_url": "https://www.hokej.cz/zapas/2927794"
+  },
+  {
+    "match_id": "2927791",
+    "date": "15.3.2026",
+    "round": "5.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – KLA",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2927791"
+  },
+  {
+    "match_id": "2927788",
+    "date": "13.3.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "CEB – KOM",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2927788"
+  },
+  {
+    "match_id": "2927787",
+    "date": "13.3.2026",
+    "round": "4.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KLA – SPA",
+    "score": "2:5",
+    "match_url": "https://www.hokej.cz/zapas/2927787"
+  },
+  {
+    "match_id": "2927784",
+    "date": "12.3.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "CEB – KOM",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2927784"
+  },
+  {
+    "match_id": "2927783",
+    "date": "12.3.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KLA – SPA",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2927783"
+  },
+  {
+    "match_id": "2927781",
+    "date": "12.3.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "OLO – TRI",
+    "score": "1:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2927781"
+  },
+  {
+    "match_id": "2927782",
+    "date": "12.3.2026",
+    "round": "3.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "VIT – KVA",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2927782"
+  },
+  {
+    "match_id": "2927780",
+    "date": "10.3.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KOM – CEB",
+    "score": "1:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2927780"
+  },
+  {
+    "match_id": "2927779",
+    "date": "10.3.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – KLA",
+    "score": "3:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2927779"
+  },
+  {
+    "match_id": "2927777",
+    "date": "10.3.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – OLO",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2927777"
+  },
+  {
+    "match_id": "2927778",
+    "date": "10.3.2026",
+    "round": "2.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KVA – VIT",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2927778"
+  },
+  {
+    "match_id": "2927776",
+    "date": "9.3.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KOM – CEB",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2927776"
+  },
+  {
+    "match_id": "2927775",
+    "date": "9.3.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "SPA – KLA",
+    "score": "1:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2927775"
+  },
+  {
+    "match_id": "2927773",
+    "date": "9.3.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "TRI – OLO",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2927773"
+  },
+  {
+    "match_id": "2927774",
+    "date": "9.3.2026",
+    "round": "1.",
+    "competition": "Play off Tipsport extraligy",
+    "matchup": "KVA – VIT",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2927774"
+  },
+  {
+    "match_id": "2922123",
+    "date": "6.3.2026",
+    "round": "52.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – OLO",
+    "score": "5:4",
+    "match_url": "https://www.hokej.cz/zapas/2922123"
+  },
+  {
+    "match_id": "2922125",
+    "date": "6.3.2026",
+    "round": "52.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – LIB",
+    "score": "4:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922125"
+  },
+  {
+    "match_id": "2922121",
+    "date": "6.3.2026",
+    "round": "52.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – VIT",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2922121"
+  },
+  {
+    "match_id": "2922120",
+    "date": "6.3.2026",
+    "round": "52.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – SPA",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2922120"
+  },
+  {
+    "match_id": "2922126",
+    "date": "6.3.2026",
+    "round": "52.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – KVA",
+    "score": "1:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922126"
+  },
+  {
+    "match_id": "2922124",
+    "date": "6.3.2026",
+    "round": "52.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – MBL",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2922124"
+  },
+  {
+    "match_id": "2922122",
+    "date": "6.3.2026",
+    "round": "52.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – LIT",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2922122"
+  },
+  {
+    "match_id": "2922119",
+    "date": "4.3.2026",
+    "round": "51.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – KOM",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2922119"
+  },
+  {
+    "match_id": "2922115",
+    "date": "4.3.2026",
+    "round": "51.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – MHK",
+    "score": "4:0",
+    "match_url": "https://www.hokej.cz/zapas/2922115"
+  },
+  {
+    "match_id": "2922117",
+    "date": "4.3.2026",
+    "round": "51.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – KLA",
+    "score": "6:3",
+    "match_url": "https://www.hokej.cz/zapas/2922117"
+  },
+  {
+    "match_id": "2922113",
+    "date": "4.3.2026",
+    "round": "51.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – CEB",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2922113"
+  },
+  {
+    "match_id": "2922114",
+    "date": "4.3.2026",
+    "round": "51.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – PLZ",
+    "score": "0:2",
+    "match_url": "https://www.hokej.cz/zapas/2922114"
+  },
+  {
+    "match_id": "2922116",
+    "date": "4.3.2026",
+    "round": "51.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – PCE",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2922116"
+  },
+  {
+    "match_id": "2922118",
+    "date": "4.3.2026",
+    "round": "51.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – TRI",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2922118"
+  },
+  {
+    "match_id": "2922107",
+    "date": "1.3.2026",
+    "round": "50.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – KOM",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2922107"
+  },
+  {
+    "match_id": "2922110",
+    "date": "1.3.2026",
+    "round": "50.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – OLO",
+    "score": "6:3",
+    "match_url": "https://www.hokej.cz/zapas/2922110"
+  },
+  {
+    "match_id": "2922111",
+    "date": "1.3.2026",
+    "round": "50.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – SPA",
+    "score": "6:3",
+    "match_url": "https://www.hokej.cz/zapas/2922111"
+  },
+  {
+    "match_id": "2922108",
+    "date": "1.3.2026",
+    "round": "50.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – KVA",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2922108"
+  },
+  {
+    "match_id": "2922109",
+    "date": "1.3.2026",
+    "round": "50.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – LIT",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2922109"
+  },
+  {
+    "match_id": "2922112",
+    "date": "1.3.2026",
+    "round": "50.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – VIT",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2922112"
+  },
+  {
+    "match_id": "2922106",
+    "date": "1.3.2026",
+    "round": "50.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – MBL",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2922106"
+  },
+  {
+    "match_id": "2922105",
+    "date": "27.2.2026",
+    "round": "49.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – TRI",
+    "score": "5:1",
+    "match_url": "https://www.hokej.cz/zapas/2922105"
+  },
+  {
+    "match_id": "2922103",
+    "date": "27.2.2026",
+    "round": "49.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – LIB",
+    "score": "4:5 P",
+    "match_url": "https://www.hokej.cz/zapas/2922103"
+  },
+  {
+    "match_id": "2922099",
+    "date": "27.2.2026",
+    "round": "49.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – PLZ",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2922099"
+  },
+  {
+    "match_id": "2922100",
+    "date": "27.2.2026",
+    "round": "49.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – MHK",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2922100"
+  },
+  {
+    "match_id": "2922101",
+    "date": "27.2.2026",
+    "round": "49.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – PCE",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2922101"
+  },
+  {
+    "match_id": "2922104",
+    "date": "27.2.2026",
+    "round": "49.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – CEB",
+    "score": "5:4 P",
+    "match_url": "https://www.hokej.cz/zapas/2922104"
+  },
+  {
+    "match_id": "2922102",
+    "date": "27.2.2026",
+    "round": "49.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – KLA",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2922102"
+  },
+  {
+    "match_id": "2922096",
+    "date": "25.2.2026",
+    "round": "48.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – KOM",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2922096"
+  },
+  {
+    "match_id": "2922094",
+    "date": "25.2.2026",
+    "round": "48.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – SPA",
+    "score": "1:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2922094"
+  },
+  {
+    "match_id": "2922097",
+    "date": "25.2.2026",
+    "round": "48.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – KVA",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2922097"
+  },
+  {
+    "match_id": "2922093",
+    "date": "25.2.2026",
+    "round": "48.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – VIT",
+    "score": "4:0",
+    "match_url": "https://www.hokej.cz/zapas/2922093"
+  },
+  {
+    "match_id": "2922092",
+    "date": "25.2.2026",
+    "round": "48.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – TRI",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2922092"
+  },
+  {
+    "match_id": "2922098",
+    "date": "25.2.2026",
+    "round": "48.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – LIT",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2922098"
+  },
+  {
+    "match_id": "2922095",
+    "date": "24.2.2026",
+    "round": "48.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – OLO",
+    "score": "3:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922095"
+  },
+  {
+    "match_id": "2921994",
+    "date": "22.2.2026",
+    "round": "34.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – SPA",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921994"
+  },
+  {
+    "match_id": "2922008",
+    "date": "2.2.2026",
+    "round": "36.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – SPA",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922008"
+  },
+  {
+    "match_id": "2922041",
+    "date": "1.2.2026",
+    "round": "40.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – CEB",
+    "score": "4:3",
+    "match_url": "https://www.hokej.cz/zapas/2922041"
+  },
+  {
+    "match_id": "2922090",
+    "date": "30.1.2026",
+    "round": "47.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – CEB",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2922090"
+  },
+  {
+    "match_id": "2921907",
+    "date": "30.1.2026",
+    "round": "21.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – LIB",
+    "score": "3:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921907"
+  },
+  {
+    "match_id": "2922089",
+    "date": "29.1.2026",
+    "round": "47.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – LIB",
+    "score": "3:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922089"
+  },
+  {
+    "match_id": "2922085",
+    "date": "29.1.2026",
+    "round": "47.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – MBL",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922085"
+  },
+  {
+    "match_id": "2922091",
+    "date": "29.1.2026",
+    "round": "47.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – PCE",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2922091"
+  },
+  {
+    "match_id": "2922086",
+    "date": "29.1.2026",
+    "round": "47.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – PLZ",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922086"
+  },
+  {
+    "match_id": "2922087",
+    "date": "29.1.2026",
+    "round": "47.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – MHK",
+    "score": "3:6",
+    "match_url": "https://www.hokej.cz/zapas/2922087"
+  },
+  {
+    "match_id": "2922081",
+    "date": "27.1.2026",
+    "round": "46.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – KOM",
+    "score": "4:0",
+    "match_url": "https://www.hokej.cz/zapas/2922081"
+  },
+  {
+    "match_id": "2922079",
+    "date": "27.1.2026",
+    "round": "46.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – VIT",
+    "score": "6:2",
+    "match_url": "https://www.hokej.cz/zapas/2922079"
+  },
+  {
+    "match_id": "2922080",
+    "date": "27.1.2026",
+    "round": "46.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – KLA",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2922080"
+  },
+  {
+    "match_id": "2922082",
+    "date": "27.1.2026",
+    "round": "46.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – KVA",
+    "score": "3:6",
+    "match_url": "https://www.hokej.cz/zapas/2922082"
+  },
+  {
+    "match_id": "2922083",
+    "date": "27.1.2026",
+    "round": "46.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – LIT",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2922083"
+  },
+  {
+    "match_id": "2922084",
+    "date": "27.1.2026",
+    "round": "46.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – TRI",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2922084"
+  },
+  {
+    "match_id": "2922078",
+    "date": "26.1.2026",
+    "round": "46.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – OLO",
+    "score": "6:3",
+    "match_url": "https://www.hokej.cz/zapas/2922078"
+  },
+  {
+    "match_id": "2922075",
+    "date": "25.1.2026",
+    "round": "45.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – MHK",
+    "score": "4:3",
+    "match_url": "https://www.hokej.cz/zapas/2922075"
+  },
+  {
+    "match_id": "2922077",
+    "date": "25.1.2026",
+    "round": "45.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – LIB",
+    "score": "0:2",
+    "match_url": "https://www.hokej.cz/zapas/2922077"
+  },
+  {
+    "match_id": "2922073",
+    "date": "25.1.2026",
+    "round": "45.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – OLO",
+    "score": "3:5",
+    "match_url": "https://www.hokej.cz/zapas/2922073"
+  },
+  {
+    "match_id": "2922071",
+    "date": "25.1.2026",
+    "round": "45.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – PLZ",
+    "score": "3:4 P",
+    "match_url": "https://www.hokej.cz/zapas/2922071"
+  },
+  {
+    "match_id": "2922074",
+    "date": "25.1.2026",
+    "round": "45.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – MBL",
+    "score": "4:0",
+    "match_url": "https://www.hokej.cz/zapas/2922074"
+  },
+  {
+    "match_id": "2922076",
+    "date": "25.1.2026",
+    "round": "45.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – CEB",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2922076"
+  },
+  {
+    "match_id": "2922070",
+    "date": "23.1.2026",
+    "round": "44.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – KOM",
+    "score": "4:0",
+    "match_url": "https://www.hokej.cz/zapas/2922070"
+  },
+  {
+    "match_id": "2922066",
+    "date": "23.1.2026",
+    "round": "44.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – PCE",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2922066"
+  },
+  {
+    "match_id": "2922068",
+    "date": "23.1.2026",
+    "round": "44.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – KVA",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2922068"
+  },
+  {
+    "match_id": "2922065",
+    "date": "23.1.2026",
+    "round": "44.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – VIT",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2922065"
+  },
+  {
+    "match_id": "2922067",
+    "date": "23.1.2026",
+    "round": "44.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – KLA",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2922067"
+  },
+  {
+    "match_id": "2921914",
+    "date": "21.1.2026",
+    "round": "22.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – KOM",
+    "score": "7:1",
+    "match_url": "https://www.hokej.cz/zapas/2921914"
+  },
+  {
+    "match_id": "2922020",
+    "date": "20.1.2026",
+    "round": "37.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – MHK",
+    "score": "1:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922020"
+  },
+  {
+    "match_id": "2922064",
+    "date": "20.1.2026",
+    "round": "44.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – TRI",
+    "score": "2:1 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922064"
+  },
+  {
+    "match_id": "2922057",
+    "date": "18.1.2026",
+    "round": "43.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – KOM",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2922057"
+  },
+  {
+    "match_id": "2922060",
+    "date": "18.1.2026",
+    "round": "43.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – LIT",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922060"
+  },
+  {
+    "match_id": "2922063",
+    "date": "18.1.2026",
+    "round": "43.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – SPA",
+    "score": "3:4 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922063"
+  },
+  {
+    "match_id": "2922059",
+    "date": "18.1.2026",
+    "round": "43.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – OLO",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2922059"
+  },
+  {
+    "match_id": "2922061",
+    "date": "18.1.2026",
+    "round": "43.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – CEB",
+    "score": "5:1",
+    "match_url": "https://www.hokej.cz/zapas/2922061"
+  },
+  {
+    "match_id": "2922058",
+    "date": "18.1.2026",
+    "round": "43.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – MHK",
+    "score": "2:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922058"
+  },
+  {
+    "match_id": "2922062",
+    "date": "18.1.2026",
+    "round": "43.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – TRI",
+    "score": "4:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922062"
+  },
+  {
+    "match_id": "2922050",
+    "date": "16.1.2026",
+    "round": "42.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – TRI",
+    "score": "5:3",
+    "match_url": "https://www.hokej.cz/zapas/2922050"
+  },
+  {
+    "match_id": "2922056",
+    "date": "16.1.2026",
+    "round": "42.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – KVA",
+    "score": "1:5",
+    "match_url": "https://www.hokej.cz/zapas/2922056"
+  },
+  {
+    "match_id": "2922053",
+    "date": "16.1.2026",
+    "round": "42.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – PCE",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2922053"
+  },
+  {
+    "match_id": "2922051",
+    "date": "16.1.2026",
+    "round": "42.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – PLZ",
+    "score": "5:1",
+    "match_url": "https://www.hokej.cz/zapas/2922051"
+  },
+  {
+    "match_id": "2922055",
+    "date": "16.1.2026",
+    "round": "42.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – LIT",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922055"
+  },
+  {
+    "match_id": "2922054",
+    "date": "16.1.2026",
+    "round": "42.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – KLA",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2922054"
+  },
+  {
+    "match_id": "2922052",
+    "date": "15.1.2026",
+    "round": "42.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – KOM",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2922052"
+  },
+  {
+    "match_id": "2922034",
+    "date": "13.1.2026",
+    "round": "39.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – CEB",
+    "score": "6:3",
+    "match_url": "https://www.hokej.cz/zapas/2922034"
+  },
+  {
+    "match_id": "2922069",
+    "date": "13.1.2026",
+    "round": "44.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – LIT",
+    "score": "5:1",
+    "match_url": "https://www.hokej.cz/zapas/2922069"
+  },
+  {
+    "match_id": "2922033",
+    "date": "13.1.2026",
+    "round": "39.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – MHK",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2922033"
+  },
+  {
+    "match_id": "2922046",
+    "date": "12.1.2026",
+    "round": "41.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – OLO",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2922046"
+  },
+  {
+    "match_id": "2922049",
+    "date": "11.1.2026",
+    "round": "41.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – MBL",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2922049"
+  },
+  {
+    "match_id": "2922047",
+    "date": "11.1.2026",
+    "round": "41.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – LIB",
+    "score": "2:1 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922047"
+  },
+  {
+    "match_id": "2922048",
+    "date": "11.1.2026",
+    "round": "41.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – SPA",
+    "score": "5:3",
+    "match_url": "https://www.hokej.cz/zapas/2922048"
+  },
+  {
+    "match_id": "2922045",
+    "date": "11.1.2026",
+    "round": "41.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – LIT",
+    "score": "3:4 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922045"
+  },
+  {
+    "match_id": "2922044",
+    "date": "11.1.2026",
+    "round": "41.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – VIT",
+    "score": "8:1",
+    "match_url": "https://www.hokej.cz/zapas/2922044"
+  },
+  {
+    "match_id": "2922043",
+    "date": "11.1.2026",
+    "round": "41.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – MHK",
+    "score": "5:1",
+    "match_url": "https://www.hokej.cz/zapas/2922043"
+  },
+  {
+    "match_id": "2922042",
+    "date": "9.1.2026",
+    "round": "40.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – LIT",
+    "score": "7:2",
+    "match_url": "https://www.hokej.cz/zapas/2922042"
+  },
+  {
+    "match_id": "2922036",
+    "date": "9.1.2026",
+    "round": "40.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – PLZ",
+    "score": "3:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922036"
+  },
+  {
+    "match_id": "2922039",
+    "date": "9.1.2026",
+    "round": "40.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – TRI",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922039"
+  },
+  {
+    "match_id": "2922037",
+    "date": "9.1.2026",
+    "round": "40.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – PCE",
+    "score": "4:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922037"
+  },
+  {
+    "match_id": "2922040",
+    "date": "9.1.2026",
+    "round": "40.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – KVA",
+    "score": "3:4 P",
+    "match_url": "https://www.hokej.cz/zapas/2922040"
+  },
+  {
+    "match_id": "2922038",
+    "date": "9.1.2026",
+    "round": "40.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – KLA",
+    "score": "1:5",
+    "match_url": "https://www.hokej.cz/zapas/2922038"
+  },
+  {
+    "match_id": "2922035",
+    "date": "7.1.2026",
+    "round": "39.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – KVA",
+    "score": "6:3",
+    "match_url": "https://www.hokej.cz/zapas/2922035"
+  },
+  {
+    "match_id": "2922029",
+    "date": "6.1.2026",
+    "round": "39.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – PCE",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2922029"
+  },
+  {
+    "match_id": "2922032",
+    "date": "6.1.2026",
+    "round": "39.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – KOM",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2922032"
+  },
+  {
+    "match_id": "2922030",
+    "date": "6.1.2026",
+    "round": "39.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – PLZ",
+    "score": "4:6",
+    "match_url": "https://www.hokej.cz/zapas/2922030"
+  },
+  {
+    "match_id": "2922031",
+    "date": "6.1.2026",
+    "round": "39.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – KLA",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922031"
+  },
+  {
+    "match_id": "2922024",
+    "date": "4.1.2026",
+    "round": "38.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – LIB",
+    "score": "0:2",
+    "match_url": "https://www.hokej.cz/zapas/2922024"
+  },
+  {
+    "match_id": "2922026",
+    "date": "4.1.2026",
+    "round": "38.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – KLA",
+    "score": "4:5 P",
+    "match_url": "https://www.hokej.cz/zapas/2922026"
+  },
+  {
+    "match_id": "2922022",
+    "date": "4.1.2026",
+    "round": "38.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – OLO",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2922022"
+  },
+  {
+    "match_id": "2922025",
+    "date": "4.1.2026",
+    "round": "38.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – VIT",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922025"
+  },
+  {
+    "match_id": "2922023",
+    "date": "4.1.2026",
+    "round": "38.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – MBL",
+    "score": "6:2",
+    "match_url": "https://www.hokej.cz/zapas/2922023"
+  },
+  {
+    "match_id": "2922028",
+    "date": "4.1.2026",
+    "round": "38.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – KVA",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2922028"
+  },
+  {
+    "match_id": "2922027",
+    "date": "4.1.2026",
+    "round": "38.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – LIT",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2922027"
+  },
+  {
+    "match_id": "2922016",
+    "date": "2.1.2026",
+    "round": "37.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – KLA",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2922016"
+  },
+  {
+    "match_id": "2922019",
+    "date": "2.1.2026",
+    "round": "37.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – LIB",
+    "score": "5:3",
+    "match_url": "https://www.hokej.cz/zapas/2922019"
+  },
+  {
+    "match_id": "2922017",
+    "date": "2.1.2026",
+    "round": "37.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – PCE",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2922017"
+  },
+  {
+    "match_id": "2922018",
+    "date": "2.1.2026",
+    "round": "37.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – PLZ",
+    "score": "1:8",
+    "match_url": "https://www.hokej.cz/zapas/2922018"
+  },
+  {
+    "match_id": "2922015",
+    "date": "2.1.2026",
+    "round": "37.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – CEB",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2922015"
+  },
+  {
+    "match_id": "2922021",
+    "date": "2.1.2026",
+    "round": "37.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – TRI",
+    "score": "0:2",
+    "match_url": "https://www.hokej.cz/zapas/2922021"
+  },
+  {
+    "match_id": "2922014",
+    "date": "30.12.2025",
+    "round": "36.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – KOM",
+    "score": "4:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922014"
+  },
+  {
+    "match_id": "2922012",
+    "date": "30.12.2025",
+    "round": "36.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – MBL",
+    "score": "2:1 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922012"
+  },
+  {
+    "match_id": "2922009",
+    "date": "30.12.2025",
+    "round": "36.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – OLO",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2922009"
+  },
+  {
+    "match_id": "2922010",
+    "date": "30.12.2025",
+    "round": "36.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – LIT",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2922010"
+  },
+  {
+    "match_id": "2922011",
+    "date": "30.12.2025",
+    "round": "36.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – KVA",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2922011"
+  },
+  {
+    "match_id": "2922013",
+    "date": "30.12.2025",
+    "round": "36.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – VIT",
+    "score": "2:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2922013"
+  },
+  {
+    "match_id": "2922005",
+    "date": "28.12.2025",
+    "round": "35.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – PCE",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2922005"
+  },
+  {
+    "match_id": "2922004",
+    "date": "28.12.2025",
+    "round": "35.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – MBL",
+    "score": "2:5",
+    "match_url": "https://www.hokej.cz/zapas/2922004"
+  },
+  {
+    "match_id": "2922006",
+    "date": "28.12.2025",
+    "round": "35.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – PLZ",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2922006"
+  },
+  {
+    "match_id": "2922002",
+    "date": "28.12.2025",
+    "round": "35.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – MHK",
+    "score": "3:5",
+    "match_url": "https://www.hokej.cz/zapas/2922002"
+  },
+  {
+    "match_id": "2922001",
+    "date": "28.12.2025",
+    "round": "35.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – KLA",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2922001"
+  },
+  {
+    "match_id": "2922007",
+    "date": "28.12.2025",
+    "round": "35.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – CEB",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2922007"
+  },
+  {
+    "match_id": "2921999",
+    "date": "26.12.2025",
+    "round": "34.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – KOM",
+    "score": "3:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921999"
+  },
+  {
+    "match_id": "2921998",
+    "date": "26.12.2025",
+    "round": "34.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – KVA",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921998"
+  },
+  {
+    "match_id": "2921997",
+    "date": "26.12.2025",
+    "round": "34.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – VIT",
+    "score": "0:6",
+    "match_url": "https://www.hokej.cz/zapas/2921997"
+  },
+  {
+    "match_id": "2922000",
+    "date": "26.12.2025",
+    "round": "34.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – TRI",
+    "score": "5:3",
+    "match_url": "https://www.hokej.cz/zapas/2922000"
+  },
+  {
+    "match_id": "2921995",
+    "date": "26.12.2025",
+    "round": "34.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – KLA",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2921995"
+  },
+  {
+    "match_id": "2921996",
+    "date": "26.12.2025",
+    "round": "34.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – LIT",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921996"
+  },
+  {
+    "match_id": "2921990",
+    "date": "23.12.2025",
+    "round": "33.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – PLZ",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2921990"
+  },
+  {
+    "match_id": "2921988",
+    "date": "23.12.2025",
+    "round": "33.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – LIB",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921988"
+  },
+  {
+    "match_id": "2921987",
+    "date": "23.12.2025",
+    "round": "33.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – OLO",
+    "score": "7:2",
+    "match_url": "https://www.hokej.cz/zapas/2921987"
+  },
+  {
+    "match_id": "2921989",
+    "date": "23.12.2025",
+    "round": "33.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – PCE",
+    "score": "0:1",
+    "match_url": "https://www.hokej.cz/zapas/2921989"
+  },
+  {
+    "match_id": "2921991",
+    "date": "23.12.2025",
+    "round": "33.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – CEB",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2921991"
+  },
+  {
+    "match_id": "2921992",
+    "date": "23.12.2025",
+    "round": "33.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – MBL",
+    "score": "6:1",
+    "match_url": "https://www.hokej.cz/zapas/2921992"
+  },
+  {
+    "match_id": "2921984",
+    "date": "21.12.2025",
+    "round": "32.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – KOM",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921984"
+  },
+  {
+    "match_id": "2921986",
+    "date": "21.12.2025",
+    "round": "32.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – KLA",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921986"
+  },
+  {
+    "match_id": "2921981",
+    "date": "21.12.2025",
+    "round": "32.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – VIT",
+    "score": "3:6",
+    "match_url": "https://www.hokej.cz/zapas/2921981"
+  },
+  {
+    "match_id": "2921982",
+    "date": "21.12.2025",
+    "round": "32.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – LIT",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921982"
+  },
+  {
+    "match_id": "2921980",
+    "date": "21.12.2025",
+    "round": "32.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – PCE",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921980"
+  },
+  {
+    "match_id": "2921983",
+    "date": "21.12.2025",
+    "round": "32.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – KVA",
+    "score": "0:3",
+    "match_url": "https://www.hokej.cz/zapas/2921983"
+  },
+  {
+    "match_id": "2921985",
+    "date": "21.12.2025",
+    "round": "32.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – TRI",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2921985"
+  },
+  {
+    "match_id": "2921979",
+    "date": "19.12.2025",
+    "round": "31.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – LIB",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921979"
+  },
+  {
+    "match_id": "2921978",
+    "date": "19.12.2025",
+    "round": "31.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – SPA",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921978"
+  },
+  {
+    "match_id": "2921973",
+    "date": "19.12.2025",
+    "round": "31.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – PLZ",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2921973"
+  },
+  {
+    "match_id": "2921977",
+    "date": "19.12.2025",
+    "round": "31.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – MHK",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921977"
+  },
+  {
+    "match_id": "2921974",
+    "date": "19.12.2025",
+    "round": "31.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – MBL",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921974"
+  },
+  {
+    "match_id": "2921976",
+    "date": "19.12.2025",
+    "round": "31.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – CEB",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921976"
+  },
+  {
+    "match_id": "2921975",
+    "date": "17.12.2025",
+    "round": "31.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – OLO",
+    "score": "4:5 P",
+    "match_url": "https://www.hokej.cz/zapas/2921975"
+  },
+  {
+    "match_id": "2921848",
+    "date": "17.12.2025",
+    "round": "13.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – PLZ",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921848"
+  },
+  {
+    "match_id": "2921993",
+    "date": "17.12.2025",
+    "round": "33.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – MHK",
+    "score": "2:5",
+    "match_url": "https://www.hokej.cz/zapas/2921993"
+  },
+  {
+    "match_id": "2921966",
+    "date": "7.12.2025",
+    "round": "30.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – KOM",
+    "score": "4:3",
+    "match_url": "https://www.hokej.cz/zapas/2921966"
+  },
+  {
+    "match_id": "2921969",
+    "date": "7.12.2025",
+    "round": "30.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – LIB",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921969"
+  },
+  {
+    "match_id": "2921972",
+    "date": "7.12.2025",
+    "round": "30.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – KVA",
+    "score": "6:1",
+    "match_url": "https://www.hokej.cz/zapas/2921972"
+  },
+  {
+    "match_id": "2921968",
+    "date": "7.12.2025",
+    "round": "30.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – KLA",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921968"
+  },
+  {
+    "match_id": "2921970",
+    "date": "7.12.2025",
+    "round": "30.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – PCE",
+    "score": "3:6",
+    "match_url": "https://www.hokej.cz/zapas/2921970"
+  },
+  {
+    "match_id": "2921967",
+    "date": "7.12.2025",
+    "round": "30.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – PLZ",
+    "score": "5:4",
+    "match_url": "https://www.hokej.cz/zapas/2921967"
+  },
+  {
+    "match_id": "2921959",
+    "date": "7.12.2025",
+    "round": "30.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – MBL",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2921959"
+  },
+  {
+    "match_id": "2921961",
+    "date": "5.12.2025",
+    "round": "29.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – SPA",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921961"
+  },
+  {
+    "match_id": "2921965",
+    "date": "5.12.2025",
+    "round": "29.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – OLO",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921965"
+  },
+  {
+    "match_id": "2921962",
+    "date": "5.12.2025",
+    "round": "29.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – MBL",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2921962"
+  },
+  {
+    "match_id": "2921960",
+    "date": "5.12.2025",
+    "round": "29.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – CEB",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921960"
+  },
+  {
+    "match_id": "2921964",
+    "date": "5.12.2025",
+    "round": "29.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – VIT",
+    "score": "2:5",
+    "match_url": "https://www.hokej.cz/zapas/2921964"
+  },
+  {
+    "match_id": "2921963",
+    "date": "5.12.2025",
+    "round": "29.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – MHK",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921963"
+  },
+  {
+    "match_id": "2921971",
+    "date": "5.12.2025",
+    "round": "29.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – LIB",
+    "score": "3:5",
+    "match_url": "https://www.hokej.cz/zapas/2921971"
+  },
+  {
+    "match_id": "2922088",
+    "date": "3.12.2025",
+    "round": "47.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – OLO",
+    "score": "1:5",
+    "match_url": "https://www.hokej.cz/zapas/2922088"
+  },
+  {
+    "match_id": "2921811",
+    "date": "3.12.2025",
+    "round": "7.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – MHK",
+    "score": "6:1",
+    "match_url": "https://www.hokej.cz/zapas/2921811"
+  },
+  {
+    "match_id": "2921958",
+    "date": "30.11.2025",
+    "round": "28.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – KOM",
+    "score": "3:4",
+    "match_url": "https://www.hokej.cz/zapas/2921958"
+  },
+  {
+    "match_id": "2921956",
+    "date": "30.11.2025",
+    "round": "28.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – PCE",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921956"
+  },
+  {
+    "match_id": "2921957",
+    "date": "30.11.2025",
+    "round": "28.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – SPA",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921957"
+  },
+  {
+    "match_id": "2921955",
+    "date": "30.11.2025",
+    "round": "28.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – PLZ",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2921955"
+  },
+  {
+    "match_id": "2921954",
+    "date": "30.11.2025",
+    "round": "28.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – KVA",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921954"
+  },
+  {
+    "match_id": "2921953",
+    "date": "30.11.2025",
+    "round": "28.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – KLA",
+    "score": "0:3",
+    "match_url": "https://www.hokej.cz/zapas/2921953"
+  },
+  {
+    "match_id": "2921952",
+    "date": "30.11.2025",
+    "round": "28.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – CEB",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921952"
+  },
+  {
+    "match_id": "2921951",
+    "date": "28.11.2025",
+    "round": "27.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – KOM",
+    "score": "6:2",
+    "match_url": "https://www.hokej.cz/zapas/2921951"
+  },
+  {
+    "match_id": "2921945",
+    "date": "28.11.2025",
+    "round": "27.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – LIB",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2921945"
+  },
+  {
+    "match_id": "2921950",
+    "date": "28.11.2025",
+    "round": "27.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – SPA",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921950"
+  },
+  {
+    "match_id": "2921948",
+    "date": "28.11.2025",
+    "round": "27.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – OLO",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2921948"
+  },
+  {
+    "match_id": "2921946",
+    "date": "28.11.2025",
+    "round": "27.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – MHK",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921946"
+  },
+  {
+    "match_id": "2921949",
+    "date": "28.11.2025",
+    "round": "27.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – VIT",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921949"
+  },
+  {
+    "match_id": "2921947",
+    "date": "28.11.2025",
+    "round": "27.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – MBL",
+    "score": "5:0",
+    "match_url": "https://www.hokej.cz/zapas/2921947"
+  },
+  {
+    "match_id": "2921939",
+    "date": "26.11.2025",
+    "round": "26.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – VIT",
+    "score": "7:0",
+    "match_url": "https://www.hokej.cz/zapas/2921939"
+  },
+  {
+    "match_id": "2921941",
+    "date": "25.11.2025",
+    "round": "26.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – OLO",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921941"
+  },
+  {
+    "match_id": "2921943",
+    "date": "25.11.2025",
+    "round": "26.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – CEB",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2921943"
+  },
+  {
+    "match_id": "2921938",
+    "date": "25.11.2025",
+    "round": "26.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – SPA",
+    "score": "1:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2921938"
+  },
+  {
+    "match_id": "2921944",
+    "date": "25.11.2025",
+    "round": "26.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – TRI",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921944"
+  },
+  {
+    "match_id": "2921942",
+    "date": "25.11.2025",
+    "round": "26.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – MBL",
+    "score": "0:1 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921942"
+  },
+  {
+    "match_id": "2921940",
+    "date": "25.11.2025",
+    "round": "26.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – LIT",
+    "score": "2:1 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921940"
+  },
+  {
+    "match_id": "2921937",
+    "date": "23.11.2025",
+    "round": "25.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – KOM",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921937"
+  },
+  {
+    "match_id": "2921933",
+    "date": "23.11.2025",
+    "round": "25.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – MHK",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921933"
+  },
+  {
+    "match_id": "2921935",
+    "date": "23.11.2025",
+    "round": "25.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – SPA",
+    "score": "3:7",
+    "match_url": "https://www.hokej.cz/zapas/2921935"
+  },
+  {
+    "match_id": "2921931",
+    "date": "23.11.2025",
+    "round": "25.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – CEB",
+    "score": "1:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2921931"
+  },
+  {
+    "match_id": "2921934",
+    "date": "23.11.2025",
+    "round": "25.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – PCE",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921934"
+  },
+  {
+    "match_id": "2921932",
+    "date": "23.11.2025",
+    "round": "25.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – PLZ",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921932"
+  },
+  {
+    "match_id": "2921936",
+    "date": "23.11.2025",
+    "round": "25.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – TRI",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2921936"
+  },
+  {
+    "match_id": "2921925",
+    "date": "21.11.2025",
+    "round": "24.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – KOM",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921925"
+  },
+  {
+    "match_id": "2921929",
+    "date": "21.11.2025",
+    "round": "24.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – SPA",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921929"
+  },
+  {
+    "match_id": "2921924",
+    "date": "21.11.2025",
+    "round": "24.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – MBL",
+    "score": "4:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921924"
+  },
+  {
+    "match_id": "2921926",
+    "date": "20.11.2025",
+    "round": "24.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – KVA",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921926"
+  },
+  {
+    "match_id": "2921927",
+    "date": "20.11.2025",
+    "round": "24.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – LIT",
+    "score": "7:2",
+    "match_url": "https://www.hokej.cz/zapas/2921927"
+  },
+  {
+    "match_id": "2921930",
+    "date": "20.11.2025",
+    "round": "24.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – TRI",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921930"
+  },
+  {
+    "match_id": "2921918",
+    "date": "17.11.2025",
+    "round": "23.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – MHK",
+    "score": "1:7",
+    "match_url": "https://www.hokej.cz/zapas/2921918"
+  },
+  {
+    "match_id": "2921923",
+    "date": "16.11.2025",
+    "round": "23.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – TRI",
+    "score": "4:3",
+    "match_url": "https://www.hokej.cz/zapas/2921923"
+  },
+  {
+    "match_id": "2921921",
+    "date": "16.11.2025",
+    "round": "23.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – LIB",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2921921"
+  },
+  {
+    "match_id": "2921917",
+    "date": "16.11.2025",
+    "round": "23.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – SPA",
+    "score": "5:6",
+    "match_url": "https://www.hokej.cz/zapas/2921917"
+  },
+  {
+    "match_id": "2921919",
+    "date": "16.11.2025",
+    "round": "23.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – PCE",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921919"
+  },
+  {
+    "match_id": "2921920",
+    "date": "16.11.2025",
+    "round": "23.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – KLA",
+    "score": "1:5",
+    "match_url": "https://www.hokej.cz/zapas/2921920"
+  },
+  {
+    "match_id": "2921912",
+    "date": "14.11.2025",
+    "round": "22.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – SPA",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2921912"
+  },
+  {
+    "match_id": "2921913",
+    "date": "14.11.2025",
+    "round": "22.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – OLO",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921913"
+  },
+  {
+    "match_id": "2921915",
+    "date": "14.11.2025",
+    "round": "22.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – PLZ",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921915"
+  },
+  {
+    "match_id": "2921911",
+    "date": "14.11.2025",
+    "round": "22.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – VIT",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2921911"
+  },
+  {
+    "match_id": "2921910",
+    "date": "14.11.2025",
+    "round": "22.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – TRI",
+    "score": "5:3",
+    "match_url": "https://www.hokej.cz/zapas/2921910"
+  },
+  {
+    "match_id": "2921916",
+    "date": "14.11.2025",
+    "round": "22.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – LIT",
+    "score": "2:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921916"
+  },
+  {
+    "match_id": "2921928",
+    "date": "12.11.2025",
+    "round": "24.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – OLO",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921928"
+  },
+  {
+    "match_id": "2921922",
+    "date": "12.11.2025",
+    "round": "23.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – CEB",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921922"
+  },
+  {
+    "match_id": "2922003",
+    "date": "9.11.2025",
+    "round": "35.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – LIB",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2922003"
+  },
+  {
+    "match_id": "2921908",
+    "date": "2.11.2025",
+    "round": "21.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – CEB",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921908"
+  },
+  {
+    "match_id": "2921903",
+    "date": "2.11.2025",
+    "round": "21.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – MBL",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2921903"
+  },
+  {
+    "match_id": "2921906",
+    "date": "2.11.2025",
+    "round": "21.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – OLO",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921906"
+  },
+  {
+    "match_id": "2921909",
+    "date": "2.11.2025",
+    "round": "21.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – PCE",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2921909"
+  },
+  {
+    "match_id": "2921904",
+    "date": "2.11.2025",
+    "round": "21.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – PLZ",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921904"
+  },
+  {
+    "match_id": "2921905",
+    "date": "2.11.2025",
+    "round": "21.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – MHK",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921905"
+  },
+  {
+    "match_id": "2921899",
+    "date": "31.10.2025",
+    "round": "20.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – KOM",
+    "score": "4:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921899"
+  },
+  {
+    "match_id": "2921897",
+    "date": "31.10.2025",
+    "round": "20.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – VIT",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921897"
+  },
+  {
+    "match_id": "2921896",
+    "date": "31.10.2025",
+    "round": "20.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – SPA",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921896"
+  },
+  {
+    "match_id": "2921898",
+    "date": "31.10.2025",
+    "round": "20.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – KLA",
+    "score": "8:3",
+    "match_url": "https://www.hokej.cz/zapas/2921898"
+  },
+  {
+    "match_id": "2921900",
+    "date": "31.10.2025",
+    "round": "20.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – KVA",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921900"
+  },
+  {
+    "match_id": "2921901",
+    "date": "31.10.2025",
+    "round": "20.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – LIT",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921901"
+  },
+  {
+    "match_id": "2921902",
+    "date": "31.10.2025",
+    "round": "20.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – TRI",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921902"
+  },
+  {
+    "match_id": "2921890",
+    "date": "29.10.2025",
+    "round": "19.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – SPA",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921890"
+  },
+  {
+    "match_id": "2921893",
+    "date": "28.10.2025",
+    "round": "19.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – MHK",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921893"
+  },
+  {
+    "match_id": "2921895",
+    "date": "28.10.2025",
+    "round": "19.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – LIB",
+    "score": "4:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921895"
+  },
+  {
+    "match_id": "2921891",
+    "date": "28.10.2025",
+    "round": "19.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – OLO",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2921891"
+  },
+  {
+    "match_id": "2921889",
+    "date": "28.10.2025",
+    "round": "19.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – PLZ",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921889"
+  },
+  {
+    "match_id": "2921892",
+    "date": "28.10.2025",
+    "round": "19.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – MBL",
+    "score": "4:5 P",
+    "match_url": "https://www.hokej.cz/zapas/2921892"
+  },
+  {
+    "match_id": "2921894",
+    "date": "28.10.2025",
+    "round": "19.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – CEB",
+    "score": "6:3",
+    "match_url": "https://www.hokej.cz/zapas/2921894"
+  },
+  {
+    "match_id": "2921888",
+    "date": "26.10.2025",
+    "round": "18.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – KOM",
+    "score": "4:3",
+    "match_url": "https://www.hokej.cz/zapas/2921888"
+  },
+  {
+    "match_id": "2921887",
+    "date": "26.10.2025",
+    "round": "18.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – LIT",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921887"
+  },
+  {
+    "match_id": "2921884",
+    "date": "26.10.2025",
+    "round": "18.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – PCE",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2921884"
+  },
+  {
+    "match_id": "2921882",
+    "date": "26.10.2025",
+    "round": "18.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – TRI",
+    "score": "1:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921882"
+  },
+  {
+    "match_id": "2921886",
+    "date": "26.10.2025",
+    "round": "18.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – KVA",
+    "score": "4:5",
+    "match_url": "https://www.hokej.cz/zapas/2921886"
+  },
+  {
+    "match_id": "2921883",
+    "date": "26.10.2025",
+    "round": "18.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – VIT",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921883"
+  },
+  {
+    "match_id": "2921885",
+    "date": "26.10.2025",
+    "round": "18.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – KLA",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921885"
+  },
+  {
+    "match_id": "2921875",
+    "date": "24.10.2025",
+    "round": "17.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – VIT",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921875"
+  },
+  {
+    "match_id": "2921878",
+    "date": "24.10.2025",
+    "round": "17.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – LIB",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921878"
+  },
+  {
+    "match_id": "2921881",
+    "date": "24.10.2025",
+    "round": "17.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – SPA",
+    "score": "4:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921881"
+  },
+  {
+    "match_id": "2921877",
+    "date": "24.10.2025",
+    "round": "17.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – OLO",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921877"
+  },
+  {
+    "match_id": "2921876",
+    "date": "24.10.2025",
+    "round": "17.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – MHK",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921876"
+  },
+  {
+    "match_id": "2921880",
+    "date": "24.10.2025",
+    "round": "17.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – MBL",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921880"
+  },
+  {
+    "match_id": "2921879",
+    "date": "23.10.2025",
+    "round": "17.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – CEB",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2921879"
+  },
+  {
+    "match_id": "2922072",
+    "date": "22.10.2025",
+    "round": "45.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – VIT",
+    "score": "5:4 P",
+    "match_url": "https://www.hokej.cz/zapas/2922072"
+  },
+  {
+    "match_id": "2921866",
+    "date": "21.10.2025",
+    "round": "15.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – TRI",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921866"
+  },
+  {
+    "match_id": "2921800",
+    "date": "21.10.2025",
+    "round": "6.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – LIT",
+    "score": "3:2",
+    "match_url": "https://www.hokej.cz/zapas/2921800"
+  },
+  {
+    "match_id": "2921861",
+    "date": "21.10.2025",
+    "round": "15.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – MHK",
+    "score": "0:3",
+    "match_url": "https://www.hokej.cz/zapas/2921861"
+  },
+  {
+    "match_id": "2921870",
+    "date": "19.10.2025",
+    "round": "16.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – KOM",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921870"
+  },
+  {
+    "match_id": "2921868",
+    "date": "19.10.2025",
+    "round": "16.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – TRI",
+    "score": "0:1",
+    "match_url": "https://www.hokej.cz/zapas/2921868"
+  },
+  {
+    "match_id": "2921874",
+    "date": "19.10.2025",
+    "round": "16.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – KVA",
+    "score": "5:3",
+    "match_url": "https://www.hokej.cz/zapas/2921874"
+  },
+  {
+    "match_id": "2921871",
+    "date": "19.10.2025",
+    "round": "16.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – PCE",
+    "score": "0:2",
+    "match_url": "https://www.hokej.cz/zapas/2921871"
+  },
+  {
+    "match_id": "2921869",
+    "date": "19.10.2025",
+    "round": "16.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – PLZ",
+    "score": "0:3",
+    "match_url": "https://www.hokej.cz/zapas/2921869"
+  },
+  {
+    "match_id": "2921872",
+    "date": "19.10.2025",
+    "round": "16.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – KLA",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921872"
+  },
+  {
+    "match_id": "2921867",
+    "date": "17.10.2025",
+    "round": "15.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – MBL",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921867"
+  },
+  {
+    "match_id": "2921865",
+    "date": "17.10.2025",
+    "round": "15.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – LIB",
+    "score": "0:5",
+    "match_url": "https://www.hokej.cz/zapas/2921865"
+  },
+  {
+    "match_id": "2921863",
+    "date": "17.10.2025",
+    "round": "15.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – LIT",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2921863"
+  },
+  {
+    "match_id": "2921862",
+    "date": "17.10.2025",
+    "round": "15.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – VIT",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921862"
+  },
+  {
+    "match_id": "2921864",
+    "date": "16.10.2025",
+    "round": "15.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – OLO",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921864"
+  },
+  {
+    "match_id": "2921873",
+    "date": "15.10.2025",
+    "round": "16.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – LIT",
+    "score": "8:2",
+    "match_url": "https://www.hokej.cz/zapas/2921873"
+  },
+  {
+    "match_id": "2921860",
+    "date": "12.10.2025",
+    "round": "14.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – KOM",
+    "score": "2:5",
+    "match_url": "https://www.hokej.cz/zapas/2921860"
+  },
+  {
+    "match_id": "2921854",
+    "date": "12.10.2025",
+    "round": "14.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – LIB",
+    "score": "0:1",
+    "match_url": "https://www.hokej.cz/zapas/2921854"
+  },
+  {
+    "match_id": "2921859",
+    "date": "12.10.2025",
+    "round": "14.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – CEB",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921859"
+  },
+  {
+    "match_id": "2921857",
+    "date": "12.10.2025",
+    "round": "14.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – TRI",
+    "score": "3:5",
+    "match_url": "https://www.hokej.cz/zapas/2921857"
+  },
+  {
+    "match_id": "2921855",
+    "date": "12.10.2025",
+    "round": "14.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – PCE",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2921855"
+  },
+  {
+    "match_id": "2921858",
+    "date": "12.10.2025",
+    "round": "14.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – KVA",
+    "score": "3:0",
+    "match_url": "https://www.hokej.cz/zapas/2921858"
+  },
+  {
+    "match_id": "2921856",
+    "date": "12.10.2025",
+    "round": "14.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – KLA",
+    "score": "2:1 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921856"
+  },
+  {
+    "match_id": "2921850",
+    "date": "10.10.2025",
+    "round": "13.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – KOM",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921850"
+  },
+  {
+    "match_id": "2921852",
+    "date": "10.10.2025",
+    "round": "13.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – LIB",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921852"
+  },
+  {
+    "match_id": "2921847",
+    "date": "10.10.2025",
+    "round": "13.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – PCE",
+    "score": "3:6",
+    "match_url": "https://www.hokej.cz/zapas/2921847"
+  },
+  {
+    "match_id": "2921853",
+    "date": "10.10.2025",
+    "round": "13.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – TRI",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921853"
+  },
+  {
+    "match_id": "2921851",
+    "date": "10.10.2025",
+    "round": "13.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – MHK",
+    "score": "2:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921851"
+  },
+  {
+    "match_id": "2921849",
+    "date": "10.10.2025",
+    "round": "13.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – KLA",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921849"
+  },
+  {
+    "match_id": "2921841",
+    "date": "8.10.2025",
+    "round": "12.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – MBL",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2921841"
+  },
+  {
+    "match_id": "2921846",
+    "date": "5.10.2025",
+    "round": "12.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – KVA",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921846"
+  },
+  {
+    "match_id": "2921842",
+    "date": "5.10.2025",
+    "round": "12.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – LIB",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921842"
+  },
+  {
+    "match_id": "2921844",
+    "date": "5.10.2025",
+    "round": "12.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – SPA",
+    "score": "5:4",
+    "match_url": "https://www.hokej.cz/zapas/2921844"
+  },
+  {
+    "match_id": "2921840",
+    "date": "5.10.2025",
+    "round": "12.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – OLO",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921840"
+  },
+  {
+    "match_id": "2921843",
+    "date": "5.10.2025",
+    "round": "12.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – VIT",
+    "score": "3:4",
+    "match_url": "https://www.hokej.cz/zapas/2921843"
+  },
+  {
+    "match_id": "2921845",
+    "date": "5.10.2025",
+    "round": "12.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – LIT",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921845"
+  },
+  {
+    "match_id": "2921834",
+    "date": "3.10.2025",
+    "round": "11.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – KLA",
+    "score": "3:4 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921834"
+  },
+  {
+    "match_id": "2921837",
+    "date": "3.10.2025",
+    "round": "11.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – LIB",
+    "score": "0:1",
+    "match_url": "https://www.hokej.cz/zapas/2921837"
+  },
+  {
+    "match_id": "2921838",
+    "date": "3.10.2025",
+    "round": "11.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – MHK",
+    "score": "0:2",
+    "match_url": "https://www.hokej.cz/zapas/2921838"
+  },
+  {
+    "match_id": "2921835",
+    "date": "3.10.2025",
+    "round": "11.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – PCE",
+    "score": "0:3",
+    "match_url": "https://www.hokej.cz/zapas/2921835"
+  },
+  {
+    "match_id": "2921836",
+    "date": "3.10.2025",
+    "round": "11.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – PLZ",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921836"
+  },
+  {
+    "match_id": "2921839",
+    "date": "3.10.2025",
+    "round": "11.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – VIT",
+    "score": "4:5 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921839"
+  },
+  {
+    "match_id": "2921833",
+    "date": "3.10.2025",
+    "round": "11.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – CEB",
+    "score": "3:4",
+    "match_url": "https://www.hokej.cz/zapas/2921833"
+  },
+  {
+    "match_id": "2921832",
+    "date": "30.9.2025",
+    "round": "10.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – KOM",
+    "score": "1:0",
+    "match_url": "https://www.hokej.cz/zapas/2921832"
+  },
+  {
+    "match_id": "2921830",
+    "date": "30.9.2025",
+    "round": "10.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – MBL",
+    "score": "0:3",
+    "match_url": "https://www.hokej.cz/zapas/2921830"
+  },
+  {
+    "match_id": "2921826",
+    "date": "30.9.2025",
+    "round": "10.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – PLZ",
+    "score": "0:2",
+    "match_url": "https://www.hokej.cz/zapas/2921826"
+  },
+  {
+    "match_id": "2921827",
+    "date": "30.9.2025",
+    "round": "10.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – OLO",
+    "score": "0:1",
+    "match_url": "https://www.hokej.cz/zapas/2921827"
+  },
+  {
+    "match_id": "2921828",
+    "date": "30.9.2025",
+    "round": "10.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – LIT",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2921828"
+  },
+  {
+    "match_id": "2921829",
+    "date": "30.9.2025",
+    "round": "10.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – KVA",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921829"
+  },
+  {
+    "match_id": "2921831",
+    "date": "30.9.2025",
+    "round": "10.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – VIT",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921831"
+  },
+  {
+    "match_id": "2921823",
+    "date": "28.9.2025",
+    "round": "9.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – PCE",
+    "score": "1:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2921823"
+  },
+  {
+    "match_id": "2921821",
+    "date": "28.9.2025",
+    "round": "9.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – LIB",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921821"
+  },
+  {
+    "match_id": "2921822",
+    "date": "28.9.2025",
+    "round": "9.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – MBL",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921822"
+  },
+  {
+    "match_id": "2921824",
+    "date": "28.9.2025",
+    "round": "9.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – KVA",
+    "score": "3:2 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921824"
+  },
+  {
+    "match_id": "2921820",
+    "date": "28.9.2025",
+    "round": "9.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – MHK",
+    "score": "0:4",
+    "match_url": "https://www.hokej.cz/zapas/2921820"
+  },
+  {
+    "match_id": "2921819",
+    "date": "28.9.2025",
+    "round": "9.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – KLA",
+    "score": "3:2 P",
+    "match_url": "https://www.hokej.cz/zapas/2921819"
+  },
+  {
+    "match_id": "2921825",
+    "date": "28.9.2025",
+    "round": "9.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – CEB",
+    "score": "3:6",
+    "match_url": "https://www.hokej.cz/zapas/2921825"
+  },
+  {
+    "match_id": "2921817",
+    "date": "26.9.2025",
+    "round": "8.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – KOM",
+    "score": "8:0",
+    "match_url": "https://www.hokej.cz/zapas/2921817"
+  },
+  {
+    "match_id": "2921816",
+    "date": "26.9.2025",
+    "round": "8.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – KVA",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921816"
+  },
+  {
+    "match_id": "2921812",
+    "date": "26.9.2025",
+    "round": "8.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – SPA",
+    "score": "2:7",
+    "match_url": "https://www.hokej.cz/zapas/2921812"
+  },
+  {
+    "match_id": "2921815",
+    "date": "26.9.2025",
+    "round": "8.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – VIT",
+    "score": "2:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921815"
+  },
+  {
+    "match_id": "2921813",
+    "date": "26.9.2025",
+    "round": "8.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – KLA",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921813"
+  },
+  {
+    "match_id": "2921814",
+    "date": "26.9.2025",
+    "round": "8.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – LIT",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2921814"
+  },
+  {
+    "match_id": "2921818",
+    "date": "25.9.2025",
+    "round": "8.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – TRI",
+    "score": "4:5",
+    "match_url": "https://www.hokej.cz/zapas/2921818"
+  },
+  {
+    "match_id": "2921808",
+    "date": "23.9.2025",
+    "round": "7.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – PLZ",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921808"
+  },
+  {
+    "match_id": "2921806",
+    "date": "23.9.2025",
+    "round": "7.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – LIB",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921806"
+  },
+  {
+    "match_id": "2921805",
+    "date": "23.9.2025",
+    "round": "7.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – SPA",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921805"
+  },
+  {
+    "match_id": "2921809",
+    "date": "23.9.2025",
+    "round": "7.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – CEB",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921809"
+  },
+  {
+    "match_id": "2921807",
+    "date": "23.9.2025",
+    "round": "7.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – PCE",
+    "score": "4:5",
+    "match_url": "https://www.hokej.cz/zapas/2921807"
+  },
+  {
+    "match_id": "2921810",
+    "date": "23.9.2025",
+    "round": "7.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – MBL",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921810"
+  },
+  {
+    "match_id": "2921802",
+    "date": "21.9.2025",
+    "round": "6.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – KOM",
+    "score": "3:5",
+    "match_url": "https://www.hokej.cz/zapas/2921802"
+  },
+  {
+    "match_id": "2921804",
+    "date": "21.9.2025",
+    "round": "6.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – KLA",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921804"
+  },
+  {
+    "match_id": "2921799",
+    "date": "21.9.2025",
+    "round": "6.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – SPA",
+    "score": "2:3 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921799"
+  },
+  {
+    "match_id": "2921798",
+    "date": "21.9.2025",
+    "round": "6.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – PCE",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921798"
+  },
+  {
+    "match_id": "2921801",
+    "date": "21.9.2025",
+    "round": "6.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – KVA",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921801"
+  },
+  {
+    "match_id": "2921803",
+    "date": "21.9.2025",
+    "round": "6.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – TRI",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921803"
+  },
+  {
+    "match_id": "2921797",
+    "date": "19.9.2025",
+    "round": "5.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – LIB",
+    "score": "4:5",
+    "match_url": "https://www.hokej.cz/zapas/2921797"
+  },
+  {
+    "match_id": "2921796",
+    "date": "19.9.2025",
+    "round": "5.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – SPA",
+    "score": "1:5",
+    "match_url": "https://www.hokej.cz/zapas/2921796"
+  },
+  {
+    "match_id": "2921793",
+    "date": "19.9.2025",
+    "round": "5.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – OLO",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921793"
+  },
+  {
+    "match_id": "2921791",
+    "date": "19.9.2025",
+    "round": "5.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – PLZ",
+    "score": "2:1 P",
+    "match_url": "https://www.hokej.cz/zapas/2921791"
+  },
+  {
+    "match_id": "2921795",
+    "date": "19.9.2025",
+    "round": "5.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – MHK",
+    "score": "3:1",
+    "match_url": "https://www.hokej.cz/zapas/2921795"
+  },
+  {
+    "match_id": "2921792",
+    "date": "19.9.2025",
+    "round": "5.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – MBL",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2921792"
+  },
+  {
+    "match_id": "2921794",
+    "date": "19.9.2025",
+    "round": "5.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – CEB",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921794"
+  },
+  {
+    "match_id": "2921786",
+    "date": "17.9.2025",
+    "round": "4.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – KLA",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921786"
+  },
+  {
+    "match_id": "2921784",
+    "date": "16.9.2025",
+    "round": "4.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – VIT",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2921784"
+  },
+  {
+    "match_id": "2921787",
+    "date": "16.9.2025",
+    "round": "4.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – LIT",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2921787"
+  },
+  {
+    "match_id": "2921790",
+    "date": "16.9.2025",
+    "round": "4.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – KVA",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921790"
+  },
+  {
+    "match_id": "2921785",
+    "date": "16.9.2025",
+    "round": "4.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – PLZ",
+    "score": "4:3 P",
+    "match_url": "https://www.hokej.cz/zapas/2921785"
+  },
+  {
+    "match_id": "2921788",
+    "date": "16.9.2025",
+    "round": "4.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – PCE",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921788"
+  },
+  {
+    "match_id": "2921789",
+    "date": "16.9.2025",
+    "round": "4.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – TRI",
+    "score": "2:1",
+    "match_url": "https://www.hokej.cz/zapas/2921789"
+  },
+  {
+    "match_id": "2921779",
+    "date": "14.9.2025",
+    "round": "3.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – SPA",
+    "score": "2:0",
+    "match_url": "https://www.hokej.cz/zapas/2921779"
+  },
+  {
+    "match_id": "2921777",
+    "date": "14.9.2025",
+    "round": "3.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – LIB",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921777"
+  },
+  {
+    "match_id": "2921783",
+    "date": "14.9.2025",
+    "round": "3.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – OLO",
+    "score": "2:4",
+    "match_url": "https://www.hokej.cz/zapas/2921783"
+  },
+  {
+    "match_id": "2921778",
+    "date": "14.9.2025",
+    "round": "3.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PLZ – CEB",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921778"
+  },
+  {
+    "match_id": "2921780",
+    "date": "14.9.2025",
+    "round": "3.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – MBL",
+    "score": "4:1",
+    "match_url": "https://www.hokej.cz/zapas/2921780"
+  },
+  {
+    "match_id": "2921782",
+    "date": "14.9.2025",
+    "round": "3.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – VIT",
+    "score": "0:3",
+    "match_url": "https://www.hokej.cz/zapas/2921782"
+  },
+  {
+    "match_id": "2921781",
+    "date": "14.9.2025",
+    "round": "3.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – MHK",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921781"
+  },
+  {
+    "match_id": "2921776",
+    "date": "12.9.2025",
+    "round": "2.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MBL – KOM",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921776"
+  },
+  {
+    "match_id": "2921774",
+    "date": "12.9.2025",
+    "round": "2.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – PCE",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921774"
+  },
+  {
+    "match_id": "2921775",
+    "date": "12.9.2025",
+    "round": "2.",
+    "competition": "Tipsport extraliga",
+    "matchup": "SPA – TRI",
+    "score": "5:2",
+    "match_url": "https://www.hokej.cz/zapas/2921775"
+  },
+  {
+    "match_id": "2921773",
+    "date": "12.9.2025",
+    "round": "2.",
+    "competition": "Tipsport extraliga",
+    "matchup": "OLO – PLZ",
+    "score": "1:4",
+    "match_url": "https://www.hokej.cz/zapas/2921773"
+  },
+  {
+    "match_id": "2921772",
+    "date": "12.9.2025",
+    "round": "2.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIT – KVA",
+    "score": "0:4",
+    "match_url": "https://www.hokej.cz/zapas/2921772"
+  },
+  {
+    "match_id": "2921771",
+    "date": "12.9.2025",
+    "round": "2.",
+    "competition": "Tipsport extraliga",
+    "matchup": "VIT – KLA",
+    "score": "1:0 SN",
+    "match_url": "https://www.hokej.cz/zapas/2921771"
+  },
+  {
+    "match_id": "2921770",
+    "date": "12.9.2025",
+    "round": "2.",
+    "competition": "Tipsport extraliga",
+    "matchup": "MHK – CEB",
+    "score": "3:4",
+    "match_url": "https://www.hokej.cz/zapas/2921770"
+  },
+  {
+    "match_id": "2921769",
+    "date": "10.9.2025",
+    "round": "1.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KOM – LIT",
+    "score": "4:2",
+    "match_url": "https://www.hokej.cz/zapas/2921769"
+  },
+  {
+    "match_id": "2921763",
+    "date": "10.9.2025",
+    "round": "1.",
+    "competition": "Tipsport extraliga",
+    "matchup": "LIB – PLZ",
+    "score": "1:3",
+    "match_url": "https://www.hokej.cz/zapas/2921763"
+  },
+  {
+    "match_id": "2921766",
+    "date": "10.9.2025",
+    "round": "1.",
+    "competition": "Tipsport extraliga",
+    "matchup": "TRI – OLO",
+    "score": "8:2",
+    "match_url": "https://www.hokej.cz/zapas/2921766"
+  },
+  {
+    "match_id": "2921767",
+    "date": "10.9.2025",
+    "round": "1.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KVA – VIT",
+    "score": "4:7",
+    "match_url": "https://www.hokej.cz/zapas/2921767"
+  },
+  {
+    "match_id": "2921764",
+    "date": "10.9.2025",
+    "round": "1.",
+    "competition": "Tipsport extraliga",
+    "matchup": "PCE – MHK",
+    "score": "7:1",
+    "match_url": "https://www.hokej.cz/zapas/2921764"
+  },
+  {
+    "match_id": "2921765",
+    "date": "10.9.2025",
+    "round": "1.",
+    "competition": "Tipsport extraliga",
+    "matchup": "KLA – MBL",
+    "score": "1:2",
+    "match_url": "https://www.hokej.cz/zapas/2921765"
+  },
+  {
+    "match_id": "2921768",
+    "date": "9.9.2025",
+    "round": "1.",
+    "competition": "Tipsport extraliga",
+    "matchup": "CEB – SPA",
+    "score": "2:3",
+    "match_url": "https://www.hokej.cz/zapas/2921768"
+  }
+]

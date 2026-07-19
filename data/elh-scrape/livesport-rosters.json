@@ -1,0 +1,4036 @@
+{
+  "BK Mladá Boleslav": {
+    "team": {
+      "id": "YeGlkuUb",
+      "name": "Mladá Boleslav",
+      "slug": "mlada-boleslav",
+      "club": "BK Mladá Boleslav",
+      "soupiska_url": "https://www.livesport.cz/tym/mlada-boleslav/YeGlkuUb/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Dominik Furch",
+        "name_raw": "Furch Dominik",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "furch-dominik",
+        "livesport_id": "lnucTSSq",
+        "livesport_url": "https://www.livesport.cz/hrac/furch-dominik/lnucTSSq/"
+      },
+      {
+        "name": "Vojtěch Mokry",
+        "name_raw": "Mokry Vojtěch",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "mokry-vojtech",
+        "livesport_id": "Q1RCE48J",
+        "livesport_url": "https://www.livesport.cz/hrac/mokry-vojtech/Q1RCE48J/"
+      },
+      {
+        "name": "Vojtěch Budík",
+        "name_raw": "Budík Vojtěch",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "budik-vojtech",
+        "livesport_id": "hdVTNvgk",
+        "livesport_url": "https://www.livesport.cz/hrac/budik-vojtech/hdVTNvgk/"
+      },
+      {
+        "name": "Adam Jánošík",
+        "name_raw": "Jánošík Adam",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "janosik-adam",
+        "livesport_id": "YeEWGxAb",
+        "livesport_url": "https://www.livesport.cz/hrac/janosik-adam/YeEWGxAb/"
+      },
+      {
+        "name": "Šimon Kubíček",
+        "name_raw": "Kubíček Šimon",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kubicek-simon",
+        "livesport_id": "8d9Np8wF",
+        "livesport_url": "https://www.livesport.cz/hrac/kubicek-simon/8d9Np8wF/"
+      },
+      {
+        "name": "David Moravec",
+        "name_raw": "Moravec David",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "moravec-david",
+        "livesport_id": "voyiaujF",
+        "livesport_url": "https://www.livesport.cz/hrac/moravec-david/voyiaujF/"
+      },
+      {
+        "name": "Filip Pavlík",
+        "name_raw": "Pavlík Filip",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "pavlik-filip",
+        "livesport_id": "OCHvLSE5",
+        "livesport_url": "https://www.livesport.cz/hrac/pavlik-filip/OCHvLSE5/"
+      },
+      {
+        "name": "Martin Skarberg",
+        "name_raw": "Skarberg Martin",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "skarberg-martin",
+        "livesport_id": "YPIAqdC8",
+        "livesport_url": "https://www.livesport.cz/hrac/skarberg-martin/YPIAqdC8/"
+      },
+      {
+        "name": "Adam Vlasák",
+        "name_raw": "Vlasák Adam",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "vlasak-adam",
+        "livesport_id": "p4I5sMNp",
+        "livesport_url": "https://www.livesport.cz/hrac/vlasak-adam/p4I5sMNp/"
+      },
+      {
+        "name": "Vojtěch Vochvest",
+        "name_raw": "Vochvest Vojtěch",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "vochvest-vojtech",
+        "livesport_id": "WfsNs2eK",
+        "livesport_url": "https://www.livesport.cz/hrac/vochvest-vojtech/WfsNs2eK/"
+      },
+      {
+        "name": "Petr Zámorský",
+        "name_raw": "Zámorský Petr",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "zamorsky-petr",
+        "livesport_id": "AapdTKs6",
+        "livesport_url": "https://www.livesport.cz/hrac/zamorsky-petr/AapdTKs6/"
+      },
+      {
+        "name": "Tomáš Čermák",
+        "name_raw": "Čermák Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "cermak-tomas",
+        "livesport_id": "xKGnXtrS",
+        "livesport_url": "https://www.livesport.cz/hrac/cermak-tomas/xKGnXtrS/"
+      },
+      {
+        "name": "Jan Buchtele",
+        "name_raw": "Buchtele Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "buchtele-jan",
+        "livesport_id": "UcnjEEGS",
+        "livesport_url": "https://www.livesport.cz/hrac/buchtele-jan/UcnjEEGS/"
+      },
+      {
+        "name": "Tomáš Fořt",
+        "name_raw": "Fořt Tomáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "fort-tomas",
+        "livesport_id": "hx398jQi",
+        "livesport_url": "https://www.livesport.cz/hrac/fort-tomas/hx398jQi/"
+      },
+      {
+        "name": "Felikss Gavars",
+        "name_raw": "Gavars Felikss",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "gavars-felikss",
+        "livesport_id": "OpsZyfvT",
+        "livesport_url": "https://www.livesport.cz/hrac/gavars-felikss/OpsZyfvT/"
+      },
+      {
+        "name": "Dávid Gríger",
+        "name_raw": "Gríger Dávid",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "griger-david",
+        "livesport_id": "dzR76LKu",
+        "livesport_url": "https://www.livesport.cz/hrac/griger-david/dzR76LKu/"
+      },
+      {
+        "name": "Vojtěch Hradec",
+        "name_raw": "Hradec Vojtěch",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hradec-vojtech",
+        "livesport_id": "6ap3H0dn",
+        "livesport_url": "https://www.livesport.cz/hrac/hradec-vojtech/6ap3H0dn/"
+      },
+      {
+        "name": "Radek Koblížek",
+        "name_raw": "Koblížek Radek",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "koblizek-radek",
+        "livesport_id": "hvCMAZJj",
+        "livesport_url": "https://www.livesport.cz/hrac/koblizek-radek/hvCMAZJj/"
+      },
+      {
+        "name": "Patrik Král",
+        "name_raw": "Král Patrik",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kral-patrik",
+        "livesport_id": "lYzAU2hb",
+        "livesport_url": "https://www.livesport.cz/hrac/kral-patrik/lYzAU2hb/"
+      },
+      {
+        "name": "Jakub Lichtag",
+        "name_raw": "Lichtag Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "lichtag-jakub",
+        "livesport_id": "Wbq4uVa8",
+        "livesport_url": "https://www.livesport.cz/hrac/lichtag-jakub/Wbq4uVa8/"
+      },
+      {
+        "name": "Vojtěch Malínek",
+        "name_raw": "Malínek Vojtěch",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "malinek-vojtech",
+        "livesport_id": "MBtq68w0",
+        "livesport_url": "https://www.livesport.cz/hrac/malinek-vojtech/MBtq68w0/"
+      },
+      {
+        "name": "Jordan Martel",
+        "name_raw": "Martel Jordan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "martel-jordan",
+        "livesport_id": "W2EbGqCE",
+        "livesport_url": "https://www.livesport.cz/hrac/martel-jordan/W2EbGqCE/"
+      },
+      {
+        "name": "Antoine Morand",
+        "name_raw": "Morand Antoine",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "morand-antoine",
+        "livesport_id": "neIgVwpK",
+        "livesport_url": "https://www.livesport.cz/hrac/morand-antoine/neIgVwpK/"
+      },
+      {
+        "name": "Aleksi Rekonen",
+        "name_raw": "Rekonen Aleksi",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "rekonen-aleksi",
+        "livesport_id": "C6sYtooi",
+        "livesport_url": "https://www.livesport.cz/hrac/rekonen-aleksi/C6sYtooi/"
+      },
+      {
+        "name": "Pavol Skalický",
+        "name_raw": "Skalický Pavol",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "skalicky-pavol",
+        "livesport_id": "rsQLqcm4",
+        "livesport_url": "https://www.livesport.cz/hrac/skalicky-pavol/rsQLqcm4/"
+      },
+      {
+        "name": "Jan Závora",
+        "name_raw": "Závora Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "zavora-jan",
+        "livesport_id": "n5TEJyNn",
+        "livesport_url": "https://www.livesport.cz/hrac/zavora-jan/n5TEJyNn/"
+      }
+    ]
+  },
+  "Bílí Tygři Liberec": {
+    "team": {
+      "id": "tp8PNVFQ",
+      "name": "Liberec",
+      "slug": "liberec",
+      "club": "Bílí Tygři Liberec",
+      "soupiska_url": "https://www.livesport.cz/tym/liberec/tp8PNVFQ/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Petr Kváča",
+        "name_raw": "Kváča Petr",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "kvaca-petr",
+        "livesport_id": "Q9i4CiS9",
+        "livesport_url": "https://www.livesport.cz/hrac/kvaca-petr/Q9i4CiS9/"
+      },
+      {
+        "name": "Layton Ahac",
+        "name_raw": "Ahac Layton",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "ahac-layton",
+        "livesport_id": "lAJC7Tdg",
+        "livesport_url": "https://www.livesport.cz/hrac/ahac-layton/lAJC7Tdg/"
+      },
+      {
+        "name": "Tomáš Galvas",
+        "name_raw": "Galvas Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "galvas-tomas",
+        "livesport_id": "IyLHoK3d",
+        "livesport_url": "https://www.livesport.cz/hrac/galvas-tomas/IyLHoK3d/"
+      },
+      {
+        "name": "Tomáš Hanousek",
+        "name_raw": "Hanousek Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "hanousek-tomas",
+        "livesport_id": "AZE9cEnr",
+        "livesport_url": "https://www.livesport.cz/hrac/hanousek-tomas/AZE9cEnr/"
+      },
+      {
+        "name": "Michal Ivan",
+        "name_raw": "Ivan Michal",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "ivan-michal",
+        "livesport_id": "EJyvJX2b",
+        "livesport_url": "https://www.livesport.cz/hrac/ivan-michal/EJyvJX2b/"
+      },
+      {
+        "name": "Lukáš Kachlíř",
+        "name_raw": "Kachlíř Lukáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kachlir-lukas",
+        "livesport_id": "hOEqytUn",
+        "livesport_url": "https://www.livesport.cz/hrac/kachlir-lukas/hOEqytUn/"
+      },
+      {
+        "name": "Vojtěch Pilíšek",
+        "name_raw": "Pilíšek Vojtěch",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "pilisek-vojtech",
+        "livesport_id": "UFQTcTiQ",
+        "livesport_url": "https://www.livesport.cz/hrac/pilisek-vojtech/UFQTcTiQ/"
+      },
+      {
+        "name": "Denis Zeman",
+        "name_raw": "Zeman Denis",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "zeman-denis",
+        "livesport_id": "vsHVkpRa",
+        "livesport_url": "https://www.livesport.cz/hrac/zeman-denis/vsHVkpRa/"
+      },
+      {
+        "name": "Kristaps Zile",
+        "name_raw": "Zile Kristaps",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "zile-kristaps",
+        "livesport_id": "M7TskS7o",
+        "livesport_url": "https://www.livesport.cz/hrac/zile-kristaps/M7TskS7o/"
+      },
+      {
+        "name": "Radim Šimek",
+        "name_raw": "Šimek Radim",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "simek-radim",
+        "livesport_id": "2g1MOZRn",
+        "livesport_url": "https://www.livesport.cz/hrac/simek-radim/2g1MOZRn/"
+      },
+      {
+        "name": "Martin Faško-Rudáš",
+        "name_raw": "Faško-Rudáš Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "fasko-rudas-martin",
+        "livesport_id": "SWGVj76R",
+        "livesport_url": "https://www.livesport.cz/hrac/fasko-rudas-martin/SWGVj76R/"
+      },
+      {
+        "name": "Jakub Hujer",
+        "name_raw": "Hujer Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hujer-jakub",
+        "livesport_id": "44dZwr5m",
+        "livesport_url": "https://www.livesport.cz/hrac/hujer-jakub/44dZwr5m/"
+      },
+      {
+        "name": "Filip Jansa",
+        "name_raw": "Jansa Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "jansa-filip",
+        "livesport_id": "6RZA4fO0",
+        "livesport_url": "https://www.livesport.cz/hrac/jansa-filip/6RZA4fO0/"
+      },
+      {
+        "name": "Radan Lenc",
+        "name_raw": "Lenc Radan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "lenc-radan",
+        "livesport_id": "WS91h1Hl",
+        "livesport_url": "https://www.livesport.cz/hrac/lenc-radan/WS91h1Hl/"
+      },
+      {
+        "name": "Adam Musil",
+        "name_raw": "Musil Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "musil-adam",
+        "livesport_id": "rRZ9KZGh",
+        "livesport_url": "https://www.livesport.cz/hrac/musil-adam/rRZ9KZGh/"
+      },
+      {
+        "name": "Adam Najman",
+        "name_raw": "Najman Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "najman-adam",
+        "livesport_id": "rVwHf77D",
+        "livesport_url": "https://www.livesport.cz/hrac/najman-adam/rVwHf77D/"
+      },
+      {
+        "name": "Adam Němec",
+        "name_raw": "Němec Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "nemec-adam",
+        "livesport_id": "rLqxOttA",
+        "livesport_url": "https://www.livesport.cz/hrac/nemec-adam/rLqxOttA/"
+      },
+      {
+        "name": "Servác Petrovský",
+        "name_raw": "Petrovský Servác",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "petrovsky-servac",
+        "livesport_id": "xnJXePsC",
+        "livesport_url": "https://www.livesport.cz/hrac/petrovsky-servac/xnJXePsC/"
+      },
+      {
+        "name": "Jaromír Pytlík",
+        "name_raw": "Pytlík Jaromír",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pytlik-jaromir",
+        "livesport_id": "M3Xl5m0A",
+        "livesport_url": "https://www.livesport.cz/hrac/pytlik-jaromir/M3Xl5m0A/"
+      },
+      {
+        "name": "Jaromír Pérez",
+        "name_raw": "Pérez Jaromír",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "perez-jaromir",
+        "livesport_id": "f3F8pZjF",
+        "livesport_url": "https://www.livesport.cz/hrac/perez-jaromir/f3F8pZjF/"
+      },
+      {
+        "name": "Jakub Rychlovský",
+        "name_raw": "Rychlovský Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "rychlovsky-jakub",
+        "livesport_id": "6mgP7ga4",
+        "livesport_url": "https://www.livesport.cz/hrac/rychlovsky-jakub/6mgP7ga4/"
+      },
+      {
+        "name": "Filip Sandberg",
+        "name_raw": "Sandberg Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sandberg-filip",
+        "livesport_id": "h4TVrCP6",
+        "livesport_url": "https://www.livesport.cz/hrac/sandberg-filip/h4TVrCP6/"
+      },
+      {
+        "name": "Jaroslav Vlach",
+        "name_raw": "Vlach Jaroslav",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vlach-jaroslav",
+        "livesport_id": "IBS1hZoh",
+        "livesport_url": "https://www.livesport.cz/hrac/vlach-jaroslav/IBS1hZoh/"
+      }
+    ]
+  },
+  "HC Dynamo Pardubice": {
+    "team": {
+      "id": "UDlHJ9wl",
+      "name": "Pardubice",
+      "slug": "pardubice",
+      "club": "HC Dynamo Pardubice",
+      "soupiska_url": "https://www.livesport.cz/tym/pardubice/UDlHJ9wl/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Lukáš Matěcha",
+        "name_raw": "Matěcha Lukáš",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "matecha-lukas",
+        "livesport_id": "WE1PZr31",
+        "livesport_url": "https://www.livesport.cz/hrac/matecha-lukas/WE1PZr31/"
+      },
+      {
+        "name": "Malcolm Subban",
+        "name_raw": "Subban Malcolm",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "subban-malcolm",
+        "livesport_id": "dKK4GmgL",
+        "livesport_url": "https://www.livesport.cz/hrac/subban-malcolm/dKK4GmgL/"
+      },
+      {
+        "name": "Roman Will",
+        "name_raw": "Will Roman",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "will-roman",
+        "livesport_id": "8YU99FDb",
+        "livesport_url": "https://www.livesport.cz/hrac/will-roman/8YU99FDb/"
+      },
+      {
+        "name": "Ondřej Chabada",
+        "name_raw": "Chabada Ondřej",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "chabada-ondrej",
+        "livesport_id": "AwZ7Sw9j",
+        "livesport_url": "https://www.livesport.cz/hrac/chabada-ondrej/AwZ7Sw9j/"
+      },
+      {
+        "name": "Tomáš Dvořák",
+        "name_raw": "Dvořák Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "dvorak-tomas",
+        "livesport_id": "xjtH4wJk",
+        "livesport_url": "https://www.livesport.cz/hrac/dvorak-tomas/xjtH4wJk/"
+      },
+      {
+        "name": "Daniel Gazda",
+        "name_raw": "Gazda Daniel",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "gazda-daniel",
+        "livesport_id": "Gpa9KUIg",
+        "livesport_url": "https://www.livesport.cz/hrac/gazda-daniel/Gpa9KUIg/"
+      },
+      {
+        "name": "Jan Košťálek",
+        "name_raw": "Košťálek Jan",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kostalek-jan",
+        "livesport_id": "AZ44PvqT",
+        "livesport_url": "https://www.livesport.cz/hrac/kostalek-jan/AZ44PvqT/"
+      },
+      {
+        "name": "John Ludvig",
+        "name_raw": "Ludvig John",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "ludvig-john",
+        "livesport_id": "bcxGv76G",
+        "livesport_url": "https://www.livesport.cz/hrac/ludvig-john/bcxGv76G/"
+      },
+      {
+        "name": "Ondřej Mikliš",
+        "name_raw": "Mikliš Ondřej",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "miklis-ondrej",
+        "livesport_id": "CSjNu6ih",
+        "livesport_url": "https://www.livesport.cz/hrac/miklis-ondrej/CSjNu6ih/"
+      },
+      {
+        "name": "Miguel Tourigny",
+        "name_raw": "Tourigny Miguel",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "tourigny-miguel",
+        "livesport_id": "lOdaPnh2",
+        "livesport_url": "https://www.livesport.cz/hrac/tourigny-miguel/lOdaPnh2/"
+      },
+      {
+        "name": "Peter Čerešňák",
+        "name_raw": "Čerešňák Peter",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "ceresnak-peter",
+        "livesport_id": "nuCKJvQu",
+        "livesport_url": "https://www.livesport.cz/hrac/ceresnak-peter/nuCKJvQu/"
+      },
+      {
+        "name": "Martin Švec",
+        "name_raw": "Švec Martin",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "svec-martin",
+        "livesport_id": "2ohHptC0",
+        "livesport_url": "https://www.livesport.cz/hrac/svec-martin/2ohHptC0/"
+      },
+      {
+        "name": "Hunter Fejes",
+        "name_raw": "Fejes Hunter",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "fejes-hunter",
+        "livesport_id": "MusG3o5n",
+        "livesport_url": "https://www.livesport.cz/hrac/fejes-hunter/MusG3o5n/"
+      },
+      {
+        "name": "František Formánek",
+        "name_raw": "Formánek František",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "formanek-frantisek",
+        "livesport_id": "CULU9Wad",
+        "livesport_url": "https://www.livesport.cz/hrac/formanek-frantisek/CULU9Wad/"
+      },
+      {
+        "name": "Robin Kaplan",
+        "name_raw": "Kaplan Robin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kaplan-robin",
+        "livesport_id": "WCouPcd9",
+        "livesport_url": "https://www.livesport.cz/hrac/kaplan-robin/WCouPcd9/"
+      },
+      {
+        "name": "Martin Kaut",
+        "name_raw": "Kaut Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kaut-martin",
+        "livesport_id": "EoArEWZA",
+        "livesport_url": "https://www.livesport.cz/hrac/kaut-martin/EoArEWZA/"
+      },
+      {
+        "name": "Miloš Kelemen",
+        "name_raw": "Kelemen Miloš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kelemen-milos",
+        "livesport_id": "v7W5yRK8",
+        "livesport_url": "https://www.livesport.cz/hrac/kelemen-milos/v7W5yRK8/"
+      },
+      {
+        "name": "Jáchym Kondelík",
+        "name_raw": "Kondelík Jáchym",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kondelik-jachym",
+        "livesport_id": "IX3MNxGf",
+        "livesport_url": "https://www.livesport.cz/hrac/kondelik-jachym/IX3MNxGf/"
+      },
+      {
+        "name": "Jakub Lauko",
+        "name_raw": "Lauko Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "lauko-jakub",
+        "livesport_id": "4t6oUC83",
+        "livesport_url": "https://www.livesport.cz/hrac/lauko-jakub/4t6oUC83/"
+      },
+      {
+        "name": "Vít Macek",
+        "name_raw": "Macek Vít",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "macek-vit",
+        "livesport_id": "0l4wckLm",
+        "livesport_url": "https://www.livesport.cz/hrac/macek-vit/0l4wckLm/"
+      },
+      {
+        "name": "Jan Mandát",
+        "name_raw": "Mandát Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "mandat-jan",
+        "livesport_id": "b1O6ecnh",
+        "livesport_url": "https://www.livesport.cz/hrac/mandat-jan/b1O6ecnh/"
+      },
+      {
+        "name": "Patrik Poulíček",
+        "name_raw": "Poulíček Patrik",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "poulicek-patrik",
+        "livesport_id": "SlGde78M",
+        "livesport_url": "https://www.livesport.cz/hrac/poulicek-patrik/SlGde78M/"
+      },
+      {
+        "name": "Daniel Rákos",
+        "name_raw": "Rákos Daniel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "rakos-daniel",
+        "livesport_id": "AgFcZUxk",
+        "livesport_url": "https://www.livesport.cz/hrac/rakos-daniel/AgFcZUxk/"
+      },
+      {
+        "name": "Lukáš Sedlák",
+        "name_raw": "Sedlák Lukáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sedlak-lukas",
+        "livesport_id": "E3ZQz5j2",
+        "livesport_url": "https://www.livesport.cz/hrac/sedlak-lukas/E3ZQz5j2/"
+      },
+      {
+        "name": "Jiří Smejkal",
+        "name_raw": "Smejkal Jiří",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "smejkal-jiri",
+        "livesport_id": "xjzV1c3C",
+        "livesport_url": "https://www.livesport.cz/hrac/smejkal-jiri/xjzV1c3C/"
+      },
+      {
+        "name": "Vladimír Sobotka",
+        "name_raw": "Sobotka Vladimír",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sobotka-vladimir",
+        "livesport_id": "thWGSjca",
+        "livesport_url": "https://www.livesport.cz/hrac/sobotka-vladimir/thWGSjca/"
+      },
+      {
+        "name": "Jan Stránský",
+        "name_raw": "Stránský Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "stransky-jan",
+        "livesport_id": "S8S6ETDj",
+        "livesport_url": "https://www.livesport.cz/hrac/stransky-jan/S8S6ETDj/"
+      },
+      {
+        "name": "Matěj Stránský",
+        "name_raw": "Stránský Matěj",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "stransky-matej",
+        "livesport_id": "SWCOvuaD",
+        "livesport_url": "https://www.livesport.cz/hrac/stransky-matej/SWCOvuaD/"
+      },
+      {
+        "name": "David Tomášek",
+        "name_raw": "Tomášek David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "tomasek-david",
+        "livesport_id": "xtkW4fH5",
+        "livesport_url": "https://www.livesport.cz/hrac/tomasek-david/xtkW4fH5/"
+      },
+      {
+        "name": "Tomáš Urban",
+        "name_raw": "Urban Tomáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "urban-tomas",
+        "livesport_id": "QipNN4gO",
+        "livesport_url": "https://www.livesport.cz/hrac/urban-tomas/QipNN4gO/"
+      },
+      {
+        "name": "Tomáš Vondráček",
+        "name_raw": "Vondráček Tomáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vondracek-tomas",
+        "livesport_id": "SIBngKh2",
+        "livesport_url": "https://www.livesport.cz/hrac/vondracek-tomas/SIBngKh2/"
+      },
+      {
+        "name": "Matúš Válek",
+        "name_raw": "Válek Matúš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "valek-matus",
+        "livesport_id": "nZRGtXZF",
+        "livesport_url": "https://www.livesport.cz/hrac/valek-matus/nZRGtXZF/"
+      },
+      {
+        "name": "Roman Červenka",
+        "name_raw": "Červenka Roman",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "cervenka-roman",
+        "livesport_id": "hCZtQI3B",
+        "livesport_url": "https://www.livesport.cz/hrac/cervenka-roman/hCZtQI3B/"
+      }
+    ]
+  },
+  "HC Energie Karlovy Vary": {
+    "team": {
+      "id": "pIEGPioE",
+      "name": "Karlovy Vary",
+      "slug": "karlovy-vary",
+      "club": "HC Energie Karlovy Vary",
+      "soupiska_url": "https://www.livesport.cz/tym/karlovy-vary/pIEGPioE/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Dominik Frodl",
+        "name_raw": "Frodl Dominik",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "frodl-dominik",
+        "livesport_id": "6Ra8Ntyj",
+        "livesport_url": "https://www.livesport.cz/hrac/frodl-dominik/6Ra8Ntyj/"
+      },
+      {
+        "name": "Daniel Král",
+        "name_raw": "Král Daniel",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "kral-daniel",
+        "livesport_id": "f1La1ToE",
+        "livesport_url": "https://www.livesport.cz/hrac/kral-daniel/f1La1ToE/"
+      },
+      {
+        "name": "Daniel Brickley",
+        "name_raw": "Brickley Daniel",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "brickley-daniel",
+        "livesport_id": "WxBlASdr",
+        "livesport_url": "https://www.livesport.cz/hrac/brickley-daniel/WxBlASdr/"
+      },
+      {
+        "name": "Kryštof Dyk",
+        "name_raw": "Dyk Kryštof",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "dyk-krystof",
+        "livesport_id": "29fCMjsA",
+        "livesport_url": "https://www.livesport.cz/hrac/dyk-krystof/29fCMjsA/"
+      },
+      {
+        "name": "Elmeri Eronen",
+        "name_raw": "Eronen Elmeri",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "eronen-elmeri",
+        "livesport_id": "6c6AJgMC",
+        "livesport_url": "https://www.livesport.cz/hrac/eronen-elmeri/6c6AJgMC/"
+      },
+      {
+        "name": "Janis Jaks",
+        "name_raw": "Jaks Janis",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "jaks-janis",
+        "livesport_id": "SvwH4Qrc",
+        "livesport_url": "https://www.livesport.cz/hrac/jaks-janis/SvwH4Qrc/"
+      },
+      {
+        "name": "Matteo Kočí",
+        "name_raw": "Kočí Matteo",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "koci-matteo",
+        "livesport_id": "pf3KHL4q",
+        "livesport_url": "https://www.livesport.cz/hrac/koci-matteo/pf3KHL4q/"
+      },
+      {
+        "name": "Roberts Mamčics",
+        "name_raw": "Mamčics Roberts",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "mamcics-roberts",
+        "livesport_id": "n9Xdvdyl",
+        "livesport_url": "https://www.livesport.cz/hrac/mamcics-roberts/n9Xdvdyl/"
+      },
+      {
+        "name": "Josef Myšák",
+        "name_raw": "Myšák Josef",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "mysak-josef",
+        "livesport_id": "O4Dp697o",
+        "livesport_url": "https://www.livesport.cz/hrac/mysak-josef/O4Dp697o/"
+      },
+      {
+        "name": "Tobias Winberg",
+        "name_raw": "Winberg Tobias",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "winberg-tobias",
+        "livesport_id": "M9IWH1qb",
+        "livesport_url": "https://www.livesport.cz/hrac/winberg-tobias/M9IWH1qb/"
+      },
+      {
+        "name": "Jan Bambula",
+        "name_raw": "Bambula Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "bambula-jan",
+        "livesport_id": "pEGa8oF9",
+        "livesport_url": "https://www.livesport.cz/hrac/bambula-jan/pEGa8oF9/"
+      },
+      {
+        "name": "Ondřej Beránek",
+        "name_raw": "Beránek Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "beranek-ondrej",
+        "livesport_id": "UJRGxp24",
+        "livesport_url": "https://www.livesport.cz/hrac/beranek-ondrej/UJRGxp24/"
+      },
+      {
+        "name": "Haralds Egle",
+        "name_raw": "Egle Haralds",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "egle-haralds",
+        "livesport_id": "xMWHHkNJ",
+        "livesport_url": "https://www.livesport.cz/hrac/egle-haralds/xMWHHkNJ/"
+      },
+      {
+        "name": "Radek Janata",
+        "name_raw": "Janata Radek",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "janata-radek",
+        "livesport_id": "CYG22D3L",
+        "livesport_url": "https://www.livesport.cz/hrac/janata-radek/CYG22D3L/"
+      },
+      {
+        "name": "Vít Jiskra",
+        "name_raw": "Jiskra Vít",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "jiskra-vit",
+        "livesport_id": "fcgZhlyK",
+        "livesport_url": "https://www.livesport.cz/hrac/jiskra-vit/fcgZhlyK/"
+      },
+      {
+        "name": "Nick Jones",
+        "name_raw": "Jones Nick",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "jones-nick",
+        "livesport_id": "4QXBKRaO",
+        "livesport_url": "https://www.livesport.cz/hrac/jones-nick/4QXBKRaO/"
+      },
+      {
+        "name": "Filip Koffer",
+        "name_raw": "Koffer Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "koffer-filip",
+        "livesport_id": "WtDO0FLB",
+        "livesport_url": "https://www.livesport.cz/hrac/koffer-filip/WtDO0FLB/"
+      },
+      {
+        "name": "Adam Lukošik",
+        "name_raw": "Lukošik Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "lukosik-adam",
+        "livesport_id": "b50Ogx13",
+        "livesport_url": "https://www.livesport.cz/hrac/lukosik-adam/b50Ogx13/"
+      },
+      {
+        "name": "Jakub Minárik",
+        "name_raw": "Minárik Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "minarik-jakub",
+        "livesport_id": "0EtHTbZb",
+        "livesport_url": "https://www.livesport.cz/hrac/minarik-jakub/0EtHTbZb/"
+      },
+      {
+        "name": "Martin Osmík",
+        "name_raw": "Osmík Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "osmik-martin",
+        "livesport_id": "tYiBRW09",
+        "livesport_url": "https://www.livesport.cz/hrac/osmik-martin/tYiBRW09/"
+      },
+      {
+        "name": "Tobiáš Pastor",
+        "name_raw": "Pastor Tobiáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pastor-tobias",
+        "livesport_id": "Qymo4WEK",
+        "livesport_url": "https://www.livesport.cz/hrac/pastor-tobias/Qymo4WEK/"
+      },
+      {
+        "name": "Tomáš Redlich",
+        "name_raw": "Redlich Tomáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "redlich-tomas",
+        "livesport_id": "WxXZuAtQ",
+        "livesport_url": "https://www.livesport.cz/hrac/redlich-tomas/WxXZuAtQ/"
+      },
+      {
+        "name": "Robin Sapoušek",
+        "name_raw": "Sapoušek Robin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sapousek-robin",
+        "livesport_id": "EVR0nc3O",
+        "livesport_url": "https://www.livesport.cz/hrac/sapousek-robin/EVR0nc3O/"
+      },
+      {
+        "name": "David Sedláček",
+        "name_raw": "Sedláček David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sedlacek-david",
+        "livesport_id": "IR18xUlU",
+        "livesport_url": "https://www.livesport.cz/hrac/sedlacek-david/IR18xUlU/"
+      },
+      {
+        "name": "Petr Tomek",
+        "name_raw": "Tomek Petr",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "tomek-petr",
+        "livesport_id": "b3C31xrh",
+        "livesport_url": "https://www.livesport.cz/hrac/tomek-petr/b3C31xrh/"
+      },
+      {
+        "name": "Matyáš Váňa",
+        "name_raw": "Váňa Matyáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vana-matyas",
+        "livesport_id": "6PTLrenf",
+        "livesport_url": "https://www.livesport.cz/hrac/vana-matyas/6PTLrenf/"
+      },
+      {
+        "name": "Jiří Černoch",
+        "name_raw": "Černoch Jiří",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "cernoch-jiri",
+        "livesport_id": "WnUXMb8e",
+        "livesport_url": "https://www.livesport.cz/hrac/cernoch-jiri/WnUXMb8e/"
+      },
+      {
+        "name": "David Šilhán",
+        "name_raw": "Šilhán David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "silhan-david",
+        "livesport_id": "02g7TRQN",
+        "livesport_url": "https://www.livesport.cz/hrac/silhan-david/02g7TRQN/"
+      },
+      {
+        "name": "David Šťastný",
+        "name_raw": "Šťastný David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "stastny-david",
+        "livesport_id": "OnIunJd5",
+        "livesport_url": "https://www.livesport.cz/hrac/stastny-david/OnIunJd5/"
+      }
+    ]
+  },
+  "HC Kometa Brno": {
+    "team": {
+      "id": "AusK09zk",
+      "name": "Kometa Brno",
+      "slug": "kometa-brno",
+      "club": "HC Kometa Brno",
+      "soupiska_url": "https://www.livesport.cz/tym/kometa-brno/AusK09zk/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Jan Kavan",
+        "name_raw": "Kavan Jan",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "kavan-jan",
+        "livesport_id": "bc7OGuKk",
+        "livesport_url": "https://www.livesport.cz/hrac/kavan-jan/bc7OGuKk/"
+      },
+      {
+        "name": "Eugen Rabčan",
+        "name_raw": "Rabčan Eugen",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "rabcan-eugen",
+        "livesport_id": "b3Xd3Hac",
+        "livesport_url": "https://www.livesport.cz/hrac/rabcan-eugen/b3Xd3Hac/"
+      },
+      {
+        "name": "Aleš Stezka",
+        "name_raw": "Stezka Aleš",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "stezka-ales",
+        "livesport_id": "S8zqCDz0",
+        "livesport_url": "https://www.livesport.cz/hrac/stezka-ales/S8zqCDz0/"
+      },
+      {
+        "name": "Tadeáš Beroun",
+        "name_raw": "Beroun Tadeáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "beroun-tadeas",
+        "livesport_id": "0Mo9wIG5",
+        "livesport_url": "https://www.livesport.cz/hrac/beroun-tadeas/0Mo9wIG5/"
+      },
+      {
+        "name": "Michal Gulaši",
+        "name_raw": "Gulaši Michal",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "gulasi-michal",
+        "livesport_id": "rNF898JP",
+        "livesport_url": "https://www.livesport.cz/hrac/gulasi-michal/rNF898JP/"
+      },
+      {
+        "name": "Jan Jurný",
+        "name_raw": "Jurný Jan",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "jurny-jan",
+        "livesport_id": "YyabGybC",
+        "livesport_url": "https://www.livesport.cz/hrac/jurny-jan/YyabGybC/"
+      },
+      {
+        "name": "Filip Král",
+        "name_raw": "Král Filip",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kral-filip",
+        "livesport_id": "hpTdCVN6",
+        "livesport_url": "https://www.livesport.cz/hrac/kral-filip/hpTdCVN6/"
+      },
+      {
+        "name": "Radek Kučeřík",
+        "name_raw": "Kučeřík Radek",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kucerik-radek",
+        "livesport_id": "lSb0g1xL",
+        "livesport_url": "https://www.livesport.cz/hrac/kucerik-radek/lSb0g1xL/"
+      },
+      {
+        "name": "Dalimil Mikyska",
+        "name_raw": "Mikyska Dalimil",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "mikyska-dalimil",
+        "livesport_id": "61EomFNe",
+        "livesport_url": "https://www.livesport.cz/hrac/mikyska-dalimil/61EomFNe/"
+      },
+      {
+        "name": "Richard Nedomlel",
+        "name_raw": "Nedomlel Richard",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "nedomlel-richard",
+        "livesport_id": "tKIN126Q",
+        "livesport_url": "https://www.livesport.cz/hrac/nedomlel-richard/tKIN126Q/"
+      },
+      {
+        "name": "Stanislav Svozil",
+        "name_raw": "Svozil Stanislav",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "svozil-stanislav",
+        "livesport_id": "djLtUqof",
+        "livesport_url": "https://www.livesport.cz/hrac/svozil-stanislav/djLtUqof/"
+      },
+      {
+        "name": "Luke Witkowski",
+        "name_raw": "Witkowski Luke",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "witkowski-luke",
+        "livesport_id": "EeqtqRoo",
+        "livesport_url": "https://www.livesport.cz/hrac/witkowski-luke/EeqtqRoo/"
+      },
+      {
+        "name": "Jan Zdráhal",
+        "name_raw": "Zdráhal Jan",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "zdrahal-jan",
+        "livesport_id": "QLadfWEE",
+        "livesport_url": "https://www.livesport.cz/hrac/zdrahal-jan/QLadfWEE/"
+      },
+      {
+        "name": "Jakub Zubíček",
+        "name_raw": "Zubíček Jakub",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "zubicek-jakub",
+        "livesport_id": "f1G5kdL6",
+        "livesport_url": "https://www.livesport.cz/hrac/zubicek-jakub/f1G5kdL6/"
+      },
+      {
+        "name": "Libor Zábranský",
+        "name_raw": "Zábranský Libor",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "zabransky-libor",
+        "livesport_id": "S8O4r52C",
+        "livesport_url": "https://www.livesport.cz/hrac/zabransky-libor/S8O4r52C/"
+      },
+      {
+        "name": "Jan Ščotka",
+        "name_raw": "Ščotka Jan",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "scotka-jan",
+        "livesport_id": "nyMASKX8",
+        "livesport_url": "https://www.livesport.cz/hrac/scotka-jan/nyMASKX8/"
+      },
+      {
+        "name": "Jakub Brabenec",
+        "name_raw": "Brabenec Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "brabenec-jakub",
+        "livesport_id": "0QnzjPYD",
+        "livesport_url": "https://www.livesport.cz/hrac/brabenec-jakub/0QnzjPYD/"
+      },
+      {
+        "name": "Danny Chludil",
+        "name_raw": "Chludil Danny",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "chludil-danny",
+        "livesport_id": "Yao4FJfF",
+        "livesport_url": "https://www.livesport.cz/hrac/chludil-danny/Yao4FJfF/"
+      },
+      {
+        "name": "Lukáš Cingeľ",
+        "name_raw": "Cingeľ Lukáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "cingel-lukas",
+        "livesport_id": "xGXGJRHS",
+        "livesport_url": "https://www.livesport.cz/hrac/cingel-lukas/xGXGJRHS/"
+      },
+      {
+        "name": "Jan Ekrt",
+        "name_raw": "Ekrt Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "ekrt-jan",
+        "livesport_id": "2DvKtXU4",
+        "livesport_url": "https://www.livesport.cz/hrac/ekrt-jan/2DvKtXU4/"
+      },
+      {
+        "name": "Jakub Flek",
+        "name_raw": "Flek Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "flek-jakub",
+        "livesport_id": "hC7GFfX7",
+        "livesport_url": "https://www.livesport.cz/hrac/flek-jakub/hC7GFfX7/"
+      },
+      {
+        "name": "Michal Hartl",
+        "name_raw": "Hartl Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hartl-michal",
+        "livesport_id": "E36JmZeK",
+        "livesport_url": "https://www.livesport.cz/hrac/hartl-michal/E36JmZeK/"
+      },
+      {
+        "name": "Arttu Ilomaki",
+        "name_raw": "Ilomaki Arttu",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "ilomaki-arttu",
+        "livesport_id": "Q9m43dij",
+        "livesport_url": "https://www.livesport.cz/hrac/ilomaki-arttu/Q9m43dij/"
+      },
+      {
+        "name": "Andrej Kollár",
+        "name_raw": "Kollár Andrej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kollar-andrej",
+        "livesport_id": "QTXqdxXQ",
+        "livesport_url": "https://www.livesport.cz/hrac/kollar-andrej/QTXqdxXQ/"
+      },
+      {
+        "name": "Michal Kunc",
+        "name_raw": "Kunc Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kunc-michal",
+        "livesport_id": "fPLZQkg3",
+        "livesport_url": "https://www.livesport.cz/hrac/kunc-michal/fPLZQkg3/"
+      },
+      {
+        "name": "Silvester Kusko",
+        "name_raw": "Kusko Silvester",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kusko-silvester",
+        "livesport_id": "lO4VV92c",
+        "livesport_url": "https://www.livesport.cz/hrac/kusko-silvester/lO4VV92c/"
+      },
+      {
+        "name": "Robert Leino",
+        "name_raw": "Leino Robert",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "leino-robert",
+        "livesport_id": "j9xUTMFG",
+        "livesport_url": "https://www.livesport.cz/hrac/leino-robert/j9xUTMFG/"
+      },
+      {
+        "name": "David Michálek",
+        "name_raw": "Michálek David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "michalek-david",
+        "livesport_id": "I1icnbL9",
+        "livesport_url": "https://www.livesport.cz/hrac/michalek-david/I1icnbL9/"
+      },
+      {
+        "name": "David Moravec",
+        "name_raw": "Moravec David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "moravec-david",
+        "livesport_id": "p8lBlnei",
+        "livesport_url": "https://www.livesport.cz/hrac/moravec-david/p8lBlnei/"
+      },
+      {
+        "name": "Kristián Pospíšil",
+        "name_raw": "Pospíšil Kristián",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pospisil-kristian",
+        "livesport_id": "6wjeHPat",
+        "livesport_url": "https://www.livesport.cz/hrac/pospisil-kristian/6wjeHPat/"
+      },
+      {
+        "name": "Tomáš Selic",
+        "name_raw": "Selic Tomáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "selic-tomas",
+        "livesport_id": "AyTteKRN",
+        "livesport_url": "https://www.livesport.cz/hrac/selic-tomas/AyTteKRN/"
+      },
+      {
+        "name": "Jan Süss",
+        "name_raw": "Süss Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "suss-jan",
+        "livesport_id": "0v0j41L9",
+        "livesport_url": "https://www.livesport.cz/hrac/suss-jan/0v0j41L9/"
+      },
+      {
+        "name": "Maxim Vehovský",
+        "name_raw": "Vehovský Maxim",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vehovsky-maxim",
+        "livesport_id": "jsRJyJnS",
+        "livesport_url": "https://www.livesport.cz/hrac/vehovsky-maxim/jsRJyJnS/"
+      },
+      {
+        "name": "Tobiáš Vehovský",
+        "name_raw": "Vehovský Tobiáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vehovsky-tobias",
+        "livesport_id": "hQsvFvbL",
+        "livesport_url": "https://www.livesport.cz/hrac/vehovsky-tobias/hQsvFvbL/"
+      },
+      {
+        "name": "Adam Zbořil",
+        "name_raw": "Zbořil Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "zboril-adam",
+        "livesport_id": "SlSU5kKl",
+        "livesport_url": "https://www.livesport.cz/hrac/zboril-adam/SlSU5kKl/"
+      },
+      {
+        "name": "Hynek Zohorna",
+        "name_raw": "Zohorna Hynek",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "zohorna-hynek",
+        "livesport_id": "27WE4trt",
+        "livesport_url": "https://www.livesport.cz/hrac/zohorna-hynek/27WE4trt/"
+      },
+      {
+        "name": "Tomáš Zohorna",
+        "name_raw": "Zohorna Tomáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "zohorna-tomas",
+        "livesport_id": "6JDQx4qs",
+        "livesport_url": "https://www.livesport.cz/hrac/zohorna-tomas/6JDQx4qs/"
+      },
+      {
+        "name": "Maxim Čajkovič",
+        "name_raw": "Čajkovič Maxim",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "cajkovic-maxim",
+        "livesport_id": "hS5aJlil",
+        "livesport_url": "https://www.livesport.cz/hrac/cajkovic-maxim/hS5aJlil/"
+      }
+    ]
+  },
+  "HC Litvínov": {
+    "team": {
+      "id": "rgfiJkOs",
+      "name": "Litvínov",
+      "slug": "litvinov",
+      "club": "HC Litvínov",
+      "soupiska_url": "https://www.livesport.cz/tym/litvinov/rgfiJkOs/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Adam Kubík",
+        "name_raw": "Kubík Adam",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "kubik-adam",
+        "livesport_id": "EioAqG0a",
+        "livesport_url": "https://www.livesport.cz/hrac/kubik-adam/EioAqG0a/"
+      },
+      {
+        "name": "Matej Tomek",
+        "name_raw": "Tomek Matej",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "tomek-matej",
+        "livesport_id": "S6kobw9S",
+        "livesport_url": "https://www.livesport.cz/hrac/tomek-matej/S6kobw9S/"
+      },
+      {
+        "name": "Pavel Čajan",
+        "name_raw": "Čajan Pavel",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "cajan-pavel",
+        "livesport_id": "6HEzAfJ7",
+        "livesport_url": "https://www.livesport.cz/hrac/cajan-pavel/6HEzAfJ7/"
+      },
+      {
+        "name": "Ondřej Baláž",
+        "name_raw": "Baláž Ondřej",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "balaz-ondrej",
+        "livesport_id": "dlGPaJkq",
+        "livesport_url": "https://www.livesport.cz/hrac/balaz-ondrej/dlGPaJkq/"
+      },
+      {
+        "name": "Vít Beran",
+        "name_raw": "Beran Vít",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "beran-vit",
+        "livesport_id": "W6qmE10e",
+        "livesport_url": "https://www.livesport.cz/hrac/beran-vit/W6qmE10e/"
+      },
+      {
+        "name": "Kevin Czuczman",
+        "name_raw": "Czuczman Kevin",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "czuczman-kevin",
+        "livesport_id": "MmwznYNM",
+        "livesport_url": "https://www.livesport.cz/hrac/czuczman-kevin/MmwznYNM/"
+      },
+      {
+        "name": "Vojtěch Husinecký",
+        "name_raw": "Husinecký Vojtěch",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "husinecky-vojtech",
+        "livesport_id": "MPByKg3b",
+        "livesport_url": "https://www.livesport.cz/hrac/husinecky-vojtech/MPByKg3b/"
+      },
+      {
+        "name": "Michal Moravčík",
+        "name_raw": "Moravčík Michal",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "moravcik-michal",
+        "livesport_id": "lWhcEAF6",
+        "livesport_url": "https://www.livesport.cz/hrac/moravcik-michal/lWhcEAF6/"
+      },
+      {
+        "name": "Adam Polášek",
+        "name_raw": "Polášek Adam",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "polasek-adam",
+        "livesport_id": "nBlGzzGl",
+        "livesport_url": "https://www.livesport.cz/hrac/polasek-adam/nBlGzzGl/"
+      },
+      {
+        "name": "Jonáš Bednařík",
+        "name_raw": "Bednařík Jonáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "bednarik-jonas",
+        "livesport_id": "0bo4Dohg",
+        "livesport_url": "https://www.livesport.cz/hrac/bednarik-jonas/0bo4Dohg/"
+      },
+      {
+        "name": "Michal Gut",
+        "name_raw": "Gut Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "gut-michal",
+        "livesport_id": "IsPcRnfa",
+        "livesport_url": "https://www.livesport.cz/hrac/gut-michal/IsPcRnfa/"
+      },
+      {
+        "name": "Ondřej Jurčík",
+        "name_raw": "Jurčík Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "jurcik-ondrej",
+        "livesport_id": "rgnNIoqf",
+        "livesport_url": "https://www.livesport.cz/hrac/jurcik-ondrej/rgnNIoqf/"
+      },
+      {
+        "name": "Josef Jícha",
+        "name_raw": "Jícha Josef",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "jicha-josef",
+        "livesport_id": "pfOcPfem",
+        "livesport_url": "https://www.livesport.cz/hrac/jicha-josef/pfOcPfem/"
+      },
+      {
+        "name": "David Kaše",
+        "name_raw": "Kaše David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kase-david",
+        "livesport_id": "WbYewdh4",
+        "livesport_url": "https://www.livesport.cz/hrac/kase-david/WbYewdh4/"
+      },
+      {
+        "name": "Ondřej Kaše",
+        "name_raw": "Kaše Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kase-ondrej",
+        "livesport_id": "xpmd9RQC",
+        "livesport_url": "https://www.livesport.cz/hrac/kase-ondrej/xpmd9RQC/"
+      },
+      {
+        "name": "Petr Koblasa",
+        "name_raw": "Koblasa Petr",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "koblasa-petr",
+        "livesport_id": "xf46ijVe",
+        "livesport_url": "https://www.livesport.cz/hrac/koblasa-petr/xf46ijVe/"
+      },
+      {
+        "name": "David Kämpf",
+        "name_raw": "Kämpf David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kampf-david",
+        "livesport_id": "UJLSbNXR",
+        "livesport_url": "https://www.livesport.cz/hrac/kampf-david/UJLSbNXR/"
+      },
+      {
+        "name": "Matěj Maštalířský",
+        "name_raw": "Maštalířský Matěj",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "mastalirsky-matej",
+        "livesport_id": "hveqvXTr",
+        "livesport_url": "https://www.livesport.cz/hrac/mastalirsky-matej/hveqvXTr/"
+      },
+      {
+        "name": "Jan Peroutka",
+        "name_raw": "Peroutka Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "peroutka-jan",
+        "livesport_id": "d8ygE61E",
+        "livesport_url": "https://www.livesport.cz/hrac/peroutka-jan/d8ygE61E/"
+      },
+      {
+        "name": "Marek Peroutka",
+        "name_raw": "Peroutka Marek",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "peroutka-marek",
+        "livesport_id": "beOYKlHG",
+        "livesport_url": "https://www.livesport.cz/hrac/peroutka-marek/beOYKlHG/"
+      },
+      {
+        "name": "Theodor Pištěk",
+        "name_raw": "Pištěk Theodor",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pistek-theodor",
+        "livesport_id": "4CWaNyKu",
+        "livesport_url": "https://www.livesport.cz/hrac/pistek-theodor/4CWaNyKu/"
+      },
+      {
+        "name": "Matúš Sukeľ",
+        "name_raw": "Sukeľ Matúš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sukel-matus",
+        "livesport_id": "Wp9EXuIE",
+        "livesport_url": "https://www.livesport.cz/hrac/sukel-matus/Wp9EXuIE/"
+      },
+      {
+        "name": "Pawel Zygmunt",
+        "name_raw": "Zygmunt Pawel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "zygmunt-pawel",
+        "livesport_id": "UkAjNdYD",
+        "livesport_url": "https://www.livesport.cz/hrac/zygmunt-pawel/UkAjNdYD/"
+      },
+      {
+        "name": "Jan Šprynar",
+        "name_raw": "Šprynar Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sprynar-jan",
+        "livesport_id": "8jFbZY2o",
+        "livesport_url": "https://www.livesport.cz/hrac/sprynar-jan/8jFbZY2o/"
+      }
+    ]
+  },
+  "HC Motor České Budějovice": {
+    "team": {
+      "id": "UTfYWeKA",
+      "name": "České Budějovice",
+      "slug": "ceske-budejovice",
+      "club": "HC Motor České Budějovice",
+      "soupiska_url": "https://www.livesport.cz/tym/ceske-budejovice/UTfYWeKA/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Milan Klouček",
+        "name_raw": "Klouček Milan",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "kloucek-milan",
+        "livesport_id": "WSJ3pp2P",
+        "livesport_url": "https://www.livesport.cz/hrac/kloucek-milan/WSJ3pp2P/"
+      },
+      {
+        "name": "Matyáš Mařík",
+        "name_raw": "Mařík Matyáš",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "marik-matyas",
+        "livesport_id": "2HnOgnQa",
+        "livesport_url": "https://www.livesport.cz/hrac/marik-matyas/2HnOgnQa/"
+      },
+      {
+        "name": "Jan Strmeň",
+        "name_raw": "Strmeň Jan",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "strmen-jan",
+        "livesport_id": "UsW5Aebh",
+        "livesport_url": "https://www.livesport.cz/hrac/strmen-jan/UsW5Aebh/"
+      },
+      {
+        "name": "Ondřej Kachyňa",
+        "name_raw": "Kachyňa Ondřej",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kachyna-ondrej",
+        "livesport_id": "Q5HCL0PO",
+        "livesport_url": "https://www.livesport.cz/hrac/kachyna-ondrej/Q5HCL0PO/"
+      },
+      {
+        "name": "Tomáš Kundrátek",
+        "name_raw": "Kundrátek Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kundratek-tomas",
+        "livesport_id": "GpgKZgVf",
+        "livesport_url": "https://www.livesport.cz/hrac/kundratek-tomas/GpgKZgVf/"
+      },
+      {
+        "name": "Pavel Pýcha",
+        "name_raw": "Pýcha Pavel",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "pycha-pavel",
+        "livesport_id": "j5b2RgIU",
+        "livesport_url": "https://www.livesport.cz/hrac/pycha-pavel/j5b2RgIU/"
+      },
+      {
+        "name": "Roman Vráblík",
+        "name_raw": "Vráblík Roman",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "vrablik-roman",
+        "livesport_id": "vHaTb3st",
+        "livesport_url": "https://www.livesport.cz/hrac/vrablik-roman/vHaTb3st/"
+      },
+      {
+        "name": "Ondřej Vála",
+        "name_raw": "Vála Ondřej",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "vala-ondrej",
+        "livesport_id": "QaEfna7D",
+        "livesport_url": "https://www.livesport.cz/hrac/vala-ondrej/QaEfna7D/"
+      },
+      {
+        "name": "Jan Štencel",
+        "name_raw": "Štencel Jan",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "stencel-jan",
+        "livesport_id": "UHA6NKgC",
+        "livesport_url": "https://www.livesport.cz/hrac/stencel-jan/UHA6NKgC/"
+      },
+      {
+        "name": "Filip Ahl",
+        "name_raw": "Ahl Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "ahl-filip",
+        "livesport_id": "tljWONXD",
+        "livesport_url": "https://www.livesport.cz/hrac/ahl-filip/tljWONXD/"
+      },
+      {
+        "name": "Martin Beránek",
+        "name_raw": "Beránek Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "beranek-martin",
+        "livesport_id": "0jj7JjpE",
+        "livesport_url": "https://www.livesport.cz/hrac/beranek-martin/0jj7JjpE/"
+      },
+      {
+        "name": "Michal Bulíř",
+        "name_raw": "Bulíř Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "bulir-michal",
+        "livesport_id": "hlwckWTJ",
+        "livesport_url": "https://www.livesport.cz/hrac/bulir-michal/hlwckWTJ/"
+      },
+      {
+        "name": "Tomáš Chlubna",
+        "name_raw": "Chlubna Tomáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "chlubna-tomas",
+        "livesport_id": "AVINCmu6",
+        "livesport_url": "https://www.livesport.cz/hrac/chlubna-tomas/AVINCmu6/"
+      },
+      {
+        "name": "Samuel Drančák",
+        "name_raw": "Drančák Samuel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "drancak-samuel",
+        "livesport_id": "z116trVT",
+        "livesport_url": "https://www.livesport.cz/hrac/drancak-samuel/z116trVT/"
+      },
+      {
+        "name": "Štěpán Hoch",
+        "name_raw": "Hoch Štěpán",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hoch-stepan",
+        "livesport_id": "pCddHQdU",
+        "livesport_url": "https://www.livesport.cz/hrac/hoch-stepan/pCddHQdU/"
+      },
+      {
+        "name": "Matyáš Humeník",
+        "name_raw": "Humeník Matyáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "humenik-matyas",
+        "livesport_id": "f7Lmapre",
+        "livesport_url": "https://www.livesport.cz/hrac/humenik-matyas/f7Lmapre/"
+      },
+      {
+        "name": "Róbert Lantoši",
+        "name_raw": "Lantoši Róbert",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "lantosi-robert",
+        "livesport_id": "hrCrWujG",
+        "livesport_url": "https://www.livesport.cz/hrac/lantosi-robert/hrCrWujG/"
+      },
+      {
+        "name": "Pavel Novák",
+        "name_raw": "Novák Pavel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "novak-pavel",
+        "livesport_id": "4rqRMO8U",
+        "livesport_url": "https://www.livesport.cz/hrac/novak-pavel/4rqRMO8U/"
+      },
+      {
+        "name": "Nick Olesen",
+        "name_raw": "Olesen Nick",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "olesen-nick",
+        "livesport_id": "Q3nvhOtn",
+        "livesport_url": "https://www.livesport.cz/hrac/olesen-nick/Q3nvhOtn/"
+      },
+      {
+        "name": "Jan Ordoš",
+        "name_raw": "Ordoš Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "ordos-jan",
+        "livesport_id": "UaVttexO",
+        "livesport_url": "https://www.livesport.cz/hrac/ordos-jan/UaVttexO/"
+      },
+      {
+        "name": "Jakub Pour",
+        "name_raw": "Pour Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pour-jakub",
+        "livesport_id": "lbqLamC1",
+        "livesport_url": "https://www.livesport.cz/hrac/pour-jakub/lbqLamC1/"
+      },
+      {
+        "name": "Matěj Toman",
+        "name_raw": "Toman Matěj",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "toman-matej",
+        "livesport_id": "2abBdM3m",
+        "livesport_url": "https://www.livesport.cz/hrac/toman-matej/2abBdM3m/"
+      },
+      {
+        "name": "Jakub Valský",
+        "name_raw": "Valský Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "valsky-jakub",
+        "livesport_id": "QFvHW427",
+        "livesport_url": "https://www.livesport.cz/hrac/valsky-jakub/QFvHW427/"
+      },
+      {
+        "name": "Marek Zachar",
+        "name_raw": "Zachar Marek",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "zachar-marek",
+        "livesport_id": "4xhvfEz9",
+        "livesport_url": "https://www.livesport.cz/hrac/zachar-marek/4xhvfEz9/"
+      }
+    ]
+  },
+  "HC Oceláři Třinec": {
+    "team": {
+      "id": "UJFDTRxD",
+      "name": "Třinec",
+      "slug": "trinec",
+      "club": "HC Oceláři Třinec",
+      "soupiska_url": "https://www.livesport.cz/tym/trinec/UJFDTRxD/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Daniel Dolejš",
+        "name_raw": "Dolejš Daniel",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "dolejs-daniel",
+        "livesport_id": "xIpsVeKc",
+        "livesport_url": "https://www.livesport.cz/hrac/dolejs-daniel/xIpsVeKc/"
+      },
+      {
+        "name": "Ondřej Kacetl",
+        "name_raw": "Kacetl Ondřej",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "kacetl-ondrej",
+        "livesport_id": "vZAAJlbd",
+        "livesport_url": "https://www.livesport.cz/hrac/kacetl-ondrej/vZAAJlbd/"
+      },
+      {
+        "name": "Marek Mazanec",
+        "name_raw": "Mazanec Marek",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "mazanec-marek",
+        "livesport_id": "ALkAzKUh",
+        "livesport_url": "https://www.livesport.cz/hrac/mazanec-marek/ALkAzKUh/"
+      },
+      {
+        "name": "Marian Adámek",
+        "name_raw": "Adámek Marian",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "adamek-marian",
+        "livesport_id": "EJkJxQYD",
+        "livesport_url": "https://www.livesport.cz/hrac/adamek-marian/EJkJxQYD/"
+      },
+      {
+        "name": "Jakub Galvas",
+        "name_raw": "Galvas Jakub",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "galvas-jakub",
+        "livesport_id": "8UMDNuIP",
+        "livesport_url": "https://www.livesport.cz/hrac/galvas-jakub/8UMDNuIP/"
+      },
+      {
+        "name": "Patrik Koch",
+        "name_raw": "Koch Patrik",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "koch-patrik",
+        "livesport_id": "QinyUcGB",
+        "livesport_url": "https://www.livesport.cz/hrac/koch-patrik/QinyUcGB/"
+      },
+      {
+        "name": "Martin Marinčin",
+        "name_raw": "Marinčin Martin",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "marincin-martin",
+        "livesport_id": "dGhtFGvB",
+        "livesport_url": "https://www.livesport.cz/hrac/marincin-martin/dGhtFGvB/"
+      },
+      {
+        "name": "David Musil",
+        "name_raw": "Musil David",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "musil-david",
+        "livesport_id": "2TVMyoyd",
+        "livesport_url": "https://www.livesport.cz/hrac/musil-david/2TVMyoyd/"
+      },
+      {
+        "name": "Filip Pyrochta",
+        "name_raw": "Pyrochta Filip",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "pyrochta-filip",
+        "livesport_id": "jBJyu7yO",
+        "livesport_url": "https://www.livesport.cz/hrac/pyrochta-filip/jBJyu7yO/"
+      },
+      {
+        "name": "Marko Daňo",
+        "name_raw": "Daňo Marko",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "dano-marko",
+        "livesport_id": "xd5pSoAP",
+        "livesport_url": "https://www.livesport.cz/hrac/dano-marko/xd5pSoAP/"
+      },
+      {
+        "name": "Oscar Flynn",
+        "name_raw": "Flynn Oscar",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "flynn-oscar",
+        "livesport_id": "YuMtIxUG",
+        "livesport_url": "https://www.livesport.cz/hrac/flynn-oscar/YuMtIxUG/"
+      },
+      {
+        "name": "Patrik Hrehorčák",
+        "name_raw": "Hrehorčák Patrik",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hrehorcak-patrik",
+        "livesport_id": "pdX25djk",
+        "livesport_url": "https://www.livesport.cz/hrac/hrehorcak-patrik/pdX25djk/"
+      },
+      {
+        "name": "Libor Hudáček",
+        "name_raw": "Hudáček Libor",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hudacek-libor",
+        "livesport_id": "2yfr46Ui",
+        "livesport_url": "https://www.livesport.cz/hrac/hudacek-libor/2yfr46Ui/"
+      },
+      {
+        "name": "David Kofroň",
+        "name_raw": "Kofroň David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kofron-david",
+        "livesport_id": "63q7Y7Id",
+        "livesport_url": "https://www.livesport.cz/hrac/kofron-david/63q7Y7Id/"
+      },
+      {
+        "name": "Michal Kovařčík",
+        "name_raw": "Kovařčík Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kovarcik-michal",
+        "livesport_id": "8IrRI4Y6",
+        "livesport_url": "https://www.livesport.cz/hrac/kovarcik-michal/8IrRI4Y6/"
+      },
+      {
+        "name": "Ondřej Kovařčík",
+        "name_raw": "Kovařčík Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kovarcik-ondrej",
+        "livesport_id": "Ag9z2D3N",
+        "livesport_url": "https://www.livesport.cz/hrac/kovarcik-ondrej/Ag9z2D3N/"
+      },
+      {
+        "name": "Matěj Kubiesa",
+        "name_raw": "Kubiesa Matěj",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kubiesa-matej",
+        "livesport_id": "xSUjpABd",
+        "livesport_url": "https://www.livesport.cz/hrac/kubiesa-matej/xSUjpABd/"
+      },
+      {
+        "name": "Daniel Kurovský",
+        "name_raw": "Kurovský Daniel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kurovsky-daniel",
+        "livesport_id": "rDUPtU86",
+        "livesport_url": "https://www.livesport.cz/hrac/kurovsky-daniel/rDUPtU86/"
+      },
+      {
+        "name": "Andrej Nestrašil",
+        "name_raw": "Nestrašil Andrej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "nestrasil-andrej",
+        "livesport_id": "SCzd7L2K",
+        "livesport_url": "https://www.livesport.cz/hrac/nestrasil-andrej/SCzd7L2K/"
+      },
+      {
+        "name": "Miloš Roman",
+        "name_raw": "Roman Miloš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "roman-milos",
+        "livesport_id": "WKVSkDp9",
+        "livesport_url": "https://www.livesport.cz/hrac/roman-milos/WKVSkDp9/"
+      },
+      {
+        "name": "Martin Růžička",
+        "name_raw": "Růžička Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "ruzicka-martin",
+        "livesport_id": "lvTkOdYN",
+        "livesport_url": "https://www.livesport.cz/hrac/ruzicka-martin/lvTkOdYN/"
+      },
+      {
+        "name": "Daniel Voženílek",
+        "name_raw": "Voženílek Daniel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vozenilek-daniel",
+        "livesport_id": "dCj4AEIh",
+        "livesport_url": "https://www.livesport.cz/hrac/vozenilek-daniel/dCj4AEIh/"
+      }
+    ]
+  },
+  "HC Olomouc": {
+    "team": {
+      "id": "zVrB6irF",
+      "name": "Olomouc",
+      "slug": "olomouc",
+      "club": "HC Olomouc",
+      "soupiska_url": "https://www.livesport.cz/tym/olomouc/zVrB6irF/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Oldřich Cichoň",
+        "name_raw": "Cichoň Oldřich",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "cichon-oldrich",
+        "livesport_id": "OfCrM6Sr",
+        "livesport_url": "https://www.livesport.cz/hrac/cichon-oldrich/OfCrM6Sr/"
+      },
+      {
+        "name": "Matěj Machovský",
+        "name_raw": "Machovský Matěj",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "machovsky-matej",
+        "livesport_id": "pheolCoG",
+        "livesport_url": "https://www.livesport.cz/hrac/machovsky-matej/pheolCoG/"
+      },
+      {
+        "name": "Lukáš Pytel",
+        "name_raw": "Pytel Lukáš",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "pytel-lukas",
+        "livesport_id": "WE7zei8D",
+        "livesport_url": "https://www.livesport.cz/hrac/pytel-lukas/WE7zei8D/"
+      },
+      {
+        "name": "Trevor Cosgrove",
+        "name_raw": "Cosgrove Trevor",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "cosgrove-trevor",
+        "livesport_id": "U5o0I5XG",
+        "livesport_url": "https://www.livesport.cz/hrac/cosgrove-trevor/U5o0I5XG/"
+      },
+      {
+        "name": "Ralfs Freibergs",
+        "name_raw": "Freibergs Ralfs",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "freibergs-ralfs",
+        "livesport_id": "2wqA1z4j",
+        "livesport_url": "https://www.livesport.cz/hrac/freibergs-ralfs/2wqA1z4j/"
+      },
+      {
+        "name": "Petr Gewiese",
+        "name_raw": "Gewiese Petr",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "gewiese-petr",
+        "livesport_id": "AqYDGwxi",
+        "livesport_url": "https://www.livesport.cz/hrac/gewiese-petr/AqYDGwxi/"
+      },
+      {
+        "name": "Michal Hrádek",
+        "name_raw": "Hrádek Michal",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "hradek-michal",
+        "livesport_id": "Ya60raTc",
+        "livesport_url": "https://www.livesport.cz/hrac/hradek-michal/Ya60raTc/"
+      },
+      {
+        "name": "Jiří Ondrušek",
+        "name_raw": "Ondrušek Jiří",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "ondrusek-jiri",
+        "livesport_id": "6aaFpoDE",
+        "livesport_url": "https://www.livesport.cz/hrac/ondrusek-jiri/6aaFpoDE/"
+      },
+      {
+        "name": "Rayen Petrovický",
+        "name_raw": "Petrovický Rayen",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "petrovicky-rayen",
+        "livesport_id": "0MvREIzj",
+        "livesport_url": "https://www.livesport.cz/hrac/petrovicky-rayen/0MvREIzj/"
+      },
+      {
+        "name": "Adam Rutar",
+        "name_raw": "Rutar Adam",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "rutar-adam",
+        "livesport_id": "ImErcfxe",
+        "livesport_url": "https://www.livesport.cz/hrac/rutar-adam/ImErcfxe/"
+      },
+      {
+        "name": "Evan Stella",
+        "name_raw": "Stella Evan",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "stella-evan",
+        "livesport_id": "Meo4YwHB",
+        "livesport_url": "https://www.livesport.cz/hrac/stella-evan/Meo4YwHB/"
+      },
+      {
+        "name": "Tomáš Černý",
+        "name_raw": "Černý Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "cerny-tomas",
+        "livesport_id": "EZsAbJjg",
+        "livesport_url": "https://www.livesport.cz/hrac/cerny-tomas/EZsAbJjg/"
+      },
+      {
+        "name": "Dalibor Řezníček",
+        "name_raw": "Řezníček Dalibor",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "reznicek-dalibor",
+        "livesport_id": "px7PFhC9",
+        "livesport_url": "https://www.livesport.cz/hrac/reznicek-dalibor/px7PFhC9/"
+      },
+      {
+        "name": "Lukáš Anděl",
+        "name_raw": "Anděl Lukáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "andel-lukas",
+        "livesport_id": "zmumRIXd",
+        "livesport_url": "https://www.livesport.cz/hrac/andel-lukas/zmumRIXd/"
+      },
+      {
+        "name": "Carl Berglund",
+        "name_raw": "Berglund Carl",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "berglund-carl",
+        "livesport_id": "z5xihOq5",
+        "livesport_url": "https://www.livesport.cz/hrac/berglund-carl/z5xihOq5/"
+      },
+      {
+        "name": "Daniel Herčík",
+        "name_raw": "Herčík Daniel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hercik-daniel",
+        "livesport_id": "hntYeKjf",
+        "livesport_url": "https://www.livesport.cz/hrac/hercik-daniel/hntYeKjf/"
+      },
+      {
+        "name": "Jakub Kos",
+        "name_raw": "Kos Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kos-jakub",
+        "livesport_id": "2NGdunPf",
+        "livesport_url": "https://www.livesport.cz/hrac/kos-jakub/2NGdunPf/"
+      },
+      {
+        "name": "Rok Macuh",
+        "name_raw": "Macuh Rok",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "macuh-rok",
+        "livesport_id": "lYuEzlrH",
+        "livesport_url": "https://www.livesport.cz/hrac/macuh-rok/lYuEzlrH/"
+      },
+      {
+        "name": "Ondřej Matýs",
+        "name_raw": "Matýs Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "matys-ondrej",
+        "livesport_id": "2N0Mroxd",
+        "livesport_url": "https://www.livesport.cz/hrac/matys-ondrej/2N0Mroxd/"
+      },
+      {
+        "name": "Daniel Ministr",
+        "name_raw": "Ministr Daniel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "ministr-daniel",
+        "livesport_id": "6DWvsNUa",
+        "livesport_url": "https://www.livesport.cz/hrac/ministr-daniel/6DWvsNUa/"
+      },
+      {
+        "name": "Joshua-James Mácha",
+        "name_raw": "Mácha Joshua-James",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "macha-joshua-james",
+        "livesport_id": "b5pcKBrn",
+        "livesport_url": "https://www.livesport.cz/hrac/macha-joshua-james/b5pcKBrn/"
+      },
+      {
+        "name": "Jakub Navrátil",
+        "name_raw": "Navrátil Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "navratil-jakub",
+        "livesport_id": "IyGS26vC",
+        "livesport_url": "https://www.livesport.cz/hrac/navratil-jakub/IyGS26vC/"
+      },
+      {
+        "name": "Jakub Orsava",
+        "name_raw": "Orsava Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "orsava-jakub",
+        "livesport_id": "8Ky8gMoD",
+        "livesport_url": "https://www.livesport.cz/hrac/orsava-jakub/8Ky8gMoD/"
+      },
+      {
+        "name": "Karel Plášek",
+        "name_raw": "Plášek Karel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "plasek-karel",
+        "livesport_id": "IFW5mtxm",
+        "livesport_url": "https://www.livesport.cz/hrac/plasek-karel/IFW5mtxm/"
+      },
+      {
+        "name": "Zachary Senyshyn",
+        "name_raw": "Senyshyn Zachary",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "senyshyn-zachary",
+        "livesport_id": "GvvcUfot",
+        "livesport_url": "https://www.livesport.cz/hrac/senyshyn-zachary/GvvcUfot/"
+      },
+      {
+        "name": "Matúš Spodniak",
+        "name_raw": "Spodniak Matúš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "spodniak-matus",
+        "livesport_id": "2RA7Sl6i",
+        "livesport_url": "https://www.livesport.cz/hrac/spodniak-matus/2RA7Sl6i/"
+      },
+      {
+        "name": "Michal Tomeček",
+        "name_raw": "Tomeček Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "tomecek-m",
+        "livesport_id": "pxKsH0OR",
+        "livesport_url": "https://www.livesport.cz/hrac/tomecek-m/pxKsH0OR/"
+      },
+      {
+        "name": "David Vitouch",
+        "name_raw": "Vitouch David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vitouch-david",
+        "livesport_id": "vyWqOo27",
+        "livesport_url": "https://www.livesport.cz/hrac/vitouch-david/vyWqOo27/"
+      },
+      {
+        "name": "Michal Vitouch",
+        "name_raw": "Vitouch Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vitouch-michal",
+        "livesport_id": "4I94QXjB",
+        "livesport_url": "https://www.livesport.cz/hrac/vitouch-michal/4I94QXjB/"
+      },
+      {
+        "name": "Martin Štohanzl",
+        "name_raw": "Štohanzl Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "stohanzl-martin",
+        "livesport_id": "l8d79lv9",
+        "livesport_url": "https://www.livesport.cz/hrac/stohanzl-martin/l8d79lv9/"
+      }
+    ]
+  },
+  "HC Plzeň": {
+    "team": {
+      "id": "CMBTIThf",
+      "name": "Plzeň",
+      "slug": "plzen",
+      "club": "HC Plzeň",
+      "soupiska_url": "https://www.livesport.cz/tym/plzen/CMBTIThf/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Nick Malík",
+        "name_raw": "Malík Nick",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "malik-nick",
+        "livesport_id": "CWABK6TM",
+        "livesport_url": "https://www.livesport.cz/hrac/malik-nick/CWABK6TM/"
+      },
+      {
+        "name": "Jan Růžička",
+        "name_raw": "Růžička Jan",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "ruzicka-jan",
+        "livesport_id": "4AX0NRUo",
+        "livesport_url": "https://www.livesport.cz/hrac/ruzicka-jan/4AX0NRUo/"
+      },
+      {
+        "name": "Jakub Chromiak",
+        "name_raw": "Chromiak Jakub",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "chromiak-jakub",
+        "livesport_id": "YDAcsvM4",
+        "livesport_url": "https://www.livesport.cz/hrac/chromiak-jakub/YDAcsvM4/"
+      },
+      {
+        "name": "Jakub Jeřábek",
+        "name_raw": "Jeřábek Jakub",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "jerabek-jakub",
+        "livesport_id": "dvutJIaI",
+        "livesport_url": "https://www.livesport.cz/hrac/jerabek-jakub/dvutJIaI/"
+      },
+      {
+        "name": "Dylan MacPherson",
+        "name_raw": "MacPherson Dylan",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "macpherson-dylan",
+        "livesport_id": "nP1nmv54",
+        "livesport_url": "https://www.livesport.cz/hrac/macpherson-dylan/nP1nmv54/"
+      },
+      {
+        "name": "Daniel Malák",
+        "name_raw": "Malák Daniel",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "malak-daniel",
+        "livesport_id": "84Z9nnEm",
+        "livesport_url": "https://www.livesport.cz/hrac/malak-daniel/84Z9nnEm/"
+      },
+      {
+        "name": "Igor Merezhko",
+        "name_raw": "Merezhko Igor",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "merezhko-igor",
+        "livesport_id": "tQgoeom7",
+        "livesport_url": "https://www.livesport.cz/hrac/merezhko-igor/tQgoeom7/"
+      },
+      {
+        "name": "Carter Robertson",
+        "name_raw": "Robertson Carter",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "robertson-carter",
+        "livesport_id": "zF9ONp3G",
+        "livesport_url": "https://www.livesport.cz/hrac/robertson-carter/zF9ONp3G/"
+      },
+      {
+        "name": "Kristians Rubins",
+        "name_raw": "Rubins Kristians",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "rubins-kristians",
+        "livesport_id": "l0QexmD8",
+        "livesport_url": "https://www.livesport.cz/hrac/rubins-kristians/l0QexmD8/"
+      },
+      {
+        "name": "Aleš Čech",
+        "name_raw": "Čech Aleš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "cech-ales",
+        "livesport_id": "UBRfGYMS",
+        "livesport_url": "https://www.livesport.cz/hrac/cech-ales/UBRfGYMS/"
+      },
+      {
+        "name": "Matyáš Filip",
+        "name_raw": "Filip Matyáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "filip-matyas",
+        "livesport_id": "69IKR9G6",
+        "livesport_url": "https://www.livesport.cz/hrac/filip-matyas/69IKR9G6/"
+      },
+      {
+        "name": "Jake Gricius",
+        "name_raw": "Gricius Jake",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "gricius-jake",
+        "livesport_id": "dCpCltpE",
+        "livesport_url": "https://www.livesport.cz/hrac/gricius-jake/dCpCltpE/"
+      },
+      {
+        "name": "Christophe Lalancette",
+        "name_raw": "Lalancette Christophe",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "lalancette-christophe",
+        "livesport_id": "M5G7B47S",
+        "livesport_url": "https://www.livesport.cz/hrac/lalancette-christophe/M5G7B47S/"
+      },
+      {
+        "name": "Jakub Lev",
+        "name_raw": "Lev Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "lev-jakub",
+        "livesport_id": "WUj6y0Fn",
+        "livesport_url": "https://www.livesport.cz/hrac/lev-jakub/WUj6y0Fn/"
+      },
+      {
+        "name": "Adam Měchura",
+        "name_raw": "Měchura Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "mechura-adam",
+        "livesport_id": "OUGi4kBR",
+        "livesport_url": "https://www.livesport.cz/hrac/mechura-adam/OUGi4kBR/"
+      },
+      {
+        "name": "Mikko Petman",
+        "name_raw": "Petman Mikko",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "petman-mikko",
+        "livesport_id": "hQnI2qz4",
+        "livesport_url": "https://www.livesport.cz/hrac/petman-mikko/hQnI2qz4/"
+      },
+      {
+        "name": "Ville Petman",
+        "name_raw": "Petman Ville",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "petman-ville",
+        "livesport_id": "tnLEazvr",
+        "livesport_url": "https://www.livesport.cz/hrac/petman-ville/tnLEazvr/"
+      },
+      {
+        "name": "Ondřej Pšenička",
+        "name_raw": "Pšenička Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "psenicka-ondrej",
+        "livesport_id": "n36pvulJ",
+        "livesport_url": "https://www.livesport.cz/hrac/psenicka-ondrej/n36pvulJ/"
+      },
+      {
+        "name": "Ondřej Rohlík",
+        "name_raw": "Rohlík Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "rohlik-ondrej",
+        "livesport_id": "MTGn08Rk",
+        "livesport_url": "https://www.livesport.cz/hrac/rohlik-ondrej/MTGn08Rk/"
+      },
+      {
+        "name": "Jan Schleiss",
+        "name_raw": "Schleiss Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "schleiss-jan",
+        "livesport_id": "jHfsF95p",
+        "livesport_url": "https://www.livesport.cz/hrac/schleiss-jan/jHfsF95p/"
+      },
+      {
+        "name": "Ivo Sedláček",
+        "name_raw": "Sedláček Ivo",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sedlacek-ivo",
+        "livesport_id": "U503JsU6",
+        "livesport_url": "https://www.livesport.cz/hrac/sedlacek-ivo/U503JsU6/"
+      },
+      {
+        "name": "Dominik Simon",
+        "name_raw": "Simon Dominik",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "simon-dominik",
+        "livesport_id": "UqyebQ3j",
+        "livesport_url": "https://www.livesport.cz/hrac/simon-dominik/UqyebQ3j/"
+      },
+      {
+        "name": "Lukáš Strnad",
+        "name_raw": "Strnad Lukáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "strnad-lukas",
+        "livesport_id": "G2FwIt9L",
+        "livesport_url": "https://www.livesport.cz/hrac/strnad-lukas/G2FwIt9L/"
+      },
+      {
+        "name": "Michal Teplý",
+        "name_raw": "Teplý Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "teply-michal",
+        "livesport_id": "4OIz3OQJ",
+        "livesport_url": "https://www.livesport.cz/hrac/teply-michal/4OIz3OQJ/"
+      },
+      {
+        "name": "Adam Titlbach",
+        "name_raw": "Titlbach Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "titlbach-adam",
+        "livesport_id": "nRBWkjEB",
+        "livesport_url": "https://www.livesport.cz/hrac/titlbach-adam/nRBWkjEB/"
+      }
+    ]
+  },
+  "HC Sparta Praha": {
+    "team": {
+      "id": "zcG9U7N6",
+      "name": "Sparta Praha",
+      "slug": "sparta-praha",
+      "club": "HC Sparta Praha",
+      "soupiska_url": "https://www.livesport.cz/tym/sparta-praha/zcG9U7N6/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Jakub Kovář",
+        "name_raw": "Kovář Jakub",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "kovar-jakub",
+        "livesport_id": "dYFaGJRo",
+        "livesport_url": "https://www.livesport.cz/hrac/kovar-jakub/dYFaGJRo/"
+      },
+      {
+        "name": "Josef Kořenář",
+        "name_raw": "Kořenář Josef",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "korenar-josef",
+        "livesport_id": "MFmvwrpf",
+        "livesport_url": "https://www.livesport.cz/hrac/korenar-josef/MFmvwrpf/"
+      },
+      {
+        "name": "Tomáš Volevecký",
+        "name_raw": "Volevecký Tomáš",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "volevecky-tomas",
+        "livesport_id": "OKgscGca",
+        "livesport_url": "https://www.livesport.cz/hrac/volevecky-tomas/OKgscGca/"
+      },
+      {
+        "name": "Aaron Irving",
+        "name_raw": "Irving Aaron",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "irving-aaron",
+        "livesport_id": "My3YhL1g",
+        "livesport_url": "https://www.livesport.cz/hrac/irving-aaron/My3YhL1g/"
+      },
+      {
+        "name": "Ronald Knot",
+        "name_raw": "Knot Ronald",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "knot-ronald",
+        "livesport_id": "K8ENpekJ",
+        "livesport_url": "https://www.livesport.cz/hrac/knot-ronald/K8ENpekJ/"
+      },
+      {
+        "name": "Jakub Krejčík",
+        "name_raw": "Krejčík Jakub",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "krejcik-jakub",
+        "livesport_id": "42Jqsncq",
+        "livesport_url": "https://www.livesport.cz/hrac/krejcik-jakub/42Jqsncq/"
+      },
+      {
+        "name": "Dominik Mašín",
+        "name_raw": "Mašín Dominik",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "masin-dominik",
+        "livesport_id": "AZdKoc3n",
+        "livesport_url": "https://www.livesport.cz/hrac/masin-dominik/AZdKoc3n/"
+      },
+      {
+        "name": "David Němeček",
+        "name_raw": "Němeček David",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "nemecek-david",
+        "livesport_id": "EV7MSs01",
+        "livesport_url": "https://www.livesport.cz/hrac/nemecek-david/EV7MSs01/"
+      },
+      {
+        "name": "Mark Pysyk",
+        "name_raw": "Pysyk Mark",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "pysyk-mark",
+        "livesport_id": "t0K6JZ0h",
+        "livesport_url": "https://www.livesport.cz/hrac/pysyk-mark/t0K6JZ0h/"
+      },
+      {
+        "name": "Mikael Seppala",
+        "name_raw": "Seppala Mikael",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "seppala-mikael",
+        "livesport_id": "xtZ4VTbl",
+        "livesport_url": "https://www.livesport.cz/hrac/seppala-mikael/xtZ4VTbl/"
+      },
+      {
+        "name": "Niko Seppala",
+        "name_raw": "Seppala Niko",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "seppala-niko",
+        "livesport_id": "6y3H868f",
+        "livesport_url": "https://www.livesport.cz/hrac/seppala-niko/6y3H868f/"
+      },
+      {
+        "name": "Jakub Sirota",
+        "name_raw": "Sirota Jakub",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "sirota-jakub",
+        "livesport_id": "z3qkwYL5",
+        "livesport_url": "https://www.livesport.cz/hrac/sirota-jakub/z3qkwYL5/"
+      },
+      {
+        "name": "Matěj Blümel",
+        "name_raw": "Blümel Matěj",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "blumel-matej",
+        "livesport_id": "YcR5nREr",
+        "livesport_url": "https://www.livesport.cz/hrac/blumel-matej/YcR5nREr/"
+      },
+      {
+        "name": "Filip Chlapík",
+        "name_raw": "Chlapík Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "chlapik-filip",
+        "livesport_id": "vux4NzXL",
+        "livesport_url": "https://www.livesport.cz/hrac/chlapik-filip/vux4NzXL/"
+      },
+      {
+        "name": "Martins Dzierkals",
+        "name_raw": "Dzierkals Martins",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "dzierkals-martins",
+        "livesport_id": "CE9T8x1M",
+        "livesport_url": "https://www.livesport.cz/hrac/dzierkals-martins/CE9T8x1M/"
+      },
+      {
+        "name": "Roman Horák",
+        "name_raw": "Horák Roman",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "horak-roman",
+        "livesport_id": "O0gTRAC5",
+        "livesport_url": "https://www.livesport.cz/hrac/horak-roman/O0gTRAC5/"
+      },
+      {
+        "name": "Kryštof Hrabík",
+        "name_raw": "Hrabík Kryštof",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hrabik-krystof",
+        "livesport_id": "QN818enN",
+        "livesport_url": "https://www.livesport.cz/hrac/hrabik-krystof/QN818enN/"
+      },
+      {
+        "name": "Ondřej Hrabík",
+        "name_raw": "Hrabík Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hrabik-ondrej",
+        "livesport_id": "QDcVvOks",
+        "livesport_url": "https://www.livesport.cz/hrac/hrabik-ondrej/QDcVvOks/"
+      },
+      {
+        "name": "Tomáš Hyka",
+        "name_raw": "Hyka Tomáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hyka-tomas",
+        "livesport_id": "6uwWa3vL",
+        "livesport_url": "https://www.livesport.cz/hrac/hyka-tomas/6uwWa3vL/"
+      },
+      {
+        "name": "Jakub Klepiš",
+        "name_raw": "Klepiš Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "klepis-jakub",
+        "livesport_id": "IomkFzBG",
+        "livesport_url": "https://www.livesport.cz/hrac/klepis-jakub/IomkFzBG/"
+      },
+      {
+        "name": "Pavel Kousal",
+        "name_raw": "Kousal Pavel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kousal-pavel",
+        "livesport_id": "n9Fjmuh7",
+        "livesport_url": "https://www.livesport.cz/hrac/kousal-pavel/n9Fjmuh7/"
+      },
+      {
+        "name": "Filip Kuťák",
+        "name_raw": "Kuťák Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kutak-filip",
+        "livesport_id": "ddzHmM66",
+        "livesport_url": "https://www.livesport.cz/hrac/kutak-filip/ddzHmM66/"
+      },
+      {
+        "name": "Ondřej Najman",
+        "name_raw": "Najman Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "najman-ondrej",
+        "livesport_id": "6qZ1DNHR",
+        "livesport_url": "https://www.livesport.cz/hrac/najman-ondrej/6qZ1DNHR/"
+      },
+      {
+        "name": "Filip Novák",
+        "name_raw": "Novák Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "novak-filip",
+        "livesport_id": "0f54WHrI",
+        "livesport_url": "https://www.livesport.cz/hrac/novak-filip/0f54WHrI/"
+      },
+      {
+        "name": "Jiří Pospíšil",
+        "name_raw": "Pospíšil Jiří",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pospisil-jiri",
+        "livesport_id": "6e43cY8o",
+        "livesport_url": "https://www.livesport.cz/hrac/pospisil-jiri/6e43cY8o/"
+      },
+      {
+        "name": "Adam Raška",
+        "name_raw": "Raška Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "raska-adam",
+        "livesport_id": "xEf8ZzgS",
+        "livesport_url": "https://www.livesport.cz/hrac/raska-adam/xEf8ZzgS/"
+      },
+      {
+        "name": "Jiří Sekáč",
+        "name_raw": "Sekáč Jiří",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sekac-jiri",
+        "livesport_id": "nTBWWglb",
+        "livesport_url": "https://www.livesport.cz/hrac/sekac-jiri/nTBWWglb/"
+      },
+      {
+        "name": "Devin Shore",
+        "name_raw": "Shore Devin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "shore-devin",
+        "livesport_id": "6NmW8PrH",
+        "livesport_url": "https://www.livesport.cz/hrac/shore-devin/6NmW8PrH/"
+      },
+      {
+        "name": "Kristian Vesalainen",
+        "name_raw": "Vesalainen Kristian",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vesalainen-kristian",
+        "livesport_id": "EshVKwgj",
+        "livesport_url": "https://www.livesport.cz/hrac/vesalainen-kristian/EshVKwgj/"
+      },
+      {
+        "name": "Michal Řepík",
+        "name_raw": "Řepík Michal",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "repik-michal",
+        "livesport_id": "YPFLnBzp",
+        "livesport_url": "https://www.livesport.cz/hrac/repik-michal/YPFLnBzp/"
+      },
+      {
+        "name": "Michael Špaček",
+        "name_raw": "Špaček Michael",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "spacek-michael",
+        "livesport_id": "A9ybnf8A",
+        "livesport_url": "https://www.livesport.cz/hrac/spacek-michael/A9ybnf8A/"
+      }
+    ]
+  },
+  "HC Vítkovice": {
+    "team": {
+      "id": "QDufxqpt",
+      "name": "Vítkovice",
+      "slug": "vitkovice",
+      "club": "HC Vítkovice",
+      "soupiska_url": "https://www.livesport.cz/tym/vitkovice/QDufxqpt/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Dominik Hrachovina",
+        "name_raw": "Hrachovina Dominik",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "hrachovina-dominik",
+        "livesport_id": "nFd7DdMg",
+        "livesport_url": "https://www.livesport.cz/hrac/hrachovina-dominik/nFd7DdMg/"
+      },
+      {
+        "name": "Patrik Švančara",
+        "name_raw": "Švančara Patrik",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "svancara-patrik",
+        "livesport_id": "pSDlqt0q",
+        "livesport_url": "https://www.livesport.cz/hrac/svancara-patrik/pSDlqt0q/"
+      },
+      {
+        "name": "Patrik Brůna",
+        "name_raw": "Brůna Patrik",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "bruna-patrik",
+        "livesport_id": "hlGF25fn",
+        "livesport_url": "https://www.livesport.cz/hrac/bruna-patrik/hlGF25fn/"
+      },
+      {
+        "name": "Patrik Demel",
+        "name_raw": "Demel Patrik",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "demel-patrik",
+        "livesport_id": "n9DeIhmO",
+        "livesport_url": "https://www.livesport.cz/hrac/demel-patrik/n9DeIhmO/"
+      },
+      {
+        "name": "Rhett Holland",
+        "name_raw": "Holland Rhett",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "holland-rhett",
+        "livesport_id": "xEl0dr5J",
+        "livesport_url": "https://www.livesport.cz/hrac/holland-rhett/xEl0dr5J/"
+      },
+      {
+        "name": "Samuel Kňažko",
+        "name_raw": "Kňažko Samuel",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "knazko-samuel",
+        "livesport_id": "Eq5gxi88",
+        "livesport_url": "https://www.livesport.cz/hrac/knazko-samuel/Eq5gxi88/"
+      },
+      {
+        "name": "Joe Leahy",
+        "name_raw": "Leahy Joe",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "leahy-joe",
+        "livesport_id": "hEDrvoRq",
+        "livesport_url": "https://www.livesport.cz/hrac/leahy-joe/hEDrvoRq/"
+      },
+      {
+        "name": "Tomáš Pavelka",
+        "name_raw": "Pavelka Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "pavelka-tomas",
+        "livesport_id": "88DAy6wf",
+        "livesport_url": "https://www.livesport.cz/hrac/pavelka-tomas/88DAy6wf/"
+      },
+      {
+        "name": "Vojtěch Port",
+        "name_raw": "Port Vojtěch",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "port-vojtech",
+        "livesport_id": "Eg5JUAHG",
+        "livesport_url": "https://www.livesport.cz/hrac/port-vojtech/Eg5JUAHG/"
+      },
+      {
+        "name": "Josh Wesley",
+        "name_raw": "Wesley Josh",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "wesley-josh",
+        "livesport_id": "llxj11Gs",
+        "livesport_url": "https://www.livesport.cz/hrac/wesley-josh/llxj11Gs/"
+      },
+      {
+        "name": "Jakub Zbořil",
+        "name_raw": "Zbořil Jakub",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "zboril-jakub",
+        "livesport_id": "bThfFCv2",
+        "livesport_url": "https://www.livesport.cz/hrac/zboril-jakub/bThfFCv2/"
+      },
+      {
+        "name": "Jindřich Abdul",
+        "name_raw": "Abdul Jindřich",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "abdul-jindrich",
+        "livesport_id": "d2FHqwwa",
+        "livesport_url": "https://www.livesport.cz/hrac/abdul-jindrich/d2FHqwwa/"
+      },
+      {
+        "name": "Jan Bernovský",
+        "name_raw": "Bernovský Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "bernovsky-jan",
+        "livesport_id": "8nK4ysjN",
+        "livesport_url": "https://www.livesport.cz/hrac/bernovsky-jan/8nK4ysjN/"
+      },
+      {
+        "name": "David Cienciala",
+        "name_raw": "Cienciala David",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "cienciala-david",
+        "livesport_id": "GQIRKz0D",
+        "livesport_url": "https://www.livesport.cz/hrac/cienciala-david/GQIRKz0D/"
+      },
+      {
+        "name": "Jan Hladonik",
+        "name_raw": "Hladonik Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hladonik-jan",
+        "livesport_id": "xpDqIJum",
+        "livesport_url": "https://www.livesport.cz/hrac/hladonik-jan/xpDqIJum/"
+      },
+      {
+        "name": "Marek Hrivík",
+        "name_raw": "Hrivík Marek",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hrivik-marek",
+        "livesport_id": "n5ogCEOT",
+        "livesport_url": "https://www.livesport.cz/hrac/hrivik-marek/n5ogCEOT/"
+      },
+      {
+        "name": "Marek Kalus",
+        "name_raw": "Kalus Marek",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kalus-marek",
+        "livesport_id": "86KF3OyE",
+        "livesport_url": "https://www.livesport.cz/hrac/kalus-marek/86KF3OyE/"
+      },
+      {
+        "name": "Filip Krivošík",
+        "name_raw": "Krivošík Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "krivosik-filip",
+        "livesport_id": "jNymDeLI",
+        "livesport_url": "https://www.livesport.cz/hrac/krivosik-filip/jNymDeLI/"
+      },
+      {
+        "name": "Krzysztof Macias",
+        "name_raw": "Macias Krzysztof",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "macias-krzysztof",
+        "livesport_id": "OS0Ht5UO",
+        "livesport_url": "https://www.livesport.cz/hrac/macias-krzysztof/OS0Ht5UO/"
+      },
+      {
+        "name": "Anthony Nellis",
+        "name_raw": "Nellis Anthony",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "nellis-anthony",
+        "livesport_id": "GO1qU3bn",
+        "livesport_url": "https://www.livesport.cz/hrac/nellis-anthony/GO1qU3bn/"
+      },
+      {
+        "name": "Dominik Petr",
+        "name_raw": "Petr Dominik",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "petr-dominik",
+        "livesport_id": "v754H496",
+        "livesport_url": "https://www.livesport.cz/hrac/petr-dominik/v754H496/"
+      },
+      {
+        "name": "Šimon Stránský",
+        "name_raw": "Stránský Šimon",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "stransky-simon",
+        "livesport_id": "0CemgXN9",
+        "livesport_url": "https://www.livesport.cz/hrac/stransky-simon/0CemgXN9/"
+      },
+      {
+        "name": "Chad Yetman",
+        "name_raw": "Yetman Chad",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "yetman-chad",
+        "livesport_id": "80qjTxGL",
+        "livesport_url": "https://www.livesport.cz/hrac/yetman-chad/80qjTxGL/"
+      },
+      {
+        "name": "Jan Šír",
+        "name_raw": "Šír Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "sir-jan",
+        "livesport_id": "2gw05GHa",
+        "livesport_url": "https://www.livesport.cz/hrac/sir-jan/2gw05GHa/"
+      }
+    ]
+  },
+  "Mountfield HK": {
+    "team": {
+      "id": "xdNp4YNk",
+      "name": "Mountfield HK",
+      "slug": "mountfield-hk",
+      "club": "Mountfield HK",
+      "soupiska_url": "https://www.livesport.cz/tym/mountfield-hk/xdNp4YNk/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Jan Kasal",
+        "name_raw": "Kasal Jan",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "kasal-jan",
+        "livesport_id": "G08j2VsT",
+        "livesport_url": "https://www.livesport.cz/hrac/kasal-jan/G08j2VsT/"
+      },
+      {
+        "name": "Filip Růžička",
+        "name_raw": "Růžička Filip",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "ruzicka-filip",
+        "livesport_id": "W4ISYWHr",
+        "livesport_url": "https://www.livesport.cz/hrac/ruzicka-filip/W4ISYWHr/"
+      },
+      {
+        "name": "Tomáš Vomáčka",
+        "name_raw": "Vomáčka Tomáš",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "vomacka-tomas",
+        "livesport_id": "xI2rN7w9",
+        "livesport_url": "https://www.livesport.cz/hrac/vomacka-tomas/xI2rN7w9/"
+      },
+      {
+        "name": "Stanislav Škorvánek",
+        "name_raw": "Škorvánek Stanislav",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "skorvanek-stanislav",
+        "livesport_id": "l44Hcx7L",
+        "livesport_url": "https://www.livesport.cz/hrac/skorvanek-stanislav/l44Hcx7L/"
+      },
+      {
+        "name": "Petr Kalina",
+        "name_raw": "Kalina Petr",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kalina-petr",
+        "livesport_id": "ObrovTOG",
+        "livesport_url": "https://www.livesport.cz/hrac/kalina-petr/ObrovTOG/"
+      },
+      {
+        "name": "Anders Koch",
+        "name_raw": "Koch Anders",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "koch-anders",
+        "livesport_id": "4dOwfzRo",
+        "livesport_url": "https://www.livesport.cz/hrac/koch-anders/4dOwfzRo/"
+      },
+      {
+        "name": "Graeme McCormack",
+        "name_raw": "McCormack Graeme",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "mccormack-graeme",
+        "livesport_id": "MV9U2wFO",
+        "livesport_url": "https://www.livesport.cz/hrac/mccormack-graeme/MV9U2wFO/"
+      },
+      {
+        "name": "T.J. Melancon",
+        "name_raw": "Melancon T.J.",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "melancon-t-j",
+        "livesport_id": "OGZOAFCa",
+        "livesport_url": "https://www.livesport.cz/hrac/melancon-t-j/OGZOAFCa/"
+      },
+      {
+        "name": "Dávid Mudrák",
+        "name_raw": "Mudrák Dávid",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "mudrak-david",
+        "livesport_id": "EBD7Ztus",
+        "livesport_url": "https://www.livesport.cz/hrac/mudrak-david/EBD7Ztus/"
+      },
+      {
+        "name": "Martin Pláněk",
+        "name_raw": "Pláněk Martin",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "planek-martin",
+        "livesport_id": "bJJHvjzM",
+        "livesport_url": "https://www.livesport.cz/hrac/planek-martin/bJJHvjzM/"
+      },
+      {
+        "name": "David Sýkora",
+        "name_raw": "Sýkora David",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "sykora-david",
+        "livesport_id": "fZjrFMV0",
+        "livesport_url": "https://www.livesport.cz/hrac/sykora-david/fZjrFMV0/"
+      },
+      {
+        "name": "Michael Vukojevic",
+        "name_raw": "Vukojevic Michael",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "vukojevic-michael",
+        "livesport_id": "SSxwxlf7",
+        "livesport_url": "https://www.livesport.cz/hrac/vukojevic-michael/SSxwxlf7/"
+      },
+      {
+        "name": "Štěpán Černý",
+        "name_raw": "Černý Štěpán",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "cerny-stepan",
+        "livesport_id": "0zP4rj6f",
+        "livesport_url": "https://www.livesport.cz/hrac/cerny-stepan/0zP4rj6f/"
+      },
+      {
+        "name": "Petr Hašek",
+        "name_raw": "Hašek Petr",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hasek-petr",
+        "livesport_id": "tnDr077c",
+        "livesport_url": "https://www.livesport.cz/hrac/hasek-petr/tnDr077c/"
+      },
+      {
+        "name": "Aleš Jergl",
+        "name_raw": "Jergl Aleš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "jergl-ales",
+        "livesport_id": "8AWW3I78",
+        "livesport_url": "https://www.livesport.cz/hrac/jergl-ales/8AWW3I78/"
+      },
+      {
+        "name": "Kevin Klíma",
+        "name_raw": "Klíma Kevin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "klima-kevin",
+        "livesport_id": "2NpZcrM0",
+        "livesport_url": "https://www.livesport.cz/hrac/klima-kevin/2NpZcrM0/"
+      },
+      {
+        "name": "Martin Kohout",
+        "name_raw": "Kohout Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kohout-martin",
+        "livesport_id": "OGgnXe2r",
+        "livesport_url": "https://www.livesport.cz/hrac/kohout-martin/OGgnXe2r/"
+      },
+      {
+        "name": "Robert Kousal",
+        "name_raw": "Kousal Robert",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kousal-robert",
+        "livesport_id": "h0aKRDVL",
+        "livesport_url": "https://www.livesport.cz/hrac/kousal-robert/h0aKRDVL/"
+      },
+      {
+        "name": "Šimon Marha",
+        "name_raw": "Marha Šimon",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "marha-simon",
+        "livesport_id": "6yo4l3xE",
+        "livesport_url": "https://www.livesport.cz/hrac/marha-simon/6yo4l3xE/"
+      },
+      {
+        "name": "Patrik Miškář",
+        "name_raw": "Miškář Patrik",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "miskar-patrik",
+        "livesport_id": "Ykmk8SFf",
+        "livesport_url": "https://www.livesport.cz/hrac/miskar-patrik/Ykmk8SFf/"
+      },
+      {
+        "name": "Markus Nenonen",
+        "name_raw": "Nenonen Markus",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "nenonen-markus",
+        "livesport_id": "U1loEHZH",
+        "livesport_url": "https://www.livesport.cz/hrac/nenonen-markus/U1loEHZH/"
+      },
+      {
+        "name": "Dominik Pavlík",
+        "name_raw": "Pavlík Dominik",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pavlik-dominik",
+        "livesport_id": "thVWlgj5",
+        "livesport_url": "https://www.livesport.cz/hrac/pavlik-dominik/thVWlgj5/"
+      },
+      {
+        "name": "Radovan Pavlík",
+        "name_raw": "Pavlík Radovan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pavlik-radovan",
+        "livesport_id": "Yy6Vu4At",
+        "livesport_url": "https://www.livesport.cz/hrac/pavlik-radovan/Yy6Vu4At/"
+      },
+      {
+        "name": "Jordann Perret",
+        "name_raw": "Perret Jordann",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "perret-jordan",
+        "livesport_id": "YVbCRTUI",
+        "livesport_url": "https://www.livesport.cz/hrac/perret-jordan/YVbCRTUI/"
+      },
+      {
+        "name": "Radek Pilař",
+        "name_raw": "Pilař Radek",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "pilar-radek",
+        "livesport_id": "l8OBoMqN",
+        "livesport_url": "https://www.livesport.cz/hrac/pilar-radek/l8OBoMqN/"
+      },
+      {
+        "name": "Lukáš Radil",
+        "name_raw": "Radil Lukáš",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "radil-lukas",
+        "livesport_id": "GWFgzBNr",
+        "livesport_url": "https://www.livesport.cz/hrac/radil-lukas/GWFgzBNr/"
+      },
+      {
+        "name": "Alex Tamáši",
+        "name_raw": "Tamáši Alex",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "tamasi-alex",
+        "livesport_id": "Q3r0qkBn",
+        "livesport_url": "https://www.livesport.cz/hrac/tamasi-alex/Q3r0qkBn/"
+      },
+      {
+        "name": "Jan Vyvial",
+        "name_raw": "Vyvial Jan",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vyvial-jan",
+        "livesport_id": "dpVplOdd",
+        "livesport_url": "https://www.livesport.cz/hrac/vyvial-jan/dpVplOdd/"
+      },
+      {
+        "name": "Patrik Zdráhal",
+        "name_raw": "Zdráhal Patrik",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "zdrahal-patrik",
+        "livesport_id": "ATaI6V4r",
+        "livesport_url": "https://www.livesport.cz/hrac/zdrahal-patrik/ATaI6V4r/"
+      },
+      {
+        "name": "Viliam Čacho",
+        "name_raw": "Čacho Viliam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "cacho-viliam",
+        "livesport_id": "M9jj39Tc",
+        "livesport_url": "https://www.livesport.cz/hrac/cacho-viliam/M9jj39Tc/"
+      }
+    ]
+  },
+  "Rytíři Kladno": {
+    "team": {
+      "id": "bLIKOB0K",
+      "name": "Kladno",
+      "slug": "kladno",
+      "club": "Rytíři Kladno",
+      "soupiska_url": "https://www.livesport.cz/tym/kladno/bLIKOB0K/soupiska/"
+    },
+    "players": [
+      {
+        "name": "Adam Brízgala",
+        "name_raw": "Brízgala Adam",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "brizgala-adam",
+        "livesport_id": "K8E4NMfC",
+        "livesport_url": "https://www.livesport.cz/hrac/brizgala-adam/K8E4NMfC/"
+      },
+      {
+        "name": "Dominik Pavlát",
+        "name_raw": "Pavlát Dominik",
+        "position": "G",
+        "role": "",
+        "section": "Brankáři",
+        "livesport_slug": "pavlat-dominik",
+        "livesport_id": "6ZgG0Tde",
+        "livesport_url": "https://www.livesport.cz/hrac/pavlat-dominik/6ZgG0Tde/"
+      },
+      {
+        "name": "Jérémie Blain",
+        "name_raw": "Blain Jérémie",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "blain-jeremie",
+        "livesport_id": "CtAzwSG9",
+        "livesport_url": "https://www.livesport.cz/hrac/blain-jeremie/CtAzwSG9/"
+      },
+      {
+        "name": "Michal Houdek",
+        "name_raw": "Houdek Michal",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "houdek-michal",
+        "livesport_id": "prrL63aM",
+        "livesport_url": "https://www.livesport.cz/hrac/houdek-michal/prrL63aM/"
+      },
+      {
+        "name": "Martin Jandus",
+        "name_raw": "Jandus Martin",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "jandus-martin",
+        "livesport_id": "EchTeLo6",
+        "livesport_url": "https://www.livesport.cz/hrac/jandus-martin/EchTeLo6/"
+      },
+      {
+        "name": "Michal Kempný",
+        "name_raw": "Kempný Michal",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "kempny-michal",
+        "livesport_id": "6mPKjNDt",
+        "livesport_url": "https://www.livesport.cz/hrac/kempny-michal/6mPKjNDt/"
+      },
+      {
+        "name": "Martin Matějíček",
+        "name_raw": "Matějíček Martin",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "matejicek-martin",
+        "livesport_id": "2HrRQ1Gr",
+        "livesport_url": "https://www.livesport.cz/hrac/matejicek-martin/2HrRQ1Gr/"
+      },
+      {
+        "name": "Griffin Mendel",
+        "name_raw": "Mendel Griffin",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "mendel-griffin",
+        "livesport_id": "IVh6lsPJ",
+        "livesport_url": "https://www.livesport.cz/hrac/mendel-griffin/IVh6lsPJ/"
+      },
+      {
+        "name": "Phil Pietroniro",
+        "name_raw": "Pietroniro Phil",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "pietroniro-phil",
+        "livesport_id": "nRhTusbA",
+        "livesport_url": "https://www.livesport.cz/hrac/pietroniro-phil/nRhTusbA/"
+      },
+      {
+        "name": "Adam Rulík",
+        "name_raw": "Rulík Adam",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "rulik-adam",
+        "livesport_id": "dIkuTO7i",
+        "livesport_url": "https://www.livesport.cz/hrac/rulik-adam/dIkuTO7i/"
+      },
+      {
+        "name": "Tomáš Tomek",
+        "name_raw": "Tomek Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "tomek-tomas",
+        "livesport_id": "Sllh0NG7",
+        "livesport_url": "https://www.livesport.cz/hrac/tomek-tomas/Sllh0NG7/"
+      },
+      {
+        "name": "Josef Trojna",
+        "name_raw": "Trojna Josef",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "trojna-josef",
+        "livesport_id": "6ynCQY6b",
+        "livesport_url": "https://www.livesport.cz/hrac/trojna-josef/6ynCQY6b/"
+      },
+      {
+        "name": "Tomáš Vandas",
+        "name_raw": "Vandas Tomáš",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "vandas-tomas",
+        "livesport_id": "lIOdMsWd",
+        "livesport_url": "https://www.livesport.cz/hrac/vandas-tomas/lIOdMsWd/"
+      },
+      {
+        "name": "Filip Westerlund",
+        "name_raw": "Westerlund Filip",
+        "position": "D",
+        "role": "",
+        "section": "Obránci",
+        "livesport_slug": "westerlund-filip",
+        "livesport_id": "nkFgJt7d",
+        "livesport_url": "https://www.livesport.cz/hrac/westerlund-filip/nkFgJt7d/"
+      },
+      {
+        "name": "Daniel Audette",
+        "name_raw": "Audette Daniel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "audette-daniel",
+        "livesport_id": "6FRLNTvs",
+        "livesport_url": "https://www.livesport.cz/hrac/audette-daniel/6FRLNTvs/"
+      },
+      {
+        "name": "Adam Bareš",
+        "name_raw": "Bareš Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "bares-adam",
+        "livesport_id": "ht5vIfhG",
+        "livesport_url": "https://www.livesport.cz/hrac/bares-adam/ht5vIfhG/"
+      },
+      {
+        "name": "Ondřej Blaha",
+        "name_raw": "Blaha Ondřej",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "blaha-ondrej",
+        "livesport_id": "OtBgzYRM",
+        "livesport_url": "https://www.livesport.cz/hrac/blaha-ondrej/OtBgzYRM/"
+      },
+      {
+        "name": "Miroslav Forman",
+        "name_raw": "Forman Miroslav",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "forman-miroslav",
+        "livesport_id": "jDfpC4mR",
+        "livesport_url": "https://www.livesport.cz/hrac/forman-miroslav/jDfpC4mR/"
+      },
+      {
+        "name": "Nicolas Hlava",
+        "name_raw": "Hlava Nicolas",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "hlava-nicolas",
+        "livesport_id": "IZn3k9UP",
+        "livesport_url": "https://www.livesport.cz/hrac/hlava-nicolas/IZn3k9UP/"
+      },
+      {
+        "name": "Kelly Klíma",
+        "name_raw": "Klíma Kelly",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "klima-kelly",
+        "livesport_id": "GAjYK5TD",
+        "livesport_url": "https://www.livesport.cz/hrac/klima-kelly/GAjYK5TD/"
+      },
+      {
+        "name": "Jakub Konečný",
+        "name_raw": "Konečný Jakub",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "konecny-jakub",
+        "livesport_id": "8poMzrwU",
+        "livesport_url": "https://www.livesport.cz/hrac/konecny-jakub/8poMzrwU/"
+      },
+      {
+        "name": "Adam Kubík",
+        "name_raw": "Kubík Adam",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "kubik-adam",
+        "livesport_id": "SbPxtb0j",
+        "livesport_url": "https://www.livesport.cz/hrac/kubik-adam/SbPxtb0j/"
+      },
+      {
+        "name": "Oskar Lisler",
+        "name_raw": "Lisler Oskar",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "lisler-oskar",
+        "livesport_id": "jVIY8glc",
+        "livesport_url": "https://www.livesport.cz/hrac/lisler-oskar/jVIY8glc/"
+      },
+      {
+        "name": "Marcel Marcel",
+        "name_raw": "Marcel Marcel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "marcel-marcel",
+        "livesport_id": "zyNwvbEr",
+        "livesport_url": "https://www.livesport.cz/hrac/marcel-marcel/zyNwvbEr/"
+      },
+      {
+        "name": "Niko Ojamaki",
+        "name_raw": "Ojamaki Niko",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "ojamaki-niko",
+        "livesport_id": "hUQprmXE",
+        "livesport_url": "https://www.livesport.cz/hrac/ojamaki-niko/hUQprmXE/"
+      },
+      {
+        "name": "Martin Procházka",
+        "name_raw": "Procházka Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "prochazka-martin",
+        "livesport_id": "pnjFAkPq",
+        "livesport_url": "https://www.livesport.cz/hrac/prochazka-martin/pnjFAkPq/"
+      },
+      {
+        "name": "Filip Přikryl",
+        "name_raw": "Přikryl Filip",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "prikryl-filip",
+        "livesport_id": "MDCriIXO",
+        "livesport_url": "https://www.livesport.cz/hrac/prikryl-filip/MDCriIXO/"
+      },
+      {
+        "name": "Martin Ryšavý",
+        "name_raw": "Ryšavý Martin",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "rysavy-martin",
+        "livesport_id": "WYxifHj6",
+        "livesport_url": "https://www.livesport.cz/hrac/rysavy-martin/WYxifHj6/"
+      },
+      {
+        "name": "Samuel Vigneault",
+        "name_raw": "Vigneault Samuel",
+        "position": "F",
+        "role": "",
+        "section": "Útočníci",
+        "livesport_slug": "vigneault-samuel",
+        "livesport_id": "dIZQoNi6",
+        "livesport_url": "https://www.livesport.cz/hrac/vigneault-samuel/dIZQoNi6/"
+      }
+    ]
+  }
+}

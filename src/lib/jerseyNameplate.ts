@@ -104,11 +104,11 @@ export function jerseyNameplateNameProps(
 
   if (variant === "poster" && options?.uniformPosterSize) {
     const uniformPx = options.uniformFontPx ?? 20;
-    const overflowScore = 12.5;
-    const minPx = 14;
+    const overflowScore = 10.5;
+    const minPx = 16;
     let fontSize = uniformPx;
     if (score > overflowScore) {
-      const t = clamp((score - overflowScore) / (16.5 - overflowScore), 0, 1);
+      const t = clamp((score - overflowScore) / (15.5 - overflowScore), 0, 1);
       fontSize = uniformPx - t * (uniformPx - minPx);
     }
     const woven = "jersey-nameplate-text--woven";

@@ -1,0 +1,233 @@
+.poster {
+  position: relative;
+  display: flex;
+  width: 1080px;
+  height: 1350px;
+  min-width: 1080px;
+  max-width: 1080px;
+  min-height: 1350px;
+  max-height: 1350px;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: #fff;
+  background: #020714;
+  font-family: "Barlow Condensed", "Inter", system-ui, sans-serif;
+  isolation: isolate;
+}
+
+.background {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+.shade {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(1, 5, 17, 0.18) 0%, rgba(1, 5, 17, 0.08) 45%, rgba(1, 5, 17, 0.34) 100%),
+    radial-gradient(circle at 50% 42%, rgba(3, 13, 38, 0.05), rgba(0, 3, 13, 0.28) 78%);
+}
+
+.header {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 22px;
+  min-height: 142px;
+  padding: 34px 58px 20px;
+  box-sizing: border-box;
+}
+
+.host {
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-wordmark, "Barlow Condensed", system-ui, sans-serif);
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: 0.035em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  transform: translateX(24px);
+  white-space: nowrap;
+}
+
+.title {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--font-display, "Bebas Neue", "Barlow Condensed", system-ui, sans-serif);
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: 0.025em;
+  line-height: 0.98;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(255, 255, 255, 0.14);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.logoFrame {
+  position: relative;
+  justify-self: end;
+  width: 225px;
+  height: 78px;
+  margin-right: 18px;
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 5px 16px rgba(0, 0, 0, 0.4);
+}
+
+.logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 270px;
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%);
+  filter:
+    drop-shadow(0 0 1px rgba(255, 255, 255, 0.9))
+    drop-shadow(0 3px 8px rgba(0, 0, 0, 0.65));
+}
+
+.headerRule {
+  position: relative;
+  z-index: 3;
+  height: 3px;
+  margin: 0 72px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78) 12%, #fff 50%, rgba(255, 255, 255, 0.78) 88%, transparent);
+  box-shadow:
+    0 0 10px rgba(255, 255, 255, 0.35),
+    0 0 20px rgba(38, 132, 255, 0.22);
+}
+
+.content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  min-height: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 56px;
+  padding: 22px 70px 30px;
+  box-sizing: border-box;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sectionGoalies {
+  flex: 0 0 auto;
+}
+
+.sectionDefense {
+  flex: 0 0 auto;
+}
+
+.sectionForwards {
+  flex: 0 0 auto;
+}
+
+.sectionTitle {
+  margin: 0 0 22px;
+  color: #fff;
+  font-family: var(--font-display, "Bebas Neue", "Barlow Condensed", system-ui, sans-serif);
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: 0.055em;
+  line-height: 1;
+  text-align: center;
+  text-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.72),
+    0 0 14px rgba(255, 255, 255, 0.18);
+  text-transform: uppercase;
+}
+
+.rows {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  height: 72px;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  background: linear-gradient(180deg, rgba(5, 11, 28, 0.52), rgba(13, 4, 16, 0.72));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 5px 13px rgba(0, 0, 0, 0.34);
+  box-sizing: border-box;
+  color: #fff;
+  font-family: var(--font-display, "Bebas Neue", "Barlow Condensed", system-ui, sans-serif);
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 0.018em;
+  line-height: 1;
+  padding: 4px 10px 2px;
+  text-align: center;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.85);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.boxTwo {
+  width: 320px;
+}
+
+.boxThree {
+  width: 270px;
+  font-size: 31px;
+}
+
+.connector {
+  width: 38px;
+  height: 3px;
+  flex: 0 0 38px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 7px rgba(255, 255, 255, 0.22);
+}
+
+.empty {
+  color: rgba(255, 255, 255, 0.45);
+}

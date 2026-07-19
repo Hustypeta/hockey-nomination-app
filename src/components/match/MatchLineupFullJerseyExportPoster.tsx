@@ -25,6 +25,10 @@ import {
 } from "@/lib/posterRosterIceBg";
 import styles from "./MatchLineupFullJerseyPoster.module.css";
 
+// Tento plakát aktuálně reprezentuje český mužský A-tým.
+const CZE_A_TEAM_COACH_NAME = "Moták";
+const CZE_A_TEAM_COACH_IMAGE = "/images/trener.png";
+
 interface MatchLineupFullJerseyExportPosterProps {
   lineupTitle: string;
   players: Player[];
@@ -116,7 +120,12 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
     const host =
       siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "").trim() || SITE_CANONICAL_HOST;
 
-    const renderSlot = (pid: string | null, positionLabel: string, reactKey: string) => (
+    const renderSlot = (
+      pid: string | null,
+      positionLabel: string,
+      reactKey: string,
+      footerLabel?: string
+    ) => (
       <div key={reactKey} className={`${styles.jerseyTile} flex min-w-0 flex-col gap-0`}>
         <Nhl25JerseyCard
           player={getPlayer(pid)}
@@ -129,6 +138,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           disableMotion
           posterUniformNames
         />
+        {pid && footerLabel ? <span className={styles.goalieOrderLabel}>({footerLabel})</span> : null}
         {jerseyRatingExport && pid ? (
           <MatchJerseyRatingBadge pid={pid} jerseyRatingExport={jerseyRatingExport} />
         ) : null}
@@ -204,6 +214,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           decoding="sync"
           draggable={false}
         />
+        <div className={styles.iceTopRim} aria-hidden />
 
         <div className={styles.posterSurface}>
           <header className={styles.topBar}>
@@ -228,17 +239,36 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
 
           <div className={styles.posterBody}>
           <div className={styles.posterLanes}>
-            <section className={`${styles.goalieBlock} ${extraForwardId ? styles.goalieBlockWithExtra : ""}`}>
+            <section className={`${styles.goalieBlock} ${styles.goalieBlockWithExtra}`}>
+              <div className={styles.goalieCoachSlot}>
+                <h2 className={styles.cellHeading}>
+                  <span className={styles.cellHeadingText}>Trenér</span>
+                </h2>
+                <div className={`${styles.jerseyTile} ${styles.coachCard}`}>
+                  <div className={styles.coachImageFrame}>
+                    {/* eslint-disable-next-line @next/next/no-img-element -- statický obrázek trenéra pro export PNG */}
+                    <img
+                      src={CZE_A_TEAM_COACH_IMAGE}
+                      alt=""
+                      width={1000}
+                      height={675}
+                      decoding="sync"
+                      className={styles.coachImage}
+                    />
+                  </div>
+                  <div className={styles.coachName}>{CZE_A_TEAM_COACH_NAME}</div>
+                </div>
+              </div>
               <div className={styles.goalieMain}>
                 <h2 className={styles.cellHeading}>
                   <span className={styles.cellHeadingText}>Brankáři</span>
                 </h2>
                 <div className={styles.goaliePair}>
                   <div className={styles.goalieSlot}>
-                    {renderSlot(lineup.goalies[0] ?? null, "G", "g1")}
+                    {renderSlot(lineup.goalies[0] ?? null, "G", "g1", "1. brankář")}
                   </div>
                   <div className={styles.goalieSlot}>
-                    {renderSlot(lineup.goalies[1] ?? null, "G", "g2")}
+                    {renderSlot(lineup.goalies[1] ?? null, "G", "g2", "2. brankář")}
                   </div>
                 </div>
               </div>

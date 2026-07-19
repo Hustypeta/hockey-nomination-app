@@ -6,6 +6,9 @@ const assetQ = assetV && assetV.length > 0 ? `?v=${encodeURIComponent(assetV)}` 
 /** Soubor: `public/images/cz-jersey-squad-compact.png` — po výměně za novou verzi zvedni `NEXT_PUBLIC_ASSET_VERSION`, ať se obejde CDN cache. */
 export const CZ_JERSEY_BACK_BLANK_SRC = `/images/cz-jersey-squad-compact.png${assetQ}`;
 
+/** Brankářský dres: `public/images/brankar.png`. */
+export const CZ_GOALIE_JERSEY_BACK_BLANK_SRC = `/images/brankar.png${assetQ}`;
+
 /**
  * PNG je široký — `object-cover` + `object-top` zvětší dres a ořízne boční prázdno; stejné ve všech kartách.
  */
