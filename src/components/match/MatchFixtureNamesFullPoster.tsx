@@ -142,7 +142,10 @@ function FittedBoxName({
     const el = ref.current;
     if (!el || name === "—") return;
     const estimated = posterNameStyle(name, columns);
-    let size = parseFloat(estimated?.fontSize ?? "") || (columns === 3 ? 31 : 34);
+    const rawSize = estimated?.fontSize;
+    let size =
+      (typeof rawSize === "number" ? rawSize : parseFloat(String(rawSize ?? ""))) ||
+      (columns === 3 ? 31 : 34);
     el.style.fontSize = `${size}px`;
     while (size > 14 && el.scrollWidth > el.clientWidth + 0.5) {
       size -= 0.5;
