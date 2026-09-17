@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withAdminJson, requireUserId } from "@/lib/community/adminRoute";
+import { withAdminJson } from "@/lib/community/adminRoute";
+import { ensureCommunityAdminUserId } from "@/lib/community/adminIdentity";
 import { prisma } from "@/lib/prisma";
 
 type Ctx = { params: Promise<{ slug: string }> };
 
 export async function POST(_req: NextRequest, ctx: Ctx) {
-  return withAdminJson(async ({ userId }) => {
-    const uid = requireUserId(userId);
+  return withAdminJson(async () => {
+    const uid = await ensureCommunityAdminUserId();
     const { slug } = await ctx.params;
     const post = await prisma.communityPost.findFirst({
       where: { slug, status: "PUBLISHED", deletedAt: null },

@@ -11,6 +11,7 @@ export interface NamesOnlySharePosterProps {
   nominationTitle?: string | null;
   siteUrl?: string;
   footerInstantIso?: string | null;
+  captainId?: string | null;
 }
 
 const formatCsDate = (d: Date) =>
@@ -20,10 +21,32 @@ const formatCsDate = (d: Date) =>
     year: "numeric",
   }).format(d);
 
-function NamePill({ children }: { children: string }) {
+function NamePill({
+  children,
+  leadership,
+}: {
+  children: string;
+  leadership?: "C" | "A" | null;
+}) {
   return (
-    <div className="flex min-h-[2.5rem] items-center justify-center rounded-lg bg-white/[0.96] px-2 py-1.5 text-center font-sans text-[15px] font-bold leading-snug tracking-wide text-[#0a1628] shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[2.65rem] sm:text-[16px]">
-      <span className="line-clamp-2 break-words">{children}</span>
+    <div className="flex min-h-[2.5rem] items-center justify-center gap-1 rounded-lg bg-white/[0.96] px-2 py-1.5 text-center font-sans text-[15px] font-bold leading-snug tracking-wide text-[#0a1628] shadow-[0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,24,52,0.06)] antialiased sm:min-h-[2.65rem] sm:text-[16px]">
+      <span className="line-clamp-2 min-w-0 break-words">{children}</span>
+      {leadership === "C" ? (
+        <span
+          className="inline-flex h-[1.05em] min-w-[1.05em] shrink-0 items-center justify-center rounded-[2px] bg-[#c8102e] px-[0.12em] font-display text-[0.72em] font-black leading-none text-white"
+          aria-label="Kapitán"
+        >
+          C
+        </span>
+      ) : null}
+      {leadership === "A" ? (
+        <span
+          className="inline-flex h-[1.05em] min-w-[1.05em] shrink-0 items-center justify-center rounded-[2px] bg-[#003087] px-[0.12em] font-display text-[0.68em] font-black leading-none text-white"
+          aria-label="Asistent kapitána"
+        >
+          A
+        </span>
+      ) : null}
     </div>
   );
 }
@@ -36,9 +59,27 @@ function SectionTitle({ children }: { children: ReactNode }) {
   );
 }
 
+function leadershipMark(
+  playerId: string | null,
+  captainId: string | null,
+  assistantIds: string[]
+): "C" | "A" | null {
+  if (!playerId) return null;
+  if (captainId === playerId) return "C";
+  if (assistantIds.includes(playerId)) return "A";
+  return null;
+}
+
 export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePosterProps>(
   function NamesOnlySharePoster(
-    { players, lineup, nominationTitle = null, siteUrl = "", footerInstantIso = null },
+    {
+      players,
+      lineup,
+      nominationTitle = null,
+      siteUrl = "",
+      footerInstantIso = null,
+      captainId = null,
+    },
     ref
   ) {
     const [mountedDateLabel] = useState(() => formatCsDate(new Date()));
@@ -51,6 +92,7 @@ export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePos
       () => buildNamesOnlyRoster(players, lineup),
       [players, lineup]
     );
+    const assistantIds = lineup.assistantIds ?? [];
 
     return (
       <div
@@ -88,8 +130,13 @@ export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePos
             <section>
               <SectionTitle>Brankáři</SectionTitle>
               <div className="mx-auto grid max-w-xl grid-cols-3 gap-2 sm:gap-2.5">
-                {goalies.map((name, i) => (
-                  <NamePill key={`g-${i}`}>{name}</NamePill>
+                {goalies.map((entry, i) => (
+                  <NamePill
+                    key={`g-${i}`}
+                    leadership={leadershipMark(entry.id, captainId, assistantIds)}
+                  >
+                    {entry.name}
+                  </NamePill>
                 ))}
               </div>
             </section>
@@ -97,8 +144,13 @@ export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePos
             <section>
               <SectionTitle>Obránci</SectionTitle>
               <div className="mx-auto grid max-w-2xl grid-cols-2 gap-2 sm:gap-2.5">
-                {defense.map((name, i) => (
-                  <NamePill key={`d-${i}`}>{name}</NamePill>
+                {defense.map((entry, i) => (
+                  <NamePill
+                    key={`d-${i}`}
+                    leadership={leadershipMark(entry.id, captainId, assistantIds)}
+                  >
+                    {entry.name}
+                  </NamePill>
                 ))}
               </div>
             </section>
@@ -106,8 +158,13 @@ export const NamesOnlySharePoster = forwardRef<HTMLDivElement, NamesOnlySharePos
             <section>
               <SectionTitle>Útočníci</SectionTitle>
               <div className="mx-auto grid max-w-3xl grid-cols-3 gap-2 sm:gap-2.5">
-                {forwards.map((name, i) => (
-                  <NamePill key={`f-${i}`}>{name}</NamePill>
+                {forwards.map((entry, i) => (
+                  <NamePill
+                    key={`f-${i}`}
+                    leadership={leadershipMark(entry.id, captainId, assistantIds)}
+                  >
+                    {entry.name}
+                  </NamePill>
                 ))}
               </div>
             </section>

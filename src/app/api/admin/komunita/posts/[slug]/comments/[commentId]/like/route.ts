@@ -1,0 +1,31 @@
+import { NextRequest, NextResponse } from "next/server";
+import { withAdminJson } from "@/lib/community/adminRoute";
+import { ensureCommunityAdminUserId } from "@/lib/community/adminIdentity";
+import { togglePublishedCommentLike } from "@/lib/community/commentLikes";
+import { prisma } from "@/lib/prisma";
+
+type Ctx = { params: Promise<{ slug: string; commentId: string }> };
+
+export async function POST(_req: NextRequest, ctx: Ctx) {
+  return withAdminJson(async () => {
+    const uid = await ensureCommunityAdminUserId();
+    const { slug, commentId } = await ctx.params;
+    const post = await prisma.communityPost.findFirst({
+      where: { slug, status: "PUBLISHED", deletedAt: null },
+      select: { id: true },
+    });
+    if (!post) {
+      return NextResponse.json({ error: "Příspěvek nenalezen." }, { status: 404 });
+    }
+
+    const result = await togglePublishedCommentLike({
+      userId: uid,
+      postId: post.id,
+      commentId,
+    });
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+    return NextResponse.json({ liked: result.liked, likeCount: result.likeCount });
+  });
+}

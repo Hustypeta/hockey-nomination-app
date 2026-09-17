@@ -1,3 +1,4 @@
+import { normalizeMatchSharePoolKey } from "@/lib/matchSharePool";
 import type { LineupStructure } from "@/types";
 
 export type MatchShareBody = {
@@ -6,6 +7,7 @@ export type MatchShareBody = {
   lineupStructure: LineupStructure;
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
+  poolKey: string;
 };
 
 export function validateMatchShareBody(body: unknown):
@@ -26,6 +28,7 @@ export function validateMatchShareBody(body: unknown):
   const defenseCount =
     defenseCountRaw === 6 || defenseCountRaw === 7 || defenseCountRaw === 8 ? defenseCountRaw : 8;
   const allowExtraForward = Boolean(x.allowExtraForward);
+  const poolKey = normalizeMatchSharePoolKey(x.poolKey);
   return {
     ok: true,
     title,
@@ -33,6 +36,7 @@ export function validateMatchShareBody(body: unknown):
     lineupStructure: lineupStructure as LineupStructure,
     defenseCount,
     allowExtraForward,
+    poolKey,
   };
 }
 

@@ -115,6 +115,7 @@ export function MatchRatingExperience({
             allowExtraForward={allowExtraForward}
             ratings={ratings}
             myRatings={myRatings}
+            captainId={captainId}
           />
         </>
       ) : null}

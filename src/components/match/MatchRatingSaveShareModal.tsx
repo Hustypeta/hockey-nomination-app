@@ -20,6 +20,7 @@ export function MatchRatingSaveShareModal({
   allowExtraForward,
   ratings,
   myRatings,
+  captainId = null,
 }: {
   open: boolean;
   onClose: () => void;
@@ -31,6 +32,7 @@ export function MatchRatingSaveShareModal({
   allowExtraForward: boolean;
   ratings: RatingMap;
   myRatings: Record<string, number>;
+  captainId?: string | null;
 }) {
   const [title, setTitle] = useState(`Hodnocení — ${matchTitle}`);
   const [busy, setBusy] = useState(false);
@@ -198,6 +200,7 @@ export function MatchRatingSaveShareModal({
                 allowExtraForward={allowExtraForward}
                 shareSlug={matchSlug}
                 siteOrigin={siteOrigin}
+                captainId={captainId}
                 ratingSnapshot={{
                   ratings,
                   myRatings,

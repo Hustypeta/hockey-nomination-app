@@ -62,7 +62,7 @@ export function CommunityLineupEmbed({
     return (
       <div className="overflow-hidden rounded-xl border border-white/10 bg-black/20 aspect-[4/5]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageUrl} alt={imageAlt} className="h-full w-full object-contain" />
+        <img src={imageUrl} alt={imageAlt} className="h-full w-full object-cover" />
       </div>
     );
   }

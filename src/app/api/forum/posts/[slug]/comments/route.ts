@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { listPublishedCommentsForPost } from "@/lib/community/commentLikes";
 import { withForumJson, requireForumUser } from "@/lib/community/forumRoute";
 import { serializeComment, communityAuthorSelect } from "@/lib/community/serialize";
 import { validateCommentBody } from "@/lib/community/validate";
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ slug: string }> };
 
 export async function GET(_req: NextRequest, ctx: Ctx) {
-  return withForumJson(async () => {
+  return withForumJson(async ({ userId }) => {
     const { slug } = await ctx.params;
     const post = await prisma.communityPost.findFirst({
       where: { slug, status: "PUBLISHED", deletedAt: null },
@@ -18,12 +19,8 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
     if (!post) {
       return NextResponse.json({ error: "Příspěvek nenalezen." }, { status: 404 });
     }
-    const rows = await prisma.communityComment.findMany({
-      where: { postId: post.id, status: "PUBLISHED" },
-      orderBy: { createdAt: "asc" },
-      include: { author: { select: communityAuthorSelect } },
-    });
-    return NextResponse.json({ comments: rows.map(serializeComment) });
+    const comments = await listPublishedCommentsForPost(post.id, userId);
+    return NextResponse.json({ comments });
   });
 }
 
@@ -48,10 +45,17 @@ export async function POST(req: NextRequest, ctx: Ctx) {
 
     if (parentId) {
       const parent = await prisma.communityComment.findFirst({
-        where: { id: parentId, postId: post.id },
+        where: { id: parentId, postId: post.id, status: "PUBLISHED" },
+        select: { parentId: true },
       });
       if (!parent) {
         return NextResponse.json({ error: "Nadřazený komentář nenalezen." }, { status: 400 });
+      }
+      if (parent.parentId) {
+        return NextResponse.json(
+          { error: "Odpovědi lze přidávat jen k hlavním komentářům." },
+          { status: 400 },
+        );
       }
     }
 

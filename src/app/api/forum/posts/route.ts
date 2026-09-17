@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { CommunityPostCategory } from "@prisma/client";
 import { allocateCommunityPostSlug } from "@/lib/allocateNominationSlug";
-import { parseCommunitySort, listPublishedPosts } from "@/lib/community/listPublishedPosts";
+import { parseCommunitySort, parseForumWindow, listPublishedPosts } from "@/lib/community/listPublishedPosts";
 import { withForumJson, requireForumUser } from "@/lib/community/forumRoute";
 import { parseAttachmentInputs, resolveAttachmentsForUser } from "@/lib/community/attachments";
 import { postInclude, serializePost } from "@/lib/community/serialize";
@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
   return withForumJson(async ({ userId }) => {
     const { searchParams } = req.nextUrl;
     const sort = parseCommunitySort(searchParams.get("sort"));
+    const window = parseForumWindow(searchParams.get("window"));
     const category = searchParams.get("category") as CommunityPostCategory | null;
     const q = searchParams.get("q")?.trim();
     const take = Math.min(50, Math.max(1, Number(searchParams.get("limit") ?? 30) || 30));
@@ -27,6 +28,7 @@ export async function GET(req: NextRequest) {
         q,
         take,
         userId,
+        window,
       });
       return NextResponse.json({ posts });
     } catch (error) {

@@ -34,7 +34,7 @@ export function FloatingSestavaBar({
   /** true = šedý stav (nepřipravená nominace / uzávěrka); kliknutí stále proběhne (rodič ukáže nápovědu). */
   contestSubmitInactive?: boolean;
   showContestSubmit?: boolean;
-  /** Např. skrýt lištu pod mobilním výběrem hráčů (`max-lg:hidden`). */
+  /** Např. skrýt lištu pod mobilním výběrem hráčů (`max-lg-device:hidden`). */
   className?: string;
   uiVariant?: "classic" | "fifa";
 }) {
@@ -66,8 +66,8 @@ export function FloatingSestavaBar({
               >
                 <Trophy className="h-4 w-4 shrink-0 opacity-95" aria-hidden />
                 <span className="fifa-editor-bar__label">
-                  <span className="lg:hidden">Soutěž</span>
-                  <span className="hidden lg:inline">Do soutěže</span>
+                  <span className="lg-device:hidden">Soutěž</span>
+                  <span className="hidden lg-device:inline">Do soutěže</span>
                 </span>
               </button>
             ) : null}

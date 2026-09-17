@@ -7,6 +7,7 @@ import { MetaPixel } from "@/components/MetaPixel";
 import { UmamiAnalytics } from "@/components/UmamiAnalytics";
 import { Toaster } from "sonner";
 import {
+  SITE_APPLE_TOUCH_ICON_URL,
   SITE_ICON_URL,
   SITE_OG_DEFAULT_IMAGE_HEIGHT,
   SITE_OG_DEFAULT_IMAGE_URL,
@@ -48,13 +49,11 @@ export async function generateMetadata(): Promise<Metadata> {
       template: "%s | Lineup",
     },
     description: previewText,
+    // Brand favicon: `public/images/logo/icon.png` (+ `app/favicon.ico`, `app/icon.png`, `public/apple-touch-icon.png`).
     icons: {
-      icon: [
-        { url: "/icon", type: "image/svg+xml" },
-        { url: "/images/flavicon.png", type: "image/png" },
-        { url: SITE_ICON_URL, type: "image/png" },
-      ],
-      apple: [{ url: "/apple-icon", type: "image/svg+xml" }],
+      icon: [{ url: SITE_ICON_URL, type: "image/png", sizes: "512x512" }],
+      shortcut: [{ url: SITE_ICON_URL, type: "image/png" }],
+      apple: [{ url: SITE_APPLE_TOUCH_ICON_URL, type: "image/png", sizes: "180x180" }],
     },
     ...(facebookAppId
       ? { facebook: { appId: facebookAppId } as const }

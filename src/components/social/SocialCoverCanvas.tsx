@@ -69,6 +69,7 @@ function CoverPosterThumb({
               nominationTitle={PROMO_FB_TITLE}
               siteUrl="hokejlineup.cz"
               footerInstantIso={PROMO_POSTER_ISO}
+              captainId={PROMO_FB_CAPTAIN_ID}
             />
           )}
         </div>

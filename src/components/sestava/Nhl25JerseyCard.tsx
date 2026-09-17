@@ -5,9 +5,12 @@ import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import {
-  CZ_GOALIE_JERSEY_BACK_BLANK_SRC,
-  CZ_JERSEY_BACK_BLANK_SRC,
   CZ_JERSEY_CARD_IMG_BASE,
+  jerseyBlankSrcForPool,
+  jerseyKitAttrForPool,
+  jerseyNameModifierClassForPool,
+  jerseyNumberModifierClassForPool,
+  jerseyTeamAttrForPool,
 } from "@/lib/jerseyPhotoAsset";
 import { JerseyCornerFlagCz, JerseyFlagCzInline } from "@/components/sestava/JerseyCornerFlagCz";
 
@@ -69,6 +72,8 @@ export interface Nhl25JerseyCardProps {
   hidePosterFlag?: boolean;
   /** Stejná velikost jména na exportním plakátu (zmenší jen extrémně dlouhá). */
   posterUniformNames?: boolean;
+  /** Pool editoru (repre_a, elh:HC Dynamo Pardubice, …) — volí PNG dresu. */
+  poolKey?: string | null;
 }
 
 export function Nhl25JerseyCard({
@@ -86,16 +91,24 @@ export function Nhl25JerseyCard({
   hidePositionLabel = false,
   hidePosterFlag = false,
   posterUniformNames = false,
+  poolKey,
 }: Nhl25JerseyCardProps) {
   const empty = !player;
   const kind: "skater" | "goalie" =
     empty ? (size === "goalie" ? "goalie" : "skater") : player.position === "G" ? "goalie" : "skater";
-  const jerseySrc = kind === "goalie" ? CZ_GOALIE_JERSEY_BACK_BLANK_SRC : CZ_JERSEY_BACK_BLANK_SRC;
-  const jerseyImageSize = kind === "goalie" ? { width: 1000, height: 675 } : { width: 400, height: 480 };
+  const resolvedPoolKey = poolKey ?? player?.poolKey;
+  const jerseySrc = jerseyBlankSrcForPool(resolvedPoolKey, kind);
+  const jerseyKit = jerseyKitAttrForPool(resolvedPoolKey);
+  const jerseyTeam = jerseyTeamAttrForPool(resolvedPoolKey);
+  const numberMod = jerseyNumberModifierClassForPool(resolvedPoolKey);
+  const nameMod = jerseyNameModifierClassForPool(resolvedPoolKey);
+  const jerseyImageSize = { width: 400, height: 480 };
   const showAssistant = isAssistant && !empty && !isCaptain;
   const w = nameplateVariant === "poster" ? NHL25_POSTER_CARD.width : widthClass[size];
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
-  const numCls = nameplateVariant === "poster" ? POSTER_EXPORT_NUMBER : numberClass[size];
+  const numCls = `${nameplateVariant === "poster" ? POSTER_EXPORT_NUMBER : numberClass[size]}${
+    numberMod ? ` ${numberMod}` : ""
+  }`;
   const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
   const npVar = nameplateVariant === "poster" ? "poster" : "card";
   const namePlate =
@@ -106,7 +119,8 @@ export function Nhl25JerseyCard({
     !empty && nameplateVariant === "poster" && ln
       ? jerseyNameplateNameProps(ln, "poster", {
           uniformPosterSize: posterUniformNames,
-          uniformFontPx: 20,
+          uniformFontPx: 18,
+          leadershipExtraScore: isCaptain || showAssistant ? 2.4 : 0,
         })
       : null;
 
@@ -135,6 +149,11 @@ export function Nhl25JerseyCard({
     ? ""
     : "transition-[transform,box-shadow] duration-300 ease-out will-change-transform hover:-translate-y-0.5";
 
+  const capBesideName =
+    "ml-0.5 inline-flex h-[0.95em] min-w-[0.95em] shrink-0 items-center justify-center self-center rounded-[2px] bg-gradient-to-br from-[#c8102e] to-[#8a0b20] px-[0.12em] font-display text-[0.72em] font-black leading-none text-white shadow-sm ring-1 ring-white/70";
+  const asstBesideName =
+    "ml-0.5 inline-flex h-[0.95em] min-w-[0.95em] shrink-0 items-center justify-center self-center rounded-[2px] bg-gradient-to-br from-[#003087] to-[#001a4d] px-[0.12em] font-display text-[0.68em] font-black leading-none text-white shadow-sm ring-1 ring-white/60";
+
   return (
     <div
       className={`
@@ -145,35 +164,10 @@ export function Nhl25JerseyCard({
             : "rounded-xl"
         }
       `}
+      data-jersey-team={jerseyTeam}
+      data-jersey-kit={jerseyKit}
+      data-jersey-kind={kind}
     >
-      {isCaptain && !empty && (
-        <span
-          className={`
-            absolute -right-0.5 -top-1 z-30 flex items-center justify-center rounded-full
-            bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-xs font-bold text-white
-            shadow-md ring-2 ring-white
-            h-6 w-6 text-[11px]
-          `}
-          aria-label="Kapitán"
-        >
-          C
-        </span>
-      )}
-
-      {showAssistant && (
-        <span
-          className={`
-            absolute -bottom-0.5 -left-0.5 z-30 flex items-center justify-center rounded-full
-            bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[10px] font-bold text-white
-            shadow-md ring-2 ring-white/90
-            h-5 w-5 text-[9px]
-          `}
-          aria-label="Asistent kapitána"
-        >
-          A
-        </span>
-      )}
-
       <div
         className={
           nameplateVariant === "poster"
@@ -198,50 +192,59 @@ export function Nhl25JerseyCard({
               className={`relative w-full overflow-visible rounded-md bg-transparent ${hemPlate && hemPlate.lines.length > 0 ? "rounded-b-none" : ""}`}
             >
               <div
-                className={`relative aspect-[100/120] w-full bg-transparent ${empty ? "ring-1 ring-inset ring-white/20" : ""}`}
+                className={`relative aspect-[100/120] w-full overflow-visible bg-transparent ${empty ? "ring-1 ring-inset ring-white/20" : ""}`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
-                <img
-                  src={jerseySrc}
-                  alt=""
-                  width={jerseyImageSize.width}
-                  height={jerseyImageSize.height}
-                  decoding="async"
-                  data-jersey-kind={kind}
-                  style={
-                    kind === "goalie"
-                      ? {
-                          objectFit: "contain",
-                          objectPosition: "center",
-                          transform: "scale(1.65)",
-                        }
-                      : undefined
-                  }
-                  className={`
+                <div className="poster-jersey-silhouette relative h-full w-full overflow-visible">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- stejný statický podklad jako v editoru */}
+                  <img
+                    src={jerseySrc}
+                    alt=""
+                    width={jerseyImageSize.width}
+                    height={jerseyImageSize.height}
+                    decoding="async"
+                    data-jersey-kind={kind}
+                    data-jersey-kit={jerseyKit}
+                    data-jersey-team={jerseyTeam}
+                    className={`
                 ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]
                 ${empty ? "opacity-[0.55] saturate-[0.85]" : ""}
               `}
-                />
-                <div
-                  className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-start px-2 pt-[44%]`}
-                >
-                  {numStr ? (
-                    <span className={`${numCls}`} style={jerseyNumberStyle(ln || numStr, "poster")}>
-                      {numStr}
-                    </span>
-                  ) : null}
+                  />
+                  <div className="jersey-print-overlay jersey-print-overlay--poster-number pointer-events-none absolute inset-0 z-[15] flex flex-col items-center justify-start px-2 pt-[40%]">
+                    {numStr ? (
+                      <span className={`${numCls}`} style={jerseyNumberStyle(ln || numStr, "poster")}>
+                        {numStr}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             </div>
             {hemPlate && hemPlate.lines.length > 0 ? (
-              <div className="pointer-events-none flex w-full min-w-0 items-center justify-center px-0.5 pb-1 pt-1.5">
-                <span className="nhl25-poster-jersey-hem-name flex min-w-0 max-w-full flex-col items-center justify-center gap-0.5 text-center leading-snug">
+              <div className="pointer-events-none mx-auto flex w-max max-w-none items-center justify-center gap-0.5 overflow-visible px-0 pb-1.5 pt-1.5">
+                <span className="nhl25-poster-jersey-hem-name flex w-max max-w-none flex-col items-center justify-center gap-0.5 overflow-visible text-center leading-snug">
                   {hemPlate.lines.map((line, idx) => (
                     <span key={idx} className={hemPlate.className} style={hemPlate.style}>
                       {line}
                     </span>
                   ))}
                 </span>
+                {isCaptain ? (
+                  <span
+                    className="inline-flex h-3 min-w-3 shrink-0 items-center justify-center self-center overflow-visible rounded-[2px] bg-gradient-to-br from-[#c8102e] to-[#8a0b20] px-px font-display text-[8px] font-black leading-none text-white ring-1 ring-white/75"
+                    aria-label="Kapitán"
+                  >
+                    C
+                  </span>
+                ) : null}
+                {showAssistant ? (
+                  <span
+                    className="inline-flex h-3 min-w-3 shrink-0 items-center justify-center self-center overflow-visible rounded-[2px] bg-gradient-to-br from-[#003087] to-[#001a4d] px-px font-display text-[8px] font-black leading-none text-white ring-1 ring-white/65"
+                    aria-label="Asistent kapitána"
+                  >
+                    A
+                  </span>
+                ) : null}
                 {!hidePosterFlag ? (
                   <JerseyFlagCzInline
                     width={28}
@@ -265,6 +268,8 @@ export function Nhl25JerseyCard({
                 height={jerseyImageSize.height}
                 decoding="async"
                 data-jersey-kind={kind}
+                data-jersey-kit={jerseyKit}
+                data-jersey-team={jerseyTeam}
                 className={`
                 ${CZ_JERSEY_CARD_IMG_BASE} drop-shadow-[0_8px_20px_rgba(0,0,0,0.45)]
                 ${empty ? "opacity-[0.62] saturate-[0.88]" : ""}
@@ -275,17 +280,46 @@ export function Nhl25JerseyCard({
                 <>
                   {kind !== "goalie" ? <JerseyCornerFlagCz /> : null}
                   <div
-                    className={`pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
+                    className={`jersey-print-overlay pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1 ${overlayTopClass[size]}`}
                   >
                     {namePlate && namePlate.lines.length > 0 ? (
-                      <span className="flex w-full min-w-0 flex-col items-center gap-[0.08em] max-w-full">
-                        {namePlate.lines.map((line, idx) => (
-                          <span key={idx} className={namePlate.className} style={scaledNameplateStyle}>
-                            {line}
+                      <div className="flex w-full max-w-full items-center justify-center gap-x-0.5">
+                        <span className="flex min-w-0 max-w-[calc(100%-1.1em)] flex-col items-center gap-[0.08em]">
+                          {namePlate.lines.map((line, idx) => (
+                            <span
+                              key={idx}
+                              className={`${namePlate.className}${nameMod ? ` ${nameMod}` : ""}`}
+                              style={scaledNameplateStyle}
+                            >
+                              {line}
+                            </span>
+                          ))}
+                        </span>
+                        {isCaptain ? (
+                          <span className={capBesideName} aria-label="Kapitán">
+                            C
                           </span>
-                        ))}
-                      </span>
-                    ) : null}
+                        ) : null}
+                        {showAssistant ? (
+                          <span className={asstBesideName} aria-label="Asistent kapitána">
+                            A
+                          </span>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <>
+                        {isCaptain ? (
+                          <span className={capBesideName} aria-label="Kapitán">
+                            C
+                          </span>
+                        ) : null}
+                        {showAssistant ? (
+                          <span className={asstBesideName} aria-label="Asistent kapitána">
+                            A
+                          </span>
+                        ) : null}
+                      </>
+                    )}
                     {numStr ? (
                       <span className={`mt-px ${numCls}`} style={scaledNumberStyle}>
                         {numStr}

@@ -5,8 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { toast } from "sonner";
 import { Images, Loader2, Plus, Share2 } from "lucide-react";
+import { LineupPoolSwitcher } from "@/components/match/LineupPoolSwitcher";
 import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 import type { LineupStructure, Player } from "@/types";
+import { DEFAULT_LINEUP_POOL } from "@/lib/lineupPools";
+import { matchLineupEditorHref, normalizeMatchSharePoolKey } from "@/lib/matchSharePool";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 
@@ -17,6 +20,7 @@ type MatchShareLinkRow = {
   createdAt: string;
   defenseCount: number;
   allowExtraForward: boolean;
+  poolKey?: string | null;
 };
 
 function formatWhen(iso: string) {
@@ -56,14 +60,35 @@ type PosterBundle = {
   lineup: LineupStructure;
   players: Player[];
   siteOrigin: string;
+  poolKey: string;
 };
 
 export function MyMatchLineupsPage() {
   const { status } = useSession();
   const [links, setLinks] = useState<MatchShareLinkRow[] | null>(null);
+  const [poolKey, setPoolKey] = useState<string>(DEFAULT_LINEUP_POOL);
+  const [poolCounts, setPoolCounts] = useState<Record<string, number>>({});
   const [loadError, setLoadError] = useState<string | null>(null);
   const [poster, setPoster] = useState<PosterBundle | null>(null);
   const [posterLoadingCode, setPosterLoadingCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/players?meta=1")
+      .then((r) => r.json())
+      .then((data: { pools?: { poolKey: string; count: number }[] }) => {
+        if (cancelled || !Array.isArray(data.pools)) return;
+        const map: Record<string, number> = {};
+        for (const p of data.pools) map[p.poolKey] = p.count;
+        setPoolCounts(map);
+      })
+      .catch(() => {
+        /* ignore */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (status !== "authenticated") return;
@@ -85,13 +110,24 @@ export function MyMatchLineupsPage() {
     };
   }, [status]);
 
-  const empty = useMemo(() => Array.isArray(links) && links.length === 0, [links]);
+  const filteredLinks = useMemo(() => {
+    if (!Array.isArray(links)) return null;
+    return links.filter((l) => normalizeMatchSharePoolKey(l.poolKey) === poolKey);
+  }, [links, poolKey]);
+
+  const empty = useMemo(
+    () => Array.isArray(filteredLinks) && filteredLinks.length === 0,
+    [filteredLinks]
+  );
+
+  const newHref = matchLineupEditorHref({ poolKey });
 
   async function openPosterGenerator(row: MatchShareLinkRow) {
     setPosterLoadingCode(row.code);
+    const rowPool = normalizeMatchSharePoolKey(row.poolKey);
     try {
       const [rp, rl] = await Promise.all([
-        fetch("/api/players"),
+        fetch(`/api/players?pool=${encodeURIComponent(rowPool)}`),
         fetch(`/api/match-share-links/${encodeURIComponent(row.code)}`),
       ]);
       if (!rp.ok) {
@@ -110,6 +146,7 @@ export function MyMatchLineupsPage() {
         allowExtraForward?: boolean;
         title?: string | null;
         slug?: string | null;
+        poolKey?: string | null;
       };
       if (!data.lineupStructure || typeof data.lineupStructure !== "object") {
         toast.error("V uložené sestavě chybí data soupisky.");
@@ -138,6 +175,7 @@ export function MyMatchLineupsPage() {
         lineup,
         players,
         siteOrigin: origin,
+        poolKey: normalizeMatchSharePoolKey(data.poolKey ?? rowPool),
       });
     } catch {
       toast.error("Plakát se nepodařilo připravit.");
@@ -195,7 +233,7 @@ export function MyMatchLineupsPage() {
           <p className="mt-1 text-sm text-slate-500">Uložené odkazy z editoru sestavy na zápas.</p>
         </div>
         <Link
-          href="/zapasy/sestava"
+          href={newHref}
           className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#00B4FF] px-4 py-2 text-sm font-black text-[#03050a] shadow-[0_0_24px_rgba(0,180,255,0.22)] ring-1 ring-white/15 hover:brightness-110"
         >
           <Plus className="h-4 w-4" aria-hidden />
@@ -203,8 +241,17 @@ export function MyMatchLineupsPage() {
         </Link>
       </div>
 
+      <div className="mt-5">
+        <LineupPoolSwitcher
+          value={poolKey}
+          onChange={setPoolKey}
+          counts={poolCounts}
+          size="comfortable"
+        />
+      </div>
+
       {loadError ? <p className="mt-4 text-sm text-rose-300">{loadError}</p> : null}
-      {links === null && !loadError ? (
+      {filteredLinks === null && !loadError ? (
         <p className="mt-10 flex items-center gap-2 text-slate-500">
           <Loader2 className="h-5 w-5 animate-spin text-[#c8102e]" aria-hidden />
           Načítám…
@@ -213,71 +260,77 @@ export function MyMatchLineupsPage() {
 
       {empty ? (
         <p className="mt-8 rounded-2xl border border-white/10 bg-black/25 p-8 text-center text-slate-400">
-          Zatím nemáš uloženou žádnou zápasovou sestavu. Otevři{" "}
-          <strong className="text-white">Editor sestavy</strong>, slož ji a dej <strong className="text-white">Uložit</strong>.
+          V tomto poolu zatím nemáš uloženou žádnou zápasovou sestavu. Otevři{" "}
+          <Link href={newHref} className="font-semibold text-sky-300 hover:underline">
+            Editor sestavy
+          </Link>
+          , slož ji a dej <strong className="text-white">Uložit</strong>.
         </p>
       ) : null}
 
-      {Array.isArray(links) && links.length > 0 ? (
+      {Array.isArray(filteredLinks) && filteredLinks.length > 0 ? (
         <ul className="mt-8 space-y-3">
-          {links.map((l) => (
-            <li key={l.code} className="rounded-xl border border-white/10 bg-[#0a1428]/90 p-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="min-w-0">
-                  <p className="truncate text-base font-semibold text-white">{l.title?.trim() || "Sestava bez názvu"}</p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    {formatWhen(l.createdAt)} · {l.defenseCount}D{l.allowExtraForward ? " · 13. útočník" : ""}
-                  </p>
+          {filteredLinks.map((l) => {
+            const rowPool = normalizeMatchSharePoolKey(l.poolKey);
+            return (
+              <li key={l.code} className="rounded-xl border border-white/10 bg-[#0a1428]/90 p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="truncate text-base font-semibold text-white">{l.title?.trim() || "Sestava bez názvu"}</p>
+                    <p className="mt-1 text-xs text-slate-400">
+                      {formatWhen(l.createdAt)} · {l.defenseCount}D{l.allowExtraForward ? " · 13. útočník" : ""}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 flex-wrap gap-2">
+                    <button
+                      type="button"
+                      disabled={posterLoadingCode === l.code}
+                      onClick={() => void openPosterGenerator(l)}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-2 text-sm font-semibold text-violet-100 transition hover:border-violet-300/55 hover:bg-violet-500/25 disabled:opacity-60"
+                    >
+                      {posterLoadingCode === l.code ? (
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                      ) : (
+                        <Images className="h-4 w-4" aria-hidden />
+                      )}
+                      Plakát
+                    </button>
+                    <Link
+                      href={matchLineupEditorHref({ code: l.code, poolKey: rowPool })}
+                      className="inline-flex items-center justify-center rounded-lg border border-sky-400/40 bg-sky-500/15 px-3 py-2 text-sm font-semibold text-sky-100 transition hover:border-sky-300/55 hover:bg-sky-500/25"
+                    >
+                      Upravit sestavu
+                    </Link>
+                    {l.slug ? (
+                      <>
+                        <Link
+                          href={`/m/${encodeURIComponent(l.slug)}`}
+                          className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[#c8102e] to-[#9e0c24] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#c8102e]/20 transition hover:brightness-110"
+                        >
+                          Otevřít
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const url =
+                              typeof window !== "undefined"
+                                ? `${window.location.origin}/m/${encodeURIComponent(l.slug!)}`
+                                : `/m/${encodeURIComponent(l.slug!)}`;
+                            void shareLink(l.title?.trim() || "Sestava na zápas", url);
+                          }}
+                          className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#f1c40f]/40 bg-gradient-to-b from-[#f1c40f]/15 to-[#f1c40f]/5 px-3 py-2 text-sm font-semibold text-[#f1e6a8] transition hover:from-[#f1c40f]/25 hover:to-[#f1c40f]/10"
+                        >
+                          <Share2 className="h-4 w-4" aria-hidden />
+                          Sdílet
+                        </button>
+                      </>
+                    ) : null}
+                  </div>
                 </div>
-                <div className="flex shrink-0 flex-wrap gap-2">
-                  <button
-                    type="button"
-                    disabled={posterLoadingCode === l.code}
-                    onClick={() => void openPosterGenerator(l)}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-2 text-sm font-semibold text-violet-100 transition hover:border-violet-300/55 hover:bg-violet-500/25 disabled:opacity-60"
-                  >
-                    {posterLoadingCode === l.code ? (
-                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                    ) : (
-                      <Images className="h-4 w-4" aria-hidden />
-                    )}
-                    Plakát
-                  </button>
-                  <Link
-                    href={`/zapasy/sestava?kod=${encodeURIComponent(l.code)}`}
-                    className="inline-flex items-center justify-center rounded-lg border border-sky-400/40 bg-sky-500/15 px-3 py-2 text-sm font-semibold text-sky-100 transition hover:border-sky-300/55 hover:bg-sky-500/25"
-                  >
-                    Upravit sestavu
-                  </Link>
-                  {l.slug ? (
-                    <>
-                      <Link
-                        href={`/m/${encodeURIComponent(l.slug)}`}
-                        className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[#c8102e] to-[#9e0c24] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#c8102e]/20 transition hover:brightness-110"
-                      >
-                        Otevřít
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const url =
-                            typeof window !== "undefined"
-                              ? `${window.location.origin}/m/${encodeURIComponent(l.slug!)}`
-                              : `/m/${encodeURIComponent(l.slug!)}`;
-                          void shareLink(l.title?.trim() || "Sestava na zápas", url);
-                        }}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#f1c40f]/40 bg-gradient-to-b from-[#f1c40f]/15 to-[#f1c40f]/5 px-3 py-2 text-sm font-semibold text-[#f1e6a8] transition hover:from-[#f1c40f]/25 hover:to-[#f1c40f]/10"
-                      >
-                        <Share2 className="h-4 w-4" aria-hidden />
-                        Sdílet
-                      </button>
-                    </>
-                  ) : null}
-                </div>
-              </div>
-              <p className="mt-3 font-mono text-[10px] text-slate-600">{l.code}</p>
-            </li>
-          ))}
+                <p className="mt-3 font-mono text-[10px] text-slate-600">{l.code}</p>
+              </li>
+            );
+          })}
         </ul>
       ) : null}
 
@@ -291,6 +344,7 @@ export function MyMatchLineupsPage() {
           allowExtraForward={poster.allowExtraForward}
           shareSlug={poster.slug}
           siteOrigin={poster.siteOrigin}
+          poolKey={poster.poolKey}
           modalOpen
           onModalOpenChange={(open) => {
             if (!open) setPoster(null);
@@ -301,4 +355,3 @@ export function MyMatchLineupsPage() {
     </div>
   );
 }
-

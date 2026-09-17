@@ -4,7 +4,14 @@ import type { Player } from "@/types";
 import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
-import { CZ_JERSEY_BACK_BLANK_SRC, CZ_JERSEY_CARD_IMG_BASE } from "@/lib/jerseyPhotoAsset";
+import {
+  CZ_JERSEY_CARD_IMG_BASE,
+  jerseyBlankSrcForPool,
+  jerseyKitAttrForPool,
+  jerseyNameModifierClassForPool,
+  jerseyNumberModifierClassForPool,
+  jerseyTeamAttrForPool,
+} from "@/lib/jerseyPhotoAsset";
 import { JerseyCornerFlagCz } from "@/components/sestava/JerseyCornerFlagCz";
 
 export type PremiumJerseySize = "compact" | "skater" | "goalie";
@@ -16,10 +23,10 @@ const PREMIUM_SLOT_UNIFIED = {
     "select-none font-jersey-print text-[9px] font-semibold uppercase leading-tight tracking-[0.14em] text-[#002d54]/28 min-[380px]:text-[10px] sm:text-[12px]",
   emptyNum:
     "select-none font-jersey-print mt-1 text-[20px] font-bold leading-none tabular-nums text-white/22 [-webkit-text-stroke:1px_rgba(0,45,84,0.22)] min-[380px]:text-[22px] sm:text-[26px] lg:text-[30px]",
-  capUnderNum:
-    "mt-2 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#c8102e] to-[#8a0b20] font-display text-[10px] font-bold text-white shadow-md ring-2 ring-white sm:h-6 sm:w-6 sm:text-[11px]",
-  asstUnderNum:
-    "mt-2 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#003087] to-[#001a4d] font-display text-[9px] font-bold text-white shadow-md ring-2 ring-white/90 sm:h-6 sm:w-6 sm:text-[10px]",
+  capBesideName:
+    "ml-0.5 inline-flex h-[0.95em] min-w-[0.95em] shrink-0 items-center justify-center self-center rounded-[2px] bg-gradient-to-br from-[#c8102e] to-[#8a0b20] px-[0.12em] font-display text-[0.72em] font-black leading-none text-white shadow-sm ring-1 ring-white/70",
+  asstBesideName:
+    "ml-0.5 inline-flex h-[0.95em] min-w-[0.95em] shrink-0 items-center justify-center self-center rounded-[2px] bg-gradient-to-br from-[#003087] to-[#001a4d] px-[0.12em] font-display text-[0.68em] font-black leading-none text-white shadow-sm ring-1 ring-white/60",
   clear:
     "absolute right-1 top-1 z-40 flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#c8102e] bg-transparent text-[#c8102e] transition-colors duration-200 hover:bg-[#c8102e] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0f0f0] sm:right-2 sm:top-2 sm:h-6 sm:w-6",
 } as const;
@@ -57,6 +64,8 @@ export interface PremiumJerseySlotCardProps {
   posterEmbed?: boolean;
   /** Duplicitní příjmení v soupisce → iniciála („M. Kovařčík“). */
   ambiguousJerseyLastKeys?: ReadonlySet<string> | null;
+  /** Pool editoru — volí PNG dresu. */
+  poolKey?: string | null;
 }
 
 /**
@@ -78,6 +87,7 @@ export function PremiumJerseySlotCard({
   lightRinkSurface = false,
   posterEmbed = false,
   ambiguousJerseyLastKeys,
+  poolKey,
 }: PremiumJerseySlotCardProps) {
   const sz = SIZE_STYLES[size];
   const iceFill = posterEmbed ? "bg-transparent" : lightRinkSurface ? "squad-ice-surface-light" : "squad-ice-fill";
@@ -85,6 +95,14 @@ export function PremiumJerseySlotCard({
   const empty = !player;
   /** Prázdný slot bez výběru — výrazně vybledlý oproti vybranému / obsazenému. */
   const emptyUnfocused = empty && !isSelected;
+  const resolvedKind: "skater" | "goalie" =
+    !empty && player.position === "G" ? "goalie" : kind;
+  const resolvedPoolKey = poolKey ?? player?.poolKey;
+  const jerseySrc = jerseyBlankSrcForPool(resolvedPoolKey, resolvedKind);
+  const jerseyKit = jerseyKitAttrForPool(resolvedPoolKey);
+  const jerseyTeam = jerseyTeamAttrForPool(resolvedPoolKey);
+  const numberMod = jerseyNumberModifierClassForPool(resolvedPoolKey);
+  const nameMod = jerseyNameModifierClassForPool(resolvedPoolKey);
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
   const namePlate = !empty ? jerseyNameplateNameProps(ln, "premium") : null;
@@ -116,6 +134,9 @@ export function PremiumJerseySlotCard({
         premium-jersey-slot-card relative mx-auto shrink-0 ${sz.root}
         ${motion} ${hoverFx} ${stateRing} ${className}
       `}
+      data-jersey-team={jerseyTeam}
+      data-jersey-kit={jerseyKit}
+      data-jersey-kind={resolvedKind}
     >
       <div
         className={`
@@ -141,12 +162,14 @@ export function PremiumJerseySlotCard({
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- lokální statický podklad */}
         <img
-          src={CZ_JERSEY_BACK_BLANK_SRC}
+          src={jerseySrc}
           alt=""
           width={400}
           height={480}
           decoding="async"
-          data-jersey-kind={kind}
+          data-jersey-kind={resolvedKind}
+          data-jersey-kit={jerseyKit}
+          data-jersey-team={jerseyTeam}
           className={`
             ${CZ_JERSEY_CARD_IMG_BASE} ${
               posterEmbed
@@ -197,41 +220,56 @@ export function PremiumJerseySlotCard({
 
         <div
           className={`
-            pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1
+            jersey-print-overlay pointer-events-none absolute inset-0 z-[15] flex flex-col items-center px-1
             ${empty ? "justify-center pt-[22%] pb-[22%]" : "justify-start gap-1.5 px-1 pb-[18%] pt-[28%] sm:pb-[16%] sm:pt-[29%]"}
           `}
         >
           {!empty ? (
             <>
               {namePlate && namePlate.lines.length > 0 ? (
-                <div className="flex w-full max-w-full flex-col items-center gap-y-px">
-                  {namePlate.lines.map((line, idx) => (
-                    <span
-                      key={idx}
-                      className={`${namePlate.className}${lightRinkSurface ? " jersey-nameplate-text--on-light-ice" : ""}`}
-                      style={namePlate.style}
-                    >
-                      {line}
+                <div className="flex w-full max-w-full items-center justify-center gap-x-0.5">
+                  <div className="flex min-w-0 max-w-[calc(100%-1.1em)] flex-col items-center gap-y-px">
+                    {namePlate.lines.map((line, idx) => (
+                      <span
+                        key={idx}
+                        className={`${namePlate.className}${nameMod ? ` ${nameMod}` : ""}${lightRinkSurface ? " jersey-nameplate-text--on-light-ice" : ""}`}
+                        style={namePlate.style}
+                      >
+                        {line}
+                      </span>
+                    ))}
+                  </div>
+                  {isCaptain ? (
+                    <span className={sz.capBesideName} aria-label="Kapitán">
+                      C
                     </span>
-                  ))}
+                  ) : null}
+                  {showAssistant ? (
+                    <span className={sz.asstBesideName} aria-label="Asistent kapitána">
+                      A
+                    </span>
+                  ) : null}
                 </div>
-              ) : null}
+              ) : (
+                <>
+                  {isCaptain ? (
+                    <span className={sz.capBesideName} aria-label="Kapitán">
+                      C
+                    </span>
+                  ) : null}
+                  {showAssistant ? (
+                    <span className={sz.asstBesideName} aria-label="Asistent kapitána">
+                      A
+                    </span>
+                  ) : null}
+                </>
+              )}
               {numStr ? (
                 <span
-                  className={`max-w-[92%] text-center text-[18px] min-[380px]:text-[20px] sm:text-[22px] lg:text-[25px] xl:text-[27px] jersey-back-number-text ${lightRinkSurface ? "jersey-back-number-text--on-light-ice" : "jersey-back-number-text--woven"}`}
+                  className={`max-w-[92%] text-center text-[18px] min-[380px]:text-[20px] sm:text-[22px] lg:text-[25px] xl:text-[27px] jersey-back-number-text ${lightRinkSurface ? "jersey-back-number-text--on-light-ice" : "jersey-back-number-text--woven"}${numberMod ? ` ${numberMod}` : ""}`}
                   style={jerseyNumberStyle(ln, "premium")}
                 >
                   {numStr}
-                </span>
-              ) : null}
-              {isCaptain ? (
-                <span className={sz.capUnderNum} aria-label="Kapitán">
-                  C
-                </span>
-              ) : null}
-              {showAssistant ? (
-                <span className={sz.asstUnderNum} aria-label="Asistent kapitána">
-                  A
                 </span>
               ) : null}
             </>

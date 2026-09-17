@@ -11,7 +11,11 @@ import {
 
 export function FifaExtraligaDraftFantasyHubCard() {
   return (
-    <Link href="/souteze/extraliga" className="block min-h-0 w-full lg:h-full" aria-label={`Otevřít: ${EXTRALIGA_DRAFT_FANTASY_TITLE}`}>
+    <Link
+      href="/souteze/extraliga"
+      className="block w-full min-h-[13rem] lg-device:h-full lg-device:min-h-0"
+      aria-label={`Otevřít: ${EXTRALIGA_DRAFT_FANTASY_TITLE}`}
+    >
       <FifaHubMenuCard
         title={EXTRALIGA_DRAFT_FANTASY_HEADLINE}
         subtitle={EXTRALIGA_DRAFT_FANTASY_SEASON}

@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import type { Player } from "@/types";
 import type { Role } from "@/types";
 import { ROLE_LABELS, POSITION_LABELS } from "@/types";
+import { isElhPoolKey } from "@/lib/lineupPools";
 import { PlayerAvatar } from "./PlayerAvatar";
 
 export function PlayerPreviewModal({
@@ -15,7 +16,11 @@ export function PlayerPreviewModal({
 }) {
   if (!player) return null;
 
-  const teamLine = [player.club, player.league].filter(Boolean).join(" · ");
+  const hideClubLeague = !!player.poolKey && isElhPoolKey(player.poolKey);
+  const club = player.club?.trim() || "";
+  const leagueRaw = player.league?.trim() || "";
+  const league =
+    leagueRaw && !["–", "-", "—"].includes(leagueRaw) ? leagueRaw : "";
 
   return (
     <div
@@ -33,9 +38,9 @@ export function PlayerPreviewModal({
             <PlayerAvatar name={player.name} position={player.position} role={player.role} size="lg" />
             <div className="min-w-0 flex-1">
               <h3 className="font-display text-2xl font-bold text-white">{player.name}</h3>
-              {teamLine ? (
-                <p className="mt-1 truncate text-base font-medium text-white/85" title={teamLine}>
-                  {teamLine}
+              {!hideClubLeague && club ? (
+                <p className="mt-1 truncate text-base font-medium text-white/85" title={club}>
+                  {club}
                 </p>
               ) : null}
               <p className="mt-1 text-sm text-[#d4af37]/90">{POSITION_LABELS[player.position]}</p>
@@ -53,16 +58,18 @@ export function PlayerPreviewModal({
             <X className="h-5 w-5" />
           </button>
         </div>
-        <dl className="mt-6 space-y-3 border-t border-white/10 pt-4 text-sm">
-          <div className="flex justify-between gap-4">
-            <dt className="text-white/45">Klub</dt>
-            <dd className="text-right font-medium text-white">{player.club || "—"}</dd>
-          </div>
-          <div className="flex justify-between gap-4">
-            <dt className="text-white/45">Liga</dt>
-            <dd className="text-right text-white/90">{player.league || "—"}</dd>
-          </div>
-        </dl>
+        {!hideClubLeague ? (
+          <dl className="mt-6 space-y-3 border-t border-white/10 pt-4 text-sm">
+            <div className="flex justify-between gap-4">
+              <dt className="text-white/45">Klub</dt>
+              <dd className="text-right font-medium text-white">{club || "—"}</dd>
+            </div>
+            <div className="flex justify-between gap-4">
+              <dt className="text-white/45">Liga</dt>
+              <dd className="text-right text-white/90">{league || "—"}</dd>
+            </div>
+          </dl>
+        ) : null}
       </div>
     </div>
   );

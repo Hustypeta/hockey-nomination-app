@@ -14,19 +14,19 @@ export function FifaAppPage({
 }) {
   const mobileClass = fillMobile
     ? "flex-1 min-h-0 overflow-hidden"
-    : "max-lg:flex-none max-lg:overflow-visible";
+    : "max-lg-device:flex-none max-lg-device:overflow-visible";
 
   return (
     <div
       className={`flex w-full flex-col ${mobileClass} px-4 py-4 sm:px-5 sm:py-5 ${
         fitViewport
-          ? "lg:h-full lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overflow-hidden lg:px-5 lg:py-2.5"
+          ? "lg-device:h-full lg-device:min-h-0 lg-device:flex-1 lg-device:overflow-y-auto lg-device:overflow-hidden lg-device:px-5 lg-device:py-2.5"
           : ""
       } ${className}`}
     >
       <div
-        className={`flex w-full flex-col ${fillMobile ? "flex-1 min-h-0 overflow-hidden" : "max-lg:flex-none"} ${
-          fitViewport ? "lg:min-h-0 lg:flex-1 lg:overflow-hidden" : ""
+        className={`flex w-full flex-col ${fillMobile ? "flex-1 min-h-0 overflow-hidden" : "max-lg-device:flex-none"} ${
+          fitViewport ? "lg-device:min-h-0 lg-device:flex-1 lg-device:overflow-hidden" : ""
         }`}
       >
         {children}

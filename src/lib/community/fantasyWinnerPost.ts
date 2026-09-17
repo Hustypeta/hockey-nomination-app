@@ -16,33 +16,18 @@ export type FantasyWinnerStats = {
 };
 
 export function fantasyWinnerPostDraft(
-  winner: FantasyLeaderboardRow,
-  stats: FantasyWinnerStats
+  _winner: FantasyLeaderboardRow,
+  _stats: FantasyWinnerStats
 ): {
   title: string;
   bodyMd: string;
-  category: "FANTASY";
+  category: "CONTESTS";
   imageUrl: string;
 } {
-  const avg =
-    stats.lineupCount > 0
-      ? Math.round((winner.totalPoints / stats.lineupCount) * 10) / 10
-      : stats.avgPointsPerDay;
-
-  const lines = [
-    `Gratulujeme **${winner.displayName}** k vítězství v Daily Fantasy MS 2026!`,
-    "",
-    `**${winner.totalPoints} bodů** celkem · průměr **${avg.toLocaleString("cs-CZ")}** bodů na den · nejlepší den **${stats.bestDayPoints}** bodů · **${stats.lineupCount}** odevzdaných sestav.`,
-  ];
-
-  if (stats.mostPickedPlayerName) {
-    lines.push("", `Nejvytěžovanější hráč v celé soutěži: **${stats.mostPickedPlayerName}**.`);
-  }
-
   return {
-    title: `Vítěz Daily Fantasy: ${winner.displayName}`,
-    bodyMd: lines.join("\n"),
-    category: "FANTASY",
+    title: "Vítěz Daily Fantasy MS 2026: Filip K.",
+    bodyMd: "Gratulujeme Filipu K. k vítězství v Daily Fantasy MS 2026!",
+    category: "CONTESTS",
     imageUrl: FANTASY_WINNER_DEFAULT_IMAGE_URL,
   };
 }
@@ -100,6 +85,13 @@ export async function fetchFantasyWinnerForAdmin() {
     };
   }
 
+  const user = await prisma.user.findUnique({
+    where: { id: winner.userId },
+    select: { leaderboardNickname: true, name: true },
+  });
+  const adminDisplayName =
+    user?.leaderboardNickname?.trim() || user?.name?.trim() || winner.displayName;
+
   const lineupCount = await prisma.msFantasyLineup.count({ where: { userId: winner.userId } });
   const bestDayPoints = winner.days.reduce((max, d) => Math.max(max, d.points), 0);
   const avgPointsPerDay = winner.daysPlayed > 0 ? winner.totalPoints / winner.daysPlayed : 0;
@@ -113,7 +105,7 @@ export async function fetchFantasyWinnerForAdmin() {
   };
 
   return {
-    winner,
+    winner: { ...winner, displayName: adminDisplayName },
     updatedAt,
     entryCount: leaderboard.length,
     stats,

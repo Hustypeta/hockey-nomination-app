@@ -151,7 +151,7 @@ export function ContestLeaderboardView({ variant = "page" }: ContestLeaderboardV
       ) : (
         <p className="fifa-meta text-center">
           <Link href="/ucet" className={FIFA_LINK}>
-            Přezdívka v účtu
+            Změnit přezdívku
           </Link>
         </p>
       )}

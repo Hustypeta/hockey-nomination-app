@@ -4,7 +4,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FifaRinkChemistryLines } from "@/components/fifa/FifaRinkChemistryLines";
 import { FifaRinkShieldFrame } from "@/components/fifa/FifaRinkShieldFrame";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { MQ_LAYOUT_NARROW, useMediaQuery } from "@/hooks/useMediaQuery";
 import { fifaRinkChemistryEdges } from "@/lib/fifa/fifaRinkChemistry";
 import {
   FIFA_RINK_TEMPLATE_HEIGHT,
@@ -74,7 +74,7 @@ export function FifaMatchLineRink({
   starterGoalie,
 }: FifaMatchLineRinkProps) {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
-  const isMobileLayout = useMediaQuery("(max-width: 1023px)");
+  const isMobileLayout = useMediaQuery(MQ_LAYOUT_NARROW);
   const useMobileTemplate = !preview && isMobileLayout;
   const slotLayout = useMobileTemplate ? FIFA_RINK_TEMPLATE_SLOTS_MOBILE : FIFA_RINK_TEMPLATE_SLOTS;
 
@@ -163,7 +163,7 @@ export function FifaMatchLineRink({
               <picture>
                 {!preview ? (
                   <source
-                    media="(max-width: 1023px)"
+                    media="(max-width: 1023px) and (max-device-width: 1023px)"
                     srcSet={FIFA_RINK_TEMPLATE_MOBILE_SRC}
                   />
                 ) : null}

@@ -70,9 +70,9 @@
   overflow: hidden;
   color: #fff;
   font-family: var(--font-display, "Bebas Neue", "Barlow Condensed", system-ui, sans-serif);
-  font-size: 52px;
+  font-size: 40px;
   font-weight: 900;
-  letter-spacing: 0.025em;
+  letter-spacing: 0.02em;
   line-height: 0.98;
   text-align: center;
   text-overflow: ellipsis;
@@ -192,6 +192,8 @@
   height: 72px;
   align-items: center;
   justify-content: center;
+  gap: 0.22em;
+  overflow: hidden;
   border: 3px solid rgba(255, 255, 255, 0.92);
   background: linear-gradient(180deg, rgba(5, 11, 28, 0.52), rgba(13, 4, 16, 0.72));
   box-shadow:
@@ -209,6 +211,42 @@
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.85);
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.boxName {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.boxMark {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 0.78em;
+  min-width: 0.78em;
+  padding: 0 0.1em;
+  border-radius: 3px;
+  font-size: 0.55em;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1;
+  text-shadow: none;
+}
+
+.boxMarkCaptain {
+  background: rgba(200, 16, 46, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+
+.boxMarkAssistant {
+  background: rgba(0, 48, 135, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  color: #fff;
 }
 
 .boxTwo {

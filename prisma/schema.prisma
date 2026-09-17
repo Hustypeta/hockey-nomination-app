@@ -19,8 +19,12 @@ model Player {
   league    String? // NHL, AHL, …; NULL u starých řádků → dopočet v API z klubu
   /// Číslo na dresu (repre / klub z JSON). Není unikátní — stejné číslo může mít víc hráčů (repre vs. klub).
   jerseyNumber Int?
+  /// Pool editoru sestavy: repre_a | repre_u20 | repre_u18 | repre_zeny | elh:<klub>
+  poolKey   String   @default("repre_a")
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
+  @@index([poolKey])
   @@map("players")
 }
 
@@ -44,6 +48,7 @@ model User {
   communityPosts         CommunityPost[]
   communityComments      CommunityComment[]
   communityPostLikes     CommunityPostLike[]
+  communityCommentLikes  CommunityCommentLike[]
 
   @@map("users")
 }
@@ -237,11 +242,14 @@ model MatchShareLink {
   title             String?
   defenseCount      Int      @default(8)
   allowExtraForward Boolean  @default(false)
+  /// Pool editoru: repre_a | repre_u20 | … | elh:<klub> — default A-tým (starší odkazy).
+  poolKey           String   @default("repre_a")
   createdAt         DateTime @default(now())
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+  @@index([poolKey])
   @@map("match_share_links")
 }
 
@@ -374,6 +382,7 @@ enum CommunityPostCategory {
   FANTASY
   GENERAL
   Q_AND_A
+  CONTESTS
 }
 
 enum CommunityPostStatus {
@@ -464,6 +473,7 @@ model CommunityComment {
   authorId  String
   parentId  String?
   bodyMd    String              @db.Text
+  isStaffComment Boolean        @default(false)
   likeCount Int                 @default(0)
   status    CommunityPostStatus @default(PUBLISHED)
   createdAt DateTime            @default(now())
@@ -473,6 +483,7 @@ model CommunityComment {
   author  User               @relation(fields: [authorId], references: [id], onDelete: Cascade)
   parent  CommunityComment?  @relation("CommentThread", fields: [parentId], references: [id], onDelete: Cascade)
   replies CommunityComment[] @relation("CommentThread")
+  likes   CommunityCommentLike[]
 
   @@index([postId, createdAt])
   @@index([parentId])
@@ -489,4 +500,16 @@ model CommunityPostLike {
 
   @@id([userId, postId])
   @@map("community_post_likes")
+}
+
+model CommunityCommentLike {
+  userId    String
+  commentId String
+  createdAt DateTime @default(now())
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment CommunityComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@id([userId, commentId])
+  @@map("community_comment_likes")
 }

@@ -5,8 +5,8 @@ const assetVersion =
   process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 10) ||
   process.env.RAILWAY_GIT_COMMIT_SHA?.slice(0, 10) ||
   (process.env.NODE_ENV === "development"
-    ? (process.env.NEXT_PUBLIC_DEV_ASSET_VERSION?.trim() || "dev")
-    : "1");
+    ? (process.env.NEXT_PUBLIC_DEV_ASSET_VERSION?.trim() || "brand-hockey-1")
+    : "brand-hockey-1");
 
 const nextConfig: NextConfig = {
   env: {
@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
         destination: "https://hokejlineup.cz/:path*",
         permanent: true,
       },
-      { source: "/logo.png", destination: "/images/logo.png", permanent: false },
+      { source: "/logo.png", destination: "/images/logo/logo.png", permanent: false },
     ];
   },
 };

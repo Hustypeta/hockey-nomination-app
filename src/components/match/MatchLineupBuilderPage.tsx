@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -22,6 +22,8 @@ import { LineBuilder } from "@/components/LineBuilder";
 import type { LineupStructure, Player, Position } from "@/types";
 import { EMPTY_LINEUP } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
+import { DEFAULT_LINEUP_POOL, isKnownPoolKey } from "@/lib/lineupPools";
+import { matchLineupEditorHref, normalizeMatchSharePoolKey } from "@/lib/matchSharePool";
 import {
   tryAutoAssignPlayer,
   assignPlayerToTarget,
@@ -35,10 +37,11 @@ import { powerPlaySlotPickerLabel } from "@/lib/powerPlayLineup";
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { poolToSlotCollision } from "@/lib/dndCollision";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { MQ_LAYOUT_NARROW, useMediaQuery } from "@/hooks/useMediaQuery";
 import { useUndoableState } from "@/hooks/useUndoableState";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { MatchLineupSaveShareModal } from "@/components/match/MatchLineupSaveShareModal";
+import { LineupPoolSwitcher } from "@/components/match/LineupPoolSwitcher";
 
 function isMatchLineupValid(
   lineup: LineupStructure,
@@ -81,13 +84,21 @@ export function MatchLineupBuilderPage() {
     const t = k?.trim();
     return t && t.length > 0 ? t : null;
   }, [searchParams]);
+  const poolFromQuery = useMemo(() => {
+    const raw = searchParams.get("pool")?.trim();
+    return raw && isKnownPoolKey(raw) ? raw : null;
+  }, [searchParams]);
 
   const { status: authStatus } = useSession();
   const [players, setPlayers] = useState<Player[]>([]);
+  const [playersLoadError, setPlayersLoadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [poolKey, setPoolKey] = useState<string>(() => poolFromQuery ?? DEFAULT_LINEUP_POOL);
+  const [poolCounts, setPoolCounts] = useState<Record<string, number>>({});
   /** Dokud není načten draft z ?kod=, draft se aplikuje až po načtení hráčů. */
   const needDraftImport = Boolean(loadEditCode);
-  const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
+  const draftHydratedRef = useRef(false);
+  const isNarrowLayout = useMediaQuery(MQ_LAYOUT_NARROW);
   const fifaEnabled = isFifaDesignEnabled();
   const fifaMobileInlinePool = fifaEnabled && isNarrowLayout;
   const [lineupPosterModalOpen, setLineupPosterModalOpen] = useState(false);
@@ -161,14 +172,14 @@ export function MatchLineupBuilderPage() {
     let cancelled = false;
     (async () => {
       try {
-        const r = await fetch("/api/players");
-        const data = (await r.json()) as unknown;
-        if (cancelled) return;
-        const list = Array.isArray(data) ? (data as Player[]) : [];
-        setPlayers(list);
-        initJerseyNameDisambiguation(list);
-      } finally {
-        if (!cancelled) setLoading(false);
+        const r = await fetch("/api/players?meta=1");
+        const data = (await r.json()) as { pools?: { poolKey: string; count: number }[] };
+        if (cancelled || !Array.isArray(data.pools)) return;
+        const map: Record<string, number> = {};
+        for (const p of data.pools) map[p.poolKey] = p.count;
+        setPoolCounts(map);
+      } catch {
+        /* ignore */
       }
     })();
     return () => {
@@ -177,12 +188,65 @@ export function MatchLineupBuilderPage() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setPlayersLoadError(null);
+    (async () => {
+      try {
+        const r = await fetch(
+          `/api/players?pool=${encodeURIComponent(poolKey)}&source=saves`
+        );
+        const data = (await r.json()) as unknown;
+        if (cancelled) return;
+        if (!r.ok || (data && typeof data === "object" && !Array.isArray(data) && "error" in data)) {
+          const err = data as { error?: string; hint?: string; code?: string };
+          setPlayers([]);
+          setPlayersLoadError(
+            err.code === "SCHEMA_MISSING_POOL_KEY"
+              ? "Schéma DB se obnovuje — restartuj npm run dev (db:ensure doplní poolKey)."
+              : err.hint || err.error || "Nepodařilo se načíst hráče z API."
+          );
+          return;
+        }
+        const list = Array.isArray(data) ? (data as Player[]) : [];
+        setPlayers(list);
+        initJerseyNameDisambiguation(list);
+      } catch {
+        if (!cancelled) {
+          setPlayers([]);
+          setPlayersLoadError("Nepodařilo se načíst hráče (síť / server).");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [poolKey]);
+
+  const onPoolChange = (next: string) => {
+    if (next === poolKey) return;
+    setPoolKey(next);
+    replaceLineup(EMPTY_LINEUP);
+    setCaptainId(null);
+    setSelectedSlot(null);
+    setShareCode(null);
+    setShareSlug(null);
+  };
+  useEffect(() => {
     setSiteOrigin(typeof window !== "undefined" ? window.location.origin : "");
   }, []);
 
+  /** Bez ?kod= — synchronizuj pool z ?pool= při navigaci. */
+  useEffect(() => {
+    if (needDraftImport || !poolFromQuery || poolFromQuery === poolKey) return;
+    setPoolKey(poolFromQuery);
+  }, [needDraftImport, poolFromQuery, poolKey]);
+
   /** Načtení existující uložené sestavy z účtu (?kod=…) po načtení hráčů. */
   useEffect(() => {
-    if (!needDraftImport || loading) return;
+    if (!needDraftImport || loading || draftHydratedRef.current) return;
 
     let cancelled = false;
 
@@ -198,10 +262,18 @@ export function MatchLineupBuilderPage() {
           slug?: string | null;
           defenseCount?: number;
           allowExtraForward?: boolean;
+          poolKey?: string | null;
         };
         if (cancelled) return;
         if (!r.ok) {
           toast.error(data.error ?? "Nepodařilo se načíst uloženou sestavu.");
+          draftHydratedRef.current = true;
+          return;
+        }
+        const savedPool = normalizeMatchSharePoolKey(data.poolKey);
+        if (savedPool !== poolKey) {
+          setPoolKey(savedPool);
+          // Počkej na reload hráčů pro správný pool, pak znovu aplikuj draft.
           return;
         }
         if (data.lineupStructure && typeof data.lineupStructure === "object") {
@@ -222,6 +294,7 @@ export function MatchLineupBuilderPage() {
         }
         if (typeof data.code === "string") setShareCode(data.code);
         if (typeof data.slug === "string" && data.slug.length > 0) setShareSlug(data.slug);
+        draftHydratedRef.current = true;
         toast.success("Sestava načtena — můžeš ji upravit.");
       } catch {
         /* ignore */
@@ -231,7 +304,7 @@ export function MatchLineupBuilderPage() {
     return () => {
       cancelled = true;
     };
-  }, [needDraftImport, loadEditCode, loading, replaceLineup]);
+  }, [needDraftImport, loadEditCode, loading, poolKey, replaceLineup]);
 
   useEffect(() => {
     if (!mobilePlayerSheetOpen) return;
@@ -369,6 +442,7 @@ export function MatchLineupBuilderPage() {
         lineupStructure: lineup,
         defenseCount,
         allowExtraForward,
+        poolKey,
       };
       const url = shareCode ? `/api/match-share-links/${shareCode}` : "/api/match-share-links";
       const method = shareCode ? "PATCH" : "POST";
@@ -386,10 +460,20 @@ export function MatchLineupBuilderPage() {
       const nextCode = (data as { code?: unknown } | null)?.code;
       const nextSlug = (data as { slug?: unknown } | null)?.slug;
       const nextUrl = (data as { url?: unknown } | null)?.url;
+      const savedPoolRaw = (data as { poolKey?: unknown } | null)?.poolKey;
+      const savedPool = normalizeMatchSharePoolKey(
+        typeof savedPoolRaw === "string" ? savedPoolRaw : poolKey
+      );
       const finalCode = typeof nextCode === "string" ? nextCode : shareCode;
       const finalSlug = typeof nextSlug === "string" ? nextSlug : shareSlug;
       setShareCode(finalCode);
       setShareSlug(finalSlug);
+      if (savedPool !== poolKey) setPoolKey(savedPool);
+      // Keep editor URL on the pool that was saved (repre_* / elh:*) so reload isn’t empty.
+      if (finalCode && typeof window !== "undefined") {
+        const nextPath = matchLineupEditorHref({ code: finalCode, poolKey: savedPool });
+        window.history.replaceState(null, "", nextPath);
+      }
       toast.success("Sestava uložena.");
       if (typeof nextUrl === "string" && nextUrl) return nextUrl;
       if (finalSlug && typeof window !== "undefined") {
@@ -443,11 +527,23 @@ export function MatchLineupBuilderPage() {
 
   const content = fifaEnabled ? (
     <FifaAppPage className="!p-0" fillMobile>
-      <div className={`flex min-h-0 flex-1 flex-col max-lg:px-0 px-3 pt-0 text-white lg:px-4 lg:pb-[4.25rem] ${fifaMobileInlinePool ? "fifa-editor-match-page--mobile max-lg:overflow-hidden" : "max-lg:pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))]"}`}>
-        <div className={`grid min-h-0 flex-1 grid-cols-1 gap-2 lg:grid-cols-[minmax(0,9fr)_minmax(0,16fr)] lg:gap-3 ${fifaMobileInlinePool ? "max-lg:overflow-hidden" : ""}`}>
+      <div className={`flex min-h-0 flex-1 flex-col max-lg-device:px-0 px-3 pt-0 text-white lg-device:px-4 lg-device:pb-[4.25rem] ${fifaMobileInlinePool ? "fifa-editor-match-page--mobile max-lg-device:overflow-hidden" : "max-lg-device:pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))]"}`}>
+        <div className={`grid min-h-0 flex-1 grid-cols-1 gap-2 lg-device:grid-cols-[minmax(0,9fr)_minmax(0,16fr)] lg-device:gap-3 ${fifaMobileInlinePool ? "max-lg-device:overflow-hidden" : ""}`}>
           {showDesktopPoolColumn ? (
-            <section className="hidden min-h-0 min-w-0 lg:flex lg:flex-col">
+            <section className="hidden min-h-0 min-w-0 lg-device:flex lg-device:flex-col">
               <PoolRemoveDropZone className={`${FIFA_EDITOR_SURFACE_POOL} flex min-h-0 flex-1 flex-col overflow-hidden p-2`}>
+                {/* Switcher v pool sloupci — ne nad celým gridem, ať rink nepřijde o výšku (goalie clip). */}
+                <div className="shrink-0 space-y-0.5 pb-1.5">
+                  <LineupPoolSwitcher
+                    value={poolKey}
+                    onChange={onPoolChange}
+                    counts={poolCounts}
+                    size="compact"
+                  />
+                  {loading ? (
+                    <p className="text-[11px] text-[var(--fifa-muted)]">Načítám pool…</p>
+                  ) : null}
+                </div>
                 <PlayerPoolPanel
                   players={players}
                   usedIds={usedIds}
@@ -460,18 +556,19 @@ export function MatchLineupBuilderPage() {
                   simplePickList
                   uiVariant="fifa"
                   gridColumns={2}
+                  emptyHint={playersLoadError}
                 />
               </PoolRemoveDropZone>
             </section>
           ) : null}
 
           <section
-            className={`flex min-h-0 min-w-0 flex-1 flex-col ${fifaMobileInlinePool ? "fifa-editor-mobile-split max-lg:overflow-hidden" : ""}`}
+            className={`flex min-h-0 min-w-0 flex-1 flex-col ${fifaMobileInlinePool ? "fifa-editor-mobile-split max-lg-device:overflow-hidden" : ""}`}
           >
             <div
               className={`${FIFA_EDITOR_SURFACE_CANVAS}${
                 fifaMobileInlinePool ? " fifa-editor-surface--canvas-inline-pool" : ""
-              } flex min-h-0 flex-col overflow-hidden p-0 ${fifaMobileInlinePool ? "max-lg:min-h-0 max-lg:flex-1" : "flex-1"}`}
+              } flex min-h-0 flex-col overflow-hidden p-0 ${fifaMobileInlinePool ? "max-lg-device:min-h-0 max-lg-device:flex-1" : "flex-1"}`}
             >
               <LineBuilder
                 mode="match"
@@ -494,8 +591,16 @@ export function MatchLineupBuilderPage() {
 
             {fifaMobileInlinePool ? (
               <PoolRemoveDropZone
-                className={`${FIFA_EDITOR_SURFACE_POOL} fifa-editor-mobile-pool mt-0 flex min-h-0 flex-col overflow-hidden lg:hidden`}
+                className={`${FIFA_EDITOR_SURFACE_POOL} fifa-editor-mobile-pool mt-0 flex min-h-0 flex-col overflow-hidden lg-device:hidden`}
               >
+                <div className="fifa-editor-mobile-pool__switcher">
+                  <LineupPoolSwitcher
+                    value={poolKey}
+                    onChange={onPoolChange}
+                    counts={poolCounts}
+                    size="compact"
+                  />
+                </div>
                 {!selectedSlot ? (
                   <p className="fifa-editor-mobile-pool__intro shrink-0">Klepni na slot na ledě, pak vyber hráče.</p>
                 ) : null}
@@ -512,6 +617,7 @@ export function MatchLineupBuilderPage() {
                   compactInline
                   uiVariant="fifa"
                   gridColumns={3}
+                  emptyHint={playersLoadError}
                 />
               </PoolRemoveDropZone>
             ) : null}
@@ -520,7 +626,7 @@ export function MatchLineupBuilderPage() {
 
         {mobilePlayerSheetOpen ? (
           <div
-            className="fixed inset-0 z-[52] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg:hidden"
+            className="fixed inset-0 z-[52] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg-device:hidden"
             role="dialog"
             aria-modal="true"
             aria-labelledby="mobile-match-pool-title"
@@ -557,6 +663,7 @@ export function MatchLineupBuilderPage() {
                   onClearSelectedSlot={() => setSelectedSlot(null)}
                   simplePickList
                   uiVariant="fifa"
+                  emptyHint={playersLoadError}
                 />
               </div>
             </div>
@@ -596,7 +703,7 @@ export function MatchLineupBuilderPage() {
         undoDisabled={!canUndo}
         shareDisabled={saving || !valid}
         shareLabel={saving ? "Ukládám…" : shareUrl ? "Sdílet" : "Uložit & sdílet"}
-        className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+        className={mobilePlayerSheetOpen ? "max-lg-device:hidden" : ""}
       />
 
       <MatchLineupSaveShareModal
@@ -616,6 +723,8 @@ export function MatchLineupBuilderPage() {
         allowExtraForward={allowExtraForward}
         shareSlug={shareSlug}
         siteOrigin={siteOrigin}
+        poolKey={poolKey}
+        captainId={captainId}
       />
     </FifaAppPage>
   ) : (
@@ -626,19 +735,25 @@ export function MatchLineupBuilderPage() {
 
       <main className="relative z-10 mx-auto max-w-[90rem] px-3 py-5 sm:px-5 lg:px-6">
         <div className="mb-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="font-display text-2xl font-black">Editor sestavy</h1>
               <p className="mt-1 text-sm text-white/60">
                 Fanouškovský editor (sdílení jako u nominace). {authStatus === "authenticated" ? "Přihlášeno." : ""}
               </p>
             </div>
+            <LineupPoolSwitcher
+              value={poolKey}
+              onChange={onPoolChange}
+              counts={poolCounts}
+              size="compact"
+            />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7">
+        <div className="grid grid-cols-1 gap-5 lg-device:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7">
           {showDesktopPoolColumn ? (
-            <section className="min-w-0 hidden lg:block">
+            <section className="min-w-0 hidden lg-device:block">
               <div
                 className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
                   isNarrowLayout ? "" : "backdrop-blur-sm"
@@ -655,13 +770,14 @@ export function MatchLineupBuilderPage() {
                   onClearSelectedSlot={() => setSelectedSlot(null)}
                   simplePickList
                   gridColumns={3}
+                  emptyHint={playersLoadError}
                 />
               </div>
             </section>
           ) : null}
 
           <section className="min-w-0">
-            <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:pt-1 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
+            <div className="lg-device:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg-device:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:pt-1 lg-device:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
               <div
                 className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
                   isNarrowLayout ? "" : "backdrop-blur-sm"
@@ -698,7 +814,7 @@ export function MatchLineupBuilderPage() {
             (fullscreen flex sloupec, ne částečně visící panel — iOS Safari má pak spolehlivý scroll). */}
         {mobilePlayerSheetOpen ? (
           <div
-            className="fixed inset-0 z-[52] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg:hidden"
+            className="fixed inset-0 z-[52] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg-device:hidden"
             role="dialog"
             aria-modal="true"
             aria-labelledby="mobile-match-pool-title"
@@ -740,6 +856,7 @@ export function MatchLineupBuilderPage() {
                   forcedPosition={forcedPoolPosition}
                   onClearSelectedSlot={() => setSelectedSlot(null)}
                   simplePickList
+                  emptyHint={playersLoadError}
                 />
               </div>
             </div>
@@ -778,7 +895,7 @@ export function MatchLineupBuilderPage() {
         undoDisabled={!canUndo}
         shareDisabled={saving || !valid}
         shareLabel={saving ? "Ukládám…" : shareUrl ? "Sdílet" : "Uložit & sdílet"}
-        className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+        className={mobilePlayerSheetOpen ? "max-lg-device:hidden" : ""}
       />
 
       <MatchLineupSaveShareModal
@@ -798,6 +915,8 @@ export function MatchLineupBuilderPage() {
         allowExtraForward={allowExtraForward}
         shareSlug={shareSlug}
         siteOrigin={siteOrigin}
+        poolKey={poolKey}
+        captainId={captainId}
       />
     </div>
   );

@@ -22,10 +22,15 @@ export function CommunityPostDetailModal({
   onSubmitComment,
   commentBusy,
   canComment,
+  replyToId,
+  onReply,
+  onCancelReply,
   canDelete,
   onDelete,
   onToggleLike,
   likeBusy,
+  onToggleCommentLike,
+  commentLikeBusyId,
 }: {
   post: CommunityPostDto | null;
   players: Player[];
@@ -38,10 +43,15 @@ export function CommunityPostDetailModal({
   onSubmitComment: () => void;
   commentBusy: boolean;
   canComment: boolean;
+  replyToId: string | null;
+  onReply: (commentId: string) => void;
+  onCancelReply: () => void;
   canDelete: boolean;
   onDelete: () => void;
   onToggleLike: () => void;
   likeBusy: boolean;
+  onToggleCommentLike: (commentId: string) => void;
+  commentLikeBusyId: string | null;
 }) {
   if (!open || !post) return null;
 
@@ -73,14 +83,16 @@ export function CommunityPostDetailModal({
 
         <div className="fifa-forum-detail-modal__body">
           <div className="flex items-center gap-3">
-            <div className="fifa-forum-avatar fifa-forum-avatar--lg" aria-hidden>
-              {post.author.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={post.author.image} alt="" className="h-full w-full object-cover" />
-              ) : (
-                authorInitials(authorLabel)
-              )}
-            </div>
+            {post.author.isStaff || post.isStaffPost ? null : (
+              <div className="fifa-forum-avatar fifa-forum-avatar--lg" aria-hidden>
+                {post.author.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={post.author.image} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  authorInitials(authorLabel)
+                )}
+              </div>
+            )}
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 {post.author.isStaff || post.isStaffPost ? (
@@ -170,6 +182,11 @@ export function CommunityPostDetailModal({
               onSubmitComment={onSubmitComment}
               commentBusy={commentBusy}
               showCompose={canComment}
+              replyToId={replyToId}
+              onReply={onReply}
+              onCancelReply={onCancelReply}
+              onToggleLike={onToggleCommentLike}
+              likeBusyId={commentLikeBusyId}
             />
           )}
         </div>

@@ -1,14 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
-import { Loader2, Plus, RefreshCw, Trophy } from "lucide-react";
+import { Loader2, Pencil, Plus, RefreshCw, Trophy } from "lucide-react";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 import { AdminPasswordLoginForm } from "@/components/admin/AdminPasswordLoginForm";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { CommunityPostCard } from "@/components/komunita/CommunityPostCard";
+import { EditPostModal } from "@/components/komunita/EditPostModal";
 import { NewPostModal } from "@/components/komunita/NewPostModal";
 import { PostDetailPanel } from "@/components/komunita/PostDetailPanel";
+import { canEditAdminForumPost } from "@/lib/community/ownPost";
 import {
   ForumLineupPosterCaptureStage,
   type ForumLineupPosterCaptureHandle,
@@ -27,7 +29,7 @@ import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import type { Player } from "@/types";
 
 export function CommunityForumApp() {
-  const { status, data: session } = useSession();
+  const { data: session } = useSession();
   const [adminOk, setAdminOk] = useState(false);
   const [adminChecked, setAdminChecked] = useState(false);
   const [posts, setPosts] = useState<CommunityPostDto[]>([]);
@@ -41,6 +43,8 @@ export function CommunityForumApp() {
   const [q, setQ] = useState("");
   const [contestWinnerBusy, setContestWinnerBusy] = useState(false);
   const [fantasyWinnerBusy, setFantasyWinnerBusy] = useState(false);
+  const [editingPost, setEditingPost] = useState<CommunityPostDto | null>(null);
+  const [editBusy, setEditBusy] = useState(false);
   const captureRef = useRef<ForumLineupPosterCaptureHandle>(null);
 
   const checkAdmin = useCallback(async () => {
@@ -103,12 +107,31 @@ export function CommunityForumApp() {
     );
   };
 
-  const publishContestWinner = async () => {
-    if (status !== "authenticated") {
-      toast.error("Pro publikování se přihlas Google účtem.");
-      return;
+  const saveEditedPost = async (title: string, bodyMd: string) => {
+    if (!editingPost) return;
+    setEditBusy(true);
+    try {
+      const res = await fetch(`/api/admin/komunita/posts/${encodeURIComponent(editingPost.slug)}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, bodyMd }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { post?: CommunityPostDto; error?: string };
+      if (!res.ok || !data.post) {
+        toast.error(data.error ?? "Úprava selhala.");
+        return;
+      }
+      updatePostInList(data.post);
+      setEditingPost(null);
+      toast.success("Příspěvek uložen.");
+      await loadPosts();
+    } finally {
+      setEditBusy(false);
     }
+  };
 
+  const publishContestWinner = async () => {
     setContestWinnerBusy(true);
     try {
       const previewRes = await fetch("/api/admin/komunita/posts?contestWinnerPreview=1", {
@@ -172,11 +195,6 @@ export function CommunityForumApp() {
   };
 
   const publishFantasyWinner = async () => {
-    if (status !== "authenticated") {
-      toast.error("Pro publikování se přihlas Google účtem.");
-      return;
-    }
-
     setFantasyWinnerBusy(true);
     try {
       const previewRes = await fetch("/api/admin/komunita/posts?fantasyWinnerPreview=1", {
@@ -228,10 +246,6 @@ export function CommunityForumApp() {
   };
 
   const toggleLike = async (slug: string) => {
-    if (status !== "authenticated") {
-      toast.error("Pro lajk se přihlas Google účtem.");
-      return;
-    }
     setLikeBusySlug(slug);
     try {
       const res = await fetch(`/api/admin/komunita/posts/${encodeURIComponent(slug)}/like`, {
@@ -291,8 +305,8 @@ export function CommunityForumApp() {
             </p>
             <h1 className="mt-1 font-sans text-2xl font-bold text-white">Komunita</h1>
             <p className="mt-1 max-w-xl text-sm text-white/55">
-              Feed, kategorie, přílohy sestav, lajky a komentáře. Veřejné URL zatím ne — jen pro
-              testování.
+              Admin rozhraní pro publikování, připínání a moderaci. Vlastní Admin příspěvky upravíš
+              žlutým tlačítkem <span className="font-semibold text-amber-200">Upravit příspěvek</span> pod kartou.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -304,52 +318,40 @@ export function CommunityForumApp() {
               <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
               Obnovit
             </button>
-            {status === "authenticated" ? (
-              <>
-                <button
-                  type="button"
-                  disabled={contestWinnerBusy}
-                  onClick={() => void publishContestWinner()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-amber-400/35 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-100 hover:bg-amber-500/20 disabled:opacity-60"
-                >
-                  {contestWinnerBusy ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Trophy className="h-4 w-4" />
-                  )}
-                  Vítěz nominací
-                </button>
-                <button
-                  type="button"
-                  disabled={fantasyWinnerBusy}
-                  onClick={() => void publishFantasyWinner()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/35 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20 disabled:opacity-60"
-                >
-                  {fantasyWinnerBusy ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Trophy className="h-4 w-4" />
-                  )}
-                  Vítěz fantasy
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setNewOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2 text-sm font-bold"
-                >
-                  <Plus className="h-4 w-4" />
-                  Nový příspěvek
-                </button>
-              </>
-            ) : (
-              <button
-                type="button"
-                onClick={() => void signIn("google")}
-                className="rounded-xl border border-cyan-500/40 px-4 py-2 text-sm text-cyan-200"
-              >
-                Přihlásit Google (psaní)
-              </button>
-            )}
+            <button
+              type="button"
+              disabled={contestWinnerBusy}
+              onClick={() => void publishContestWinner()}
+              className="inline-flex items-center gap-2 rounded-xl border border-amber-400/35 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-100 hover:bg-amber-500/20 disabled:opacity-60"
+            >
+              {contestWinnerBusy ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trophy className="h-4 w-4" />
+              )}
+              Vítěz nominací
+            </button>
+            <button
+              type="button"
+              disabled={fantasyWinnerBusy}
+              onClick={() => void publishFantasyWinner()}
+              className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/35 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20 disabled:opacity-60"
+            >
+              {fantasyWinnerBusy ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trophy className="h-4 w-4" />
+              )}
+              Vítěz fantasy
+            </button>
+            <button
+              type="button"
+              onClick={() => setNewOpen(true)}
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2 text-sm font-bold"
+            >
+              <Plus className="h-4 w-4" />
+              Nový příspěvek
+            </button>
           </div>
         </div>
 
@@ -391,20 +393,31 @@ export function CommunityForumApp() {
               <p className="text-sm text-white/50">Načítám feed…</p>
             ) : posts.length === 0 ? (
               <p className="rounded-2xl border border-white/10 bg-black/20 p-6 text-sm text-white/50">
-                Zatím žádné příspěvky. Přihlas Google a vytvoř první.
+                Zatím žádné příspěvky. Vytvoř první admin příspěvek.
               </p>
             ) : (
               posts.map((post) => (
-                <CommunityPostCard
-                  key={post.id}
-                  post={post}
-                  players={players}
-                  selected={selectedSlug === post.slug}
-                  onOpenDetail={() => setSelectedSlug(post.slug)}
-                  onSelect={() => setSelectedSlug(post.slug)}
-                  onToggleLike={() => void toggleLike(post.slug)}
-                  likeBusy={likeBusySlug === post.slug}
-                />
+                <div key={post.id} className="space-y-2">
+                  <CommunityPostCard
+                    post={post}
+                    players={players}
+                    selected={selectedSlug === post.slug}
+                    onOpenDetail={() => setSelectedSlug(post.slug)}
+                    onSelect={() => setSelectedSlug(post.slug)}
+                    onToggleLike={() => void toggleLike(post.slug)}
+                    likeBusy={likeBusySlug === post.slug}
+                  />
+                  {canEditAdminForumPost(post, session?.user?.id) ? (
+                    <button
+                      type="button"
+                      onClick={() => setEditingPost(post)}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-amber-400/45 bg-amber-500/20 px-3 py-2 text-sm font-semibold text-amber-50 hover:bg-amber-500/30"
+                    >
+                      <Pencil className="h-4 w-4" />
+                      Upravit příspěvek
+                    </button>
+                  ) : null}
+                </div>
               ))
             )}
           </div>
@@ -435,6 +448,16 @@ export function CommunityForumApp() {
         apiBase="/api/admin/komunita"
         staffPost
         players={players}
+      />
+      <EditPostModal
+        open={!!editingPost}
+        initialTitle={editingPost?.title ?? ""}
+        initialBodyMd={editingPost?.bodyMd ?? ""}
+        busy={editBusy}
+        onClose={() => {
+          if (!editBusy) setEditingPost(null);
+        }}
+        onSave={(title, bodyMd) => void saveEditedPost(title, bodyMd)}
       />
       <ForumLineupPosterCaptureStage ref={captureRef} />
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CommunityPostDto } from "@/lib/community/types";
 import {
   computeForumPosterContainScale,
@@ -11,7 +11,69 @@ import {
 } from "@/lib/sharePosterLayout";
 import { CommunityBody } from "@/components/komunita/CommunityBody";
 import { CommunityPosterThumb } from "@/components/komunita/CommunityPosterThumb";
+import {
+  FORUM_POST_BODY_MAX,
+  FORUM_POST_BODY_MAX_LINES,
+} from "@/lib/community/validate";
 import type { Player } from "@/types";
+
+function FittedForumText({
+  title,
+  body,
+  isDense,
+  isLegacyLong,
+}: {
+  title: string;
+  body: string;
+  isDense: boolean;
+  isLegacyLong: boolean;
+}) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const bodyWrapRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    const bodyEl = bodyWrapRef.current?.firstElementChild as HTMLElement | null;
+    if (!wrap || !bodyEl) return;
+
+    const start = isLegacyLong ? 14 : isDense ? 15 : 16;
+    const floor = 13;
+    const lineHeight = isLegacyLong ? "1.4" : isDense ? "1.42" : "1.45";
+
+    const fit = () => {
+      let size = start;
+      bodyEl.style.setProperty("font-size", `${size}px`, "important");
+      bodyEl.style.setProperty("line-height", lineHeight, "important");
+      while (size > floor && wrap.scrollHeight > wrap.clientHeight + 1) {
+        size -= 0.25;
+        bodyEl.style.setProperty("font-size", `${size}px`, "important");
+      }
+    };
+
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(wrap);
+    return () => observer.disconnect();
+  }, [title, body, isDense, isLegacyLong]);
+
+  return (
+    <div ref={wrapRef} className="fifa-forum-post-card__frame-text">
+      <h2 className="fifa-forum-post-card__frame-title">{title}</h2>
+      <div ref={bodyWrapRef}>
+        <CommunityBody
+          text={body}
+          className={[
+            "fifa-forum-post-card__frame-body !text-inherit",
+            isDense ? "fifa-forum-post-card__frame-body--dense" : "",
+            isLegacyLong ? "fifa-forum-post-card__frame-body--legacy" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        />
+      </div>
+    </div>
+  );
+}
 
 export function CommunityPostMediaFrame({
   post,
@@ -59,6 +121,11 @@ export function CommunityPostMediaFrame({
     typeof snapshot?.meta?.imageAlt === "string" && snapshot.meta.imageAlt.trim()
       ? snapshot.meta.imageAlt.trim()
       : post.title;
+  const bodyLineCount = post.bodyMd.split(/\r\n?|\n/).length;
+  const isLegacyLong =
+    post.bodyMd.length > FORUM_POST_BODY_MAX ||
+    bodyLineCount > FORUM_POST_BODY_MAX_LINES;
+  const isDense = post.bodyMd.length > 220;
 
   if (imageUrl) {
     return (
@@ -117,10 +184,12 @@ export function CommunityPostMediaFrame({
 
   return (
     <div ref={frameRef} className="fifa-forum-post-card__frame fifa-forum-post-card__frame--text">
-      <div className="fifa-forum-post-card__frame-text">
-        <h2 className="fifa-forum-post-card__frame-title">{post.title}</h2>
-        <CommunityBody text={post.bodyMd} className="fifa-forum-post-card__frame-body !text-inherit" />
-      </div>
+      <FittedForumText
+        title={post.title}
+        body={post.bodyMd}
+        isDense={isDense}
+        isLegacyLong={isLegacyLong}
+      />
     </div>
   );
 }

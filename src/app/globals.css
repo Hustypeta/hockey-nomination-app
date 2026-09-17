@@ -3,8 +3,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800;900&display=swap&subset=latin,latin-ext');
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap&subset=latin,latin-ext');
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap&subset=latin,latin-ext');
+/** Sparta digits — angular block face close to the chest „S“ wordmark. */
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap');
+/** Karlovy Vary digits — sharp geometric block (ČERNOCH #21, no curves). */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&display=swap');
 @import "tailwindcss";
 @import "./fifa-design-system.css";
+
+/**
+ * Zoom-stable layout breakpoints (pair with device-width so desktop browser zoom
+ * magnifies instead of reflowing into the mobile shell). Prefer these over bare
+ * `max-lg:` / `lg:` wherever the class flips desktop↔mobile structure.
+ * Use @slot body form — shorthand with comma media lists emits invalid CSS.
+ */
+@custom-variant max-lg-device {
+  @media (max-width: 1023px) and (max-device-width: 1023px) {
+    @slot;
+  }
+}
+@custom-variant lg-device {
+  @media (min-width: 1024px), (min-device-width: 1024px) {
+    @slot;
+  }
+}
 
 :root {
   --background: #05080f;
@@ -200,9 +221,12 @@ body::after {
     0 0.5px 0 rgba(0, 45, 84, 0.1);
 }
 
-/** Úzký výřez exportu — potisk držet ve středu bílého yoku (PNG má zaoblený panel). */
+/** Export — příjmení pod dresem může být širší než dlaždice (mezera mezi dresy). */
 .jersey-nameplate-text--poster-crop {
   margin-inline: auto;
+  width: max-content;
+  max-width: none;
+  overflow: visible;
 }
 
 /**
@@ -260,6 +284,111 @@ body::after {
 /* Velikost jména pod dresem řídí inline style z jerseyNameplateNameProps (poster). */
 .nhl25-share-poster-capture[data-poster-surface="light"] .nhl25-poster-jersey-hem-name span:not([style*="font-size"]) {
   font-size: clamp(14px, 2vw, 18px);
+}
+
+/**
+ * Sjednocení vizuální velikosti blank PNG napříč pooly (karty / pool listy).
+ * Baseline = národák skater (~25 % boční padding → object-cover zoomuje správně).
+ * Všechny klubové blanky (S i G) jsou teď stejně těsné jako národák G (~1 % pad)
+ * → jeden scale pro club skater a jeden pro club/national goalie. Bez per-team zoomů.
+ * Neaplikovat na `.fifa-rink-jersey` — rink má vlastní fit v fifa-design-system.css.
+ */
+.jersey-slot-root:not(.fifa-rink-jersey) .jersey-blank-img,
+.premium-jersey-slot-card .jersey-blank-img,
+.nhl25-jersey-card-root .jersey-blank-img {
+  transform-origin: center 34%;
+}
+
+.jersey-slot-root:not(.fifa-rink-jersey) .jersey-blank-img[data-jersey-kit="national"][data-jersey-kind="goalie"],
+.premium-jersey-slot-card .jersey-blank-img[data-jersey-kit="national"][data-jersey-kind="goalie"],
+.nhl25-jersey-card-root .jersey-blank-img[data-jersey-kit="national"][data-jersey-kind="goalie"] {
+  object-position: center 30%;
+  transform: scale(0.9);
+}
+
+/* Club skater: tight crop ≈ národák G → scale 0.507/0.97 ≈ 0.52 = silueta národák skater. */
+.jersey-slot-root:not(.fifa-rink-jersey) .jersey-blank-img[data-jersey-kit="club"][data-jersey-kind="skater"],
+.premium-jersey-slot-card .jersey-blank-img[data-jersey-kit="club"][data-jersey-kind="skater"],
+.nhl25-jersey-card-root .jersey-blank-img[data-jersey-kit="club"][data-jersey-kind="skater"] {
+  object-position: center 30%;
+  transform: scale(0.52);
+}
+
+/* Club goalie: stejný crop jako národák G → stejný scale. */
+.jersey-slot-root:not(.fifa-rink-jersey) .jersey-blank-img[data-jersey-kit="club"][data-jersey-kind="goalie"],
+.premium-jersey-slot-card .jersey-blank-img[data-jersey-kit="club"][data-jersey-kind="goalie"],
+.nhl25-jersey-card-root .jersey-blank-img[data-jersey-kit="club"][data-jersey-kind="goalie"] {
+  object-position: center 30%;
+  transform: scale(0.9);
+}
+
+/**
+ * Team print-zone tuning (name above number on card / premium / rink).
+ * Budějovice: name must sit ABOVE the yellow/red chest stripe (~14–16%).
+ * Liberec / Třinec: slightly higher nameplate vs default club 25–29%.
+ */
+.premium-jersey-slot-card[data-jersey-team="budejovice"] .jersey-print-overlay:not(.jersey-print-overlay--poster-number),
+.nhl25-jersey-card-root[data-jersey-team="budejovice"] .jersey-print-overlay:not(.jersey-print-overlay--poster-number),
+.jersey-slot-root:not(.fifa-rink-jersey)[data-jersey-team="budejovice"] .jersey-print-overlay {
+  /* Name in blue band above chest stripe; gap clears stripe before number. */
+  padding-top: 15% !important;
+  gap: 0.85rem !important;
+  padding-bottom: 20% !important;
+}
+
+.premium-jersey-slot-card[data-jersey-team="liberec"] .jersey-print-overlay:not(.jersey-print-overlay--poster-number),
+.nhl25-jersey-card-root[data-jersey-team="liberec"] .jersey-print-overlay:not(.jersey-print-overlay--poster-number),
+.jersey-slot-root:not(.fifa-rink-jersey)[data-jersey-team="liberec"] .jersey-print-overlay {
+  padding-top: 24.5% !important;
+  gap: 0.42rem !important;
+}
+
+.premium-jersey-slot-card[data-jersey-team="trinec"] .jersey-print-overlay:not(.jersey-print-overlay--poster-number),
+.nhl25-jersey-card-root[data-jersey-team="trinec"] .jersey-print-overlay:not(.jersey-print-overlay--poster-number),
+.jersey-slot-root:not(.fifa-rink-jersey)[data-jersey-team="trinec"] .jersey-print-overlay {
+  padding-top: 24% !important;
+  gap: 0.4rem !important;
+}
+
+/* Litvínov: deep black yoke — name/number sit lower in the yellow torso. */
+.premium-jersey-slot-card[data-jersey-team="litvinov"] .jersey-print-overlay:not(.jersey-print-overlay--poster-number),
+.nhl25-jersey-card-root[data-jersey-team="litvinov"] .jersey-print-overlay:not(.jersey-print-overlay--poster-number),
+.jersey-slot-root:not(.fifa-rink-jersey)[data-jersey-team="litvinov"] .jersey-print-overlay {
+  padding-top: 31% !important;
+  gap: 0.4rem !important;
+}
+
+/* Poster number overlay stays on the repre template (pt-[40%]); no per-club shifts. */
+
+/*
+ * Black Ops One a Orbitron mají při stejné CSS velikosti menší optickou výšku.
+ * Dorovnání platí jen pro editorové karty; exportní plakát má vlastní rozměry.
+ */
+.premium-jersey-slot-card:is([data-jersey-team="sparta"], [data-jersey-team="vitkovice"]) .jersey-back-number-text,
+.jersey-slot-root:not(.fifa-rink-jersey):is([data-jersey-team="sparta"], [data-jersey-team="vitkovice"]) .jersey-back-number-text {
+  scale: 1.13;
+}
+
+.premium-jersey-slot-card[data-jersey-team="vary"] .jersey-back-number-text,
+.jersey-slot-root:not(.fifa-rink-jersey)[data-jersey-team="vary"] .jersey-back-number-text {
+  scale: 1.06;
+}
+
+/* Keep Budějovice / Liberec / Třinec on-jersey names out of sleeve seams (not poster hem). */
+.premium-jersey-slot-card[data-jersey-team="budejovice"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop),
+.nhl25-jersey-card-root[data-jersey-team="budejovice"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop),
+.jersey-slot-root[data-jersey-team="budejovice"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop) {
+  max-width: min(100%, 6.6rem);
+  letter-spacing: 0.045em;
+}
+
+.premium-jersey-slot-card[data-jersey-team="liberec"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop),
+.nhl25-jersey-card-root[data-jersey-team="liberec"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop),
+.jersey-slot-root[data-jersey-team="liberec"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop),
+.premium-jersey-slot-card[data-jersey-team="trinec"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop),
+.nhl25-jersey-card-root[data-jersey-team="trinec"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop),
+.jersey-slot-root[data-jersey-team="trinec"] .jersey-nameplate-text:not(.jersey-nameplate-text--poster-crop) {
+  max-width: min(100%, 7.1rem);
 }
 
 /**
@@ -344,6 +473,991 @@ body::after {
   -webkit-text-stroke-color: #002d54;
   paint-order: stroke fill;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/**
+ * HC Dynamo Pardubice — ČERVENKA #19: úzké bezpatkové sportovní číslo,
+ * bílá výplň + navy obrys. text-shadow vrstvy: spolehlivější v html-to-image.
+ */
+.jersey-back-number-text.jersey-back-number-text--pardubice,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--pardubice,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--pardubice {
+  --pardubice-number-navy: #0a1f4d;
+  font-family: "Barlow Condensed", "Oswald", "Impact", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  font-stretch: extra-condensed;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "tnum" 0, "lnum" 1;
+  display: inline-block;
+  transform: scaleX(0.72);
+  transform-origin: center;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.55px, 0.105em, 3.5px);
+  -webkit-text-stroke-color: var(--pardubice-number-navy);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.45px -1.45px 0 var(--pardubice-number-navy),
+    1.45px -1.45px 0 var(--pardubice-number-navy),
+    -1.45px 1.45px 0 var(--pardubice-number-navy),
+    1.45px 1.45px 0 var(--pardubice-number-navy),
+    -1.95px 0 0 var(--pardubice-number-navy),
+    1.95px 0 0 var(--pardubice-number-navy),
+    0 -1.95px 0 var(--pardubice-number-navy),
+    0 1.95px 0 var(--pardubice-number-navy);
+}
+
+.jersey-nameplate-text.jersey-nameplate-text--pardubice {
+  --pardubice-number-navy: #0a1f4d;
+  font-family: "Barlow Condensed", "Oswald", "Impact", var(--font-jersey-print);
+  font-weight: 800;
+  letter-spacing: 0.045em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.55px, 0.04em, 1.3px);
+  -webkit-text-stroke-color: var(--pardubice-number-navy);
+  paint-order: stroke fill;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--pardubice,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--pardubice {
+  letter-spacing: 0.22em;
+  font-stretch: extra-condensed;
+  font-variant-numeric: lining-nums;
+  display: inline-block;
+  transform: scaleX(0.72);
+  transform-origin: center;
+  -webkit-text-stroke-width: clamp(1.8px, 0.12em, 4px);
+  -webkit-text-stroke-color: var(--pardubice-number-navy, #0a1f4d);
+  text-shadow:
+    -1.85px -1.85px 0 var(--pardubice-number-navy, #0a1f4d),
+    1.85px -1.85px 0 var(--pardubice-number-navy, #0a1f4d),
+    -1.85px 1.85px 0 var(--pardubice-number-navy, #0a1f4d),
+    1.85px 1.85px 0 var(--pardubice-number-navy, #0a1f4d),
+    -2.35px 0 0 var(--pardubice-number-navy, #0a1f4d),
+    2.35px 0 0 var(--pardubice-number-navy, #0a1f4d),
+    0 -2.35px 0 var(--pardubice-number-navy, #0a1f4d),
+    0 2.35px 0 var(--pardubice-number-navy, #0a1f4d);
+}
+
+/**
+ * HC Kometa Brno — FLEK #9: bílá výplň, silný navy obrys, tenký bílý vnější rim.
+ * Condensed block face (Bebas); token `#001d4a` = dark outline z reference.
+ */
+.jersey-back-number-text.jersey-back-number-text--kometa,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--kometa,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--kometa {
+  --kometa-number-navy: #001d4a;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(2px, 0.13em, 4.4px);
+  -webkit-text-stroke-color: var(--kometa-number-navy);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.75px -1.75px 0 var(--kometa-number-navy),
+    1.75px -1.75px 0 var(--kometa-number-navy),
+    -1.75px 1.75px 0 var(--kometa-number-navy),
+    1.75px 1.75px 0 var(--kometa-number-navy),
+    -2.35px 0 0 var(--kometa-number-navy),
+    2.35px 0 0 var(--kometa-number-navy),
+    0 -2.35px 0 var(--kometa-number-navy),
+    0 2.35px 0 var(--kometa-number-navy),
+    -3.1px -3.1px 0 #ffffff,
+    3.1px -3.1px 0 #ffffff,
+    -3.1px 3.1px 0 #ffffff,
+    3.1px 3.1px 0 #ffffff,
+    -3.55px 0 0 #ffffff,
+    3.55px 0 0 #ffffff,
+    0 -3.55px 0 #ffffff,
+    0 3.55px 0 #ffffff;
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--kometa,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--kometa {
+  -webkit-text-stroke-width: clamp(2.25px, 0.145em, 4.9px);
+  -webkit-text-stroke-color: var(--kometa-number-navy, #001d4a);
+  text-shadow:
+    -2.1px -2.1px 0 var(--kometa-number-navy, #001d4a),
+    2.1px -2.1px 0 var(--kometa-number-navy, #001d4a),
+    -2.1px 2.1px 0 var(--kometa-number-navy, #001d4a),
+    2.1px 2.1px 0 var(--kometa-number-navy, #001d4a),
+    -2.75px 0 0 var(--kometa-number-navy, #001d4a),
+    2.75px 0 0 var(--kometa-number-navy, #001d4a),
+    0 -2.75px 0 var(--kometa-number-navy, #001d4a),
+    0 2.75px 0 var(--kometa-number-navy, #001d4a),
+    -3.55px -3.55px 0 #ffffff,
+    3.55px -3.55px 0 #ffffff,
+    -3.55px 3.55px 0 #ffffff,
+    3.55px 3.55px 0 #ffffff,
+    -4.05px 0 0 #ffffff,
+    4.05px 0 0 #ffffff,
+    0 -4.05px 0 #ffffff,
+    0 4.05px 0 #ffffff;
+}
+
+/**
+ * HC Kometa Brno — bílé jméno na královsky modrém dresu (kit reference FLEK).
+ */
+.jersey-nameplate-text.jersey-nameplate-text--kometa,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--kometa,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--kometa {
+  --kometa-number-navy: #001d4a;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.55px, 0.05em, 1.6px);
+  -webkit-text-stroke-color: var(--kometa-number-navy);
+  paint-order: stroke fill;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--kometa,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--kometa {
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.7px, 0.068em, 2.05px);
+  -webkit-text-stroke-color: var(--kometa-number-navy, #001d4a);
+  paint-order: stroke fill;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/**
+ * HC Energie Karlovy Vary — ČERNOCH #21: solid teal on black, no outline.
+ * Sharp geometric block face (Orbitron) — straight bars / no soft curves.
+ */
+.jersey-back-number-text.jersey-back-number-text--karlovy,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--karlovy,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--karlovy {
+  --karlovy-number-teal: #00c4b4;
+  font-family: "Orbitron", "Bebas Neue", "Oswald", var(--font-jersey-print);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--karlovy-number-teal);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--karlovy,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--karlovy {
+  color: var(--karlovy-number-teal, #00c4b4);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  text-shadow: none;
+}
+
+/**
+ * HC Energie Karlovy Vary — teal condensed nameplate on black kit.
+ */
+.jersey-nameplate-text.jersey-nameplate-text--karlovy,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--karlovy,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--karlovy {
+  --karlovy-number-teal: #00c4b4;
+  font-family: "Oswald", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--karlovy-number-teal);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--karlovy,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--karlovy {
+  color: var(--karlovy-number-teal, #00c4b4);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/**
+ * HC Litvínov — yellow kit (KAŠE O. #73): solid black digits + thin white outline.
+ */
+.jersey-back-number-text.jersey-back-number-text--litvinov,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--litvinov,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--litvinov {
+  --litvinov-number-black: #0a0a0a;
+  --litvinov-number-white: #ffffff;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--litvinov-number-black);
+  -webkit-text-stroke-width: clamp(1.15px, 0.078em, 2.7px);
+  -webkit-text-stroke-color: var(--litvinov-number-white);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.05px -1.05px 0 var(--litvinov-number-white),
+    1.05px -1.05px 0 var(--litvinov-number-white),
+    -1.05px 1.05px 0 var(--litvinov-number-white),
+    1.05px 1.05px 0 var(--litvinov-number-white),
+    -1.4px 0 0 var(--litvinov-number-white),
+    1.4px 0 0 var(--litvinov-number-white),
+    0 -1.4px 0 var(--litvinov-number-white),
+    0 1.4px 0 var(--litvinov-number-white);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--litvinov,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--litvinov {
+  color: var(--litvinov-number-black, #0a0a0a);
+  -webkit-text-stroke-width: clamp(1.35px, 0.09em, 3.1px);
+  -webkit-text-stroke-color: var(--litvinov-number-white, #ffffff);
+  text-shadow:
+    -1.25px -1.25px 0 var(--litvinov-number-white, #ffffff),
+    1.25px -1.25px 0 var(--litvinov-number-white, #ffffff),
+    -1.25px 1.25px 0 var(--litvinov-number-white, #ffffff),
+    1.25px 1.25px 0 var(--litvinov-number-white, #ffffff),
+    -1.65px 0 0 var(--litvinov-number-white, #ffffff),
+    1.65px 0 0 var(--litvinov-number-white, #ffffff),
+    0 -1.65px 0 var(--litvinov-number-white, #ffffff),
+    0 1.65px 0 var(--litvinov-number-white, #ffffff);
+}
+
+/**
+ * HC Litvínov — solid black nameplate on yellow kit (no yellow outline).
+ */
+.jersey-nameplate-text.jersey-nameplate-text--litvinov,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--litvinov,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--litvinov {
+  --litvinov-number-black: #0a0a0a;
+  font-family: "Oswald", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--litvinov-number-black);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--litvinov,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--litvinov {
+  color: var(--litvinov-number-black, #0a0a0a);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/**
+ * Rytíři Kladno — layered block digits (photo: JELÍNEK #88 / FILIP #8).
+ * On our white blank: navy fill + thick white rim + sky outer (same 3-tone stack as navy kit).
+ */
+.jersey-back-number-text.jersey-back-number-text--kladno,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--kladno,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--kladno {
+  --kladno-number-navy: #0a2a6b;
+  --kladno-number-sky: #5eb6e8;
+  --kladno-number-white: #ffffff;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--kladno-number-navy);
+  -webkit-text-stroke-width: clamp(1.85px, 0.12em, 4px);
+  -webkit-text-stroke-color: var(--kladno-number-white);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.6px -1.6px 0 var(--kladno-number-white),
+    1.6px -1.6px 0 var(--kladno-number-white),
+    -1.6px 1.6px 0 var(--kladno-number-white),
+    1.6px 1.6px 0 var(--kladno-number-white),
+    -2.15px 0 0 var(--kladno-number-white),
+    2.15px 0 0 var(--kladno-number-white),
+    0 -2.15px 0 var(--kladno-number-white),
+    0 2.15px 0 var(--kladno-number-white),
+    -2.85px -2.85px 0 var(--kladno-number-sky),
+    2.85px -2.85px 0 var(--kladno-number-sky),
+    -2.85px 2.85px 0 var(--kladno-number-sky),
+    2.85px 2.85px 0 var(--kladno-number-sky),
+    -3.3px 0 0 var(--kladno-number-sky),
+    3.3px 0 0 var(--kladno-number-sky),
+    0 -3.3px 0 var(--kladno-number-sky),
+    0 3.3px 0 var(--kladno-number-sky);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--kladno,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--kladno {
+  color: var(--kladno-number-navy, #0a2a6b);
+  -webkit-text-stroke-width: clamp(2.1px, 0.135em, 4.5px);
+  -webkit-text-stroke-color: var(--kladno-number-white, #ffffff);
+  text-shadow:
+    -1.85px -1.85px 0 var(--kladno-number-white, #ffffff),
+    1.85px -1.85px 0 var(--kladno-number-white, #ffffff),
+    -1.85px 1.85px 0 var(--kladno-number-white, #ffffff),
+    1.85px 1.85px 0 var(--kladno-number-white, #ffffff),
+    -2.45px 0 0 var(--kladno-number-white, #ffffff),
+    2.45px 0 0 var(--kladno-number-white, #ffffff),
+    0 -2.45px 0 var(--kladno-number-white, #ffffff),
+    0 2.45px 0 var(--kladno-number-white, #ffffff),
+    -3.25px -3.25px 0 var(--kladno-number-sky, #5eb6e8),
+    3.25px -3.25px 0 var(--kladno-number-sky, #5eb6e8),
+    -3.25px 3.25px 0 var(--kladno-number-sky, #5eb6e8),
+    3.25px 3.25px 0 var(--kladno-number-sky, #5eb6e8),
+    -3.75px 0 0 var(--kladno-number-sky, #5eb6e8),
+    3.75px 0 0 var(--kladno-number-sky, #5eb6e8),
+    0 -3.75px 0 var(--kladno-number-sky, #5eb6e8),
+    0 3.75px 0 var(--kladno-number-sky, #5eb6e8);
+}
+
+/**
+ * Rytíři Kladno — solid dark blue nameplate on white kit (no sky outline).
+ */
+.jersey-nameplate-text.jersey-nameplate-text--kladno,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--kladno,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--kladno {
+  --kladno-number-navy: #0a2a6b;
+  font-family: "Oswald", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--kladno-number-navy);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--kladno,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--kladno {
+  color: var(--kladno-number-navy, #0a2a6b);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/**
+ * HC Plzeň — layered block digits (photo: GULÁŠ #77).
+ * On our white blank: navy fill + thick white rim + sky outer (same 3-tone stack as navy kit).
+ */
+.jersey-back-number-text.jersey-back-number-text--plzen,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--plzen,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--plzen {
+  --plzen-number-navy: #00205b;
+  --plzen-number-sky: #6eb6e8;
+  --plzen-number-white: #ffffff;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--plzen-number-navy);
+  -webkit-text-stroke-width: clamp(1.85px, 0.12em, 4px);
+  -webkit-text-stroke-color: var(--plzen-number-white);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.6px -1.6px 0 var(--plzen-number-white),
+    1.6px -1.6px 0 var(--plzen-number-white),
+    -1.6px 1.6px 0 var(--plzen-number-white),
+    1.6px 1.6px 0 var(--plzen-number-white),
+    -2.15px 0 0 var(--plzen-number-white),
+    2.15px 0 0 var(--plzen-number-white),
+    0 -2.15px 0 var(--plzen-number-white),
+    0 2.15px 0 var(--plzen-number-white),
+    -2.85px -2.85px 0 var(--plzen-number-sky),
+    2.85px -2.85px 0 var(--plzen-number-sky),
+    -2.85px 2.85px 0 var(--plzen-number-sky),
+    2.85px 2.85px 0 var(--plzen-number-sky),
+    -3.3px 0 0 var(--plzen-number-sky),
+    3.3px 0 0 var(--plzen-number-sky),
+    0 -3.3px 0 var(--plzen-number-sky),
+    0 3.3px 0 var(--plzen-number-sky);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--plzen,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--plzen {
+  color: var(--plzen-number-navy, #00205b);
+  -webkit-text-stroke-width: clamp(2.1px, 0.135em, 4.5px);
+  -webkit-text-stroke-color: var(--plzen-number-white, #ffffff);
+  text-shadow:
+    -1.85px -1.85px 0 var(--plzen-number-white, #ffffff),
+    1.85px -1.85px 0 var(--plzen-number-white, #ffffff),
+    -1.85px 1.85px 0 var(--plzen-number-white, #ffffff),
+    1.85px 1.85px 0 var(--plzen-number-white, #ffffff),
+    -2.45px 0 0 var(--plzen-number-white, #ffffff),
+    2.45px 0 0 var(--plzen-number-white, #ffffff),
+    0 -2.45px 0 var(--plzen-number-white, #ffffff),
+    0 2.45px 0 var(--plzen-number-white, #ffffff),
+    -3.25px -3.25px 0 var(--plzen-number-sky, #6eb6e8),
+    3.25px -3.25px 0 var(--plzen-number-sky, #6eb6e8),
+    -3.25px 3.25px 0 var(--plzen-number-sky, #6eb6e8),
+    3.25px 3.25px 0 var(--plzen-number-sky, #6eb6e8),
+    -3.75px 0 0 var(--plzen-number-sky, #6eb6e8),
+    3.75px 0 0 var(--plzen-number-sky, #6eb6e8),
+    0 -3.75px 0 var(--plzen-number-sky, #6eb6e8),
+    0 3.75px 0 var(--plzen-number-sky, #6eb6e8);
+}
+
+/**
+ * HC Plzeň — solid navy nameplate on white kit (usual nameplate position; no outline).
+ */
+.jersey-nameplate-text.jersey-nameplate-text--plzen,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--plzen,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--plzen {
+  --plzen-number-navy: #00205b;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--plzen-number-navy);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--plzen,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--plzen {
+  color: var(--plzen-number-navy, #00205b);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/**
+ * Bílí Tygři Liberec — ŠIMEK #44: cyan fill + thin white inner + thick navy outer.
+ * Tall block face (Bebas); nameplate stays solid navy.
+ */
+.jersey-back-number-text.jersey-back-number-text--liberec,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--liberec,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--liberec {
+  --liberec-number-cyan: #00adef;
+  --liberec-number-navy: #001a33;
+  --liberec-number-white: #ffffff;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--liberec-number-cyan);
+  -webkit-text-stroke-width: clamp(1.15px, 0.08em, 2.8px);
+  -webkit-text-stroke-color: var(--liberec-number-white);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.05px -1.05px 0 var(--liberec-number-white),
+    1.05px -1.05px 0 var(--liberec-number-white),
+    -1.05px 1.05px 0 var(--liberec-number-white),
+    1.05px 1.05px 0 var(--liberec-number-white),
+    -1.4px 0 0 var(--liberec-number-white),
+    1.4px 0 0 var(--liberec-number-white),
+    0 -1.4px 0 var(--liberec-number-white),
+    0 1.4px 0 var(--liberec-number-white),
+    -2.35px -2.35px 0 var(--liberec-number-navy),
+    2.35px -2.35px 0 var(--liberec-number-navy),
+    -2.35px 2.35px 0 var(--liberec-number-navy),
+    2.35px 2.35px 0 var(--liberec-number-navy),
+    -2.85px 0 0 var(--liberec-number-navy),
+    2.85px 0 0 var(--liberec-number-navy),
+    0 -2.85px 0 var(--liberec-number-navy),
+    0 2.85px 0 var(--liberec-number-navy);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--liberec,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--liberec {
+  color: var(--liberec-number-cyan, #00adef);
+  -webkit-text-stroke-width: clamp(1.35px, 0.09em, 3.2px);
+  -webkit-text-stroke-color: var(--liberec-number-white, #ffffff);
+  text-shadow:
+    -1.25px -1.25px 0 var(--liberec-number-white, #ffffff),
+    1.25px -1.25px 0 var(--liberec-number-white, #ffffff),
+    -1.25px 1.25px 0 var(--liberec-number-white, #ffffff),
+    1.25px 1.25px 0 var(--liberec-number-white, #ffffff),
+    -1.65px 0 0 var(--liberec-number-white, #ffffff),
+    1.65px 0 0 var(--liberec-number-white, #ffffff),
+    0 -1.65px 0 var(--liberec-number-white, #ffffff),
+    0 1.65px 0 var(--liberec-number-white, #ffffff),
+    -2.75px -2.75px 0 var(--liberec-number-navy, #001a33),
+    2.75px -2.75px 0 var(--liberec-number-navy, #001a33),
+    -2.75px 2.75px 0 var(--liberec-number-navy, #001a33),
+    2.75px 2.75px 0 var(--liberec-number-navy, #001a33),
+    -3.25px 0 0 var(--liberec-number-navy, #001a33),
+    3.25px 0 0 var(--liberec-number-navy, #001a33),
+    0 -3.25px 0 var(--liberec-number-navy, #001a33),
+    0 3.25px 0 var(--liberec-number-navy, #001a33);
+}
+
+/**
+ * Bílí Tygři Liberec — solid dark navy nameplate on white home kit (no outline).
+ */
+.jersey-nameplate-text.jersey-nameplate-text--liberec,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--liberec,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--liberec {
+  --liberec-number-navy: #001a33;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--liberec-number-navy);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--liberec,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--liberec {
+  color: var(--liberec-number-navy, #001a33);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/**
+ * HC Oceláři Třinec — DAŇO #56: solid red digits on white kit, no outline.
+ * Flat geometric block face (Bebas); same red token for nameplate.
+ */
+.jersey-back-number-text.jersey-back-number-text--trinec,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--trinec,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--trinec {
+  --trinec-number-red: #e30613;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--trinec-number-red);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--trinec,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--trinec {
+  color: var(--trinec-number-red, #e30613);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/**
+ * HC Oceláři Třinec — solid red nameplate on white kit (DAŇO; no outline).
+ */
+.jersey-nameplate-text.jersey-nameplate-text--trinec,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--trinec,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--trinec {
+  --trinec-number-red: #e30613;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--trinec-number-red);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--trinec,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--trinec {
+  color: var(--trinec-number-red, #e30613);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/**
+ * HC Motor České Budějovice — yellow digits on blue home kit; thin red inner + navy outer outline.
+ * Stroke = red inner ring; larger text-shadow stack = navy outer (html-to-image friendly).
+ * Block athletic face via Bebas/Impact/Oswald condensed stack.
+ */
+.jersey-back-number-text.jersey-back-number-text--budejovice,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--budejovice,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--budejovice {
+  --budejovice-number-yellow: #f5d200;
+  --budejovice-number-red: #f1141a;
+  --budejovice-number-navy: #121b47;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--budejovice-number-yellow);
+  -webkit-text-stroke-width: clamp(1.05px, 0.072em, 2.55px);
+  -webkit-text-stroke-color: var(--budejovice-number-red);
+  paint-order: stroke fill;
+  text-shadow:
+    -1px -1px 0 var(--budejovice-number-red),
+    1px -1px 0 var(--budejovice-number-red),
+    -1px 1px 0 var(--budejovice-number-red),
+    1px 1px 0 var(--budejovice-number-red),
+    -1.35px 0 0 var(--budejovice-number-red),
+    1.35px 0 0 var(--budejovice-number-red),
+    0 -1.35px 0 var(--budejovice-number-red),
+    0 1.35px 0 var(--budejovice-number-red),
+    -2px -2px 0 var(--budejovice-number-navy),
+    2px -2px 0 var(--budejovice-number-navy),
+    -2px 2px 0 var(--budejovice-number-navy),
+    2px 2px 0 var(--budejovice-number-navy),
+    -2.5px 0 0 var(--budejovice-number-navy),
+    2.5px 0 0 var(--budejovice-number-navy),
+    0 -2.5px 0 var(--budejovice-number-navy),
+    0 2.5px 0 var(--budejovice-number-navy);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--budejovice,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--budejovice {
+  color: var(--budejovice-number-yellow, #f5d200);
+  -webkit-text-stroke-width: clamp(1.25px, 0.085em, 3px);
+  -webkit-text-stroke-color: var(--budejovice-number-red, #f1141a);
+  text-shadow:
+    -1.25px -1.25px 0 var(--budejovice-number-red, #f1141a),
+    1.25px -1.25px 0 var(--budejovice-number-red, #f1141a),
+    -1.25px 1.25px 0 var(--budejovice-number-red, #f1141a),
+    1.25px 1.25px 0 var(--budejovice-number-red, #f1141a),
+    -1.65px 0 0 var(--budejovice-number-red, #f1141a),
+    1.65px 0 0 var(--budejovice-number-red, #f1141a),
+    0 -1.65px 0 var(--budejovice-number-red, #f1141a),
+    0 1.65px 0 var(--budejovice-number-red, #f1141a),
+    -2.35px -2.35px 0 var(--budejovice-number-navy, #121b47),
+    2.35px -2.35px 0 var(--budejovice-number-navy, #121b47),
+    -2.35px 2.35px 0 var(--budejovice-number-navy, #121b47),
+    2.35px 2.35px 0 var(--budejovice-number-navy, #121b47),
+    -2.9px 0 0 var(--budejovice-number-navy, #121b47),
+    2.9px 0 0 var(--budejovice-number-navy, #121b47),
+    0 -2.9px 0 var(--budejovice-number-navy, #121b47),
+    0 2.9px 0 var(--budejovice-number-navy, #121b47);
+}
+
+/**
+ * HC Motor České Budějovice — solid yellow nameplate on blue home kit (no heavy outline).
+ */
+.jersey-nameplate-text.jersey-nameplate-text--budejovice,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--budejovice,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--budejovice {
+  --budejovice-number-yellow: #f5d200;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--budejovice-number-yellow);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--budejovice,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--budejovice {
+  color: var(--budejovice-number-yellow, #f5d200);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/** HC Olomouc — white print on the current red jersey, with a dark-red safety edge. */
+.jersey-back-number-text.jersey-back-number-text--olomouc,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--olomouc,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--olomouc {
+  --olomouc-number-edge: #76091c;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1px, 0.065em, 2.4px);
+  -webkit-text-stroke-color: var(--olomouc-number-edge);
+  paint-order: stroke fill;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.48);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--olomouc,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--olomouc {
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.2px, 0.075em, 2.8px);
+  -webkit-text-stroke-color: var(--olomouc-number-edge, #76091c);
+  paint-order: stroke fill;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.48);
+}
+
+.jersey-nameplate-text.jersey-nameplate-text--olomouc,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--olomouc,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--olomouc {
+  --olomouc-number-edge: #76091c;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.7px, 0.045em, 1.5px);
+  -webkit-text-stroke-color: var(--olomouc-number-edge);
+  paint-order: stroke fill;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.48);
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--olomouc,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--olomouc {
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.8px, 0.05em, 1.7px);
+  -webkit-text-stroke-color: var(--olomouc-number-edge, #76091c);
+  paint-order: stroke fill;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.48);
+}
+
+/**
+ * HC Sparta Praha — white digits on red kit, angular block face like the chest „S“
+ * (sharp corners / geometric bars; thin black outline; Black Ops One = digits only).
+ */
+.jersey-back-number-text.jersey-back-number-text--sparta,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--sparta,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--sparta {
+  --sparta-number-black: #0a0a0a;
+  font-family: "Black Ops One", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.35px, 0.09em, 3.1px);
+  -webkit-text-stroke-color: var(--sparta-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.35px -1.35px 0 var(--sparta-number-black),
+    1.35px -1.35px 0 var(--sparta-number-black),
+    -1.35px 1.35px 0 var(--sparta-number-black),
+    1.35px 1.35px 0 var(--sparta-number-black),
+    -1.85px 0 0 var(--sparta-number-black),
+    1.85px 0 0 var(--sparta-number-black),
+    0 -1.85px 0 var(--sparta-number-black),
+    0 1.85px 0 var(--sparta-number-black);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--sparta,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--sparta {
+  -webkit-text-stroke-width: clamp(1.55px, 0.1em, 3.6px);
+  -webkit-text-stroke-color: var(--sparta-number-black, #0a0a0a);
+  text-shadow:
+    -1.65px -1.65px 0 var(--sparta-number-black, #0a0a0a),
+    1.65px -1.65px 0 var(--sparta-number-black, #0a0a0a),
+    -1.65px 1.65px 0 var(--sparta-number-black, #0a0a0a),
+    1.65px 1.65px 0 var(--sparta-number-black, #0a0a0a),
+    -2.15px 0 0 var(--sparta-number-black, #0a0a0a),
+    2.15px 0 0 var(--sparta-number-black, #0a0a0a),
+    0 -2.15px 0 var(--sparta-number-black, #0a0a0a),
+    0 2.15px 0 var(--sparta-number-black, #0a0a0a);
+}
+
+.jersey-nameplate-text.jersey-nameplate-text--sparta,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--sparta,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--sparta {
+  --sparta-number-black: #0a0a0a;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.55px, 0.05em, 1.6px);
+  -webkit-text-stroke-color: var(--sparta-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--sparta,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--sparta {
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.7px, 0.068em, 2.05px);
+  -webkit-text-stroke-color: var(--sparta-number-black, #0a0a0a);
+  paint-order: stroke fill;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/**
+ * Mountfield HK — PAVLÍK #98: white block digits + thin black outline on black kit.
+ * Name: white on red nameplate bar (photo).
+ */
+.jersey-back-number-text.jersey-back-number-text--hradec,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--hradec,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--hradec {
+  --hradec-number-black: #0a0a0a;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.2px, 0.08em, 2.9px);
+  -webkit-text-stroke-color: var(--hradec-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.15px -1.15px 0 var(--hradec-number-black),
+    1.15px -1.15px 0 var(--hradec-number-black),
+    -1.15px 1.15px 0 var(--hradec-number-black),
+    1.15px 1.15px 0 var(--hradec-number-black),
+    -1.55px 0 0 var(--hradec-number-black),
+    1.55px 0 0 var(--hradec-number-black),
+    0 -1.55px 0 var(--hradec-number-black),
+    0 1.55px 0 var(--hradec-number-black);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--hradec,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--hradec {
+  -webkit-text-stroke-width: clamp(1.4px, 0.09em, 3.3px);
+  -webkit-text-stroke-color: var(--hradec-number-black, #0a0a0a);
+  text-shadow:
+    -1.4px -1.4px 0 var(--hradec-number-black, #0a0a0a),
+    1.4px -1.4px 0 var(--hradec-number-black, #0a0a0a),
+    -1.4px 1.4px 0 var(--hradec-number-black, #0a0a0a),
+    1.4px 1.4px 0 var(--hradec-number-black, #0a0a0a),
+    -1.85px 0 0 var(--hradec-number-black, #0a0a0a),
+    1.85px 0 0 var(--hradec-number-black, #0a0a0a),
+    0 -1.85px 0 var(--hradec-number-black, #0a0a0a),
+    0 1.85px 0 var(--hradec-number-black, #0a0a0a);
+}
+
+.jersey-nameplate-text.jersey-nameplate-text--hradec,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--hradec,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--hradec {
+  --hradec-nameplate-red: #c8102e;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  background-color: var(--hradec-nameplate-red);
+  padding: 0.06em 0.28em;
+  border-radius: 0.04em;
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--hradec,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--hradec {
+  color: #ffffff;
+  background-color: var(--hradec-nameplate-red, #c8102e);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/**
+ * HC Vítkovice — KALUS #11: white stencil / angular block digits on navy kit.
+ * Name: solid white (no plate).
+ */
+.jersey-back-number-text.jersey-back-number-text--vitkovice,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--vitkovice,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--vitkovice {
+  --vitkovice-number-navy: #061a3a;
+  font-family: "Black Ops One", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.85px, 0.055em, 2.2px);
+  -webkit-text-stroke-color: var(--vitkovice-number-navy);
+  paint-order: stroke fill;
+  text-shadow:
+    -0.9px -0.9px 0 var(--vitkovice-number-navy),
+    0.9px -0.9px 0 var(--vitkovice-number-navy),
+    -0.9px 0.9px 0 var(--vitkovice-number-navy),
+    0.9px 0.9px 0 var(--vitkovice-number-navy),
+    -1.25px 0 0 var(--vitkovice-number-navy),
+    1.25px 0 0 var(--vitkovice-number-navy),
+    0 -1.25px 0 var(--vitkovice-number-navy),
+    0 1.25px 0 var(--vitkovice-number-navy);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--vitkovice,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--vitkovice {
+  -webkit-text-stroke-width: clamp(1.05px, 0.065em, 2.6px);
+  -webkit-text-stroke-color: var(--vitkovice-number-navy, #061a3a);
+  text-shadow:
+    -1.1px -1.1px 0 var(--vitkovice-number-navy, #061a3a),
+    1.1px -1.1px 0 var(--vitkovice-number-navy, #061a3a),
+    -1.1px 1.1px 0 var(--vitkovice-number-navy, #061a3a),
+    1.1px 1.1px 0 var(--vitkovice-number-navy, #061a3a),
+    -1.45px 0 0 var(--vitkovice-number-navy, #061a3a),
+    1.45px 0 0 var(--vitkovice-number-navy, #061a3a),
+    0 -1.45px 0 var(--vitkovice-number-navy, #061a3a),
+    0 1.45px 0 var(--vitkovice-number-navy, #061a3a);
+}
+
+.jersey-nameplate-text.jersey-nameplate-text--vitkovice,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--vitkovice,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--vitkovice {
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--vitkovice,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--vitkovice {
+  color: #ffffff;
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/**
+ * BK Mladá Boleslav — front chest #24 / #3 on green kit (no back photo):
+ * white block digits + thin black outline. Name: matching white.
+ */
+.jersey-back-number-text.jersey-back-number-text--boleslav,
+.jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--boleslav,
+.jersey-back-number-text.jersey-back-number-text--on-light-ice.jersey-back-number-text--boleslav {
+  --boleslav-number-black: #0a0a0a;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.15px, 0.075em, 2.8px);
+  -webkit-text-stroke-color: var(--boleslav-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.1px -1.1px 0 var(--boleslav-number-black),
+    1.1px -1.1px 0 var(--boleslav-number-black),
+    -1.1px 1.1px 0 var(--boleslav-number-black),
+    1.1px 1.1px 0 var(--boleslav-number-black),
+    -1.5px 0 0 var(--boleslav-number-black),
+    1.5px 0 0 var(--boleslav-number-black),
+    0 -1.5px 0 var(--boleslav-number-black),
+    0 1.5px 0 var(--boleslav-number-black);
+}
+
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--boleslav,
+.nhl25-share-poster-capture .jersey-back-number-text.jersey-back-number-text--woven.jersey-back-number-text--boleslav {
+  -webkit-text-stroke-width: clamp(1.35px, 0.085em, 3.2px);
+  -webkit-text-stroke-color: var(--boleslav-number-black, #0a0a0a);
+  text-shadow:
+    -1.3px -1.3px 0 var(--boleslav-number-black, #0a0a0a),
+    1.3px -1.3px 0 var(--boleslav-number-black, #0a0a0a),
+    -1.3px 1.3px 0 var(--boleslav-number-black, #0a0a0a),
+    1.3px 1.3px 0 var(--boleslav-number-black, #0a0a0a),
+    -1.75px 0 0 var(--boleslav-number-black, #0a0a0a),
+    1.75px 0 0 var(--boleslav-number-black, #0a0a0a),
+    0 -1.75px 0 var(--boleslav-number-black, #0a0a0a),
+    0 1.75px 0 var(--boleslav-number-black, #0a0a0a);
+}
+
+.jersey-nameplate-text.jersey-nameplate-text--boleslav,
+.jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--boleslav,
+.jersey-nameplate-text.jersey-nameplate-text--on-light-ice.jersey-nameplate-text--boleslav {
+  --boleslav-number-black: #0a0a0a;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.5px, 0.04em, 1.4px);
+  -webkit-text-stroke-color: var(--boleslav-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    -0.6px -0.6px 0 var(--boleslav-number-black),
+    0.6px -0.6px 0 var(--boleslav-number-black),
+    -0.6px 0.6px 0 var(--boleslav-number-black),
+    0.6px 0.6px 0 var(--boleslav-number-black);
+}
+
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--boleslav,
+.nhl25-share-poster-capture .jersey-nameplate-text.jersey-nameplate-text--woven.jersey-nameplate-text--boleslav {
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.6px, 0.05em, 1.7px);
+  -webkit-text-stroke-color: var(--boleslav-number-black, #0a0a0a);
+  paint-order: stroke fill;
+  text-shadow:
+    -0.7px -0.7px 0 var(--boleslav-number-black, #0a0a0a),
+    0.7px -0.7px 0 var(--boleslav-number-black, #0a0a0a),
+    -0.7px 0.7px 0 var(--boleslav-number-black, #0a0a0a),
+    0.7px 0.7px 0 var(--boleslav-number-black, #0a0a0a);
 }
 
 /* Hockey rink ice gradient */

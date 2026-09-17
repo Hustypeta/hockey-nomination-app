@@ -48,6 +48,7 @@ export type CommunityCommentDto = {
   parentId: string | null;
   bodyMd: string;
   likeCount: number;
+  likedByMe: boolean;
   createdAt: string;
   author: {
     id: string;
@@ -56,6 +57,15 @@ export type CommunityCommentDto = {
     displayName: string;
     isStaff: boolean;
   };
+};
+
+export type CommunityMemberDto = {
+  id: string;
+  displayName: string;
+  image: string | null;
+  isStaff: boolean;
+  lastActiveAt: string;
+  active: boolean;
 };
 
 export type MyLineupPick = {

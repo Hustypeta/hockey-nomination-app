@@ -16,10 +16,10 @@ const cardProps = {
 export function FifaCeskaReprezentaceHubCard() {
   return (
     <>
-      <div className="hidden h-full min-h-0 lg:block">
+      <div className="hidden h-full min-h-0 lg-device:block">
         <FifaHubMenuCard {...cardProps} />
       </div>
-      <div className="lg:hidden">
+      <div className="lg-device:hidden">
         <FifaHubMenuCardTouch {...cardProps} />
       </div>
     </>

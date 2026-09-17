@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { CommunityPostCategory, Prisma } from "@prisma/client";
 import { allocateCommunityPostSlug } from "@/lib/allocateNominationSlug";
-import { withAdminJson, requireUserId } from "@/lib/community/adminRoute";
+import { withAdminJson } from "@/lib/community/adminRoute";
+import { ensureCommunityAdminUserId } from "@/lib/community/adminIdentity";
 import {
   parseAttachmentInputs,
   resolveAttachmentsForAdmin,
@@ -24,7 +25,7 @@ import { validatePostBody, FORUM_POST_BODY_MAX, FORUM_POST_TITLE_MAX } from "@/l
 import { prisma } from "@/lib/prisma";
 
 function parseSort(raw: string | null): CommunitySortMode {
-  if (raw === "top" || raw === "discussed") return raw;
+  if (raw === "top") return "top";
   return "new";
 }
 
@@ -80,9 +81,7 @@ export async function GET(req: NextRequest) {
     const orderBy: Prisma.CommunityPostOrderByWithRelationInput[] =
       sort === "top"
         ? [{ pinnedAt: "desc" }, { score: "desc" }, { createdAt: "desc" }]
-        : sort === "discussed"
-          ? [{ pinnedAt: "desc" }, { commentCount: "desc" }, { createdAt: "desc" }]
-          : [{ pinnedAt: "desc" }, { createdAt: "desc" }];
+        : [{ pinnedAt: "desc" }, { createdAt: "desc" }];
 
     const rows = await prisma.communityPost.findMany({
       where,
@@ -106,9 +105,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  return withAdminJson(async ({ userId }) => {
+  return withAdminJson(async () => {
     try {
-      const authorId = requireUserId(userId);
+      const authorId = await ensureCommunityAdminUserId();
       const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
 
       const contestWinner = body.contestWinner === true || body.contestWinner === "true";

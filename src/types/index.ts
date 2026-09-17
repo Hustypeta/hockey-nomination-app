@@ -14,6 +14,8 @@ export interface Player {
   imageUrl?: string | null;
   /** Globální oblíbenost hráče (0–100). Pokud nemáme data, držíme 0. */
   pick_rate: number;
+  /** Sekce editoru (repre_a, elh:…); volitelné u starších payloadů. */
+  poolKey?: string;
 }
 
 export const ROLE_LABELS: Record<Role, string> = {

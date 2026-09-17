@@ -27,7 +27,7 @@ import { parseDroppableId, droppableIdFromSelectedSlot } from "@/lib/dndSlotIds"
 import type { Player } from "@/types";
 import type { LineupStructure } from "@/types";
 import { EMPTY_LINEUP, TOTAL_PLAYERS } from "@/types";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { MQ_LAYOUT_NARROW, useMediaQuery } from "@/hooks/useMediaQuery";
 
 export function OfficialLineupAdminEditor() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -51,7 +51,7 @@ export function OfficialLineupAdminEditor() {
   const wasCompleteRef = useRef(false);
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
 
-  const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
+  const isNarrowLayout = useMediaQuery(MQ_LAYOUT_NARROW);
   /** Široký editor (≥ lg): DnD z poolu; úzký: jen klepnutí. */
   const enableDnd = !isNarrowLayout;
   const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
@@ -405,7 +405,7 @@ export function OfficialLineupAdminEditor() {
       <div className="sticky top-0 z-40">
         <SiteHeader />
         <header className="relative border-b border-white/[0.1] bg-gradient-to-b from-[#0a1224]/95 via-[#080d18]/92 to-[#060a14]/95 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:px-4 lg:px-6">
-          <div className="mx-auto flex max-w-[90rem] flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div className="mx-auto flex max-w-[90rem] flex-col gap-3 lg-device:flex-row lg-device:items-start lg-device:justify-between">
             <div>
               <h1 className="font-display text-xl font-black tracking-[0.08em] text-white sm:text-2xl">
                 Admin — oficiální soupiska
@@ -481,10 +481,10 @@ export function OfficialLineupAdminEditor() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7">
+        <div className="grid grid-cols-1 gap-5 lg-device:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7">
           {showDesktopPoolColumn ? (
-            <section className="min-h-0 min-w-0 hidden lg:block">
-              <div className="lg:sticky lg:top-[11.5rem] lg:max-h-[calc(100vh-12rem)] lg:overflow-y-auto lg:overscroll-contain lg:pb-2 lg:pr-0.5 lg:self-start xl:top-[12rem] xl:max-h-[calc(100vh-12.5rem)]">
+            <section className="min-h-0 min-w-0 hidden lg-device:block">
+              <div className="lg-device:sticky lg:top-[11.5rem] lg:max-h-[calc(100vh-12rem)] lg-device:overflow-y-auto lg-device:overscroll-contain lg:pb-2 lg:pr-0.5 lg-device:self-start xl:top-[12rem] xl:max-h-[calc(100vh-12.5rem)]">
                 <div
                   className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
                     isNarrowLayout ? "" : "backdrop-blur-sm"
@@ -513,7 +513,7 @@ export function OfficialLineupAdminEditor() {
           ) : null}
 
           <section className="min-h-0 min-w-0">
-            <div className="lg:sticky lg:top-[11.5rem] lg:max-h-[calc(100vh-12rem)] lg:overflow-y-auto lg:overscroll-contain lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[12rem] xl:max-h-[calc(100vh-12.5rem)]">
+            <div className="lg-device:sticky lg:top-[11.5rem] lg:max-h-[calc(100vh-12rem)] lg-device:overflow-y-auto lg-device:overscroll-contain lg:pb-2 lg:pl-0.5 lg-device:self-start xl:top-[12rem] xl:max-h-[calc(100vh-12.5rem)]">
               <div
                 className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${
                   isNarrowLayout ? "" : "backdrop-blur-sm"
@@ -550,7 +550,7 @@ export function OfficialLineupAdminEditor() {
 
         {/* Mobilní výběr hráče po klepnutí na slot — jako u /zapasy/sestava */}
         {mobilePlayerSheetOpen ? (
-          <div className="fixed inset-0 z-[90] lg:hidden">
+          <div className="fixed inset-0 z-[90] lg-device:hidden">
             <div className="absolute inset-0 bg-[#010208]/80 backdrop-blur-md" aria-hidden />
             <div className="absolute inset-x-0 bottom-0 top-[calc(0.5rem+env(safe-area-inset-top))] mx-2 overflow-hidden rounded-2xl border border-white/[0.12] bg-gradient-to-b from-[#0b1220]/98 to-[#03050a]/98 shadow-[0_24px_80px_rgba(0,0,0,0.65),0_0_0_1px_rgba(0,180,255,0.12)]">
               <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3">

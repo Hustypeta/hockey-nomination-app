@@ -4,6 +4,8 @@ import { allocateMatchShareLinkSlug } from "@/lib/allocateNominationSlug";
 import { validateMatchShareBody } from "@/lib/validateMatchShareBody";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { normalizeMatchSharePoolKey } from "@/lib/matchSharePool";
+import { backfillMatchSharePoolKeys } from "@/lib/matchSharePool.server";
 
 /**
  * Načtení uložené sestavy do editoru (jen přihlášený vlastník, nebo neobsazený řádek userId = kdokoliv přihlášený s kódem).
@@ -29,6 +31,7 @@ export async function GET(
         lineupStructure: true,
         defenseCount: true,
         allowExtraForward: true,
+        poolKey: true,
       },
     });
     if (!row) {
@@ -37,6 +40,12 @@ export async function GET(
     if (row.userId && row.userId !== session.user.id) {
       return NextResponse.json({ error: "Nemáte přístup k této sestavě." }, { status: 403 });
     }
+
+    const poolByCode = await backfillMatchSharePoolKeys([
+      { code: row.code, poolKey: row.poolKey, lineupStructure: row.lineupStructure },
+    ]);
+    const poolKey = poolByCode.get(row.code) ?? normalizeMatchSharePoolKey(row.poolKey);
+
     return NextResponse.json({
       code: row.code,
       slug: row.slug,
@@ -45,6 +54,7 @@ export async function GET(
       lineupStructure: row.lineupStructure,
       defenseCount: row.defenseCount,
       allowExtraForward: row.allowExtraForward,
+      poolKey,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -85,7 +95,7 @@ export async function PATCH(
     if (!parsed.ok) {
       return NextResponse.json({ error: parsed.error }, { status: parsed.status });
     }
-    const { title, captainId, lineupStructure, defenseCount, allowExtraForward } = parsed;
+    const { title, captainId, lineupStructure, defenseCount, allowExtraForward, poolKey } = parsed;
 
     const slug = await allocateMatchShareLinkSlug(prisma, title, code);
 
@@ -99,10 +109,11 @@ export async function PATCH(
         title,
         defenseCount,
         allowExtraForward,
+        poolKey,
       },
     });
 
-    return NextResponse.json({ ok: true, code, slug });
+    return NextResponse.json({ ok: true, code, slug, poolKey });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error("PATCH /api/match-share-links/[code]", e);

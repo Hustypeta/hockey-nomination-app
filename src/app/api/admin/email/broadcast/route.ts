@@ -10,7 +10,7 @@ const TEXT =
 
 const CTA_URL = "https://hokejlineup.cz/sestava";
 const PREHEADER = "Dnes v 19:30 je deadline soutěže o dres — nezapomeň nominaci dokončit.";
-const LOGO_URL = "https://hokejlineup.cz/images/logo.png";
+const LOGO_URL = "https://hokejlineup.cz/images/logo/logo.png";
 
 const HTML = `<!doctype html>
 <html lang="cs">

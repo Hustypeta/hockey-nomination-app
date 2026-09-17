@@ -55,7 +55,7 @@ import {
 } from "@/lib/fifa/fifaEditorClasses";
 import { FIFA_BTN_PRIMARY, FIFA_KICKER } from "@/lib/fifa/fifaUiClasses";
 import { useContestStats } from "@/hooks/useContestStats";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { MQ_LAYOUT_NARROW, useMediaQuery } from "@/hooks/useMediaQuery";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 import {
   tryAutoAssignPlayer,
@@ -133,7 +133,7 @@ export function NominationBuilderPage() {
   }, [siteOrigin, guestShareSlug, savedNominationSlug, editingNominationId]);
 
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
-  const isNarrowLayout = useMediaQuery("(max-width: 1023px)");
+  const isNarrowLayout = useMediaQuery(MQ_LAYOUT_NARROW);
   const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
   /** Na ├║zk├ęm layoutu schovat sloupec poolu jen p┼Öi otev┼Öen├ęm v├Żb─Ťru (pool je ve fullscreen sheetu). */
   const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
@@ -740,12 +740,12 @@ export function NominationBuilderPage() {
     >
       {fifaEnabled ? (
         <FifaAppPage className="!p-0">
-                <div className="flex h-full min-h-0 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] text-white lg:pb-[4.25rem]">
+                <div className="flex h-full min-h-0 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] text-white lg-device:pb-[4.25rem]">
                 <div className="shrink-0">
                   <SestavaHero filled={filled} uiVariant="fifa" />
                 </div>
         
-                <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[90rem] flex-1 flex-col px-3 pt-2 sm:px-4 lg:px-5">
+                <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[90rem] flex-1 flex-col px-3 pt-2 sm:px-4 lg-device:px-5">
                   <div className="mb-2 rounded-xl border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] p-3 sm:mb-3 sm:p-4">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="min-w-0">
@@ -807,9 +807,9 @@ export function NominationBuilderPage() {
                           </div>
                   ) : null}
         
-                  <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,11fr)_minmax(0,14fr)] lg:gap-4">
+                  <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg-device:grid-cols-[minmax(0,11fr)_minmax(0,14fr)] lg-device:gap-4">
                     {showDesktopPoolColumn ? (
-                      <section className="hidden min-h-0 min-w-0 lg:flex lg:flex-col">
+                      <section className="hidden min-h-0 min-w-0 lg-device:flex lg-device:flex-col">
                         <div className={`${FIFA_EDITOR_SURFACE_POOL} flex min-h-0 flex-1 flex-col overflow-hidden p-3 lg:p-4`}>
                           <div className="mb-3 shrink-0">
                             <div>
@@ -871,7 +871,7 @@ export function NominationBuilderPage() {
         
                   {mobilePlayerSheetOpen ? (
                     <div
-                      className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg:hidden"
+                      className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#0a0b10] lg-device:hidden"
                       role="dialog"
                       aria-modal="true"
                       aria-labelledby="mobile-player-pool-title"
@@ -933,7 +933,7 @@ export function NominationBuilderPage() {
                     </div>
                   ) : null}
         
-                  <div className="mt-6 hidden justify-center lg:flex">
+                  <div className="mt-6 hidden justify-center lg-device:flex">
                     <button
                       type="button"
                       onClick={() => {
@@ -984,7 +984,7 @@ export function NominationBuilderPage() {
                   contestSubmitInactive={
                     !isComplete || !shareNominationTitle.trim() || !contestSubmissionOpen
                   }
-                  className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+                  className={mobilePlayerSheetOpen ? "max-lg-device:hidden" : ""}
                 />
         
                 <div
@@ -1029,6 +1029,7 @@ export function NominationBuilderPage() {
                       nominationTitle={shareNominationTitle}
                       siteUrl={siteOrigin}
                       footerInstantIso={sharePosterFooterIso}
+                      captainId={captainId}
                     />
                   )}
                 </div>
@@ -1200,9 +1201,9 @@ export function NominationBuilderPage() {
                           </div>
                   ) : null}
         
-                  <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-5 lg-device:grid-cols-[minmax(0,10fr)_minmax(0,14fr)] lg:gap-7 xl:gap-8">
                     {showDesktopPoolColumn ? (
-                      <section className="min-w-0 hidden lg:block">
+                      <section className="min-w-0 hidden lg-device:block">
                         <div
                           className={`sestava-premium-panel-dark rounded-2xl p-3.5 sm:p-5 ${
                             isNarrowLayout ? "" : "backdrop-blur-sm"
@@ -1244,7 +1245,7 @@ export function NominationBuilderPage() {
                     ) : null}
         
                     <section className="min-w-0">
-                      <div className="lg:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:pb-2 lg:pl-0.5 lg:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
+                      <div className="lg-device:sticky lg:top-[10rem] lg:max-h-[calc(100vh-10.5rem)] lg-device:overflow-y-auto lg:pb-2 lg:pl-0.5 lg-device:self-start xl:top-[10.5rem] xl:max-h-[calc(100vh-11rem)]">
                         <div className="nhl25-moje-sestava-panel rounded-2xl p-3 sm:p-5 lg:p-6">
                           <div className="nhl25-moje-sestava-accent mb-2 sm:mb-3" aria-hidden />
                           <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#003087]">
@@ -1276,7 +1277,7 @@ export function NominationBuilderPage() {
         
                   {mobilePlayerSheetOpen ? (
                     <div
-                      className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
+                      className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg-device:hidden"
                       role="dialog"
                       aria-modal="true"
                       aria-labelledby="mobile-player-pool-title"
@@ -1341,7 +1342,7 @@ export function NominationBuilderPage() {
                     </div>
                   ) : null}
         
-                  <div className="mt-6 hidden justify-center lg:flex">
+                  <div className="mt-6 hidden justify-center lg-device:flex">
                     <button
                       type="button"
                       onClick={() => {
@@ -1394,7 +1395,7 @@ export function NominationBuilderPage() {
                   contestSubmitInactive={
                     !isComplete || !shareNominationTitle.trim() || !contestSubmissionOpen
                   }
-                  className={mobilePlayerSheetOpen ? "max-lg:hidden" : ""}
+                  className={mobilePlayerSheetOpen ? "max-lg-device:hidden" : ""}
                 />
         
                 <div
@@ -1439,6 +1440,7 @@ export function NominationBuilderPage() {
                       nominationTitle={shareNominationTitle}
                       siteUrl={siteOrigin}
                       footerInstantIso={sharePosterFooterIso}
+                      captainId={captainId}
                     />
                   )}
                 </div>

@@ -12,7 +12,7 @@ export function FifaHistoricalLineupCardArt({
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/souteze-historical-lineup.png"
+        src="/images/soutěže/souteze-historical-lineup.png"
         alt=""
         className={`fifa-image-art-photo object-[64%_46%] brightness-[1.02] ${className}`}
         loading="lazy"

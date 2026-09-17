@@ -24,11 +24,15 @@ export function FifaRinkShieldFrame() {
       aria-hidden
     >
       <defs>
-        {/* Hloubkový fill — tmavě modrá nahoře do černé dole, s nádechem azurové */}
+        {/*
+          Hloubkový fill — default tmavě navy (bílé dresy).
+          Týmový override přes CSS vars (--fifa-shield-fill-*) na slotu
+          (např. Vary — černé dresy potřebují světlejší fill).
+        */}
         <linearGradient id={fillId} x1="0" y1="0" x2="0.25" y2="1">
-          <stop offset="0%" stopColor="rgb(24, 40, 66)" stopOpacity="0.97" />
-          <stop offset="42%" stopColor="rgb(11, 18, 34)" stopOpacity="0.98" />
-          <stop offset="100%" stopColor="rgb(3, 5, 12)" stopOpacity="1" />
+          <stop offset="0%" stopColor="var(--fifa-shield-fill-0, rgb(24, 40, 66))" stopOpacity="0.97" />
+          <stop offset="42%" stopColor="var(--fifa-shield-fill-42, rgb(11, 18, 34))" stopOpacity="0.98" />
+          <stop offset="100%" stopColor="var(--fifa-shield-fill-100, rgb(3, 5, 12))" stopOpacity="1" />
         </linearGradient>
         {/* Horní lesk (gloss) přes vrchní polovinu */}
         <linearGradient id={sheenId} x1="0" y1="0" x2="0" y2="1">

@@ -23,11 +23,9 @@ import {
   posterRosterIceBgUrl,
   POSTER_ROSTER_ICE_BG_REVISION,
 } from "@/lib/posterRosterIceBg";
+import { inferLineupPoolKey, posterCoachForPool } from "@/lib/jerseyPhotoAsset";
+import { posterJerseyKitCssVars, posterJerseyKitForPool } from "@/lib/posterJerseyKit";
 import styles from "./MatchLineupFullJerseyPoster.module.css";
-
-// Tento plakát aktuálně reprezentuje český mužský A-tým.
-const CZE_A_TEAM_COACH_NAME = "Moták";
-const CZE_A_TEAM_COACH_IMAGE = "/images/trener.png";
 
 interface MatchLineupFullJerseyExportPosterProps {
   lineupTitle: string;
@@ -36,6 +34,11 @@ interface MatchLineupFullJerseyExportPosterProps {
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
   siteUrl?: string;
+  /** Pool editoru (repre_a / elh:…) — dresy a trenér. */
+  poolKey?: string | null;
+  /** Volitelný override jména trenéra (jen forum Vítěz nominací). */
+  coachName?: string | null;
+  captainId?: string | null;
   jerseyRatingExport?: {
     ratings: MatchRatingAggregateMap;
     myRatings: MatchRatingMyMap;
@@ -89,10 +92,32 @@ function MatchJerseyRatingBadge({
  */
 export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, MatchLineupFullJerseyExportPosterProps>(
   function MatchLineupFullJerseyExportPoster(
-    { lineupTitle, players, lineup, defenseCount, allowExtraForward, siteUrl = "", jerseyRatingExport },
+    {
+      lineupTitle,
+      players,
+      lineup,
+      defenseCount,
+      allowExtraForward,
+      siteUrl = "",
+      poolKey: poolKeyProp,
+      coachName: coachNameOverride,
+      captainId = null,
+      jerseyRatingExport,
+    },
     ref
   ) {
     const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
+    const poolKey = useMemo(
+      () => inferLineupPoolKey(players, poolKeyProp),
+      [players, poolKeyProp]
+    );
+    const coach = useMemo(() => {
+      const fromPool = posterCoachForPool(poolKey);
+      const override = coachNameOverride?.trim();
+      return override ? { ...fromPool, name: override } : fromPool;
+    }, [poolKey, coachNameOverride]);
+    const jerseyKit = useMemo(() => posterJerseyKitForPool(poolKey), [poolKey]);
+    const assistantIds = lineup.assistantIds ?? [];
     const [iceBgSrc, setIceBgSrc] = useState(posterRosterIceBgUrl());
 
     useEffect(() => {
@@ -137,6 +162,9 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
           hidePosterFlag
           disableMotion
           posterUniformNames
+          poolKey={poolKey}
+          isCaptain={Boolean(pid && captainId === pid)}
+          isAssistant={Boolean(pid && captainId !== pid && assistantIds.includes(pid))}
         />
         {pid && footerLabel ? <span className={styles.goalieOrderLabel}>({footerLabel})</span> : null}
         {jerseyRatingExport && pid ? (
@@ -202,8 +230,10 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
         ref={ref}
         data-export-slot="cele-dresy"
         data-poster-surface="light"
+        data-jersey-kit={jerseyKit.kit}
+        data-jersey-team={jerseyKit.team}
         className={`match-lineup-full-jersey-poster ${styles.posterRoot} ${styles.posterLineFramesOff}`}
-        style={SHARE_POSTER_ROSTER_4X5_STYLE}
+        style={{ ...SHARE_POSTER_ROSTER_4X5_STYLE, ...posterJerseyKitCssVars(jerseyKit) }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- statické pozadí od uživatele pro export PNG */}
         <img
@@ -248,7 +278,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                   <div className={styles.coachImageFrame}>
                     {/* eslint-disable-next-line @next/next/no-img-element -- statický obrázek trenéra pro export PNG */}
                     <img
-                      src={CZE_A_TEAM_COACH_IMAGE}
+                      src={coach.imageSrc}
                       alt=""
                       width={1000}
                       height={675}
@@ -256,7 +286,7 @@ export const MatchLineupFullJerseyExportPoster = forwardRef<HTMLDivElement, Matc
                       className={styles.coachImage}
                     />
                   </div>
-                  <div className={styles.coachName}>{CZE_A_TEAM_COACH_NAME}</div>
+                  <div className={styles.coachName}>{coach.name}</div>
                 </div>
               </div>
               <div className={styles.goalieMain}>

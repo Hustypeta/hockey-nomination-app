@@ -393,9 +393,10 @@ export function clearPositionGroup(
 }
 
 /**
- * Prohodí dva hráče přímo na ploše — POUZE v rámci jedné lajny a stejného typu
- * (útočník↔útočník v téže forwardLine, obránce↔obránce v témže páru). Jinak `null`.
- * Záměrně nepovoluje přesun mezi lajnami, aby se sestava „nebugovala“.
+ * Prohodí dva hráče přímo na ploše — stejný typ / smysluplný pár:
+ * útočník↔útočník v téže lajně, obránce↔obránce v témže páru,
+ * brankář↔brankář, 13. útočník↔libovolný F slot. Jinak `null`.
+ * Záměrně nepovoluje přesun mezi lajnami (kromě 13. F), aby se sestava „nebugovala“.
  */
 export function swapWithinLine(
   lineup: LineupStructure,
@@ -422,6 +423,44 @@ export function swapWithinLine(
     const b = pair[to.role];
     pair[from.role] = b;
     pair[to.role] = a;
+    return next;
+  }
+  if (from.type === "goalie" && to.type === "goalie") {
+    if (from.index === to.index) return null;
+    if (from.index < 0 || from.index > 2 || to.index < 0 || to.index > 2) return null;
+    const next = cloneLineup(lineup);
+    const a = next.goalies[from.index];
+    const b = next.goalies[to.index];
+    next.goalies = [...next.goalies] as LineupStructure["goalies"];
+    next.goalies[from.index] = b;
+    next.goalies[to.index] = a;
+    return next;
+  }
+  // 13. útočník ↔ slot v lajně (stejná pozice F).
+  if (from.type === "extraForward" && to.type === "forward") {
+    const li = to.lineIndex;
+    if (li < 0 || li > 3) return null;
+    if (to.role === "x" && li !== 3) return null;
+    const next = cloneLineup(lineup);
+    const line = next.forwardLines[li];
+    if (!line) return null;
+    const lineId = line[to.role];
+    const extraId = next.extraForwards[0] ?? null;
+    line[to.role] = extraId;
+    next.extraForwards = [lineId];
+    return next;
+  }
+  if (from.type === "forward" && to.type === "extraForward") {
+    const li = from.lineIndex;
+    if (li < 0 || li > 3) return null;
+    if (from.role === "x" && li !== 3) return null;
+    const next = cloneLineup(lineup);
+    const line = next.forwardLines[li];
+    if (!line) return null;
+    const lineId = line[from.role];
+    const extraId = next.extraForwards[0] ?? null;
+    line[from.role] = extraId;
+    next.extraForwards = [lineId];
     return next;
   }
   return null;

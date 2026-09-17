@@ -2,7 +2,7 @@
  * VOLITELNĚ: převod pozadí na přesných 1080×1350.
  *
  * Výchozí workflow — jen nahrajte soubor, nic nespouštějte:
- *   public/images/poster-roster-ice-bg.png
+ *   public/images/reprezentace/poster-roster-ice-bg.png
  *
  * Skript se spouští jen s --normalize a nikdy nepoužívá jiný „zdrojový“ soubor.
  * Před přepsáním vytvoří zálohu poster-roster-ice-bg.backup.png.
@@ -16,13 +16,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const W = 1080;
 const H = 1350;
-const target = path.join(root, "public/images/poster-roster-ice-bg.png");
-const backup = path.join(root, "public/images/poster-roster-ice-bg.backup.png");
+const target = path.join(root, "public/images/reprezentace/poster-roster-ice-bg.png");
+const backup = path.join(root, "public/images/reprezentace/poster-roster-ice-bg.backup.png");
 
 const normalize = process.argv.includes("--normalize");
 
 if (!fs.existsSync(target)) {
-  console.error("Chybí public/images/poster-roster-ice-bg.png — nahrajte obrázek a hotovo.");
+  console.error("Chybí public/images/reprezentace/poster-roster-ice-bg.png — nahrajte obrázek a hotovo.");
   process.exit(1);
 }
 

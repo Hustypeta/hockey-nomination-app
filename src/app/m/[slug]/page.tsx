@@ -2,7 +2,9 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import type { LineupStructure } from "@/types";
 import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
-import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
+import { normalizeMatchSharePoolKey } from "@/lib/matchSharePool";
+import { backfillMatchSharePoolKeys } from "@/lib/matchSharePool.server";
+import { loadPlayersForPool } from "@/lib/playersFromDb";
 
 export const metadata = {
   title: "Sdílená sestava (zápas)",
@@ -15,7 +17,12 @@ export default async function MatchShareViewPage({ params }: { params: Promise<{
   if (!row) notFound();
 
   const lineup = row.lineupStructure as unknown as LineupStructure;
-  const players = loadMs2026Candidates();
+  const poolByCode = await backfillMatchSharePoolKeys([
+    { code: row.code, poolKey: row.poolKey, lineupStructure: row.lineupStructure },
+  ]);
+  const poolKey = poolByCode.get(row.code) ?? normalizeMatchSharePoolKey(row.poolKey);
+  const players = await loadPlayersForPool(poolKey);
+
   return (
     <main className="min-h-screen bg-transparent text-white">
       <div className="mx-auto max-w-5xl px-4 py-10">
@@ -35,4 +42,3 @@ export default async function MatchShareViewPage({ params }: { params: Promise<{
     </main>
   );
 }
-

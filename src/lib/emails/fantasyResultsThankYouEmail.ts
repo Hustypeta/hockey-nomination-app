@@ -2,7 +2,7 @@ import { SITE_CANONICAL_HOST } from "@/lib/siteBranding";
 
 const SITE_URL = `https://${SITE_CANONICAL_HOST}`;
 const FANTASY_LEADERBOARD_URL = `${SITE_URL}/zebricek?soutez=fantasy`;
-const LOGO_URL = `${SITE_URL}/images/logo.png`;
+const LOGO_URL = `${SITE_URL}/images/logo/logo.png`;
 
 export const FANTASY_RESULTS_EMAIL_SUBJECT = "Výsledek soutěže Daily Fantasy — Lineup";
 

@@ -13,7 +13,7 @@ export function FifaHistoricalLineupHubCard() {
   return (
     <Link
       href="/souteze/historical-lineup"
-      className="block min-h-0 w-full lg:h-full"
+      className="block w-full min-h-[13rem] lg-device:h-full lg-device:min-h-0"
       aria-label={`Otevřít: ${HISTORICAL_LINEUP_TITLE}`}
     >
       <FifaHubMenuCard

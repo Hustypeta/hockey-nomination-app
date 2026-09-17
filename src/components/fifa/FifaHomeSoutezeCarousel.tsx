@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type TouchEvent } from "react";
 
 import { ChevronRight, Flag } from "lucide-react";
 
@@ -207,6 +207,8 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
   const [repreMenuOpen, setRepreMenuOpen] = useState(false);
   const [hoverActive, setHoverActive] = useState(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const didSwipeRef = useRef(false);
   const showArrows = SOUTEZE_PREVIEWS.length > 1;
 
   const cancelHoverTimer = useCallback(() => {
@@ -253,6 +255,44 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
     },
     [clearHover, goToIndex, index],
   );
+
+  /** Horizontal swipe only when clearly intentional — never block vertical page scroll. */
+  const onTouchStart = useCallback((e: TouchEvent<HTMLElement>) => {
+    const t = e.touches[0];
+    if (!t) return;
+    touchStartRef.current = { x: t.clientX, y: t.clientY };
+    setPaused(true);
+  }, []);
+
+  const onTouchEnd = useCallback(
+    (e: TouchEvent<HTMLElement>) => {
+      const start = touchStartRef.current;
+      touchStartRef.current = null;
+      setPaused(false);
+      if (!start || SOUTEZE_PREVIEWS.length < 2) return;
+
+      const t = e.changedTouches[0];
+      if (!t) return;
+
+      const dx = t.clientX - start.x;
+      const dy = t.clientY - start.y;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      // Require a decisive horizontal gesture; vertical wins → page scroll.
+      if (absX < 56 || absX < absY * 1.4) return;
+
+      didSwipeRef.current = true;
+      clearHover();
+      goToIndex(index + (dx < 0 ? 1 : -1));
+    },
+    [clearHover, goToIndex, index],
+  );
+
+  const onTouchCancel = useCallback(() => {
+    touchStartRef.current = null;
+    setPaused(false);
+  }, []);
 
 
 
@@ -313,12 +353,12 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
     <article
 
-      className={`fifa-card fifa-card--interactive fifa-home-souteze-carousel group relative flex h-full min-h-[5.5rem] flex-col overflow-hidden lg:min-h-0 ${
+      className={`fifa-card fifa-card--interactive fifa-home-souteze-carousel group relative flex h-full min-h-[5.5rem] flex-col overflow-hidden max-lg-device:min-h-[15.75rem] lg-device:min-h-0 ${
 
         hasHeroLayout
           ? `fifa-card-hero fifa-repre-hub-card fifa-hub-menu-card fifa-home-souteze-repre${hasHoverMenu ? " fifa-home-souteze-repre--touch" : ""}${isPreparing ? " fifa-hub-menu-card--preparing" : ""}${repreMenuOpen ? " fifa-hub-menu-card--menu-open" : ""}${hoverActive ? " fifa-hub-menu-card--hover-active" : ""}`
           : ""
-      } ${compact ? "p-3" : "p-4 lg:p-5"}`}
+      } ${compact ? "p-3" : "p-4 lg-device:p-5"}`}
       onMouseEnter={() => {
         setPaused(true);
         if (hasHoverMenu) scheduleHover();
@@ -327,6 +367,9 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
         setPaused(false);
         clearHover();
       }}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchCancel}
 
     >
 
@@ -344,7 +387,12 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
                 : current.title
           }`}
 
-          className="absolute inset-0 z-10"
+          className="fifa-home-souteze-hit absolute inset-0 z-10"
+          onClick={(e) => {
+            if (!didSwipeRef.current) return;
+            e.preventDefault();
+            didSwipeRef.current = false;
+          }}
 
         />
 
@@ -454,7 +502,7 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
           className={`fifa-home-souteze-body flex min-h-0 flex-1 flex-col ${
 
-            hasHeroLayout ? "justify-end gap-0" : "justify-between pt-7"
+            hasHeroLayout ? "justify-end gap-0 max-lg-device:gap-1.5" : "justify-between pt-7"
 
           } ${showArrows ? "fifa-home-carousel-content--nav" : ""}`}
 
@@ -466,7 +514,7 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
             hasHeroLayout
 
-              ? "fifa-repre-hero-headline fifa-home-souteze-repre__headline fifa-image-text-layer shrink-0 px-2"
+              ? "fifa-repre-hero-headline fifa-home-souteze-repre__headline fifa-image-text-layer relative shrink-0 max-lg-device:static max-lg-device:px-0 px-2"
 
               : "min-h-0 shrink-0"
 
@@ -476,7 +524,7 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
           {hasHeroLayout ? (
 
-            <FifaRepreHeroHeadline title={current.title} subtitle={current.heroSubtitle} />
+            <FifaRepreHeroHeadline key={current.href} title={current.title} subtitle={current.heroSubtitle} />
 
           ) : (
 

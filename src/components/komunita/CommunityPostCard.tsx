@@ -36,14 +36,16 @@ export function CommunityPostCard({
       <article id={`post-${post.slug}`} className="fifa-forum-post-card">
         <header className="fifa-forum-post-card__header">
           <div className="fifa-forum-post-card__author-row">
-            <div className="fifa-forum-avatar" aria-hidden>
-              {post.author.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={post.author.image} alt="" className="h-full w-full object-cover" />
-              ) : (
-                authorInitials(authorLabel)
-              )}
-            </div>
+            {post.author.isStaff || post.isStaffPost ? null : (
+              <div className="fifa-forum-avatar" aria-hidden>
+                {post.author.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={post.author.image} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  authorInitials(authorLabel)
+                )}
+              </div>
+            )}
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                 {post.author.isStaff || post.isStaffPost ? (
@@ -127,5 +129,4 @@ export function CommunityPostCard({
 export const COMMUNITY_SORT_ICONS = {
   new: Clock,
   top: Heart,
-  discussed: MessageCircle,
 } as const;

@@ -10,3 +10,9 @@ export const FIFA_RINK_SHIELD_CLIP_CSS =
 
 /** Šířka slotu (% šířky plátna). Štít je čtvercový v pixelech. */
 export const FIFA_RINK_SLOT_WIDTH = 12.5;
+
+/**
+ * Mobilní šířka slotu (% šířky portrétního plátna).
+ * Mírně užší než dřívějších 15 %, ať 8D + náhr. G / 13. F nestíní LB/RB.
+ */
+export const FIFA_RINK_SLOT_WIDTH_MOBILE = 13.5;

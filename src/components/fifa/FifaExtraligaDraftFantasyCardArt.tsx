@@ -6,7 +6,7 @@ export function FifaExtraligaDraftFantasyCardArt({ className = "" }: { className
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/souteze-extraliga-draft-fantasy.png"
+        src="/images/soutěže/souteze-extraliga-draft-fantasy.png"
         alt=""
         className={`fifa-image-art-photo object-[72%_center] brightness-[1.05] ${className}`}
         loading="lazy"

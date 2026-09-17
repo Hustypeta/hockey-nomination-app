@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { withAdminJson, requireUserId } from "@/lib/community/adminRoute";
+import { withAdminJson } from "@/lib/community/adminRoute";
 import type { MyLineupPick } from "@/lib/community/types";
 
 export async function GET() {
   return withAdminJson(async ({ userId }) => {
-    const uid = requireUserId(userId);
+    if (!userId) {
+      return NextResponse.json({ picks: [] });
+    }
+    const uid = userId;
     const [nominations, matchLinks, fantasy] = await Promise.all([
       prisma.nomination.findMany({
         where: { userId: uid },

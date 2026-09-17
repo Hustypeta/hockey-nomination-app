@@ -31,8 +31,8 @@ export function AccountHubNav({
             aria-current={isActive ? "page" : undefined}
             onClick={() => onChange(section.id)}
           >
-            <Icon className="h-4 w-4 shrink-0" aria-hidden />
-            <span>{section.label}</span>
+            <Icon className="fifa-account-hub-nav__icon" aria-hidden />
+            <span className="fifa-account-hub-nav__label">{section.label}</span>
           </button>
         );
       })}

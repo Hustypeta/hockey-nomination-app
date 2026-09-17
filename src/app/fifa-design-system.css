@@ -90,7 +90,7 @@ body:has(.fifa-design-viewport) {
   background: #0a0f1c;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   html:has(.fifa-app-viewport),
   body:has(.fifa-app-viewport),
   html:has(.fifa-design-viewport),
@@ -130,7 +130,7 @@ body:has(.fifa-design-viewport) {
   overflow: hidden;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (max-device-width: 1023px) {
   .fifa-app-chrome > .fifa-app-content {
   -webkit-overflow-scrolling: touch;
 }
@@ -211,7 +211,7 @@ body:has(.fifa-design-viewport) {
   overflow: hidden;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (max-device-width: 1023px) {
   .fifa-viewport-page-body--scroll-mobile {
     overflow-y: auto;
   }
@@ -239,7 +239,7 @@ body:has(.fifa-design-viewport) {
     transform 0.22s ease;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-card--interactive:hover {
     border-color: rgba(0, 212, 255, 0.38);
     background: rgba(26, 34, 56, 0.88);
@@ -293,7 +293,7 @@ body:has(.fifa-design-viewport) {
   transition: transform 0s;
 }
 
-@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference), (min-device-width: 1024px) and (prefers-reduced-motion: no-preference) {
   .fifa-card-hero:hover::after {
     transform: translateX(120%);
     transition: transform 0.85s ease;
@@ -576,6 +576,16 @@ body:has(.fifa-design-viewport) {
   padding: 0.25rem 0.5rem;
 }
 
+/* Domovská FIFA: skryj promo copy nad bannerem; disclaimer nech */
+.fifa-design-tipsport-compact > p:first-of-type {
+  display: none !important;
+}
+
+.fifa-design-tipsport-compact a {
+  margin-top: 0 !important;
+  border-radius: 0.75rem !important;
+}
+
 /* ─── Typography ─── */
 .fifa-kicker {
   font-size: 0.625rem;
@@ -609,7 +619,7 @@ body:has(.fifa-design-viewport) {
   color: var(--fifa-text);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-page-heading h1 {
     font-size: 1.5rem;
   }
@@ -854,7 +864,7 @@ header:has(.fifa-top-nav-root--open) {
   z-index: 210;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (max-device-width: 1023px) {
 .fifa-top-nav-mobile {
   position: relative;
     padding: 0.2rem 0.65rem 0.28rem;
@@ -959,7 +969,7 @@ header:has(.fifa-top-nav-root--open) {
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-top-nav-scroll {
     overflow-x: hidden;
     justify-content: space-between;
@@ -1112,7 +1122,7 @@ header:has(.fifa-top-nav-root--open) {
   color: rgba(71, 85, 105, 0.45);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-app-chrome header .fifa-header-logo img[alt="Hokej Lineup"] {
     width: 10.25rem;
   }
@@ -1153,7 +1163,7 @@ header:has(.fifa-top-nav-root--open) {
   gap: 0.75rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-home-page {
     height: 100%;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1198,7 +1208,7 @@ header:has(.fifa-top-nav-root--open) {
   overflow: visible;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
 .fifa-home-col {
     height: 100%;
   min-height: 0;
@@ -1271,7 +1281,7 @@ header:has(.fifa-top-nav-root--open) {
     transform 0.2s ease;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-home-page .fifa-card--interactive:hover,
   .fifa-home-page .fifa-card--interactive:focus-within {
     border-color: var(--fifa-home-tile-border-hover);
@@ -1481,14 +1491,199 @@ header:has(.fifa-top-nav-root--open) {
   }
 }
 
+/* Mobile-first: preparing chip stays in document flow under the title.
+   Desktop (lg+) recenters it as an overlay — see min-width: 1024px block. */
 .fifa-home-souteze-preparing {
   pointer-events: none;
-  position: absolute;
-  inset: 0;
-  z-index: 9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: static;
+  z-index: auto;
+  display: block;
+  width: auto;
+  max-width: min(100%, 12.75rem);
+  margin: 0;
+}
+
+/* ─── Mobile home: Soutěže carousel + intro scroll ─── */
+@media (max-width: 1023px) and (max-device-width: 1023px) {
+  .fifa-home-page {
+    overflow-x: clip;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .fifa-home-page .fifa-home-slot,
+  .fifa-home-page .fifa-home-editor-card,
+  .fifa-home-page .fifa-partner-slot,
+  .fifa-home-page .fifa-design-tipsport-compact {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .fifa-home-page .fifa-design-tipsport-compact a,
+  .fifa-home-page .fifa-design-tipsport-compact img {
+    max-width: 100%;
+  }
+
+  /* Nested panel scroll must not steal vertical page scroll on home */
+  .fifa-home-page .fifa-card-panel-scroll {
+    overflow-x: hidden;
+    overflow-y: visible;
+    overscroll-behavior: auto;
+  }
+
+  .fifa-home-page .fifa-home-souteze-carousel {
+    min-height: 15.75rem;
+    touch-action: pan-y;
+    overflow-x: clip;
+  }
+
+  /*
+   * News + Komunita cards use absolute media / container-query stats and h-full.
+   * On mobile the home grid is height:auto, so % height collapses to ~0 without
+   * an intrinsic min-height (Soutěže already has one above).
+   */
+  .fifa-home-page .fifa-home-slot--lineup-news,
+  .fifa-home-page .fifa-home-slot--novinky,
+  .fifa-home-page .fifa-home-lineup-news-card,
+  .fifa-home-page .fifa-home-novinky-card {
+    min-height: 14.5rem;
+  }
+
+  .fifa-home-page .fifa-home-slot--komunita,
+  .fifa-home-page .fifa-home-komunita-card {
+    min-height: 11.75rem;
+  }
+
+  .fifa-home-page .fifa-home-komunita-card .fifa-card-body {
+    flex: 1 1 auto;
+    min-height: 9.25rem;
+  }
+
+  .fifa-home-page .fifa-komunita-stats {
+    overflow: visible;
+  }
+
+  /* Soft bottom scrim so blueprint art does not clash with titles */
+  .fifa-home-page .fifa-home-souteze-carousel::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 3;
+    height: 58%;
+    pointer-events: none;
+    background: linear-gradient(
+      0deg,
+      rgba(10, 15, 28, 0.92) 0%,
+      rgba(10, 15, 28, 0.62) 42%,
+      rgba(10, 15, 28, 0.18) 72%,
+      transparent 100%
+    );
+  }
+
+  .fifa-home-page .fifa-home-souteze-repre .fifa-image-art-photo {
+    object-fit: cover;
+    object-position: 68% 38%;
+    filter: brightness(1.08) !important;
+  }
+
+  .fifa-home-page .fifa-home-souteze-repre .fifa-image-text-scrim {
+    opacity: 0.72;
+  }
+
+  /* Full-bleed hit targets: allow normal vertical page scroll */
+  .fifa-home-page .fifa-home-souteze-hit,
+  .fifa-home-page .fifa-home-souteze-carousel .fifa-hub-menu-card__tap-target,
+  .fifa-home-page .fifa-home-editor-card {
+    touch-action: pan-y;
+  }
+
+  .fifa-home-page .fifa-home-souteze-repre__headline {
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    max-width: min(100%, 17.5rem);
+    padding-inline: 0;
+  }
+
+  /* One title stack only — no absolute dual labels on mobile carousel */
+  .fifa-home-page .fifa-home-souteze-repre .fifa-repre-hero-headline--top,
+  .fifa-home-page .fifa-home-souteze-repre .fifa-home-souteze-repre__headline {
+    position: static !important;
+    inset: auto !important;
+  }
+
+  .fifa-home-page .fifa-home-souteze-repre .fifa-repre-hero-title {
+    font-size: clamp(1.2rem, 5.8vw, 1.55rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+  }
+
+  .fifa-home-page .fifa-home-souteze-repre .fifa-repre-hero-subtitle {
+    margin-top: 0.2rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+  }
+
+  .fifa-home-page .fifa-home-souteze-repre .fifa-home-souteze-body {
+    justify-content: flex-end;
+    gap: 0.4rem;
+    padding-bottom: 0.35rem;
+    overflow: visible;
+  }
+
+  .fifa-home-page .fifa-home-souteze-repre .fifa-home-souteze-body.fifa-home-carousel-content--nav {
+    padding-right: 0.15rem;
+    padding-bottom: 2.7rem;
+  }
+
+  .fifa-home-page .fifa-home-souteze-preparing .fifa-repre-menu__item {
+    padding: 0.32rem 0.55rem;
+    gap: 0.4rem;
+  }
+
+  .fifa-home-page .fifa-home-souteze-preparing .fifa-repre-menu__item .font-display {
+    font-size: 0.75rem;
+    line-height: 1.15;
+  }
+
+  .fifa-home-page .fifa-home-souteze-preparing .fifa-repre-menu__icon {
+    flex-shrink: 0;
+  }
+
+  .fifa-home-page .fifa-home-souteze-preparing .fifa-repre-menu__icon svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .fifa-home-page .fifa-home-carousel-nav--full {
+    padding: 0.45rem 0.65rem;
+  }
+
+  /* Hub rozcestí: never collapse card rows — absolute titles were stacking */
+  .fifa-souteze-hub-grid {
+    flex: 0 0 auto;
+    min-height: auto;
+    height: auto;
+    overflow: visible;
+    align-content: start;
+  }
+
+  .fifa-souteze-hub-grid > * {
+    min-height: auto;
+    height: auto;
+  }
+
+  /* Hub cards keep intrinsic height so absolute bottom titles stay inside each card */
+  .fifa-hub-menu-card:not(.fifa-home-souteze-repre) {
+    height: auto;
+  }
+
+  /* preparingOnly / hover menus: hide on touch widths so they can't steal layout */
+  .fifa-hub-menu-card:not(.fifa-hub-menu-card--touch):not(.fifa-home-souteze-repre) .fifa-repre-menu {
+    display: none;
+  }
 }
 
 /* Touch stav repre hub karty */
@@ -1540,7 +1735,20 @@ header:has(.fifa-top-nav-root--open) {
 }
 
 /* ─── Desktop: carousel repre → hover řízený JS třídou (ne :hover/:focus-within) ─── */
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
+  /* Desktop: preparing chip as centered overlay (unchanged from prior design) */
+  .fifa-home-souteze-preparing {
+    position: absolute;
+    inset: 0;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: none;
+    width: auto;
+    margin: 0;
+  }
+
   /* Na desktopu skryjeme tap-target, hover řídí React stav */
   .fifa-home-souteze-repre--touch .fifa-hub-menu-card__tap-target {
     display: none;
@@ -1676,7 +1884,7 @@ header:has(.fifa-top-nav-root--open) {
     transform 0.18s ease;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-repre-hub-card .fifa-repre-menu__item:hover {
     border-color: rgba(0, 212, 255, 0.45);
     background: linear-gradient(
@@ -1701,7 +1909,7 @@ header:has(.fifa-top-nav-root--open) {
   color: var(--fifa-accent-text);
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (max-device-width: 1023px) {
   .fifa-repre-hub-card .fifa-repre-menu__item:hover {
     transform: none;
   }
@@ -1836,7 +2044,7 @@ header:has(.fifa-top-nav-root--open) {
   color: var(--fifa-accent-text);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-home-page .fifa-home-komunita-card.fifa-card--interactive:hover,
   .fifa-home-page .fifa-home-komunita-card.fifa-card--interactive:focus-within,
   .fifa-home-page .fifa-home-forum-card.fifa-card--interactive:hover,
@@ -2481,10 +2689,23 @@ header:has(.fifa-top-nav-root--open) {
   display: flex;
   align-items: center;
   gap: 0.375rem;
+  min-width: 0;
+}
+
+.fifa-editor-pool-toolbar .fifa-editor-input {
+  /* Search shares the row with sort — keep it fluid */
+  min-width: 0;
 }
 
 .fifa-editor-pool-sort--compact {
   font-size: 0.625rem;
+}
+
+/* Desktop/simple pick list: sort beside search (not full-width) */
+.fifa-editor-pool-sort--inline {
+  max-width: 9.5rem;
+  padding-inline: 0.5rem 0.35rem;
+  font-size: 0.75rem;
 }
 
 /* ─── Pool legend ─── */
@@ -2714,6 +2935,10 @@ header:has(.fifa-top-nav-root--open) {
 }
 
 /* ─── Žebříček / fórum grid ─── */
+.fifa-zebricek-mobile-chrome {
+  display: none;
+}
+
 .fifa-zebricek-grid {
   display: grid;
   min-height: 0;
@@ -2722,17 +2947,83 @@ header:has(.fifa-top-nav-root--open) {
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px), (min-device-width: 768px) {
   .fifa-zebricek-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.65rem;
     overflow: hidden;
   }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 767px) {
+  .fifa-zebricek-mobile-chrome {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0 0.45rem;
+  }
+
+  .fifa-zebricek-mobile-switcher {
+    display: grid;
+    min-width: 0;
+    flex: 1 1 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.15rem;
+    padding: 0.18rem;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 999px;
+    background: rgba(6, 10, 18, 0.72);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 10px 24px rgba(0, 0, 0, 0.28);
+  }
+
+  .fifa-zebricek-mobile-switcher__tab {
+    display: flex;
+    min-height: 2.75rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.08rem;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    padding: 0.2rem 0.15rem;
+    color: var(--fifa-text-muted);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    transition:
+      color 0.16s ease,
+      background 0.16s ease,
+      box-shadow 0.16s ease;
+  }
+
+  .fifa-zebricek-mobile-switcher__icon {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .fifa-zebricek-mobile-switcher__tab--active {
+    color: var(--fifa-text);
+    background:
+      linear-gradient(180deg, rgba(0, 212, 255, 0.22) 0%, rgba(0, 212, 255, 0.08) 100%);
+    box-shadow:
+      0 0 0 1px rgba(0, 212, 255, 0.32),
+      0 8px 18px rgba(0, 212, 255, 0.14);
+  }
+
   .fifa-zebricek-grid {
-    overflow-y: auto;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+  }
+
+  .fifa-zebricek-page[data-mobile-pane="nominace"] .fifa-zebricek-pane--fantasy,
+  .fifa-zebricek-page[data-mobile-pane="fantasy"] .fifa-zebricek-pane--nominace {
+    display: none;
   }
 }
 
@@ -2744,7 +3035,7 @@ header:has(.fifa-top-nav-root--open) {
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-forum-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 0.65rem;
@@ -2752,7 +3043,7 @@ header:has(.fifa-top-nav-root--open) {
   }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (max-device-width: 1023px) {
   .fifa-forum-grid {
     overflow-y: auto;
   }
@@ -2816,36 +3107,42 @@ header:has(.fifa-top-nav-root--open) {
   display: flex;
   width: 100%;
   max-width: 100%;
-  height: 100%;
-  min-height: 100%;
-  flex: 0 0 100%;
+  height: auto;
+  min-height: 0;
+  flex: 0 0 auto;
   flex-direction: column;
   overflow: hidden;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  border: 1px solid rgba(0, 212, 255, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1rem;
   background:
-    radial-gradient(120% 90% at 50% 0%, rgba(0, 212, 255, 0.1), transparent 58%),
+    radial-gradient(120% 90% at 50% 0%, rgba(0, 212, 255, 0.07), transparent 58%),
     var(--fifa-glass-bg);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.07) inset,
-    0 18px 52px rgba(0, 0, 0, 0.42),
-    0 0 36px -10px rgba(0, 212, 255, 0.28);
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 16px 40px rgba(0, 0, 0, 0.36);
   transition:
     transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.2s ease,
     border-color 0.2s ease;
 }
 
+.fifa-forum-post-card:focus-within {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(0, 212, 255, 0.08),
+    0 16px 40px rgba(0, 0, 0, 0.36);
+}
+
 .fifa-forum-feed__list .fifa-forum-post-card {
   border-radius: 1rem;
-  flex: 0 0 100%;
+  flex: 0 0 auto;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 100%;
-  min-height: 100%;
+  height: auto;
+  min-height: 0;
 }
 
 .fifa-forum-post-card__frame-btn {
@@ -2864,6 +3161,9 @@ header:has(.fifa-top-nav-root--open) {
 .fifa-forum-post-card__frame {
   position: relative;
   width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  flex: 0 0 auto;
   overflow: hidden;
   background: #0a0f1c;
 }
@@ -2885,25 +3185,23 @@ header:has(.fifa-top-nav-root--open) {
   object-position: center center;
 }
 
-/* Desktop — dva sloupce; náhled fotky 4:5, karta úzká jako fotka (bez černých boků) */
+/* Instagramové médium: vždy přesné 4:5, ovládání příspěvku zůstává pod ním. */
 @media (min-width: 768px) {
   .fifa-forum-feed__list {
-    container-type: size;
-    container-name: forum-feed-list;
     align-items: center;
   }
 
-  .fifa-forum-post-card,
-  .fifa-forum-feed__list .fifa-forum-post-card {
-    /* šířka karty = dostupná výška pro médium × 4/5 (header + footer ~ 8.5rem) */
-    width: min(100%, calc((100cqh - 8.5rem) * 4 / 5));
+  .fifa-forum-feed__list .fifa-forum-post-card,
+  .fifa-forum-wall .fifa-forum-post-card {
+    /* Médium 4:5 + kompaktní hlavička/patička se vždy vejdou do výšky sloupce. */
+    width: min(100%, 28rem, calc((100cqh - 9.5rem) * 4 / 5));
     max-width: 100%;
     margin-inline: auto;
     align-self: center;
   }
 
   .fifa-forum-post-card__frame-btn {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-height: 0;
     width: 100%;
   }
@@ -3009,37 +3307,46 @@ header:has(.fifa-top-nav-root--open) {
   min-height: 0;
   flex: 1 1 auto;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.65rem;
-  padding: 0.85rem 1.25rem 1.25rem;
+  padding: 0.85rem 1.15rem 1rem;
   text-align: left;
   overflow: hidden;
 }
 
 .fifa-forum-post-card__frame-title {
   flex-shrink: 0;
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  overflow: visible;
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 4vw, 1.55rem);
+  font-size: clamp(1.2rem, 4.4vw, 1.55rem);
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.22;
   letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   color: #fff;
 }
 
 .fifa-forum-post-card__frame-body {
   min-height: 0;
-  flex: 1 1 auto;
-  display: -webkit-box;
+  flex: 0 1 auto;
+  overflow: visible;
+  font-size: 1rem !important;
+  line-height: 1.45 !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.fifa-forum-post-card__frame-body--dense {
+  font-size: 0.9375rem !important;
+  line-height: 1.42 !important;
+}
+
+.fifa-forum-post-card__frame-body--legacy {
   overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 10;
-  font-size: clamp(0.8125rem, 2vw, 0.9375rem) !important;
-  line-height: 1.5 !important;
-  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.4 !important;
 }
 
 .fifa-forum-post-card__frame-body p {
@@ -3406,7 +3713,7 @@ header:has(.fifa-top-nav-root--open) {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: 14;
 }
 
 .fifa-forum-detail-attachment-slot {
@@ -3435,7 +3742,7 @@ header:has(.fifa-top-nav-root--open) {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center center;
 }
 
@@ -3540,6 +3847,36 @@ header:has(.fifa-top-nav-root--open) {
   padding: 1rem 1.25rem 1.25rem;
 }
 
+@media (min-width: 900px) {
+  .fifa-forum-detail-modal {
+    display: grid;
+    width: min(96vw, 70rem);
+    max-width: 70rem;
+    height: min(90vh, 52rem);
+    max-height: 90vh;
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 23rem);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .fifa-forum-detail-modal__head {
+    grid-column: 1 / -1;
+  }
+
+  .fifa-forum-detail-modal__body {
+    grid-column: 1;
+    grid-row: 2;
+    overflow-y: auto;
+  }
+
+  .fifa-forum-detail-modal__comments {
+    grid-column: 2;
+    grid-row: 2;
+    max-height: none;
+    border-top: none;
+    border-left: 1px solid var(--fifa-border);
+  }
+}
+
 .fifa-forum-new-modal {
   width: 100%;
   max-width: 32rem;
@@ -3641,11 +3978,11 @@ header:has(.fifa-top-nav-root--open) {
   overflow: hidden;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .fifa-forum-layout {
     flex-direction: row;
     gap: 1rem;
-    padding: 0.65rem 0.85rem 0 0;
+    padding: 0.65rem 0.85rem 0 0.35rem;
   }
 }
 
@@ -3671,26 +4008,24 @@ header:has(.fifa-top-nav-root--open) {
   overflow: hidden;
   isolation: isolate;
   border: none;
-  border-top: 1px solid rgba(0, 212, 255, 0.16);
   border-radius: 0;
   background:
-    radial-gradient(ellipse 62% 58% at 50% 42%, rgba(0, 212, 255, 0.14), transparent 72%),
-    radial-gradient(ellipse 48% 42% at 12% 88%, rgba(255, 45, 85, 0.08), transparent 62%),
-    radial-gradient(ellipse 42% 38% at 90% 10%, rgba(0, 212, 255, 0.11), transparent 58%),
-    linear-gradient(168deg, rgba(22, 30, 50, 0.96) 0%, rgba(10, 15, 28, 0.99) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    inset 0 0 80px rgba(0, 212, 255, 0.04);
+    radial-gradient(ellipse 62% 58% at 50% 42%, rgba(0, 212, 255, 0.12), transparent 72%),
+    radial-gradient(ellipse 48% 42% at 12% 88%, rgba(255, 45, 85, 0.06), transparent 62%),
+    radial-gradient(ellipse 42% 38% at 90% 10%, rgba(0, 212, 255, 0.08), transparent 58%),
+    linear-gradient(168deg, rgba(18, 24, 40, 0.72) 0%, rgba(8, 12, 22, 0.55) 100%);
+  box-shadow: none;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .fifa-forum-feed-stage {
-    border: 1px solid rgba(0, 212, 255, 0.2);
-    border-radius: 1.35rem;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.07),
-      inset 0 0 80px rgba(0, 212, 255, 0.04),
-      0 14px 44px rgba(0, 0, 0, 0.38);
+    border: none;
+    border-radius: 1.15rem;
+    background:
+      radial-gradient(ellipse 62% 58% at 50% 42%, rgba(0, 212, 255, 0.16), transparent 72%),
+      radial-gradient(ellipse 48% 42% at 12% 88%, rgba(255, 45, 85, 0.07), transparent 62%),
+      radial-gradient(ellipse 42% 38% at 90% 10%, rgba(0, 212, 255, 0.1), transparent 58%),
+      linear-gradient(168deg, rgba(20, 28, 46, 0.88) 0%, rgba(9, 14, 24, 0.78) 100%);
   }
 }
 
@@ -3702,6 +4037,12 @@ header:has(.fifa-top-nav-root--open) {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+@media (min-width: 1024px) {
+  .fifa-forum-feed-stage__toolbar {
+    display: none;
+  }
 }
 
 .fifa-forum-stage-tool {
@@ -3719,6 +4060,12 @@ header:has(.fifa-top-nav-root--open) {
 }
 
 .fifa-forum-feed-stage__split {
+  --forum-duo-gap: clamp(0.85rem, 2vw, 1.5rem);
+  --forum-duo-card-width: min(
+    28rem,
+    calc((100cqh - 9.5rem) * 4 / 5),
+    calc((100cqw - 2.5rem) / 2)
+  );
   position: relative;
   z-index: 1;
   display: flex;
@@ -3734,12 +4081,13 @@ header:has(.fifa-top-nav-root--open) {
   .fifa-forum-feed-stage__split {
     flex-direction: column;
     padding-top: 0.45rem;
-    overflow-y: auto;
+    overflow: hidden;
     overscroll-behavior-y: contain;
   }
 }
 
 .fifa-forum-feed-column {
+  position: relative;
   display: flex;
   min-width: 0;
   min-height: 0;
@@ -3755,39 +4103,126 @@ header:has(.fifa-top-nav-root--open) {
   flex: 1 1 50%;
 }
 
+@media (min-width: 768px) {
+  .fifa-forum-feed-stage__split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, var(--forum-duo-card-width)));
+    justify-content: center;
+    gap: var(--forum-duo-gap);
+  }
+
+  .fifa-forum-feed-column--pinned {
+    padding-right: 0;
+  }
+
+  .fifa-forum-feed-column--feed {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .fifa-forum-feed-column--pinned .fifa-forum-post-card {
+    max-width: 28rem;
+  }
+}
+
 @media (max-width: 767px) {
   .fifa-forum-feed-column,
   .fifa-forum-feed-column--pinned,
   .fifa-forum-feed-column--feed {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     width: 100%;
     min-height: 0;
   }
 
   .fifa-forum-feed-column .fifa-forum-feed-carousel {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     height: auto;
     min-height: 0;
   }
 
   .fifa-forum-feed-column .fifa-forum-feed__list {
     height: auto;
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .fifa-forum-feed-column .fifa-forum-feed__list--arrows-only {
+    overflow-y: hidden;
+    overscroll-behavior: auto;
+  }
+}
+
+.fifa-forum-wall {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y mandatory;
+  scroll-padding-block: 0.35rem;
+  padding: 0.35rem 0.25rem 1.25rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fifa-forum-wall::-webkit-scrollbar {
+  display: none;
+}
+
+.fifa-forum-wall::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(0, 212, 255, 0.3);
+}
+
+.fifa-forum-wall .fifa-forum-post-card {
+  max-width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (max-width: 767px) {
+  .fifa-forum-wall {
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: none;
+    padding: 0.2rem 0 0.75rem;
   }
 }
 
 .fifa-forum-feed-column__label {
+  position: static;
+  z-index: 1;
   flex-shrink: 0;
-  padding-inline: 0.35rem;
+  align-self: center;
+  border: none;
+  background: none;
+  padding: 0.05rem 0 0.15rem;
   font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--fifa-text-muted);
 }
 
 .fifa-forum-feed-column--pinned .fifa-forum-feed-column__label {
-  color: rgba(255, 214, 102, 0.85);
+  left: auto;
+  transform: none;
+  color: rgba(255, 206, 74, 0.7);
+  box-shadow: none;
+}
+
+.fifa-forum-feed-column--feed .fifa-forum-feed-column__label {
+  right: auto;
+  transform: none;
+  color: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
 }
 
 .fifa-forum-feed-column__empty {
@@ -3796,9 +4231,9 @@ header:has(.fifa-top-nav-root--open) {
   min-height: 0;
   align-items: center;
   justify-content: center;
-  border: 1px dashed rgba(0, 212, 255, 0.18);
+  border: none;
   border-radius: 1rem;
-  background: rgba(8, 12, 22, 0.45);
+  background: rgba(8, 12, 22, 0.28);
   padding: 1rem;
   text-align: center;
   font-size: 0.8125rem;
@@ -3968,69 +4403,599 @@ header:has(.fifa-top-nav-root--open) {
   color: var(--fifa-text-muted);
 }
 
-.fifa-forum-stage-fab {
-  position: absolute;
-  right: 0.5rem;
-  bottom: 0.65rem;
-  z-index: 3;
+@media (min-width: 768px) {
+  .fifa-forum-feed-column--pinned .fifa-forum-post-card {
+    border-color: rgba(255, 202, 63, 0.2);
+    box-shadow:
+      0 1px 0 rgba(255, 206, 74, 0.08) inset,
+      0 16px 40px rgba(0, 0, 0, 0.36);
+  }
+
+  .fifa-forum-feed-column--pinned .fifa-forum-post-card__header {
+    background:
+      linear-gradient(90deg, rgba(255, 194, 46, 0.06), transparent 48%),
+      rgba(10, 17, 29, 0.86);
+  }
+
+  .fifa-forum-feed-column--feed .fifa-forum-post-card {
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 16px 40px rgba(0, 0, 0, 0.36);
+  }
+
+  .fifa-forum-feed-column--feed .fifa-forum-post-card__header {
+    background: rgba(8, 16, 28, 0.78);
+  }
+
+  .fifa-forum-post-card__header {
+    min-height: 3.25rem;
+    padding: 0.45rem 0.65rem;
+  }
+
+  .fifa-forum-post-card__author-row {
+    gap: 0.5rem;
+  }
+
+  .fifa-forum-post-card__header .fifa-forum-avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .fifa-forum-post-card__author-row > .min-w-0 {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .fifa-forum-post-card__author-row > .min-w-0 > .flex {
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+  }
+
+  .fifa-forum-post-card__author-row time {
+    flex: 0 0 auto;
+    font-size: 0.6875rem;
+  }
+
+  .fifa-forum-post-card__header .fifa-forum-chip,
+  .fifa-forum-post-card__category {
+    padding: 0.18rem 0.42rem;
+    font-size: 0.5625rem;
+  }
+
+  .fifa-forum-post-card__footer,
+  .fifa-forum-feed__list .fifa-forum-post-card__footer {
+    display: grid;
+    min-height: 4.5rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.2rem 0.7rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .fifa-forum-post-card__counts {
+    min-width: 0;
+    margin-top: 0;
+  }
+
+  .fifa-forum-post-card__caption {
+    grid-column: 1 / -1;
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .fifa-forum-layout {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+
+  .fifa-forum-feed,
+  .fifa-forum-feed-stage,
+  .fifa-forum-feed-stage__body {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: min(100%, 48rem);
+    overflow: visible;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .fifa-forum-feed,
+  .fifa-forum-feed-stage,
+  .fifa-forum-feed-stage__body {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 767px) {
+  .fifa-forum-layout {
+    overflow: hidden;
+    scroll-snap-type: none;
+    scroll-padding-block: 0;
+  }
+
+  .fifa-forum-feed-column--pinned {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
+
+  .fifa-forum-feed-column--pinned .fifa-forum-post-card {
+    scroll-snap-align: none;
+  }
+}
+
+@media (min-width: 768px) and (max-height: 700px) {
+  .fifa-forum-feed-stage__split {
+    --forum-duo-card-width: min(
+      28rem,
+      calc((100cqh - 10.5rem) * 4 / 5),
+      calc((100cqw - 2.5rem) / 2)
+    );
+  }
+
+  .fifa-forum-feed__list .fifa-forum-post-card,
+  .fifa-forum-wall .fifa-forum-post-card {
+    width: min(100%, 28rem, calc((100cqh - 10.5rem) * 4 / 5));
+  }
+
+  .fifa-forum-post-card__header {
+    min-height: 3rem;
+    padding: 0.4rem 0.55rem;
+  }
+
+  .fifa-forum-post-card__author-row {
+    gap: 0.45rem;
+  }
+
+  .fifa-forum-post-card__header .fifa-forum-avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .fifa-forum-post-card__header .fifa-forum-chip {
+    padding: 0.15rem 0.35rem;
+    font-size: 0.55rem;
+  }
+
+  .fifa-forum-post-card__header .fifa-forum-chip--pin {
+    display: none;
+  }
+
+  .fifa-forum-post-card__category {
+    display: none;
+  }
+
+  .fifa-forum-post-card__footer,
+  .fifa-forum-feed__list .fifa-forum-post-card__footer {
+    padding: 0.4rem 0.6rem 0.5rem;
+  }
+
+  .fifa-forum-post-card__caption {
+    display: none;
+  }
+}
+
+.fifa-forum-members {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 0 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.fifa-forum-members__head {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-bottom: none;
+  padding: 0 0.15rem 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-forum-members__head > span {
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
+}
+
+.fifa-forum-members__head strong {
+  display: inline-flex;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  align-items: center;
   justify-content: center;
-  height: 3.1rem;
-  width: 3.1rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 45, 85, 0.45);
-  background: var(--fifa-cta-gradient);
-  color: #fff;
-  box-shadow:
-    0 8px 28px rgba(255, 45, 85, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.12) inset;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background: rgba(34, 197, 94, 0.14);
+  color: #73e89a;
 }
 
-.fifa-forum-stage-fab:hover {
-  box-shadow:
-    0 10px 32px rgba(255, 45, 85, 0.52),
-    0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+.fifa-forum-members__list {
+  --forum-member-row: 2.9rem;
+  --forum-member-gap: 0.22rem;
+  display: flex;
+  min-height: 0;
+  flex: 0 1 auto;
+  flex-direction: column;
+  gap: var(--forum-member-gap);
+  max-height: calc((var(--forum-member-row) * 5) + (var(--forum-member-gap) * 4));
+  overflow-y: auto;
+  padding: 0.1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 212, 255, 0.28) transparent;
 }
 
-.fifa-forum-stage-fab:active {
-  transform: scale(0.96);
+.fifa-forum-members__item {
+  display: flex;
+  min-width: 0;
+  min-height: var(--forum-member-row);
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.7rem;
+  padding: 0.42rem;
 }
 
-.fifa-forum-feed-stage__column .fifa-forum-post-card__footer {
-  padding-right: 4rem;
+.fifa-forum-members__item:hover {
+  background: rgba(255, 255, 255, 0.045);
 }
 
-.fifa-forum-feed-column .fifa-forum-post-card__footer {
-  padding-right: 4rem;
+.fifa-forum-members__avatar {
+  position: relative;
+  display: inline-flex;
+  width: 1.9rem;
+  height: 1.9rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  border: 1px solid rgba(0, 212, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(0, 212, 255, 0.1);
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: var(--fifa-accent-text);
 }
 
-.fifa-forum-feed-stage__split .fifa-forum-stage-fab {
-  right: 0.65rem;
-  bottom: 0.75rem;
+.fifa-forum-members__avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
 }
 
-.fifa-forum-sidebar {
-  display: none;
-  width: 18rem;
+.fifa-forum-members__status {
+  position: absolute;
+  right: -0.1rem;
+  bottom: -0.05rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 2px solid #080d18;
+  border-radius: 999px;
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.55);
+}
+
+.fifa-forum-members__status--inactive {
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.55);
+}
+
+.fifa-forum-members__status--active {
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.85);
+}
+
+.fifa-forum-members__identity {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.fifa-forum-members__identity strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  color: var(--fifa-text);
+}
+
+.fifa-forum-members__identity time {
+  margin-top: 0.08rem;
+  font-size: 0.5625rem;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-forum-members__staff {
+  color: #ff718f !important;
+}
+
+.fifa-forum-members__stats,
+.fifa-forum-banner__block.fifa-forum-members__stats {
+  display: grid;
   flex-shrink: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.fifa-forum-members__stats > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: 0;
+  font-size: 0.5625rem;
+  line-height: 1.25;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-forum-members__stats strong {
+  margin-bottom: 0.12rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  color: var(--fifa-text);
+}
+
+.fifa-forum-banners {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.75rem 0.75rem 1rem;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .fifa-forum-banners {
+    flex-direction: row;
+    align-items: stretch;
+    padding-inline: 0.85rem;
+  }
+
+  .fifa-forum-banner {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .fifa-forum-feed-stage__split {
+    justify-content: flex-start;
+    padding-left: 0.85rem;
+  }
+
+  .fifa-forum-banners {
+    width: clamp(17.5rem, 22vw, 20.5rem);
+    flex-shrink: 0;
+    align-self: stretch;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0.15rem 0.15rem 0.65rem 0;
+  }
+}
+
+/* Laptop+ (1280 / 1366): compose + discover sit side by side, not stacked. */
+@media (min-width: 1280px) {
+  .fifa-forum-banners {
+    flex-direction: row;
+    align-items: stretch;
+    width: clamp(28rem, 32vw, 34rem);
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 1600px) {
+  .fifa-forum-banners {
+    /* Below 1920: modest grow. 1920+ leftover-eating is in the next query. */
+    width: clamp(37rem, 41vw, 47rem);
+  }
+}
+
+@media (min-width: 1920px) {
+  .fifa-forum-layout {
+    gap: 1.5rem;
+    padding-right: 1.25rem;
+  }
+
+  .fifa-forum-feed {
+    /* Content-size the 4:5 duo; leftover goes to the right rail, not a dark strip. */
+    flex: 0 0 auto;
+    width: 59rem;
+  }
+
+  .fifa-forum-banners {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+  }
+}
+
+.fifa-forum-banner {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: 0.7rem;
+  overflow: hidden;
+  border: 1px solid rgba(148, 184, 220, 0.16);
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(165deg, rgba(38, 52, 80, 0.98) 0%, rgba(18, 28, 46, 0.97) 100%);
+  padding: 0.7rem 0.65rem 0.75rem;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.fifa-forum-banner--compose {
+  flex: 0 0 auto;
+}
+
+.fifa-forum-banner--discover {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 @media (min-width: 1280px) {
-  .fifa-forum-sidebar {
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
+  .fifa-forum-banner,
+  .fifa-forum-banner--compose,
+  .fifa-forum-banner--discover {
+    flex: 1 1 0;
+    min-width: 0;
     min-height: 0;
-    padding-top: 0.65rem;
-    padding-bottom: 0.65rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 212, 255, 0.28) transparent;
   }
 
-  .fifa-forum-sidebar__sticky {
-    height: 100%;
+  .fifa-forum-banner--compose {
+    justify-content: stretch;
+    overflow: hidden;
   }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__block {
+    flex: 1 1 0;
+    min-height: 0;
+    justify-content: flex-start;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-sidebar__list {
+    flex: 1 1 auto;
+    justify-content: space-evenly;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__cta {
+    flex: 0 0 auto;
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 1600px) and (min-height: 1000px) {
+  .fifa-forum-banner--compose {
+    gap: 0.85rem;
+    padding: 0.85rem 0.75rem 0.9rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__block,
+  .fifa-forum-banner--compose .fifa-forum-banner__cta {
+    padding: 0.85rem 0.8rem 0.9rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-sidebar__heading {
+    margin-bottom: 0.7rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-sidebar__heading-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-sidebar__item {
+    gap: 0.6rem;
+    padding: 0.68rem 0.85rem;
+    font-size: 0.9375rem;
+    border-radius: 0.9rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-sidebar__item-icon {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__cta {
+    gap: 0.75rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-sidebar__editor-btn,
+  .fifa-forum-banner--compose .fifa-forum-new-post-btn,
+  .fifa-forum-banner--compose .fifa-forum-sidebar__cta-login {
+    padding-block: 0.85rem;
+    font-size: 0.9375rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-sidebar__cta-icon {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .fifa-forum-banner--compose .fifa-forum-banner__block--sort .fifa-forum-sidebar__heading {
+    margin-bottom: 0.9rem;
+    font-size: 1.0625rem;
+    letter-spacing: 0.12em;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__block--sort .fifa-forum-sidebar__heading-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__block--sort .fifa-forum-sidebar__list {
+    gap: 0.55rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__block--sort .fifa-forum-sidebar__item {
+    gap: 0.75rem;
+    padding: 1rem 1.15rem;
+    font-size: 1.1875rem;
+    border-radius: 1.05rem;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__block--sort .fifa-forum-sidebar__item--active {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .fifa-forum-banner--compose .fifa-forum-banner__block--sort .fifa-forum-sidebar__item-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+}
+
+.fifa-forum-banner__block,
+.fifa-forum-banner__cta {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  border-radius: 0.85rem;
+  background:
+    linear-gradient(180deg, rgba(8, 14, 26, 0.28) 0%, rgba(6, 10, 20, 0.18) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 0.7rem 0.65rem 0.75rem;
+}
+
+.fifa-forum-banner__cta {
+  gap: 0.6rem;
+}
+
+.fifa-forum-banner__cta .fifa-forum-new-post-btn {
+  width: 100%;
+  justify-content: center;
 }
 
 .fifa-forum-sidebar__sticky {
@@ -4041,13 +5006,34 @@ header:has(.fifa-top-nav-root--open) {
   flex: 1;
   flex-direction: column;
   gap: 0.65rem;
+  overflow: hidden;
+}
+
+.fifa-forum-sidebar__scroll {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.65rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 212, 255, 0.28) transparent;
 }
 
 .fifa-forum-sidebar__cta {
   display: none;
   margin-top: auto;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 0.55rem;
   padding-top: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .fifa-forum-sidebar__cta {
+    display: flex;
+  }
 }
 
 @media (min-width: 1280px) {
@@ -4067,9 +5053,47 @@ header:has(.fifa-top-nav-root--open) {
 
 .fifa-forum-sidebar__section {
   border: 1px solid var(--fifa-border);
-  border-radius: 1.25rem;
-  background: var(--fifa-glass-bg);
-  padding: 1.1rem;
+  border-radius: 1rem;
+  background:
+    linear-gradient(145deg, rgba(19, 29, 49, 0.88), rgba(12, 19, 34, 0.84));
+  padding: 0.8rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.fifa-forum-sidebar__section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.fifa-forum-sidebar__section-head .fifa-forum-sidebar__heading {
+  margin-bottom: 0;
+}
+
+.fifa-forum-sidebar__refresh {
+  display: inline-flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(0, 212, 255, 0.06);
+  color: var(--fifa-text-muted);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.fifa-forum-sidebar__refresh:hover {
+  border-color: rgba(0, 212, 255, 0.42);
+  background: rgba(0, 212, 255, 0.12);
+  color: var(--fifa-accent-text);
 }
 
 .fifa-forum-sidebar__heading {
@@ -4085,11 +5109,198 @@ header:has(.fifa-top-nav-root--open) {
   color: var(--fifa-text-muted);
 }
 
+.fifa-forum-sidebar__heading-icon,
+.fifa-forum-sidebar__item-icon,
+.fifa-forum-sidebar__cta-icon {
+  flex-shrink: 0;
+  width: 0.9rem;
+  height: 0.9rem;
+  color: var(--fifa-accent-text);
+}
+
+.fifa-forum-sidebar__item-icon {
+  opacity: 0.7;
+  color: currentColor;
+}
+
+.fifa-forum-sidebar__cta-icon {
+  width: 1rem;
+  height: 1rem;
+  color: currentColor;
+}
+
+.fifa-forum-sidebar__empty {
+  margin: 0;
+  padding: 0.35rem 0.15rem 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--fifa-text-muted);
+}
+
 .fifa-forum-sidebar__meta {
   padding-inline: 0.35rem;
   text-align: center;
   font-size: 0.625rem;
   color: var(--fifa-text-muted);
+}
+
+.fifa-forum-sidebar__popular {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.fifa-forum-sidebar__popular-item {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.8rem;
+  background: rgba(5, 10, 20, 0.52);
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  color: var(--fifa-text);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.fifa-forum-sidebar__popular-item:hover {
+  border-color: rgba(0, 212, 255, 0.32);
+  background: rgba(0, 212, 255, 0.08);
+}
+
+.fifa-forum-sidebar__popular-rank {
+  display: inline-flex;
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 206, 74, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 190, 35, 0.1);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ffd768;
+}
+
+.fifa-forum-sidebar__popular-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.fifa-forum-sidebar__popular-meta {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 0.2rem;
+  font-size: 0.625rem;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-forum-sidebar__popular-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.fifa-forum-sidebar__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.fifa-forum-sidebar__stats > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border: 1px solid rgba(0, 212, 255, 0.14);
+  border-radius: 0.8rem;
+  background: rgba(0, 212, 255, 0.05);
+  padding: 0.55rem;
+  font-size: 0.625rem;
+  line-height: 1.25;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-forum-sidebar__stats strong {
+  margin-bottom: 0.15rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--fifa-text);
+}
+
+.fifa-forum-sidebar__editor-btn {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(0, 212, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(0, 212, 255, 0.08);
+  padding: 0.65rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--fifa-accent-text);
+  cursor: pointer;
+}
+
+.fifa-forum-sidebar__editor-btn:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  background: rgba(0, 212, 255, 0.14);
+}
+
+.fifa-forum-sidebar button:focus-visible,
+.fifa-forum-banners button:focus-visible,
+.fifa-forum-post-card button:focus-visible {
+  outline: 2px solid var(--fifa-accent-text);
+  outline-offset: 2px;
+}
+
+@media (min-width: 1024px) and (max-height: 820px) {
+  .fifa-forum-banners,
+  .fifa-forum-banner {
+    gap: 0.55rem;
+  }
+
+  .fifa-forum-banner {
+    padding: 0.65rem 0.7rem 0.7rem;
+  }
+
+  .fifa-forum-banner__cta .fifa-forum-new-post-btn,
+  .fifa-forum-banner__cta .fifa-forum-sidebar__editor-btn,
+  .fifa-forum-banner__cta .fifa-forum-sidebar__cta-login {
+    padding-block: 0.5rem;
+  }
+
+  .fifa-forum-sidebar__heading,
+  .fifa-forum-sidebar__section-head {
+    margin-bottom: 0.4rem;
+  }
+
+  .fifa-forum-sidebar__popular {
+    gap: 0.3rem;
+  }
+
+  .fifa-forum-sidebar__popular-item {
+    padding: 0.45rem 0.55rem;
+  }
+
+  .fifa-forum-banners .fifa-forum-sidebar__item {
+    padding-block: 0.35rem;
+  }
+
+  .fifa-forum-banner__cta {
+    gap: 0.45rem;
+    padding-top: 0.2rem;
+  }
 }
 
 .fifa-forum-feed-carousel {
@@ -4107,16 +5318,26 @@ header:has(.fifa-top-nav-root--open) {
   flex: 1 1 auto;
 }
 
+.fifa-forum-feed-column .fifa-forum-feed-carousel--arrows-only {
+  flex: 0 1 auto;
+  height: auto;
+  max-height: 100%;
+  align-self: center;
+}
+
 .fifa-forum-feed-carousel__arrow {
+  --forum-arrow-size: 2.75rem;
+  --forum-arrow-gap: 0.4rem;
   position: absolute;
-  left: 50%;
+  left: auto;
+  right: 0.4rem;
   z-index: 5;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 2.75rem;
-  width: 2.75rem;
-  transform: translateX(-50%);
+  height: var(--forum-arrow-size);
+  width: var(--forum-arrow-size);
+  transform: none;
   border: 1px solid rgba(0, 212, 255, 0.35);
   border-radius: 999px;
   background: rgba(8, 12, 22, 0.88);
@@ -4137,11 +5358,11 @@ header:has(.fifa-top-nav-root--open) {
 .fifa-forum-feed-carousel__arrow:hover:not(:disabled) {
   border-color: rgba(0, 212, 255, 0.55);
   background: rgba(12, 18, 32, 0.95);
-  transform: translateX(-50%) scale(1.04);
+  transform: scale(1.04);
 }
 
 .fifa-forum-feed-carousel__arrow:active:not(:disabled) {
-  transform: translateX(-50%) scale(0.97);
+  transform: scale(0.97);
 }
 
 .fifa-forum-feed-carousel__arrow:disabled {
@@ -4149,12 +5370,21 @@ header:has(.fifa-top-nav-root--open) {
   pointer-events: none;
 }
 
+.fifa-forum-feed-carousel--single .fifa-forum-feed-carousel__arrow {
+  display: none;
+}
+
+/* Stack prev/next on the card's right edge, centered on the 4:5 media — not over the footer. */
 .fifa-forum-feed-carousel__arrow--prev {
-  top: 0.35rem;
+  top: calc(50% - var(--forum-arrow-gap) / 2 - var(--forum-arrow-size));
+  bottom: auto;
 }
 
 .fifa-forum-feed-carousel__arrow--next {
-  bottom: 0.35rem;
+  top: calc(50% + var(--forum-arrow-gap) / 2);
+  right: 0.4rem;
+  bottom: auto;
+  left: auto;
 }
 
 .fifa-forum-feed__list {
@@ -4177,6 +5407,25 @@ header:has(.fifa-top-nav-root--open) {
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+}
+
+.fifa-forum-feed-carousel--arrows-only .fifa-forum-feed__list,
+.fifa-forum-feed__list--arrows-only {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: none;
+  scroll-snap-type: none;
+  -webkit-overflow-scrolling: auto;
+}
+
+.fifa-forum-feed__slide {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+}
+
+.fifa-forum-feed__slide[hidden] {
+  display: none;
 }
 
 .fifa-forum-feed__list::-webkit-scrollbar {
@@ -4339,6 +5588,480 @@ header:has(.fifa-top-nav-root--open) {
   border-color: rgba(0, 212, 255, 0.4);
   outline: none;
   box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.1);
+}
+
+.fifa-forum-mobile-chrome,
+.fifa-forum-mobile-filters,
+.fifa-forum-mobile-explore,
+.fifa-forum-mobile-empty-link {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .fifa-forum-mobile-chrome {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.7rem 0.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background:
+      linear-gradient(180deg, rgba(18, 24, 40, 0.96) 0%, rgba(10, 15, 26, 0.9) 100%);
+  }
+
+  .fifa-forum-mobile-switcher {
+    display: grid;
+    min-width: 0;
+    flex: 1 1 auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.15rem;
+    padding: 0.18rem;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 999px;
+    background: rgba(6, 10, 18, 0.72);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 10px 24px rgba(0, 0, 0, 0.28);
+  }
+
+  .fifa-forum-mobile-switcher__tab {
+    display: flex;
+    min-height: 2.75rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.08rem;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    padding: 0.2rem 0.15rem;
+    color: var(--fifa-text-muted);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    transition:
+      color 0.16s ease,
+      background 0.16s ease,
+      box-shadow 0.16s ease;
+  }
+
+  .fifa-forum-mobile-switcher__icon {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .fifa-forum-mobile-switcher__tab--active {
+    color: var(--fifa-text);
+    background:
+      linear-gradient(180deg, rgba(0, 212, 255, 0.22) 0%, rgba(0, 212, 255, 0.08) 100%);
+    box-shadow:
+      0 0 0 1px rgba(0, 212, 255, 0.32),
+      0 8px 18px rgba(0, 212, 255, 0.14);
+  }
+
+  .fifa-forum-mobile-compose {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    height: 2.75rem;
+    width: 2.75rem;
+    border: 1px solid rgba(255, 45, 85, 0.45);
+    border-radius: 999px;
+    background: var(--fifa-cta-gradient);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(255, 45, 85, 0.38);
+  }
+
+  .fifa-forum-mobile-compose:active {
+    transform: scale(0.96);
+  }
+
+  .fifa-forum-mobile-compose__icon {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .fifa-forum-mobile-filters {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.4rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.4rem 0.7rem 0.5rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fifa-forum-mobile-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fifa-forum-mobile-filters__group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .fifa-forum-mobile-filters__rule {
+    flex: 0 0 1px;
+    align-self: stretch;
+    min-height: 1.4rem;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .fifa-forum-mobile-filters__chip {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    background: rgba(8, 12, 22, 0.55);
+    padding: 0.45rem 0.85rem;
+    color: var(--fifa-text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .fifa-forum-mobile-filters__chip--active {
+    border-color: rgba(0, 212, 255, 0.42);
+    background: rgba(0, 212, 255, 0.14);
+    color: var(--fifa-text);
+  }
+
+  .fifa-forum-mobile-filters__refresh {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    margin-left: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    background: rgba(8, 12, 22, 0.55);
+    color: var(--fifa-text-secondary);
+  }
+
+  .fifa-forum-page[data-mobile-pane="explore"] .fifa-forum-mobile-explore {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.7rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0.7rem 0.75rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fifa-forum-mobile-explore__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .fifa-forum-mobile-explore .fifa-forum-sidebar__editor-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 2.75rem;
+  }
+
+  .fifa-forum-mobile-explore .fifa-forum-sidebar__popular-item,
+  .fifa-forum-mobile-explore .fifa-forum-sidebar__refresh {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+
+  .fifa-forum-page {
+    --forum-mobile-card-chrome: 10.25rem;
+  }
+
+  .fifa-forum-layout {
+    overflow: hidden;
+    scroll-snap-type: none;
+  }
+
+  .fifa-forum-feed,
+  .fifa-forum-feed-stage,
+  .fifa-forum-feed-stage__body {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .fifa-forum-feed-stage__body {
+    flex-direction: column;
+  }
+
+  .fifa-forum-feed-stage__toolbar {
+    display: none;
+  }
+
+  .fifa-forum-banners {
+    display: none;
+  }
+
+  .fifa-forum-feed-stage__split {
+    flex-direction: column;
+    gap: 0;
+    padding: 0.25rem 0.65rem 0.45rem;
+    overflow: hidden;
+  }
+
+  .fifa-forum-feed-column,
+  .fifa-forum-feed-column--pinned,
+  .fifa-forum-feed-column--feed {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+  }
+
+  .fifa-forum-feed-column__label {
+    display: none;
+  }
+
+  .fifa-forum-page[data-mobile-pane="pinned"] .fifa-forum-feed-column--feed,
+  .fifa-forum-page[data-mobile-pane="wall"] .fifa-forum-feed-column--pinned,
+  .fifa-forum-page[data-mobile-pane="explore"] .fifa-forum-feed-stage__split,
+  .fifa-forum-page[data-mobile-pane="explore"] .fifa-forum-feed-stage__column {
+    display: none;
+  }
+
+  .fifa-forum-feed-column .fifa-forum-feed-carousel,
+  .fifa-forum-feed-column .fifa-forum-feed-carousel--arrows-only {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  .fifa-forum-feed-column .fifa-forum-feed__list,
+  .fifa-forum-feed-column .fifa-forum-feed__list--arrows-only {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  .fifa-forum-wall {
+    flex: 1 1 auto;
+    gap: 1.1rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scroll-snap-type: none;
+    scroll-padding-block: 0;
+    padding: 0.15rem 0 calc(0.65rem + env(safe-area-inset-bottom, 0px));
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fifa-forum-post-card,
+  .fifa-forum-wall .fifa-forum-post-card,
+  .fifa-forum-feed-column--pinned .fifa-forum-post-card {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
+
+  .fifa-forum-feed__list .fifa-forum-post-card,
+  .fifa-forum-wall .fifa-forum-post-card,
+  .fifa-forum-feed-column--pinned .fifa-forum-post-card {
+    width: min(100%, calc((100cqh - var(--forum-mobile-card-chrome)) * 4 / 5));
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .fifa-forum-feed-column--pinned {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
+
+  .fifa-forum-post-card__footer,
+  .fifa-forum-feed__list .fifa-forum-post-card__footer,
+  .fifa-forum-wall .fifa-forum-post-card__footer {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.1rem 0.65rem;
+    padding: 0.3rem 0.65rem 0.4rem;
+  }
+
+  .fifa-forum-post-card__counts {
+    margin-top: 0;
+    font-size: 0.75rem;
+  }
+
+  .fifa-forum-post-card__caption {
+    grid-column: 1 / -1;
+    margin-top: 0.05rem;
+  }
+
+  .fifa-forum-post-card__header {
+    min-height: 2.85rem;
+    padding: 0.35rem 0.6rem;
+  }
+
+  .fifa-forum-post-card__action {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .fifa-forum-feed-carousel__arrow {
+    --forum-arrow-size: 2.75rem;
+  }
+
+  .fifa-forum-detail-modal-backdrop {
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+    background: rgba(8, 12, 22, 0.96);
+  }
+
+  .fifa-forum-detail-modal {
+    max-width: none;
+    max-height: none;
+    height: 100%;
+    height: 100dvh;
+    border-radius: 0;
+    background: #0b1220;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .fifa-forum-detail-modal__close,
+  .fifa-forum-detail-modal__delete {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .fifa-forum-detail-modal__body {
+    overflow-y: auto;
+  }
+
+  .fifa-forum-detail-text-slot .fifa-forum-post-card__frame,
+  .fifa-forum-detail-attachment {
+    width: min(100%, calc((100dvh - 16rem) * 4 / 5));
+  }
+
+  .fifa-forum-detail-modal__comments {
+    max-height: min(42dvh, 24rem);
+    padding-bottom: 0.25rem;
+  }
+
+  .fifa-forum-action {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+
+  .fifa-forum-feed-column__empty {
+    min-height: 12rem;
+  }
+
+  .fifa-forum-post-card:hover {
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 16px 40px rgba(0, 0, 0, 0.36);
+  }
+
+  .fifa-app-viewport:has(.fifa-forum-page) > .shrink-0:has(footer.fifa-site-footer),
+  .fifa-app-viewport:has(.fifa-account-page) > .shrink-0:has(footer.fifa-site-footer) {
+    display: none;
+  }
+
+  .fifa-forum-mobile-explore .fifa-forum-members {
+    flex: 0 0 auto;
+    overflow: visible;
+    min-height: auto;
+  }
+
+  .fifa-forum-mobile-explore .fifa-forum-members__list {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .fifa-forum-mobile-explore .fifa-forum-search__input {
+    min-height: 2.75rem;
+    font-size: 1rem;
+  }
+
+  .fifa-forum-mobile-explore .fifa-forum-members__stats > span {
+    font-size: 0.6875rem;
+  }
+
+  .fifa-forum-mobile-explore .fifa-forum-members__stats strong {
+    font-size: 1rem;
+  }
+
+  .fifa-forum-modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .fifa-forum-new-modal {
+    width: 100%;
+    max-width: none;
+    max-height: min(92dvh, var(--forum-vvh, 100dvh));
+    border-radius: 1.15rem 1.15rem 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .fifa-forum-new-modal__head {
+    padding: 0.85rem 1rem;
+  }
+
+  .fifa-forum-new-modal__body {
+    max-height: calc(min(92dvh, var(--forum-vvh, 100dvh)) - 8.5rem);
+    padding: 1rem;
+  }
+
+  .fifa-forum-new-modal__foot {
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .fifa-forum-type-btn,
+  .fifa-forum-lineup-pick {
+    min-height: 2.75rem;
+  }
+
+  .fifa-forum-new-modal input,
+  .fifa-forum-new-modal textarea,
+  .fifa-forum-new-modal select,
+  .fifa-forum-detail-modal textarea {
+    font-size: 1rem;
+  }
+
+  .fifa-forum-mobile-empty-link {
+    display: inline-flex;
+    margin-top: 0.75rem;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 212, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(0, 212, 255, 0.1);
+    padding: 0.4rem 0.9rem;
+    color: var(--fifa-accent-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .fifa-forum-feed-column__empty {
+    flex-direction: column;
+  }
 }
 
 .fifa-forum-tag {
@@ -4631,10 +6354,17 @@ button.fifa-forum-action:hover {
 }
 
 /* ─── Soutěže hub grid ─── */
-/* Sloupce jsou řízeny Tailwind utility třídami (grid-cols-*), tady jen gap/výška */
+/* Mobile: content-sized rows (see max-width: 1023px). Desktop: fill viewport. */
 .fifa-souteze-hub-grid {
-  min-height: 0;
-  flex: 1 1 0;
+  flex: 0 0 auto;
+  min-height: auto;
+}
+
+@media (min-width: 1024px), (min-device-width: 1024px) {
+  .fifa-souteze-hub-grid {
+    min-height: 0;
+    flex: 1 1 0;
+  }
 }
 
 /* ─── Tabulka ─── */
@@ -5020,50 +6750,52 @@ button.fifa-forum-action:hover {
   color: var(--fifa-accent-text);
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (max-device-width: 1023px) {
   .fifa-editor-bar {
-    padding: 0.45rem 0.75rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.4rem 0.65rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
   }
 
-  .fifa-editor-bar__inner { padding: 0.375rem; }
-  .fifa-editor-bar__actions { gap: 0.25rem; }
+  .fifa-editor-bar__inner { padding: 0.35rem; }
+  .fifa-editor-bar__actions { gap: 0.3rem; }
 
   .fifa-editor-bar__primary {
-    min-height: 2.125rem;
-    padding: 0.3125rem 0.375rem;
-    font-size: 0.625rem;
-    gap: 0.2rem;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.45rem;
+    font-size: 0.6875rem;
+    gap: 0.25rem;
+    touch-action: manipulation;
   }
 
   .fifa-editor-bar__primary svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+  }
+
+  .fifa-editor-bar__secondary {
+    min-height: 2.75rem;
+    padding: 0.35rem 0.35rem;
+    font-size: 0.625rem;
+    gap: 0.2rem;
+    touch-action: manipulation;
+  }
+
+  .fifa-editor-bar__secondary svg {
     width: 0.8125rem;
     height: 0.8125rem;
   }
 
-  .fifa-editor-bar__secondary {
-    min-height: 2.125rem;
-    padding: 0.25rem 0.3125rem;
-    font-size: 0.5625rem;
-    gap: 0.1875rem;
-  }
-
-  .fifa-editor-bar__secondary svg {
-    width: 0.6875rem;
-    height: 0.6875rem;
-  }
-
   .fifa-editor-bar__action--share .fifa-editor-bar__label {
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
   }
 }
 
 /* ─── Match editor mobilní split ─── */
 .fifa-editor-match-page--mobile {
-  --fifa-editor-mobile-bar-h: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+  --fifa-editor-mobile-bar-h: calc(5.15rem + env(safe-area-inset-bottom, 0px));
   padding-bottom: var(--fifa-editor-mobile-bar-h);
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (max-device-width: 1023px) {
   /* Parent grid musí mít definovanou výšku řádku aby 1fr fungovalo */
   .grid:has(> .fifa-editor-mobile-split) {
     grid-template-rows: minmax(0, 1fr);
@@ -5073,17 +6805,19 @@ button.fifa-forum-action:hover {
 
   .fifa-editor-mobile-split {
     display: grid;
-    /* Rink dostane zbytek, pool pevná výška pro filtry + 4 celé řady karet */
+    /* Rink dostane zbytek; pool = switcher + taby + hledání + 3 celé řady karet */
     grid-template-rows: minmax(0, 1fr) var(--fifa-pool-block-h);
     height: 100%;
     min-height: 0;
     gap: 0.375rem;
-    --fifa-pool-card-h: 2.125rem;
-    --fifa-pool-grid-gap: 0.125rem;
-    --fifa-pool-filters-h: 3rem;
-    --fifa-pool-scroll-pad: 0.35rem;
-    --fifa-pool-rows-visible: 4;
+    --fifa-pool-switcher-h: 3.85rem;
+    --fifa-pool-card-h: 2.2rem;
+    --fifa-pool-grid-gap: 0.15rem;
+    --fifa-pool-filters-h: 4rem;
+    --fifa-pool-scroll-pad: 0.3rem;
+    --fifa-pool-rows-visible: 3;
     --fifa-pool-block-h: calc(
+      var(--fifa-pool-switcher-h) +
       var(--fifa-pool-filters-h) + var(--fifa-pool-scroll-pad) +
       var(--fifa-pool-card-h) * var(--fifa-pool-rows-visible) +
       var(--fifa-pool-grid-gap) * (var(--fifa-pool-rows-visible) - 1)
@@ -5097,8 +6831,8 @@ button.fifa-forum-action:hover {
 
   .fifa-app-viewport,
   .fifa-design-viewport {
-    --fifa-pool-card-h: 2.125rem;
-    --fifa-pool-grid-gap: 0.125rem;
+    --fifa-pool-card-h: 2.2rem;
+    --fifa-pool-grid-gap: 0.15rem;
     --fifa-editor-mobile-inset: 0.5rem;
   }
 
@@ -5152,7 +6886,7 @@ button.fifa-forum-action:hover {
   }
 
   .fifa-editor-mobile-pool {
-  display: flex;
+    display: flex;
     flex-direction: column;
     flex-shrink: 0;
     height: var(--fifa-pool-block-h);
@@ -5166,60 +6900,138 @@ button.fifa-forum-action:hover {
     margin-inline: var(--fifa-editor-mobile-inset, 0.5rem);
   }
 
+  /* Switcher má vlastní rozpočet — nesmí ukrajovat filtry / řady karet */
+  .fifa-editor-mobile-pool__switcher {
+    box-sizing: border-box;
+    flex: 0 0 var(--fifa-pool-switcher-h);
+    height: var(--fifa-pool-switcher-h);
+    min-height: var(--fifa-pool-switcher-h);
+    max-height: var(--fifa-pool-switcher-h);
+    overflow: hidden;
+    padding: 0.28rem 0.4rem 0.2rem;
+    border-bottom: 1px solid var(--fifa-border);
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher--compact {
+    gap: 0.18rem;
+    height: 100%;
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher__kind {
+    gap: 0;
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher__kind-btn {
+    flex: 1 1 0;
+    min-height: 1.65rem;
+    padding: 0.22rem 0.28rem 0.3rem;
+    font-size: 0.75rem;
+    line-height: 1.15;
+    touch-action: manipulation;
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher__chips {
+    flex-wrap: nowrap;
+    gap: 0.2rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher__chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher__chip {
+    flex: 1 1 0;
+    min-width: 3.75rem;
+    min-height: 1.45rem;
+    justify-content: center;
+    padding: 0.22rem 0.35rem;
+    font-size: 0.6875rem;
+    border-color: rgba(148, 163, 184, 0.4);
+    background: rgba(36, 48, 78, 0.88);
+    touch-action: manipulation;
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher__chip--active {
+    border-color: var(--pool-accent-border);
+    background: var(--pool-accent-muted);
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher__chip-count {
+    padding: 0.04rem 0.28rem;
+    font-size: 0.5625rem;
+  }
+
+  .fifa-editor-mobile-pool__switcher .fifa-pool-switcher__select {
+    min-height: 1.35rem;
+    padding: 0.18rem 1.55rem 0.18rem 0.4rem;
+    font-size: 0.6875rem;
+  }
+
   .fifa-editor-mobile-pool__intro {
     display: none; /* Skryto pro maximální prostor rince */
   }
 
   .fifa-editor-mobile-pool .fifa-editor-panel-scroll {
     flex: 1 1 auto;
-  min-height: 0;
+    min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding: 0.12rem 0.375rem 0.15rem;
   }
 
   .fifa-editor-mobile-pool .fifa-editor-pool-filters {
     display: flex;
-  flex-direction: column;
-    justify-content: space-between;
-    gap: 0.06rem;
-    flex: 0 0 var(--fifa-pool-filters-h);
-    height: var(--fifa-pool-filters-h);
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.2rem;
+    flex: 0 0 auto;
+    height: auto;
     min-height: var(--fifa-pool-filters-h);
-    max-height: var(--fifa-pool-filters-h);
-    overflow: hidden;
-    padding: 0.12rem 0.375rem 0.08rem;
+    max-height: none;
+    overflow: visible;
+    padding: 0.14rem 0.375rem 0.16rem;
     border-bottom: 1px solid var(--fifa-border);
   }
 
   .fifa-editor-mobile-pool .fifa-editor-tabs {
-    padding: 0.1rem;
-    gap: 0.1rem;
+    padding: 0.12rem;
+    gap: 0.12rem;
     border-radius: var(--fifa-radius-sm);
   }
 
   .fifa-editor-mobile-pool .fifa-editor-tab {
     min-width: 2.5rem;
+    min-height: 1.55rem;
     flex: 1 1 0;
-    padding: 0.14rem 0.28rem;
-    font-size: 0.53125rem;
+    padding: 0.22rem 0.28rem;
+    font-size: 0.625rem;
+    touch-action: manipulation;
   }
 
-  /* Kompaktnější search input + sort pro 4 řady karet */
+  /* Search + sort — stále kompaktní, ale čitelnější */
   .fifa-editor-mobile-pool .fifa-editor-input {
-    padding-top: 0.18rem;
-    padding-bottom: 0.18rem;
-    font-size: 0.6875rem;
+    padding-top: 0.22rem;
+    padding-bottom: 0.22rem;
+    font-size: 0.75rem;
   }
 
   .fifa-editor-mobile-pool .fifa-editor-pool-toolbar {
-    gap: 0.2rem;
+    gap: 0.25rem;
     padding-top: 0;
   }
 
   .fifa-editor-mobile-pool .fifa-editor-pool-sort--compact {
-    padding: 0.18rem 0.32rem;
-    font-size: 0.53125rem;
+    min-height: 1.55rem;
+    padding: 0.22rem 0.4rem;
+    font-size: 0.625rem;
+    touch-action: manipulation;
   }
 
   .fifa-editor-mobile-pool .fifa-pool-grid--inline-compact {
@@ -5233,17 +7045,18 @@ button.fifa-forum-action:hover {
 
   .fifa-editor-mobile-pool .fifa-pool-grid--inline-compact .fifa-pool-card {
     box-sizing: border-box;
-  display: flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
     position: relative;
-    min-height: var(--fifa-pool-card-h, 2.125rem);
-    height: var(--fifa-pool-card-h, 2.125rem);
-    max-height: var(--fifa-pool-card-h, 2.125rem);
-    padding: 0.1rem 0.95rem 0.1rem 0.2rem;
+    min-height: var(--fifa-pool-card-h, 2.35rem);
+    height: var(--fifa-pool-card-h, 2.35rem);
+    max-height: var(--fifa-pool-card-h, 2.35rem);
+    padding: 0.12rem 0.95rem 0.12rem 0.25rem;
     border-radius: 0.3125rem;
     border-color: rgba(0, 212, 255, 0.35);
+    touch-action: manipulation;
     box-shadow:
       inset 2px 0 0 var(--fifa-accent),
       inset 0 -1px 0 rgba(255, 45, 85, 0.45),
@@ -5320,8 +7133,8 @@ button.fifa-forum-action:hover {
     white-space: nowrap;
     overflow-wrap: normal;
     word-break: normal;
-    font-size: 0.5625rem;
-    line-height: 1.05;
+    font-size: 0.625rem;
+    line-height: 1.08;
     color: #fff;
   }
 
@@ -5395,6 +7208,7 @@ button.fifa-forum-action:hover {
 .fifa-rink-template__frame {
   position: relative;
   width: 100%;
+  max-height: 100%;
   aspect-ratio: 16 / 9;
   container-type: inline-size;
   overflow: hidden;
@@ -5402,6 +7216,12 @@ button.fifa-forum-action:hover {
   box-shadow:
     inset 0 0 0 1px rgba(0, 212, 255, 0.14),
     0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Stage is container-type:size — shrink width so 16:9 fits height and goalie
+   stays inside overflow:hidden (switcher/chrome must not clip bottom slot). */
+.fifa-match-rink__stage .fifa-rink-template__frame {
+  width: min(100%, calc(100cqh * 16 / 9));
 }
 
 .fifa-rink-template__frame::before {
@@ -5504,6 +7324,16 @@ button.fifa-forum-action:hover {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/*
+ * Karlovy Vary (data-jersey-team="vary") — mírně světlejší hex fill,
+ * ať černé/teal dresy nezmizí ve slotu. Jen KV (bílé dresy zůstanou na defaultu).
+ */
+.fifa-rink-template__slot:has([data-jersey-team="vary"]) {
+  --fifa-shield-fill-0: rgb(48, 70, 102);
+  --fifa-shield-fill-42: rgb(28, 42, 66);
+  --fifa-shield-fill-100: rgb(16, 24, 42);
 }
 
 .fifa-rink-template__slot:has(.fifa-rink-slot--selected) .fifa-rink-shield-svg polygon {
@@ -5685,7 +7515,7 @@ button.fifa-forum-action:hover {
   z-index: 4;
   left: -14%;
   right: -14%;
-  top: calc(100% + 0.2rem);
+  top: calc(100% + 0.08rem);
   display: flex;
   min-height: 0;
   flex: none;
@@ -5704,7 +7534,7 @@ button.fifa-forum-action:hover {
   min-height: 1.45em;
   align-items: center;
   justify-content: center;
-  gap: 0.28em;
+  gap: 0.14em;
   padding: 0.22em 0.42em;
   border: 1px solid rgba(0, 212, 255, 0.42);
   border-radius: 3px;
@@ -5736,7 +7566,7 @@ button.fifa-forum-action:hover {
 
 .fifa-rink-slot__caption-name {
   min-width: 0;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -5749,12 +7579,8 @@ button.fifa-forum-action:hover {
   color: rgba(255, 255, 255, 0.96);
 }
 
-.fifa-rink-slot__caption-plate:has(.fifa-rink-slot__caption-badge) {
-  padding-right: 1.2em;
-}
-
 .fifa-rink-slot__caption-plate:has(.fifa-rink-slot__caption-badge) .fifa-rink-slot__caption-name {
-  padding-right: 0.15em;
+  max-width: calc(100% - 1.05em);
 }
 
 .fifa-rink-slot__caption-label {
@@ -5774,18 +7600,16 @@ button.fifa-forum-action:hover {
 }
 
 .fifa-rink-slot__caption-badge {
-  position: absolute;
-  top: 50%;
-  right: 0.18em;
+  position: static;
   z-index: 1;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(-50%);
   height: 1em;
   min-width: 1em;
-  padding: 0 0.12em;
+  margin: 0;
+  padding: 0 0.1em;
   border-radius: 2px;
   font-family: var(--font-display);
   font-size: clamp(0.44rem, 10cqh, 0.58rem);
@@ -5845,8 +7669,506 @@ button.fifa-forum-action:hover {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
+/* Pardubice rink — ČERVENKA #19: condensed athletic face + navy obrys. */
+.fifa-rink-jersey__number.jersey-back-number-text--pardubice {
+  --pardubice-number-navy: #0a1f4d;
+  font-family: "Barlow Condensed", "Oswald", "Impact", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  font-stretch: extra-condensed;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "tnum" 0, "lnum" 1;
+  display: inline-block;
+  transform: scaleX(0.72);
+  transform-origin: center;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.35px, 0.095em, 3.1px);
+  -webkit-text-stroke-color: var(--pardubice-number-navy);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.25px -1.25px 0 var(--pardubice-number-navy),
+    1.25px -1.25px 0 var(--pardubice-number-navy),
+    -1.25px 1.25px 0 var(--pardubice-number-navy),
+    1.25px 1.25px 0 var(--pardubice-number-navy),
+    -1.75px 0 0 var(--pardubice-number-navy),
+    1.75px 0 0 var(--pardubice-number-navy),
+    0 -1.75px 0 var(--pardubice-number-navy),
+    0 1.75px 0 var(--pardubice-number-navy);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--pardubice {
+  --pardubice-number-navy: #0a1f4d;
+  font-family: "Barlow Condensed", "Oswald", "Impact", var(--font-jersey-print, var(--font-display));
+  font-weight: 800;
+  letter-spacing: 0.045em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.45px, 0.035em, 1.2px);
+  -webkit-text-stroke-color: var(--pardubice-number-navy);
+  paint-order: stroke fill;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+/* Kometa rink — FLEK #9: bílá + silný navy + tenký bílý rim (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--kometa {
+  --kometa-number-navy: #001d4a;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.75px, 0.12em, 3.8px);
+  -webkit-text-stroke-color: var(--kometa-number-navy);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.5px -1.5px 0 var(--kometa-number-navy),
+    1.5px -1.5px 0 var(--kometa-number-navy),
+    -1.5px 1.5px 0 var(--kometa-number-navy),
+    1.5px 1.5px 0 var(--kometa-number-navy),
+    -2.1px 0 0 var(--kometa-number-navy),
+    2.1px 0 0 var(--kometa-number-navy),
+    0 -2.1px 0 var(--kometa-number-navy),
+    0 2.1px 0 var(--kometa-number-navy),
+    -2.75px -2.75px 0 #ffffff,
+    2.75px -2.75px 0 #ffffff,
+    -2.75px 2.75px 0 #ffffff,
+    2.75px 2.75px 0 #ffffff,
+    -3.15px 0 0 #ffffff,
+    3.15px 0 0 #ffffff,
+    0 -3.15px 0 #ffffff,
+    0 3.15px 0 #ffffff;
+}
+
+/* Kometa rink — bílé jméno na modrém dresu. */
+.fifa-rink-jersey__name.jersey-nameplate-text--kometa {
+  --kometa-number-navy: #001d4a;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.45px, 0.045em, 1.35px);
+  -webkit-text-stroke-color: var(--kometa-number-navy);
+  paint-order: stroke fill;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* Karlovy Vary rink — ČERNOCH #21: solid teal geometric block (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--karlovy {
+  --karlovy-number-teal: #00c4b4;
+  font-family: "Orbitron", "Bebas Neue", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--karlovy-number-teal);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--karlovy {
+  --karlovy-number-teal: #00c4b4;
+  font-family: "Oswald", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--karlovy-number-teal);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Litvínov rink — yellow kit: black + thin white outline (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--litvinov {
+  --litvinov-number-black: #0a0a0a;
+  --litvinov-number-white: #ffffff;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--litvinov-number-black);
+  -webkit-text-stroke-width: clamp(1px, 0.07em, 2.4px);
+  -webkit-text-stroke-color: var(--litvinov-number-white);
+  paint-order: stroke fill;
+  text-shadow:
+    -0.95px -0.95px 0 var(--litvinov-number-white),
+    0.95px -0.95px 0 var(--litvinov-number-white),
+    -0.95px 0.95px 0 var(--litvinov-number-white),
+    0.95px 0.95px 0 var(--litvinov-number-white),
+    -1.25px 0 0 var(--litvinov-number-white),
+    1.25px 0 0 var(--litvinov-number-white),
+    0 -1.25px 0 var(--litvinov-number-white),
+    0 1.25px 0 var(--litvinov-number-white);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--litvinov {
+  --litvinov-number-black: #0a0a0a;
+  font-family: "Oswald", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--litvinov-number-black);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Kladno rink — navy + white rim + sky outer (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--kladno {
+  --kladno-number-navy: #0a2a6b;
+  --kladno-number-sky: #5eb6e8;
+  --kladno-number-white: #ffffff;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--kladno-number-navy);
+  -webkit-text-stroke-width: clamp(1.6px, 0.11em, 3.5px);
+  -webkit-text-stroke-color: var(--kladno-number-white);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.4px -1.4px 0 var(--kladno-number-white),
+    1.4px -1.4px 0 var(--kladno-number-white),
+    -1.4px 1.4px 0 var(--kladno-number-white),
+    1.4px 1.4px 0 var(--kladno-number-white),
+    -1.9px 0 0 var(--kladno-number-white),
+    1.9px 0 0 var(--kladno-number-white),
+    0 -1.9px 0 var(--kladno-number-white),
+    0 1.9px 0 var(--kladno-number-white),
+    -2.55px -2.55px 0 var(--kladno-number-sky),
+    2.55px -2.55px 0 var(--kladno-number-sky),
+    -2.55px 2.55px 0 var(--kladno-number-sky),
+    2.55px 2.55px 0 var(--kladno-number-sky),
+    -2.95px 0 0 var(--kladno-number-sky),
+    2.95px 0 0 var(--kladno-number-sky),
+    0 -2.95px 0 var(--kladno-number-sky),
+    0 2.95px 0 var(--kladno-number-sky);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--kladno {
+  --kladno-number-navy: #0a2a6b;
+  font-family: "Oswald", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 800;
+  color: var(--kladno-number-navy);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Plzeň rink — GULÁŠ #77: navy + white rim + sky outer (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--plzen {
+  --plzen-number-navy: #00205b;
+  --plzen-number-sky: #6eb6e8;
+  --plzen-number-white: #ffffff;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--plzen-number-navy);
+  -webkit-text-stroke-width: clamp(1.85px, 0.12em, 4px);
+  -webkit-text-stroke-color: var(--plzen-number-white);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.6px -1.6px 0 var(--plzen-number-white),
+    1.6px -1.6px 0 var(--plzen-number-white),
+    -1.6px 1.6px 0 var(--plzen-number-white),
+    1.6px 1.6px 0 var(--plzen-number-white),
+    -2.15px 0 0 var(--plzen-number-white),
+    2.15px 0 0 var(--plzen-number-white),
+    0 -2.15px 0 var(--plzen-number-white),
+    0 2.15px 0 var(--plzen-number-white),
+    -2.85px -2.85px 0 var(--plzen-number-sky),
+    2.85px -2.85px 0 var(--plzen-number-sky),
+    -2.85px 2.85px 0 var(--plzen-number-sky),
+    2.85px 2.85px 0 var(--plzen-number-sky),
+    -3.3px 0 0 var(--plzen-number-sky),
+    3.3px 0 0 var(--plzen-number-sky),
+    0 -3.3px 0 var(--plzen-number-sky),
+    0 3.3px 0 var(--plzen-number-sky);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--plzen {
+  --plzen-number-navy: #00205b;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--plzen-number-navy);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Liberec rink — ŠIMEK #44: cyan + white inner + navy outer (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--liberec {
+  --liberec-number-cyan: #00adef;
+  --liberec-number-navy: #001a33;
+  --liberec-number-white: #ffffff;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--liberec-number-cyan);
+  -webkit-text-stroke-width: clamp(1px, 0.07em, 2.4px);
+  -webkit-text-stroke-color: var(--liberec-number-white);
+  paint-order: stroke fill;
+  text-shadow:
+    -0.95px -0.95px 0 var(--liberec-number-white),
+    0.95px -0.95px 0 var(--liberec-number-white),
+    -0.95px 0.95px 0 var(--liberec-number-white),
+    0.95px 0.95px 0 var(--liberec-number-white),
+    -1.25px 0 0 var(--liberec-number-white),
+    1.25px 0 0 var(--liberec-number-white),
+    0 -1.25px 0 var(--liberec-number-white),
+    0 1.25px 0 var(--liberec-number-white),
+    -2.15px -2.15px 0 var(--liberec-number-navy),
+    2.15px -2.15px 0 var(--liberec-number-navy),
+    -2.15px 2.15px 0 var(--liberec-number-navy),
+    2.15px 2.15px 0 var(--liberec-number-navy),
+    -2.55px 0 0 var(--liberec-number-navy),
+    2.55px 0 0 var(--liberec-number-navy),
+    0 -2.55px 0 var(--liberec-number-navy),
+    0 2.55px 0 var(--liberec-number-navy);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--liberec {
+  --liberec-number-navy: #001a33;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--liberec-number-navy);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Třinec rink — DAŇO #56: solid red, no outline (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--trinec {
+  --trinec-number-red: #e30613;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--trinec-number-red);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--trinec {
+  --trinec-number-red: #e30613;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--trinec-number-red);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Budějovice rink — yellow fill + red inner + navy outer (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--budejovice {
+  --budejovice-number-yellow: #f5d200;
+  --budejovice-number-red: #f1141a;
+  --budejovice-number-navy: #121b47;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--budejovice-number-yellow);
+  -webkit-text-stroke-width: clamp(0.95px, 0.068em, 2.2px);
+  -webkit-text-stroke-color: var(--budejovice-number-red);
+  paint-order: stroke fill;
+  text-shadow:
+    -1px -1px 0 var(--budejovice-number-red),
+    1px -1px 0 var(--budejovice-number-red),
+    -1px 1px 0 var(--budejovice-number-red),
+    1px 1px 0 var(--budejovice-number-red),
+    -1.25px 0 0 var(--budejovice-number-red),
+    1.25px 0 0 var(--budejovice-number-red),
+    0 -1.25px 0 var(--budejovice-number-red),
+    0 1.25px 0 var(--budejovice-number-red),
+    -1.85px -1.85px 0 var(--budejovice-number-navy),
+    1.85px -1.85px 0 var(--budejovice-number-navy),
+    -1.85px 1.85px 0 var(--budejovice-number-navy),
+    1.85px 1.85px 0 var(--budejovice-number-navy),
+    -2.25px 0 0 var(--budejovice-number-navy),
+    2.25px 0 0 var(--budejovice-number-navy),
+    0 -2.25px 0 var(--budejovice-number-navy),
+    0 2.25px 0 var(--budejovice-number-navy);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--budejovice {
+  --budejovice-number-yellow: #f5d200;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--budejovice-number-yellow);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Olomouc rink — solid red flat block, no outline (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--olomouc {
+  --olomouc-number-red: #c8102e;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--olomouc-number-red);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--olomouc {
+  --olomouc-number-red: #c8102e;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--olomouc-number-red);
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Sparta rink — angular block digits like chest „S“ (stejný token jako globals). */
+.fifa-rink-jersey__number.jersey-back-number-text--sparta {
+  --sparta-number-black: #0a0a0a;
+  font-family: "Black Ops One", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.2px, 0.085em, 2.8px);
+  -webkit-text-stroke-color: var(--sparta-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.2px -1.2px 0 var(--sparta-number-black),
+    1.2px -1.2px 0 var(--sparta-number-black),
+    -1.2px 1.2px 0 var(--sparta-number-black),
+    1.2px 1.2px 0 var(--sparta-number-black),
+    -1.65px 0 0 var(--sparta-number-black),
+    1.65px 0 0 var(--sparta-number-black),
+    0 -1.65px 0 var(--sparta-number-black),
+    0 1.65px 0 var(--sparta-number-black);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--sparta {
+  --sparta-number-black: #0a0a0a;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.5px, 0.045em, 1.4px);
+  -webkit-text-stroke-color: var(--sparta-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* Mountfield HK rink — PAVLÍK #98: white + black outline; white name on red bar. */
+.fifa-rink-jersey__number.jersey-back-number-text--hradec {
+  --hradec-number-black: #0a0a0a;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.1px, 0.075em, 2.6px);
+  -webkit-text-stroke-color: var(--hradec-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    -1.05px -1.05px 0 var(--hradec-number-black),
+    1.05px -1.05px 0 var(--hradec-number-black),
+    -1.05px 1.05px 0 var(--hradec-number-black),
+    1.05px 1.05px 0 var(--hradec-number-black),
+    -1.4px 0 0 var(--hradec-number-black),
+    1.4px 0 0 var(--hradec-number-black),
+    0 -1.4px 0 var(--hradec-number-black),
+    0 1.4px 0 var(--hradec-number-black);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--hradec {
+  --hradec-nameplate-red: #c8102e;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  background-color: var(--hradec-nameplate-red);
+  padding: 0.05em 0.24em;
+  border-radius: 0.04em;
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: none;
+}
+
+/* Vítkovice rink — KALUS #11: white stencil block + white name. */
+.fifa-rink-jersey__number.jersey-back-number-text--vitkovice {
+  --vitkovice-number-navy: #061a3a;
+  font-family: "Black Ops One", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.75px, 0.05em, 2px);
+  -webkit-text-stroke-color: var(--vitkovice-number-navy);
+  paint-order: stroke fill;
+  text-shadow:
+    -0.85px -0.85px 0 var(--vitkovice-number-navy),
+    0.85px -0.85px 0 var(--vitkovice-number-navy),
+    -0.85px 0.85px 0 var(--vitkovice-number-navy),
+    0.85px 0.85px 0 var(--vitkovice-number-navy),
+    -1.15px 0 0 var(--vitkovice-number-navy),
+    1.15px 0 0 var(--vitkovice-number-navy),
+    0 -1.15px 0 var(--vitkovice-number-navy),
+    0 1.15px 0 var(--vitkovice-number-navy);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--vitkovice {
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke-width: 0;
+  -webkit-text-stroke-color: transparent;
+  paint-order: fill;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* Boleslav rink — front #24/#3 style on green: white + black outline. */
+.fifa-rink-jersey__number.jersey-back-number-text--boleslav {
+  --boleslav-number-black: #0a0a0a;
+  font-family: "Bebas Neue", "Impact", "Oswald", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(1.05px, 0.07em, 2.5px);
+  -webkit-text-stroke-color: var(--boleslav-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    -1px -1px 0 var(--boleslav-number-black),
+    1px -1px 0 var(--boleslav-number-black),
+    -1px 1px 0 var(--boleslav-number-black),
+    1px 1px 0 var(--boleslav-number-black),
+    -1.35px 0 0 var(--boleslav-number-black),
+    1.35px 0 0 var(--boleslav-number-black),
+    0 -1.35px 0 var(--boleslav-number-black),
+    0 1.35px 0 var(--boleslav-number-black);
+}
+
+.fifa-rink-jersey__name.jersey-nameplate-text--boleslav {
+  --boleslav-number-black: #0a0a0a;
+  font-family: "Oswald", "Impact", "Barlow Condensed", var(--font-jersey-print, var(--font-display));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke-width: clamp(0.45px, 0.035em, 1.2px);
+  -webkit-text-stroke-color: var(--boleslav-number-black);
+  paint-order: stroke fill;
+  text-shadow:
+    -0.55px -0.55px 0 var(--boleslav-number-black),
+    0.55px -0.55px 0 var(--boleslav-number-black),
+    -0.55px 0.55px 0 var(--boleslav-number-black),
+    0.55px 0.55px 0 var(--boleslav-number-black);
+}
+
 /* ─── Match rink mobile responsive ─── */
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (max-device-width: 1023px) {
   .fifa-editor-mobile-split .fifa-match-rink {
     flex: 1 1 0;
     min-height: 0;
@@ -5872,15 +8194,17 @@ button.fifa-forum-action:hover {
   }
 
   .fifa-editor-mobile-split .fifa-line-pager__arrow {
-    height: 2.25rem;
-    width: 2.25rem;
+    height: 2.5rem;
+    width: 2.5rem;
   }
 
   .fifa-editor-mobile-split .fifa-line-pager__tab {
     flex: 1 1 0;
-    min-width: max-content;
-    padding: 0.45rem 0.35rem;
+    min-width: 0;
+    min-height: 2.5rem;
+    padding: 0.45rem 0.3rem;
     font-size: 0.6875rem;
+    touch-action: manipulation;
   }
 
   .fifa-editor-mobile-split .fifa-match-rink .fifa-match-rink__stage {
@@ -5914,6 +8238,7 @@ button.fifa-forum-action:hover {
   .fifa-editor-mobile-split .fifa-match-rink .fifa-rink-template__frame {
     aspect-ratio: unset;
     width: 100%;
+    max-height: none;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -5926,12 +8251,12 @@ button.fifa-forum-action:hover {
   }
 
   .fifa-editor-mobile-split .fifa-match-rink .fifa-rink-template__slot .fifa-rink-jersey__name {
-    font-size: clamp(0.48rem, 7.5cqh, 0.82rem) !important;
+    font-size: clamp(0.52rem, 7.8cqh, 0.86rem) !important;
     letter-spacing: 0.015em !important;
   }
 
   .fifa-editor-mobile-split .fifa-match-rink .fifa-rink-template__slot .fifa-rink-jersey__number {
-    font-size: clamp(0.95rem, 17cqh, 1.85rem) !important;
+    font-size: clamp(1.05rem, var(--jersey-rink-number-size-mobile, 17.5cqh), 1.9rem) !important;
     line-height: 0.95 !important;
   }
 
@@ -5956,13 +8281,17 @@ button.fifa-forum-action:hover {
     display: none;
   }
 
-  /* Mobile caption — prázdné pozice úzké, jména hráčů širší */
+  /* Mobile caption — prázdné pozice úzké, jména hráčů širší; goalie výš kvůli clipu */
   .fifa-match-rink .fifa-rink-slot__caption {
     left: 50%;
     right: auto;
     transform: translateX(-50%);
-    top: calc(100% + 0.12rem);
+    top: calc(100% + 0.08rem);
     transform-origin: top center;
+  }
+
+  .fifa-editor-mobile-split .fifa-rink-template__slot--goalie .fifa-rink-slot__caption {
+    top: calc(100% + 0.02rem);
   }
 
   .fifa-match-rink .fifa-rink-slot__caption--empty {
@@ -5970,17 +8299,28 @@ button.fifa-forum-action:hover {
   }
 
   .fifa-match-rink .fifa-rink-slot__caption:not(.fifa-rink-slot__caption--empty) {
-    width: clamp(4.75rem, 108%, 6.5rem);
+    width: clamp(3.85rem, 100%, 5.75rem);
+  }
+
+  /* Bench + D na 4. lajně — užší jmenovky, ať nelezou do sebe */
+  .fifa-editor-mobile-split .fifa-rink-template__slot--bench .fifa-rink-slot__caption:not(.fifa-rink-slot__caption--empty),
+  .fifa-editor-mobile-split .fifa-rink-template__slot[data-rink-pos="ld"] .fifa-rink-slot__caption:not(.fifa-rink-slot__caption--empty),
+  .fifa-editor-mobile-split .fifa-rink-template__slot[data-rink-pos="rd"] .fifa-rink-slot__caption:not(.fifa-rink-slot__caption--empty) {
+    width: clamp(3.4rem, 96%, 5.1rem);
+  }
+
+  .fifa-editor-mobile-split .fifa-rink-template__slot--bench::before {
+    bottom: calc(100% + 2px);
+    padding: 0.12em 0.4em;
+    font-size: clamp(0.34rem, 2cqw, 0.5rem);
+    letter-spacing: 0.08em;
   }
 
   .fifa-match-rink .fifa-rink-slot__caption-plate {
-    padding: 0.16em 0.38em;
-    min-height: 1.2em;
+    gap: 0.1em;
+    padding: 0.14em 0.36em;
+    min-height: 1.15em;
     justify-content: center;
-  }
-
-  .fifa-match-rink .fifa-rink-slot__caption-plate:has(.fifa-rink-slot__caption-badge) {
-    padding-right: 1.05em;
   }
 
   .fifa-match-rink .fifa-rink-slot__caption--empty .fifa-rink-slot__caption-plate {
@@ -5988,13 +8328,28 @@ button.fifa-forum-action:hover {
   }
 
   .fifa-match-rink .fifa-rink-slot__caption--empty .fifa-rink-slot__caption-label {
-  width: 100%;
+    width: 100%;
     text-align: center;
   }
 
   .fifa-match-rink .fifa-rink-slot__caption-badge {
     font-size: clamp(0.42rem, 9cqh, 0.54rem);
-    right: 0.16em;
+  }
+
+  .fifa-editor-mobile-split .fifa-line-pager__tab,
+  .fifa-editor-mobile-split .fifa-line-pager__arrow {
+    min-height: 2.5rem;
+    touch-action: manipulation;
+  }
+
+  .fifa-editor-mobile-split .fifa-line-pager__arrow {
+    width: 2.5rem;
+  }
+
+  .fifa-editor-mobile-split .fifa-editor-segment__btn,
+  .fifa-editor-mobile-split .fifa-editor-match-toggle {
+    min-height: 2.25rem;
+    touch-action: manipulation;
   }
 }
 
@@ -6040,13 +8395,109 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
   display: none;
 }
 
+/**
+ * Rink jersey fit — PNG blanks differ by kit/team:
+ * - national skater: ~25% transparent side padding (1.5:1)
+ * - national goalie: ~16% side padding (1.5:1)
+ * - club skaters: asymmetric / near edge-to-edge (1.5:1)
+ * - Pardubice goalie: square 1:1, opaque bbox ~80%
+ * - Brno goalie: 1.5:1 with ~19% side padding, opaque bbox ~52% → needs higher scale
+ * object-contain + kit/kind(/team) scale keeps silhouette size equal; name/number stay on the figure box.
+ */
 .fifa-rink-template__slot .fifa-rink-jersey img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 38%;
-  transform: scale(1.06);
-  transform-origin: center 40%;
+  object-fit: contain;
+  object-position: center 40%;
+  transform: scale(var(--jersey-rink-scale, 1.72));
+  transform-origin: center 38%;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-kit="national"][data-jersey-kind="skater"] {
+  --jersey-rink-scale: 1.88;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-kit="national"][data-jersey-kind="goalie"] {
+  --jersey-rink-scale: 1.56;
+  object-position: center 42%;
+}
+
+/*
+ * Klubové skater PNG mají stejně jako národák skutečnou siluetu širokou
+ * přibližně 49–56 % plátna; krajní alfa pixely jsou jen exportní šum.
+ * Proto používají stejné měřítko 1.88. Pravidlo platí i pro mobilní šablonu,
+ * takže dres vyplní osmiúhelník na obou breakpointech bez změny pozic slotů.
+ * Goalie blanky zůstávají sjednocené s národákem G na 1.56.
+ */
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-kit="club"][data-jersey-kind="skater"] {
+  --jersey-rink-scale: 1.88;
+  object-position: center 40%;
+}
+
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-kit="club"][data-jersey-kind="goalie"] {
+  --jersey-rink-scale: 1.56;
+  object-position: center 42%;
+}
+
+/*
+ * Per-team rink calibration.
+ * Hodnoty jsou vypočtené z bboxu pixelů s alpha >= 128 proti viditelné
+ * šířce reprezentačního blanku. Stejné proměnné platí pro desktop i mobil.
+ */
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="boleslav"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.786; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="brno"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.741; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="budejovice"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.712; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="hradec"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.893; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="kladno"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.677; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="liberec"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.920; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="litvinov"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.694; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="olomouc"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.838; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="pardubice"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.799; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="plzen"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.716; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="sparta"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.735; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="trinec"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.935; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="vary"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.773; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="vitkovice"][data-jersey-kind="skater"] { --jersey-rink-scale: 1.749; }
+
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="boleslav"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.771; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="brno"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.818; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="budejovice"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.695; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="hradec"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.868; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="kladno"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.556; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="liberec"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.883; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="litvinov"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.800; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="olomouc"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.602; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="pardubice"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.866; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="plzen"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.649; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="sparta"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.731; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="trinec"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.962; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="vary"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.686; }
+.fifa-rink-template__slot .fifa-rink-jersey img[data-jersey-team="vitkovice"][data-jersey-kind="goalie"] { --jersey-rink-scale: 1.763; }
+
+/*
+ * Čísla na klubových dresích: každý font má jinou optickou výšku/šířku.
+ * Proměnné vyrovnávají vizuální velikost; jemný top inset drží číslo ve středu
+ * hrudi konkrétního designu. Platí pro desktop i mobil.
+ */
+.fifa-rink-jersey[data-jersey-team="boleslav"]   { --jersey-rink-number-size: 29.5cqh; --jersey-rink-goalie-number-size: 26.5cqh; --jersey-rink-number-size-mobile: 17.2cqh; --jersey-rink-number-top: 5%; }
+.fifa-rink-jersey[data-jersey-team="brno"]       { --jersey-rink-number-size: 29cqh;   --jersey-rink-goalie-number-size: 26cqh;   --jersey-rink-number-size-mobile: 17cqh;   --jersey-rink-number-top: 6%; }
+.fifa-rink-jersey[data-jersey-team="budejovice"] { --jersey-rink-number-size: 28.5cqh; --jersey-rink-goalie-number-size: 25.5cqh; --jersey-rink-number-size-mobile: 16.8cqh; --jersey-rink-number-top: 10%; }
+.fifa-rink-jersey[data-jersey-team="hradec"]     { --jersey-rink-number-size: 29.5cqh; --jersey-rink-goalie-number-size: 26.5cqh; --jersey-rink-number-size-mobile: 17.2cqh; --jersey-rink-number-top: 4%; }
+.fifa-rink-jersey[data-jersey-team="kladno"]     { --jersey-rink-number-size: 29cqh;   --jersey-rink-goalie-number-size: 26cqh;   --jersey-rink-number-size-mobile: 17cqh;   --jersey-rink-number-top: 6%; }
+.fifa-rink-jersey[data-jersey-team="liberec"]    { --jersey-rink-number-size: 29.5cqh; --jersey-rink-goalie-number-size: 26.5cqh; --jersey-rink-number-size-mobile: 17.2cqh; --jersey-rink-number-top: 6%; }
+.fifa-rink-jersey[data-jersey-team="litvinov"]   { --jersey-rink-number-size: 29cqh;   --jersey-rink-goalie-number-size: 26cqh;   --jersey-rink-number-size-mobile: 17cqh;   --jersey-rink-number-top: 12%; }
+.fifa-rink-jersey[data-jersey-team="olomouc"]    { --jersey-rink-number-size: 29.5cqh; --jersey-rink-goalie-number-size: 26.5cqh; --jersey-rink-number-size-mobile: 17.2cqh; --jersey-rink-number-top: 6%; }
+.fifa-rink-jersey[data-jersey-team="pardubice"]  { --jersey-rink-number-size: 29cqh;   --jersey-rink-goalie-number-size: 26cqh;   --jersey-rink-number-size-mobile: 17cqh;   --jersey-rink-number-top: 7%; }
+.fifa-rink-jersey[data-jersey-team="plzen"]      { --jersey-rink-number-size: 29cqh;   --jersey-rink-goalie-number-size: 26cqh;   --jersey-rink-number-size-mobile: 17cqh;   --jersey-rink-number-top: 6%; }
+.fifa-rink-jersey[data-jersey-team="sparta"]     { --jersey-rink-number-size: 31cqh;   --jersey-rink-goalie-number-size: 28cqh;   --jersey-rink-number-size-mobile: 18cqh;   --jersey-rink-number-top: 6%; }
+.fifa-rink-jersey[data-jersey-team="trinec"]     { --jersey-rink-number-size: 29.5cqh; --jersey-rink-goalie-number-size: 26.5cqh; --jersey-rink-number-size-mobile: 17.2cqh; --jersey-rink-number-top: 6%; }
+.fifa-rink-jersey[data-jersey-team="vary"]       { --jersey-rink-number-size: 27.5cqh; --jersey-rink-goalie-number-size: 25cqh;   --jersey-rink-number-size-mobile: 16.8cqh; --jersey-rink-number-top: 6%; }
+.fifa-rink-jersey[data-jersey-team="vitkovice"]  { --jersey-rink-number-size: 31cqh;   --jersey-rink-goalie-number-size: 28cqh;   --jersey-rink-number-size-mobile: 18cqh;   --jersey-rink-number-top: 6%; }
+
+.fifa-rink-jersey[data-jersey-kit="club"] .jersey-print-overlay--rink {
+  justify-content: center !important;
+  gap: 0 !important;
+  padding: var(--jersey-rink-number-top, 6%) 6% 0 !important;
 }
 
 .fifa-rink-template__slot .fifa-rink-jersey__name {
@@ -6056,12 +8507,22 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
 }
 
 .fifa-rink-template__slot .fifa-rink-jersey__number {
-  font-size: clamp(1.9rem, 30cqh, 4rem) !important;
+  font-size: clamp(1.9rem, var(--jersey-rink-number-size, 30cqh), 4rem) !important;
   line-height: 0.92 !important;
 }
 
 .fifa-rink-template__slot--goalie .fifa-rink-jersey__number {
-  font-size: clamp(1.7rem, 27cqh, 3.6rem) !important;
+  font-size: clamp(1.7rem, var(--jersey-rink-goalie-number-size, 27cqh), 3.6rem) !important;
+}
+
+/* Litvínov — tighter spacing keeps two digits inside the yellow torso. */
+.fifa-rink-template__slot .fifa-rink-jersey[data-jersey-team="litvinov"] .fifa-rink-jersey__number {
+  letter-spacing: 0.005em !important;
+  line-height: 0.9 !important;
+}
+
+.fifa-rink-template__slot--goalie .fifa-rink-jersey[data-jersey-team="litvinov"] .fifa-rink-jersey__number {
+  letter-spacing: 0 !important;
 }
 
 .fifa-rink-template__slot .fifa-rink-jersey__empty-label {
@@ -6181,7 +8642,7 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
   color: var(--fifa-text-muted);
 }
 
-.fifa-account-page__welcome span {
+.fifa-account-page__welcome-name {
   color: var(--fifa-text-secondary);
   font-weight: 500;
 }
@@ -6189,6 +8650,33 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
 .fifa-account-page__email-inline {
   color: var(--fifa-text-muted);
   font-weight: 400;
+}
+
+.fifa-account-page__email-inline::before {
+  content: " · ";
+}
+
+.fifa-account-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fifa-account-page__signout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.fifa-account-hub-nav__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.fifa-account-hub-nav__label {
+  min-width: 0;
 }
 
 .fifa-account-page__shell {
@@ -6200,7 +8688,7 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
   overflow: hidden;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-account-page__shell {
     flex-direction: row;
     gap: 0.85rem;
@@ -6220,7 +8708,7 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-account-hub-nav {
     display: flex;
     width: 13.5rem;
@@ -6248,7 +8736,7 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
     color 0.2s ease;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-account-hub-nav__item {
     padding: 0.7rem 0.85rem;
     font-size: 0.8125rem;
@@ -6279,7 +8767,7 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
   padding: 0.85rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px), (min-device-width: 1024px) {
   .fifa-account-page__panel {
     padding: 1rem 1.1rem;
   }
@@ -6543,4 +9031,811 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
   display: block;
   font-size: 0.6875rem;
   color: var(--fifa-text-muted);
+}
+
+/* Mobile account hub — keep desktop (≥768px) layout unchanged */
+@media (max-width: 767px) {
+  .fifa-account-page {
+    gap: 0.85rem;
+    overflow-x: hidden;
+  }
+
+  .fifa-account-page__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+  }
+
+  .fifa-account-page__identity {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .fifa-account-page__title {
+    font-size: 1.625rem;
+    line-height: 1.15;
+  }
+
+  .fifa-account-page__welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    margin-top: 0.35rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  .fifa-account-page__welcome-line,
+  .fifa-account-page__welcome-name,
+  .fifa-account-page__email-inline {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .fifa-account-page__email-inline::before {
+    content: none;
+  }
+
+  .fifa-account-page__actions {
+    width: 100%;
+  }
+
+  .fifa-account-page__signout {
+    min-height: 2.75rem;
+    padding-inline: 1.05rem;
+  }
+
+  .fifa-account-page__shell {
+    gap: 0.75rem;
+    overflow-x: hidden;
+  }
+
+  .fifa-account-hub-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .fifa-account-hub-nav__item {
+    min-height: 3.15rem;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.7rem 0.7rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  .fifa-account-hub-nav__label {
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: break-word;
+    hyphens: none;
+  }
+
+  .fifa-account-page__panel {
+    overflow-x: hidden;
+    padding: 0.9rem 0.85rem calc(1.1rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .fifa-account-section__head {
+    gap: 0.75rem;
+    margin-bottom: 0.95rem;
+  }
+
+  .fifa-account-section__title {
+    font-size: 1.2rem;
+  }
+
+  .fifa-account-section__desc {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .fifa-account-section__action {
+    min-height: 2.75rem;
+    padding-inline: 0.95rem;
+  }
+
+  .fifa-account-lineup-tiles {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .fifa-account-lineup-tile {
+    width: 100%;
+    max-width: 22.5rem;
+    margin-inline: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .fifa-account-lineup-tile__meta {
+    padding: 0.7rem 0.8rem 0.8rem;
+  }
+
+  .fifa-account-lineup-tile__name {
+    font-size: 0.875rem;
+  }
+
+  .fifa-account-lineup-tile__date {
+    font-size: 0.6875rem;
+  }
+
+  .fifa-account-contest-tile {
+    padding: 0.95rem;
+  }
+
+  .fifa-account-settings-panel {
+    padding: 0.95rem;
+  }
+}
+
+/* ─── Lineup pool switcher (Reprezentace / Tipsport Extraliga) ─── */
+.fifa-pool-switcher {
+  /* Shared active-state tokens (overridden per kind) */
+  --pool-accent: #3b82f6;
+  --pool-accent-text: #f8fafc;
+  --pool-accent-muted: rgba(59, 130, 246, 0.14);
+  --pool-accent-border: rgba(59, 130, 246, 0.48);
+  --pool-accent-border-soft: rgba(59, 130, 246, 0.16);
+  --pool-accent-glow: rgba(59, 130, 246, 0.38);
+  --pool-count-bg: rgba(215, 20, 26, 0.88);
+  --pool-count-text: #ffffff;
+  --pool-select-bg: rgba(26, 34, 56, 0.55);
+  --pool-select-border: rgba(59, 130, 246, 0.42);
+  --pool-select-ring: rgba(59, 130, 246, 0.14);
+
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* Reprezentace — Czech national (blue / white / red) */
+.fifa-pool-switcher--repre {
+  --pool-czech-blue: #11457e;
+  --pool-czech-blue-bright: #3b82f6;
+  --pool-czech-red: #d7141a;
+  --pool-czech-white: #f8fafc;
+  --pool-accent: var(--pool-czech-blue-bright);
+  --pool-accent-text: var(--pool-czech-white);
+  --pool-accent-muted: rgba(17, 69, 126, 0.38);
+  --pool-accent-border: rgba(59, 130, 246, 0.55);
+  --pool-accent-border-soft: rgba(59, 130, 246, 0.18);
+  --pool-accent-glow: rgba(59, 130, 246, 0.35);
+  --pool-count-bg: var(--pool-czech-red);
+  --pool-count-text: #ffffff;
+  --pool-select-bg: rgba(17, 69, 126, 0.28);
+  --pool-select-border: rgba(59, 130, 246, 0.45);
+  --pool-select-ring: rgba(215, 20, 26, 0.18);
+}
+
+/* Extraliga — Tipsport Extraliha (dark blue / gold / red sparingly) */
+.fifa-pool-switcher--elh {
+  --pool-elh-navy: #0b1d3a;
+  --pool-elh-gold: #f5c518;
+  --pool-elh-gold-soft: #fbbf24;
+  --pool-elh-red: #e30613;
+  --pool-accent: var(--pool-elh-gold);
+  --pool-accent-text: var(--pool-elh-gold-soft);
+  --pool-accent-muted: rgba(245, 197, 24, 0.12);
+  --pool-accent-border: rgba(245, 197, 24, 0.55);
+  --pool-accent-border-soft: rgba(245, 197, 24, 0.16);
+  --pool-accent-glow: rgba(245, 197, 24, 0.32);
+  --pool-count-bg: rgba(245, 197, 24, 0.92);
+  --pool-count-text: #0b1d3a;
+  --pool-select-bg: rgba(11, 29, 58, 0.72);
+  --pool-select-border: rgba(245, 197, 24, 0.48);
+  --pool-select-ring: rgba(227, 6, 19, 0.2);
+}
+
+.fifa-pool-switcher__kind {
+  display: flex;
+  min-width: 0;
+  gap: 0;
+  border-bottom: 1px solid var(--fifa-border);
+}
+
+.fifa-pool-switcher__kind-btn {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  margin-bottom: -1px;
+  padding: 0.35rem 0.4rem 0.45rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--fifa-text-muted);
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+  white-space: normal;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}
+
+.fifa-pool-switcher__kind-btn:hover {
+  color: var(--fifa-text);
+}
+
+.fifa-pool-switcher__kind-btn--active {
+  color: var(--pool-accent-text);
+  font-weight: 700;
+  border-bottom-color: var(--pool-accent);
+}
+
+.fifa-pool-switcher--repre .fifa-pool-switcher__kind-btn--active {
+  /* Blue underline + white label; red reserved for active chip counts */
+  border-bottom-color: var(--pool-czech-blue-bright);
+}
+
+.fifa-pool-switcher--elh .fifa-pool-switcher__kind-btn--active {
+  border-bottom-color: var(--pool-elh-gold);
+}
+
+.fifa-pool-switcher__chips {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+}
+
+.fifa-pool-switcher__chip {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.28rem;
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  border-radius: var(--fifa-radius-sm);
+  background: rgba(30, 41, 68, 0.82);
+  padding: 0.28rem 0.45rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--fifa-text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.fifa-pool-switcher__chip:hover {
+  color: var(--fifa-text);
+  background: var(--fifa-bg-hover);
+  border-color: rgba(148, 163, 184, 0.5);
+}
+
+.fifa-pool-switcher__chip--active {
+  border-color: var(--pool-accent-border);
+  background: var(--pool-accent-muted);
+  color: var(--fifa-text);
+  box-shadow: inset 0 0 0 1px var(--pool-accent-border-soft);
+}
+
+.fifa-pool-switcher__chip-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fifa-pool-switcher__chip-count {
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.12);
+  padding: 0.05rem 0.32rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--fifa-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.fifa-pool-switcher__chip--active .fifa-pool-switcher__chip-count {
+  background: var(--pool-count-bg);
+  color: var(--pool-count-text);
+}
+
+.fifa-pool-switcher__select-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.fifa-pool-switcher__select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--fifa-border);
+  border-radius: var(--fifa-radius-sm);
+  background: var(--pool-select-bg);
+  padding: 0.35rem 1.75rem 0.35rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--fifa-text);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.fifa-pool-switcher--elh .fifa-pool-switcher__select {
+  border-color: var(--pool-select-border);
+  color: var(--pool-accent-text);
+}
+
+.fifa-pool-switcher__select:hover {
+  border-color: var(--pool-select-border);
+}
+
+.fifa-pool-switcher__select:focus {
+  border-color: var(--pool-accent);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--pool-select-ring);
+}
+
+.fifa-pool-switcher__select-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.45rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  pointer-events: none;
+  color: var(--pool-accent-text);
+  transform: translateY(-50%);
+  opacity: 0.85;
+}
+
+/* Compact — editor pool column / mobile sheet (tight vertical budget) */
+.fifa-pool-switcher--compact {
+  gap: 0.28rem;
+}
+
+.fifa-pool-switcher--compact .fifa-pool-switcher__kind-btn {
+  padding: 0.28rem 0.3rem 0.34rem;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  gap: 0;
+}
+
+/* Desktop pool column: slightly wider kind tabs (freed a filter row) */
+@media (min-width: 1024px) {
+  .fifa-pool-switcher--compact .fifa-pool-switcher__kind-btn {
+    padding: 0.36rem 0.55rem 0.42rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    hyphens: none;
+  }
+}
+
+.fifa-pool-switcher--compact .fifa-pool-switcher__chips {
+  gap: 0.28rem;
+}
+
+.fifa-pool-switcher--compact .fifa-pool-switcher__chip {
+  flex: 1 1 calc(50% - 0.14rem);
+  justify-content: center;
+  min-height: 1.85rem;
+  padding: 0.32rem 0.4rem;
+  font-size: 0.75rem;
+  border-color: rgba(148, 163, 184, 0.42);
+  background: rgba(36, 48, 78, 0.88);
+  touch-action: manipulation;
+}
+
+.fifa-pool-switcher--compact .fifa-pool-switcher__chip--active {
+  border-color: var(--pool-accent-border);
+  background: var(--pool-accent-muted);
+}
+
+.fifa-pool-switcher--compact .fifa-pool-switcher__chip-count {
+  padding: 0.04rem 0.28rem;
+  font-size: 0.5625rem;
+}
+
+.fifa-pool-switcher--compact .fifa-pool-switcher__select {
+  min-height: 1.75rem;
+  padding: 0.28rem 1.55rem 0.28rem 0.45rem;
+  font-size: 0.75rem;
+}
+
+/* Comfortable — Moje sestavy / account (roomier, less “form box”) */
+.fifa-pool-switcher--comfortable {
+  gap: 0.7rem;
+  padding: 0.15rem 0 0.1rem;
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__kind {
+  gap: 0.15rem;
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__kind-btn {
+  flex: 1 1 0;
+  min-height: 2.85rem;
+  padding: 0.6rem 0.85rem 0.65rem;
+  font-size: 1.0625rem;
+  letter-spacing: 0.01em;
+  touch-action: manipulation;
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__kind-btn--active {
+  border-bottom-width: 2px;
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__chips {
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__chip {
+  flex: 1 1 0;
+  justify-content: center;
+  min-height: 2.75rem;
+  border-radius: var(--fifa-radius-md);
+  padding: 0.6rem 0.7rem;
+  font-size: 0.9375rem;
+  border-color: rgba(148, 163, 184, 0.4);
+  background: rgba(36, 48, 78, 0.86);
+  touch-action: manipulation;
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__chip--active {
+  border-color: var(--pool-accent-border);
+  background: var(--pool-accent-muted);
+  box-shadow:
+    inset 0 0 0 1px var(--pool-accent-border-soft),
+    0 0 18px -6px var(--pool-accent-glow);
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__chip-count {
+  padding: 0.12rem 0.45rem;
+  font-size: 0.75rem;
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__select {
+  min-height: 2.75rem;
+  border-radius: var(--fifa-radius-md);
+  padding: 0.75rem 2.25rem 0.75rem 0.9rem;
+  font-size: 1rem;
+}
+
+.fifa-pool-switcher--comfortable .fifa-pool-switcher__select-icon {
+  right: 0.7rem;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+/* Narrow account screens — 2×2 chips, full labels, ≥44px targets */
+@media (max-width: 767px) {
+  .fifa-pool-switcher--comfortable {
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  .fifa-pool-switcher--comfortable .fifa-pool-switcher__kind-btn {
+    min-height: 2.75rem;
+    padding: 0.45rem 0.35rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    white-space: normal;
+    overflow-wrap: break-word;
+    hyphens: none;
+  }
+
+  .fifa-pool-switcher--comfortable .fifa-pool-switcher__chips {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex-wrap: unset;
+    gap: 0.45rem;
+    overflow: visible;
+  }
+
+  .fifa-pool-switcher--comfortable .fifa-pool-switcher__chip {
+    flex: unset;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.8125rem;
+  }
+
+  .fifa-pool-switcher--comfortable .fifa-pool-switcher__chip-label {
+    overflow: visible;
+    text-overflow: unset;
+    white-space: nowrap;
+  }
+
+  .fifa-pool-switcher--comfortable .fifa-pool-switcher__select {
+    min-height: 2.75rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* ─── Extraliga picker tiles — home-kit colors (do not touch ice layout) ─── */
+.fifa-pool-card--pardubice {
+  --pool-kit-from: #c8102e;
+  --pool-kit-mid: #9b1b2e;
+  --pool-kit-to: #0a1f4d;
+  --pool-kit-border: rgba(254, 202, 202, 0.55);
+  --pool-kit-accent: #f8fafc;
+  --pool-kit-underline: rgba(10, 31, 77, 0.85);
+  --pool-kit-shadow: rgba(127, 29, 29, 0.32);
+  --pool-kit-ink: #f8fafc;
+  --pool-kit-muted: rgba(248, 250, 252, 0.78);
+  --pool-kit-rate-bg: rgba(255, 255, 255, 0.16);
+  --pool-kit-rate-border: rgba(255, 255, 255, 0.38);
+}
+
+.fifa-pool-card--brno {
+  --pool-kit-from: #003087;
+  --pool-kit-mid: #001d4a;
+  --pool-kit-to: #061018;
+  --pool-kit-border: rgba(147, 197, 253, 0.45);
+  --pool-kit-accent: #93c5fd;
+  --pool-kit-underline: rgba(0, 48, 135, 0.8);
+  --pool-kit-shadow: rgba(0, 29, 74, 0.35);
+  --pool-kit-ink: #f8fafc;
+  --pool-kit-muted: rgba(226, 232, 240, 0.8);
+  --pool-kit-rate-bg: rgba(255, 255, 255, 0.12);
+  --pool-kit-rate-border: rgba(147, 197, 253, 0.4);
+}
+
+.fifa-pool-card--vary {
+  --pool-kit-from: #111111;
+  --pool-kit-mid: #064e4a;
+  --pool-kit-to: #022c2a;
+  --pool-kit-border: rgba(45, 212, 191, 0.4);
+  --pool-kit-accent: #2dd4bf;
+  --pool-kit-underline: rgba(6, 78, 74, 0.85);
+  --pool-kit-shadow: rgba(2, 20, 18, 0.4);
+  --pool-kit-ink: #f8fafc;
+  --pool-kit-muted: rgba(204, 251, 241, 0.78);
+  --pool-kit-rate-bg: rgba(45, 212, 191, 0.14);
+  --pool-kit-rate-border: rgba(45, 212, 191, 0.4);
+}
+
+.fifa-pool-card--litvinov {
+  --pool-kit-from: #ffe566;
+  --pool-kit-mid: #f5d000;
+  --pool-kit-to: #e6c200;
+  --pool-kit-border: rgba(17, 17, 17, 0.35);
+  --pool-kit-accent: #111111;
+  --pool-kit-underline: rgba(17, 17, 17, 0.55);
+  --pool-kit-shadow: rgba(120, 90, 0, 0.22);
+  --pool-kit-ink: #0a0a0a;
+  --pool-kit-muted: rgba(17, 17, 17, 0.7);
+  --pool-kit-rate-bg: rgba(17, 17, 17, 0.1);
+  --pool-kit-rate-border: rgba(17, 17, 17, 0.28);
+}
+
+.fifa-pool-card--kladno {
+  --pool-kit-from: #ffffff;
+  --pool-kit-mid: #f4f7fb;
+  --pool-kit-to: #dce6f5;
+  --pool-kit-border: rgba(10, 42, 107, 0.35);
+  --pool-kit-accent: #0a2a6b;
+  --pool-kit-underline: rgba(10, 42, 107, 0.45);
+  --pool-kit-shadow: rgba(10, 42, 107, 0.14);
+  --pool-kit-ink: #0a2a6b;
+  --pool-kit-muted: rgba(10, 42, 107, 0.7);
+  --pool-kit-rate-bg: rgba(10, 42, 107, 0.1);
+  --pool-kit-rate-border: rgba(10, 42, 107, 0.28);
+}
+
+.fifa-pool-card--plzen {
+  --pool-kit-from: #ffffff;
+  --pool-kit-mid: #f5f7fa;
+  --pool-kit-to: #d6e4f5;
+  --pool-kit-border: rgba(0, 32, 91, 0.35);
+  --pool-kit-accent: #00205b;
+  --pool-kit-underline: rgba(0, 32, 91, 0.45);
+  --pool-kit-shadow: rgba(0, 32, 91, 0.14);
+  --pool-kit-ink: #00205b;
+  --pool-kit-muted: rgba(0, 32, 91, 0.7);
+  --pool-kit-rate-bg: rgba(0, 32, 91, 0.1);
+  --pool-kit-rate-border: rgba(0, 32, 91, 0.28);
+}
+
+.fifa-pool-card--liberec {
+  --pool-kit-from: #ffffff;
+  --pool-kit-mid: #f7fafc;
+  --pool-kit-to: #d9eef7;
+  --pool-kit-border: rgba(0, 26, 51, 0.32);
+  --pool-kit-accent: #001a33;
+  --pool-kit-underline: rgba(0, 26, 51, 0.4);
+  --pool-kit-shadow: rgba(0, 26, 51, 0.12);
+  --pool-kit-ink: #001a33;
+  --pool-kit-muted: rgba(0, 26, 51, 0.68);
+  --pool-kit-rate-bg: rgba(0, 26, 51, 0.08);
+  --pool-kit-rate-border: rgba(0, 26, 51, 0.26);
+}
+
+.fifa-pool-card--trinec {
+  --pool-kit-from: #ffffff;
+  --pool-kit-mid: #fff7f7;
+  --pool-kit-to: #fee2e2;
+  --pool-kit-border: rgba(196, 16, 46, 0.4);
+  --pool-kit-accent: #c4102e;
+  --pool-kit-underline: rgba(196, 16, 46, 0.5);
+  --pool-kit-shadow: rgba(196, 16, 46, 0.14);
+  --pool-kit-ink: #7f1d1d;
+  --pool-kit-muted: rgba(127, 29, 29, 0.72);
+  --pool-kit-rate-bg: rgba(196, 16, 46, 0.1);
+  --pool-kit-rate-border: rgba(196, 16, 46, 0.3);
+}
+
+.fifa-pool-card--budejovice {
+  --pool-kit-from: #121b47;
+  --pool-kit-mid: #1e3a8a;
+  --pool-kit-to: #0b1228;
+  --pool-kit-border: rgba(250, 204, 21, 0.45);
+  --pool-kit-accent: #facc15;
+  --pool-kit-underline: rgba(250, 204, 21, 0.55);
+  --pool-kit-shadow: rgba(18, 27, 71, 0.35);
+  --pool-kit-ink: #f8fafc;
+  --pool-kit-muted: rgba(254, 240, 138, 0.82);
+  --pool-kit-rate-bg: rgba(250, 204, 21, 0.16);
+  --pool-kit-rate-border: rgba(250, 204, 21, 0.4);
+}
+
+.fifa-pool-card--olomouc {
+  --pool-kit-from: #ffffff;
+  --pool-kit-mid: #fff7f7;
+  --pool-kit-to: #fecaca;
+  --pool-kit-border: rgba(159, 18, 57, 0.38);
+  --pool-kit-accent: #9f1239;
+  --pool-kit-underline: rgba(159, 18, 57, 0.48);
+  --pool-kit-shadow: rgba(159, 18, 57, 0.14);
+  --pool-kit-ink: #7f1d1d;
+  --pool-kit-muted: rgba(127, 29, 29, 0.7);
+  --pool-kit-rate-bg: rgba(159, 18, 57, 0.1);
+  --pool-kit-rate-border: rgba(159, 18, 57, 0.28);
+}
+
+.fifa-pool-card--sparta {
+  --pool-kit-from: #b91c1c;
+  --pool-kit-mid: #7f1d1d;
+  --pool-kit-to: #111111;
+  --pool-kit-border: rgba(254, 202, 202, 0.42);
+  --pool-kit-accent: #f8fafc;
+  --pool-kit-underline: rgba(17, 17, 17, 0.7);
+  --pool-kit-shadow: rgba(80, 10, 10, 0.32);
+  --pool-kit-ink: #f8fafc;
+  --pool-kit-muted: rgba(254, 226, 226, 0.8);
+  --pool-kit-rate-bg: rgba(255, 255, 255, 0.14);
+  --pool-kit-rate-border: rgba(255, 255, 255, 0.32);
+}
+
+.fifa-pool-card--boleslav {
+  --pool-kit-from: #14532d;
+  --pool-kit-mid: #166534;
+  --pool-kit-to: #052e16;
+  --pool-kit-border: rgba(187, 247, 208, 0.4);
+  --pool-kit-accent: #bbf7d0;
+  --pool-kit-underline: rgba(5, 46, 22, 0.7);
+  --pool-kit-shadow: rgba(20, 83, 45, 0.32);
+  --pool-kit-ink: #f8fafc;
+  --pool-kit-muted: rgba(220, 252, 231, 0.8);
+  --pool-kit-rate-bg: rgba(255, 255, 255, 0.12);
+  --pool-kit-rate-border: rgba(187, 247, 208, 0.35);
+}
+
+.fifa-pool-card--hradec {
+  --pool-kit-from: #1a1a1a;
+  --pool-kit-mid: #7f1d1d;
+  --pool-kit-to: #c8102e;
+  --pool-kit-border: rgba(253, 224, 71, 0.4);
+  --pool-kit-accent: #fde047;
+  --pool-kit-underline: rgba(200, 16, 46, 0.7);
+  --pool-kit-shadow: rgba(26, 26, 26, 0.35);
+  --pool-kit-ink: #f8fafc;
+  --pool-kit-muted: rgba(254, 240, 138, 0.82);
+  --pool-kit-rate-bg: rgba(253, 224, 71, 0.14);
+  --pool-kit-rate-border: rgba(253, 224, 71, 0.38);
+}
+
+.fifa-pool-card--vitkovice {
+  --pool-kit-from: #061a3a;
+  --pool-kit-mid: #0f2744;
+  --pool-kit-to: #1e3a5f;
+  --pool-kit-border: rgba(191, 219, 254, 0.38);
+  --pool-kit-accent: #bfdbfe;
+  --pool-kit-underline: rgba(6, 26, 58, 0.75);
+  --pool-kit-shadow: rgba(6, 26, 58, 0.35);
+  --pool-kit-ink: #f8fafc;
+  --pool-kit-muted: rgba(219, 234, 254, 0.8);
+  --pool-kit-rate-bg: rgba(255, 255, 255, 0.12);
+  --pool-kit-rate-border: rgba(191, 219, 254, 0.35);
+}
+
+.fifa-pool-card--kit {
+  background:
+    linear-gradient(
+      128deg,
+      var(--pool-kit-from) 0%,
+      var(--pool-kit-mid) 48%,
+      var(--pool-kit-to) 100%
+    );
+  border-color: var(--pool-kit-border);
+  box-shadow:
+    inset 3px 0 0 var(--pool-kit-accent),
+    inset 0 -2px 0 var(--pool-kit-underline),
+    0 1px 0 rgba(255, 255, 255, 0.18) inset,
+    0 3px 10px var(--pool-kit-shadow);
+}
+
+.fifa-pool-card--kit:not(.fifa-pool-card--muted):not(.fifa-pool-card--dragging):hover {
+  border-color: var(--pool-kit-accent);
+  background:
+    linear-gradient(
+      128deg,
+      var(--pool-kit-from) 0%,
+      var(--pool-kit-mid) 42%,
+      var(--pool-kit-to) 100%
+    );
+  filter: brightness(1.06);
+  box-shadow:
+    inset 3px 0 0 var(--pool-kit-accent),
+    inset 0 -2px 0 var(--pool-kit-underline),
+    0 4px 16px var(--pool-kit-shadow);
+}
+
+.fifa-pool-card--kit .fifa-pool-card__name,
+.fifa-pool-card--kit .fifa-pool-card__pos {
+  color: var(--pool-kit-ink) !important;
+  text-shadow: none;
+}
+
+.fifa-pool-card--kit .fifa-pool-card__rate,
+.fifa-pool-card--kit .fifa-pool-card__rate.text-emerald-300,
+.fifa-pool-card--kit .fifa-pool-card__rate.text-amber-300 {
+  color: var(--pool-kit-ink) !important;
+  border-color: var(--pool-kit-rate-border) !important;
+  background: var(--pool-kit-rate-bg) !important;
+}
+
+.fifa-pool-card--kit button[aria-label="Detail hráče"] {
+  color: var(--pool-kit-muted) !important;
+}
+
+.fifa-pool-card--kit .fifa-pool-card__rate-fill {
+  background: linear-gradient(90deg, var(--pool-kit-from) 0%, var(--pool-kit-accent) 100%);
+}
+
+.fifa-editor-mobile-pool .fifa-pool-grid--inline-compact .fifa-pool-card--kit {
+  border-color: var(--pool-kit-border);
+  box-shadow:
+    inset 2px 0 0 var(--pool-kit-accent),
+    inset 0 -1px 0 var(--pool-kit-underline),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+.fifa-editor-mobile-pool .fifa-pool-grid--inline-compact .fifa-pool-card--kit:not(.fifa-pool-card--muted):active {
+  border-color: var(--pool-kit-accent);
+  box-shadow:
+    inset 2px 0 0 var(--pool-kit-accent),
+    inset 0 -2px 0 var(--pool-kit-underline),
+    0 0 0 1px var(--pool-kit-border);
+}
+
+.fifa-editor-mobile-pool .fifa-pool-card--kit .fifa-pool-card__compact-stack .fifa-pool-card__name,
+.fifa-editor-mobile-pool .fifa-pool-card--kit .fifa-pool-card__pos,
+.fifa-editor-mobile-pool .fifa-pool-card--kit .fifa-pool-card__compact-stack .fifa-pool-card__rate {
+  color: var(--pool-kit-ink) !important;
+  text-shadow: none;
+}
+
+.fifa-editor-mobile-pool .fifa-pool-card--kit .fifa-pool-card__compact-stack .fifa-pool-card__rate {
+  border-color: var(--pool-kit-rate-border) !important;
+  background: var(--pool-kit-rate-bg) !important;
 }

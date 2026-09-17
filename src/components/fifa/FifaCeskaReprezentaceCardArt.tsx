@@ -6,7 +6,7 @@ export function FifaCeskaReprezentaceCardArt({ className = "" }: { className?: s
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/souteze-ceska-reprezentace.png"
+        src="/images/soutěže/souteze-ceska-reprezentace.png"
         alt=""
         className={`fifa-image-art-photo object-[68%_center] brightness-[1.06] ${className}`}
         loading="lazy"

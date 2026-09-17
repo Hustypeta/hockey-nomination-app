@@ -553,7 +553,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
         setTeamFilter("");
         setTierFilter("");
         if (typeof window !== "undefined") {
-          if (window.matchMedia("(max-width: 1023px)").matches) {
+          if (window.matchMedia("(max-width: 1023px) and (max-device-width: 1023px)").matches) {
             setMobileRosterOpen(true);
           } else {
             rosterPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -683,7 +683,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-4 sm:gap-5 sm:px-5 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 lg:flex-row lg:gap-8 lg:pb-8 lg:pt-8">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-4 sm:gap-5 sm:px-5 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] sm:pt-6 lg-device:flex-row lg:gap-8 lg:pb-8 lg:pt-8">
       <div className="min-w-0 flex-1 space-y-4">
         {MS_FANTASY_ACTIVE_NOTICES.map((notice) => (
           <MsFantasyNoticeBanner key={notice.id} notice={notice} />
@@ -868,9 +868,9 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
       <aside
         ref={rosterPanelRef}
-        className="hidden w-full shrink-0 lg:block lg:max-w-[22.5rem] lg:border-l lg:border-cyan-500/15 lg:pl-6"
+        className="hidden w-full shrink-0 lg-device:block lg:max-w-[22.5rem] lg-device:border-l lg:border-cyan-500/15 lg:pl-6"
       >
-        <div className="ms-fantasy-scroll lg:sticky lg:top-24 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto lg:overscroll-contain lg:pb-4 lg:pr-1">
+        <div className="ms-fantasy-scroll lg-device:sticky lg:top-24 lg:max-h-[calc(100dvh-6rem)] lg-device:overflow-y-auto lg-device:overscroll-contain lg:pb-4 lg:pr-1">
           <MsFantasyGlassPanel glow="cyan" className="p-4 shadow-[0_0_48px_rgba(0,180,255,0.1)] sm:p-5">
             <MsFantasyRosterPanel
               day={day}
@@ -897,7 +897,7 @@ export function MsFantasyDayEditor({ slug }: { slug: string }) {
 
       {mobileRosterOpen ? (
         <div
-          className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg:hidden"
+          className="fixed inset-0 z-[52] flex max-h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#05080f] lg-device:hidden"
           role="dialog"
           aria-modal="true"
           aria-labelledby="ms-fantasy-mobile-roster-title"

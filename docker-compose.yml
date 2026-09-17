@@ -1,0 +1,28 @@
+# Local Postgres for development — keeps Railway production from wiping
+# players.poolKey while you work against a shared DB.
+#
+# Start:  docker compose up -d
+# Stop:   docker compose down
+# Wipe:   docker compose down -v
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: lineup-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: lineup
+      POSTGRES_PASSWORD: lineupdev
+      POSTGRES_DB: lineup
+    volumes:
+      - lineup_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lineup -d lineup"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  lineup_pgdata:

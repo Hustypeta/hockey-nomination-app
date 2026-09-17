@@ -1,13 +1,26 @@
 "use client";
 
-import { Fragment, forwardRef, useMemo, useState, type ReactNode } from "react";
+import {
+  Fragment,
+  forwardRef,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import type { LineupStructure, Player } from "@/types";
 import { SHARE_POSTER_3X4_STYLE, SHARE_POSTER_ROSTER_4X5_STYLE } from "@/lib/sharePosterLayout";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupSegmentPlayerIds,
 } from "@/lib/matchLineupPosterSegments";
-import { rosterLastDisplay } from "@/lib/namesOnlyRoster";
+import {
+  rosterDisplayNamesForIds,
+  rosterLastDisplay,
+} from "@/lib/namesOnlyRoster";
+import { nameplateWidthScore } from "@/lib/jerseyNameplate";
 import { SITE_CANONICAL_HOST, SITE_LOGO_URL } from "@/lib/siteBranding";
 import {
   fmtMatchRating,
@@ -15,9 +28,8 @@ import {
   resolveMatchRatingDisplay,
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
+import { inferLineupPoolKey, namesPosterBgForPool } from "@/lib/jerseyPhotoAsset";
 import styles from "./MatchFixtureNamesFullPoster.module.css";
-
-const LINEUP_NAMES_BACKGROUND_SRC = "/images/poster-lineup-names-bg.png";
 
 const formatCsDate = (d: Date) =>
   new Intl.DateTimeFormat("cs-CZ", {
@@ -46,12 +58,14 @@ function RatingNamePill({
   snapshotMode,
   votes,
   badge,
+  leadership,
 }: {
   nameLine: string;
   display: number | null;
   snapshotMode: "personal" | "community";
   votes: number;
   badge?: string;
+  leadership?: "C" | "A" | null;
 }) {
   const hue = matchRatingHue(display);
   return (
@@ -61,8 +75,26 @@ function RatingNamePill({
           {badge}
         </span>
       ) : null}
-      <span className="line-clamp-2 w-full break-words font-sans text-[17px] font-bold leading-snug tracking-wide text-[#0a1628] sm:text-[18px]">
-        {nameLine}
+      <span className="inline-flex max-w-full items-center justify-center gap-1">
+        <span className="line-clamp-2 min-w-0 break-words font-sans text-[17px] font-bold leading-snug tracking-wide text-[#0a1628] sm:text-[18px]">
+          {nameLine}
+        </span>
+        {leadership === "C" ? (
+          <span
+            className="inline-flex h-[1.05em] min-w-[1.05em] shrink-0 items-center justify-center rounded-[2px] bg-[#c8102e] px-[0.14em] font-display text-[0.72em] font-black leading-none text-white"
+            aria-label="Kapitán"
+          >
+            C
+          </span>
+        ) : null}
+        {leadership === "A" ? (
+          <span
+            className="inline-flex h-[1.05em] min-w-[1.05em] shrink-0 items-center justify-center rounded-[2px] bg-[#003087] px-[0.14em] font-display text-[0.68em] font-black leading-none text-white"
+            aria-label="Asistent kapitána"
+          >
+            A
+          </span>
+        ) : null}
       </span>
       <span
         className="inline-flex items-baseline gap-1 rounded-lg px-2.5 py-0.5 font-display text-[15px] font-black tabular-nums sm:text-[16px]"
@@ -81,47 +113,92 @@ function RatingNamePill({
   );
 }
 
-function compactRosterName(players: Player[], id: string): string {
-  const player = players.find((candidate) => candidate.id === id);
-  if (!player) return "—";
-  const parts = player.name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length < 2) return (parts[0] ?? "—").toLocaleUpperCase("cs-CZ");
-  const first = parts[0]!;
-  const last = parts[parts.length - 1]!;
-  return `${first.charAt(0).toLocaleUpperCase("cs-CZ")}. ${last.toLocaleUpperCase("cs-CZ")}`;
+function posterNameStyle(name: string, columns: 2 | 3): CSSProperties | undefined {
+  if (name === "—") return undefined;
+  const score = nameplateWidthScore(name);
+  const baseFontPx = columns === 3 ? 31 : 34;
+  // Inner box minus padding, border and optional C/A mark — never rely on ellipsis.
+  const availablePx = columns === 3 ? 200 : 250;
+  const fontSize = Math.min(baseFontPx, availablePx / Math.max(1, score * 0.78));
+  return {
+    fontSize: `${Math.round(fontSize * 100) / 100}px`,
+    letterSpacing: score > 11 ? "0" : score > 9 ? "0.006em" : undefined,
+  };
 }
 
-function NamesRows({ names, columns }: { names: string[]; columns: 2 | 3 }) {
-  const rows: string[][] = [];
-  for (let index = 0; index < names.length; index += columns) {
-    rows.push(names.slice(index, index + columns));
+function FittedBoxName({
+  name,
+  columns,
+  hasMark,
+}: {
+  name: string;
+  columns: 2 | 3;
+  hasMark: boolean;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const style = posterNameStyle(name, columns);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || name === "—") return;
+    const estimated = posterNameStyle(name, columns);
+    let size = parseFloat(estimated?.fontSize ?? "") || (columns === 3 ? 31 : 34);
+    el.style.fontSize = `${size}px`;
+    while (size > 14 && el.scrollWidth > el.clientWidth + 0.5) {
+      size -= 0.5;
+      el.style.fontSize = `${size}px`;
+    }
+  }, [name, columns, hasMark]);
+
+  return (
+    <span ref={ref} className={styles.boxName} style={style}>
+      {name}
+    </span>
+  );
+}
+
+function NamesRows({
+  entries,
+  columns,
+}: {
+  entries: Array<{ name: string; mark?: "C" | "A" | null }>;
+  columns: 2 | 3;
+}) {
+  const rows: Array<Array<{ name: string; mark?: "C" | "A" | null }>> = [];
+  for (let index = 0; index < entries.length; index += columns) {
+    rows.push(entries.slice(index, index + columns));
   }
 
   return (
     <div className={styles.rows}>
       {rows.map((row, rowIndex) => (
         <div className={styles.row} key={`row-${rowIndex}`}>
-          {row.map((name, nameIndex) => {
-            const compactLength = name.replace(/\s/g, "").length;
-            const fontSize =
-              columns === 3 && compactLength > 13
-                ? 27
-                : columns === 3 && compactLength > 11
-                  ? 29
-                  : columns === 2 && compactLength > 15
-                    ? 30
-                    : undefined;
+          {row.map((entry, nameIndex) => {
             return (
-              <Fragment key={`${name}-${nameIndex}`}>
+              <Fragment key={`${entry.name}-${nameIndex}`}>
                 {nameIndex > 0 ? <span className={styles.connector} aria-hidden /> : null}
                 <div
                   className={
-                    name === "—"
+                    entry.name === "—"
                       ? `${styles.box} ${columns === 2 ? styles.boxTwo : styles.boxThree} ${styles.empty}`
                       : `${styles.box} ${columns === 2 ? styles.boxTwo : styles.boxThree}`
                   }
                 >
-                  <span style={fontSize ? { fontSize } : undefined}>{name}</span>
+                  <FittedBoxName
+                    name={entry.name}
+                    columns={columns}
+                    hasMark={Boolean(entry.mark)}
+                  />
+                  {entry.mark === "C" ? (
+                    <span className={`${styles.boxMark} ${styles.boxMarkCaptain}`} aria-label="Kapitán">
+                      C
+                    </span>
+                  ) : null}
+                  {entry.mark === "A" ? (
+                    <span className={`${styles.boxMark} ${styles.boxMarkAssistant}`} aria-label="Asistent kapitána">
+                      A
+                    </span>
+                  ) : null}
                 </div>
               </Fragment>
             );
@@ -142,6 +219,20 @@ interface BaseFixtureNamesFullPosterProps {
   allowExtraForward: boolean;
   siteUrl?: string;
   footerInstantIso?: string | null;
+  /** Pool sestavy — řídí pozadí plakátu „jen jména“ (Pardubice / Kometa / národák). */
+  poolKey?: string | null;
+  captainId?: string | null;
+}
+
+function leadershipMark(
+  playerId: string | null | undefined,
+  captainId: string | null | undefined,
+  assistantIds: string[]
+): "C" | "A" | null {
+  if (!playerId) return null;
+  if (captainId && captainId === playerId) return "C";
+  if (assistantIds.includes(playerId)) return "A";
+  return null;
 }
 
 type RatingMap = Record<string, { avg: number; count: number } | undefined>;
@@ -151,32 +242,83 @@ const ratingSharedRoot =
 
 export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixtureNamesFullPosterProps>(
   function MatchLineupNamesFullPoster(
-    { headline, lineup, players, defenseCount, allowExtraForward, siteUrl = "" },
+    {
+      headline,
+      lineup,
+      players,
+      defenseCount,
+      allowExtraForward,
+      siteUrl = "",
+      poolKey: poolKeyProp,
+      captainId = null,
+    },
     ref
   ) {
     const host =
       siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "").trim() || SITE_CANONICAL_HOST;
     const titleLine = headline.trim();
+    const poolKey = useMemo(
+      () => inferLineupPoolKey(players, poolKeyProp),
+      [players, poolKeyProp]
+    );
+    const backgroundSrc = namesPosterBgForPool(poolKey);
 
-    const goalies = useMemo(() => {
-      const ids = pickMatchLineupSegmentPlayerIds(lineup, "goalies", defenseCount, allowExtraForward);
-      return ids.map((id) => compactRosterName(players, id));
-    }, [lineup, players, defenseCount, allowExtraForward]);
-
-    const defense = useMemo(() => {
-      const ids = pickMatchLineupSegmentPlayerIds(lineup, "defense", defenseCount, allowExtraForward);
-      return ids.map((id) => compactRosterName(players, id));
-    }, [lineup, players, defenseCount, allowExtraForward]);
-
-    const forwards = useMemo(() => {
-      const ids12 = pickMatchLineupSegmentPlayerIds(lineup, "forwards-12", defenseCount, allowExtraForward);
-      const ids34 = pickMatchLineupSegmentPlayerIds(lineup, "forwards-34", defenseCount, allowExtraForward);
-      const ids = [...ids12, ...ids34];
-      if (allowExtraForward && lineup.extraForwards[0] && !ids.includes(lineup.extraForwards[0])) {
-        ids.push(lineup.extraForwards[0]);
+    const roster = useMemo(() => {
+      const aids = lineup.assistantIds ?? [];
+      const goalieIds = pickMatchLineupSegmentPlayerIds(
+        lineup,
+        "goalies",
+        defenseCount,
+        allowExtraForward
+      );
+      const defenseIds = pickMatchLineupSegmentPlayerIds(
+        lineup,
+        "defense",
+        defenseCount,
+        allowExtraForward
+      );
+      const forwardIds = [
+        ...pickMatchLineupSegmentPlayerIds(
+          lineup,
+          "forwards-12",
+          defenseCount,
+          allowExtraForward
+        ),
+        ...pickMatchLineupSegmentPlayerIds(
+          lineup,
+          "forwards-34",
+          defenseCount,
+          allowExtraForward
+        ),
+      ];
+      if (
+        allowExtraForward &&
+        lineup.extraForwards[0] &&
+        !forwardIds.includes(lineup.extraForwards[0])
+      ) {
+        forwardIds.push(lineup.extraForwards[0]);
       }
-      return ids.map((id) => compactRosterName(players, id));
-    }, [lineup, players, defenseCount, allowExtraForward]);
+      const displayNames = rosterDisplayNamesForIds(players, [
+        ...goalieIds,
+        ...defenseIds,
+        ...forwardIds,
+      ]);
+      const entries = (ids: string[]) =>
+        ids.map((id) => ({
+          name: displayNames.get(id) ?? "—",
+          mark: leadershipMark(id, captainId, aids),
+        }));
+
+      return {
+        goalies: entries(goalieIds),
+        defense: entries(defenseIds),
+        forwards: entries(forwardIds),
+      };
+    }, [lineup, players, defenseCount, allowExtraForward, captainId]);
+
+    const goalies = roster.goalies;
+    const defense = roster.defense;
+    const forwards = roster.forwards;
 
     return (
       <div
@@ -186,7 +328,7 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
         style={SHARE_POSTER_ROSTER_4X5_STYLE}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- uživatelem dodané pozadí exportního plakátu */}
-        <img src={LINEUP_NAMES_BACKGROUND_SRC} alt="" className={styles.background} decoding="sync" />
+        <img src={backgroundSrc} alt="" className={styles.background} decoding="sync" />
         <div className={styles.shade} aria-hidden />
 
         <header className={styles.header}>
@@ -202,17 +344,17 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
         <main className={styles.content}>
           <section className={`${styles.section} ${styles.sectionGoalies}`}>
             <h2 className={styles.sectionTitle}>Brankáři</h2>
-            <NamesRows names={goalies} columns={2} />
+            <NamesRows entries={goalies} columns={2} />
           </section>
 
           <section className={`${styles.section} ${styles.sectionDefense}`}>
             <h2 className={styles.sectionTitle}>Obránci</h2>
-            <NamesRows names={defense} columns={2} />
+            <NamesRows entries={defense} columns={2} />
           </section>
 
           <section className={`${styles.section} ${styles.sectionForwards}`}>
             <h2 className={styles.sectionTitle}>Útočníci</h2>
-            <NamesRows names={forwards} columns={3} />
+            <NamesRows entries={forwards} columns={3} />
           </section>
         </main>
       </div>
@@ -240,6 +382,7 @@ export const MatchRatingNamesFullPoster = forwardRef<
     snapshotMode,
     siteUrl = "",
     footerInstantIso = null,
+    captainId = null,
   },
   ref
 ) {
@@ -249,6 +392,7 @@ export const MatchRatingNamesFullPoster = forwardRef<
   const titleLine = headline.trim();
 
   const renderPills = useMemo(() => {
+    const assistantIds = lineup.assistantIds ?? [];
     return (ids: string[], goalieLabels = false) =>
       ids.map((id, index) => {
         const agg = ratings[id];
@@ -262,10 +406,11 @@ export const MatchRatingNamesFullPoster = forwardRef<
             snapshotMode={snapshotMode}
             votes={votes}
             badge={goalieLabels ? `${index + 1}. brankář` : undefined}
+            leadership={leadershipMark(id, captainId, assistantIds)}
           />
         );
       });
-  }, [players, ratings, myRatings, snapshotMode]);
+  }, [players, ratings, myRatings, snapshotMode, captainId, lineup]);
 
   const goalieIds = useMemo(
     () => pickMatchLineupSegmentPlayerIds(lineup, "goalies", defenseCount, allowExtraForward),

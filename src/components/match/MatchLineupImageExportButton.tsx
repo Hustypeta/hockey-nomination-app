@@ -82,6 +82,9 @@ export function MatchLineupImageExportButton({
   showTriggerButton = true,
   /** Zobrazení známek na dresových plakátech (modal hodnocení + stejný režim jako u odkazu). */
   ratingSnapshot,
+  /** Pool editoru — dresy/trenér (Pardubice vs. národák). */
+  poolKey,
+  captainId = null,
 }: {
   shareTitle: string;
   lineup: LineupStructure;
@@ -95,6 +98,8 @@ export function MatchLineupImageExportButton({
   onModalOpenChange?: (open: boolean) => void;
   showTriggerButton?: boolean;
   ratingSnapshot?: MatchLineupImageRatingSnapshot;
+  poolKey?: string | null;
+  captainId?: string | null;
 }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const previewRunRef = useRef(0);
@@ -123,12 +128,20 @@ export function MatchLineupImageExportButton({
       JSON.stringify({
         titleLine,
         lineup,
-        players: players.map(({ id, name, jerseyNumber, position }) => ({ id, name, jerseyNumber, position })),
+        players: players.map(({ id, name, jerseyNumber, position, poolKey: pk }) => ({
+          id,
+          name,
+          jerseyNumber,
+          position,
+          poolKey: pk,
+        })),
         defenseCount,
         allowExtraForward,
         ratingSnapshot,
+        poolKey,
+        captainId,
       }),
-    [titleLine, lineup, players, defenseCount, allowExtraForward, ratingSnapshot]
+    [titleLine, lineup, players, defenseCount, allowExtraForward, ratingSnapshot, poolKey, captainId]
   );
 
   const footerIso = useMemo(() => new Date().toISOString(), []);
@@ -443,6 +456,7 @@ export function MatchLineupImageExportButton({
             snapshotMode={ratingSnapshot.mode}
             siteUrl={siteOrigin}
             footerInstantIso={footerIso}
+            captainId={captainId}
           />
         ) : (
           <MatchLineupNamesFullPoster
@@ -453,6 +467,8 @@ export function MatchLineupImageExportButton({
             allowExtraForward={allowExtraForward}
             siteUrl={siteOrigin}
             footerInstantIso={footerIso}
+            poolKey={poolKey}
+            captainId={captainId}
           />
         )}
         <MatchLineupFullJerseyExportPoster
@@ -462,6 +478,8 @@ export function MatchLineupImageExportButton({
           defenseCount={defenseCount}
           allowExtraForward={allowExtraForward}
           siteUrl={siteOrigin}
+          poolKey={poolKey}
+          captainId={captainId}
           jerseyRatingExport={jerseyRatingExport}
         />
         {POWER_PLAY_UI_ENABLED && !ratingSnapshot ? (
@@ -477,6 +495,8 @@ export function MatchLineupImageExportButton({
             defenseCount={defenseCount}
             allowExtraForward={allowExtraForward}
             siteUrl={siteOrigin}
+            poolKey={poolKey}
+            captainId={captainId}
             jerseyRatingExport={jerseyRatingExport}
           />
         ))}

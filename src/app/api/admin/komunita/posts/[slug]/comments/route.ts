@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withAdminJson, requireUserId } from "@/lib/community/adminRoute";
+import { withAdminJson } from "@/lib/community/adminRoute";
+import { ensureCommunityAdminUserId } from "@/lib/community/adminIdentity";
+import { listPublishedCommentsForPost } from "@/lib/community/commentLikes";
 import { serializeComment, communityAuthorSelect } from "@/lib/community/serialize";
 import { validateCommentBody } from "@/lib/community/validate";
 import { prisma } from "@/lib/prisma";
@@ -16,18 +18,15 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
     if (!post) {
       return NextResponse.json({ error: "Příspěvek nenalezen." }, { status: 404 });
     }
-    const rows = await prisma.communityComment.findMany({
-      where: { postId: post.id, status: "PUBLISHED" },
-      orderBy: { createdAt: "asc" },
-      include: { author: { select: communityAuthorSelect } },
-    });
-    return NextResponse.json({ comments: rows.map(serializeComment) });
+    const likeUserId = await ensureCommunityAdminUserId();
+    const comments = await listPublishedCommentsForPost(post.id, likeUserId);
+    return NextResponse.json({ comments });
   });
 }
 
 export async function POST(req: NextRequest, ctx: Ctx) {
-  return withAdminJson(async ({ userId }) => {
-    const authorId = requireUserId(userId);
+  return withAdminJson(async () => {
+    const authorId = await ensureCommunityAdminUserId();
     const { slug } = await ctx.params;
     const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
     const parsed = validateCommentBody(body.bodyMd);
@@ -46,10 +45,17 @@ export async function POST(req: NextRequest, ctx: Ctx) {
 
     if (parentId) {
       const parent = await prisma.communityComment.findFirst({
-        where: { id: parentId, postId: post.id },
+        where: { id: parentId, postId: post.id, status: "PUBLISHED" },
+        select: { parentId: true },
       });
       if (!parent) {
         return NextResponse.json({ error: "Nadřazený komentář nenalezen." }, { status: 400 });
+      }
+      if (parent.parentId) {
+        return NextResponse.json(
+          { error: "Odpovědi lze přidávat jen k hlavním komentářům." },
+          { status: 400 },
+        );
       }
     }
 
@@ -60,6 +66,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
           authorId,
           parentId,
           bodyMd: parsed.bodyMd,
+          isStaffComment: true,
         },
         include: { author: { select: communityAuthorSelect } },
       });

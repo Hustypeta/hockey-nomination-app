@@ -5,6 +5,12 @@ import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 
+/** Square 4:5 PNG sits in a rounded frame — fill matches the poster surface. */
+function previewChromeFillClass(choice: { key: string; previewLight?: boolean }): string {
+  const lightSurface = choice.previewLight ?? choice.key === "cele-dresy";
+  return lightSurface ? "bg-white" : "bg-black";
+}
+
 export function MatchPosterExportChoicesModal({
   open,
   onClose,
@@ -139,11 +145,7 @@ export function MatchPosterExportChoicesModal({
                 {stackedChoices.map(({ choice, depth }) => (
                   <div
                     key={`${choice.key}-stack`}
-                    className={`absolute inset-0 overflow-hidden rounded-2xl border border-white/20 bg-[#111827] shadow-[0_16px_40px_rgba(0,0,0,0.48)] ${
-                      choice.previewLight
-                        ? "bg-[repeating-conic-gradient(#cbd5e1_0%_25%,#f1f5f9_0%_50%)] bg-[length:16px_16px]"
-                        : ""
-                    }`}
+                    className={`absolute inset-0 overflow-hidden rounded-2xl border border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.48)] ${previewChromeFillClass(choice)}`}
                     style={{
                       zIndex: 20 - depth,
                       transform: `translate(${depth * 13}px, ${depth * 5}px) rotate(${depth * 1.8}deg)`,
@@ -159,11 +161,7 @@ export function MatchPosterExportChoicesModal({
                 ))}
 
                 <div
-                  className={`absolute inset-0 z-30 flex items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-black/35 shadow-[0_24px_65px_rgba(0,0,0,0.58)] ${
-                    activeChoice.previewLight
-                      ? "bg-[repeating-conic-gradient(#cbd5e1_0%_25%,#f1f5f9_0%_50%)] bg-[length:16px_16px]"
-                      : ""
-                  }`}
+                  className={`absolute inset-0 z-30 flex items-center justify-center overflow-hidden rounded-2xl border border-white/15 shadow-[0_24px_65px_rgba(0,0,0,0.58)] ${previewChromeFillClass(activeChoice)}`}
                 >
                   {activeChoice.previewDataUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element

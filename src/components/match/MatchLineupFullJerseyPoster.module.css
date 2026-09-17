@@ -17,14 +17,17 @@
   --poster-ice-inset-left: 1.48%;
   --poster-ice-inset-right: 1.14%;
   --poster-header-h: 130px;
-  /* bezpečná zóna pod zaoblenými rohy nahoře */
-  --poster-header-inset-x: calc(var(--poster-outer-r) * 0.42 + 6px);
+  /* bezpečná zóna pod zaoblenými rohy nahoře — menší inset, ať se vejde hokejlineup.cz */
+  --poster-header-inset-x: calc(var(--poster-outer-r) * 0.3 + 4px);
+  --poster-jersey-skater-scale: 1;
+  --poster-jersey-goalie-scale: 0.9;
+  --poster-name-color: var(--poster-navy);
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  border-radius: var(--poster-outer-r);
+  border-radius: 0;
   isolation: isolate;
   color: var(--poster-navy);
   font-family: "Barlow Condensed", "Inter", system-ui, sans-serif;
@@ -90,7 +93,7 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(7.6rem, 1fr) auto minmax(0, 1fr);
   flex-shrink: 0;
   align-items: center;
   gap: 6px 14px;
@@ -111,13 +114,12 @@
   align-self: center;
   min-width: 0;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
   white-space: nowrap;
   font-family: var(--font-wordmark, "Barlow Condensed", system-ui, sans-serif);
-  font-size: clamp(19px, 2.15vw, 25px);
+  font-size: clamp(13px, 1.35vw, 16px);
   font-weight: 900;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   line-height: 1;
   color: var(--poster-navy);
   text-transform: lowercase;
@@ -140,21 +142,19 @@
   display: inline-block;
   max-width: 100%;
   font-family: var(--font-display, "Bebas Neue", system-ui, sans-serif);
-  font-size: clamp(27px, 3.45vw, 41px);
+  font-size: clamp(18px, 2.15vw, 26px);
   font-weight: 700;
   line-height: 1.05;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   color: var(--poster-cz-red);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .brandLogo {
   justify-self: end;
   align-self: center;
   flex-shrink: 0;
-  width: clamp(145px, 16.5vw, 185px);
+  width: clamp(110px, 12.2vw, 148px);
   max-width: 100%;
   height: auto;
   object-fit: contain;
@@ -175,6 +175,7 @@
   min-height: 0;
   min-width: 0;
   align-items: stretch;
+  overflow: visible;
 }
 
 .lineFrame {
@@ -188,7 +189,8 @@
   border-radius: var(--line-frame-inner-r);
   background: var(--line-frame-bg, rgba(255, 255, 255, 0.42));
   box-shadow: 0 3px 12px var(--line-frame-shadow, rgba(10, 36, 99, 0.1));
-  padding: 6px 8px 10px;
+  padding: 6px 8px 13px;
+  overflow: visible;
 }
 
 /* Vnější roh rámečku = stejná konkávnost jako okraj plakátu */
@@ -342,7 +344,8 @@
   flex: 1 1 0;
   min-height: 0;
   flex-direction: column;
-  padding-bottom: 1.2%;
+  overflow: visible;
+  padding-bottom: 1.8%;
 }
 
 .rinkCenterCircle {
@@ -445,6 +448,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  overflow: visible;
 }
 
 .linesGrid {
@@ -466,6 +470,17 @@
   max-width: 100%;
   flex-shrink: 1;
   min-height: 0;
+  overflow: visible;
+}
+
+.lineGrid :global([class*="mainGrid"]) {
+  align-items: center;
+}
+
+.lineGrid :global([class*="rowForwards"] > *),
+.lineGrid :global([class*="rowDefense"] > *) {
+  min-width: 0;
+  overflow: visible;
 }
 
 .lineGrid :global([class*="rowForwards"]) {
@@ -474,16 +489,22 @@
   gap: 14px !important;
   width: max-content !important;
   max-width: 100%;
+  min-width: 0 !important;
   margin-inline: auto;
 }
 
 .lineGrid :global([class*="rowDefense"]) {
   grid-template-columns: repeat(2, var(--jersey-w)) !important;
   justify-content: center !important;
+  justify-items: center;
   gap: var(--poster-defense-gap) !important;
-  width: max-content !important;
-  max-width: calc(var(--jersey-w) * 2 + var(--poster-defense-gap));
+  /* Same span as the 3-F row so the pair sits under F1–F2 / F2–F3, not packed left.
+     min-width: 0 keeps w-max nameplates from inflating this flex item. */
+  width: calc(var(--jersey-w) * 3 + 28px) !important;
+  max-width: 100%;
+  min-width: 0 !important;
   margin-inline: auto;
+  box-sizing: border-box;
 }
 
 .jerseyTile {
@@ -493,6 +514,7 @@
   margin-left: auto;
   margin-right: auto;
   flex: 0 0 auto;
+  overflow: visible;
 }
 
 .jerseyTile :global(.nhl25-jersey-card-root) {
@@ -500,6 +522,7 @@
   max-width: 100% !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  overflow: visible !important;
 }
 
 .jerseyTile :global(.nhl25-jersey-card-root > div) {
@@ -507,8 +530,8 @@
 }
 
 .jerseyTile :global(.nhl25-jersey-card-root [class*="pt-1.5"]) {
-  padding-top: 2px !important;
-  padding-bottom: 0 !important;
+  padding-top: 3px !important;
+  padding-bottom: 5px !important;
 }
 
 .jerseyTile :global(.jersey-back-number-text) {
@@ -516,21 +539,143 @@
   line-height: 0.9 !important;
 }
 
+/* Pardubice — výraznější navy obrys čísla na exportním plakátu (html-to-image). */
+.jerseyTile :global(.jersey-back-number-text--pardubice) {
+  --pardubice-number-navy: #0a1f4d;
+  letter-spacing: 0.22em !important;
+  font-stretch: extra-condensed;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "tnum" 0, "lnum" 1;
+  display: inline-block;
+  transform: scaleX(0.72);
+  transform-origin: center;
+  -webkit-text-stroke-width: clamp(2px, 0.125em, 4.25px) !important;
+  -webkit-text-stroke-color: var(--pardubice-number-navy) !important;
+  paint-order: stroke fill;
+  text-shadow:
+    -2px -2px 0 var(--pardubice-number-navy),
+    2px -2px 0 var(--pardubice-number-navy),
+    -2px 2px 0 var(--pardubice-number-navy),
+    2px 2px 0 var(--pardubice-number-navy),
+    -2.5px 0 0 var(--pardubice-number-navy),
+    2.5px 0 0 var(--pardubice-number-navy),
+    0 -2.5px 0 var(--pardubice-number-navy),
+    0 2.5px 0 var(--pardubice-number-navy) !important;
+}
+
+/* Kometa — silný tmavě modrý obrys čísla na exportním plakátu (html-to-image). */
+.jerseyTile :global(.jersey-back-number-text--kometa) {
+  --kometa-number-navy: #001d4a;
+  -webkit-text-stroke-width: clamp(2px, 0.125em, 4.25px) !important;
+  -webkit-text-stroke-color: var(--kometa-number-navy) !important;
+  paint-order: stroke fill;
+  text-shadow:
+    -2px -2px 0 var(--kometa-number-navy),
+    2px -2px 0 var(--kometa-number-navy),
+    -2px 2px 0 var(--kometa-number-navy),
+    2px 2px 0 var(--kometa-number-navy),
+    -2.5px 0 0 var(--kometa-number-navy),
+    2.5px 0 0 var(--kometa-number-navy),
+    0 -2.5px 0 var(--kometa-number-navy),
+    0 2.5px 0 var(--kometa-number-navy) !important;
+}
+
+/* Liberec — cyan fill + navy outline readable after html-to-image. */
+.jerseyTile :global(.jersey-back-number-text--liberec) {
+  --liberec-number-cyan: #00adef;
+  --liberec-number-navy: #001a33;
+  color: var(--liberec-number-cyan) !important;
+  -webkit-text-stroke-width: clamp(1.75px, 0.11em, 3.75px) !important;
+  -webkit-text-stroke-color: var(--liberec-number-navy) !important;
+  paint-order: stroke fill;
+  text-shadow:
+    -1.75px -1.75px 0 var(--liberec-number-navy),
+    1.75px -1.75px 0 var(--liberec-number-navy),
+    -1.75px 1.75px 0 var(--liberec-number-navy),
+    1.75px 1.75px 0 var(--liberec-number-navy),
+    -2.25px 0 0 var(--liberec-number-navy),
+    2.25px 0 0 var(--liberec-number-navy),
+    0 -2.25px 0 var(--liberec-number-navy),
+    0 2.25px 0 var(--liberec-number-navy) !important;
+}
+
+/* Třinec — solid red (no stroke) — keep fill after capture overrides. */
+.jerseyTile :global(.jersey-back-number-text--trinec) {
+  --trinec-number-red: #d31245;
+  color: var(--trinec-number-red) !important;
+  -webkit-text-stroke-width: 0 !important;
+  -webkit-text-stroke-color: transparent !important;
+  paint-order: fill;
+  text-shadow: none !important;
+}
+
+/* Budějovice — yellow + red/navy outline stack for export. */
+.jerseyTile :global(.jersey-back-number-text--budejovice) {
+  --budejovice-number-yellow: #f5d200;
+  --budejovice-number-red: #f1141a;
+  --budejovice-number-navy: #121b47;
+  color: var(--budejovice-number-yellow) !important;
+  -webkit-text-stroke-width: clamp(1.75px, 0.11em, 3.75px) !important;
+  -webkit-text-stroke-color: var(--budejovice-number-red) !important;
+  paint-order: stroke fill;
+  text-shadow:
+    -1.5px -1.5px 0 var(--budejovice-number-red),
+    1.5px -1.5px 0 var(--budejovice-number-red),
+    -1.5px 1.5px 0 var(--budejovice-number-red),
+    1.5px 1.5px 0 var(--budejovice-number-red),
+    -2px 0 0 var(--budejovice-number-red),
+    2px 0 0 var(--budejovice-number-red),
+    0 -2px 0 var(--budejovice-number-red),
+    0 2px 0 var(--budejovice-number-red),
+    -2.75px -2.75px 0 var(--budejovice-number-navy),
+    2.75px -2.75px 0 var(--budejovice-number-navy),
+    -2.75px 2.75px 0 var(--budejovice-number-navy),
+    2.75px 2.75px 0 var(--budejovice-number-navy),
+    -3.25px 0 0 var(--budejovice-number-navy),
+    3.25px 0 0 var(--budejovice-number-navy),
+    0 -3.25px 0 var(--budejovice-number-navy),
+    0 3.25px 0 var(--budejovice-number-navy) !important;
+}
+
+/*
+ * Klubový skater: škáluje se celá silueta (PNG + číslo), ať číslo zůstane na hrudi
+ * jako u národáku. globals.css má na img scale(0.52) pro editor — tady vypnout.
+ * G: jen img, stejné 0.9 jako národák (číslo už sedí).
+ */
+.jerseyTile :global(.jersey-blank-img[data-jersey-kit="club"][data-jersey-kind="skater"]) {
+  transform: none !important;
+}
+
+.jerseyTile :global(.nhl25-jersey-card-root[data-jersey-kit="club"][data-jersey-kind="skater"] .poster-jersey-silhouette) {
+  transform: scale(var(--poster-jersey-skater-scale, 0.8));
+  transform-origin: center 34%;
+}
+
+.jerseyTile :global(.jersey-blank-img[data-jersey-kit="club"][data-jersey-kind="goalie"]) {
+  transform: scale(var(--poster-jersey-goalie-scale, 0.9));
+}
+
 .jerseyTile :global(.jersey-nameplate-text),
 .jerseyTile :global(.jersey-nameplate-text--woven),
 .jerseyTile :global(.nhl25-poster-jersey-hem-name span) {
-  color: var(--poster-navy) !important;
+  color: var(--poster-name-color, var(--poster-navy)) !important;
   -webkit-text-stroke-width: 0 !important;
   text-shadow: none !important;
   font-weight: 800 !important;
 }
 
 .jerseyTile :global(.jersey-nameplate-text--poster-crop) {
-  max-width: 100% !important;
+  max-width: none !important;
+  width: max-content !important;
+  overflow: visible !important;
 }
 
 .jerseyTile :global(.nhl25-poster-jersey-hem-name) {
   gap: 0 !important;
-  line-height: 1 !important;
-  padding-top: 2px !important;
+  width: max-content !important;
+  max-width: none !important;
+  overflow: visible !important;
+  line-height: 1.18 !important;
+  padding-top: 3px !important;
+  padding-bottom: 2px !important;
 }

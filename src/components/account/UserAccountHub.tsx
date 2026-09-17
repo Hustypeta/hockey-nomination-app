@@ -72,26 +72,25 @@ export function UserAccountHub() {
   const welcomeName = session?.user?.name ?? "Hráč";
 
   return (
-    <FifaAppPage fillMobile className="!py-2 lg:!py-3">
+    <FifaAppPage fillMobile className="!py-2 lg-device:!py-3">
       <div className="fifa-account-page flex min-h-0 flex-1 flex-col">
         <div className="fifa-account-page__header shrink-0">
-          <div className="min-w-0">
+          <div className="fifa-account-page__identity min-w-0">
             <h1 className="fifa-account-page__title">Můj účet</h1>
             <p className="fifa-account-page__welcome">
-              Vítej zpět, <span>{welcomeName}</span>
+              <span className="fifa-account-page__welcome-line">
+                Vítej zpět, <span className="fifa-account-page__welcome-name">{welcomeName}</span>
+              </span>
               {session?.user?.email ? (
-                <>
-                  {" "}
-                  · <span className="fifa-account-page__email-inline">{session.user.email}</span>
-                </>
+                <span className="fifa-account-page__email-inline">{session.user.email}</span>
               ) : null}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="fifa-account-page__actions">
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className={`${FIFA_BTN_SECONDARY} flex items-center gap-1.5`}
+              className={`${FIFA_BTN_SECONDARY} fifa-account-page__signout`}
             >
               <LogOut className="h-3.5 w-3.5" aria-hidden />
               Odhlásit

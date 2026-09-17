@@ -53,30 +53,19 @@ function layoutWidthScore(lines: string[]): number {
 }
 
 /**
- * Jméno na dresu — plynulé zmenšení písma a mezer podle šířky (editor, karty, export).
- * `premium` = širší slot v hlavním editoru.
- * Dlouhá jednoslovná jména zůstaní na jednom řádku s menším písmem (čitelné na sdílených PNG).
+ * Plakát — jen přirozené zlomy (pomlčka / mezera). Žádný řez uprostřed slova
+ * (VOŽENÍLEK, MELOVSKÝ musí zůstat celé).
  */
-/** Pro exportní plakát — menší strop písma a případný „řez“ dlouhého jednoslového příjmení na dvě řádky. */
 function splitNameplateLinesForPoster(lastName: string): string[] {
-  const base = splitNameplateLines(lastName);
-  if (base.length !== 1) return base;
-  const line = base[0]!;
-  if (isInitialPlusSurname(line)) return base;
-  const score = nameplateWidthScore(line);
-  /** Časněji než na kartě — na úzkém yoku PNG udržet dvě kratší řádky místo jedné ultra dlouhé. */
-  if (score <= 11.8 || line.length < 8) return base;
-  const mid = Math.ceil(line.length / 2);
-  const left = line.slice(0, mid).trimEnd();
-  const right = line.slice(mid).trimStart();
-  if (left.length < 3 || right.length < 3) return base;
-  return [left, right];
+  return splitNameplateLines(lastName);
 }
 
 export type JerseyNameplateOptions = {
   /** Stejná velikost pro všechna jména; zmenší jen při riziku přesahu. */
   uniformPosterSize?: boolean;
   uniformFontPx?: number;
+  /** Extra šířka za C / A vedle příjmení — zmenšit jen když by řádek srazil souseda. */
+  leadershipExtraScore?: number;
 };
 
 export function jerseyNameplateNameProps(
@@ -103,29 +92,30 @@ export function jerseyNameplateNameProps(
   const score = layoutWidthScore(lines);
 
   if (variant === "poster" && options?.uniformPosterSize) {
-    const uniformPx = options.uniformFontPx ?? 20;
-    const overflowScore = 10.5;
+    const uniformPx = options.uniformFontPx ?? 18;
+    const overflowScore = 11.8;
     const minPx = 16;
+    const fitScore = score + Math.max(0, options.leadershipExtraScore ?? 0);
     let fontSize = uniformPx;
-    if (score > overflowScore) {
-      const t = clamp((score - overflowScore) / (15.5 - overflowScore), 0, 1);
+    if (fitScore > overflowScore) {
+      const t = clamp((fitScore - overflowScore) / (16.5 - overflowScore), 0, 1);
       fontSize = uniformPx - t * (uniformPx - minPx);
     }
     const woven = "jersey-nameplate-text--woven";
-    const posterClamp = "jersey-nameplate-text--poster-crop max-w-[min(100%,7.95rem)] sm:max-w-[min(100%,8.25rem)]";
+    const posterClamp = "jersey-nameplate-text--poster-crop";
     return {
       lines,
       className: [
         "jersey-nameplate-text",
         woven,
         posterClamp,
-        "box-border min-w-0 shrink px-0.5",
-        "block w-full max-w-full whitespace-nowrap text-center hyphens-none",
+        "box-border w-max max-w-none overflow-visible px-px",
+        "block whitespace-nowrap text-center hyphens-none",
       ].join(" "),
       style: {
         fontSize: `${Math.round(fontSize * 100) / 100}px`,
-        letterSpacing: score > overflowScore ? "0.02em" : "0.04em",
-        lineHeight: lineCount > 1 ? 1.06 : 1.1,
+        letterSpacing: fitScore > overflowScore ? "0.015em" : "0.03em",
+        lineHeight: lineCount > 1 ? 1.12 : 1.18,
       },
     };
   }
@@ -168,9 +158,7 @@ export function jerseyNameplateNameProps(
     variant === "premium" || variant === "poster" ? "jersey-nameplate-text--woven" : "";
 
   const posterClamp =
-    variant === "poster"
-      ? "jersey-nameplate-text--poster-crop max-w-[min(100%,7.95rem)] sm:max-w-[min(100%,8.25rem)]"
-      : "";
+    variant === "poster" ? "jersey-nameplate-text--poster-crop w-max max-w-none overflow-visible" : "";
 
   return {
     lines,
@@ -178,8 +166,12 @@ export function jerseyNameplateNameProps(
       "jersey-nameplate-text",
       woven,
       posterClamp,
-      "box-border min-w-0 shrink px-0.5",
-      "block w-full max-w-full whitespace-nowrap text-center hyphens-none",
+      variant === "poster"
+        ? "box-border w-max max-w-none overflow-visible px-0.5"
+        : "box-border min-w-0 shrink px-0.5",
+      variant === "poster"
+        ? "block whitespace-nowrap text-center hyphens-none"
+        : "block w-full max-w-full whitespace-nowrap text-center hyphens-none",
     ]
       .filter(Boolean)
       .join(" "),

@@ -174,12 +174,12 @@ export function FifaHubMenuCard({
 
   return (
     <div
-      className={`fifa-card fifa-card-hero fifa-repre-hub-card fifa-hub-menu-card group relative flex h-full min-h-[13rem] flex-col overflow-hidden p-4 sm:min-h-[15rem] lg:min-h-[16.5rem] lg:p-5 ${stateClass} ${className}`.trim()}
+      className={`fifa-card fifa-card-hero fifa-repre-hub-card fifa-hub-menu-card group relative flex min-h-[13rem] flex-col overflow-hidden p-4 sm:min-h-[15rem] max-lg-device:h-auto lg-device:h-full lg-device:min-h-[16.5rem] lg-device:p-5 ${stateClass} ${className}`.trim()}
     >
       {art}
       <div className="fifa-hub-menu-card__focus-scrim pointer-events-none absolute inset-0 z-[6]" aria-hidden />
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col gap-3 lg:gap-3.5">
+      <div className="relative z-10 flex min-h-[13rem] flex-1 flex-col gap-3 sm:min-h-[15rem] lg-device:min-h-0 lg-device:gap-3.5">
         {preparingOnly && preparingOnlyLabel ? (
           <div className="flex flex-1 flex-col items-center justify-center px-2 text-center">
             <p className="font-display text-lg font-bold text-[var(--fifa-text)] lg:text-xl">{preparingOnlyLabel}</p>

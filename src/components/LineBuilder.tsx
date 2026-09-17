@@ -347,9 +347,14 @@ export function LineBuilder({
     const premiumSize: PremiumJerseySize =
       jerseySize === "goalie" ? "goalie" : jerseySize === "compact" ? "compact" : "skater";
 
-    /** Přesun hráče přímo na ploše — jen obsazené sloty ledu, jen útočníci/obránci v rámci lajny. */
+    /** Přesun hráče přímo na ploše — obsazené rink sloty (F/D/G/13. F), vč. náhradního G. */
     const canMoveOnRink =
-      rinkSlot && enableDnd && !!dndId && !!player && !readOnly && (type === "forward" || type === "defense");
+      rinkSlot &&
+      enableDnd &&
+      !!dndId &&
+      !!player &&
+      !readOnly &&
+      (type === "forward" || type === "defense" || type === "goalie" || type === "extraForward");
     const moveDrag = useDraggable({
       id: `move-${rinkSlot ? "rink" : "list"}-${dndId ?? `${type}-${lineIndex ?? 0}-${role ?? ""}`}`,
       disabled: !canMoveOnRink,
@@ -1262,7 +1267,7 @@ export function LineBuilder({
           >
             <div className="flex flex-nowrap items-center gap-2 min-w-0">
               <span className={fifa ? "fifa-editor-match-controls__label" : "text-[10px] font-bold uppercase tracking-[0.22em] text-white/55"}>
-                Nastavení zápasu
+                Nastavení sestavy
               </span>
               <div className={fifa ? "fifa-editor-segment" : "flex gap-2"}>
                 {([8, 7, 6] as const).map((n) => (

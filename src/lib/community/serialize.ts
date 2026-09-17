@@ -75,21 +75,26 @@ export function serializePost(row: CommunityPostRow, likedByMe: boolean): Commun
   };
 }
 
-export function serializeComment(row: {
-  id: string;
-  parentId: string | null;
-  bodyMd: string;
-  likeCount: number;
-  createdAt: Date;
-  author: CommunityAuthorRow;
-}): CommunityCommentDto {
+export function serializeComment(
+  row: {
+    id: string;
+    parentId: string | null;
+    bodyMd: string;
+    isStaffComment?: boolean;
+    likeCount: number;
+    createdAt: Date;
+    author: CommunityAuthorRow;
+  },
+  likedByMe = false,
+): CommunityCommentDto {
   return {
     id: row.id,
     parentId: row.parentId,
     bodyMd: row.bodyMd,
     likeCount: row.likeCount,
+    likedByMe,
     createdAt: row.createdAt.toISOString(),
-    author: serializeAuthor(row.author, { isStaffPost: false }),
+    author: serializeAuthor(row.author, { isStaffPost: row.isStaffComment }),
   };
 }
 

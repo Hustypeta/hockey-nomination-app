@@ -42,7 +42,7 @@ const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
 function useIsMobile(breakpointPx = 720) {
   const [mobile, setMobile] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia(`(max-width:${breakpointPx}px)`);
+    const mq = window.matchMedia(`(max-width:${breakpointPx}px) and (max-device-width:${breakpointPx}px)`);
     const apply = () => setMobile(mq.matches);
     apply();
     mq.addEventListener?.("change", apply);

@@ -23,6 +23,10 @@
 # misc
 .DS_Store
 *.pem
+# Excel lock + export backups (manual xlsx)
+**/~$*.xlsx
+data/extraliga-fantasy-players.bak-*.xlsx
+data/czech-national-players.bak-*.xlsx
 
 # debug
 npm-debug.log*
@@ -32,6 +36,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.local.example
+!.env.example
 
 # vercel
 .vercel

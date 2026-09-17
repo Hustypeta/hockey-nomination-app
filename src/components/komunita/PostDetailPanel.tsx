@@ -1,13 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, Pin, Send, Trash2 } from "lucide-react";
+import { EyeOff, Loader2, Pencil, Pin, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import type { CommunityCommentDto, CommunityPostDto } from "@/lib/community/types";
 import { CommunityBody } from "@/components/komunita/CommunityBody";
+import { CommunityCommentLikeButton } from "@/components/komunita/CommunityPostComments";
 import { CommunityLineupEmbed } from "@/components/komunita/CommunityLineupEmbed";
+import { EditPostModal } from "@/components/komunita/EditPostModal";
 import { authorInitials, formatRelativeTime } from "@/lib/community/display";
+import { canEditAdminForumPost } from "@/lib/community/ownPost";
 import { FIFA_BTN_PRIMARY, FIFA_BTN_SECONDARY, FIFA_INPUT } from "@/lib/fifa/fifaUiClasses";
 import type { Player } from "@/types";
 
@@ -38,7 +41,10 @@ export function PostDetailPanel({
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState("");
   const [commentBusy, setCommentBusy] = useState(false);
+  const [commentLikeBusyId, setCommentLikeBusyId] = useState<string | null>(null);
   const [pinBusy, setPinBusy] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editBusy, setEditBusy] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -94,6 +100,33 @@ export function PostDetailPanel({
     }
   };
 
+  const toggleCommentLike = async (commentId: string) => {
+    setCommentLikeBusyId(commentId);
+    try {
+      const res = await fetch(
+        `${apiBase}/posts/${encodeURIComponent(slug)}/comments/${encodeURIComponent(commentId)}/like`,
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
+      const data = (await res.json()) as { liked?: boolean; likeCount?: number; error?: string };
+      if (!res.ok) {
+        toast.error(data.error ?? "Lajk selhal.");
+        return;
+      }
+      setComments((prev) =>
+        prev.map((c) =>
+          c.id === commentId
+            ? { ...c, likedByMe: !!data.liked, likeCount: data.likeCount ?? c.likeCount }
+            : c,
+        ),
+      );
+    } finally {
+      setCommentLikeBusyId(null);
+    }
+  };
+
   const togglePin = async () => {
     if (!post || !allowPin) return;
     setPinBusy(true);
@@ -135,7 +168,74 @@ export function PostDetailPanel({
     onDeleted();
   };
 
+  const hidePost = async () => {
+    if (!post || !confirm("Skrýt tento příspěvek z veřejného fóra?")) return;
+    const res = await fetch(`${apiBase}/posts/${encodeURIComponent(slug)}/moderate`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "hide" }),
+    });
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
+    if (!res.ok) {
+      toast.error(data.error ?? "Skrytí selhalo.");
+      return;
+    }
+    toast.success("Příspěvek byl skryt.");
+    onDeleted();
+  };
+
+  const moderateComment = async (commentId: string, action: "hide" | "delete") => {
+    const label = action === "hide" ? "Skrýt" : "Smazat";
+    if (!confirm(`${label} tento komentář?`)) return;
+
+    const res = await fetch(
+      `${apiBase}/posts/${encodeURIComponent(slug)}/comments/${encodeURIComponent(commentId)}/moderate`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      },
+    );
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
+    if (!res.ok) {
+      toast.error(data.error ?? "Moderace komentáře selhala.");
+      return;
+    }
+    toast.success(action === "hide" ? "Komentář byl skryt." : "Komentář byl smazán.");
+    await load();
+  };
+
   const canDelete = post && (allowDeleteAny || post.author.id === session?.user?.id);
+  const canEdit =
+    !!post &&
+    apiBase.startsWith("/api/admin/") &&
+    canEditAdminForumPost(post, session?.user?.id);
+
+  const saveEdit = async (title: string, bodyMd: string) => {
+    if (!post || !canEdit) return;
+    setEditBusy(true);
+    try {
+      const res = await fetch(`${apiBase}/posts/${encodeURIComponent(slug)}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, bodyMd }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { post?: CommunityPostDto; error?: string };
+      if (!res.ok || !data.post) {
+        toast.error(data.error ?? "Úprava selhala.");
+        return;
+      }
+      setPost(data.post);
+      onPostUpdated(data.post);
+      setEditOpen(false);
+      toast.success("Příspěvek uložen.");
+    } finally {
+      setEditBusy(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -173,14 +273,16 @@ export function PostDetailPanel({
       <div className={fifaUi ? "fifa-forum-post-layout" : "flex flex-wrap items-start justify-between gap-3"}>
         {fifaUi ? (
           <aside className="fifa-forum-post-layout__author">
-            <div className="fifa-forum-avatar fifa-forum-avatar--lg" aria-hidden>
-              {post.author.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={post.author.image} alt="" className="h-full w-full object-cover" />
-              ) : (
-                authorInitials(post.author.displayName)
-              )}
-            </div>
+            {post.author.isStaff || post.isStaffPost ? null : (
+              <div className="fifa-forum-avatar fifa-forum-avatar--lg" aria-hidden>
+                {post.author.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={post.author.image} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  authorInitials(post.author.displayName)
+                )}
+              </div>
+            )}
             <p className="fifa-forum-post-layout__author-name">
               {post.author.isStaff || post.isStaffPost ? (
                 <span className="fifa-forum-chip fifa-forum-chip--staff">Admin</span>
@@ -207,12 +309,22 @@ export function PostDetailPanel({
             <div className="fifa-forum-post-layout__head">
               <h2 className="fifa-forum-post-layout__title">{post.title}</h2>
               <div className="fifa-forum-post-layout__actions">
+                {canEdit ? (
+                  <button type="button" onClick={() => setEditOpen(true)} className={actionBtn}>
+                    <Pencil className="h-3.5 w-3.5" />
+                    Upravit
+                  </button>
+                ) : null}
                 {allowPin ? (
                   <button type="button" disabled={pinBusy} onClick={() => void togglePin()} className={actionBtn}>
                     <Pin className="h-3.5 w-3.5" />
                     {post.pinnedAt ? "Odepnout" : "Připnout"}
                   </button>
                 ) : null}
+                <button type="button" onClick={() => void hidePost()} className={actionBtn}>
+                  <EyeOff className="h-3.5 w-3.5" />
+                  Skrýt
+                </button>
                 {canDelete ? (
                   <button type="button" onClick={() => void deletePost()} className={deleteBtn}>
                     <Trash2 className="h-3.5 w-3.5" />
@@ -229,6 +341,10 @@ export function PostDetailPanel({
                   {post.pinnedAt ? "Odepnout" : "Připnout"}
                 </button>
               ) : null}
+              <button type="button" onClick={() => void hidePost()} className={actionBtn}>
+                <EyeOff className="h-3.5 w-3.5" />
+                Skrýt
+              </button>
               {canDelete ? (
                 <button type="button" onClick={() => void deletePost()} className={deleteBtn}>
                   <Trash2 className="h-3.5 w-3.5" />
@@ -271,14 +387,77 @@ export function PostDetailPanel({
                     </div>
                   ) : null}
                   <p className={commentMeta}>
-                    {c.author.displayName} · {formatRelativeTime(c.createdAt)}
+                    {c.author.isStaff ? (
+                      <span className="fifa-forum-chip fifa-forum-chip--staff">Admin</span>
+                    ) : (
+                      c.author.displayName
+                    )}{" "}
+                    · {formatRelativeTime(c.createdAt)}
                   </p>
+                  <div className="ml-auto flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => void moderateComment(c.id, "hide")}
+                      className="text-[var(--fifa-text-muted)] hover:text-amber-300"
+                      aria-label="Skrýt komentář"
+                    >
+                      <EyeOff className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void moderateComment(c.id, "delete")}
+                      className="text-[var(--fifa-text-muted)] hover:text-red-300"
+                      aria-label="Smazat komentář"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
                 <CommunityBody text={c.bodyMd} className={fifaUi ? "mt-1.5 text-sm" : "mt-1"} />
+                <div className="mt-1.5">
+                  <CommunityCommentLikeButton
+                    comment={c}
+                    busy={commentLikeBusyId === c.id}
+                    onToggle={() => void toggleCommentLike(c.id)}
+                  />
+                </div>
                 {(repliesByParent[c.id] ?? []).map((r) => (
                   <div key={r.id} className={`ml-4 mt-2 border-l ${sectionBorder} pl-3`}>
-                    <p className={commentMeta}>{r.author.displayName}</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className={commentMeta}>
+                        {r.author.isStaff ? (
+                          <span className="fifa-forum-chip fifa-forum-chip--staff">Admin</span>
+                        ) : (
+                          r.author.displayName
+                        )}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => void moderateComment(r.id, "hide")}
+                          className="text-[var(--fifa-text-muted)] hover:text-amber-300"
+                          aria-label="Skrýt odpověď"
+                        >
+                          <EyeOff className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void moderateComment(r.id, "delete")}
+                          className="text-[var(--fifa-text-muted)] hover:text-red-300"
+                          aria-label="Smazat odpověď"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
                     <CommunityBody text={r.bodyMd} />
+                    <div className="mt-1">
+                      <CommunityCommentLikeButton
+                        comment={r}
+                        busy={commentLikeBusyId === r.id}
+                        onToggle={() => void toggleCommentLike(r.id)}
+                      />
+                    </div>
                   </div>
                 ))}
               </li>

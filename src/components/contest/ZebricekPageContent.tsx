@@ -38,7 +38,7 @@ export function ZebricekPageContent() {
           onClick={() => selectTab("nominace")}
           className={`fifa-tab ${tab === "nominace" ? "fifa-tab--active" : ""}`}
         >
-          Nominace
+          Tipovačka nominace MS 2026
         </button>
         <button
           type="button"
@@ -47,7 +47,7 @@ export function ZebricekPageContent() {
           onClick={() => selectTab("fantasy")}
           className={`fifa-tab ${tab === "fantasy" ? "fifa-tab--active" : ""}`}
         >
-          Fantasy
+          Daily Fantasy MS 2026
         </button>
       </div>
 

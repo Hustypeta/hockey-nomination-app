@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { readFileSync } from "fs";
+import { readFileSync, statSync } from "fs";
 import { join } from "path";
 import type { Player } from "@/types";
 import { leagueForClub } from "./clubLeague";
@@ -74,13 +74,16 @@ function rowToPlayer(p: JsonRow): Player {
 }
 
 let cache: Player[] | null = null;
+let cacheMtimeMs = 0;
 
 /** Načte `czech-ms-2026-candidates-80.json` z kořene projektu (server-only). */
 export function loadMs2026Candidates(): Player[] {
-  if (cache) return cache;
   const path = join(process.cwd(), "czech-ms-2026-candidates-80.json");
+  const mtimeMs = statSync(path).mtimeMs;
+  if (cache && cacheMtimeMs === mtimeMs) return cache;
   const raw = JSON.parse(readFileSync(path, "utf-8")) as JsonRow[];
   cache = raw.map(rowToPlayer);
+  cacheMtimeMs = mtimeMs;
   return cache;
 }
 

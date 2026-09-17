@@ -97,7 +97,7 @@ export function FifaMsHubCardArt({
 export function FifaMs2026HubCardArt(props: { className?: string }) {
   return (
     <FifaMsHubCardArt
-      src="/images/souteze-ms-2026.png?v=4"
+      src="/images/soutěže/souteze-ms-2026.png?v=4"
       tournament="2026"
       accentColor="#e1061b"
       accentSecondary="#38bdf8"
@@ -110,7 +110,7 @@ export function FifaMs2026HubCardArt(props: { className?: string }) {
 export function FifaMs2027HubCardArt(props: { className?: string }) {
   return (
     <FifaMsHubCardArt
-      src="/images/souteze-ms-2027.png?v=4"
+      src="/images/soutěže/souteze-ms-2027.png?v=4"
       tournament="2027"
       accentColor="#dd0000"
       accentSecondary="#ffcc00"

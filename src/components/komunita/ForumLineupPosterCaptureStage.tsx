@@ -3,6 +3,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
+import { MatchLineupNamesFullPoster } from "@/components/match/MatchFixtureNamesFullPoster";
 import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
 import { captureElementToCanvas } from "@/lib/captureSharePoster";
 import { ensureFreshPosterIceBackground } from "@/lib/posterRosterIceBg";
@@ -16,6 +17,8 @@ import {
 import type { LineupStructure, Player } from "@/types";
 
 const FORUM_FRAME_BG = "#05080f";
+const FORUM_CAPTURE_W = FORUM_POST_FRAME_W * FORUM_POSTER_EXPORT_PIXEL_RATIO;
+const FORUM_CAPTURE_H = FORUM_POST_FRAME_H * FORUM_POSTER_EXPORT_PIXEL_RATIO;
 
 export type ForumCaptureLineupPayload =
   | {
@@ -34,6 +37,10 @@ export type ForumCaptureLineupPayload =
       title?: string | null;
       defenseCount: 6 | 7 | 8;
       allowExtraForward: boolean;
+      poolKey?: string | null;
+      posterVariant: "names" | "jerseys";
+      /** Jen Vítěz nominací jersey capture — zápas / editor dál berou trenéra z poolu. */
+      coachName?: string | null;
     };
 
 export type ForumLineupPosterCaptureHandle = {
@@ -42,7 +49,7 @@ export type ForumLineupPosterCaptureHandle = {
 
 function measureFitScale(posterHeight: number): number {
   const h = Math.max(1, posterHeight);
-  return Math.min(FORUM_POST_FRAME_W / NOMINATION_WEB_POSTER_W, FORUM_POST_FRAME_H / h);
+  return Math.min(FORUM_CAPTURE_W / NOMINATION_WEB_POSTER_W, FORUM_CAPTURE_H / h);
 }
 
 export const ForumLineupPosterCaptureStage = forwardRef<
@@ -59,8 +66,10 @@ export const ForumLineupPosterCaptureStage = forwardRef<
     ref,
     () => ({
       async captureForumFrame(p) {
-        const ls = normalizeLineupStructure(p.lineup);
-        if (!isLineupComplete(ls)) return null;
+        const ls = normalizeLineupStructure(p.lineup, {
+          mode: p.kind === "MATCH_LINEUP" ? "match" : "nomination",
+        });
+        if (p.kind === "NOMINATION" && !isLineupComplete(ls)) return null;
 
         flushSync(() => {
           setPayload(p);
@@ -89,8 +98,10 @@ export const ForumLineupPosterCaptureStage = forwardRef<
 
         try {
           const canvas = await captureElementToCanvas(stage, {
-            scale: FORUM_POSTER_EXPORT_PIXEL_RATIO,
+            scale: 1,
             backgroundColor: FORUM_FRAME_BG,
+            captureWidth: FORUM_CAPTURE_W,
+            captureHeight: FORUM_CAPTURE_H,
           });
           return await new Promise<Blob | null>((resolve) => {
             canvas.toBlob((blob) => resolve(blob), "image/png", 1);
@@ -107,7 +118,11 @@ export const ForumLineupPosterCaptureStage = forwardRef<
     []
   );
 
-  const ls = payload ? normalizeLineupStructure(payload.lineup) : null;
+  const ls = payload
+    ? normalizeLineupStructure(payload.lineup, {
+        mode: payload.kind === "MATCH_LINEUP" ? "match" : "nomination",
+      })
+    : null;
 
   return (
     <div
@@ -118,8 +133,8 @@ export const ForumLineupPosterCaptureStage = forwardRef<
       <div
         ref={stageRef}
         style={{
-          width: FORUM_POST_FRAME_W,
-          height: FORUM_POST_FRAME_H,
+          width: FORUM_CAPTURE_W,
+          height: FORUM_CAPTURE_H,
           background: FORUM_FRAME_BG,
           display: "flex",
           alignItems: "center",
@@ -147,13 +162,32 @@ export const ForumLineupPosterCaptureStage = forwardRef<
               footerInstantIso={payload.createdAtIso}
             />
           ) : null}
-          {payload?.kind === "MATCH_LINEUP" && ls ? (
+          {payload?.kind === "MATCH_LINEUP" &&
+          payload.posterVariant === "names" &&
+          ls ? (
+            <MatchLineupNamesFullPoster
+              headline={payload.title ?? "Zápasová sestava"}
+              players={payload.players}
+              lineup={ls}
+              defenseCount={payload.defenseCount}
+              allowExtraForward={payload.allowExtraForward}
+              poolKey={payload.poolKey}
+              captainId={payload.captainId}
+              siteUrl=""
+            />
+          ) : null}
+          {payload?.kind === "MATCH_LINEUP" &&
+          payload.posterVariant === "jerseys" &&
+          ls ? (
             <MatchLineupFullJerseyExportPoster
               lineupTitle={payload.title ?? "Zápasová sestava"}
               players={payload.players}
               lineup={ls}
               defenseCount={payload.defenseCount}
               allowExtraForward={payload.allowExtraForward}
+              poolKey={payload.poolKey}
+              captainId={payload.captainId}
+              coachName={payload.coachName}
               siteUrl=""
             />
           ) : null}

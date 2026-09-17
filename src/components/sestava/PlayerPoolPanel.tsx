@@ -19,6 +19,7 @@ import {
   FIFA_EDITOR_TABS,
   FIFA_POOL_CARD,
 } from "@/lib/fifa/fifaEditorClasses";
+import { fifaPoolCardKitClass } from "@/lib/posterJerseyKit";
 
 type Tab = "all" | "G" | "D" | "F";
 type PickRateSort = "popular" | "unique";
@@ -199,7 +200,7 @@ function DraggableCard({
   onInfo: () => void;
   counts: { G: number; D: number; F: number };
   enableDnd?: boolean;
-  /** Nominace / zápasová sestava: jen jméno, pozice (avatar), oblíbenost — klub/liga až v info. */
+  /** Nominace / zápasová sestava: jméno, %, pozice a info na cihle; klub jen v info modalu. */
   simplePickList?: boolean;
   compactInline?: boolean;
   ambiguousKeys?: ReadonlySet<string> | null;
@@ -221,7 +222,12 @@ function DraggableCard({
   const muted = inRoster || disabled || slotBlocks;
 
   const cardClass = fifaUi
-    ? [FIFA_POOL_CARD, muted ? "fifa-pool-card--muted" : "", isDragging ? "fifa-pool-card--dragging" : ""]
+    ? [
+        FIFA_POOL_CARD,
+        fifaPoolCardKitClass(player.poolKey),
+        muted ? "fifa-pool-card--muted" : "",
+        isDragging ? "fifa-pool-card--dragging" : "",
+      ]
         .filter(Boolean)
         .join(" ")
     : `
@@ -311,20 +317,6 @@ function DraggableCard({
               >
                 {player.name}
               </p>
-              {!simplePickList ? (
-                <p
-                  className={
-                    fifaUi
-                      ? "fifa-pool-card__meta mt-0.5 line-clamp-2"
-                      : "mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95"
-                  }
-                >
-                  <span className={fifaUi ? "" : "text-slate-100"}>{player.club}</span>
-                  {player.league ? (
-                    <span className={fifaUi ? "" : "text-slate-500"}> · {player.league}</span>
-                  ) : null}
-                </p>
-              ) : null}
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-0.5 pl-0">
@@ -418,7 +410,9 @@ const TapCard = memo(function TapCard({
     <div
       className={
         fifaUi
-          ? [FIFA_POOL_CARD, muted ? "fifa-pool-card--muted" : ""].filter(Boolean).join(" ")
+          ? [FIFA_POOL_CARD, fifaPoolCardKitClass(player.poolKey), muted ? "fifa-pool-card--muted" : ""]
+              .filter(Boolean)
+              .join(" ")
           : `relative flex flex-col gap-2 rounded-xl border p-3 ${inRoster ? "border-white/[0.07] bg-[#05080f]/45 opacity-60" : "border-white/[0.12] bg-[#0a1428]/75"} ${disabled || slotBlocks ? "opacity-55" : "opacity-100"}`
       }
     >
@@ -468,12 +462,6 @@ const TapCard = memo(function TapCard({
             >
               {player.name}
             </p>
-            {!simplePickList ? (
-              <p className={fifaUi ? "fifa-pool-card__meta mt-0.5 line-clamp-2" : "mt-1 line-clamp-2 text-xs leading-snug text-slate-300/95"}>
-                <span className={fifaUi ? "" : "text-slate-100"}>{player.club}</span>
-                {player.league ? <span className={fifaUi ? "" : "text-slate-500"}> · {player.league}</span> : null}
-              </p>
-            ) : null}
           </div>
         </div>
         <div className={`flex flex-wrap items-center ${fifaUi ? "gap-0.5 pl-0" : "gap-1.5 pl-0.5"}`}>
@@ -541,7 +529,7 @@ interface PlayerPoolPanelProps {
   assignableFilter?: (player: Player) => boolean;
   /** Doplňková nápověda pod bannerem (např. pravidla pro náhradního D). */
   slotHint?: string | null;
-  /** Nominace / zápasová sestava: v seznamu jen jméno, pozice (na avataru), oblíbenost; klub/liga v modalu Info. */
+  /** Nominace / zápasová sestava: jméno, %, pozice a info na cihle; klub v modalu Info. */
   simplePickList?: boolean;
   /** Po kliknutí na jinou pozici zruší výběr slotu ve sestavě (uvolní filtr). */
   onClearSelectedSlot?: () => void;
@@ -551,6 +539,8 @@ interface PlayerPoolPanelProps {
   gridColumns?: 2 | 3;
   /** Mobilní inline pool pod ledem — ultra kompaktní filtry a karty. */
   compactInline?: boolean;
+  /** Volitelná nápověda při prázdném poolu (schema vs. opravdu prázdný klub). */
+  emptyHint?: string | null;
 }
 
 export function PlayerPoolPanel({
@@ -567,6 +557,7 @@ export function PlayerPoolPanel({
   uiVariant = "classic",
   gridColumns = 2,
   compactInline = false,
+  emptyHint = null,
 }: PlayerPoolPanelProps) {
   const fifaUi = uiVariant === "fifa";
   const denseGrid = gridColumns === 3 || compactInline;
@@ -620,7 +611,14 @@ export function PlayerPoolPanel({
       <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 p-8 text-center">
         <p className="font-medium text-amber-200">Žádní hráči v databázi</p>
         <p className="mt-2 text-sm text-white/50">
-          Na Railway spusť <code className="rounded bg-black/40 px-2 py-0.5 text-amber-200/90">railway run npm run db:seed</code>
+          {emptyHint ?? (
+            <>
+              Lokálně / na Railway:{" "}
+              <code className="rounded bg-black/40 px-2 py-0.5 text-amber-200/90">npm run db:push</code>
+              {" "}pak{" "}
+              <code className="rounded bg-black/40 px-2 py-0.5 text-amber-200/90">npm run import:lineup-pools</code>
+            </>
+          )}
         </p>
       </div>
     );
@@ -701,11 +699,14 @@ export function PlayerPoolPanel({
       </div>
   );
 
+  /** Search + sort share one row (mobile compact + desktop/simple pick list). */
+  const searchSortInline = compactInline || simplePickList;
+
   const sortSelect = (
         <select
           value={pickSort}
           onChange={(e) => setPickSort(e.target.value as PickRateSort)}
-          className={`${fifaUi ? FIFA_EDITOR_SELECT : "rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20"} ${simplePickList && !compactInline ? "w-full sm:w-auto" : ""}${compactInline ? " fifa-editor-pool-sort--compact shrink-0" : ""}`}
+          className={`${fifaUi ? FIFA_EDITOR_SELECT : "rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20"} shrink-0${compactInline ? " fifa-editor-pool-sort--compact" : ""}${simplePickList && !compactInline ? " fifa-editor-pool-sort--inline" : ""}`}
           aria-label="Řazení podle oblíbenosti"
         >
           <option value="popular">{compactInline ? "Top" : "Nejoblíbenější"}</option>
@@ -713,32 +714,28 @@ export function PlayerPoolPanel({
         </select>
   );
 
-  const filterControlsBlock = compactInline ? null : (
+  const filterControlsBlock =
+    compactInline || simplePickList ? null : (
       <div className="flex flex-wrap items-center gap-2">
-        {!simplePickList ? (
-          <>
-            <Filter className={`h-4 w-4 ${fifaUi ? "text-[var(--fifa-text-muted)]" : "text-[#c8102e]/70"}`} />
-            <select
-              value={league}
-              onChange={(e) => setLeague(e.target.value)}
-              className={fifaUi ? FIFA_EDITOR_SELECT : "rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20"}
-            >
-              <option value="">Všechny ligy</option>
-              {leagues.map((lg) => (
-                <option key={lg} value={lg}>
-                  {lg}
-                </option>
-              ))}
-            </select>
-          </>
-        ) : null}
-
+        <Filter className={`h-4 w-4 ${fifaUi ? "text-[var(--fifa-text-muted)]" : "text-[#c8102e]/70"}`} />
+        <select
+          value={league}
+          onChange={(e) => setLeague(e.target.value)}
+          className={fifaUi ? FIFA_EDITOR_SELECT : "rounded-xl border border-white/[0.12] bg-[#0a1428]/80 px-3 py-3 text-sm text-white focus:border-[#f1c40f]/40 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/20"}
+        >
+          <option value="">Všechny ligy</option>
+          {leagues.map((lg) => (
+            <option key={lg} value={lg}>
+              {lg}
+            </option>
+          ))}
+        </select>
         {sortSelect}
       </div>
   );
 
-  const searchToolbarBlock = compactInline ? (
-    <div className="fifa-editor-pool-toolbar flex min-w-0 items-center gap-1">
+  const searchToolbarBlock = searchSortInline ? (
+    <div className={`fifa-editor-pool-toolbar flex min-w-0 items-center ${compactInline ? "gap-1" : "gap-1.5"}`}>
       {searchBlock}
       {sortSelect}
     </div>
@@ -823,7 +820,7 @@ export function PlayerPoolPanel({
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div className={`${FIFA_EDITOR_POOL_FILTERS} shrink-0 ${compactInline ? "" : "space-y-3"}`}>
           {tabsBlock}
-          {compactInline ? searchToolbarBlock : searchBlock}
+          {searchSortInline ? searchToolbarBlock : searchBlock}
           {filterControlsBlock}
         </div>
         <div className={`${FIFA_EDITOR_SCROLL} min-h-0 flex-1 overflow-y-auto overscroll-contain ${compactInline ? "pt-0.5" : "pt-1"}`}>
@@ -840,7 +837,7 @@ export function PlayerPoolPanel({
   return (
     <div className="flex flex-col gap-5">
       {tabsBlock}
-      {searchBlock}
+      {searchSortInline ? searchToolbarBlock : searchBlock}
       {filterControlsBlock}
       {playerGridBlock}
       {emptyBlock}

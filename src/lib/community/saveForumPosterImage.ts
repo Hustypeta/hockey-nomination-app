@@ -2,7 +2,8 @@ import { randomUUID } from "crypto";
 import fs from "fs/promises";
 import path from "path";
 
-const MAX_BYTES = 2 * 1024 * 1024;
+// Dresy a fotografie hráčů mohou i při rozměru 702 × 878 vytvořit PNG přes 2 MB.
+const MAX_BYTES = 5 * 1024 * 1024;
 
 /** Uloží PNG z base64 do public/images/forum/posts/ a vrátí veřejnou cestu. */
 export async function saveForumPosterPngFromBase64(pngBase64: string): Promise<string> {
@@ -11,7 +12,7 @@ export async function saveForumPosterPngFromBase64(pngBase64: string): Promise<s
 
   const buf = Buffer.from(raw, "base64");
   if (buf.length === 0) throw new Error("Neplatný obrázek.");
-  if (buf.length > MAX_BYTES) throw new Error("Obrázek je příliš velký (max. 2 MB).");
+  if (buf.length > MAX_BYTES) throw new Error("Obrázek je příliš velký (max. 5 MB).");
 
   const dir = path.join(process.cwd(), "public", "images", "forum", "posts");
   await fs.mkdir(dir, { recursive: true });

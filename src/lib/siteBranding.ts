@@ -12,14 +12,20 @@ export const SITE_GOOGLE_OAUTH_REDIRECT_URI =
 export const DEV_GOOGLE_OAUTH_REDIRECT_URI = "http://localhost:3000/api/auth/callback/google" as const;
 
 const assetV = process.env.NEXT_PUBLIC_ASSET_VERSION?.trim();
-const assetQ = assetV && assetV.length > 0 ? `?v=${encodeURIComponent(assetV)}` : "";
+/** Výchozí bust pro favicon — Chrome na localhost drží `/favicon.ico` a staré `rel=icon` agresivně. */
+export const SITE_ASSET_QUERY =
+  assetV && assetV.length > 0
+    ? `?v=${encodeURIComponent(assetV)}`
+    : "?v=brand-hockey-2";
 
-/** Odkazy na soubory v `public/images/` (hlavička, favicon). `?v=` obchází agresivní cache po výměně obrázku. */
-export const SITE_LOGO_URL = `/images/logo.png${assetQ}`;
-export const SITE_ICON_URL = `/images/icon.png${assetQ}`;
+/** Odkazy na soubory v `public/images/logo/` (hlavička, favicon). `?v=` obchází agresivní cache po výměně obrázku. */
+export const SITE_LOGO_URL = `/images/logo/logo.png${SITE_ASSET_QUERY}`;
+/** Čtvercová brand ikona (branka + hokejka + puk) — zdroj `flavicon.png`, generováno jako `icon.png`. */
+export const SITE_ICON_URL = `/images/logo/icon.png${SITE_ASSET_QUERY}`;
+export const SITE_APPLE_TOUCH_ICON_URL = `/apple-touch-icon.png${SITE_ASSET_QUERY}`;
 
 /** Výchozí OG/Twitter náhled odkazu — sdílení na Facebooku / X. Rozměry musí odpovídat souboru v `public/images/promo/`. */
-export const SITE_OG_DEFAULT_IMAGE_URL = `/images/promo/og-share-ms2026-new.png${assetQ}`;
+export const SITE_OG_DEFAULT_IMAGE_URL = `/images/promo/og-share-ms2026-new.png${SITE_ASSET_QUERY}`;
 export const SITE_OG_DEFAULT_IMAGE_WIDTH = 1536;
 export const SITE_OG_DEFAULT_IMAGE_HEIGHT = 1024;
 

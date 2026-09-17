@@ -1,4 +1,4 @@
-export const POSTER_ROSTER_ICE_BG_PATH = "/images/poster-roster-ice-bg.png";
+export const POSTER_ROSTER_ICE_BG_PATH = "/images/reprezentace/poster-roster-ice-bg.png";
 
 /** Bump when replacing the PNG in public/images (cache bust for dev + export). */
 export const POSTER_ROSTER_ICE_BG_REVISION = "6";

@@ -15,7 +15,15 @@ export const MATCH_LINEUP_POSTER_RINK_HEIGHT = FIFA_RINK_TEMPLATE_MOBILE_HEIGHT;
 export const MATCH_LINEUP_POSTER_RINK_ASPECT =
   MATCH_LINEUP_POSTER_RINK_WIDTH / MATCH_LINEUP_POSTER_RINK_HEIGHT;
 
-export const MATCH_LINEUP_POSTER_RINK_SLOTS = FIFA_RINK_TEMPLATE_SLOTS_MOBILE;
+/**
+ * Export plakátu lajny — obránci dál od sebe než v editoru (jmenovky se nepřekrývají).
+ * Útok / brankář zůstávají jako mobilní šablona.
+ */
+export const MATCH_LINEUP_POSTER_RINK_SLOTS = {
+  ...FIFA_RINK_TEMPLATE_SLOTS_MOBILE,
+  ld: { ...FIFA_RINK_TEMPLATE_SLOTS_MOBILE.ld, left: 29 },
+  rd: { ...FIFA_RINK_TEMPLATE_SLOTS_MOBILE.rd, left: 71 },
+} as const satisfies Record<FifaRinkTemplatePos, FifaRinkSlotRect>;
 
 export function matchLineupPosterRinkSlotStyle(slot: FifaRinkSlotRect): CSSProperties {
   return {

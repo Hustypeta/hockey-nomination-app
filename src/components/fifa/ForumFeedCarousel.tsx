@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  Children,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 function readGapPx(el: HTMLElement): number {
@@ -9,19 +17,29 @@ function readGapPx(el: HTMLElement): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function clampIndex(index: number, itemCount: number): number {
+  if (itemCount <= 0) return 0;
+  return Math.max(0, Math.min(itemCount - 1, index));
+}
+
 export function ForumFeedCarousel({
   children,
   itemCount,
   ariaLabel = "Seznam příspěvků",
+  arrowsOnly = false,
 }: {
   children: ReactNode;
   itemCount: number;
   ariaLabel?: string;
+  arrowsOnly?: boolean;
 }) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [canScrollUp, setCanScrollUp] = useState(false);
   const [canScrollDown, setCanScrollDown] = useState(false);
+
+  const currentIndex = clampIndex(activeIndex, itemCount);
 
   const syncScrollState = useCallback(() => {
     const el = listRef.current;
@@ -32,6 +50,11 @@ export function ForumFeedCarousel({
   }, []);
 
   const scrollByStep = useCallback((direction: -1 | 1) => {
+    if (arrowsOnly) {
+      setActiveIndex(clampIndex(currentIndex + direction, itemCount));
+      return;
+    }
+
     const el = listRef.current;
     if (!el) return;
 
@@ -40,12 +63,12 @@ export function ForumFeedCarousel({
     const step = firstCard ? firstCard.offsetHeight + gap : el.clientHeight;
 
     el.scrollBy({ top: direction * step, behavior: "smooth" });
-  }, []);
+  }, [arrowsOnly, currentIndex, itemCount]);
 
   useEffect(() => {
     const carousel = carouselRef.current;
     const el = listRef.current;
-    if (!carousel || !el) return;
+    if (!carousel || !el || arrowsOnly) return;
 
     syncScrollState();
 
@@ -80,38 +103,68 @@ export function ForumFeedCarousel({
       carousel.removeEventListener("wheel", onWheel, { capture: true });
       observer.disconnect();
     };
-  }, [syncScrollState]);
+  }, [arrowsOnly, syncScrollState]);
 
   useEffect(() => {
+    if (arrowsOnly) return;
     const raf = requestAnimationFrame(() => syncScrollState());
     return () => cancelAnimationFrame(raf);
-  }, [itemCount, syncScrollState]);
+  }, [arrowsOnly, itemCount, syncScrollState]);
+
+  const showArrows = itemCount > 1;
+  const canGoPrev = arrowsOnly ? currentIndex > 0 : canScrollUp;
+  const canGoNext = arrowsOnly ? currentIndex < itemCount - 1 : canScrollDown;
+
+  const slides = arrowsOnly
+    ? Children.map(children, (child, index) => (
+        <div
+          key={isValidElement(child) && child.key != null ? child.key : index}
+          className="fifa-forum-feed__slide"
+          hidden={index !== currentIndex}
+        >
+          {child}
+        </div>
+      ))
+    : children;
 
   return (
-    <div ref={carouselRef} className="fifa-forum-feed-carousel">
-      <button
-        type="button"
-        className="fifa-forum-feed-carousel__arrow fifa-forum-feed-carousel__arrow--prev"
-        aria-label="Předchozí příspěvek"
-        disabled={!canScrollUp}
-        onClick={() => scrollByStep(-1)}
-      >
-        <ChevronUp className="h-5 w-5" aria-hidden />
-      </button>
+    <div
+      ref={carouselRef}
+      className={`fifa-forum-feed-carousel${arrowsOnly ? " fifa-forum-feed-carousel--arrows-only" : ""}${
+        showArrows ? "" : " fifa-forum-feed-carousel--single"
+      }`}
+    >
+      {showArrows ? (
+        <button
+          type="button"
+          className="fifa-forum-feed-carousel__arrow fifa-forum-feed-carousel__arrow--prev"
+          aria-label="Předchozí příspěvek"
+          disabled={!canGoPrev}
+          onClick={() => scrollByStep(-1)}
+        >
+          <ChevronUp className="h-5 w-5" aria-hidden />
+        </button>
+      ) : null}
 
-      <div ref={listRef} className="fifa-forum-feed__list" aria-label={ariaLabel}>
-        {children}
+      <div
+        ref={listRef}
+        className={`fifa-forum-feed__list${arrowsOnly ? " fifa-forum-feed__list--arrows-only" : ""}`}
+        aria-label={ariaLabel}
+      >
+        {slides}
       </div>
 
-      <button
-        type="button"
-        className="fifa-forum-feed-carousel__arrow fifa-forum-feed-carousel__arrow--next"
-        aria-label="Další příspěvek"
-        disabled={!canScrollDown}
-        onClick={() => scrollByStep(1)}
-      >
-        <ChevronDown className="h-5 w-5" aria-hidden />
-      </button>
+      {showArrows ? (
+        <button
+          type="button"
+          className="fifa-forum-feed-carousel__arrow fifa-forum-feed-carousel__arrow--next"
+          aria-label="Další příspěvek"
+          disabled={!canGoNext}
+          onClick={() => scrollByStep(1)}
+        >
+          <ChevronDown className="h-5 w-5" aria-hidden />
+        </button>
+      ) : null}
     </div>
   );
 }

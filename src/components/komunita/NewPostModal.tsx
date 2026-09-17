@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ListOrdered, Loader2, MessageCircle, Users, X } from "lucide-react";
+import { ListOrdered, Loader2, MessageCircle, X } from "lucide-react";
 import { toast } from "sonner";
 import {
   COMMUNITY_CATEGORY_LABELS,
@@ -11,7 +11,11 @@ import type { CommunityPostCategory } from "@prisma/client";
 import type { MyLineupPick } from "@/lib/community/types";
 import { fetchLineupCapturePayload } from "@/lib/community/fetchLineupCapturePayload";
 import { uploadForumPosterFrame } from "@/lib/community/uploadForumPosterFrame";
-import { FORUM_POST_BODY_MAX, FORUM_POST_TITLE_MAX } from "@/lib/community/validate";
+import {
+  FORUM_POST_BODY_MAX,
+  FORUM_POST_BODY_MAX_LINES,
+  FORUM_POST_TITLE_MAX,
+} from "@/lib/community/validate";
 import { FIFA_BTN_PRIMARY, FIFA_INPUT } from "@/lib/fifa/fifaUiClasses";
 import {
   ForumLineupPosterCaptureStage,
@@ -21,7 +25,8 @@ import type { Player } from "@/types";
 
 const ADMIN_API = "/api/admin/komunita";
 
-type PostType = "normal" | "lineup" | "nomination";
+type PostType = "normal" | "lineup";
+type LineupPosterVariant = "names" | "jerseys";
 
 export function NewPostModal({
   open,
@@ -46,6 +51,8 @@ export function NewPostModal({
   const [bodyMd, setBodyMd] = useState("");
   const [category, setCategory] = useState<CommunityPostCategory>("GENERAL");
   const [postType, setPostType] = useState<PostType>("normal");
+  const [lineupPosterVariant, setLineupPosterVariant] =
+    useState<LineupPosterVariant>("names");
   const [busy, setBusy] = useState(false);
   const [picks, setPicks] = useState<MyLineupPick[]>([]);
   const [picksLoading, setPicksLoading] = useState(false);
@@ -84,13 +91,31 @@ export function NewPostModal({
       setBodyMd("");
       setCategory("GENERAL");
       setPostType("normal");
+      setLineupPosterVariant("names");
       setSelectedPick(null);
     }
   }, [open]);
 
+  useEffect(() => {
+    if (!open || typeof window === "undefined" || !window.visualViewport) return;
+    const viewport = window.visualViewport;
+    const sync = () => {
+      document.documentElement.style.setProperty("--forum-vvh", `${viewport.height}px`);
+    };
+    sync();
+    viewport.addEventListener("resize", sync);
+    viewport.addEventListener("scroll", sync);
+    return () => {
+      viewport.removeEventListener("resize", sync);
+      viewport.removeEventListener("scroll", sync);
+      document.documentElement.style.removeProperty("--forum-vvh");
+    };
+  }, [open]);
+
   const filteredPicks = useMemo(() => {
-    if (postType === "nomination") return picks.filter((p) => p.kind === "NOMINATION");
-    if (postType === "lineup") return picks.filter((p) => p.kind !== "NOMINATION");
+    if (postType === "lineup") {
+      return picks.filter((p) => p.kind === "MATCH_LINEUP" || p.kind === "FANTASY_LINEUP");
+    }
     return picks;
   }, [picks, postType]);
 
@@ -99,8 +124,7 @@ export function NewPostModal({
   const selectPostType = (type: PostType) => {
     setPostType(type);
     setSelectedPick(null);
-    if (type === "nomination") setCategory("LINEUP_NOMINATION");
-    else if (type === "lineup") setCategory("FANTASY");
+    if (type === "lineup") setCategory("LINEUP_NOMINATION");
   };
 
   const attachmentPayload = selectedPick
@@ -117,7 +141,11 @@ export function NewPostModal({
     if (!selectedPick || selectedPick.kind === "FANTASY_LINEUP") return attachmentPayload;
     if (!players.length) return attachmentPayload;
 
-    const capturePayload = await fetchLineupCapturePayload(selectedPick, players);
+    const capturePayload = await fetchLineupCapturePayload(
+      selectedPick,
+      players,
+      lineupPosterVariant,
+    );
     if (!capturePayload) return attachmentPayload;
 
     const blob = await captureRef.current?.captureForumFrame(capturePayload);
@@ -137,9 +165,33 @@ export function NewPostModal({
     return attachmentPayload;
   };
 
+  const titleOverLimit = title.length > FORUM_POST_TITLE_MAX;
+  const bodyLineCount = bodyMd.split(/\r\n?|\n/).length;
+  const bodyOverLimit =
+    bodyMd.length > FORUM_POST_BODY_MAX || bodyLineCount > FORUM_POST_BODY_MAX_LINES;
+
+  const clampBody = (value: string) => {
+    const limited = value.length > FORUM_POST_BODY_MAX ? value.slice(0, FORUM_POST_BODY_MAX) : value;
+    const lines = limited.split(/\r\n?|\n/);
+    if (lines.length <= FORUM_POST_BODY_MAX_LINES) return limited;
+    return lines.slice(0, FORUM_POST_BODY_MAX_LINES).join("\n");
+  };
+
   const submit = async () => {
     if (!title.trim()) {
       toast.error("Vyplň nadpis příspěvku.");
+      return;
+    }
+    if (titleOverLimit) {
+      toast.error(`Nadpis může mít nejvýše ${FORUM_POST_TITLE_MAX} znaků.`);
+      return;
+    }
+    if (bodyOverLimit) {
+      toast.error(`Text může mít nejvýše ${FORUM_POST_BODY_MAX} znaků a ${FORUM_POST_BODY_MAX_LINES} řádků.`);
+      return;
+    }
+    if (postType === "lineup" && !selectedPick) {
+      toast.error("Vyber sestavu, kterou chceš přiložit.");
       return;
     }
     setBusy(true);
@@ -154,7 +206,7 @@ export function NewPostModal({
         body: JSON.stringify({
           title,
           bodyMd: bodyMd.trim() || title,
-          category,
+          category: postType === "lineup" ? "LINEUP_NOMINATION" : category,
           tags: [],
           attachments,
           ...(staffPost ? { asStaff: true } : {}),
@@ -168,6 +220,11 @@ export function NewPostModal({
       toast.success("Příspěvek byl úspěšně publikován!");
       onCreated();
       onClose();
+    } catch (error) {
+      console.error("Publikování příspěvku selhalo:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Příspěvek se nepodařilo publikovat.",
+      );
     } finally {
       setBusy(false);
     }
@@ -183,7 +240,7 @@ export function NewPostModal({
 
   return (
     <div
-      className={`fixed inset-0 z-[120] flex items-end justify-center p-4 sm:items-center ${fifaUi ? "fifa-forum-modal-backdrop" : "bg-black/70"}`}
+      className={`fixed inset-0 z-[120] flex items-end justify-center p-0 sm:items-center sm:p-4 ${fifaUi ? "fifa-forum-modal-backdrop" : "bg-black/70 p-4"}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -202,7 +259,7 @@ export function NewPostModal({
         <div className="fifa-forum-new-modal__body">
           <div>
             <p className={labelClass}>Typ příspěvku</p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => selectPostType("normal")}
@@ -219,14 +276,6 @@ export function NewPostModal({
                 <ListOrdered className="h-4 w-4" aria-hidden />
                 Sestava
               </button>
-              <button
-                type="button"
-                onClick={() => selectPostType("nomination")}
-                className={`fifa-forum-type-btn ${postType === "nomination" ? "fifa-forum-type-btn--active" : ""}`}
-              >
-                <Users className="h-4 w-4" aria-hidden />
-                Nominace
-              </button>
             </div>
           </div>
 
@@ -234,13 +283,13 @@ export function NewPostModal({
             <span className={labelClass}>Nadpis</span>
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value.slice(0, FORUM_POST_TITLE_MAX))}
               maxLength={FORUM_POST_TITLE_MAX}
               placeholder="Např. Moje ideální sestava na MS 2026"
               className={inputClass}
             />
             <span className="mt-1 block text-right text-[10px] text-[var(--fifa-text-muted)]">
-              {title.length}/{FORUM_POST_TITLE_MAX}
+              {title.length}/{FORUM_POST_TITLE_MAX} · zbývá {Math.max(0, FORUM_POST_TITLE_MAX - title.length)}
             </span>
           </label>
 
@@ -248,14 +297,16 @@ export function NewPostModal({
             <span className={labelClass}>Text příspěvku</span>
             <textarea
               value={bodyMd}
-              onChange={(e) => setBodyMd(e.target.value)}
+              onChange={(e) => setBodyMd(clampBody(e.target.value))}
               maxLength={FORUM_POST_BODY_MAX}
-              rows={4}
+              rows={8}
               placeholder="Co chceš sdílet s komunitou?"
               className={`${inputClass} resize-y`}
             />
             <span className="mt-1 block text-right text-[10px] text-[var(--fifa-text-muted)]">
-              {bodyMd.length}/{FORUM_POST_BODY_MAX}
+              {bodyMd.length}/{FORUM_POST_BODY_MAX} · zbývá {Math.max(0, FORUM_POST_BODY_MAX - bodyMd.length)}
+              {" · "}
+              {bodyLineCount}/{FORUM_POST_BODY_MAX_LINES} ř.
             </span>
           </label>
 
@@ -263,6 +314,7 @@ export function NewPostModal({
             <span className={labelClass}>Kategorie</span>
             <select
               value={category}
+              disabled={postType === "lineup"}
               onChange={(e) => setCategory(e.target.value as CommunityPostCategory)}
               className={`${inputClass} w-full`}
             >
@@ -274,11 +326,9 @@ export function NewPostModal({
             </select>
           </label>
 
-          {postType !== "normal" ? (
+          {postType === "lineup" ? (
             <div className="fifa-forum-lineup-picker">
-              <p className={labelClass}>
-                {postType === "nomination" ? "Přiložit nominaci" : "Přiložit sestavu"}
-              </p>
+              <p className={labelClass}>Přiložit sestavu</p>
               {picksLoading ? (
                 <p className="flex items-center gap-2 text-sm text-[var(--fifa-text-muted)]">
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -286,7 +336,7 @@ export function NewPostModal({
                 </p>
               ) : filteredPicks.length === 0 ? (
                 <p className="text-xs text-[var(--fifa-text-muted)]">
-                  Žádné uložené {postType === "nomination" ? "nominace" : "sestavy"} — nejdřív je vytvoř v editoru.
+                  Žádné uložené sestavy — nejdřív je vytvoř v editoru.
                 </p>
               ) : (
                 <ul className="max-h-36 space-y-1 overflow-y-auto">
@@ -305,13 +355,47 @@ export function NewPostModal({
               )}
             </div>
           ) : null}
+
+          {postType === "lineup" ? (
+            <div>
+              <p className={labelClass}>Vzhled sestavy ve fóru</p>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setLineupPosterVariant("names")}
+                  className={`fifa-forum-type-btn ${
+                    lineupPosterVariant === "names" ? "fifa-forum-type-btn--active" : ""
+                  }`}
+                >
+                  Jen jména
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLineupPosterVariant("jerseys")}
+                  className={`fifa-forum-type-btn ${
+                    lineupPosterVariant === "jerseys" ? "fifa-forum-type-btn--active" : ""
+                  }`}
+                >
+                  Jména + dresy
+                </button>
+              </div>
+              <p className="mt-1.5 text-[11px] text-[var(--fifa-text-muted)]">
+                Obě varianty se vytvoří jako celý plakát 4:5 bez ořezu.
+              </p>
+            </div>
+          ) : null}
         </div>
 
         <div className="fifa-forum-new-modal__foot">
           <button type="button" onClick={onClose} className="text-sm font-medium text-[var(--fifa-text-muted)] hover:text-[var(--fifa-text)]">
             Zrušit
           </button>
-          <button type="button" disabled={busy || !title.trim()} onClick={() => void submit()} className={FIFA_BTN_PRIMARY}>
+          <button
+            type="button"
+            disabled={busy || !title.trim() || titleOverLimit || bodyOverLimit}
+            onClick={() => void submit()}
+            className={FIFA_BTN_PRIMARY}
+          >
             {busy ? (selectedPick && selectedPick.kind !== "FANTASY_LINEUP" ? "Generuji náhled…" : "Odesílám…") : "Odeslat příspěvek"}
           </button>
         </div>

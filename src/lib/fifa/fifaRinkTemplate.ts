@@ -1,5 +1,8 @@
 /** Led `/images/fifa-match-rink-ice.png` — 1024×576 (16:9). Sloty v % plátna. */
-import { FIFA_RINK_SLOT_WIDTH } from "@/lib/fifa/fifaRinkShield";
+import {
+  FIFA_RINK_SLOT_WIDTH,
+  FIFA_RINK_SLOT_WIDTH_MOBILE,
+} from "@/lib/fifa/fifaRinkShield";
 
 export const FIFA_RINK_TEMPLATE_SRC = "/images/fifa-match-rink-ice.png";
 export const FIFA_RINK_TEMPLATE_WIDTH = 1024;
@@ -13,7 +16,7 @@ export const FIFA_RINK_TEMPLATE_MOBILE_HEIGHT = 1024;
 export const FIFA_RINK_TEMPLATE_MOBILE_ASPECT =
   FIFA_RINK_TEMPLATE_MOBILE_WIDTH / FIFA_RINK_TEMPLATE_MOBILE_HEIGHT;
 
-export { FIFA_RINK_SLOT_WIDTH };
+export { FIFA_RINK_SLOT_WIDTH, FIFA_RINK_SLOT_WIDTH_MOBILE };
 
 /** Štít je čtvercový v px → výška v % výšky plátna = šířka% × (16/9). */
 export const FIFA_RINK_SLOT_HEIGHT_PCT =
@@ -43,13 +46,11 @@ export const FIFA_RINK_TEMPLATE_SLOTS = {
   ld: slot(38, 50),
   rd: slot(62, 50),
   d: slot(50, 50),
-  g: slot(50, 78),
+  /* Slightly lower G — more room for D nameplates under 12.5% hexes. */
+  g: slot(50, 80),
   benchL: slot(13, 50),
   benchR: slot(87, 50),
 } as const satisfies Record<string, FifaRinkSlotRect>;
-
-/** Mobil — sloty na portrétním ledě (803×1024). */
-export const FIFA_RINK_SLOT_WIDTH_MOBILE = 15;
 
 const MOBILE_RATIO = FIFA_RINK_TEMPLATE_MOBILE_WIDTH / FIFA_RINK_TEMPLATE_MOBILE_HEIGHT;
 
@@ -57,16 +58,22 @@ function slotM(left: number, top: number, width = FIFA_RINK_SLOT_WIDTH_MOBILE): 
   return { left, top, width, height: width * MOBILE_RATIO };
 }
 
+/**
+ * Mobil — sloty na portrétním ledě (803×1024).
+ * D výš + mírně ke středu; náhr. G / 13. F dál k okrajům u G,
+ * ať při 8D + 13. F nepřekrývají LB/RB (vč. jmenovek a bench badge).
+ */
 export const FIFA_RINK_TEMPLATE_SLOTS_MOBILE = {
-  lw:     slotM(24,  28),
-  c:      slotM(50,  28),
-  rw:     slotM(76,  28),
-  ld:     slotM(38,  57),
-  rd:     slotM(62,  57),
-  d:      slotM(50,  57),
-  g:      slotM(50,  81),
-  benchL: slotM(17,  81),
-  benchR: slotM(83,  81),
+  lw:     slotM(24,  23),
+  c:      slotM(50,  23),
+  rw:     slotM(76,  23),
+  ld:     slotM(40,  48),
+  rd:     slotM(60,  48),
+  d:      slotM(50,  48),
+  /* Higher than design 81 so captions survive rotateX + overflow:hidden. */
+  g:      slotM(50,  77.5),
+  benchL: slotM(11.5, 79),
+  benchR: slotM(88.5, 79),
 } as const satisfies Record<string, FifaRinkSlotRect>;
 
 export type FifaRinkTemplatePos = keyof typeof FIFA_RINK_TEMPLATE_SLOTS;

@@ -81,7 +81,7 @@ export function FifaHubMenuCardTouch({
   return (
     <div
       ref={cardRef}
-      className={`fifa-card fifa-card-hero fifa-repre-hub-card fifa-hub-menu-card fifa-hub-menu-card--touch relative flex min-h-[14rem] w-full flex-col overflow-hidden p-4 sm:min-h-[15rem] ${stateClass} ${menuOpen ? "fifa-hub-menu-card--menu-open" : ""} ${className}`.trim()}
+      className={`fifa-card fifa-card-hero fifa-repre-hub-card fifa-hub-menu-card fifa-hub-menu-card--touch relative flex min-h-[14rem] w-full flex-col overflow-hidden p-4 sm:min-h-[15rem] max-lg-device:h-auto ${stateClass} ${menuOpen ? "fifa-hub-menu-card--menu-open" : ""} ${className}`.trim()}
     >
       {art}
       {hasMenu ? (
@@ -95,7 +95,7 @@ export function FifaHubMenuCardTouch({
       ) : null}
       <div className="fifa-hub-menu-card__focus-scrim pointer-events-none absolute inset-0 z-[6]" aria-hidden />
 
-      <div className="fifa-hub-menu-card__content relative z-10 flex min-h-0 flex-1 flex-col gap-3">
+      <div className="fifa-hub-menu-card__content relative z-10 flex min-h-[14rem] flex-1 flex-col gap-3 sm:min-h-[15rem]">
         {preparingOnly && preparingOnlyLabel ? (
           <div className="flex flex-1 flex-col items-center justify-center px-2 text-center">
             <p className="font-display text-lg font-bold text-[var(--fifa-text)]">{preparingOnlyLabel}</p>

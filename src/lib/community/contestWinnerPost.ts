@@ -11,13 +11,10 @@ export function contestWinnerPostDraft(winner: ContestLeaderboardRow): {
   nominationId: string;
 } {
   return {
-    title: `Vítěz nominační soutěže: ${winner.displayName}`,
-    bodyMd: [
-      `Gratulujeme **${winner.displayName}** k vítězství v nominační soutěži!`,
-      "",
-      `Celkem **${winner.points} bodů** podle oficiální soupisky. Níže je vítězná nominace — podívej se, jak vypadá sestava šampiona.`,
-    ].join("\n"),
-    category: "LINEUP_NOMINATION",
+    title: "Vítěz nominační soutěže MS 2026: Matěj K.",
+    bodyMd:
+      "Gratulujeme Matěji K. k vítězství v Nominační soutěži MS 2026, ve které získal neuvěřitelných 129 bodů ze 193.",
+    category: "CONTESTS",
     nominationId: winner.nominationId,
   };
 }

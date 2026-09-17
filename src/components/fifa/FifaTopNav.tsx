@@ -93,13 +93,13 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
   return (
     <>
       <div
-        className={`fifa-top-nav-mobile-backdrop lg:hidden ${mobileOpen ? "fifa-top-nav-mobile-backdrop--open" : ""}`}
+        className={`fifa-top-nav-mobile-backdrop lg-device:hidden ${mobileOpen ? "fifa-top-nav-mobile-backdrop--open" : ""}`}
         aria-hidden
         onClick={() => setMobileOpen(false)}
       />
 
     <div ref={rootRef} className={`fifa-top-nav-root relative shrink-0 border-t border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)] ${mobileOpen ? "fifa-top-nav-root--open" : ""}`}>
-      <div className="fifa-top-nav-mobile lg:hidden">
+      <div className="fifa-top-nav-mobile lg-device:hidden">
         <button
           ref={toggleRef}
           type="button"
@@ -142,7 +142,7 @@ export function FifaTopNav({ designPreview = false }: { designPreview?: boolean 
       </div>
 
       <nav
-        className="fifa-top-nav-scroll hidden w-full items-stretch gap-0 px-5 lg:flex"
+        className="fifa-top-nav-scroll hidden w-full items-stretch gap-0 px-5 lg-device:flex"
         aria-label="Hlavní menu"
       >
         {navItems.map((item) => (

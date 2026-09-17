@@ -14,11 +14,8 @@ import {
   type MatchLineupPosterGroup,
 } from "@/lib/matchLineupPosterSegments";
 import { fifaRinkChemistryEdges } from "@/lib/fifa/fifaRinkChemistry";
-import {
-  FIFA_RINK_TEMPLATE_SLOTS_MOBILE,
-  type FifaRinkSlotRect,
-  type FifaRinkTemplatePos,
-} from "@/lib/fifa/fifaRinkTemplate";
+import type { FifaRinkSlotRect, FifaRinkTemplatePos } from "@/lib/fifa/fifaRinkTemplate";
+import { MATCH_LINEUP_POSTER_RINK_SLOTS } from "@/lib/matchLineupPosterRinkTemplate";
 import {
   fmtMatchRating,
   matchRatingHue,
@@ -27,7 +24,8 @@ import {
   type MatchRatingMyMap,
 } from "@/lib/matchRatingExportDisplay";
 import { SHARE_POSTER_ROSTER_4X5_STYLE } from "@/lib/sharePosterLayout";
-import { SITE_CANONICAL_HOST, SITE_LOGO_URL } from "@/lib/siteBranding";
+import { SITE_BRAND, SITE_CANONICAL_HOST, SITE_LOGO_URL } from "@/lib/siteBranding";
+import { inferLineupPoolKey } from "@/lib/jerseyPhotoAsset";
 import styles from "./MatchLineupJerseyExportPoster.module.css";
 
 const LINE_POSTER_BACKGROUND_SRC = "/images/poster-lineup-line-rink-bg.png?v=2";
@@ -40,6 +38,9 @@ interface MatchLineupJerseyExportPosterProps {
   defenseCount: 6 | 7 | 8;
   allowExtraForward: boolean;
   siteUrl?: string;
+  /** Pool editoru — dresy (národák vs. Pardubice). */
+  poolKey?: string | null;
+  captainId?: string | null;
   jerseyRatingExport?: {
     ratings: MatchRatingAggregateMap;
     myRatings: MatchRatingMyMap;
@@ -70,12 +71,19 @@ export const MatchLineupJerseyExportPoster = forwardRef<
     defenseCount,
     allowExtraForward,
     siteUrl = "",
+    poolKey: poolKeyProp,
+    captainId = null,
     jerseyRatingExport,
   },
   ref
 ) {
   const byId = useMemo(() => new Map(players.map((player) => [player.id, player])), [players]);
   const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
+  const poolKey = useMemo(
+    () => inferLineupPoolKey(players, poolKeyProp),
+    [players, poolKeyProp]
+  );
+  const assistantIds = lineup.assistantIds ?? [];
   const ids = useMemo(
     () => pickMatchLineupSegmentPlayerIds(lineup, group, defenseCount, allowExtraForward),
     [lineup, group, defenseCount, allowExtraForward]
@@ -94,8 +102,12 @@ export const MatchLineupJerseyExportPoster = forwardRef<
 
   if (!lineChunks) return null;
 
-  const host =
+  const rawHost =
     siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "").trim() || SITE_CANONICAL_HOST;
+  const host =
+    /^localhost(?::\d+)?$/i.test(rawHost) || rawHost.startsWith("127.0.0.1")
+      ? SITE_CANONICAL_HOST
+      : rawHost;
   const starterGoalieId = lineup.goalies[0];
   const secondGoalie = extraSlots.find((slot) => slot.kind === "second-goalie");
   const extraForward = extraSlots.find((slot) => slot.kind === "extra-forward");
@@ -142,11 +154,13 @@ export const MatchLineupJerseyExportPoster = forwardRef<
     if (!playerId) return null;
     const player = byId.get(playerId) ?? null;
     const role = roleForPlayerId(lineup, playerId);
-    const slot: FifaRinkSlotRect = FIFA_RINK_TEMPLATE_SLOTS_MOBILE[pos];
+    const slot: FifaRinkSlotRect = MATCH_LINEUP_POSTER_RINK_SLOTS[pos];
     const caption = player
       ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys)
       : "—";
     const bench = Boolean(options?.benchLabel);
+    const isCaptain = Boolean(playerId && captainId === playerId);
+    const isAssistant = Boolean(playerId && !isCaptain && assistantIds.includes(playerId));
 
     return (
       <div
@@ -170,6 +184,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<
               showPositionBadge={false}
               showRoleBadge={false}
               ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
+              poolKey={poolKey}
             />
           </div>
         </div>
@@ -177,7 +192,19 @@ export const MatchLineupJerseyExportPoster = forwardRef<
           {options?.benchLabel ? (
             <span className={styles.benchLabel}>{options.benchLabel}</span>
           ) : null}
-          <div className={styles.captionPlate}>{caption}</div>
+          <div className={styles.captionPlate}>
+            <span className={styles.captionName}>{caption}</span>
+            {isCaptain ? (
+              <span className={`${styles.captionBadge} ${styles.captionBadgeCaptain}`} aria-label="Kapitán">
+                C
+              </span>
+            ) : null}
+            {isAssistant ? (
+              <span className={`${styles.captionBadge} ${styles.captionBadgeAssistant}`} aria-label="Asistent kapitána">
+                A
+              </span>
+            ) : null}
+          </div>
           {renderRating(playerId)}
         </div>
       </div>
@@ -198,21 +225,26 @@ export const MatchLineupJerseyExportPoster = forwardRef<
       <div className={styles.shade} aria-hidden />
 
       <header className={styles.header}>
-        <span className={styles.host}>{host}</span>
-        <div className={styles.titleBlock}>
-          <h1 className={styles.title}>{lineupTitle.trim() || "Moje sestava na zápas"}</h1>
-        </div>
-        <span className={styles.logoFrame}>
+        <div className={styles.brandBlock}>
           {/* eslint-disable-next-line @next/next/no-img-element -- statické logo pro export PNG */}
-          <img src={SITE_LOGO_URL} alt="Lineup" className={styles.logo} decoding="sync" />
-        </span>
+          <img src={SITE_LOGO_URL} alt={SITE_BRAND} className={styles.logo} decoding="sync" />
+        </div>
+        <div className={styles.titleBlock}>
+          <p className={styles.eyebrow}>Sestava na zápas</p>
+          <h1 className={styles.title}>{lineupTitle.trim() || "Moje sestava"}</h1>
+        </div>
+        <span className={styles.host}>{host}</span>
       </header>
-      <div className={styles.headerRule} aria-hidden />
+      <div className={styles.headerAccent} aria-hidden>
+        <span className={styles.headerAccentBlue} />
+        <span className={styles.headerAccentWhite} />
+        <span className={styles.headerAccentRed} />
+      </div>
 
       <div className={styles.formation}>
         <FifaRinkChemistryLines
           edges={chemistryEdges}
-          slotLayout={FIFA_RINK_TEMPLATE_SLOTS_MOBILE}
+          slotLayout={MATCH_LINEUP_POSTER_RINK_SLOTS}
         />
         <span className={styles.lineLabel}>{MATCH_LINEUP_POSTER_GROUP_TITLE[group]}</span>
         {renderSlot(lineChunks.forwards[0], "lw")}

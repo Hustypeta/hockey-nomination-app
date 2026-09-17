@@ -11,7 +11,7 @@ import { FifaHomeSoutezeCarousel } from "@/components/fifa/FifaHomeSoutezeCarous
 
 export function FifaHomeContent() {
   return (
-    <FifaAppPage className="!p-3 lg:!p-4">
+    <FifaAppPage className="!p-3 lg-device:!p-4">
       <div className="fifa-home-page">
 
         {/* Levý sloupec: editor + tipsport */}
@@ -20,7 +20,7 @@ export function FifaHomeContent() {
             <FifaHomeEditorCard compact />
           </div>
           <div className="fifa-partner-slot fifa-home-slot fifa-home-slot--tipsport shrink-0">
-            <TipsportPartnerBanner compact className="!mt-0" />
+            <TipsportPartnerBanner compact className="fifa-design-tipsport-compact !mt-0" />
           </div>
         </div>
 

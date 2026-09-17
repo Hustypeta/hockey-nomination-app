@@ -216,22 +216,29 @@ async function seedGermanyMs2026FantasyRoster() {
 async function main() {
   console.log("Seeding database (MS 2026 kandidáti)...");
 
-  const rows = loadMs2026Candidates().map((p) => ({
-    id: p.id,
-    name: p.name,
-    position: p.position,
-    role: p.role,
-    club: p.club,
-    league: p.league,
-    jerseyNumber: p.jerseyNumber ?? null,
-  }));
-
-  await prisma.player.deleteMany({});
-  await prisma.player.createMany({
-    data: rows,
-  });
-
-  console.log(`Seeded ${rows.length} players from czech-ms-2026-candidates-80.json`);
+  // NEVER wipe players into all-repre_a by default — that destroys ELH/U20/U18 pools.
+  // Lineup data belongs to `npm run import:lineup-pools`. Opt-in only for emergency resets.
+  if (process.env.SEED_WIPE_LINEUP_PLAYERS?.trim() === "true") {
+    const rows = loadMs2026Candidates().map((p) => ({
+      id: p.id,
+      name: p.name,
+      position: p.position,
+      role: p.role,
+      club: p.club,
+      league: p.league,
+      jerseyNumber: p.jerseyNumber ?? null,
+      poolKey: "repre_a" as const,
+    }));
+    await prisma.player.deleteMany({});
+    await prisma.player.createMany({ data: rows });
+    console.log(`Seeded ${rows.length} players from czech-ms-2026-candidates-80.json (all repre_a).`);
+    console.warn("SEED_WIPE_LINEUP_PLAYERS=true — spusť ihned: npm run import:lineup-pools");
+  } else {
+    console.log(
+      "Skipping players wipe (zachovává poolKey). Lineup: npm run import:lineup-pools. " +
+        "Nouzový wipe: SEED_WIPE_LINEUP_PLAYERS=true."
+    );
+  }
 
   const removedSample = await prisma.msFantasyRosterPlayer.deleteMany({
     where: { code: { startsWith: "SAMPLE-" } },

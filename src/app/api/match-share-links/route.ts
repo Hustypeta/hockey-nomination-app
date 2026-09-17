@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.ok) {
       return NextResponse.json({ error: parsed.error }, { status: parsed.status });
     }
-    const { title, captainId, lineupStructure, defenseCount, allowExtraForward } = parsed;
+    const { title, captainId, lineupStructure, defenseCount, allowExtraForward, poolKey } = parsed;
 
     const slug = await allocateMatchShareLinkSlug(prisma, title, null);
 
@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
         title,
         defenseCount,
         allowExtraForward,
+        poolKey,
       },
     });
 
@@ -63,6 +64,7 @@ export async function POST(request: NextRequest) {
       slug,
       path,
       url: `${origin}${path}`,
+      poolKey,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);

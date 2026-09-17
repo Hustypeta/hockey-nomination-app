@@ -4,9 +4,23 @@ import { postInclude, serializePost } from "@/lib/community/serialize";
 import { ensureWelcomeForumPostPinned, sortPostsWithWelcomeFirst } from "@/lib/community/welcomeForumPost";
 import { prisma } from "@/lib/prisma";
 
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const WEEKLY_RANK_POOL = 80;
+
+export type ForumListWindow = "week";
+
+/** Weekly popular: likes and comments count equally; ties go to the newer post. */
+export function weeklyPopularScore(likeCount: number, commentCount: number): number {
+  return likeCount + commentCount;
+}
+
 export function parseCommunitySort(raw: string | null): CommunitySortMode {
-  if (raw === "top" || raw === "discussed") return raw;
+  if (raw === "top") return "top";
   return "new";
+}
+
+export function parseForumWindow(raw: string | null): ForumListWindow | null {
+  return raw === "week" ? "week" : null;
 }
 
 export async function listPublishedPosts(opts: {
@@ -15,9 +29,11 @@ export async function listPublishedPosts(opts: {
   q?: string;
   take: number;
   userId: string | null;
+  window?: ForumListWindow | null;
 }) {
   await ensureWelcomeForumPostPinned(prisma);
 
+  const since = opts.window === "week" ? new Date(Date.now() - WEEK_MS) : null;
   const where: Prisma.CommunityPostWhereInput = {
     status: "PUBLISHED",
     deletedAt: null,
@@ -30,29 +46,43 @@ export async function listPublishedPosts(opts: {
           ],
         }
       : {}),
+    ...(since ? { createdAt: { gte: since } } : {}),
   };
 
-  const orderBy: Prisma.CommunityPostOrderByWithRelationInput[] =
-    opts.sort === "top"
+  const weeklyRank = opts.window === "week";
+  const orderBy: Prisma.CommunityPostOrderByWithRelationInput[] = weeklyRank
+    ? [{ likeCount: "desc" }, { commentCount: "desc" }, { createdAt: "desc" }]
+    : opts.sort === "top"
       ? [{ pinnedAt: "desc" }, { score: "desc" }, { createdAt: "desc" }]
-      : opts.sort === "discussed"
-        ? [{ pinnedAt: "desc" }, { commentCount: "desc" }, { createdAt: "desc" }]
-        : [{ pinnedAt: "desc" }, { createdAt: "desc" }];
+      : [{ pinnedAt: "desc" }, { createdAt: "desc" }];
 
   const rows = await prisma.communityPost.findMany({
     where,
     orderBy,
-    take: opts.take,
+    take: weeklyRank ? Math.max(opts.take, WEEKLY_RANK_POOL) : opts.take,
     include: postInclude,
   });
 
+  const ranked = weeklyRank
+    ? [...rows]
+        .sort((a, b) => {
+          const scoreDiff =
+            weeklyPopularScore(b.likeCount, b.commentCount) -
+            weeklyPopularScore(a.likeCount, a.commentCount);
+          if (scoreDiff !== 0) return scoreDiff;
+          return b.createdAt.getTime() - a.createdAt.getTime();
+        })
+        .slice(0, opts.take)
+    : rows;
+
   const liked = opts.userId
     ? await prisma.communityPostLike.findMany({
-        where: { userId: opts.userId, postId: { in: rows.map((r) => r.id) } },
+        where: { userId: opts.userId, postId: { in: ranked.map((r) => r.id) } },
         select: { postId: true },
       })
     : [];
   const likedSet = new Set(liked.map((l) => l.postId));
+  const posts = ranked.map((r) => serializePost(r, likedSet.has(r.id)));
 
-  return sortPostsWithWelcomeFirst(rows.map((r) => serializePost(r, likedSet.has(r.id))));
+  return weeklyRank ? posts : sortPostsWithWelcomeFirst(posts);
 }

@@ -25,6 +25,8 @@ export function MatchLineupSaveShareModal({
   allowExtraForward,
   shareSlug,
   siteOrigin,
+  poolKey,
+  captainId = null,
 }: {
   open: boolean;
   onClose: () => void;
@@ -42,6 +44,8 @@ export function MatchLineupSaveShareModal({
   allowExtraForward: boolean;
   shareSlug?: string | null;
   siteOrigin: string;
+  poolKey?: string | null;
+  captainId?: string | null;
 }) {
   const canShare = valid && !saving;
 
@@ -118,6 +122,8 @@ export function MatchLineupSaveShareModal({
                 allowExtraForward={allowExtraForward}
                 shareSlug={shareSlug}
                 siteOrigin={siteOrigin}
+                poolKey={poolKey}
+                captainId={captainId}
                 disabled={!valid}
               />
             </div>
