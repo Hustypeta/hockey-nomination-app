@@ -5,3 +5,5 @@ nixPkgs = ["nodejs_20", "npm-9_x", "openssl"]
 # Doporučená náhrada za deprecated npm `production` (varování v logu při startu)
 [variables]
 NPM_CONFIG_PRODUCTION = "false"
+# Client bundle inlines this at build; keep on so hokejlineup.cz matches local.
+NEXT_PUBLIC_FIFA_DESIGN = "true"
