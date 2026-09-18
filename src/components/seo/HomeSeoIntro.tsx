@@ -29,11 +29,7 @@ export function HomeSeoIntro() {
         <Link href="/souteze/historical-lineup" className="text-cyan-200/90 underline-offset-2 hover:underline">
           historických sestav
         </Link>
-        . Prohlížet editor můžeš bez účtu — Google přihlášení až když chceš sestavu uložit. Přečti si{" "}
-        <Link href="/clanky" className="text-cyan-200/90 underline-offset-2 hover:underline">
-          články
-        </Link>
-        , koukni na{" "}
+        . Prohlížet editor můžeš bez účtu — Google přihlášení až když chceš sestavu uložit. Koukni na{" "}
         <Link href="/forum" className="text-cyan-200/90 underline-offset-2 hover:underline">
           fórum
         </Link>{" "}

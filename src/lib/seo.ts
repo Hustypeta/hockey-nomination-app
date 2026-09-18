@@ -215,26 +215,6 @@ export const PAGE_SEO = {
       "Komunita Lineup: sdílené sestavy, diskuze k nominaci a extralize, komentáře a reakce fanoušků.",
     path: "/forum",
   },
-  clanky: {
-    title: "Články",
-    description:
-      "Články o nominaci české reprezentace, kurzech na MS a tipy k sestavení hokejové soupisky.",
-    path: "/clanky",
-  },
-  rady: {
-    title: "Rady k nominaci české reprezentace",
-    description:
-      "Tipy k sestavení nominace českého týmu na MS: NHL posily, brankáři, power forwardi a kdo se vejde do soupisky.",
-    path: "/clanky/rady-k-nominaci",
-    datePublished: "2026-05-01T08:00:00.000Z",
-  },
-  kurzy: {
-    title: "Kurzy a analýza: Kdo ovládne MS v hokeji 2026?",
-    description:
-      "Srovnání sázkových kurzů na vítěze MS 2026 a rozbor favoritů — Kanada, USA, Švédsko, Švýcarsko, Finsko a Česko.",
-    path: "/clanky/kurzy-a-analyza-ms-2026",
-    datePublished: "2026-05-06T08:00:00.000Z",
-  },
   pravidla: {
     title: "Pravidla soutěže",
     description:

@@ -4,7 +4,7 @@ import { SiteShell } from "@/components/site/SiteShell";
 
 export const metadata: Metadata = {
   title: "Stránka nenalezena",
-  description: "Tato stránka na Lineupu neexistuje. Vrať se na úvod, editor sestavy nebo články.",
+  description: "Tato stránka na Lineupu neexistuje. Vrať se na úvod, editor sestavy nebo soutěže.",
   robots: { index: false, follow: true },
 };
 
@@ -13,7 +13,6 @@ const LINKS = [
   { href: "/sestava", label: "Editor nominace" },
   { href: "/zapasy/sestava", label: "Editor sestavy" },
   { href: "/souteze", label: "Soutěže" },
-  { href: "/clanky", label: "Články" },
   { href: "/forum", label: "Fórum" },
 ] as const;
 
@@ -27,7 +26,7 @@ export default function NotFound() {
         </h1>
         <p className="mt-3 max-w-md text-sm leading-relaxed text-white/70 sm:text-base">
           Tahle adresa na hokejlineup.cz neexistuje, nebo se přesunula. Zkus úvod, editor sestavy
-          nebo články.
+          nebo soutěže.
         </p>
         <nav className="mt-8 flex flex-wrap items-center justify-center gap-2" aria-label="Kam dál">
           {LINKS.map((item) => (

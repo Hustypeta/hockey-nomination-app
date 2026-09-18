@@ -30,12 +30,6 @@ export function SiteFooter() {
         <span aria-hidden className="text-white/25">
           ·
         </span>
-        <Link href="/clanky" className="underline-offset-4 hover:text-white/75 hover:underline">
-          Články
-        </Link>
-        <span aria-hidden className="text-white/25">
-          ·
-        </span>
         <Link href="/kdo-jsem" className="underline-offset-4 hover:text-white/75 hover:underline">
           Kdo jsem
         </Link>

@@ -35,7 +35,6 @@ import { PlayerPreviewModal } from "@/components/sestava/PlayerPreviewModal";
 import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 import { RosterUniquenessScore } from "@/components/sestava/RosterUniquenessScore";
 import { metaTrack } from "@/components/MetaPixel";
-import Link from "next/link";
 import { encodeSharePayload } from "@/lib/sharePayload";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import {
@@ -746,25 +745,6 @@ export function NominationBuilderPage() {
                 </div>
         
                 <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[90rem] flex-1 flex-col px-3 pt-2 sm:px-4 lg-device:px-5">
-                  <div className="mb-2 rounded-xl border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] p-3 sm:mb-3 sm:p-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="min-w-0">
-                        <p className={FIFA_KICKER}>Článek</p>
-                        <p className="mt-1 font-display text-lg text-[var(--fifa-text)] sm:text-xl">
-                          Rady k nominaci
-                        </p>
-                        <p className="mt-1 text-[11px] leading-snug text-[var(--fifa-text-muted)] sm:text-sm">
-                          Tipy k nominaci pro MS 2026 (NHL posily, AHL, brankáři a další).
-                        </p>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-2">
-                        <Link href="/clanky/rady-k-nominaci" className={`${FIFA_BTN_PRIMARY} px-4 py-2.5`}>
-                          Číst článek
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-        
                   {isAuthenticated && (
                     <div className={`mb-2 text-center sm:mb-3 ${FIFA_EDITOR_BANNER_SUCCESS}`}>
                       {contestSubmitted ? (
@@ -1135,30 +1115,6 @@ export function NominationBuilderPage() {
                 </div>
         
                 <div className="relative z-10 mx-auto max-w-[90rem] px-3 pb-5 pt-2 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
-                  <div className="mb-3 rounded-2xl border border-white/10 bg-gradient-to-r from-[#003087]/18 via-white/[0.03] to-[#c8102e]/14 p-4 shadow-[0_0_34px_rgba(0,48,135,0.14)] sm:mb-4 sm:p-5">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">
-                          ─îl├ínek
-                        </p>
-                        <p className="mt-1 font-display text-lg font-black text-white sm:text-xl">
-                          Rady k nominaci
-                        </p>
-                        <p className="mt-1 text-[11px] leading-snug text-white/70 sm:text-sm">
-                          Tipy k nominaci pro MS 2026 (NHL posily, AHL, brank├í┼Öi a dal┼í├ş).
-                        </p>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-2">
-                        <Link
-                          href="/clanky/rady-k-nominaci"
-                          className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2.5 text-sm font-black text-white shadow-[0_16px_44px_rgba(0,0,0,0.22)] ring-1 ring-white/15 hover:brightness-110"
-                        >
-                          ─î├şst ─Źl├ínek
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-        
                   {isAuthenticated && (
                     <div className="mb-3 rounded-xl border border-emerald-500/30 bg-emerald-950/25 px-3 py-2 text-center text-[11px] text-emerald-50/95 shadow-[0_0_24px_rgba(16,185,129,0.12)] sm:mb-4 sm:px-4 sm:py-2.5 sm:text-sm">
                       {contestSubmitted ? (

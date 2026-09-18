@@ -43,6 +43,9 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       { source: "/logo.png", destination: "/images/logo/logo.png", permanent: false },
+      { source: "/clanky", destination: "/", permanent: true },
+      { source: "/clanky/rady-k-nominaci", destination: "/sestava", permanent: true },
+      { source: "/clanky/kurzy-a-analyza-ms-2026", destination: "/bracket", permanent: true },
     ];
   },
   async headers() {
