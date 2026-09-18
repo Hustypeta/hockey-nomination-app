@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
@@ -426,6 +426,14 @@ export function MatchLineupBuilderPage() {
    * i jako interní krok ze „Sdílet" (pokud nic není ještě uložené).
    */
   const saveShare = async (): Promise<string | null> => {
+    if (authStatus !== "authenticated") {
+      const callback =
+        typeof window !== "undefined"
+          ? `${window.location.pathname}${window.location.search}`
+          : "/zapasy/sestava";
+      await signIn("google", { callbackUrl: callback });
+      return null;
+    }
     if (!shareTitle.trim()) {
       toast.error("Doplň název sestavy.");
       return null;
@@ -454,6 +462,14 @@ export function MatchLineupBuilderPage() {
       const data: unknown = await r.json().catch(() => ({}));
       const err = (data as { error?: unknown } | null)?.error;
       if (!r.ok) {
+        if (r.status === 401) {
+          const callback =
+            typeof window !== "undefined"
+              ? `${window.location.pathname}${window.location.search}`
+              : "/zapasy/sestava";
+          await signIn("google", { callbackUrl: callback });
+          return null;
+        }
         toast.error(typeof err === "string" ? err : "Uložení selhalo.");
         return null;
       }

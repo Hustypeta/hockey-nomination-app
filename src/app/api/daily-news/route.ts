@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { enrichDailyNewsImages } from "@/lib/dailyNews/enrichImages";
-import { fetchDailyNews } from "@/lib/dailyNews/fetchDailyNews";
+import { fetchDailyNews, pickHomeNews } from "@/lib/dailyNews/fetchDailyNews";
 import { DAILY_NEWS_HOME_COUNT } from "@/lib/dailyNews/feeds";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,12 @@ export async function GET(request: Request) {
     (limit <= DAILY_NEWS_HOME_COUNT && searchParams.get("enrich") !== "0");
 
   try {
-    let items = await fetchDailyNews(limit);
+    let items = await fetchDailyNews(limit <= DAILY_NEWS_HOME_COUNT ? Math.max(limit * 4, 20) : limit);
+    if (limit <= DAILY_NEWS_HOME_COUNT) {
+      items = pickHomeNews(items, limit);
+    } else {
+      items = items.slice(0, limit);
+    }
     if (enrich) {
       items = await enrichDailyNewsImages(items, Math.min(limit, DAILY_NEWS_HOME_COUNT));
     }

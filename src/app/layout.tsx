@@ -6,6 +6,7 @@ import { CompleteRegistrationTracker } from "@/components/CompleteRegistrationTr
 import { MetaPixel } from "@/components/MetaPixel";
 import { UmamiAnalytics } from "@/components/UmamiAnalytics";
 import { Toaster } from "sonner";
+import { JsonLd } from "@/components/seo/JsonLd";
 import {
   SITE_APPLE_TOUCH_ICON_URL,
   SITE_ICON_URL,
@@ -14,6 +15,13 @@ import {
   SITE_OG_DEFAULT_IMAGE_WIDTH,
   toCanonicalHokejlineupUrl,
 } from "@/lib/siteBranding";
+import {
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_ALT,
+  DEFAULT_TITLE,
+  organizationJsonLd,
+  websiteJsonLd,
+} from "@/lib/seo";
 import { resolveFacebookAppId } from "@/lib/facebookApp";
 
 const SITE_URL = "https://hokejlineup.cz";
@@ -40,15 +48,13 @@ function metadataBaseUrl(): URL {
 /** fb:app_id — `metadata.facebook.appId` (správné `property=`) + env `FACEBOOK_APP_ID` (viz {@link resolveFacebookAppId}). */
 export async function generateMetadata(): Promise<Metadata> {
   const facebookAppId = resolveFacebookAppId();
-  const previewText = "Editor sestavy, pick'em, fantasy a hodnocení hráčů.";
-  const defaultTitle = "Lineup – hokejový editor sestavy";
   return {
     metadataBase: metadataBaseUrl(),
     title: {
-      default: defaultTitle,
+      default: DEFAULT_TITLE,
       template: "%s | Lineup",
     },
-    description: previewText,
+    description: DEFAULT_DESCRIPTION,
     // Brand favicon: `public/images/logo/icon.png` (+ `app/favicon.ico`, `app/icon.png`, `public/apple-touch-icon.png`).
     icons: {
       icon: [{ url: SITE_ICON_URL, type: "image/png", sizes: "512x512" }],
@@ -62,19 +68,21 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "cs_CZ",
       siteName: "Lineup",
-      description: previewText,
+      title: DEFAULT_TITLE,
+      description: DEFAULT_DESCRIPTION,
       images: [
         {
           url: SITE_OG_DEFAULT_IMAGE_URL,
           width: SITE_OG_DEFAULT_IMAGE_WIDTH,
           height: SITE_OG_DEFAULT_IMAGE_HEIGHT,
-          alt: "Sestav si nominaci na MS 2026 a vyhraj dres — Lineup · hokejlineup.cz",
+          alt: DEFAULT_OG_ALT,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      description: previewText,
+      title: DEFAULT_TITLE,
+      description: DEFAULT_DESCRIPTION,
       images: [SITE_OG_DEFAULT_IMAGE_URL],
     },
   };
@@ -85,14 +93,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "Lineup",
-    url: SITE_URL,
-    description: "Editor sestavy, pick'em, fantasy a hodnocení hráčů.",
-  } as const;
-
   return (
     <html lang="cs" suppressHydrationWarning>
       <head>
@@ -103,11 +103,8 @@ export default function RootLayout({
         className="relative antialiased min-h-screen bg-[#05060f] font-sans text-white"
       >
         <FrozenArenaAmbientBackground />
-        <script
-          type="application/ld+json"
-          // JSON-LD musí být čisté JSON string (ne JSX object)
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={websiteJsonLd()} />
         <AuthProvider>
           <div className="relative z-[1]">
           <MetaPixel />

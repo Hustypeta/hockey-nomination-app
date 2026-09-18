@@ -17,7 +17,7 @@ import { isMsFantasyVisibleToUsers } from "@/lib/msFantasyConfig";
 export const metadata: Metadata = {
   title: "Fantasy MS",
   description: "Fantasy nominace hráče na každý hrací den mistrovství světa.",
-  alternates: { canonical: "/fantasy" },
+  robots: { index: false, follow: false },
   openGraph: {
     title: "Fantasy MS",
     description: "Fantasy nominace hráče na každý hrací den mistrovství světa.",

@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { FifaDailyNewsPage } from "@/components/fifa/FifaDailyNewsPage";
 import { SiteShell } from "@/components/site/SiteShell";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Lineup News",
-  description:
-    "Zprávy a přestupy ze světa hokeje — agregace ze Sport.cz, Livesport.cz, ČT Sport a NHL.com/cs.",
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.dailyNews);
 
 export default function DailyNewsPage() {
   return (

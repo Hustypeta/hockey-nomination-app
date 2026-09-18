@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { ContestRulesContent } from "@/components/ContestRulesContent";
 import { SiteShell } from "@/components/site/SiteShell";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Pravidla soutěže",
-  description:
-    "Pravidla nominace na MS v hokeji 2026: bezplatná účast, časový bonus, bodování, ceny a vyhodnocení.",
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.pravidla);
 
 export default function PravidlaSoutezePage() {
   return (

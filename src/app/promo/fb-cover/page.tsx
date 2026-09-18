@@ -25,7 +25,7 @@ export default function PromoFbCoverPage() {
           </p>
           <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <Link
-              href="/?cover=true"
+              href="/cover"
               className="inline-flex items-center rounded-lg bg-white/[0.08] px-3 py-2 font-mono text-[12px] font-semibold text-sky-100 underline-offset-4 transition hover:bg-white/[0.12] hover:underline"
             >
               /?cover=true

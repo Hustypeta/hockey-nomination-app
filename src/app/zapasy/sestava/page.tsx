@@ -1,23 +1,16 @@
-import { getServerSession } from "next-auth/next";
+import type { Metadata } from "next";
 import { Suspense } from "react";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { MatchLineupBuilderPage } from "@/components/match/MatchLineupBuilderPage";
 import { SiteShell } from "@/components/site/SiteShell";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata = {
-  title: "Editor sestavy",
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.matchEditor);
 
 function SestavaFallback() {
   return null;
 }
 
-export default async function MatchLineupBuilderRoute() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    redirect("/auth/signin?callbackUrl=/zapasy/sestava");
-  }
+export default function MatchLineupBuilderRoute() {
   return (
     <SiteShell showFooter={false}>
       <Suspense fallback={<SestavaFallback />}>
@@ -26,4 +19,3 @@ export default async function MatchLineupBuilderRoute() {
     </SiteShell>
   );
 }
-

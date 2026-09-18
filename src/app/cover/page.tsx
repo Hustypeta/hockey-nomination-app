@@ -1,6 +1,12 @@
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { SocialCoverPage } from "@/components/social/SocialCoverPage";
 
-/** Krátká URL → cover plátno na úvodní stránce. */
+export const metadata: Metadata = {
+  title: "Cover — Lineup",
+  description: "Statické plátno pro snímek obrazovky — Facebook cover.",
+  robots: { index: false, follow: false },
+};
+
 export default function CoverShortcutPage() {
-  redirect("/?cover=true");
+  return <SocialCoverPage />;
 }

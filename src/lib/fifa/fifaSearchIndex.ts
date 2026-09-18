@@ -70,6 +70,7 @@ export const FIFA_SEARCH_INDEX: FifaSearchEntry[] = [
   { href: "/ucet/pickem", label: "Můj Pick'em", hint: "Účet", icon: ListChecks, keywords: ["pickem", "tipy"] },
 
   // Články a info
+  { href: "/clanky", label: "Články", hint: "Články", icon: FileText, keywords: ["blog", "texty", "analyza"] },
   { href: "/clanky/kurzy-a-analyza-ms-2026", label: "Kurzy a analýza MS 2026", hint: "Článek", icon: FileText, keywords: ["sazky", "kurzy", "analyza", "tipsport"] },
   { href: "/clanky/rady-k-nominaci", label: "Rady k nominaci", hint: "Článek", icon: FileText, keywords: ["tipy", "navod", "jak sestavit"] },
   { href: "/kdo-jsem", label: "Kdo jsem", hint: "Info", icon: UserCircle, keywords: ["o projektu", "about", "autor"] },

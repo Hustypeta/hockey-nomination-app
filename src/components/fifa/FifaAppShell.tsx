@@ -20,7 +20,7 @@ export function FifaAppShell({ children, designPreview = false }: { children: Re
         </p>
       ) : null}
       <header className="z-50 shrink-0 border-b border-[var(--fifa-border)] bg-[var(--fifa-bg-chrome)]">
-        <div className="fifa-header-bar flex items-center gap-3 px-4 py-1.5 lg:px-5">
+        <div className="fifa-header-bar relative flex items-center gap-3 px-4 py-1.5 lg:px-5">
           <div className="flex shrink-0 items-center gap-2.5">
             <Link
               href={designPreview ? "/design/home" : "/"}

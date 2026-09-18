@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { FifaNovinkyPage } from "@/components/fifa/FifaNovinkyPage";
 import { SiteShell } from "@/components/site/SiteShell";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Novinky na platformě Lineup",
-  description: "Co je nového v Hokej Lineup — redesign, funkce a změny v aplikaci.",
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.novinky);
 
 export default function NovinkyPage() {
   return (

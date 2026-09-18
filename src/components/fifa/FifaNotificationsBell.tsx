@@ -42,6 +42,12 @@ export function FifaNotificationsBell() {
   }, []);
 
   useEffect(() => {
+    const seenAt = localStorage.getItem(NOTIFICATIONS_SEEN_KEY);
+    if (!seenAt) {
+      markSiteNewsNotificationsSeen();
+      setUnread(0);
+      return;
+    }
     refreshUnread();
   }, [refreshUnread]);
 

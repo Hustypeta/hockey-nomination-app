@@ -6,38 +6,9 @@ import { SitePageHero } from "@/components/site/SitePageHero";
 import { ZebricekPageContent } from "@/components/contest/ZebricekPageContent";
 import { ZebricekHubContent } from "@/components/zebricek/ZebricekHubContent";
 import { isFifaDesignEnabled } from "@/lib/fifa/fifaDesignEnabled";
-import {
-  SITE_OG_DEFAULT_IMAGE_HEIGHT,
-  SITE_OG_DEFAULT_IMAGE_URL,
-  SITE_OG_DEFAULT_IMAGE_WIDTH,
-} from "@/lib/siteBranding";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Žebříček soutěží MS 2026",
-  description: "Výsledky nominace a Fantasy MS 2026 — body a pořadí účastníků.",
-  alternates: { canonical: "/zebricek" },
-  openGraph: {
-    title: "Žebříček soutěží MS 2026",
-    description: "Výsledky nominace a Fantasy MS 2026 — body a pořadí účastníků.",
-    url: "/zebricek",
-    type: "website",
-    locale: "cs_CZ",
-    images: [
-      {
-        url: SITE_OG_DEFAULT_IMAGE_URL,
-        width: SITE_OG_DEFAULT_IMAGE_WIDTH,
-        height: SITE_OG_DEFAULT_IMAGE_HEIGHT,
-        alt: "Lineup · hokejlineup.cz",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Žebříček soutěží MS 2026",
-    description: "Výsledky nominační soutěže a Fantasy MS 2026.",
-    images: [SITE_OG_DEFAULT_IMAGE_URL],
-  },
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.zebricek);
 
 export default function ZebricekPage() {
   if (isFifaDesignEnabled()) {

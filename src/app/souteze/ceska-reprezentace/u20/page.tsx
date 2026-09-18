@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { FifaSubHubContent } from "@/components/fifa/FifaSubHubContent";
 import { SiteShell } from "@/components/site/SiteShell";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "U20 — Česká reprezentace",
-  description: "Turnaje reprezentace do 20 let.",
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.u20);
 
 export default function CeskaReprezentaceU20Page() {
   return (

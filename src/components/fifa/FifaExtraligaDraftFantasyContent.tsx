@@ -69,9 +69,9 @@ export function FifaExtraligaDraftFantasyContent() {
             </div>
 
             <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--fifa-text-secondary)] lg:text-base">
-
-              Soutěž připravujeme. Brzy zde bude draft fantasy české extraligy.
-
+              Draft Fantasy české extraligy 2026/27 — poskládáš tým z extraligových hráčů a
+              porovnáš ho s ostatními fanoušky. Soutěž spouštíme se startem sezóny. Do té doby
+              můžeš skládat sestavy v editoru.
             </p>
 
           </div>

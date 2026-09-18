@@ -17,6 +17,7 @@ export function FifaGlobalSearch() {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [active, setActive] = useState(0);
   const wrapRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,6 +77,7 @@ export function FifaGlobalSearch() {
       const dest = target ?? results[active] ?? results[0];
       if (!dest) return;
       setOpen(false);
+      setMobileOpen(false);
       setQuery("");
       inputRef.current?.blur();
       router.push(dest.href);
@@ -96,12 +98,35 @@ export function FifaGlobalSearch() {
       go();
     } else if (e.key === "Escape") {
       setOpen(false);
+      setMobileOpen(false);
       inputRef.current?.blur();
     }
   };
 
   return (
-    <div ref={wrapRef} className="fifa-global-search relative mx-auto hidden min-w-0 max-w-xs flex-1 md:block lg:max-w-sm">
+    <>
+      <button
+        type="button"
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] text-[var(--fifa-text-secondary)] md:hidden ${
+          mobileOpen ? "hidden" : ""
+        }`}
+        aria-label="Hledat"
+        onClick={() => {
+          setMobileOpen(true);
+          setOpen(true);
+          requestAnimationFrame(() => inputRef.current?.focus());
+        }}
+      >
+        <Search className="h-4 w-4" aria-hidden />
+      </button>
+      <div
+        ref={wrapRef}
+        className={`fifa-global-search relative mx-auto min-w-0 max-w-xs flex-1 lg:max-w-sm ${
+          mobileOpen
+            ? "absolute inset-x-3 top-1.5 z-[80] max-w-none md:static md:inset-auto"
+            : "hidden md:block"
+        }`}
+      >
       <div className="flex items-center gap-2 rounded-[var(--fifa-radius-md)] border border-[var(--fifa-border)] bg-[var(--fifa-bg-elevated)] px-3 py-2 text-xs text-[var(--fifa-text-muted)] focus-within:border-[var(--fifa-border-strong)]">
         <Search className="h-3.5 w-3.5 shrink-0 opacity-60" aria-hidden />
         <input
@@ -118,6 +143,19 @@ export function FifaGlobalSearch() {
           aria-label="Hledat na webu"
           className="w-full bg-transparent text-[var(--fifa-text)] outline-none placeholder:text-[var(--fifa-text-muted)]"
         />
+        {mobileOpen ? (
+          <button
+            type="button"
+            className="shrink-0 text-[11px] font-semibold text-[var(--fifa-text-secondary)] md:hidden"
+            onClick={() => {
+              setMobileOpen(false);
+              setOpen(false);
+              setQuery("");
+            }}
+          >
+            Zavřít
+          </button>
+        ) : null}
       </div>
 
       {open && results.length > 0 ? (
@@ -153,5 +191,6 @@ export function FifaGlobalSearch() {
         </div>
       ) : null}
     </div>
+    </>
   );
 }

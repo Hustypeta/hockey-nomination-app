@@ -9,6 +9,10 @@ export function FifaSoutezeHubContent() {
     <FifaAppPage>
       <div className="flex min-h-0 flex-col max-lg-device:h-auto lg-device:h-full">
         <FifaPageHeader kicker="Rozcestí" title="Soutěže" />
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--fifa-text-secondary)]">
+          Vyber soutěž: historické české sestavy, Draft Fantasy extraligy 2026/27, nebo nástroje
+          k reprezentaci. MS 2026 je uzavřené — sezónní dění teď táhne extraliga a historické soupisky.
+        </p>
         <div className="fifa-souteze-hub-grid mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg-device:min-h-0 lg-device:flex-1 lg-device:grid-cols-3 lg-device:gap-4">
           <FifaCeskaReprezentaceHubCard />
           <FifaExtraligaDraftFantasyHubCard />

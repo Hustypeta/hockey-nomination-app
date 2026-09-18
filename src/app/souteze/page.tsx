@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { FifaSoutezeHubContent } from "@/components/fifa/FifaSoutezeHubContent";
 import { SiteShell } from "@/components/site/SiteShell";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
+import { FifaSoutezeHubContent } from "@/components/fifa/FifaSoutezeHubContent";
 
-export const metadata: Metadata = {
-  title: "Soutěže",
-  description: "Rozcestí soutěží — MS 2026, Extraliga, squad building.",
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.souteze);
 
 export default function SoutezePage() {
   return (

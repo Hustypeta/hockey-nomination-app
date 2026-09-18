@@ -20,7 +20,7 @@ const FETCH_HEADERS = {
 };
 
 let cache: { at: number; v: number; items: DailyNewsItem[] } | null = null;
-const CACHE_VERSION = 11;
+const CACHE_VERSION = 12;
 
 function normalizeTitleKey(title: string): string {
   return normalizeForMatch(title)
@@ -118,6 +118,44 @@ function parseDate(pubDate: string | null): number {
   if (!pubDate) return 0;
   const t = Date.parse(pubDate);
   return Number.isFinite(t) ? t : 0;
+}
+
+function czechHockeyRelevance(item: DailyNewsItem): number {
+  const text = normalizeForMatch(`${item.title} ${item.summary}`);
+  let score = 0;
+  if (/extraliga|tipsport/.test(text)) score += 8;
+  if (/reprezentac|narodn[iy] tym|cesk[aeyi]/.test(text)) score += 7;
+  if (/nominac|sestav/.test(text)) score += 4;
+  if (/\bms\b|mistrovstv/.test(text)) score += 3;
+  if (item.source === "NHL.com/cs") score -= 2;
+  if (
+    /florida|tampa|vegas|edmonton|winnipeg|buffalo|seattle|ottawa/.test(text) &&
+    !/cesk|repre|hron|pastrnak|zach|dostal/.test(text)
+  ) {
+    score -= 8;
+  }
+  return score;
+}
+
+export function pickHomeNews(items: DailyNewsItem[], limit: number): DailyNewsItem[] {
+  const scored = items.map((item) => ({ item, score: czechHockeyRelevance(item) }));
+  const preferred = scored
+    .filter((row) => row.score >= 4)
+    .sort((a, b) => parseDate(b.item.publishedAt) - parseDate(a.item.publishedAt));
+  const rest = scored
+    .filter((row) => row.score < 4)
+    .sort((a, b) => parseDate(b.item.publishedAt) - parseDate(a.item.publishedAt));
+  const out: DailyNewsItem[] = [];
+  for (const row of preferred) {
+    if (out.length >= Math.min(2, limit)) break;
+    out.push(row.item);
+  }
+  for (const row of [...preferred, ...rest]) {
+    if (out.includes(row.item)) continue;
+    out.push(row.item);
+    if (out.length >= limit) break;
+  }
+  return out;
 }
 
 function toDailyNewsItem(
@@ -246,8 +284,8 @@ export async function fetchDailyNews(limit = 24): Promise<DailyNewsItem[]> {
 }
 
 export async function fetchDailyNewsForHome(): Promise<DailyNewsItem[]> {
-  const all = await fetchDailyNews(Math.max(DAILY_NEWS_HOME_COUNT * 3, 15));
-  return all.slice(0, Math.max(DAILY_NEWS_HOME_COUNT, all.length));
+  const all = await fetchDailyNews(Math.max(DAILY_NEWS_HOME_COUNT * 4, 20));
+  return pickHomeNews(all, DAILY_NEWS_HOME_COUNT);
 }
 
 function getFallbackNews(): DailyNewsItem[] {

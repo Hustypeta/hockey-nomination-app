@@ -34,6 +34,18 @@ export function FifaHistoricalLineupContent() {
                 subtitle={HISTORICAL_LINEUP_SUBTITLE}
               />
             </div>
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--fifa-text-secondary)] lg:text-base">
+              Sestav si slavné české týmy z historie: Nagano 1998, zlato z MS nebo klubové sestavy
+              z extraligy. Editor historických soupisek připravujeme — zatím můžeš skládat{" "}
+              <Link href="/sestava" className={FIFA_LINK}>
+                nominaci reprezentace
+              </Link>{" "}
+              a{" "}
+              <Link href="/zapasy/sestava" className={FIFA_LINK}>
+                sestavu na zápas
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </div>

@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { FifaSubHubContent } from "@/components/fifa/FifaSubHubContent";
 import { SiteShell } from "@/components/site/SiteShell";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "MS 2027 — Česká reprezentace",
-  description: "Mistrovství světa v ledním hokeji 2027 v Německu.",
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.ms2027);
 
 export default function SoutezeMs2027Page() {
   return (

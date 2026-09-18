@@ -1,24 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "@/components/site/SiteHeader";
-import { SiteFooter } from "@/components/site/SiteFooter";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SiteShell } from "@/components/site/SiteShell";
+import { articleJsonLd, breadcrumbJsonLd, pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Rady k nominaci",
-  description:
-    "Článek: Rady k nominaci — tipy k sestavení nominace českého týmu na MS 2026 ve Švýcarsku.",
-  alternates: { canonical: "/clanky/rady-k-nominaci" },
-  openGraph: { url: "/clanky/rady-k-nominaci" },
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.rady);
 
 export default function ArticleNominationTipsPage() {
   return (
-    <main className="min-h-screen bg-transparent text-white">
-      <div className="sticky top-0 z-40">
-        <SiteHeader />
-      </div>
-
-      <div className="mx-auto max-w-4xl px-4 py-10">
+    <SiteShell>
+      <JsonLd
+        data={articleJsonLd({
+          headline: PAGE_SEO.rady.title,
+          description: PAGE_SEO.rady.description,
+          path: PAGE_SEO.rady.path,
+          datePublished: PAGE_SEO.rady.datePublished,
+        })}
+      />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Úvod", path: "/" },
+          { name: "Články", path: "/clanky" },
+          { name: PAGE_SEO.rady.title, path: PAGE_SEO.rady.path },
+        ])}
+      />
+      <article className="mx-auto max-w-4xl px-4 py-10">
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">
             Článek
@@ -66,10 +72,8 @@ export default function ArticleNominationTipsPage() {
             </Link>
           </div>
         </div>
-      </div>
-
-      <SiteFooter />
-    </main>
+      </article>
+    </SiteShell>
   );
 }
 

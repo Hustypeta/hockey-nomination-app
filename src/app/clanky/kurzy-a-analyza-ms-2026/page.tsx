@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "@/components/site/SiteHeader";
-import { SiteFooter } from "@/components/site/SiteFooter";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SiteShell } from "@/components/site/SiteShell";
+import { articleJsonLd, breadcrumbJsonLd, pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Kurzy a analýza: Kdo ovládne MS v hokeji 2026?",
-  description:
-    "Kurzy a analýza MS 2026 — srovnání kurzů na vítěze a rozbor hlavních favoritů.",
-  alternates: { canonical: "/clanky/kurzy-a-analyza-ms-2026" },
-  openGraph: { url: "/clanky/kurzy-a-analyza-ms-2026" },
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.kurzy);
 
 const TABLE = [
   { team: "Kanada", odds: "2,60 – 3,00", position: "Hlavní favorit" },
@@ -22,12 +17,23 @@ const TABLE = [
 
 export default function ArticleOddsAnalysisPage() {
   return (
-    <main className="min-h-screen bg-transparent text-white">
-      <div className="sticky top-0 z-40">
-        <SiteHeader />
-      </div>
-
-      <div className="mx-auto max-w-4xl px-4 py-10">
+    <SiteShell>
+      <JsonLd
+        data={articleJsonLd({
+          headline: PAGE_SEO.kurzy.title,
+          description: PAGE_SEO.kurzy.description,
+          path: PAGE_SEO.kurzy.path,
+          datePublished: PAGE_SEO.kurzy.datePublished,
+        })}
+      />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Úvod", path: "/" },
+          { name: "Články", path: "/clanky" },
+          { name: PAGE_SEO.kurzy.title, path: PAGE_SEO.kurzy.path },
+        ])}
+      />
+      <article className="mx-auto max-w-4xl px-4 py-10">
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">
             Článek
@@ -113,10 +119,8 @@ export default function ArticleOddsAnalysisPage() {
             </Link>
           </div>
         </div>
-      </div>
-
-      <SiteFooter />
-    </main>
+      </article>
+    </SiteShell>
   );
 }
 

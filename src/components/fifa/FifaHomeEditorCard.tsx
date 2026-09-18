@@ -34,11 +34,11 @@ export function FifaHomeEditorCard({ compact = false }: { compact?: boolean }) {
         <p
           className={`fifa-image-text-muted leading-snug ${
             compact
-              ? "mt-1.5 line-clamp-2 text-sm leading-relaxed lg:line-clamp-4 lg:text-base"
+              ? "mt-1.5 line-clamp-3 text-sm leading-relaxed lg:line-clamp-4 lg:text-base"
               : "mt-3 text-lg lg:text-xl"
           }`}
         >
-          Poskládej si sestavu na zápas v novém editoru sestavy, ukládej si svoje týmy a sdílej je s ostatními fanoušky.
+          Skládej sestavu bez účtu. Přihlášení přes Google až ve chvíli, kdy ji chceš uložit a sdílet.
         </p>
         <span className={`fifa-btn-primary ${compact ? "mt-2.5 px-3 py-1.5 text-xs" : "mt-5 px-6 py-3 text-base lg:text-lg"}`}>
           Otevřít editor

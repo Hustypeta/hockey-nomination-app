@@ -2,17 +2,37 @@ const site = "https://hokejlineup.cz";
 
 export const revalidate = 3600;
 
-const staticRoutes = [
-  "/",
-  "/sestava",
-  "/fantasy",
-  "/clanky/rady-k-nominaci",
-  "/clanky/kurzy-a-analyza-ms-2026",
-  "/pravidla-souteze",
-  "/zebricek",
-  "/bracket",
-  "/kdo-jsem",
-  "/ochrana-udaju",
+type SitemapEntry = {
+  path: string;
+  lastmod: string;
+  changefreq: "daily" | "weekly" | "monthly";
+  priority: string;
+};
+
+/**
+ * lastmod = reálné datum poslední obsahové změny, ne „teď“.
+ * Při úpravě stránky aktualizuj datum tady.
+ */
+const publicRoutes: SitemapEntry[] = [
+  { path: "/", lastmod: "2026-09-18", changefreq: "daily", priority: "1.0" },
+  { path: "/sestava", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.9" },
+  { path: "/zapasy/sestava", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.9" },
+  { path: "/souteze", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.8" },
+  { path: "/souteze/historical-lineup", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.8" },
+  { path: "/souteze/extraliga", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.8" },
+  { path: "/souteze/ceska-reprezentace/a-tym", lastmod: "2026-09-01", changefreq: "monthly", priority: "0.6" },
+  { path: "/forum", lastmod: "2026-09-18", changefreq: "daily", priority: "0.7" },
+  { path: "/clanky", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.8" },
+  { path: "/clanky/rady-k-nominaci", lastmod: "2026-05-01", changefreq: "monthly", priority: "0.7" },
+  { path: "/clanky/kurzy-a-analyza-ms-2026", lastmod: "2026-05-06", changefreq: "monthly", priority: "0.7" },
+  { path: "/pravidla-souteze", lastmod: "2026-05-15", changefreq: "monthly", priority: "0.5" },
+  { path: "/zebricek", lastmod: "2026-06-01", changefreq: "weekly", priority: "0.6" },
+  { path: "/kdo-jsem", lastmod: "2026-05-01", changefreq: "monthly", priority: "0.4" },
+  { path: "/ochrana-udaju", lastmod: "2026-05-01", changefreq: "monthly", priority: "0.3" },
+  { path: "/novinky", lastmod: "2026-06-28", changefreq: "weekly", priority: "0.5" },
+  { path: "/daily-news", lastmod: "2026-09-18", changefreq: "daily", priority: "0.6" },
+  { path: "/hraci", lastmod: "2026-09-06", changefreq: "weekly", priority: "0.6" },
+  { path: "/bracket", lastmod: "2026-05-15", changefreq: "monthly", priority: "0.3" },
 ];
 
 function escapeXml(s: string) {
@@ -26,21 +46,18 @@ function escapeXml(s: string) {
 
 export async function GET(): Promise<Response> {
   try {
-    const nowIso = new Date().toISOString();
     const body =
       `<?xml version="1.0" encoding="UTF-8"?>` +
       `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` +
-      staticRoutes
-        .map((path) => {
-          const loc = `${site}${path}`;
-          const changefreq = path === "/" ? "daily" : "weekly";
-          const priority = path === "/" ? "1.0" : path === "/sestava" ? "0.9" : "0.7";
+      publicRoutes
+        .map((route) => {
+          const loc = `${site}${route.path}`;
           return (
             `<url>` +
             `<loc>${escapeXml(loc)}</loc>` +
-            `<lastmod>${escapeXml(nowIso)}</lastmod>` +
-            `<changefreq>${changefreq}</changefreq>` +
-            `<priority>${priority}</priority>` +
+            `<lastmod>${escapeXml(route.lastmod)}</lastmod>` +
+            `<changefreq>${route.changefreq}</changefreq>` +
+            `<priority>${route.priority}</priority>` +
             `</url>`
           );
         })
@@ -55,11 +72,9 @@ export async function GET(): Promise<Response> {
       },
     });
   } catch {
-    // Absolute fallback: never 5xx (Google treats it as "can't read").
     return new Response(
       `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`,
-      { status: 200, headers: { "Content-Type": "application/xml; charset=utf-8" } }
+      { status: 200, headers: { "Content-Type": "application/xml; charset=utf-8" } },
     );
   }
 }
-

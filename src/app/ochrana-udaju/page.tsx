@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { PrivacyPolicyContent } from "@/components/PrivacyPolicyContent";
 import { SiteShell } from "@/components/site/SiteShell";
+import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Zásady ochrany osobních údajů",
-  description:
-    "Zásady ochrany osobních údajů pro hokejlineup.cz a Lineup — Google přihlášení, účet, nominace, soutěže, cookies, GDPR.",
-};
+export const metadata: Metadata = pageMetadata(PAGE_SEO.gdpr);
 
 export default function OchranaUdajuPage() {
   return (
