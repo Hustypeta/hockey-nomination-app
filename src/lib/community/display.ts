@@ -8,6 +8,14 @@ export function authorInitials(name: string | null | undefined): string {
   return trimmed.slice(0, 2).toUpperCase();
 }
 
+/** One-line comment snippet for Instagram-style card previews. */
+export function previewCommentText(bodyMd: string, maxLength = 72): string {
+  const plain = bodyMd.replace(/\*\*([^*]+)\*\*/g, "$1").replace(/\s+/g, " ").trim();
+  if (!plain) return "";
+  if (plain.length <= maxLength) return plain;
+  return `${plain.slice(0, maxLength - 1).trimEnd()}…`;
+}
+
 export function formatRelativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60_000);

@@ -30,6 +30,7 @@ export function CommunityPostCard({
 }) {
   const authorLabel = post.author.displayName;
   const open = onOpenDetail ?? onSelect ?? (() => {});
+  const previewComments = post.commentCount > 0 ? (post.previewComments ?? []).slice(0, 2) : [];
 
   if (fifaUi) {
     return (
@@ -100,6 +101,22 @@ export function CommunityPostCard({
             <span>{post.likeCount} lajků</span>
             {post.commentCount > 0 ? <span>{post.commentCount} komentářů</span> : null}
           </p>
+
+          {previewComments.length > 0 ? (
+            <button
+              type="button"
+              onClick={open}
+              className="fifa-forum-post-card__previews"
+              aria-label={`Komentáře (${post.commentCount})`}
+            >
+              {previewComments.map((comment) => (
+                <span key={comment.id} className="fifa-forum-post-card__preview">
+                  <span className="fifa-forum-post-card__preview-author">{comment.authorName}</span>{" "}
+                  <span className="fifa-forum-post-card__preview-text">{comment.text}</span>
+                </span>
+              ))}
+            </button>
+          ) : null}
 
           <button type="button" onClick={open} className="fifa-forum-post-card__caption">
             <span className="fifa-forum-post-card__caption-author">{authorLabel}</span>

@@ -1,6 +1,6 @@
 import type { CommunityPostCategory, Prisma } from "@prisma/client";
 import type { CommunitySortMode } from "@/lib/community/categories";
-import { postInclude, serializePost } from "@/lib/community/serialize";
+import { communityAuthorSelect, postInclude, serializeCommentPreviews, serializePost } from "@/lib/community/serialize";
 import { ensureWelcomeForumPostPinned, sortPostsWithWelcomeFirst } from "@/lib/community/welcomeForumPost";
 import { prisma } from "@/lib/prisma";
 
@@ -60,7 +60,20 @@ export async function listPublishedPosts(opts: {
     where,
     orderBy,
     take: weeklyRank ? Math.max(opts.take, WEEKLY_RANK_POOL) : opts.take,
-    include: postInclude,
+    include: {
+      ...postInclude,
+      comments: {
+        where: { status: "PUBLISHED" },
+        orderBy: { createdAt: "desc" },
+        take: 2,
+        select: {
+          id: true,
+          bodyMd: true,
+          isStaffComment: true,
+          author: { select: communityAuthorSelect },
+        },
+      },
+    },
   });
 
   const ranked = weeklyRank
@@ -82,7 +95,9 @@ export async function listPublishedPosts(opts: {
       })
     : [];
   const likedSet = new Set(liked.map((l) => l.postId));
-  const posts = ranked.map((r) => serializePost(r, likedSet.has(r.id)));
+  const posts = ranked.map((r) =>
+    serializePost(r, likedSet.has(r.id), serializeCommentPreviews(r.comments)),
+  );
 
   return weeklyRank ? posts : sortPostsWithWelcomeFirst(posts);
 }

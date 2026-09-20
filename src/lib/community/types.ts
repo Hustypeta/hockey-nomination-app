@@ -41,6 +41,14 @@ export type CommunityPostDto = {
     snapshot: CommunityAttachmentSnapshotV1;
   }[];
   likedByMe: boolean;
+  /** Latest 1–2 comments for feed cards. Omitted or empty when the post has none. */
+  previewComments?: CommunityCommentPreviewDto[];
+};
+
+export type CommunityCommentPreviewDto = {
+  id: string;
+  authorName: string;
+  text: string;
 };
 
 export type CommunityCommentDto = {

@@ -3507,6 +3507,35 @@ header:has(.fifa-top-nav-root--open) {
   color: var(--fifa-text-muted);
 }
 
+.fifa-forum-post-card__previews {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.12rem;
+  margin: 0.2rem 0 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fifa-forum-post-card__preview {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--fifa-text-secondary);
+}
+
+.fifa-forum-post-card__preview-author {
+  margin-right: 0.35rem;
+  font-weight: 700;
+  color: var(--fifa-text);
+}
+
 .fifa-forum-post-card__caption-excerpt {
   margin-top: 0.35rem;
   display: -webkit-box;
@@ -4481,9 +4510,14 @@ header:has(.fifa-top-nav-root--open) {
     margin-top: 0;
   }
 
-  .fifa-forum-post-card__caption {
+  .fifa-forum-post-card__caption,
+  .fifa-forum-post-card__previews {
     grid-column: 1 / -1;
     margin-top: 0;
+  }
+
+  .fifa-forum-post-card__previews {
+    margin-top: 0.05rem;
   }
 }
 
@@ -4578,7 +4612,8 @@ header:has(.fifa-top-nav-root--open) {
     padding: 0.4rem 0.6rem 0.5rem;
   }
 
-  .fifa-forum-post-card__caption {
+  .fifa-forum-post-card__caption,
+  .fifa-forum-post-card__previews {
     display: none;
   }
 }
@@ -5688,10 +5723,10 @@ header:has(.fifa-top-nav-root--open) {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.3rem;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0.4rem 0.7rem 0.5rem;
+    padding: 0.28rem 0.7rem 0.32rem;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
@@ -5704,13 +5739,13 @@ header:has(.fifa-top-nav-root--open) {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.28rem;
   }
 
   .fifa-forum-mobile-filters__rule {
     flex: 0 0 1px;
     align-self: stretch;
-    min-height: 1.4rem;
+    min-height: 1.15rem;
     background: rgba(255, 255, 255, 0.12);
   }
 
@@ -5719,13 +5754,13 @@ header:has(.fifa-top-nav-root--open) {
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    min-height: 2.75rem;
+    min-height: 2.2rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 999px;
     background: rgba(8, 12, 22, 0.55);
-    padding: 0.45rem 0.85rem;
+    padding: 0.28rem 0.7rem;
     color: var(--fifa-text-secondary);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
   }
 
@@ -5740,8 +5775,8 @@ header:has(.fifa-top-nav-root--open) {
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    min-height: 2.75rem;
-    min-width: 2.75rem;
+    min-height: 2.2rem;
+    min-width: 2.2rem;
     margin-left: auto;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 999px;
@@ -5782,7 +5817,7 @@ header:has(.fifa-top-nav-root--open) {
   }
 
   .fifa-forum-page {
-    --forum-mobile-card-chrome: 10.25rem;
+    --forum-mobile-card-chrome: calc(16rem + env(safe-area-inset-bottom, 0px));
   }
 
   .fifa-forum-layout {
@@ -5814,7 +5849,7 @@ header:has(.fifa-top-nav-root--open) {
   .fifa-forum-feed-stage__split {
     flex-direction: column;
     gap: 0;
-    padding: 0.25rem 0.65rem 0.45rem;
+    padding: 0.2rem 0.65rem 0.35rem;
     overflow: hidden;
   }
 
@@ -5854,6 +5889,7 @@ header:has(.fifa-top-nav-root--open) {
     overflow: hidden;
     overscroll-behavior: auto;
     scroll-snap-type: none;
+    padding: 0.15rem 0 calc(1.35rem + env(safe-area-inset-bottom, 0px));
   }
 
   .fifa-forum-wall {
@@ -5864,7 +5900,7 @@ header:has(.fifa-top-nav-root--open) {
     overscroll-behavior-y: contain;
     scroll-snap-type: none;
     scroll-padding-block: 0;
-    padding: 0.15rem 0 calc(0.65rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.15rem 0 calc(1.35rem + env(safe-area-inset-bottom, 0px));
     -webkit-overflow-scrolling: touch;
   }
 
@@ -5894,8 +5930,8 @@ header:has(.fifa-top-nav-root--open) {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
-    gap: 0.1rem 0.65rem;
-    padding: 0.3rem 0.65rem 0.4rem;
+    gap: 0.22rem 0.65rem;
+    padding: 0.4rem 0.7rem 0.55rem;
   }
 
   .fifa-forum-post-card__counts {
@@ -5903,9 +5939,19 @@ header:has(.fifa-top-nav-root--open) {
     font-size: 0.75rem;
   }
 
+  .fifa-forum-post-card__previews {
+    grid-column: 1 / -1;
+    margin-top: 0.12rem;
+    gap: 0.14rem;
+  }
+
+  .fifa-forum-post-card__preview {
+    font-size: 0.75rem;
+  }
+
   .fifa-forum-post-card__caption {
     grid-column: 1 / -1;
-    margin-top: 0.05rem;
+    margin-top: 0.12rem;
   }
 
   .fifa-forum-post-card__header {
@@ -5914,8 +5960,8 @@ header:has(.fifa-top-nav-root--open) {
   }
 
   .fifa-forum-post-card__action {
-    min-width: 2.75rem;
-    min-height: 2.75rem;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
   }
 
   .fifa-forum-feed-carousel__arrow {

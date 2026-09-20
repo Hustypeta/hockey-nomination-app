@@ -1,5 +1,11 @@
 import type { Prisma } from "@prisma/client";
-import type { CommunityAttachmentSnapshotV1, CommunityCommentDto, CommunityPostDto } from "@/lib/community/types";
+import { previewCommentText } from "@/lib/community/display";
+import type {
+  CommunityAttachmentSnapshotV1,
+  CommunityCommentDto,
+  CommunityCommentPreviewDto,
+  CommunityPostDto,
+} from "@/lib/community/types";
 import { publicLeaderboardDisplayName } from "@/lib/publicUserLabel";
 
 export const communityAuthorSelect = {
@@ -47,7 +53,37 @@ export function parseSnapshot(json: unknown): CommunityAttachmentSnapshotV1 {
   return { version: 1, kind: "INLINE_SNAPSHOT" };
 }
 
-export function serializePost(row: CommunityPostRow, likedByMe: boolean): CommunityPostDto {
+type CommentPreviewRow = {
+  id: string;
+  bodyMd: string;
+  isStaffComment?: boolean;
+  author: CommunityAuthorRow;
+};
+
+export function serializeCommentPreview(row: CommentPreviewRow): CommunityCommentPreviewDto | null {
+  const text = previewCommentText(row.bodyMd);
+  if (!text) return null;
+  return {
+    id: row.id,
+    authorName: serializeAuthor(row.author, { isStaffPost: row.isStaffComment }).displayName,
+    text,
+  };
+}
+
+export function serializeCommentPreviews(rows: CommentPreviewRow[] | undefined): CommunityCommentPreviewDto[] {
+  if (!rows?.length) return [];
+  return [...rows]
+    .reverse()
+    .map(serializeCommentPreview)
+    .filter((row): row is CommunityCommentPreviewDto => row !== null)
+    .slice(-2);
+}
+
+export function serializePost(
+  row: CommunityPostRow,
+  likedByMe: boolean,
+  previewComments: CommunityCommentPreviewDto[] = [],
+): CommunityPostDto {
   const isStaffPost = row.isStaffPost;
   return {
     id: row.id,
@@ -72,6 +108,7 @@ export function serializePost(row: CommunityPostRow, likedByMe: boolean): Commun
       snapshot: parseSnapshot(a.snapshot),
     })),
     likedByMe,
+    ...(previewComments.length ? { previewComments } : {}),
   };
 }
 

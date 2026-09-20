@@ -39,7 +39,7 @@ import type {
   CommunityMemberDto,
   CommunityPostDto,
 } from "@/lib/community/types";
-import { authorInitials, formatRelativeTime } from "@/lib/community/display";
+import { authorInitials, formatRelativeTime, previewCommentText } from "@/lib/community/display";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { useContestStats } from "@/hooks/useContestStats";
 import { FIFA_BTN_SECONDARY } from "@/lib/fifa/fifaUiClasses";
@@ -285,7 +285,21 @@ export function FifaForumContent() {
       setCommentTexts((prev) => ({ ...prev, [slug]: "" }));
       setReplyToBySlug((prev) => ({ ...prev, [slug]: null }));
       setPosts((prev) =>
-        prev.map((p) => (p.slug === slug ? { ...p, commentCount: p.commentCount + 1 } : p)),
+        prev.map((p) => {
+          if (p.slug !== slug) return p;
+          const previewText = previewCommentText(data.comment!.bodyMd);
+          const nextPreview = previewText
+            ? [
+                ...(p.previewComments ?? []),
+                {
+                  id: data.comment!.id,
+                  authorName: data.comment!.author.displayName,
+                  text: previewText,
+                },
+              ].slice(-2)
+            : p.previewComments;
+          return { ...p, commentCount: p.commentCount + 1, previewComments: nextPreview };
+        }),
       );
     } finally {
       setCommentBusySlug(null);
