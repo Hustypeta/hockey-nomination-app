@@ -1,21 +1,17 @@
 import type { LineupStructure, Player } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
+import { getAmbiguousLastNameKeys, jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 
 /** Příjmení velkými písmeny + klub (stejná posloupnost jako `buildNamesOnlyRoster`). */
 export type NominationWebStyleRow = { name: string; club: string };
-
-function lastUpper(name: string) {
-  const parts = name.trim().split(/\s+/);
-  const raw = parts[parts.length - 1] || name;
-  return raw.toUpperCase();
-}
 
 export function nominationWebStyleRowFromId(players: Player[], id: string | null): NominationWebStyleRow {
   if (!id) return { name: "—", club: "—" };
   const p = players.find((x) => x.id === id);
   if (!p) return { name: "—", club: "—" };
   const club = p.club?.trim() ?? "";
-  return { name: lastUpper(p.name), club: club.length > 0 ? club : "—" };
+  const name = jerseyNameForPlayer(p, getAmbiguousLastNameKeys(players)).toLocaleUpperCase("cs-CZ");
+  return { name, club: club.length > 0 ? club : "—" };
 }
 
 /** Pořadí jako soupiska jen jména: 3G, 8D, 14F (25 řádků). */

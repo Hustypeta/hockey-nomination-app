@@ -7,7 +7,7 @@ import { Search, Filter, Info } from "lucide-react";
 import type { Player, Position } from "@/types";
 import { POSITION_LABELS, POSITION_LIMITS, ROLE_LABELS } from "@/types";
 import { poolPositionSquareLabel } from "@/lib/poolPositionLabel";
-import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 import { PlayerAvatar } from "./PlayerAvatar";
 import {
   FIFA_EDITOR_INPUT,
@@ -43,21 +43,23 @@ function CompactPickCardBody({
   rate,
   fifaUi,
   ambiguousKeys,
+  hidePickRate = false,
 }: {
   player: Player;
   rate: number;
   fifaUi: boolean;
   ambiguousKeys?: ReadonlySet<string> | null;
+  hidePickRate?: boolean;
 }) {
   const posLabel = poolPositionSquareLabel(player);
-  const displayName = jerseyNameOnJersey(player.name, ambiguousKeys);
+  const displayName = jerseyNameForPlayer(player, ambiguousKeys);
   return (
     <div className="fifa-pool-card__compact-stack flex min-w-0 flex-col justify-center gap-0.5 pr-4">
       <div className="flex min-w-0 items-center justify-between gap-1">
         <span className="fifa-pool-card__pos shrink-0 font-mono font-bold leading-none tabular-nums text-[var(--fifa-accent-text)]">
           {posLabel}
         </span>
-        <PickRateBadge rate={rate} fifaUi={fifaUi} />
+        {hidePickRate ? null : <PickRateBadge rate={rate} fifaUi={fifaUi} />}
       </div>
       <p className="fifa-pool-card__name min-w-0 text-left leading-snug" title={player.name}>
         {displayName}
@@ -190,6 +192,7 @@ function DraggableCard({
   compactInline,
   ambiguousKeys,
   fifaUi = false,
+  hidePickRate = false,
 }: {
   player: Player;
   disabled: boolean;
@@ -205,6 +208,7 @@ function DraggableCard({
   compactInline?: boolean;
   ambiguousKeys?: ReadonlySet<string> | null;
   fifaUi?: boolean;
+  hidePickRate?: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `drag-player-${player.id}`,
@@ -278,7 +282,7 @@ function DraggableCard({
           onClick={() => canInteract && onAdd()}
         >
           {fifaUi && simplePickList && compactInline ? (
-            <CompactPickCardBody player={player} rate={rate} fifaUi={fifaUi} ambiguousKeys={ambiguousKeys} />
+            <CompactPickCardBody player={player} rate={rate} fifaUi={fifaUi} ambiguousKeys={ambiguousKeys} hidePickRate={hidePickRate} />
           ) : fifaUi && simplePickList ? (
             <div className="flex min-w-0 items-center gap-1">
               <div className="flex shrink-0 flex-col items-center gap-0.5">
@@ -289,7 +293,7 @@ function DraggableCard({
                   imageUrl={player.imageUrl}
                   size="xs"
                 />
-                <PickRateBadge rate={rate} fifaUi />
+                {hidePickRate ? null : <PickRateBadge rate={rate} fifaUi />}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="fifa-pool-card__name line-clamp-2 break-words text-pretty">{player.name}</p>
@@ -358,11 +362,11 @@ function DraggableCard({
           <Info className={`${fifaUi ? "h-2.5 w-2.5" : "h-3.5 w-3.5"}`} />
         </button>
       </div>
-      {fifaUi && !compactInline ? (
+      {fifaUi && !compactInline && !hidePickRate ? (
         <div className="fifa-pool-card__rate-bar">
           <div className="fifa-pool-card__rate-fill" style={{ width: `${Math.round(clamp01(rate / 100) * 100)}%` }} aria-hidden />
         </div>
-      ) : !fifaUi ? (
+      ) : !fifaUi && !hidePickRate ? (
         <div className="mt-1 h-[2px] w-full overflow-hidden rounded-full bg-white/10">
           <div
             className="h-full rounded-full bg-sky-300/70"
@@ -387,6 +391,7 @@ const TapCard = memo(function TapCard({
   compactInline,
   ambiguousKeys,
   fifaUi = false,
+  hidePickRate = false,
 }: {
   player: Player;
   disabled: boolean;
@@ -399,6 +404,7 @@ const TapCard = memo(function TapCard({
   compactInline?: boolean;
   ambiguousKeys?: ReadonlySet<string> | null;
   fifaUi?: boolean;
+  hidePickRate?: boolean;
 }) {
   const lim = POSITION_LIMITS[player.position];
   const cur = counts[player.position];
@@ -423,7 +429,7 @@ const TapCard = memo(function TapCard({
         disabled={!canInteract}
       >
         {fifaUi && simplePickList && compactInline ? (
-          <CompactPickCardBody player={player} rate={rate} fifaUi={fifaUi} ambiguousKeys={ambiguousKeys} />
+          <CompactPickCardBody player={player} rate={rate} fifaUi={fifaUi} ambiguousKeys={ambiguousKeys} hidePickRate={hidePickRate} />
         ) : fifaUi && simplePickList ? (
           <div className="flex min-w-0 items-center gap-1 pr-4">
             <div className="flex shrink-0 flex-col items-center gap-0.5">
@@ -434,7 +440,7 @@ const TapCard = memo(function TapCard({
                 imageUrl={player.imageUrl}
                 size="xs"
               />
-              <PickRateBadge rate={rate} fifaUi />
+              {hidePickRate ? null : <PickRateBadge rate={rate} fifaUi />}
             </div>
             <div className="min-w-0 flex-1">
               <p className="fifa-pool-card__name line-clamp-2 break-words text-pretty">{player.name}</p>
@@ -498,11 +504,11 @@ const TapCard = memo(function TapCard({
         <Info className={`${fifaUi ? "h-2.5 w-2.5" : "h-3.5 w-3.5"}`} />
       </button>
 
-      {fifaUi && !compactInline ? (
+      {fifaUi && !compactInline && !hidePickRate ? (
         <div className="fifa-pool-card__rate-bar">
           <div className="fifa-pool-card__rate-fill" style={{ width: `${Math.round(clamp01(rate / 100) * 100)}%` }} aria-hidden />
         </div>
-      ) : !fifaUi ? (
+      ) : !fifaUi && !hidePickRate ? (
         <div className="mt-1 h-[2px] w-full overflow-hidden rounded-full bg-white/10">
           <div
             className="h-full rounded-full bg-sky-300/70"
@@ -541,6 +547,8 @@ interface PlayerPoolPanelProps {
   compactInline?: boolean;
   /** Volitelná nápověda při prázdném poolu (schema vs. opravdu prázdný klub). */
   emptyHint?: string | null;
+  /** Historical Lineup — bez % popularity a řazení podle ní. */
+  hidePickRate?: boolean;
 }
 
 export function PlayerPoolPanel({
@@ -558,6 +566,7 @@ export function PlayerPoolPanel({
   gridColumns = 2,
   compactInline = false,
   emptyHint = null,
+  hidePickRate = false,
 }: PlayerPoolPanelProps) {
   const fifaUi = uiVariant === "fifa";
   const denseGrid = gridColumns === 3 || compactInline;
@@ -597,8 +606,15 @@ export function PlayerPoolPanel({
       );
     }
     // pick rate sort
+    if (hidePickRate) {
+      return [...list].sort((a, b) => {
+        const al = a.name.trim().split(/\s+/).pop() ?? a.name;
+        const bl = b.name.trim().split(/\s+/).pop() ?? b.name;
+        return al.localeCompare(bl, "cs") || a.name.localeCompare(b.name, "cs");
+      });
+    }
     return sortPlayersByPickRate(list, pickSort === "popular" ? "desc" : "asc");
-  }, [players, tab, league, q, forcedPosition, pickSort, simplePickList]);
+  }, [players, tab, league, q, forcedPosition, pickSort, simplePickList, hidePickRate]);
 
   const canAdd = (player: Player) => {
     if (usedIds.has(player.id)) return false;
@@ -737,7 +753,7 @@ export function PlayerPoolPanel({
   const searchToolbarBlock = searchSortInline ? (
     <div className={`fifa-editor-pool-toolbar flex min-w-0 items-center ${compactInline ? "gap-1" : "gap-1.5"}`}>
       {searchBlock}
-      {sortSelect}
+      {hidePickRate ? null : sortSelect}
     </div>
   ) : null;
 
@@ -782,6 +798,7 @@ export function PlayerPoolPanel({
                   compactInline={compactInline}
                   ambiguousKeys={ambiguousLastNameKeys}
                   fifaUi={fifaUi}
+                  hidePickRate={hidePickRate}
                   onAdd={() => onAddPlayer(player)}
                   onInfo={() => onPreview(player)}
                 />
@@ -796,6 +813,7 @@ export function PlayerPoolPanel({
                   compactInline={compactInline}
                   ambiguousKeys={ambiguousLastNameKeys}
                   fifaUi={fifaUi}
+                  hidePickRate={hidePickRate}
                   onAdd={() => onAddPlayer(player)}
                   onInfo={() => onPreview(player)}
                 />

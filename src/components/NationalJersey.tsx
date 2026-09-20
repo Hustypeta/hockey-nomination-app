@@ -3,7 +3,7 @@
 import type { Player } from "@/types";
 import { CzechHockeyCrest } from "@/components/CzechHockeyCrest";
 import { JerseySilhouetteShape } from "@/components/JerseySilhouetteShape";
-import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 
 export interface NationalJerseyProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
@@ -129,7 +129,7 @@ export function NationalJersey({
                 className={`max-w-[98%] truncate font-display font-semibold uppercase leading-tight text-white ${nameCls}`}
                 style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9), 0 0 14px rgba(0,0,0,0.45)" }}
               >
-                {jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys)}
+                {jerseyNameForPlayer(player, ambiguousJerseyLastKeys)}
               </div>
               {player.position !== "G" && player.role && (
                 <div

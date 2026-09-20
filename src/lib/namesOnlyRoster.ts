@@ -1,26 +1,19 @@
 import type { LineupStructure, Player } from "@/types";
 import { normalizeLineupStructure } from "@/lib/lineupUtils";
-import {
-  getAmbiguousLastNameKeys,
-  jerseyNameOnJersey,
-} from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 
-function lastUpper(name: string) {
-  const parts = name.trim().split(/\s+/);
-  const raw = parts[parts.length - 1] || name;
-  return raw.toLocaleUpperCase("cs-CZ");
-}
-
-/** Příjmení velkými písmeny (stejné jako export nominace). */
+/** Příjmení velkými písmeny; u jmenovců v soutěži i iniciála („T. TOMEK“). */
 export function rosterLastDisplay(players: Player[], id: string | null): string {
   if (!id) return "—";
   const p = players.find((x) => x.id === id);
-  return p ? lastUpper(p.name) : "—";
+  if (!p) return "—";
+  return jerseyNameForPlayer(p, getAmbiguousLastNameKeys(players)).toLocaleUpperCase("cs-CZ");
 }
 
 /**
- * Jména pro jeden zobrazený plakát: příjmení, iniciála pouze u jmenovců
- * v téže sestavě. Klíče z jersey utility porovnávají i českou diakritiku.
+ * Jména pro jeden zobrazený plakát: příjmení, u jmenovců iniciála.
+ * Klíče bereme z celého předaného seznamu hráčů (pool / soutěž), ne jen z hráčů na ledě,
+ * a `player.jerseyLast` z API má přednost (ELH napříč kluby).
  */
 export function rosterDisplayNamesForIds(
   players: Player[],
@@ -31,12 +24,12 @@ export function rosterDisplayNamesForIds(
   const shownPlayers = shownIds
     .map((id) => byId.get(id))
     .filter((player): player is Player => Boolean(player));
-  const ambiguousKeys = getAmbiguousLastNameKeys(shownPlayers);
+  const ambiguousKeys = getAmbiguousLastNameKeys(players);
 
   return new Map(
     shownPlayers.map((player) => [
       player.id,
-      jerseyNameOnJersey(player.name, ambiguousKeys).toLocaleUpperCase("cs-CZ"),
+      jerseyNameForPlayer(player, ambiguousKeys).toLocaleUpperCase("cs-CZ"),
     ])
   );
 }

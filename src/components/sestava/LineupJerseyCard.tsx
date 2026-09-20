@@ -1,7 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
-import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import {
@@ -110,7 +110,7 @@ export function LineupJerseyCard({
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
   const numCls = `${numberClass[size]}${numberMod ? ` ${numberMod}` : ""}`;
   const topOverlay = overlayVariant === "lower" ? overlayTopLowerClass[size] : overlayTopClass[size];
-  const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
+  const ln = !empty ? jerseyNameForPlayer(player, ambiguousJerseyLastKeys) : "";
   const namePlate =
     !empty && nameOnJersey ? jerseyNameplateNameProps(ln, onRink ? "rink" : "card") : { lines: [] as string[], className: "", style: {} };
   const namePlateStyle =

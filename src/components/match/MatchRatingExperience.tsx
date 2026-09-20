@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
-import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
 import { Share2 } from "lucide-react";
 import { MatchOfficialLineupView } from "@/components/match/MatchOfficialLineupView";
@@ -277,7 +277,7 @@ function RatingSheet({
     }
   };
 
-  const displayName = jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys);
+  const displayName = jerseyNameForPlayer(player, ambiguousJerseyLastKeys);
 
   return (
     <div

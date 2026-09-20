@@ -271,6 +271,7 @@ export function NominationBuilderPage() {
             league: r.league,
             jerseyNumber: typeof r.jerseyNumber === "number" || r.jerseyNumber === null ? r.jerseyNumber : undefined,
             imageUrl: typeof r.imageUrl === "string" || r.imageUrl === null ? r.imageUrl : undefined,
+            jerseyLast: typeof r.jerseyLast === "string" && r.jerseyLast.trim() ? r.jerseyLast.trim() : undefined,
             pick_rate: Math.max(0, Math.min(100, pick_rate)),
           };
         };

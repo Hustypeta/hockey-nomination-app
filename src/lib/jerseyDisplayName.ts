@@ -1,5 +1,3 @@
-"use client";
-
 import type { Player } from "@/types";
 
 let ambiguousLastNames: ReadonlySet<string> | null = null;
@@ -30,12 +28,13 @@ function extractLastName(fullName: string): string {
   return parts[parts.length - 1] ?? fullName.trim();
 }
 
-/** Množina klíčů příjmení, která se na soupisce vyskytuje více než jednou. */
-export function getAmbiguousLastNameKeys(players: Player[]): ReadonlySet<string> {
+/** Množina klíčů příjmení, která se v zadaných jménech vyskytuje více než jednou. */
+export function getAmbiguousLastNameKeysFromNames(names: Iterable<string>): ReadonlySet<string> {
   const counts = new Map<string, number>();
-  for (const p of players) {
-    const ln = extractLastName(p.name);
+  for (const name of names) {
+    const ln = extractLastName(name);
     const k = lastNameKeyForAmbiguity(ln);
+    if (!k) continue;
     counts.set(k, (counts.get(k) ?? 0) + 1);
   }
   const amb = new Set<string>();
@@ -43,6 +42,11 @@ export function getAmbiguousLastNameKeys(players: Player[]): ReadonlySet<string>
     if (n > 1) amb.add(k);
   }
   return amb;
+}
+
+/** Množina klíčů příjmení, která se na soupisce vyskytuje více než jednou. */
+export function getAmbiguousLastNameKeys(players: Player[]): ReadonlySet<string> {
+  return getAmbiguousLastNameKeysFromNames(players.map((p) => p.name));
 }
 
 export function initJerseyNameDisambiguation(players: Player[]) {
@@ -62,4 +66,29 @@ export function jerseyNameOnJersey(fullName: string, ambiguousKeys?: ReadonlySet
   if (!amb.has(key)) return ln;
   const initial = extractFirstNameInitial(fullName);
   return initial ? `${initial}. ${ln}` : ln;
+}
+
+/**
+ * Jméno na dresu / v poolu / na plakátu.
+ * `player.jerseyLast` je spočítané na serveru z celé soutěže (ELH napříč kluby),
+ * takže jmenovci jako T. Tomek zůstanou i v klubovém editoru.
+ */
+export function jerseyNameForPlayer(
+  player: Player,
+  ambiguousKeys?: ReadonlySet<string> | null
+): string {
+  if (player.jerseyLast?.trim()) return player.jerseyLast.trim();
+  return jerseyNameOnJersey(player.name, ambiguousKeys);
+}
+
+/** Připojí `jerseyLast` podle duplicit příjmení v `ambiguousKeys` (nebo v samotném seznamu). */
+export function withJerseyLastNames(
+  players: Player[],
+  ambiguousKeys?: ReadonlySet<string> | null
+): Player[] {
+  const keys = ambiguousKeys ?? getAmbiguousLastNameKeys(players);
+  return players.map((p) => ({
+    ...p,
+    jerseyLast: jerseyNameOnJersey(p.name, keys),
+  }));
 }

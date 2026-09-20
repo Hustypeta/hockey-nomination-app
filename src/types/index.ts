@@ -16,6 +16,11 @@ export interface Player {
   pick_rate: number;
   /** Sekce editoru (repre_a, elh:…); volitelné u starších payloadů. */
   poolKey?: string;
+  /**
+   * Příjmení na dresu / plakátu. U jmenovců v soutěži včetně iniciály („T. Tomek“).
+   * Počítá API z celého ELH poolu, ne jen z aktuálního klubu.
+   */
+  jerseyLast?: string;
 }
 
 export const ROLE_LABELS: Record<Role, string> = {

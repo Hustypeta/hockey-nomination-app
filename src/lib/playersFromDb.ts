@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { leagueForClub } from "@/lib/clubLeague";
-import { DEFAULT_LINEUP_POOL, isKnownPoolKey } from "@/lib/lineupPools";
+import { DEFAULT_LINEUP_POOL, isElhPoolKey, isKnownPoolKey } from "@/lib/lineupPools";
 import { loadMs2026Candidates } from "@/lib/ms2026Candidates";
+import {
+  getAmbiguousLastNameKeysFromNames,
+  withJerseyLastNames,
+} from "@/lib/jerseyDisplayName";
 import type { Player } from "@/types";
 
 function dbRowToPlayer(row: {
@@ -51,6 +55,31 @@ export type PlayersLoadResult = {
   source: "db" | "fallback" | "empty";
 };
 
+/**
+ * Příjmení s více hráči ve stejné soutěži: celá ELH u klubového poolu, jinak jen daný pool.
+ * Díky tomu má Tomáš Tomek v Kladně „T. Tomek“, i když je v klubu sám.
+ */
+async function loadAmbiguousLastNameKeysForPool(poolKey: string): Promise<ReadonlySet<string>> {
+  const where = isElhPoolKey(poolKey)
+    ? { poolKey: { startsWith: "elh:" } }
+    : { poolKey };
+  const rows = await prisma.player.findMany({
+    where,
+    select: { name: true },
+  });
+  return getAmbiguousLastNameKeysFromNames(rows.map((r) => r.name));
+}
+
+async function withScopeJerseyLastNames(poolKey: string, players: Player[]): Promise<Player[]> {
+  if (players.length === 0) return players;
+  try {
+    const keys = await loadAmbiguousLastNameKeysForPool(poolKey);
+    return withJerseyLastNames(players, keys);
+  } catch {
+    return withJerseyLastNames(players);
+  }
+}
+
 /** Hráči pro editor sestavy — primárně z DB podle poolKey. */
 export async function loadPlayersForPool(poolKey: string): Promise<Player[]> {
   const { players } = await loadPlayersForPoolDetailed(poolKey);
@@ -76,7 +105,8 @@ export async function loadPlayersForPoolDetailed(poolKey: string): Promise<Playe
       orderBy: [{ position: "asc" }, { name: "asc" }],
     });
     if (rows.length > 0) {
-      return { players: rows.map(dbRowToPlayer), issue: null, source: "db" };
+      const players = await withScopeJerseyLastNames(key, rows.map(dbRowToPlayer));
+      return { players, issue: null, source: "db" };
     }
 
     // Empty requested pool — detect classic "everything dumped into repre_a"
@@ -109,8 +139,9 @@ export async function loadPlayersForPoolDetailed(poolKey: string): Promise<Playe
 
   // Fallback: A-tým z JSON jen když DB odpovídá, ale pool je prázdný (před prvním importem)
   if (key === DEFAULT_LINEUP_POOL) {
+    const fallback = loadMs2026Candidates().map((p) => ({ ...p, poolKey: key }));
     return {
-      players: loadMs2026Candidates().map((p) => ({ ...p, poolKey: key })),
+      players: withJerseyLastNames(fallback),
       issue: null,
       source: "fallback",
     };

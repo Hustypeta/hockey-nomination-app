@@ -1,7 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
-import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import {
@@ -104,7 +104,7 @@ export function PremiumJerseySlotCard({
   const numberMod = jerseyNumberModifierClassForPool(resolvedPoolKey);
   const nameMod = jerseyNameModifierClassForPool(resolvedPoolKey);
   const numStr = !empty ? jerseyNumberForPlayer(player) : "";
-  const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
+  const ln = !empty ? jerseyNameForPlayer(player, ambiguousJerseyLastKeys) : "";
   const namePlate = !empty ? jerseyNameplateNameProps(ln, "premium") : null;
   const emptyCenterLabel = (emptyPlaceholder ?? positionLabel).trim() || "?";
   const showClear = !empty && typeof onClear === "function";

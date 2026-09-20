@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import type { LineupStructure, Player } from "@/types";
 import { collectMatchLineupIds } from "@/lib/matchLineupValidation";
-import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 
 type RatingMap = Record<string, { avg: number; count: number }>;
 
@@ -192,7 +192,7 @@ export function MatchRatingClient({
         const defaultFromFans =
           r.count > 0 && Number.isFinite(r.avg) && r.avg > 0 && r.avg <= 10 ? roundDeci(r.avg) : 7;
         const draft = draftById[pid] ?? (typeof mine === "number" ? roundDeci(mine) : defaultFromFans);
-        const displayName = jerseyNameOnJersey(p.name, ambiguousJerseyLastKeys);
+        const displayName = jerseyNameForPlayer(p, ambiguousJerseyLastKeys);
         const fullName = p.name === displayName ? p.name : `${p.name} (${displayName})`;
         const dirty = touched.has(pid);
         return (

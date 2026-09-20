@@ -5,7 +5,7 @@ import type { LineupStructure, Player } from "@/types";
 import { LineupJerseyCard } from "@/components/sestava/LineupJerseyCard";
 import { FifaRinkChemistryLines } from "@/components/fifa/FifaRinkChemistryLines";
 import { FifaRinkShieldFrame } from "@/components/fifa/FifaRinkShieldFrame";
-import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 import {
   MATCH_LINEUP_POSTER_GROUP_TITLE,
   pickMatchLineupLineExtraSlots,
@@ -157,7 +157,7 @@ export const MatchLineupJerseyExportPoster = forwardRef<
     const role = roleForPlayerId(lineup, playerId);
     const slot: FifaRinkSlotRect = MATCH_LINEUP_POSTER_RINK_SLOTS[pos];
     const caption = player
-      ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys)
+      ? jerseyNameForPlayer(player, ambiguousJerseyLastKeys)
       : "—";
     const bench = Boolean(options?.benchLabel);
     const isCaptain = Boolean(playerId && captainId === playerId);

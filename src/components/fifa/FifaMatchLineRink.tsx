@@ -24,6 +24,8 @@ type FifaMatchLineRinkProps = {
   onActiveLineChange: (index: number) => void;
   /** Statický náhled — bez pageru, nápovědy a swipe. */
   preview?: boolean;
+  /** Schová pager lajn, ale nechá mobilní šablonu ledu (kvíz startovní šestky). */
+  hidePager?: boolean;
   slotsForLine: (lineIndex: number) => {
     forwards: { lw: ReactNode; c: ReactNode; rw: ReactNode };
     defense: ReactNode[] | null;
@@ -70,12 +72,14 @@ export function FifaMatchLineRink({
   activeLine,
   onActiveLineChange,
   preview = false,
+  hidePager = false,
   slotsForLine,
   starterGoalie,
 }: FifaMatchLineRinkProps) {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const isMobileLayout = useMediaQuery(MQ_LAYOUT_NARROW);
   const useMobileTemplate = !preview && isMobileLayout;
+  const lockLine = preview || hidePager;
   const slotLayout = useMobileTemplate ? FIFA_RINK_TEMPLATE_SLOTS_MOBILE : FIFA_RINK_TEMPLATE_SLOTS;
 
   const lineCount = 4;
@@ -100,7 +104,7 @@ export function FifaMatchLineRink({
 
   return (
     <div className={`fifa-match-rink flex min-h-0 flex-1 flex-col${preview ? " fifa-match-rink--preview" : ""}`}>
-      {!preview ? (
+      {!lockLine ? (
       <div className="fifa-line-pager shrink-0">
         <button
           type="button"
@@ -138,12 +142,12 @@ export function FifaMatchLineRink({
       <div
         className="fifa-match-rink__stage min-h-0 flex-1 touch-pan-y"
         onTouchStart={
-          preview
+          lockLine
             ? undefined
             : (e) => setTouchStartX(e.touches[0]?.clientX ?? null)
         }
         onTouchEnd={
-          preview
+          lockLine
             ? undefined
             : (e) => {
                 if (touchStartX == null) return;

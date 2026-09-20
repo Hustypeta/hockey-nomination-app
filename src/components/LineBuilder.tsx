@@ -11,7 +11,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { LineupJerseyCard, type LineupJerseySize } from "@/components/sestava/LineupJerseyCard";
 import { PremiumJerseySlotCard, type PremiumJerseySize } from "@/components/sestava/PremiumJerseySlotCard";
 import { DroppableSlotWrap } from "@/components/sestava/DroppableSlotWrap";
-import { getAmbiguousLastNameKeys, jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { getAmbiguousLastNameKeys, jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 import { PowerPlayLineEditor } from "@/components/match/PowerPlayLineEditor";
 import { POWER_PLAY_UI_ENABLED } from "@/lib/powerPlayLineup";
 import { FifaMatchLineRink } from "@/components/fifa/FifaMatchLineRink";
@@ -60,6 +60,15 @@ interface LineBuilderProps {
   matchRinkPreview?: boolean;
   /** FIFA design — čistší bloky lajn, modrý accent, bez glow. */
   uiVariant?: "classic" | "fifa";
+  /**
+   * Kvíz Historical Lineup — jen 1. řada + 1. pár + 1 gólman, bez pageru lajn a bez C/A.
+   * Funguje s `mode="match"` + `uiVariant="fifa"`.
+   */
+  startingSix?: boolean;
+  /** Po odeslání kvízu: zelený/červený slot (klíč = dndId, např. `slot-fwd-0-lw`). */
+  slotFeedback?: Record<string, "correct" | "wrong">;
+  /** Po odeslání kvízu: nápověda ve jmenovce (typicky správné jméno u špatného slotu). */
+  slotRevealHint?: Record<string, string>;
 }
 
 /** Jemný akcent u nadpisu lajny – červená (repre), žádná „pruhovaná vlajka“. */
@@ -147,11 +156,18 @@ export function LineBuilder({
   matchPublicNamesOnly = false,
   matchRinkPreview = false,
   uiVariant = "classic",
+  startingSix = false,
+  slotFeedback,
+  slotRevealHint,
 }: LineBuilderProps) {
   const nhl = layoutVariant === "nhl25";
   const fifa = uiVariant === "fifa";
+  const singleLineRink = startingSix || matchRinkPreview;
   const fifaRinkMode =
-    fifa && mode === "match" && !matchPublicNamesOnly && (!readOnly || matchRinkPreview);
+    fifa &&
+    mode === "match" &&
+    !matchPublicNamesOnly &&
+    (!readOnly || matchRinkPreview || startingSix);
   const [activeMatchLine, setActiveMatchLine] = useState(0);
   const ambiguousJerseyLastKeys = useMemo(() => getAmbiguousLastNameKeys(players), [players]);
 
@@ -363,7 +379,7 @@ export function LineBuilder({
 
     const renderSlotBody = (isDragOver: boolean) => {
       const rinkCaptionName =
-        player && rinkSlot ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : null;
+        player && rinkSlot ? jerseyNameForPlayer(player, ambiguousJerseyLastKeys) : null;
 
       return (
       <div
@@ -398,6 +414,8 @@ export function LineBuilder({
           ${readOnly ? "cursor-default" : "cursor-pointer"}
           ${rinkSlot ? "fifa-rink-slot relative" : ""}
           ${rinkSlot && selected ? "fifa-rink-slot--selected" : ""}
+          ${rinkSlot && dndId && slotFeedback?.[dndId] === "correct" ? "fifa-rink-slot--correct" : ""}
+          ${rinkSlot && dndId && slotFeedback?.[dndId] === "wrong" ? "fifa-rink-slot--wrong" : ""}
         `}
       >
         <div
@@ -485,6 +503,7 @@ export function LineBuilder({
 
         {rinkSlot && player && !readOnly ? (
           <div className="fifa-rink-slot__controls">
+            {startingSix ? null : (
             <div className="fifa-rink-slot__ctrl-group">
               <button
                 type="button"
@@ -522,6 +541,7 @@ export function LineBuilder({
                 A
               </button>
             </div>
+            )}
             {onClear ? (
               <button
                 type="button"
@@ -554,6 +574,9 @@ export function LineBuilder({
                     <span className="fifa-rink-slot__caption-badge fifa-rink-slot__caption-badge--captain">C</span>
                   ) : isAsst ? (
                     <span className="fifa-rink-slot__caption-badge fifa-rink-slot__caption-badge--assistant">A</span>
+                  ) : null}
+                  {dndId && slotRevealHint?.[dndId] ? (
+                    <span className="fifa-rink-slot__caption-hint">{slotRevealHint[dndId]}</span>
                   ) : null}
                 </>
               ) : (
@@ -1257,7 +1280,7 @@ export function LineBuilder({
             : `min-w-0 w-full ${fifaRinkMode ? "flex min-h-0 flex-1 flex-col gap-1.5 lg:gap-2" : "space-y-6"}`
         }
       >
-        {!readOnly && !matchRinkPreview ? (
+        {!readOnly && !matchRinkPreview && !startingSix ? (
           <div
             className={
               fifa
@@ -1330,9 +1353,10 @@ export function LineBuilder({
             }
           >
             <FifaMatchLineRink
-              activeLine={matchRinkPreview ? 0 : activeMatchLine}
-              onActiveLineChange={matchRinkPreview ? () => {} : handleActiveMatchLineChange}
+              activeLine={singleLineRink ? 0 : activeMatchLine}
+              onActiveLineChange={singleLineRink ? () => {} : handleActiveMatchLineChange}
               preview={matchRinkPreview}
+              hidePager={startingSix}
               slotsForLine={slotsForLine}
               starterGoalie={starterGoalieSlot}
             />

@@ -1,7 +1,7 @@
 "use client";
 
 import type { Player } from "@/types";
-import { jerseyNameOnJersey } from "@/lib/jerseyDisplayName";
+import { jerseyNameForPlayer } from "@/lib/jerseyDisplayName";
 import { jerseyNameplateNameProps, jerseyNumberStyle } from "@/lib/jerseyNameplate";
 import { jerseyNumberForPlayer } from "@/lib/jerseyNumber";
 import {
@@ -109,7 +109,7 @@ export function Nhl25JerseyCard({
   const numCls = `${nameplateVariant === "poster" ? POSTER_EXPORT_NUMBER : numberClass[size]}${
     numberMod ? ` ${numberMod}` : ""
   }`;
-  const ln = !empty ? jerseyNameOnJersey(player.name, ambiguousJerseyLastKeys) : "";
+  const ln = !empty ? jerseyNameForPlayer(player, ambiguousJerseyLastKeys) : "";
   const npVar = nameplateVariant === "poster" ? "poster" : "card";
   const namePlate =
     !empty && nameplateVariant !== "poster"
