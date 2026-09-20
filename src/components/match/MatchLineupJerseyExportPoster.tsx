@@ -25,6 +25,7 @@ import {
 } from "@/lib/matchRatingExportDisplay";
 import { SHARE_POSTER_ROSTER_4X5_STYLE } from "@/lib/sharePosterLayout";
 import { SITE_BRAND, SITE_CANONICAL_HOST, SITE_LOGO_URL } from "@/lib/siteBranding";
+import { MATCH_LINEUP_SHARE_TITLE_DEFAULT } from "@/lib/matchLineupShareTitle";
 import { inferLineupPoolKey } from "@/lib/jerseyPhotoAsset";
 import styles from "./MatchLineupJerseyExportPoster.module.css";
 
@@ -168,24 +169,26 @@ export const MatchLineupJerseyExportPoster = forwardRef<
         className={`${styles.slot} ${bench ? styles.benchSlot : ""} fifa-rink-template__slot`}
         style={{ left: `${slot.left}%`, top: `${slot.top}%` }}
       >
-        <div className={styles.shield} aria-hidden>
-          <FifaRinkShieldFrame />
-        </div>
-        <div className={styles.jerseyHost}>
-          <div className={`${styles.jerseyClip} fifa-rink-slot__jersey`}>
-            <LineupJerseyCard
-              player={player}
-              positionLabel={role.label}
-              size={role.size}
-              disableMotion
-              overlayMode="rink"
-              nameOnJersey={false}
-              className="fifa-rink-jersey h-full w-full"
-              showPositionBadge={false}
-              showRoleBadge={false}
-              ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
-              poolKey={poolKey}
-            />
+        <div className={styles.slotBody}>
+          <div className={styles.shield} aria-hidden>
+            <FifaRinkShieldFrame />
+          </div>
+          <div className={styles.jerseyHost}>
+            <div className={`${styles.jerseyClip} fifa-rink-slot__jersey`}>
+              <LineupJerseyCard
+                player={player}
+                positionLabel={role.label}
+                size={role.size}
+                disableMotion
+                overlayMode="rink"
+                nameOnJersey={false}
+                className="fifa-rink-jersey h-full w-full"
+                showPositionBadge={false}
+                showRoleBadge={false}
+                ambiguousJerseyLastKeys={ambiguousJerseyLastKeys}
+                poolKey={poolKey}
+              />
+            </div>
           </div>
         </div>
         <div className={styles.caption}>
@@ -225,15 +228,14 @@ export const MatchLineupJerseyExportPoster = forwardRef<
       <div className={styles.shade} aria-hidden />
 
       <header className={styles.header}>
-        <div className={styles.brandBlock}>
+        <span className={styles.host}>{host}</span>
+        <div className={styles.titleBlock}>
+          <h1 className={styles.title}>{lineupTitle.trim() || MATCH_LINEUP_SHARE_TITLE_DEFAULT}</h1>
+        </div>
+        <span className={styles.logoFrame}>
           {/* eslint-disable-next-line @next/next/no-img-element -- statické logo pro export PNG */}
           <img src={SITE_LOGO_URL} alt={SITE_BRAND} className={styles.logo} decoding="sync" />
-        </div>
-        <div className={styles.titleBlock}>
-          <p className={styles.eyebrow}>Sestava na zápas</p>
-          <h1 className={styles.title}>{lineupTitle.trim() || "Moje sestava"}</h1>
-        </div>
-        <span className={styles.host}>{host}</span>
+        </span>
       </header>
       <div className={styles.headerAccent} aria-hidden>
         <span className={styles.headerAccentBlue} />
