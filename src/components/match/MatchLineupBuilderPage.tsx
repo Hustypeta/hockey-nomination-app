@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
@@ -43,6 +43,12 @@ import { useUndoableState } from "@/hooks/useUndoableState";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { MatchLineupSaveShareModal } from "@/components/match/MatchLineupSaveShareModal";
 import { LineupPoolSwitcher } from "@/components/match/LineupPoolSwitcher";
+import { GoogleSignInRequiredModal } from "@/components/auth/GoogleSignInRequiredModal";
+import {
+  clearMatchGuestDraft,
+  readMatchGuestDraft,
+  writeMatchGuestDraft,
+} from "@/lib/guestLineupDraft";
 
 function isMatchLineupValid(
   lineup: LineupStructure,
@@ -104,6 +110,7 @@ export function MatchLineupBuilderPage() {
   const fifaMobileInlinePool = fifaEnabled && isNarrowLayout;
   const [lineupPosterModalOpen, setLineupPosterModalOpen] = useState(false);
   const [saveShareModalOpen, setSaveShareModalOpen] = useState(false);
+  const [googleSignInOpen, setGoogleSignInOpen] = useState(false);
   /** Široký layout (≥ lg): DnD z poolu zapnuté. Úzký: jen klepnutí, bez přetahování. */
   const enableDnd = !isNarrowLayout;
 
@@ -307,6 +314,87 @@ export function MatchLineupBuilderPage() {
     };
   }, [needDraftImport, loadEditCode, loading, poolKey, replaceLineup]);
 
+  const persistMatchGuestDraft = (resumeSave = false) => {
+    if (lineupPlayerIds(lineup).size === 0) return;
+    writeMatchGuestDraft({
+      poolKey,
+      lineup,
+      captainId,
+      defenseCount,
+      allowExtraForward,
+      title: shareTitle,
+      resumeSave,
+    });
+  };
+
+  const editorSignInCallbackUrl = () => {
+    if (typeof window === "undefined") return "/zapasy/sestava";
+    const next = `${window.location.pathname}${window.location.search}`;
+    return next || "/zapasy/sestava";
+  };
+
+  const requireGoogleToSave = () => {
+    persistMatchGuestDraft(true);
+    setGoogleSignInOpen(true);
+  };
+
+  const openSaveShare = () => {
+    if (authStatus !== "authenticated") {
+      requireGoogleToSave();
+      return;
+    }
+    setSaveShareModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (authStatus !== "unauthenticated") return;
+    if (needDraftImport) return;
+    if (lineupPlayerIds(lineup).size === 0) return;
+    writeMatchGuestDraft({
+      poolKey,
+      lineup,
+      captainId,
+      defenseCount,
+      allowExtraForward,
+      title: shareTitle,
+      resumeSave: false,
+    });
+  }, [authStatus, needDraftImport, lineup, captainId, defenseCount, allowExtraForward, shareTitle, poolKey]);
+
+  const guestDraftAppliedRef = useRef(false);
+  useEffect(() => {
+    if (needDraftImport || loading || guestDraftAppliedRef.current) return;
+    if (authStatus === "loading") return;
+    if (lineupPlayerIds(lineup).size > 0) {
+      guestDraftAppliedRef.current = true;
+      return;
+    }
+    const draft = readMatchGuestDraft();
+    if (!draft) {
+      guestDraftAppliedRef.current = true;
+      return;
+    }
+    const draftPool = normalizeMatchSharePoolKey(draft.poolKey);
+    if (draftPool !== poolKey) {
+      setPoolKey(draftPool);
+      return;
+    }
+    replaceLineup(normalizeLineupStructure(draft.lineup, { mode: "match" }));
+    setCaptainId(draft.captainId);
+    if (draft.defenseCount === 6 || draft.defenseCount === 7 || draft.defenseCount === 8) {
+      setDefenseCount(draft.defenseCount);
+    }
+    setAllowExtraForward(Boolean(draft.allowExtraForward));
+    if (typeof draft.title === "string" && draft.title.trim()) {
+      setShareTitle(clampMatchLineupShareTitle(draft.title.trim()));
+    }
+    guestDraftAppliedRef.current = true;
+    if (draft.resumeSave && authStatus === "authenticated") {
+      setSaveShareModalOpen(true);
+      toast.success("Sestava je zpět — teď ji můžeš uložit.");
+    }
+  }, [needDraftImport, loading, authStatus, poolKey, lineup, replaceLineup]);
+
   useEffect(() => {
     if (!mobilePlayerSheetOpen) return;
     const prev = document.body.style.overflow;
@@ -332,6 +420,7 @@ export function MatchLineupBuilderPage() {
     setLineup(EMPTY_LINEUP);
     setCaptainId(null);
     setSelectedSlot(null);
+    clearMatchGuestDraft();
   };
 
   const handleUndo = () => {
@@ -428,11 +517,7 @@ export function MatchLineupBuilderPage() {
    */
   const saveShare = async (): Promise<string | null> => {
     if (authStatus !== "authenticated") {
-      const callback =
-        typeof window !== "undefined"
-          ? `${window.location.pathname}${window.location.search}`
-          : "/zapasy/sestava";
-      await signIn("google", { callbackUrl: callback });
+      requireGoogleToSave();
       return null;
     }
     if (!shareTitle.trim()) {
@@ -464,11 +549,7 @@ export function MatchLineupBuilderPage() {
       const err = (data as { error?: unknown } | null)?.error;
       if (!r.ok) {
         if (r.status === 401) {
-          const callback =
-            typeof window !== "undefined"
-              ? `${window.location.pathname}${window.location.search}`
-              : "/zapasy/sestava";
-          await signIn("google", { callbackUrl: callback });
+          requireGoogleToSave();
           return null;
         }
         toast.error(typeof err === "string" ? err : "Uložení selhalo.");
@@ -492,6 +573,7 @@ export function MatchLineupBuilderPage() {
         window.history.replaceState(null, "", nextPath);
       }
       toast.success("Sestava uložena.");
+      clearMatchGuestDraft();
       if (typeof nextUrl === "string" && nextUrl) return nextUrl;
       if (finalSlug && typeof window !== "undefined") {
         return `${window.location.origin}/m/${finalSlug}`;
@@ -713,7 +795,7 @@ export function MatchLineupBuilderPage() {
 
       <FloatingSestavaBar
         uiVariant="fifa"
-        onShare={() => setSaveShareModalOpen(true)}
+        onShare={openSaveShare}
         onRandom={handleRandom}
         onReset={handleReset}
         onUndo={handleUndo}
@@ -742,6 +824,12 @@ export function MatchLineupBuilderPage() {
         siteOrigin={siteOrigin}
         poolKey={poolKey}
         captainId={captainId}
+      />
+      <GoogleSignInRequiredModal
+        open={googleSignInOpen}
+        onClose={() => setGoogleSignInOpen(false)}
+        callbackUrl={editorSignInCallbackUrl()}
+        onBeforeSignIn={() => persistMatchGuestDraft(true)}
       />
     </FifaAppPage>
   ) : (
@@ -905,7 +993,7 @@ export function MatchLineupBuilderPage() {
       <PlayerPreviewModal player={previewPlayer} onClose={() => setPreviewPlayer(null)} />
 
       <FloatingSestavaBar
-        onShare={() => setSaveShareModalOpen(true)}
+        onShare={openSaveShare}
         onRandom={handleRandom}
         onReset={handleReset}
         onUndo={handleUndo}
@@ -934,6 +1022,12 @@ export function MatchLineupBuilderPage() {
         siteOrigin={siteOrigin}
         poolKey={poolKey}
         captainId={captainId}
+      />
+      <GoogleSignInRequiredModal
+        open={googleSignInOpen}
+        onClose={() => setGoogleSignInOpen(false)}
+        callbackUrl={editorSignInCallbackUrl()}
+        onBeforeSignIn={() => persistMatchGuestDraft(true)}
       />
     </div>
   );

@@ -40,6 +40,8 @@ interface SaveShareModalProps {
   /** Při uložení k účtu — volitelný název nominace. */
   onSave: (opts?: { title?: string | null }) => Promise<string | null>;
   isSaving: boolean;
+  /** Hostující uložení — nejdřív persistovat sestavu, pak Google OAuth. */
+  onGoogleSignIn?: () => void;
   /** Zda server ještě přijímá uložení nominace k soutěži. */
   contestSubmissionOpen?: boolean;
   /** Aktuální časový bonus (pro info u tlačítka uložit). */
@@ -67,6 +69,7 @@ export function SaveShareModal({
   shareLinkHref,
   onSave,
   isSaving,
+  onGoogleSignIn,
   contestSubmissionOpen = true,
   contestTimeBonusPercent = 0,
   posterTheme = "light",
@@ -219,7 +222,10 @@ export function SaveShareModal({
   };
 
   const handleSaveNomination = async () => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      onGoogleSignIn?.();
+      return;
+    }
     const t = ensureTitle();
     if (!t) return;
     const id = await onSave({ title: t });
@@ -582,14 +588,20 @@ export function SaveShareModal({
             <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6">
               <button
                 type="button"
-                onClick={() => signIn("google", { callbackUrl: window.location.href })}
+                onClick={() => {
+                  onGoogleSignIn?.();
+                  if (!onGoogleSignIn) void signIn("google", { callbackUrl: window.location.href });
+                }}
                 className="w-full rounded-xl border border-white/15 py-3 font-display text-sm text-white/90 transition-colors hover:border-[#c8102e]/45"
               >
                 Přihlásit se přes Google
               </button>
               <button
                 type="button"
-                onClick={() => signIn("google", { callbackUrl: window.location.href })}
+                onClick={() => {
+                  onGoogleSignIn?.();
+                  if (!onGoogleSignIn) void signIn("google", { callbackUrl: window.location.href });
+                }}
                 className="w-full rounded-xl bg-gradient-to-r from-[#c8102e] to-[#8a0b22] py-3 text-center font-display text-base font-bold text-white shadow-lg shadow-[#c8102e]/15"
               >
                 Zúčastnit se soutěže

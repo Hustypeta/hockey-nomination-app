@@ -24,6 +24,7 @@ import { Nhl25SharePoster } from "@/components/Nhl25SharePoster";
 import { NamesOnlySharePoster } from "@/components/NamesOnlySharePoster";
 import { NominationWebStyleSharePoster } from "@/components/NominationWebStyleSharePoster";
 import { SaveShareModal } from "@/components/SaveShareModal";
+import { GoogleSignInRequiredModal } from "@/components/auth/GoogleSignInRequiredModal";
 import { FifaAppPage } from "@/components/fifa/FifaAppPage";
 import { AppLoadingScreen } from "@/components/AppLoadingScreen";
 import { SiteHeader } from "@/components/site/SiteHeader";
@@ -60,7 +61,13 @@ import {
   tryAutoAssignPlayer,
   assignPlayerToTarget,
   buildRandomLineup,
+  lineupPlayerIds,
 } from "@/lib/lineupAssign";
+import {
+  clearNominationGuestDraft,
+  readNominationGuestDraft,
+  writeNominationGuestDraft,
+} from "@/lib/guestLineupDraft";
 import type { Position } from "@/types";
 import { parseDroppableId } from "@/lib/dndSlotIds";
 import type { Player } from "@/types";
@@ -92,6 +99,7 @@ export function NominationBuilderPage() {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [googleSignInOpen, setGoogleSignInOpen] = useState(false);
   const [shareCaptureVisible, setShareCaptureVisible] = useState(false);
   const [saving, setSaving] = useState(false);
   const [previewPlayer, setPreviewPlayer] = useState<Player | null>(null);
@@ -343,6 +351,69 @@ export function NominationBuilderPage() {
     };
   }, [authStatus]);
 
+  const persistNominationGuestDraft = useCallback(
+    (resumeSave = false) => {
+      if (lineupPlayerIds(lineup).size === 0) return;
+      writeNominationGuestDraft({
+        lineup,
+        captainId,
+        title: shareNominationTitle,
+        resumeSave,
+      });
+    },
+    [lineup, captainId, shareNominationTitle]
+  );
+
+  const requireGoogleToSave = useCallback(() => {
+    persistNominationGuestDraft(true);
+    setGoogleSignInOpen(true);
+  }, [persistNominationGuestDraft]);
+
+  const editorSignInCallbackUrl = () => {
+    if (typeof window === "undefined") return "/sestava";
+    const next = `${window.location.pathname}${window.location.search}`;
+    return next || "/sestava";
+  };
+
+  useEffect(() => {
+    if (authStatus !== "unauthenticated") return;
+    if (lineupPlayerIds(lineup).size === 0) return;
+    writeNominationGuestDraft({
+      lineup,
+      captainId,
+      title: shareNominationTitle,
+      resumeSave: false,
+    });
+  }, [authStatus, lineup, captainId, shareNominationTitle]);
+
+  const guestDraftAppliedRef = useRef(false);
+  useEffect(() => {
+    if (loading || guestDraftAppliedRef.current) return;
+    if (authStatus === "loading") return;
+    const fromUrl = (searchParams.get("nominace") ?? searchParams.get("nomination"))?.trim();
+    if (fromUrl) {
+      guestDraftAppliedRef.current = true;
+      return;
+    }
+    if (lineupPlayerIds(lineup).size > 0) {
+      guestDraftAppliedRef.current = true;
+      return;
+    }
+    const draft = readNominationGuestDraft();
+    if (!draft) {
+      guestDraftAppliedRef.current = true;
+      return;
+    }
+    setLineup(normalizeLineupStructure(draft.lineup));
+    setCaptainId(draft.captainId);
+    if (typeof draft.title === "string") setShareNominationTitle(draft.title);
+    guestDraftAppliedRef.current = true;
+    if (draft.resumeSave && authStatus === "authenticated") {
+      setModalOpen(true);
+      toast.success("Sestava je zpět — teď ji můžeš uložit.");
+    }
+  }, [loading, authStatus, lineup, searchParams]);
+
   useEffect(() => {
     if (!mobilePlayerSheetOpen) return;
     const prev = document.body.style.overflow;
@@ -536,12 +607,16 @@ export function NominationBuilderPage() {
     setSavedNominationSlug(null);
     setGuestShareCode(null);
     setGuestShareSlug(null);
-    toast.message("Sestava byla resetov├ína.");
+    clearNominationGuestDraft();
+    toast.message("Sestava byla resetována.");
   }, []);
 
   const handleSave = useCallback(
     async (opts?: { title?: string | null }): Promise<string | null> => {
-    if (authStatus !== "authenticated") return null;
+    if (authStatus !== "authenticated") {
+      requireGoogleToSave();
+      return null;
+    }
     setSaving(true);
     try {
       const updating = !!editingNominationId;
@@ -584,8 +659,9 @@ export function NominationBuilderPage() {
         setSavedNominationSlug(data.slug);
       }
       toast.success(
-        updating ? "Zm─Ťny ulo┼żeny." : "Nominace ulo┼żena u ├║─Źtu jako koncept."
+        updating ? "Změny uloženy." : "Nominace uložena u účtu jako koncept."
       );
+      clearNominationGuestDraft();
       metaTrack("trackCustom", "SaveNomination", {
         is_update: updating,
         player_count: selectedPlayers.length,
@@ -598,11 +674,11 @@ export function NominationBuilderPage() {
       setSaving(false);
     }
   },
-  [authStatus, selectedPlayers, captainId, lineup, editingNominationId, shareNominationTitle]);
+  [authStatus, selectedPlayers, captainId, lineup, editingNominationId, shareNominationTitle, requireGoogleToSave]);
 
   const handleSubmitToContest = useCallback(async () => {
     if (authStatus !== "authenticated") {
-      toast.error("Pro odesl├ín├ş do sout─Ť┼że se mus├ş┼í p┼Öihl├ísit p┼Öes Google.");
+      requireGoogleToSave();
       return;
     }
     if (contestSubmitted) {
@@ -685,6 +761,7 @@ export function NominationBuilderPage() {
     captainId,
     lineup,
     refreshContestStats,
+    requireGoogleToSave,
   ]);
 
   const handleContestSubmitClick = useCallback(() => {
@@ -731,6 +808,7 @@ export function NominationBuilderPage() {
   const fifaEnabled = isFifaDesignEnabled();
 
   return (
+    <>
     <DndContext
       sensors={sensors}
       collisionDetection={poolToSlotCollision}
@@ -1032,6 +1110,7 @@ export function NominationBuilderPage() {
                   onNominationTitleChange={setShareNominationTitle}
                   shareLinkHref={shareUrlForModal || longGuestShareUrl}
                   onSave={handleSave}
+                  onGoogleSignIn={requireGoogleToSave}
                   isSaving={saving}
                   contestSubmissionOpen={contestSubmissionOpen}
                   contestTimeBonusPercent={bonusPercent}
@@ -1419,6 +1498,7 @@ export function NominationBuilderPage() {
                   onNominationTitleChange={setShareNominationTitle}
                   shareLinkHref={shareUrlForModal || longGuestShareUrl}
                   onSave={handleSave}
+                  onGoogleSignIn={requireGoogleToSave}
                   isSaving={saving}
                   contestSubmissionOpen={contestSubmissionOpen}
                   contestTimeBonusPercent={bonusPercent}
@@ -1497,5 +1577,12 @@ export function NominationBuilderPage() {
               </div>
       )}
     </DndContext>
+    <GoogleSignInRequiredModal
+      open={googleSignInOpen}
+      onClose={() => setGoogleSignInOpen(false)}
+      callbackUrl={editorSignInCallbackUrl()}
+      onBeforeSignIn={() => persistNominationGuestDraft(true)}
+    />
+    </>
   );
 }
