@@ -5,8 +5,10 @@ import { X } from "lucide-react";
 import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 import type { LineupStructure, Player } from "@/types";
-
-const MATCH_LINEUP_TITLE_MAX_LENGTH = "Moje sestava na zápas".length;
+import {
+  MATCH_LINEUP_SHARE_TITLE_MAX_LENGTH,
+  clampMatchLineupShareTitle,
+} from "@/lib/matchLineupShareTitle";
 
 export function MatchLineupSaveShareModal({
   open,
@@ -86,13 +88,18 @@ export function MatchLineupSaveShareModal({
 
         <div className="space-y-5 px-5 py-5">
           <div className="space-y-2">
-            <label className="block text-xs font-bold uppercase tracking-[0.22em] text-white/50">
-              Název sestavy
-            </label>
+            <div className="flex items-center justify-between gap-3">
+              <label className="block text-xs font-bold uppercase tracking-[0.22em] text-white/50">
+                Název sestavy
+              </label>
+              <span className="tabular-nums text-[11px] font-semibold text-white/40">
+                {shareTitle.length}/{MATCH_LINEUP_SHARE_TITLE_MAX_LENGTH}
+              </span>
+            </div>
             <input
               value={shareTitle}
-              maxLength={MATCH_LINEUP_TITLE_MAX_LENGTH}
-              onChange={(e) => onShareTitleChange(e.target.value.slice(0, MATCH_LINEUP_TITLE_MAX_LENGTH))}
+              maxLength={MATCH_LINEUP_SHARE_TITLE_MAX_LENGTH}
+              onChange={(e) => onShareTitleChange(clampMatchLineupShareTitle(e.target.value))}
               className="w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2.5 text-sm font-semibold text-white outline-none focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30"
               placeholder={titleHint}
             />

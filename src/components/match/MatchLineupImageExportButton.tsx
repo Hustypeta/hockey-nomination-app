@@ -20,6 +20,7 @@ import { MatchLineupNamesFullPoster, MatchRatingNamesFullPoster } from "@/compon
 import { MatchPosterExportChoicesModal } from "@/components/match/MatchPosterExportChoicesModal";
 import type { MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
 import { POWER_PLAY_UI_ENABLED } from "@/lib/powerPlayLineup";
+import { MATCH_LINEUP_SHARE_TITLE_DEFAULT } from "@/lib/matchLineupShareTitle";
 import type { MatchRatingAggregateMap, MatchRatingMyMap } from "@/lib/matchRatingExportDisplay";
 
 const SEGMENTS: MatchLineupPosterGroup[] = ["line-1", "line-2", "line-3", "line-4"];
@@ -121,7 +122,7 @@ export function MatchLineupImageExportButton({
   const modalOpen = controlled ? modalOpenControlled : modalOpenInternal;
   const setModalOpen = controlled ? onModalOpenChange! : setModalOpenInternal;
 
-  const titleLine = shareTitle.trim() || "Moje sestava na zápas";
+  const titleLine = shareTitle.trim() || MATCH_LINEUP_SHARE_TITLE_DEFAULT;
   const baseSlug = useMemo(() => slugifyForFile(shareSlug ?? shareTitle), [shareSlug, shareTitle]);
   const previewSignature = useMemo(
     () =>

@@ -32,6 +32,7 @@ import {
   removePlayerFromLineup,
   swapWithinLine,
 } from "@/lib/lineupAssign";
+import { MATCH_LINEUP_SHARE_TITLE_DEFAULT, clampMatchLineupShareTitle } from "@/lib/matchLineupShareTitle";
 import { droppableIdFromSelectedSlot, parseDroppableId } from "@/lib/dndSlotIds";
 import { powerPlaySlotPickerLabel } from "@/lib/powerPlayLineup";
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
@@ -122,7 +123,7 @@ export function MatchLineupBuilderPage() {
 
   const [defenseCount, setDefenseCount] = useState<6 | 7 | 8>(8);
   const [allowExtraForward, setAllowExtraForward] = useState(false);
-  const [shareTitle, setShareTitle] = useState("Moje sestava na zápas");
+  const [shareTitle, setShareTitle] = useState(MATCH_LINEUP_SHARE_TITLE_DEFAULT);
   const [shareCode, setShareCode] = useState<string | null>(null);
   const [shareSlug, setShareSlug] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -290,7 +291,7 @@ export function MatchLineupBuilderPage() {
         }
         setAllowExtraForward(Boolean(data.allowExtraForward));
         if (typeof data.title === "string" && data.title.trim()) {
-          setShareTitle(data.title.trim());
+          setShareTitle(clampMatchLineupShareTitle(data.title.trim()));
         }
         if (typeof data.code === "string") setShareCode(data.code);
         if (typeof data.slug === "string" && data.slug.length > 0) setShareSlug(data.slug);
@@ -445,7 +446,7 @@ export function MatchLineupBuilderPage() {
     setSaving(true);
     try {
       const payload = {
-        title: shareTitle.trim(),
+        title: clampMatchLineupShareTitle(shareTitle.trim()),
         captainId,
         lineupStructure: lineup,
         defenseCount,
@@ -515,7 +516,7 @@ export function MatchLineupBuilderPage() {
       try {
         await nav.share({
           title: shareTitle.trim() || "Sestava na zápas",
-          text: shareTitle.trim() || "Moje sestava na zápas",
+          text: shareTitle.trim() || MATCH_LINEUP_SHARE_TITLE_DEFAULT,
           url,
         });
         return;

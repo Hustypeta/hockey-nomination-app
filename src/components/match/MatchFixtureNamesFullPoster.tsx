@@ -22,6 +22,7 @@ import {
 } from "@/lib/namesOnlyRoster";
 import { nameplateWidthScore } from "@/lib/jerseyNameplate";
 import { SITE_CANONICAL_HOST, SITE_LOGO_URL } from "@/lib/siteBranding";
+import { MATCH_LINEUP_SHARE_TITLE_DEFAULT } from "@/lib/matchLineupShareTitle";
 import {
   fmtMatchRating,
   matchRatingHue,
@@ -336,7 +337,7 @@ export const MatchLineupNamesFullPoster = forwardRef<HTMLDivElement, BaseFixture
 
         <header className={styles.header}>
           <span className={styles.host}>{host}</span>
-          <h1 className={styles.title}>{titleLine || "Moje sestava na zápas"}</h1>
+          <h1 className={styles.title}>{titleLine || MATCH_LINEUP_SHARE_TITLE_DEFAULT}</h1>
           <span className={styles.logoFrame}>
             {/* eslint-disable-next-line @next/next/no-img-element -- statické logo pro export PNG */}
             <img src={SITE_LOGO_URL} alt="Lineup" className={styles.logo} decoding="sync" />
