@@ -15,13 +15,18 @@ function authorLabel(post: CommunityPostDto): string {
   return post.author.name?.trim() || "Uživatel Lineup";
 }
 
-export function FifaHomeForumPostsCard() {
-  const [posts, setPosts] = useState<CommunityPostDto[]>([]);
+export function FifaHomeForumPostsCard({
+  initialPosts = [],
+}: {
+  initialPosts?: CommunityPostDto[];
+}) {
+  const [posts, setPosts] = useState<CommunityPostDto[]>(initialPosts);
   const [index, setIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialPosts.length === 0);
   const [fade, setFade] = useState(true);
 
   useEffect(() => {
+    if (initialPosts.length > 0) return;
     let cancelled = false;
     fetch(`/api/forum/posts?limit=${HOME_FORUM_LIMIT}`, { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("load"))))
@@ -38,6 +43,7 @@ export function FifaHomeForumPostsCard() {
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- SSR data only on first paint
   }, []);
 
   useEffect(() => {

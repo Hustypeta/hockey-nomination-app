@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { FifaForumContent } from "@/components/fifa/FifaForumContent";
+import { ForumGuestGate } from "@/components/forum/ForumGuestGate";
 import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata(PAGE_SEO.forum);
@@ -16,7 +17,9 @@ export default function ForumPage() {
           </div>
         }
       >
-        <FifaForumContent />
+        <ForumGuestGate>
+          <FifaForumContent />
+        </ForumGuestGate>
       </Suspense>
     </SiteShell>
   );

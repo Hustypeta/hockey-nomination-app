@@ -171,20 +171,17 @@ export const PAGE_SEO = {
   },
   souteze: {
     title: "Soutěže",
-    description:
-      "Hokejové soutěže na Lineupu: historické sestavy, Draft Fantasy Extraliga 2026/27 a nástroje k české reprezentaci.",
+    description: "Soutěže na Lineupu — česká reprezentace, Draft Fantasy a historické sestavy.",
     path: "/souteze",
   },
   historical: {
     title: "Historické sestavy",
-    description:
-      "Sestav si historickou českou hokejovou soupisku — od Nagana 1998 po zlaté MS. Fanouškovský editor slavných týmů.",
+    description: "Historické české sestavy na Lineupu. Soutěž připravujeme.",
     path: "/souteze/historical-lineup",
   },
   extraliga: {
     title: "Draft Fantasy Extraliga 2026/27",
-    description:
-      "Draft Fantasy české hokejové extraligy 2026/27. Připravujeme sezónní fantasy, ve kterém poskládáš svůj tým z extraligových hráčů.",
+    description: "Draft Fantasy české extraligy 2026/27. Soutěž připravujeme.",
     path: "/souteze/extraliga",
   },
   aTym: {

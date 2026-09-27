@@ -23,6 +23,7 @@ model Player {
   poolKey   String   @default("repre_a")
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  albumItems PlayerAlbumItem[]
 
   @@index([poolKey])
   @@map("players")
@@ -49,6 +50,7 @@ model User {
   communityComments      CommunityComment[]
   communityPostLikes     CommunityPostLike[]
   communityCommentLikes  CommunityCommentLike[]
+  playerAlbums           PlayerAlbum[]
 
   @@map("users")
 }
@@ -512,4 +514,33 @@ model CommunityCommentLike {
 
   @@id([userId, commentId])
   @@map("community_comment_likes")
+}
+
+/** Uživatelské album / sbírka hráčů. */
+model PlayerAlbum {
+  id        String            @id @default(cuid())
+  userId    String
+  name      String
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     PlayerAlbumItem[]
+
+  @@index([userId, updatedAt])
+  @@map("player_albums")
+}
+
+model PlayerAlbumItem {
+  id        String   @id @default(cuid())
+  albumId   String
+  playerId  String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  album  PlayerAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  player Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([albumId, playerId])
+  @@index([albumId, sortOrder])
+  @@map("player_album_items")
 }

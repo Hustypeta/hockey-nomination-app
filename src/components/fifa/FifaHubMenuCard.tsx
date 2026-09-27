@@ -8,7 +8,7 @@ import { FifaRepreHeroHeadline } from "@/components/fifa/FifaRepreHeroHeadline";
 export type FifaHubMenuItem = {
   href: string;
   label: string;
-  hint: string;
+  hint?: string;
   icon: LucideIcon;
 };
 
@@ -43,11 +43,11 @@ function FifaHubMenuItemRow({
           <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-wide text-amber-200/90 lg:text-[11px]">
             Soutěže připravujeme
           </span>
-        ) : (
+        ) : item.hint ? (
           <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-wide text-[var(--fifa-text-muted)] lg:text-[11px]">
             {item.hint}
           </span>
-        )}
+        ) : null}
       </span>
       {!inactive ? (
         <ChevronRight
@@ -103,6 +103,25 @@ export function FifaRepreMenuNav({
   );
 }
 
+export function FifaPreparingSpinner({
+  className = "",
+  label = "Připravujeme",
+}: {
+  className?: string;
+  label?: string;
+}) {
+  return (
+    <div
+      className={`mt-6 flex flex-col items-center gap-3 ${className}`.trim()}
+      role="status"
+      aria-live="polite"
+    >
+      <Loader2 className="h-8 w-8 animate-spin text-[var(--fifa-accent-text)]" aria-hidden />
+      <p className="fifa-kicker">{label}</p>
+    </div>
+  );
+}
+
 export function FifaPreparingHint({
   className = "",
   label = "Připravujeme",
@@ -138,14 +157,23 @@ type FifaHubMenuCardProps = {
   centerTitle?: boolean;
   className?: string;
   preparingOnlyLabel?: string;
+  tileHint?: string;
 } & (
   | {
       preparingOnly: true;
+      linkTile?: never;
+      menuItems?: never;
+      menuAriaLabel?: never;
+    }
+  | {
+      linkTile: true;
+      preparingOnly?: false;
       menuItems?: never;
       menuAriaLabel?: never;
     }
   | {
       preparingOnly?: false;
+      linkTile?: false;
       preparingIcon?: never;
       menuItems: FifaHubMenuItem[];
       menuAriaLabel: string;
@@ -163,6 +191,8 @@ export function FifaHubMenuCard({
   preparing = false,
   preparingOnly = false,
   preparingOnlyLabel,
+  linkTile = false,
+  tileHint,
   centerTitle = false,
   className = "",
 }: FifaHubMenuCardProps) {
@@ -203,6 +233,13 @@ export function FifaHubMenuCard({
 
             {preparingOnly ? (
               <FifaPreparingHint />
+            ) : linkTile ? (
+              <span className="fifa-repre-menu flex w-full max-w-[min(100%,16.5rem)] flex-col gap-2 sm:max-w-[58%]">
+                <span className="inline-flex items-center gap-0.5 font-semibold text-[var(--fifa-accent-text)]">
+                  {tileHint ?? "Otevřít soutěž"}
+                  <ChevronRight className="h-3.5 w-3.5 opacity-80" aria-hidden />
+                </span>
+              </span>
             ) : (
               <FifaRepreMenuNav
                 items={menuItems!}

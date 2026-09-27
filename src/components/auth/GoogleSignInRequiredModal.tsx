@@ -1,20 +1,25 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { X } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 export function GoogleSignInRequiredModal({
   open,
   onClose,
   callbackUrl,
   onBeforeSignIn,
+  onContinueAsGuest,
 }: {
   open: boolean;
   onClose: () => void;
   callbackUrl: string;
   onBeforeSignIn?: () => void;
+  /** Když je nastavené, nabídne „Pokračovat jako host“. */
+  onContinueAsGuest?: () => void;
 }) {
   if (!open) return null;
+
+  const hasGuest = typeof onContinueAsGuest === "function";
 
   return (
     <div
@@ -32,7 +37,7 @@ export function GoogleSignInRequiredModal({
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Účet</p>
             <h2 id="google-signin-required-title" className="mt-1 font-display text-lg font-black text-white">
-              Pro uložení se přihlas přes Google
+              {hasGuest ? "Přihlášení" : "Pro uložení se přihlas přes Google"}
             </h2>
           </div>
           <button
@@ -44,9 +49,11 @@ export function GoogleSignInRequiredModal({
             <X className="h-5 w-5" aria-hidden />
           </button>
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-white/70">
-          Bez přihlášení sestavu uložit nejde. Po Google účtu ti sestava zůstane a můžeš ji uložit.
-        </p>
+        {!hasGuest ? (
+          <p className="mt-3 text-sm leading-relaxed text-white/70">
+            Bez přihlášení sestavu uložit nejde. Po Google účtu ti sestava zůstane a můžeš ji uložit.
+          </p>
+        ) : null}
         <div className="mt-5 grid grid-cols-1 gap-2">
           <button
             type="button"
@@ -58,6 +65,17 @@ export function GoogleSignInRequiredModal({
           >
             Přihlásit se přes Google
           </button>
+          {hasGuest ? (
+            <button
+              type="button"
+              className="w-full rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white/90 hover:bg-white/[0.08]"
+              onClick={() => {
+                onContinueAsGuest();
+              }}
+            >
+              Pokračovat jako host
+            </button>
+          ) : null}
           <button
             type="button"
             className="w-full rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white/80 hover:bg-white/[0.08]"

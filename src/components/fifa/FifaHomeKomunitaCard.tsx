@@ -2,8 +2,15 @@
 
 import { Users } from "lucide-react";
 import { FifaHomeKomunitaStatsCard } from "@/components/fifa/FifaHomeKomunitaStatsCard";
+import type { CommunityMemberDto } from "@/lib/community/types";
 
-export function FifaHomeKomunitaCard() {
+export function FifaHomeKomunitaCard({
+  communityUsersCount,
+  members,
+}: {
+  communityUsersCount: number | null;
+  members: CommunityMemberDto[];
+}) {
   return (
     <article className="fifa-card fifa-card-hero fifa-card--interactive fifa-home-komunita-card group relative flex h-full min-h-0 flex-col overflow-hidden">
       <div className="fifa-card-header relative z-10">
@@ -15,7 +22,7 @@ export function FifaHomeKomunitaCard() {
         </p>
       </div>
       <div className="fifa-card-body relative z-10 min-h-0 flex-1">
-        <FifaHomeKomunitaStatsCard />
+        <FifaHomeKomunitaStatsCard communityUsersCount={communityUsersCount} members={members} />
       </div>
     </article>
   );

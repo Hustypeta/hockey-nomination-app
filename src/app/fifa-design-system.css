@@ -2346,6 +2346,42 @@ header:has(.fifa-top-nav-root--open) {
   opacity: 1;
 }
 
+.fifa-komunita-stats > * {
+  min-height: 0;
+}
+
+.fifa-komunita-online {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(0, 212, 255, 0.32);
+  border-radius: var(--fifa-radius-md);
+  background: rgba(0, 212, 255, 0.06);
+  padding: 0.35rem 0.4rem 0.2rem;
+}
+
+.fifa-komunita-online .fifa-forum-members {
+  flex: 1 1 auto;
+  height: 100%;
+}
+
+.fifa-komunita-online .fifa-forum-members__head {
+  padding-bottom: 0.2rem;
+}
+
+.fifa-komunita-online .fifa-forum-members__list {
+  --forum-member-row: 2.15rem;
+  flex: 1 1 auto;
+  max-height: none;
+}
+
+.fifa-komunita-online .fifa-forum-members__item {
+  padding: 0.18rem 0.28rem;
+}
+
 /* ─── Carousel nav ─── */
 .fifa-home-carousel-nav {
   display: flex;
@@ -9056,10 +9092,208 @@ body:has(.fifa-app-viewport) .frozen-arena-ambient {
 
 .fifa-account-collections-placeholder__text {
   margin-top: 0.45rem;
-  max-width: 26rem;
+  max-width: 22rem;
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.45;
+  color: var(--fifa-text-secondary);
+}
+
+.fifa-account-collections__create {
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+}
+
+.fifa-account-collections__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fifa-account-collections__list > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.35rem;
+  align-items: stretch;
+}
+
+.fifa-account-collections__list-item {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 1px solid var(--fifa-border);
+  border-radius: var(--fifa-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.fifa-account-collections__list-item:hover {
+  border-color: rgba(0, 212, 255, 0.35);
+  background: rgba(0, 212, 255, 0.06);
+}
+
+.fifa-account-collections__list-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--fifa-text);
+}
+
+.fifa-account-collections__list-count {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--fifa-text-muted);
+}
+
+.fifa-account-collections__list-delete {
+  display: inline-flex;
+  width: 2.4rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--fifa-border);
+  border-radius: var(--fifa-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--fifa-text-muted);
+}
+
+.fifa-account-collections__list-delete:hover {
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #fca5a5;
+}
+
+.fifa-account-collections__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--fifa-accent-text);
+}
+
+.fifa-account-collections__editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 0.75rem;
+  min-height: 22rem;
+}
+
+@media (max-width: 900px) {
+  .fifa-account-collections__editor {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fifa-account-collections__pool,
+.fifa-account-collections__album {
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+  flex-direction: column;
+  border: 1px solid var(--fifa-border);
+  border-radius: var(--fifa-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.fifa-account-collections__pool {
+  padding: 0.65rem;
+  gap: 0.55rem;
+}
+
+.fifa-account-collections__pool-body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.fifa-account-collections__album-head {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--fifa-border);
+  padding: 0.65rem 0.8rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-account-collections__album-head strong {
+  color: var(--fifa-accent-text);
+}
+
+.fifa-account-collections__album-empty {
+  margin: 0;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-account-collections__album-list {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  overflow-y: auto;
+  padding: 0.45rem;
+  list-style: none;
+}
+
+.fifa-account-collections__album-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 0.55rem;
+  padding: 0.4rem 0.45rem;
+}
+
+.fifa-account-collections__album-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.fifa-account-collections__album-pos {
+  font-family: ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--fifa-accent-text);
+}
+
+.fifa-account-collections__album-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--fifa-text);
+}
+
+.fifa-account-collections__album-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fifa-text-muted);
+}
+
+.fifa-account-collections__album-remove:hover {
+  color: #fca5a5;
 }
 
 .fifa-account-settings-panel {

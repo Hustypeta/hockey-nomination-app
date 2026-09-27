@@ -38,7 +38,7 @@ export function FifaHomeEditorCard({ compact = false }: { compact?: boolean }) {
               : "mt-3 text-lg lg:text-xl"
           }`}
         >
-          Skládej sestavu bez účtu. Přihlášení přes Google až ve chvíli, kdy ji chceš uložit a sdílet.
+          K dispozici nyní kromě mužského A-týmu i U20, U18, ženy a také týmy Tipsport extraligy.
         </p>
         <span className={`fifa-btn-primary ${compact ? "mt-2.5 px-3 py-1.5 text-xs" : "mt-5 px-6 py-3 text-base lg:text-lg"}`}>
           Otevřít editor

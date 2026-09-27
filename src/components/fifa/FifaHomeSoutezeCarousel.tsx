@@ -78,7 +78,9 @@ const SOUTEZE_PREVIEWS: SoutezPreview[] = [
 
     art: "ceska-reprezentace",
 
-    hoverMenu: true,
+    heroTitle: true,
+
+    preparing: true,
 
   },
 
@@ -347,7 +349,7 @@ export function FifaHomeSoutezeCarousel({ compact = false }: { compact?: boolean
 
   const isPreparing = current.preparing === true;
 
-  const isClickable = !hasHoverMenu;
+  const isClickable = !hasHoverMenu && !isPreparing;
 
   return (
 

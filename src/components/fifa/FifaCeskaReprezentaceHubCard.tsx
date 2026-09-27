@@ -1,29 +1,18 @@
 "use client";
 
-import { FifaHubMenuCard } from "@/components/fifa/FifaHubMenuCard";
-import { FifaHubMenuCardTouch } from "@/components/fifa/FifaHubMenuCardTouch";
 import { FifaCeskaReprezentaceCardArt } from "@/components/fifa/FifaCeskaReprezentaceCardArt";
-import { CESKA_REPREZENTACE_MENU_ITEMS } from "@/lib/fifa/ceskaReprezentaceMenuItems";
-
-const cardProps = {
-  title: "Česká reprezentace",
-  art: <FifaCeskaReprezentaceCardArt />,
-  menuItems: CESKA_REPREZENTACE_MENU_ITEMS,
-  menuAriaLabel: "Kategorie české reprezentace",
-  centerTitle: true as const,
-};
+import { FifaHubMenuCard } from "@/components/fifa/FifaHubMenuCard";
 
 export function FifaCeskaReprezentaceHubCard() {
   return (
-    <>
-      <div className="hidden h-full min-h-0 lg-device:block">
-        <FifaHubMenuCard {...cardProps} />
-      </div>
-      <div className="lg-device:hidden">
-        <FifaHubMenuCardTouch {...cardProps} />
-      </div>
-    </>
+    <div className="block w-full min-h-[13rem] lg-device:h-full lg-device:min-h-0" aria-disabled="true">
+      <FifaHubMenuCard
+        title="Česká reprezentace"
+        art={<FifaCeskaReprezentaceCardArt />}
+        preparing
+        preparingOnly
+        centerTitle
+      />
+    </div>
   );
 }
-
-export { CESKA_REPREZENTACE_MENU_ITEMS };

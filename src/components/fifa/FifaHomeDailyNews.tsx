@@ -14,15 +14,20 @@ import { FIFA_LINK, FIFA_META } from "@/lib/fifa/fifaUiClasses";
 
 const ROTATE_MS = 6500;
 
-export function FifaHomeDailyNews() {
-  const [items, setItems] = useState<DailyNewsItem[]>([]);
+export function FifaHomeDailyNews({
+  initialItems = [],
+}: {
+  initialItems?: DailyNewsItem[];
+}) {
+  const [items, setItems] = useState<DailyNewsItem[]>(initialItems);
   const [index, setIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialItems.length === 0);
   const [error, setError] = useState(false);
   const [fade, setFade] = useState(true);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
+    if (initialItems.length > 0) return;
     let cancelled = false;
     fetch(`/api/daily-news?limit=${DAILY_NEWS_HOME_COUNT}&enrich=1`, { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("load"))))
@@ -41,6 +46,7 @@ export function FifaHomeDailyNews() {
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- SSR data only on first paint
   }, []);
 
   const showArrows = items.length > 1;

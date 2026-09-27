@@ -3,12 +3,13 @@ import { ChevronLeft } from "lucide-react";
 import { FifaAppPage } from "@/components/fifa/FifaAppPage";
 import { FifaHistoricalLineupCardArt } from "@/components/fifa/FifaHistoricalLineupCardArt";
 import { FifaImageTextScrim } from "@/components/fifa/FifaImageTextScrim";
+import { FifaPreparingSpinner } from "@/components/fifa/FifaHubMenuCard";
 import { FifaRepreHeroHeadline } from "@/components/fifa/FifaRepreHeroHeadline";
 import {
   HISTORICAL_LINEUP_HEADLINE,
   HISTORICAL_LINEUP_SUBTITLE,
 } from "@/lib/fifa/historicalLineup";
-import { FIFA_KICKER, FIFA_LINK } from "@/lib/fifa/fifaUiClasses";
+import { FIFA_LINK } from "@/lib/fifa/fifaUiClasses";
 
 export function FifaHistoricalLineupContent() {
   return (
@@ -26,26 +27,14 @@ export function FifaHistoricalLineupContent() {
           <FifaHistoricalLineupCardArt scrim="none" />
           <FifaImageTextScrim variant="hero-center" />
           <div className="fifa-image-text-layer flex flex-1 flex-col items-center justify-center px-4 text-center">
-            <p className={`${FIFA_KICKER} fifa-image-kicker`}>Připravujeme</p>
-            <div className="fifa-repre-hero-headline mt-3">
+            <div className="fifa-repre-hero-headline">
               <FifaRepreHeroHeadline
                 as="h1"
                 title={HISTORICAL_LINEUP_HEADLINE}
                 subtitle={HISTORICAL_LINEUP_SUBTITLE}
               />
             </div>
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--fifa-text-secondary)] lg:text-base">
-              Sestav si slavné české týmy z historie: Nagano 1998, zlato z MS nebo klubové sestavy
-              z extraligy. Editor historických soupisek připravujeme — zatím můžeš skládat{" "}
-              <Link href="/sestava" className={FIFA_LINK}>
-                nominaci reprezentace
-              </Link>{" "}
-              a{" "}
-              <Link href="/zapasy/sestava" className={FIFA_LINK}>
-                sestavu na zápas
-              </Link>
-              .
-            </p>
+            <FifaPreparingSpinner />
           </div>
         </div>
       </div>

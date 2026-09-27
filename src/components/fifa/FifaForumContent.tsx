@@ -19,10 +19,10 @@ import {
   Search,
   Tags,
   TrendingUp,
-  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { FifaAppPage } from "@/components/fifa/FifaAppPage";
+import { FifaForumMembersPanel } from "@/components/fifa/FifaForumMembersPanel";
 import { ForumFeedCarousel } from "@/components/fifa/ForumFeedCarousel";
 import { CommunityPostCard, COMMUNITY_SORT_ICONS } from "@/components/komunita/CommunityPostCard";
 import { CommunityPostDetailModal } from "@/components/komunita/CommunityPostDetailModal";
@@ -39,7 +39,7 @@ import type {
   CommunityMemberDto,
   CommunityPostDto,
 } from "@/lib/community/types";
-import { authorInitials, formatRelativeTime, previewCommentText } from "@/lib/community/display";
+import { previewCommentText } from "@/lib/community/display";
 import { initJerseyNameDisambiguation } from "@/lib/jerseyDisplayName";
 import { useContestStats } from "@/hooks/useContestStats";
 import { FIFA_BTN_SECONDARY } from "@/lib/fifa/fifaUiClasses";
@@ -462,49 +462,8 @@ export function FifaForumContent() {
         )}
       </div>
 
-      <div className="fifa-forum-banner__block fifa-forum-members">
-        <div className="fifa-forum-members__head">
-          <span>
-            <Users className="fifa-forum-sidebar__heading-icon" aria-hidden />
-            Členové
-          </span>
-          {communityMembers.length > 0 ? (
-            <strong>{communityMembers.filter((member) => member.active).length}</strong>
-          ) : null}
-        </div>
-        {communityMembers.length > 0 ? (
-          <ul className="fifa-forum-members__list">
-            {communityMembers.map((member) => (
-              <li className="fifa-forum-members__item" key={member.id}>
-                <span className="fifa-forum-members__avatar" aria-hidden>
-                  {member.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={member.image} alt="" />
-                  ) : (
-                    authorInitials(member.displayName)
-                  )}
-                  <span
-                    className={`fifa-forum-members__status ${
-                      member.active
-                        ? "fifa-forum-members__status--active"
-                        : "fifa-forum-members__status--inactive"
-                    }`}
-                  />
-                </span>
-                <span className="fifa-forum-members__identity">
-                  <strong className={member.isStaff ? "fifa-forum-members__staff" : ""}>
-                    {member.displayName}
-                  </strong>
-                  <time dateTime={member.lastActiveAt}>
-                    {member.active ? "aktivní" : formatRelativeTime(member.lastActiveAt)}
-                  </time>
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="fifa-forum-sidebar__empty">Zatím žádní členové</p>
-        )}
+      <div className="fifa-forum-banner__block">
+        <FifaForumMembersPanel members={communityMembers} />
       </div>
       {communityUsersCount !== null || postsThisWeek !== null ? (
         <div className="fifa-forum-banner__block fifa-forum-members__stats">

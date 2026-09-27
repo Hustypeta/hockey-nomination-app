@@ -47,7 +47,7 @@ export const FIFA_SEARCH_INDEX: FifaSearchEntry[] = [
   { href: "/souteze/ceska-reprezentace/a-tym", label: "MS 2026", hint: "Soutěže", icon: Trophy, keywords: ["mistrovstvi sveta", "world championship", "tipovacka", "svycarsko", "daily fantasy"] },
   { href: "/souteze/ms-2027", label: "MS 2027", hint: "Soutěže", icon: Trophy, keywords: ["mistrovstvi sveta", "world championship", "nemecko", "germany"] },
   { href: "/souteze/extraliga", label: EXTRALIGA_DRAFT_FANTASY_TITLE, hint: "Soutěže", icon: Shield, keywords: ["draft", "extraliga", "fantasy"] },
-  { href: "/souteze/historical-lineup", label: "Historical Lineup", hint: "Soutěže", icon: Trophy, keywords: ["historicke sestavy", "slavne tymy"] },
+  { href: "/souteze/historical-lineup", label: "Historical Lineup", hint: "Soutěže", icon: Trophy, keywords: ["historicke sestavy", "slavne tymy", "kviz", "startovni sestka", "nagano"] },
 
   // Fórum a žebříček
   { href: "/forum", label: "Fórum", hint: "Komunita", icon: MessageSquare, keywords: ["diskuze", "prispevky", "komunita"] },

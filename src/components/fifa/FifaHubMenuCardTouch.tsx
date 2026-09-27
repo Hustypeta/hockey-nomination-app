@@ -9,7 +9,7 @@ import { FifaRepreHeroHeadline } from "@/components/fifa/FifaRepreHeroHeadline";
 type FifaHubMenuItem = {
   href: string;
   label: string;
-  hint: string;
+  hint?: string;
   icon: LucideIcon;
 };
 
@@ -154,9 +154,11 @@ export function FifaHubMenuCardTouch({
                         <span className="block font-display text-sm font-bold leading-tight text-[var(--fifa-text)]">
                           {item.label}
                         </span>
-                        <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-wide text-[var(--fifa-text-muted)]">
-                          {item.hint}
-                        </span>
+                        {item.hint ? (
+                          <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-wide text-[var(--fifa-text-muted)]">
+                            {item.hint}
+                          </span>
+                        ) : null}
                       </span>
                       <ChevronRight className="h-4 w-4 shrink-0 text-[var(--fifa-accent-text)] opacity-70" aria-hidden />
                     </Link>

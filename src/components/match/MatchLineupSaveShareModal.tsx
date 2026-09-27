@@ -29,6 +29,7 @@ export function MatchLineupSaveShareModal({
   siteOrigin,
   poolKey,
   captainId = null,
+  guestMode = false,
 }: {
   open: boolean;
   onClose: () => void;
@@ -48,6 +49,8 @@ export function MatchLineupSaveShareModal({
   siteOrigin: string;
   poolKey?: string | null;
   captainId?: string | null;
+  /** Host — jen plakát, bez uložení. */
+  guestMode?: boolean;
 }) {
   const canShare = valid && !saving;
 
@@ -66,14 +69,18 @@ export function MatchLineupSaveShareModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Uložit a sdílet sestavu na zápas"
+        aria-label={guestMode ? "Plakát" : "Uložit a sdílet sestavu na zápas"}
         className="h-[min(92dvh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/12 bg-[#0b1220] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Sdílení</p>
-            <h2 className="mt-1 font-display text-lg font-black text-white">Uložit & sdílet</h2>
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">
+              {guestMode ? "Host" : "Sdílení"}
+            </p>
+            <h2 className="mt-1 font-display text-lg font-black text-white">
+              {guestMode ? "Plakát" : "Uložit & sdílet"}
+            </h2>
           </div>
           <button
             type="button"
@@ -105,16 +112,18 @@ export function MatchLineupSaveShareModal({
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-2">
-            <button
-              type="button"
-              onClick={() => void onSave()}
-              disabled={!canShare}
-              className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2.5 text-sm font-black text-white shadow-[0_16px_44px_rgba(0,0,0,0.22)] ring-1 ring-white/15 hover:brightness-110 disabled:opacity-50"
-            >
-              {saving ? "Ukládám…" : "Uložit"}
-            </button>
-          </div>
+          {!guestMode ? (
+            <div className="grid grid-cols-1 gap-2">
+              <button
+                type="button"
+                onClick={() => void onSave()}
+                disabled={!canShare}
+                className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2.5 text-sm font-black text-white shadow-[0_16px_44px_rgba(0,0,0,0.22)] ring-1 ring-white/15 hover:brightness-110 disabled:opacity-50"
+              >
+                {saving ? "Ukládám…" : "Uložit"}
+              </button>
+            </div>
+          ) : null}
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Plakát</p>

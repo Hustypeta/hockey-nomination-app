@@ -16,7 +16,7 @@
   /* PNG je mírně asymetrické: vlevo 13px, vpravo 10px @ 879px */
   --poster-ice-inset-left: 1.48%;
   --poster-ice-inset-right: 1.14%;
-  --poster-header-h: 130px;
+  --poster-header-h: 142px;
   /* bezpečná zóna pod zaoblenými rohy nahoře — menší inset, ať se vejde hokejlineup.cz */
   --poster-header-inset-x: calc(var(--poster-outer-r) * 0.3 + 4px);
   --poster-jersey-skater-scale: 1;
@@ -93,10 +93,10 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(7.6rem, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(9.6rem, 1fr) auto minmax(10.6rem, 1fr);
   flex-shrink: 0;
   align-items: center;
-  gap: 6px 14px;
+  gap: 6px 12px;
   width: calc(100% - var(--poster-ice-inset-left) - var(--poster-ice-inset-right));
   height: var(--poster-header-h);
   min-height: 0;
@@ -117,7 +117,7 @@
   overflow: visible;
   white-space: nowrap;
   font-family: var(--font-wordmark, "Barlow Condensed", system-ui, sans-serif);
-  font-size: clamp(13px, 1.35vw, 16px);
+  font-size: clamp(15px, 1.6vw, 19px);
   font-weight: 900;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -142,7 +142,7 @@
   display: inline-block;
   max-width: 100%;
   font-family: var(--font-display, "Bebas Neue", system-ui, sans-serif);
-  font-size: clamp(18px, 2.15vw, 26px);
+  font-size: clamp(21px, 2.45vw, 30px);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: 0.01em;
@@ -154,7 +154,7 @@
   justify-self: end;
   align-self: center;
   flex-shrink: 0;
-  width: clamp(110px, 12.2vw, 148px);
+  width: clamp(128px, 14vw, 168px);
   max-width: 100%;
   height: auto;
   object-fit: contain;

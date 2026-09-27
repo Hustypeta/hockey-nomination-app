@@ -110,6 +110,7 @@ export function MatchLineupBuilderPage() {
   const fifaMobileInlinePool = fifaEnabled && isNarrowLayout;
   const [lineupPosterModalOpen, setLineupPosterModalOpen] = useState(false);
   const [saveShareModalOpen, setSaveShareModalOpen] = useState(false);
+  const [saveShareGuestMode, setSaveShareGuestMode] = useState(false);
   const [googleSignInOpen, setGoogleSignInOpen] = useState(false);
   /** Široký layout (≥ lg): DnD z poolu zapnuté. Úzký: jen klepnutí, bez přetahování. */
   const enableDnd = !isNarrowLayout;
@@ -338,11 +339,19 @@ export function MatchLineupBuilderPage() {
     setGoogleSignInOpen(true);
   };
 
+  const continueAsGuestForPoster = () => {
+    persistMatchGuestDraft(false);
+    setGoogleSignInOpen(false);
+    setSaveShareGuestMode(true);
+    setSaveShareModalOpen(true);
+  };
+
   const openSaveShare = () => {
     if (authStatus !== "authenticated") {
       requireGoogleToSave();
       return;
     }
+    setSaveShareGuestMode(false);
     setSaveShareModalOpen(true);
   };
 
@@ -390,6 +399,7 @@ export function MatchLineupBuilderPage() {
     }
     guestDraftAppliedRef.current = true;
     if (draft.resumeSave && authStatus === "authenticated") {
+      setSaveShareGuestMode(false);
       setSaveShareModalOpen(true);
       toast.success("Sestava je zpět — teď ji můžeš uložit.");
     }
@@ -807,7 +817,10 @@ export function MatchLineupBuilderPage() {
 
       <MatchLineupSaveShareModal
         open={saveShareModalOpen}
-        onClose={() => setSaveShareModalOpen(false)}
+        onClose={() => {
+          setSaveShareModalOpen(false);
+          setSaveShareGuestMode(false);
+        }}
         shareTitle={shareTitle}
         onShareTitleChange={setShareTitle}
         shareUrl={shareUrl}
@@ -824,12 +837,14 @@ export function MatchLineupBuilderPage() {
         siteOrigin={siteOrigin}
         poolKey={poolKey}
         captainId={captainId}
+        guestMode={saveShareGuestMode}
       />
       <GoogleSignInRequiredModal
         open={googleSignInOpen}
         onClose={() => setGoogleSignInOpen(false)}
         callbackUrl={editorSignInCallbackUrl()}
         onBeforeSignIn={() => persistMatchGuestDraft(true)}
+        onContinueAsGuest={continueAsGuestForPoster}
       />
     </FifaAppPage>
   ) : (
@@ -1005,7 +1020,10 @@ export function MatchLineupBuilderPage() {
 
       <MatchLineupSaveShareModal
         open={saveShareModalOpen}
-        onClose={() => setSaveShareModalOpen(false)}
+        onClose={() => {
+          setSaveShareModalOpen(false);
+          setSaveShareGuestMode(false);
+        }}
         shareTitle={shareTitle}
         onShareTitleChange={setShareTitle}
         shareUrl={shareUrl}
@@ -1022,12 +1040,14 @@ export function MatchLineupBuilderPage() {
         siteOrigin={siteOrigin}
         poolKey={poolKey}
         captainId={captainId}
+        guestMode={saveShareGuestMode}
       />
       <GoogleSignInRequiredModal
         open={googleSignInOpen}
         onClose={() => setGoogleSignInOpen(false)}
         callbackUrl={editorSignInCallbackUrl()}
         onBeforeSignIn={() => persistMatchGuestDraft(true)}
+        onContinueAsGuest={continueAsGuestForPoster}
       />
     </div>
   );
