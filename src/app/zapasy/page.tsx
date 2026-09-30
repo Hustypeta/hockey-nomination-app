@@ -7,6 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ZapasyIndexRedirectPage() {
-  redirect("/fantasy");
+  redirect("/editorsestavy");
 }
-

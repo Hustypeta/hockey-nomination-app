@@ -11,11 +11,11 @@ import {
 export const SITE_ORIGIN = "https://hokejlineup.cz";
 
 export const DEFAULT_TITLE =
-  "Lineup | Editor hokejové sestavy, nominace a fantasy";
+  "Lineup | Editor hokejové sestavy";
 export const DEFAULT_DESCRIPTION =
-  "Sestav si českou hokejovou soupisku, ulož formace na zápas a porovnej je s ostatními. Editor sestavy, fantasy a komunita fanoušků.";
+  "Sestav si českou hokejovou soupisku, ulož formace a sdílej je. Editor sestavy a komunita fanoušků na hokejlineup.cz.";
 export const DEFAULT_OG_ALT =
-  "Lineup — editor hokejové sestavy, nominace a fantasy · hokejlineup.cz";
+  "Lineup — editor hokejové sestavy · hokejlineup.cz";
 
 export const ARTICLE_AUTHOR = "Lineup";
 
@@ -164,10 +164,10 @@ export const PAGE_SEO = {
     path: "/sestava",
   },
   matchEditor: {
-    title: "Editor sestavy na zápas",
+    title: "Editor sestavy",
     description:
-      "Poskládej si hokejovou sestavu na zápas, ulož formace a sdílej je. Prohlížet a skládat můžeš bez účtu, přihlášení až při uložení.",
-    path: "/zapasy/sestava",
+      "Poskládej si hokejovou sestavu, ulož formace a sdílej je. Prohlížet a skládat můžeš bez účtu, přihlášení až při uložení.",
+    path: "/editorsestavy",
   },
   souteze: {
     title: "Soutěže",

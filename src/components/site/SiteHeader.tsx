@@ -12,21 +12,16 @@ import { UserStandingsInMenu } from "@/components/contest/UserStandingsInMenu";
 type NavItem = { href: string; label: string; shortLabel?: string };
 
 /** Plné názvy v menu — po skrytí Pick'em žebříčku se vejdou i delší položky. */
-const LINEUP_EDITOR_HREF = "/zapasy/sestava";
+const LINEUP_EDITOR_HREF = "/editorsestavy";
 
 const NAV_HOME: NavItem = { href: "/", label: "Úvod" };
 
 const NAV: NavItem[] = [
   NAV_HOME,
-  { href: "/fantasy", label: "Fantasy", shortLabel: "Fantasy" },
   { href: LINEUP_EDITOR_HREF, label: "Editor sestavy" },
   { href: "/zebricek", label: "Žebříček", shortLabel: "Žebříček" },
   { href: "/ucet", label: "Můj účet", shortLabel: "Účet" },
 ];
-
-function isNominationEditorPath(pathname: string) {
-  return pathname === "/sestava" || pathname.startsWith("/sestava/");
-}
 
 function DesktopNavLabel({ item }: { item: NavItem }) {
   if (!item.shortLabel || item.shortLabel === item.label) return <>{item.label}</>;
@@ -124,8 +119,8 @@ export function SiteHeader() {
   }, [mobileNavOpen]);
 
   const user = session?.user;
-  const onNominationEditor = isNominationEditorPath(pathname);
-  const showLineupEditorCta = !onNominationEditor;
+  const onEditor = pathname === LINEUP_EDITOR_HREF || pathname.startsWith(`${LINEUP_EDITOR_HREF}/`);
+  const showLineupEditorCta = !onEditor;
 
   return (
     <>
@@ -286,7 +281,7 @@ export function SiteHeader() {
                   <button
                     type="button"
                     onClick={() =>
-                      signIn("google", { callbackUrl: onNominationEditor ? "/sestava" : LINEUP_EDITOR_HREF })
+                      signIn("google", { callbackUrl: LINEUP_EDITOR_HREF })
                     }
                     className={`
                     rounded-lg border border-white/[0.14] bg-white/[0.04] px-3 py-2 text-xs font-semibold text-slate-200 md:text-[0.8125rem]
@@ -430,7 +425,7 @@ export function SiteHeader() {
                   onClick={() => {
                     setMobileNavOpen(false);
                     void signIn("google", {
-                      callbackUrl: onNominationEditor ? "/sestava" : LINEUP_EDITOR_HREF,
+                      callbackUrl: LINEUP_EDITOR_HREF,
                     });
                   }}
                 >

@@ -547,6 +547,8 @@ interface PlayerPoolPanelProps {
   compactInline?: boolean;
   /** Volitelná nápověda při prázdném poolu (schema vs. opravdu prázdný klub). */
   emptyHint?: string | null;
+  /** Album / free pick — bez limitů pozic ze sestavy (jen usedIds). */
+  ignorePositionLimits?: boolean;
   /** Historical Lineup — bez % popularity a řazení podle ní. */
   hidePickRate?: boolean;
 }
@@ -567,6 +569,7 @@ export function PlayerPoolPanel({
   compactInline = false,
   emptyHint = null,
   hidePickRate = false,
+  ignorePositionLimits = false,
 }: PlayerPoolPanelProps) {
   const fifaUi = uiVariant === "fifa";
   const denseGrid = gridColumns === 3 || compactInline;
@@ -618,6 +621,7 @@ export function PlayerPoolPanel({
 
   const canAdd = (player: Player) => {
     if (usedIds.has(player.id)) return false;
+    if (ignorePositionLimits) return true;
     const lim = POSITION_LIMITS[player.position];
     return counts[player.position] < lim;
   };

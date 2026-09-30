@@ -329,9 +329,9 @@ export function MatchLineupBuilderPage() {
   };
 
   const editorSignInCallbackUrl = () => {
-    if (typeof window === "undefined") return "/zapasy/sestava";
+    if (typeof window === "undefined") return "/editorsestavy";
     const next = `${window.location.pathname}${window.location.search}`;
-    return next || "/zapasy/sestava";
+    return next || "/editorsestavy";
   };
 
   const requireGoogleToSave = () => {

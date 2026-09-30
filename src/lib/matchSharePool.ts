@@ -82,6 +82,9 @@ export function resolveMatchSharePoolKey(opts: {
   return DEFAULT_LINEUP_POOL;
 }
 
+/** Canonical public path of the lineup editor. */
+export const LINEUP_EDITOR_PATH = "/editorsestavy";
+
 /** Editor URL with optional pool + saved code. */
 export function matchLineupEditorHref(opts?: { poolKey?: string | null; code?: string | null }): string {
   const params = new URLSearchParams();
@@ -90,5 +93,5 @@ export function matchLineupEditorHref(opts?: { poolKey?: string | null; code?: s
   if (code) params.set("kod", code);
   if (pool && isKnownPoolKey(pool)) params.set("pool", pool);
   const q = params.toString();
-  return q ? `/zapasy/sestava?${q}` : "/zapasy/sestava";
+  return q ? `${LINEUP_EDITOR_PATH}?${q}` : LINEUP_EDITOR_PATH;
 }

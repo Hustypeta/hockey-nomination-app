@@ -9,36 +9,53 @@ import { SiteShell } from "@/components/site/SiteShell";
 import { FifaAppPage } from "@/components/fifa/FifaAppPage";
 import { FifaPageHeader } from "@/components/fifa/FifaPageHeader";
 import { FIFA_LINK, FIFA_META } from "@/lib/fifa/fifaUiClasses";
+import { LINEUP_EDITOR_PATH } from "@/lib/matchSharePool";
 import {
   DEV_GOOGLE_OAUTH_REDIRECT_URI,
   SITE_CANONICAL_HOST,
   SITE_GOOGLE_OAUTH_REDIRECT_URI,
 } from "@/lib/siteBranding";
 
-function errorExplanation(code: string | null): string | null {
-  if (!code) return null;
+const PUBLIC_FAIL = "Nepovedlo se, zkus to znovu.";
+
+function isLocalDevHost(): boolean {
+  if (typeof window === "undefined") return false;
+  const host = window.location.hostname.toLowerCase();
+  return host === "localhost" || host === "127.0.0.1" || host === "::1";
+}
+
+/** Stručná zpráva pro návštěvníky — bez návodu na Google Cloud / env. */
+function publicErrorMessage(code: string | null): string {
+  if (!code) return PUBLIC_FAIL;
+  if (code === "AccessDenied") return "Přihlášení bylo zrušeno. Můžeš to zkusit znovu.";
+  if (code === "OAuthAccountNotLinked") {
+    return "Tenhle Google účet nejde propojit s účtem, který už tady je. Zkus jiný Google účet.";
+  }
+  return PUBLIC_FAIL;
+}
+
+/** Detail jen na localhost — pro tebe při ladění OAuth. */
+function localDevErrorDetail(code: string): string | null {
   const map: Record<string, string> = {
     OAuthAccountNotLinked:
-      "Tento Google účet nelze automaticky propojit s účtem, který už ve službě existuje (kolize e-mailu / účtu). Zkus jiný Google účet nebo dej vědět správci — případně zkontroluj databázi uživatelů.",
+      "Kolize e-mailu / účtu v DB — Google účet nejde auto-linknout. Zkontroluj User + Account v databázi.",
     OAuthCallback:
-      "Google nevrátil platný token (redirect uri mismatch = špatná adresa v Google Cloud Console nebo jiné NEXTAUTH_URL než očekáváš). V Google Cloud Console → API a služby → Pověření → tvůj OAuth 2.0 Client ID (typ Web) v sekci „Autorizované přesměrovací identifikátory URI“ musí být přesně: " +
+      "Redirect URI mismatch nebo špatné NEXTAUTH_URL. V Google Cloud Console → OAuth 2.0 Client musí být přesně: " +
       SITE_GOOGLE_OAUTH_REDIRECT_URI +
-      " (a na hostingu / Railway proměnná NEXTAUTH_URL=https://" +
-      SITE_CANONICAL_HOST +
-      " bez www a bez lomítka na konci). Pro vývoj v Cursoru/localhost ještě: " +
+      " a lokálně: " +
       DEV_GOOGLE_OAUTH_REDIRECT_URI +
-      ". V sekci „Autorizované domény JavaScriptu“ přidej https://" +
+      ". Railway: NEXTAUTH_URL=https://" +
       SITE_CANONICAL_HOST +
-      " a pro lokál http://localhost:3000. Zkontroluj taky GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET (stejný projekt v Google).",
-    OAuthSignin: "Chyba při startu OAuth u poskytovatele.",
-    Callback: "Chyba při dokončení přihlášení na serveru (často databáze nebo konfigurace). Mrkni do logů nasazení.",
-    Configuration: "Chyba konfigurace NextAuth (např. chybí NEXTAUTH_SECRET v produkci).",
-    AccessDenied: "Přihlášení bylo zamítnuto.",
-    Verification: "Neplatný nebo expirovaný ověřovací odkaz.",
-    SessionRequired: "Vyžadována session.",
-    Default: "Neznámá chyba přihlášení.",
+      " (bez www, bez lomítka). Zkontroluj GOOGLE_CLIENT_ID / SECRET.",
+    OAuthSignin: "Chyba při startu OAuth u Googlu.",
+    Callback: "Chyba callbacku na serveru (DB / konfigurace) — mrkni do logů.",
+    Configuration: "Chybí NEXTAUTH_SECRET nebo jiná konfigurace NextAuth.",
+    AccessDenied: "AccessDenied od poskytovatele.",
+    Verification: "Neplatný / expirovaný ověřovací odkaz.",
+    SessionRequired: "SessionRequired.",
+    Default: "Neznámá chyba NextAuth.",
   };
-  return map[code] ?? `Kód chyby: ${code}. Zkus to znovu nebo kontaktuj podporu.`;
+  return map[code] ?? `Kód: ${code}`;
 }
 
 function SignInBody() {
@@ -46,33 +63,38 @@ function SignInBody() {
   const errorCode = searchParams.get("error");
   const rawCallback = searchParams.get("callbackUrl");
   const callbackUrl = useMemo(() => {
-    if (!rawCallback) return "/sestava";
+    if (!rawCallback) return LINEUP_EDITOR_PATH;
     try {
-      const u = new URL(rawCallback, typeof window !== "undefined" ? window.location.origin : "https://hokejlineup.cz");
+      const u = new URL(
+        rawCallback,
+        typeof window !== "undefined" ? window.location.origin : "https://hokejlineup.cz",
+      );
       if (u.pathname.startsWith("/")) return `${u.pathname}${u.search}`;
     } catch {
       /* ignore */
     }
-    return rawCallback.startsWith("/") ? rawCallback : "/sestava";
+    return rawCallback.startsWith("/") ? rawCallback : LINEUP_EDITOR_PATH;
   }, [rawCallback]);
 
-  const hint = errorExplanation(errorCode);
+  const showDevDetail = isLocalDevHost() && Boolean(errorCode);
+  const publicHint = errorCode ? publicErrorMessage(errorCode) : null;
+  const devDetail = showDevDetail && errorCode ? localDevErrorDetail(errorCode) : null;
 
   return (
     <SiteShell>
       <FifaAppPage fitViewport={false}>
         <div className="mx-auto w-full max-w-lg">
           <FifaPageHeader title="Přihlášení" subtitle="Google účet" align="center" />
-          {hint ? (
+          {publicHint ? (
             <div
               role="alert"
               className="mb-6 rounded-xl border border-red-500/35 bg-red-950/40 px-4 py-3 text-sm leading-relaxed text-red-100/95"
             >
               <p className="font-semibold text-red-100">Přihlášení se nepovedlo</p>
-              <p className="mt-2 text-red-100/90">{hint}</p>
-              {errorCode ? (
-                <p className="mt-2 font-mono text-xs text-red-200/70">
-                  Technický kód: <span className="select-all">{errorCode}</span>
+              <p className="mt-2 text-red-100/90">{publicHint}</p>
+              {devDetail ? (
+                <p className="mt-3 border-t border-red-500/25 pt-3 font-mono text-xs leading-relaxed text-red-200/75">
+                  {devDetail}
                 </p>
               ) : null}
             </div>
@@ -88,7 +110,7 @@ function SignInBody() {
               Pokračovat s Google
             </button>
             <p className={`${FIFA_META} mt-4 text-center`}>
-              Po kliknutí otevře Google výběr účtu (kvůli bezpečnosti máme zapnutý výběr účtu při každém pokusu).
+              Po kliknutí otevře Google výběr účtu.
             </p>
           </div>
 

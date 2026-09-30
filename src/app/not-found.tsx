@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 
 const LINKS = [
   { href: "/", label: "Úvod" },
-  { href: "/sestava", label: "Editor nominace" },
-  { href: "/zapasy/sestava", label: "Editor sestavy" },
+  { href: "/editorsestavy", label: "Editor sestavy" },
   { href: "/souteze", label: "Soutěže" },
   { href: "/forum", label: "Fórum" },
+  { href: "/zebricek", label: "Žebříček" },
 ] as const;
 
 export default function NotFound() {

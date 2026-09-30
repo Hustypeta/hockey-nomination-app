@@ -3,7 +3,6 @@ import {
   Home,
   LayoutGrid,
   UserCircle,
-  Users,
   Trophy,
   MessageSquare,
   BarChart3,
@@ -20,10 +19,8 @@ export function buildFifaAppNav(designPreview: boolean): FifaAppNavItem[] {
   if (designPreview) {
     return [
       { href: "/design/home", label: "Domů", icon: Home },
-      { href: "/zapasy/sestava", label: "Editor sestavy", icon: LayoutGrid, matchPrefix: true },
-      { href: "/sestava", label: "Editor nominace", icon: LayoutGrid, matchPrefix: true },
+      { href: "/editorsestavy", label: "Editor sestavy", icon: LayoutGrid, matchPrefix: true },
       { href: "/ucet", label: "Můj účet", icon: UserCircle, matchPrefix: true },
-      { href: "/design/hraci", label: "Hráči", icon: Users, matchPrefix: true },
       { href: "/design/souteze", label: "Soutěže", icon: Trophy, matchPrefix: true },
       { href: "/design/forum", label: "Fórum", icon: MessageSquare, matchPrefix: true },
       { href: "/zebricek", label: "Žebříček", icon: BarChart3 },
@@ -33,7 +30,7 @@ export function buildFifaAppNav(designPreview: boolean): FifaAppNavItem[] {
   return [
     { href: "/", label: "Domů", icon: Home },
     { href: "/ucet", label: "Můj účet", icon: UserCircle, matchPrefix: true },
-    { href: "/zapasy/sestava", label: "Editor sestavy", icon: LayoutGrid, matchPrefix: true },
+    { href: "/editorsestavy", label: "Editor sestavy", icon: LayoutGrid, matchPrefix: true },
     { href: "/souteze", label: "Soutěže", icon: Trophy, matchPrefix: true },
     { href: "/forum", label: "Fórum", icon: MessageSquare, matchPrefix: true },
     { href: "/zebricek", label: "Žebříček", icon: BarChart3 },

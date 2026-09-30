@@ -44,8 +44,27 @@ const nextConfig: NextConfig = {
       },
       { source: "/logo.png", destination: "/images/logo/logo.png", permanent: false },
       { source: "/clanky", destination: "/", permanent: true },
-      { source: "/clanky/rady-k-nominaci", destination: "/sestava", permanent: true },
-      { source: "/clanky/kurzy-a-analyza-ms-2026", destination: "/bracket", permanent: true },
+      { source: "/clanky/rady-k-nominaci", destination: "/editorsestavy", permanent: true },
+      { source: "/clanky/kurzy-a-analyza-ms-2026", destination: "/", permanent: true },
+
+      // Editor sestavy — kanonická URL
+      { source: "/zapasy/sestava", destination: "/editorsestavy", permanent: true },
+      { source: "/zapasy", destination: "/editorsestavy", permanent: true },
+
+      // Smazané produkty → pryč z veřejného webu
+      { source: "/sestava", destination: "/editorsestavy", permanent: true },
+      { source: "/sestava/:path*", destination: "/editorsestavy", permanent: true },
+      { source: "/fantasy", destination: "/", permanent: true },
+      { source: "/fantasy/:path*", destination: "/", permanent: true },
+      { source: "/ucet/nominace", destination: "/ucet", permanent: true },
+      { source: "/ucet/hodnoceni", destination: "/ucet", permanent: true },
+      { source: "/nominations/:path*", destination: "/", permanent: true },
+      { source: "/share", destination: "/", permanent: true },
+      { source: "/v/:path*", destination: "/", permanent: true },
+      { source: "/l/:path*", destination: "/", permanent: true },
+      { source: "/h/:path*", destination: "/", permanent: true },
+      { source: "/hraci", destination: "/", permanent: true },
+      { source: "/bracket", destination: "/", permanent: true },
     ];
   },
   async headers() {

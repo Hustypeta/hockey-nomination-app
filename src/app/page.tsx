@@ -6,7 +6,7 @@ import { isFifaDesignEnabled } from "@/lib/fifa/fifaDesignEnabled";
 import { loadHomeDashboard } from "@/lib/home/loadHomeDashboard";
 import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
   ...PAGE_SEO.home,

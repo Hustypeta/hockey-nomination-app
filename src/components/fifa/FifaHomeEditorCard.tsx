@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ChevronRight, LayoutGrid } from "lucide-react";
 import { FifaHomeEditorCardArt } from "@/components/fifa/FifaHomeEditorCardArt";
 
-const LINEUP_EDITOR_HREF = "/zapasy/sestava";
+const LINEUP_EDITOR_HREF = "/editorsestavy";
 
 export function FifaHomeEditorCard({ compact = false }: { compact?: boolean }) {
   return (

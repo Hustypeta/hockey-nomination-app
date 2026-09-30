@@ -14,9 +14,8 @@ type SitemapEntry = {
  * Při úpravě stránky aktualizuj datum tady.
  */
 const publicRoutes: SitemapEntry[] = [
-  { path: "/", lastmod: "2026-09-18", changefreq: "daily", priority: "1.0" },
-  { path: "/sestava", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.9" },
-  { path: "/zapasy/sestava", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.9" },
+  { path: "/", lastmod: "2026-09-27", changefreq: "daily", priority: "1.0" },
+  { path: "/editorsestavy", lastmod: "2026-09-27", changefreq: "weekly", priority: "0.9" },
   { path: "/souteze", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.8" },
   { path: "/souteze/historical-lineup", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.8" },
   { path: "/souteze/extraliga", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.8" },
@@ -26,10 +25,6 @@ const publicRoutes: SitemapEntry[] = [
   { path: "/zebricek", lastmod: "2026-06-01", changefreq: "weekly", priority: "0.6" },
   { path: "/kdo-jsem", lastmod: "2026-05-01", changefreq: "monthly", priority: "0.4" },
   { path: "/ochrana-udaju", lastmod: "2026-05-01", changefreq: "monthly", priority: "0.3" },
-  { path: "/novinky", lastmod: "2026-06-28", changefreq: "weekly", priority: "0.5" },
-  { path: "/daily-news", lastmod: "2026-09-18", changefreq: "daily", priority: "0.6" },
-  { path: "/hraci", lastmod: "2026-09-06", changefreq: "weekly", priority: "0.6" },
-  { path: "/bracket", lastmod: "2026-05-15", changefreq: "monthly", priority: "0.3" },
 ];
 
 function escapeXml(s: string) {

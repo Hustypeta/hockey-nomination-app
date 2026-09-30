@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Users } from "lucide-react";
 import { FifaForumMembersPanel } from "@/components/fifa/FifaForumMembersPanel";
+import { useContestStats } from "@/hooks/useContestStats";
 import type { CommunityMemberDto } from "@/lib/community/types";
 
 function formatCs(n: number): string {
@@ -9,12 +11,30 @@ function formatCs(n: number): string {
 }
 
 export function FifaHomeKomunitaStatsCard({
-  communityUsersCount,
-  members,
+  communityUsersCount: initialCount,
+  members: initialMembers,
 }: {
   communityUsersCount: number | null;
   members: CommunityMemberDto[];
 }) {
+  const { communityUsersCount: liveCount } = useContestStats();
+  const [members, setMembers] = useState<CommunityMemberDto[]>(initialMembers);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/forum/members", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data: { members?: CommunityMemberDto[] }) => {
+        if (!cancelled && Array.isArray(data.members)) setMembers(data.members);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const communityUsersCount = liveCount ?? initialCount;
+
   return (
     <div className="fifa-komunita-stats">
       <div className="fifa-komunita-stat fifa-komunita-stat--community">

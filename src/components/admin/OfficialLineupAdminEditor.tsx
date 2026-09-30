@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
@@ -52,7 +52,7 @@ export function OfficialLineupAdminEditor() {
   const [poolDragPlayer, setPoolDragPlayer] = useState<Player | null>(null);
 
   const isNarrowLayout = useMediaQuery(MQ_LAYOUT_NARROW);
-  /** Široký editor (≥ lg): DnD z poolu; úzký: jen klepnutí. */
+  /** Ĺ irokĂ˝ editor (â‰Ą lg): DnD z poolu; ĂşzkĂ˝: jen klepnutĂ­. */
   const enableDnd = !isNarrowLayout;
   const mobilePlayerSheetOpen = isNarrowLayout && selectedSlot !== null;
   const showDesktopPoolColumn = !isNarrowLayout || selectedSlot === null;
@@ -93,7 +93,7 @@ export function OfficialLineupAdminEditor() {
       return;
     }
     if (!res.ok) {
-      toast.error("Nepodařilo se načíst uloženou soupisku.");
+      toast.error("NepodaĹ™ilo se naÄŤĂ­st uloĹľenou soupisku.");
       setAuthorized(true);
       return;
     }
@@ -149,7 +149,7 @@ export function OfficialLineupAdminEditor() {
 
   useEffect(() => {
     if (isComplete && !wasCompleteRef.current && authorized) {
-      toast.success("Soupiska je kompletní — můžeš uložit.", { duration: 4000 });
+      toast.success("Soupiska je kompletnĂ­ â€” mĹŻĹľeĹˇ uloĹľit.", { duration: 4000 });
     }
     wasCompleteRef.current = isComplete;
   }, [isComplete, authorized]);
@@ -183,27 +183,27 @@ export function OfficialLineupAdminEditor() {
         const slotId = droppableIdFromSelectedSlot(selectedSlot);
         const target = slotId ? parseDroppableId(slotId) : null;
         if (!target || !canAssignPlayer(player)) {
-          toast.error("Tenhle hráč nejde na vybraný slot.");
+          toast.error("Tenhle hrĂˇÄŤ nejde na vybranĂ˝ slot.");
           setSelectedSlot(null);
           return;
         }
         const next = assignPlayerToTarget(lineup, player, target);
         if (next) {
           setLineup(next);
-          toast.success(`${player.name} je ve sestavě`);
+          toast.success(`${player.name} je ve sestavÄ›`);
         } else {
-          toast.error("Sem tohohle hráče nelze dát.");
+          toast.error("Sem tohohle hrĂˇÄŤe nelze dĂˇt.");
         }
         setSelectedSlot(null);
         return;
       }
       const next = tryAutoAssignPlayer(lineup, player);
       if (!next) {
-        toast.error("Už není volné místo pro tuto pozici, nebo je hráč už ve soupisce.");
+        toast.error("UĹľ nenĂ­ volnĂ© mĂ­sto pro tuto pozici, nebo je hrĂˇÄŤ uĹľ ve soupisce.");
         return;
       }
       setLineup(next);
-      toast.success(`${player.name} přidán`);
+      toast.success(`${player.name} pĹ™idĂˇn`);
     },
     [lineup, selectedSlot, canAssignPlayer]
   );
@@ -235,11 +235,11 @@ export function OfficialLineupAdminEditor() {
       if (!player || !target) return;
       const next = assignPlayerToTarget(lineup, player, target);
       if (!next) {
-        toast.error("Sem tohohle hráče nelze dát.");
+        toast.error("Sem tohohle hrĂˇÄŤe nelze dĂˇt.");
         return;
       }
       setLineup(next);
-      toast.success(`${player.name} → sestava`);
+      toast.success(`${player.name} â†’ sestava`);
     },
     [lineup, players]
   );
@@ -249,20 +249,20 @@ export function OfficialLineupAdminEditor() {
   const handleRandom = useCallback(() => {
     const next = buildRandomLineup(players);
     if (!next) {
-      toast.error("V databázi není dost hráčů (potřeba 3G + 8D + 14F).");
+      toast.error("V databĂˇzi nenĂ­ dost hrĂˇÄŤĹŻ (potĹ™eba 3G + 8D + 14F).");
       return;
     }
     setLineup(next);
     setCaptainId(null);
     setSelectedSlot(null);
-    toast.success("Náhodná sestava — uprav podle oficiálního zápisu.");
+    toast.success("NĂˇhodnĂˇ sestava â€” uprav podle oficiĂˇlnĂ­ho zĂˇpisu.");
   }, [players]);
 
   const handleReset = useCallback(() => {
     setLineup(EMPTY_LINEUP);
     setCaptainId(null);
     setSelectedSlot(null);
-    toast.message("Sestava resetována.");
+    toast.message("Sestava resetovĂˇna.");
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -277,11 +277,11 @@ export function OfficialLineupAdminEditor() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        toast.error(typeof data.error === "string" ? data.error : "Přihlášení selhalo.");
+        toast.error(typeof data.error === "string" ? data.error : "PĹ™ihlĂˇĹˇenĂ­ selhalo.");
         return;
       }
       setPassword("");
-      toast.success("Přihlášeno.");
+      toast.success("PĹ™ihlĂˇĹˇeno.");
       await loadOfficial();
     } finally {
       setLoginBusy(false);
@@ -293,7 +293,7 @@ export function OfficialLineupAdminEditor() {
     setAuthorized(false);
     setLineup(EMPTY_LINEUP);
     setCaptainId(null);
-    toast.message("Odhlášeno.");
+    toast.message("OdhlĂˇĹˇeno.");
   };
 
   const handleSave = useCallback(async () => {
@@ -310,10 +310,10 @@ export function OfficialLineupAdminEditor() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        toast.error(typeof data.error === "string" ? data.error : "Uložení selhalo.");
+        toast.error(typeof data.error === "string" ? data.error : "UloĹľenĂ­ selhalo.");
         return;
       }
-      toast.success(data.message ?? "Uloženo.");
+      toast.success(data.message ?? "UloĹľeno.");
       await loadOfficial();
     } finally {
       setSaving(false);
@@ -323,7 +323,7 @@ export function OfficialLineupAdminEditor() {
   const handleClearStoredOfficial = useCallback(async () => {
     if (
       !window.confirm(
-        "Odstranit uloženou oficiální soupisku z databáze? Veřejný žebříček soutěže přestane zobrazovat body, dokud znovu neuložíš kompletní sestavu."
+        "Odstranit uloĹľenou oficiĂˇlnĂ­ soupisku z databĂˇze? VeĹ™ejnĂ˝ ĹľebĹ™Ă­ÄŤek soutÄ›Ĺľe pĹ™estane zobrazovat body, dokud znovu neuloĹľĂ­Ĺˇ kompletnĂ­ sestavu."
       )
     ) {
       return;
@@ -336,10 +336,10 @@ export function OfficialLineupAdminEditor() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        toast.error(typeof data.error === "string" ? data.error : "Odstranění selhalo.");
+        toast.error(typeof data.error === "string" ? data.error : "OdstranÄ›nĂ­ selhalo.");
         return;
       }
-      toast.success(data.message ?? "Odstraněno.");
+      toast.success(data.message ?? "OdstranÄ›no.");
       setLineup(EMPTY_LINEUP);
       setCaptainId(null);
       setUpdatedAt(null);
@@ -350,7 +350,7 @@ export function OfficialLineupAdminEditor() {
   }, [loadOfficial]);
 
   if (!authChecked || loading) {
-    return <AppLoadingScreen message="Načítám…" />;
+    return <AppLoadingScreen message="NaÄŤĂ­tĂˇmâ€¦" />;
   }
 
   if (!authorized) {
@@ -362,10 +362,10 @@ export function OfficialLineupAdminEditor() {
         <div className="relative z-10 mx-auto max-w-md px-4 py-16">
           <div className="sestava-premium-panel-dark rounded-2xl p-6 shadow-xl">
             <h1 className="font-sans text-xl font-bold leading-snug tracking-normal text-white">
-              Admin — oficiální soupiska
+              Admin â€” oficiĂˇlnĂ­ soupiska
             </h1>
             <p className="mt-2 text-sm text-white/65">
-              Stejný editor jako nominace na MS (25 hráčů). Po uložení se podle této sestavy vyhodnotí soutěž.
+              StejnĂ˝ editor jako nominace na MS (25 hrĂˇÄŤĹŻ). Po uloĹľenĂ­ se podle tĂ©to sestavy vyhodnotĂ­ soutÄ›Ĺľ.
             </p>
             <form onSubmit={handleLogin} className="mt-6 space-y-3">
               <label className="block text-xs font-medium uppercase tracking-wider text-white/50">
@@ -383,7 +383,7 @@ export function OfficialLineupAdminEditor() {
                 disabled={loginBusy || !password}
                 className="w-full rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] py-3 text-sm font-bold text-white disabled:opacity-40"
               >
-                {loginBusy ? "…" : "Přihlásit"}
+                {loginBusy ? "â€¦" : "PĹ™ihlĂˇsit"}
               </button>
             </form>
           </div>
@@ -408,19 +408,19 @@ export function OfficialLineupAdminEditor() {
           <div className="mx-auto flex max-w-[90rem] flex-col gap-3 lg-device:flex-row lg-device:items-start lg-device:justify-between">
             <div>
               <h1 className="font-display text-xl font-black tracking-[0.08em] text-white sm:text-2xl">
-                Admin — oficiální soupiska
+                Admin â€” oficiĂˇlnĂ­ soupiska
               </h1>
               <p className="mt-1 text-xs text-white/55">
-                Rozložení a ovládání jako u{' '}
-                <Link href="/zapasy/sestava" className="font-semibold text-[#f1c40f] underline-offset-4 hover:underline">
-                  tvorby sestavy na zápas
+                RozloĹľenĂ­ a ovlĂˇdĂˇnĂ­ jako u{' '}
+                <Link href="/editorsestavy" className="font-semibold text-[#f1c40f] underline-offset-4 hover:underline">
+                  tvorby sestavy na zĂˇpas
                 </Link>
-                — kompletní nominace{' '}
-                <span className="font-mono tabular-nums">{TOTAL_PLAYERS}</span> hráčů podle soutěže.
+                â€” kompletnĂ­ nominace{' '}
+                <span className="font-mono tabular-nums">{TOTAL_PLAYERS}</span> hrĂˇÄŤĹŻ podle soutÄ›Ĺľe.
               </p>
               {updatedAt ? (
                 <p className="mt-2 text-[10px] text-slate-500">
-                  Naposledy uloženo: {new Date(updatedAt).toLocaleString("cs-CZ")}
+                  Naposledy uloĹľeno: {new Date(updatedAt).toLocaleString("cs-CZ")}
                 </p>
               ) : null}
             </div>
@@ -431,14 +431,14 @@ export function OfficialLineupAdminEditor() {
                 disabled={!isComplete || saving}
                 className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2 text-xs font-bold text-white shadow-[0_8px_24px_rgba(200,16,46,0.25)] disabled:opacity-40"
               >
-                {saving ? "Ukládám…" : "Uložit soupisku"}
+                {saving ? "UklĂˇdĂˇmâ€¦" : "UloĹľit soupisku"}
               </button>
               <button
                 type="button"
                 onClick={handleRandom}
                 className="rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-bold text-white/85 hover:bg-white/[0.07]"
               >
-                Náhodně
+                NĂˇhodnÄ›
               </button>
               <button
                 type="button"
@@ -453,14 +453,14 @@ export function OfficialLineupAdminEditor() {
                 disabled={clearing || !updatedAt}
                 className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-100 hover:bg-amber-500/15 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {clearing ? "…" : "Smazat uložené"}
+                {clearing ? "â€¦" : "Smazat uloĹľenĂ©"}
               </button>
               <button
                 type="button"
                 onClick={() => void handleLogout()}
                 className="rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white/80 hover:bg-white/5"
               >
-                Odhlásit
+                OdhlĂˇsit
               </button>
             </div>
           </div>
@@ -472,11 +472,11 @@ export function OfficialLineupAdminEditor() {
           <div className="mb-4 rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-2.5 text-center text-xs text-amber-100 sm:text-sm">
             {remaining > 0 ? (
               <>
-                Ještě <span className="font-semibold">{remaining}</span>{" "}
-                {remaining === 1 ? "místo" : remaining < 5 ? "místa" : "míst"} do kompletní soupisky.
+                JeĹˇtÄ› <span className="font-semibold">{remaining}</span>{" "}
+                {remaining === 1 ? "mĂ­sto" : remaining < 5 ? "mĂ­sta" : "mĂ­st"} do kompletnĂ­ soupisky.
               </>
             ) : (
-              <>Doplň poslední detaily.</>
+              <>DoplĹ poslednĂ­ detaily.</>
             )}
           </div>
         )}
@@ -490,8 +490,8 @@ export function OfficialLineupAdminEditor() {
                     isNarrowLayout ? "" : "backdrop-blur-sm"
                   }`}
                 >
-                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Hráči</p>
-                  <p className="mt-1 text-sm font-semibold text-white/85">Vyber ze seznamu nebo táhni na slot →</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">HrĂˇÄŤi</p>
+                  <p className="mt-1 text-sm font-semibold text-white/85">Vyber ze seznamu nebo tĂˇhni na slot â†’</p>
                   <PlayerPoolPanel
                     players={players}
                     usedIds={usedIds}
@@ -503,7 +503,7 @@ export function OfficialLineupAdminEditor() {
                     assignableFilter={selectedSlot ? canAssignPlayer : undefined}
                     slotHint={
                       selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
-                        ? "Nejdřív doplň sedmého beka ve 4. obranném řádku — pak půjde vybrat náhradního obránce."
+                        ? "NejdĹ™Ă­v doplĹ sedmĂ©ho beka ve 4. obrannĂ©m Ĺ™Ăˇdku â€” pak pĹŻjde vybrat nĂˇhradnĂ­ho obrĂˇnce."
                         : null
                     }
                   />
@@ -521,7 +521,7 @@ export function OfficialLineupAdminEditor() {
               >
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Editor</p>
                 <h2 className="mt-1 font-display text-lg font-black tracking-[0.1em] text-white sm:text-xl">
-                  Oficiální soupiska ČR
+                  OficiĂˇlnĂ­ soupiska ÄŚR
                 </h2>
                 <div className="mt-4">
                   <LineBuilder
@@ -540,7 +540,7 @@ export function OfficialLineupAdminEditor() {
                 <div className="mt-4 rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-xs text-white/70">
                   Stav:{" "}
                   <span className={isComplete ? "text-emerald-300" : "text-amber-200"}>
-                    {isComplete ? "Kompletní — lze uložit" : "Není kompletní"}
+                    {isComplete ? "KompletnĂ­ â€” lze uloĹľit" : "NenĂ­ kompletnĂ­"}
                   </span>
                 </div>
               </div>
@@ -548,22 +548,22 @@ export function OfficialLineupAdminEditor() {
           </section>
         </div>
 
-        {/* Mobilní výběr hráče po klepnutí na slot — jako u /zapasy/sestava */}
+        {/* MobilnĂ­ vĂ˝bÄ›r hrĂˇÄŤe po klepnutĂ­ na slot â€” jako u /editorsestavy */}
         {mobilePlayerSheetOpen ? (
           <div className="fixed inset-0 z-[90] lg-device:hidden">
             <div className="absolute inset-0 bg-[#010208]/80 backdrop-blur-md" aria-hidden />
             <div className="absolute inset-x-0 bottom-0 top-[calc(0.5rem+env(safe-area-inset-top))] mx-2 overflow-hidden rounded-2xl border border-white/[0.12] bg-gradient-to-b from-[#0b1220]/98 to-[#03050a]/98 shadow-[0_24px_80px_rgba(0,0,0,0.65),0_0_0_1px_rgba(0,180,255,0.12)]">
               <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3">
                 <div className="min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-[0.26em] text-white/50">Výběr hráčů</p>
-                  <p className="mt-1 truncate text-sm font-semibold text-white/85">Klepni na hráče</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.26em] text-white/50">VĂ˝bÄ›r hrĂˇÄŤĹŻ</p>
+                  <p className="mt-1 truncate text-sm font-semibold text-white/85">Klepni na hrĂˇÄŤe</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setSelectedSlot(null)}
                   className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-black uppercase tracking-[0.14em] text-white"
                 >
-                  Zpět do sestavy
+                  ZpÄ›t do sestavy
                 </button>
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
@@ -578,7 +578,7 @@ export function OfficialLineupAdminEditor() {
                   assignableFilter={selectedSlot ? canAssignPlayer : undefined}
                   slotHint={
                     selectedSlot?.type === "extraDefenseman" && !lineup.defensePairs[3].lb
-                      ? "Nejdřív sedmého beka ve 4. řádku, pak náhradního."
+                      ? "NejdĹ™Ă­v sedmĂ©ho beka ve 4. Ĺ™Ăˇdku, pak nĂˇhradnĂ­ho."
                       : null
                   }
                 />
@@ -616,3 +616,4 @@ export function OfficialLineupAdminEditor() {
     content
   );
 }
+

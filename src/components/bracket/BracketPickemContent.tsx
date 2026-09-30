@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -27,7 +27,7 @@ import { EMPTY_BRACKET_PICKEM } from "@/types/bracketPickem";
 import type { Player, Position } from "@/types";
 import { PlayerAvatar } from "@/components/sestava/PlayerAvatar";
 
-/** v3: drag&drop pořadí skupin + bracket (MS 2026). */
+/** v3: drag&drop poĹ™adĂ­ skupin + bracket (MS 2026). */
 const STORAGE_KEY = "ms2026-bracket-pickem-v4";
 
 const selectCls =
@@ -36,7 +36,7 @@ const selectCls =
 const inputCls =
   "mt-1 w-full rounded-lg border border-white/14 bg-white/[0.07] px-3 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] placeholder:text-white/40 focus:border-[#f1c40f]/45 focus:outline-none focus:ring-1 focus:ring-[#f1c40f]/22";
 
-/** Přibližný start MS 2026 (uprav dle oficiálního termínu). */
+/** PĹ™ibliĹľnĂ˝ start MS 2026 (uprav dle oficiĂˇlnĂ­ho termĂ­nu). */
 const MS_2026_KICKOFF = new Date("2026-05-15T16:20:00+02:00");
 
 function useIsMobile(breakpointPx = 720) {
@@ -89,24 +89,24 @@ function clonePicks(p: BracketPickemPayload): BracketPickemPayload {
 
 function flagEmoji(teamId: string): string {
   const map: Record<string, string> = {
-    USA: "🇺🇸",
-    SUI: "🇨🇭",
-    FIN: "🇫🇮",
-    GER: "🇩🇪",
-    LAT: "🇱🇻",
-    AUT: "🇦🇹",
-    HUN: "🇭🇺",
-    GBR: "🇬🇧",
-    CAN: "🇨🇦",
-    SWE: "🇸🇪",
-    CZE: "🇨🇿",
-    DEN: "🇩🇰",
-    SVK: "🇸🇰",
-    NOR: "🇳🇴",
-    SLO: "🇸🇮",
-    ITA: "🇮🇹",
+    USA: "đź‡şđź‡¸",
+    SUI: "đź‡¨đź‡­",
+    FIN: "đź‡«đź‡®",
+    GER: "đź‡©đź‡Ş",
+    LAT: "đź‡±đź‡»",
+    AUT: "đź‡¦đź‡ą",
+    HUN: "đź‡­đź‡ş",
+    GBR: "đź‡¬đź‡§",
+    CAN: "đź‡¨đź‡¦",
+    SWE: "đź‡¸đź‡Ş",
+    CZE: "đź‡¨đź‡ż",
+    DEN: "đź‡©đź‡°",
+    SVK: "đź‡¸đź‡°",
+    NOR: "đź‡łđź‡´",
+    SLO: "đź‡¸đź‡®",
+    ITA: "đź‡®đź‡ą",
   };
-  return map[teamId] ?? "🏒";
+  return map[teamId] ?? "đźŹ’";
 }
 
 function twemojiFlagUrl(teamId: string): string | null {
@@ -302,7 +302,7 @@ function GroupOrderDnd({
         </DndContext>
       </div>
       <p className="mt-3 text-[11px] leading-relaxed text-white/45">
-        Přetáhni týmy a nastav pořadí 1–8. (Neřešíme skóre; je to čistě tip pořadí.)
+        PĹ™etĂˇhni tĂ˝my a nastav poĹ™adĂ­ 1â€“8. (NeĹ™eĹˇĂ­me skĂłre; je to ÄŤistÄ› tip poĹ™adĂ­.)
       </p>
     </div>
   );
@@ -372,7 +372,7 @@ function GroupOrderTap({
                   disabled={idx === 0}
                   className="rounded-lg border border-white/12 bg-white/[0.04] px-2 py-1 text-xs font-black text-white/70 disabled:opacity-40"
                 >
-                  ↑
+                  â†‘
                 </button>
                 <button
                   type="button"
@@ -380,7 +380,7 @@ function GroupOrderTap({
                   disabled={idx === order.length - 1}
                   className="rounded-lg border border-white/12 bg-white/[0.04] px-2 py-1 text-xs font-black text-white/70 disabled:opacity-40"
                 >
-                  ↓
+                  â†“
                 </button>
               </div>
             </div>
@@ -389,14 +389,14 @@ function GroupOrderTap({
       </div>
 
       <p className="mt-3 text-[11px] leading-relaxed text-white/45">
-        Klepáním na ↑↓ nastav pořadí 1–8. (Na mobilu je to spolehlivější než přetahování.)
+        KlepĂˇnĂ­m na â†‘â†“ nastav poĹ™adĂ­ 1â€“8. (Na mobilu je to spolehlivÄ›jĹˇĂ­ neĹľ pĹ™etahovĂˇnĂ­.)
       </p>
     </div>
   );
 }
 
 function teamLabel(teamById: Map<string, BracketTeam>, id: string | null) {
-  if (!id) return "Čeká se na tým";
+  if (!id) return "ÄŚekĂˇ se na tĂ˝m";
   return teamById.get(id)?.name ?? id;
 }
 
@@ -445,7 +445,7 @@ function BracketNode({
             selected ? "bg-[#FF1E2E]/10 ring-[#FF1E2E]/35" : "bg-white/[0.06] ring-white/10"
           }`}
         >
-          {id ? <FlagIcon id={id} className="h-[20px] w-[20px]" /> : <span className="text-sm">🏒</span>}
+          {id ? <FlagIcon id={id} className="h-[20px] w-[20px]" /> : <span className="text-sm">đźŹ’</span>}
         </span>
         <span className="min-w-0 truncate font-display text-sm font-black tracking-wide">{name}</span>
       </span>
@@ -663,15 +663,15 @@ function DesktopBracketLayout({
   onPickFinal: (winner: string | null) => void;
   onPickBronze: (winner: string | null) => void;
 }) {
-  // Desktop: plný pavouk bez scrollu + konektory (SVG)
+  // Desktop: plnĂ˝ pavouk bez scrollu + konektory (SVG)
   return (
     <div className="relative">
       <ConnectorSvg quarterfinals={quarterfinals} semifinals={semifinals} finalMatch={finalMatch} />
       <div className="relative grid grid-cols-4 gap-5">
         {/* Column headers */}
-        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Čtvrtfinále</div>
-        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Semifinále</div>
-        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">Finále</div>
+        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">ÄŚtvrtfinĂˇle</div>
+        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">SemifinĂˇle</div>
+        <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">FinĂˇle</div>
         <div className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-white/45">O bronz</div>
 
         {/* Bracket body */}
@@ -709,7 +709,7 @@ function DesktopBracketLayout({
         </div>
 
         <div className="relative flex flex-col justify-center pt-[48px]">
-          <PremiumMatchCard title="FINÁLE" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
+          <PremiumMatchCard title="FINĂLE" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
         </div>
 
         <div className="relative flex flex-col justify-center pt-[48px]">
@@ -795,7 +795,7 @@ function MobileRoundSnap({
             {quarterfinals.map((m, i) => (
               <PremiumMatchCard
                 key={`m-qf-${i}`}
-                title={`Čtvrtfinále ${i + 1}`}
+                title={`ÄŚtvrtfinĂˇle ${i + 1}`}
                 match={m}
                 teamById={teamById}
                 onPickWinner={(id) => onPickQf(i, id)}
@@ -809,7 +809,7 @@ function MobileRoundSnap({
             {semifinals.map((m, i) => (
               <PremiumMatchCard
                 key={`m-sf-${i}`}
-                title={`Semifinále ${i + 1}`}
+                title={`SemifinĂˇle ${i + 1}`}
                 match={m}
                 teamById={teamById}
                 onPickWinner={(id) => onPickSf(i, id)}
@@ -820,7 +820,7 @@ function MobileRoundSnap({
 
         <motion.div data-round="fin" className="w-[92%] shrink-0 snap-start" initial={false} animate={{ opacity: 1 }}>
           <div className="grid gap-4">
-            <PremiumMatchCard title="Finále" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
+            <PremiumMatchCard title="FinĂˇle" match={finalMatch} teamById={teamById} onPickWinner={onPickFinal} />
           </div>
         </motion.div>
 
@@ -893,7 +893,7 @@ function PickemPlayerPicker({
       >
         <div className="flex items-start justify-between gap-3 border-b border-white/10 px-5 py-4 sm:px-7">
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-sky-200/70">Výběr hráče</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-sky-200/70">VĂ˝bÄ›r hrĂˇÄŤe</p>
             <h3 className="mt-1 font-display text-base font-black tracking-wide text-white sm:text-lg">{title}</h3>
           </div>
           <button
@@ -901,7 +901,7 @@ function PickemPlayerPicker({
             onClick={onClose}
             className="rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/85 hover:bg-white/[0.1]"
           >
-            Zavřít
+            ZavĹ™Ă­t
           </button>
         </div>
 
@@ -909,7 +909,7 @@ function PickemPlayerPicker({
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Hledat jméno, klub, ligu…"
+            placeholder="Hledat jmĂ©no, klub, liguâ€¦"
             className="w-full rounded-2xl border border-white/[0.12] bg-[#0a1428]/70 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-[#f1c40f]/40 focus:outline-none focus:ring-2 focus:ring-[#003087]/25"
           />
 
@@ -941,17 +941,17 @@ function PickemPlayerPicker({
                     <p className="truncate font-display text-sm font-black text-white">{p.name}</p>
                     <p className="mt-1 truncate text-xs text-slate-300/90">
                       <span className="text-slate-100">{p.club}</span>
-                      {p.league ? <span className="text-slate-500"> · {p.league}</span> : null}
+                      {p.league ? <span className="text-slate-500"> Â· {p.league}</span> : null}
                     </p>
                   </div>
                   <span className="shrink-0 text-[10px] font-black uppercase tracking-[0.22em] text-white/35">
-                    {selected ? "Vybráno" : ""}
+                    {selected ? "VybrĂˇno" : ""}
                   </span>
                 </button>
               );
             })}
             {filtered.length === 0 ? (
-              <p className="col-span-full py-8 text-center text-sm text-white/45">Nikdo neodpovídá filtru.</p>
+              <p className="col-span-full py-8 text-center text-sm text-white/45">Nikdo neodpovĂ­dĂˇ filtru.</p>
             ) : null}
           </div>
         </div>
@@ -966,7 +966,7 @@ export function BracketPickemContent({
   onPicksChange,
 }: {
   initialPayload?: BracketPickemPayload;
-  /** Admin editor oficiálních výsledků — bez ukládání k účtu / soutěžních tlačítek. */
+  /** Admin editor oficiĂˇlnĂ­ch vĂ˝sledkĹŻ â€” bez uklĂˇdĂˇnĂ­ k ĂşÄŤtu / soutÄ›ĹľnĂ­ch tlaÄŤĂ­tek. */
   adminMode?: boolean;
   onPicksChange?: (picks: BracketPickemPayload) => void;
 }) {
@@ -977,7 +977,7 @@ export function BracketPickemContent({
   const [czPlayers, setCzPlayers] = useState<Player[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [pickemTitle, setPickemTitle] = useState("");
-  /** Po jednorázovém „Odeslat do soutěže“ je payload na serveru zamčený. */
+  /** Po jednorĂˇzovĂ©m â€žOdeslat do soutÄ›Ĺľeâ€ś je payload na serveru zamÄŤenĂ˝. */
   const [contestLocked, setContestLocked] = useState(false);
   const pickemContestClosed = !isPickemSubmissionOpen(new Date());
 
@@ -1028,7 +1028,7 @@ export function BracketPickemContent({
     };
   }, [authStatus, adminMode]);
 
-  // CZ hráči pro bonus tipy (výběr z DB kandidátů).
+  // CZ hrĂˇÄŤi pro bonus tipy (vĂ˝bÄ›r z DB kandidĂˇtĹŻ).
   useEffect(() => {
     fetch("/api/players")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("players fetch failed"))))
@@ -1065,7 +1065,7 @@ export function BracketPickemContent({
         setCzPlayers(list);
       })
       .catch(() => {
-        // fallback: prázdno (stále lze vyplnit čísla), ale dropdown nebude mít data
+        // fallback: prĂˇzdno (stĂˇle lze vyplnit ÄŤĂ­sla), ale dropdown nebude mĂ­t data
         setCzPlayers([]);
       });
   }, []);
@@ -1092,11 +1092,11 @@ export function BracketPickemContent({
         queueMicrotask(() => {
             setPicks(ensureDefaults(decoded));
           setHydrated(true);
-          toast.message("Tipy načteny z odkazu.");
+          toast.message("Tipy naÄŤteny z odkazu.");
         });
         return;
       }
-      toast.error("Odkaz se nepodařilo načíst.");
+      toast.error("Odkaz se nepodaĹ™ilo naÄŤĂ­st.");
     }
     try {
       if (!adminMode) {
@@ -1119,7 +1119,7 @@ export function BracketPickemContent({
     onPicksChange(picks);
   }, [picks, hydrated, adminMode, onPicksChange]);
 
-  // Načíst koncept z účtu (z /ucet/pickem nebo přímý link /bracket?loadAccount=1)
+  // NaÄŤĂ­st koncept z ĂşÄŤtu (z /ucet/pickem nebo pĹ™Ă­mĂ˝ link /bracket?loadAccount=1)
   useEffect(() => {
     if (adminMode) return;
     const want = searchParams.get("loadAccount") === "1";
@@ -1135,13 +1135,13 @@ export function BracketPickemContent({
         if (p && typeof p === "object") {
           setPicks(ensureDefaults(p as BracketPickemPayload));
           setHydrated(true);
-          toast.success("Pick’em koncept načten z účtu.");
+          toast.success("Pickâ€™em koncept naÄŤten z ĂşÄŤtu.");
         } else {
-          toast.message("V účtu není uložený Pick’em koncept.");
+          toast.message("V ĂşÄŤtu nenĂ­ uloĹľenĂ˝ Pickâ€™em koncept.");
         }
       })
       .catch(() => {
-        if (!cancelled) toast.error("Nepodařilo se načíst Pick’em z účtu.");
+        if (!cancelled) toast.error("NepodaĹ™ilo se naÄŤĂ­st Pickâ€™em z ĂşÄŤtu.");
       });
     return () => {
       cancelled = true;
@@ -1172,7 +1172,7 @@ export function BracketPickemContent({
     const B2 = B[1] ?? null;
     const B3 = B[2] ?? null;
     const B4 = B[3] ?? null;
-    // IIHF cross-over: 1A–4B, 2A–3B, 1B–4A, 2B–3A
+    // IIHF cross-over: 1Aâ€“4B, 2Aâ€“3B, 1Bâ€“4A, 2Bâ€“3A
     return [
       { teamLeft: A1, teamRight: B4 },
       { teamLeft: A2, teamRight: B3 },
@@ -1182,7 +1182,7 @@ export function BracketPickemContent({
   }, [picks.groupAOrder, picks.groupBOrder]);
 
   const computedSemifinals = useMemo(() => {
-    // IIHF po QF re-seeding: nejlepší semifinalista vs nejhorší (podle pozice ve skupině; v případě shody A před B).
+    // IIHF po QF re-seeding: nejlepĹˇĂ­ semifinalista vs nejhorĹˇĂ­ (podle pozice ve skupinÄ›; v pĹ™Ă­padÄ› shody A pĹ™ed B).
     const A = picks.groupAOrder;
     const B = picks.groupBOrder;
     const pos = (id: string): { group: "A" | "B"; place: number } | null => {
@@ -1195,7 +1195,7 @@ export function BracketPickemContent({
     const seedKey = (id: string): [number, number] => {
       const p = pos(id);
       if (!p) return [99, 9];
-      // menší = lepší (1..4); při shodě A před B (jen deterministicky)
+      // menĹˇĂ­ = lepĹˇĂ­ (1..4); pĹ™i shodÄ› A pĹ™ed B (jen deterministicky)
       return [p.place, p.group === "A" ? 0 : 1];
     };
 
@@ -1234,7 +1234,7 @@ export function BracketPickemContent({
     return { teamLeft: loser(picks.semifinals[0]), teamRight: loser(picks.semifinals[1]) };
   }, [picks.semifinals]);
 
-  // Když se změní pořadí skupin, přepočítej dvojice QF a smaž neplatné vítěze.
+  // KdyĹľ se zmÄ›nĂ­ poĹ™adĂ­ skupin, pĹ™epoÄŤĂ­tej dvojice QF a smaĹľ neplatnĂ© vĂ­tÄ›ze.
   useEffect(() => {
     if (!hydrated) return;
     setPicks((p) => {
@@ -1247,7 +1247,7 @@ export function BracketPickemContent({
     });
   }, [computedQuarterfinals, hydrated]);
 
-  // QF winners → SF teams
+  // QF winners â†’ SF teams
   useEffect(() => {
     if (!hydrated) return;
     setPicks((p) => {
@@ -1260,7 +1260,7 @@ export function BracketPickemContent({
     });
   }, [computedSemifinals, hydrated]);
 
-  // SF winners → Final + Bronze teams
+  // SF winners â†’ Final + Bronze teams
   useEffect(() => {
     if (!hydrated) return;
     setPicks((p) => {
@@ -1316,7 +1316,7 @@ export function BracketPickemContent({
   const ensurePickemTitle = useCallback((): string | null => {
     const t = pickemTitle.trim();
     if (t) return t;
-    const ok = window.confirm("Přejete si pokračovat bez vyplnění jména?");
+    const ok = window.confirm("PĹ™ejete si pokraÄŤovat bez vyplnÄ›nĂ­ jmĂ©na?");
     if (!ok) return null;
     try {
       const key = "lineup:autoTitle:pickem";
@@ -1336,7 +1336,7 @@ export function BracketPickemContent({
   const confirmIfIncomplete = useCallback(() => {
     if (isPickemComplete) return true;
     return window.confirm(
-      "Pick’em nemá vyplněné všechny části (pořadí ve skupinách, vyřazovací pavouk nebo bonusové tipy). Opravdu chcete pokračovat?"
+      "Pickâ€™em nemĂˇ vyplnÄ›nĂ© vĹˇechny ÄŤĂˇsti (poĹ™adĂ­ ve skupinĂˇch, vyĹ™azovacĂ­ pavouk nebo bonusovĂ© tipy). Opravdu chcete pokraÄŤovat?"
     );
   }, [isPickemComplete]);
 
@@ -1363,15 +1363,15 @@ export function BracketPickemContent({
         if (!url) throw new Error("no url");
         return navigator.clipboard.writeText(url).then(() => url);
       })
-      .then(() => toast.success("Krátký odkaz zkopírován — pošli ho sobě nebo kamarádům."))
+      .then(() => toast.success("KrĂˇtkĂ˝ odkaz zkopĂ­rovĂˇn â€” poĹˇli ho sobÄ› nebo kamarĂˇdĹŻm."))
       .catch(() => {
-        // fallback: dlouhý link
+        // fallback: dlouhĂ˝ link
         const z = encodeBracketPayload(picks);
         const url = `${typeof window !== "undefined" ? window.location.origin : ""}/bracket?z=${z}`;
         navigator.clipboard.writeText(url).then(
-          () => toast.success("Odkaz zkopírován (fallback) — pošli ho sobě nebo kamarádům."),
+          () => toast.success("Odkaz zkopĂ­rovĂˇn (fallback) â€” poĹˇli ho sobÄ› nebo kamarĂˇdĹŻm."),
           () =>
-            toast.error("Schránka nedostupná — zkopíruj URL ručně z adresního řádku po kliknutí sem.", {
+            toast.error("SchrĂˇnka nedostupnĂˇ â€” zkopĂ­ruj URL ruÄŤnÄ› z adresnĂ­ho Ĺ™Ăˇdku po kliknutĂ­ sem.", {
               duration: 5000,
             })
         );
@@ -1380,11 +1380,11 @@ export function BracketPickemContent({
 
   const submitPickem = useCallback(async () => {
     if (authStatus !== "authenticated") {
-      toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept, musíte se přihlásit.");
+      toast.error("Abyste se mohli odeslat Pickem do soutÄ›Ĺľe nebo si uloĹľit jeho koncept, musĂ­te se pĹ™ihlĂˇsit.");
       return;
     }
     if (contestLocked) {
-      toast.error("Pick’em už máte v soutěži — uložený koncept na serveru už nejde měnit.");
+      toast.error("Pickâ€™em uĹľ mĂˇte v soutÄ›Ĺľi â€” uloĹľenĂ˝ koncept na serveru uĹľ nejde mÄ›nit.");
       return;
     }
     if (!confirmIfIncomplete()) return;
@@ -1402,12 +1402,12 @@ export function BracketPickemContent({
           ? (data as { error: string }).error
           : null;
       if (!r.ok) {
-        toast.error(apiError ?? "Odeslání se nepovedlo.");
+        toast.error(apiError ?? "OdeslĂˇnĂ­ se nepovedlo.");
         return;
       }
-      toast.success("Pick’em odeslán a uložen k účtu.");
+      toast.success("Pickâ€™em odeslĂˇn a uloĹľen k ĂşÄŤtu.");
     } catch {
-      toast.error("Odeslání se nepovedlo.");
+      toast.error("OdeslĂˇnĂ­ se nepovedlo.");
     } finally {
       setSubmitting(false);
     }
@@ -1415,15 +1415,15 @@ export function BracketPickemContent({
 
   const submitPickemToContest = useCallback(async () => {
     if (authStatus !== "authenticated") {
-      toast.error("Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept, musíte se přihlásit.");
+      toast.error("Abyste se mohli odeslat Pickem do soutÄ›Ĺľe nebo si uloĹľit jeho koncept, musĂ­te se pĹ™ihlĂˇsit.");
       return;
     }
     if (contestLocked) {
-      toast.error("Do soutěže už máte Pick’em jednou odeslaný.");
+      toast.error("Do soutÄ›Ĺľe uĹľ mĂˇte Pickâ€™em jednou odeslanĂ˝.");
       return;
     }
     if (pickemContestClosed) {
-      toast.error("Soutěž Pick'em na MS 2026 je uzavřena.");
+      toast.error("SoutÄ›Ĺľ Pick'em na MS 2026 je uzavĹ™ena.");
       return;
     }
     if (!confirmIfIncomplete()) return;
@@ -1441,13 +1441,13 @@ export function BracketPickemContent({
           ? (data as { error: string }).error
           : null;
       if (!r.ok) {
-        toast.error(apiError ?? "Odeslání do soutěže se nepovedlo.");
+        toast.error(apiError ?? "OdeslĂˇnĂ­ do soutÄ›Ĺľe se nepovedlo.");
         return;
       }
       setContestLocked(true);
-      toast.success("Pick’em odeslán do soutěže.");
+      toast.success("Pickâ€™em odeslĂˇn do soutÄ›Ĺľe.");
     } catch {
-      toast.error("Odeslání do soutěže se nepovedlo.");
+      toast.error("OdeslĂˇnĂ­ do soutÄ›Ĺľe se nepovedlo.");
     } finally {
       setSubmitting(false);
     }
@@ -1455,11 +1455,11 @@ export function BracketPickemContent({
 
   const resetAll = () => {
     if (contestLocked) {
-      toast.error("Po odeslání do soutěže už tipy z účtu nelze v tomto rozhraní vymazat.");
+      toast.error("Po odeslĂˇnĂ­ do soutÄ›Ĺľe uĹľ tipy z ĂşÄŤtu nelze v tomto rozhranĂ­ vymazat.");
       return;
     }
     setPicks(clonePicks(EMPTY_BRACKET_PICKEM));
-    toast.message("Formulář vyprázdněn.");
+    toast.message("FormulĂˇĹ™ vyprĂˇzdnÄ›n.");
   };
 
   return (
@@ -1473,8 +1473,8 @@ export function BracketPickemContent({
       {!adminMode ? (
         <>
       <SitePageHero
-        title="Bracket Pick’em"
-        subtitle="Vítejte v Pick'emu pro MS v hokeji 2026. Zde si můžete tipnout pořadí skupin, výsledky play off a také vyzkoušet bonusové tipy."
+        title="Bracket Pickâ€™em"
+        subtitle="VĂ­tejte v Pick'emu pro MS v hokeji 2026. Zde si mĹŻĹľete tipnout poĹ™adĂ­ skupin, vĂ˝sledky play off a takĂ© vyzkouĹˇet bonusovĂ© tipy."
         align="center"
       />
 
@@ -1497,15 +1497,15 @@ export function BracketPickemContent({
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.26em] text-white/50">Odpočet</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.26em] text-white/50">OdpoÄŤet</p>
             {!cd ? (
-              <p className="mt-2 text-sm text-white/45">Načítám…</p>
+              <p className="mt-2 text-sm text-white/45">NaÄŤĂ­tĂˇmâ€¦</p>
             ) : cd.ended ? (
               <p className="mt-2 font-display text-lg font-black text-white">MS je tady</p>
             ) : (
               <div className="mt-2 grid grid-cols-4 gap-2">
                 {[
-                  { v: cd.d, l: "dní" },
+                  { v: cd.d, l: "dnĂ­" },
                   { v: cd.h, l: "hod" },
                   { v: cd.m, l: "min" },
                   { v: cd.s, l: "sek" },
@@ -1524,14 +1524,14 @@ export function BracketPickemContent({
       {authStatus !== "authenticated" ? (
         <div className="pickem-panel mt-6 rounded-2xl p-5 text-center ring-1 ring-[#003087]/25">
           <p className="text-sm text-white/75">
-            Abyste se mohli odeslat Pickem do soutěže nebo si uložit jeho koncept, musíte se přihlásit.
+            Abyste se mohli odeslat Pickem do soutÄ›Ĺľe nebo si uloĹľit jeho koncept, musĂ­te se pĹ™ihlĂˇsit.
           </p>
           <button
             type="button"
             onClick={() => signIn(undefined, { callbackUrl: "/bracket" })}
             className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] via-[#002a5c] to-[#c8102e] px-6 py-3 font-display text-sm font-bold text-white shadow-[0_12px_40px_rgba(0,48,135,0.35),0_0_32px_rgba(200,16,46,0.15)] transition hover:brightness-110"
           >
-            Přihlásit se
+            PĹ™ihlĂˇsit se
           </button>
         </div>
       ) : null}
@@ -1540,8 +1540,8 @@ export function BracketPickemContent({
 
       <div className={adminMode ? "space-y-8" : "space-y-8"}>
         <Section
-          title="Pořadí ve skupinách"
-          hint={`Oficiální skupiny IIHF MS 2026. Přetáhni týmy a nastav pořadí ve skupině A (${MS2026_GROUP_A_VENUE}) a skupině B (${MS2026_GROUP_B_VENUE}).`}
+          title="PoĹ™adĂ­ ve skupinĂˇch"
+          hint={`OficiĂˇlnĂ­ skupiny IIHF MS 2026. PĹ™etĂˇhni tĂ˝my a nastav poĹ™adĂ­ ve skupinÄ› A (${MS2026_GROUP_A_VENUE}) a skupinÄ› B (${MS2026_GROUP_B_VENUE}).`}
         >
           <div className="grid gap-6 sm:grid-cols-2">
             {isMobile ? (
@@ -1582,8 +1582,8 @@ export function BracketPickemContent({
         </Section>
 
         <Section
-          title="Play‑off pavouk"
-          hint="Dle IIHF se čtvrtfinále hraje cross-over (1A–4B, 2A–3B, 1B–4A, 2B–3A) a po čtvrtfinále se semifinalisti re-seedují (nejlepší vs nejhorší). Klikni na tým, který postupuje."
+          title="Playâ€‘off pavouk"
+          hint="Dle IIHF se ÄŤtvrtfinĂˇle hraje cross-over (1Aâ€“4B, 2Aâ€“3B, 1Bâ€“4A, 2Bâ€“3A) a po ÄŤtvrtfinĂˇle se semifinalisti re-seedujĂ­ (nejlepĹˇĂ­ vs nejhorĹˇĂ­). Klikni na tĂ˝m, kterĂ˝ postupuje."
         >
           {isMobile ? (
             <MobileRoundSnap
@@ -1614,28 +1614,28 @@ export function BracketPickemContent({
             {MS2026_QF_LABELS.map((l, i) => (
               <span key={l}>
                 <span className="font-semibold text-white/60">QF{i + 1}:</span> {l}
-                {i < MS2026_QF_LABELS.length - 1 ? " · " : ""}
+                {i < MS2026_QF_LABELS.length - 1 ? " Â· " : ""}
               </span>
             ))}
           </p>
         </Section>
 
         <Section
-          title="Bonusové tipy"
-          hint="Vyhodnocení jde udělat jen z českých hráčů + týmových součtů (bez databáze všech hráčů světa)."
+          title="BonusovĂ© tipy"
+          hint="VyhodnocenĂ­ jde udÄ›lat jen z ÄŤeskĂ˝ch hrĂˇÄŤĹŻ + tĂ˝movĂ˝ch souÄŤtĹŻ (bez databĂˇze vĹˇech hrĂˇÄŤĹŻ svÄ›ta)."
         >
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="sm:col-span-2">
-              <p className="text-xs font-medium text-white/65">Nejlepší český střelec (CZ hráč)</p>
+              <p className="text-xs font-medium text-white/65">NejlepĹˇĂ­ ÄŤeskĂ˝ stĹ™elec (CZ hrĂˇÄŤ)</p>
               <button
                 type="button"
-                onClick={() => setPicker({ field: "topCzechGoalScorerId", title: "Nejlepší český střelec" })}
+                onClick={() => setPicker({ field: "topCzechGoalScorerId", title: "NejlepĹˇĂ­ ÄŤeskĂ˝ stĹ™elec" })}
                 className="mt-1 flex w-full items-center justify-between gap-3 rounded-xl border border-white/14 bg-white/[0.07] px-3 py-2.5 text-left text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-white/20"
               >
                 <span className="min-w-0 truncate">
                   {picks.bonus.topCzechGoalScorerId
-                    ? playerNameById.get(picks.bonus.topCzechGoalScorerId) ?? "Vybraný hráč"
-                    : "— vyber hráče —"}
+                    ? playerNameById.get(picks.bonus.topCzechGoalScorerId) ?? "VybranĂ˝ hrĂˇÄŤ"
+                    : "â€” vyber hrĂˇÄŤe â€”"}
                 </span>
                 <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/75">
                   Vybrat
@@ -1653,16 +1653,16 @@ export function BracketPickemContent({
 
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="sm:col-span-2">
-              <p className="text-xs font-medium text-white/65">Nejlepší český hráč v bodování (CZ hráč)</p>
+              <p className="text-xs font-medium text-white/65">NejlepĹˇĂ­ ÄŤeskĂ˝ hrĂˇÄŤ v bodovĂˇnĂ­ (CZ hrĂˇÄŤ)</p>
               <button
                 type="button"
-                onClick={() => setPicker({ field: "topCzechPointsLeaderId", title: "Nejlepší český hráč v bodování" })}
+                onClick={() => setPicker({ field: "topCzechPointsLeaderId", title: "NejlepĹˇĂ­ ÄŤeskĂ˝ hrĂˇÄŤ v bodovĂˇnĂ­" })}
                 className="mt-1 flex w-full items-center justify-between gap-3 rounded-xl border border-white/14 bg-white/[0.07] px-3 py-2.5 text-left text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-white/20"
               >
                 <span className="min-w-0 truncate">
                   {picks.bonus.topCzechPointsLeaderId
-                    ? playerNameById.get(picks.bonus.topCzechPointsLeaderId) ?? "Vybraný hráč"
-                    : "— vyber hráče —"}
+                    ? playerNameById.get(picks.bonus.topCzechPointsLeaderId) ?? "VybranĂ˝ hrĂˇÄŤ"
+                    : "â€” vyber hrĂˇÄŤe â€”"}
                 </span>
                 <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/75">
                   Vybrat
@@ -1680,16 +1680,16 @@ export function BracketPickemContent({
 
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="sm:col-span-2">
-              <p className="text-xs font-medium text-white/65">Nejtrestanější český hráč (PIM) (CZ hráč)</p>
+              <p className="text-xs font-medium text-white/65">NejtrestanÄ›jĹˇĂ­ ÄŤeskĂ˝ hrĂˇÄŤ (PIM) (CZ hrĂˇÄŤ)</p>
               <button
                 type="button"
-                onClick={() => setPicker({ field: "mostPenalizedCzechPlayerId", title: "Nejtrestanější český hráč (PIM)" })}
+                onClick={() => setPicker({ field: "mostPenalizedCzechPlayerId", title: "NejtrestanÄ›jĹˇĂ­ ÄŤeskĂ˝ hrĂˇÄŤ (PIM)" })}
                 className="mt-1 flex w-full items-center justify-between gap-3 rounded-xl border border-white/14 bg-white/[0.07] px-3 py-2.5 text-left text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-white/20"
               >
                 <span className="min-w-0 truncate">
                   {picks.bonus.mostPenalizedCzechPlayerId
-                    ? playerNameById.get(picks.bonus.mostPenalizedCzechPlayerId) ?? "Vybraný hráč"
-                    : "— vyber hráče —"}
+                    ? playerNameById.get(picks.bonus.mostPenalizedCzechPlayerId) ?? "VybranĂ˝ hrĂˇÄŤ"
+                    : "â€” vyber hrĂˇÄŤe â€”"}
                 </span>
                 <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.22em] text-sky-200/75">
                   Vybrat
@@ -1707,13 +1707,13 @@ export function BracketPickemContent({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-xs font-medium text-white/65">
-              Počet gólů českého týmu
+              PoÄŤet gĂłlĹŻ ÄŤeskĂ©ho tĂ˝mu
               <select
                 className={selectCls}
                 value={picks.bonus.czechTeamGoals}
                 onChange={(e) => setBonus("czechTeamGoals", e.target.value)}
               >
-                <option value="">—</option>
+                <option value="">â€”</option>
                 {Array.from({ length: 61 }, (_, i) => String(i)).map((v) => (
                   <option key={`g-${v}`} value={v}>
                     {v}
@@ -1722,13 +1722,13 @@ export function BracketPickemContent({
               </select>
             </label>
             <label className="block text-xs font-medium text-white/65">
-              Počet trestných minut českého týmu
+              PoÄŤet trestnĂ˝ch minut ÄŤeskĂ©ho tĂ˝mu
               <select
                 className={selectCls}
                 value={picks.bonus.czechTeamPim}
                 onChange={(e) => setBonus("czechTeamPim", e.target.value)}
               >
-                <option value="">—</option>
+                <option value="">â€”</option>
                 {Array.from({ length: 101 }, (_, i) => String(i * 2)).map((v) => (
                   <option key={`p-${v}`} value={v}>
                     {v}
@@ -1766,11 +1766,11 @@ export function BracketPickemContent({
           role="status"
         >
           <p className="text-sm font-semibold text-emerald-100">
-            Pick’em máte jednou odeslaný do soutěže — uložený tip na serveru je finální a nelze ho měnit ani znovu
+            Pickâ€™em mĂˇte jednou odeslanĂ˝ do soutÄ›Ĺľe â€” uloĹľenĂ˝ tip na serveru je finĂˇlnĂ­ a nelze ho mÄ›nit ani znovu
             odeslat.
           </p>
           <p className="mt-2 text-xs text-emerald-100/75">
-            Stále si můžeš zkopírovat odkaz s aktuálním stavem tipů v prohlížeči (nemění uložený soutěžní tip).
+            StĂˇle si mĹŻĹľeĹˇ zkopĂ­rovat odkaz s aktuĂˇlnĂ­m stavem tipĹŻ v prohlĂ­ĹľeÄŤi (nemÄ›nĂ­ uloĹľenĂ˝ soutÄ›ĹľnĂ­ tip).
           </p>
         </div>
       ) : null}
@@ -1780,9 +1780,9 @@ export function BracketPickemContent({
           className="pickem-panel mt-10 rounded-2xl border border-rose-400/30 bg-rose-500/[0.08] p-5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:p-6"
           role="status"
         >
-          <p className="text-sm font-semibold text-rose-100">Soutěž Pick&apos;em na MS 2026 uzavřena!</p>
+          <p className="text-sm font-semibold text-rose-100">SoutÄ›Ĺľ Pick&apos;em na MS 2026 uzavĹ™ena!</p>
           <p className="mt-2 text-xs text-rose-100/75">
-            Koncept si můžeš ještě uložit k účtu; nové odeslání do soutěže už není možné.
+            Koncept si mĹŻĹľeĹˇ jeĹˇtÄ› uloĹľit k ĂşÄŤtu; novĂ© odeslĂˇnĂ­ do soutÄ›Ĺľe uĹľ nenĂ­ moĹľnĂ©.
           </p>
         </div>
       ) : null}
@@ -1792,17 +1792,17 @@ export function BracketPickemContent({
         <Trophy className="h-8 w-8 text-[#00E5FF]/85" aria-hidden />
         <p className="text-sm text-white/78">
           {pickemContestClosed
-            ? "Hotovo? Ulož si koncept k účtu nebo sdílej tipy odkazem."
-            : "Hotovo? Ulož si koncept k účtu nebo tipy odešli do soutěže."}
+            ? "Hotovo? UloĹľ si koncept k ĂşÄŤtu nebo sdĂ­lej tipy odkazem."
+            : "Hotovo? UloĹľ si koncept k ĂşÄŤtu nebo tipy odeĹˇli do soutÄ›Ĺľe."}
         </p>
         <label className="w-full max-w-xl text-left text-xs font-medium text-white/65">
-          Název Pick’em <span className="font-normal text-white/35">(volitelné)</span>
+          NĂˇzev Pickâ€™em <span className="font-normal text-white/35">(volitelnĂ©)</span>
           <input
             className={inputCls}
             value={pickemTitle}
             onChange={(e) => setPickemTitle(e.target.value)}
             maxLength={80}
-            placeholder="např. Konzervativní varianta"
+            placeholder="napĹ™. KonzervativnĂ­ varianta"
             autoComplete="off"
           />
         </label>
@@ -1813,7 +1813,7 @@ export function BracketPickemContent({
             disabled={submitting || contestLocked}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF1E2E] px-6 py-3.5 font-display text-sm font-black uppercase tracking-[0.08em] text-white shadow-[0_14px_44px_rgba(255,30,46,0.26)] transition hover:brightness-110 disabled:opacity-60"
           >
-            {submitting ? "Ukládám…" : contestLocked ? "Koncept uzamčen" : "Uložit koncept"}
+            {submitting ? "UklĂˇdĂˇmâ€¦" : contestLocked ? "Koncept uzamÄŤen" : "UloĹľit koncept"}
           </button>
           <button
             type="button"
@@ -1822,12 +1822,12 @@ export function BracketPickemContent({
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#00E5FF]/35 bg-white/[0.04] px-5 py-3.5 text-sm font-semibold text-white/90 shadow-[0_0_0_1px_rgba(0,229,255,0.10)] transition hover:bg-white/[0.07] hover:border-[#00E5FF]/55 disabled:opacity-60"
           >
             {submitting
-              ? "Odesílám…"
+              ? "OdesĂ­lĂˇmâ€¦"
               : contestLocked
-                ? "V soutěži odesláno"
+                ? "V soutÄ›Ĺľi odeslĂˇno"
                 : pickemContestClosed
-                  ? "Soutěž uzavřena"
-                  : "Odeslat do soutěže"}
+                  ? "SoutÄ›Ĺľ uzavĹ™ena"
+                  : "Odeslat do soutÄ›Ĺľe"}
           </button>
           <button
             type="button"
@@ -1835,7 +1835,7 @@ export function BracketPickemContent({
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#00E5FF]/30 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/90 shadow-[0_0_0_1px_rgba(0,229,255,0.08)] transition hover:bg-white/[0.07] hover:border-[#00E5FF]/50"
           >
             <Link2 className="h-4 w-4" aria-hidden />
-            Zkopírovat odkaz s tipy
+            ZkopĂ­rovat odkaz s tipy
           </button>
           <button
             type="button"
@@ -1848,8 +1848,8 @@ export function BracketPickemContent({
           </button>
         </div>
         <p className="text-xs text-white/50">
-          Chceš nominovat hráče?{" "}
-          <Link href="/sestava" className="font-semibold text-cyan-300 underline-offset-2 hover:underline">
+          ChceĹˇ nominovat hrĂˇÄŤe?{" "}
+          <Link href="/editorsestavy" className="font-semibold text-cyan-300 underline-offset-2 hover:underline">
             Editor sestavy nominace
           </Link>
         </p>
@@ -1858,3 +1858,4 @@ export function BracketPickemContent({
     </main>
   );
 }
+

@@ -6,14 +6,14 @@ import { pageMetadata, PAGE_SEO } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata(PAGE_SEO.matchEditor);
 
-function SestavaFallback() {
+function EditorFallback() {
   return null;
 }
 
-export default function MatchLineupBuilderRoute() {
+export default function EditorSestavyPage() {
   return (
     <SiteShell showFooter={false}>
-      <Suspense fallback={<SestavaFallback />}>
+      <Suspense fallback={<EditorFallback />}>
         <MatchLineupBuilderPage />
       </Suspense>
     </SiteShell>

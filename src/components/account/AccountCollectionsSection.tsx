@@ -32,7 +32,9 @@ export function AccountCollectionsSection() {
   const [activeAlbumId, setActiveAlbumId] = useState<string | null>(null);
   const [activeAlbumName, setActiveAlbumName] = useState("");
   const [albumPlayers, setAlbumPlayers] = useState<AlbumPlayer[]>([]);
+  const [savedPlayerIds, setSavedPlayerIds] = useState<string[]>([]);
   const [loadingAlbum, setLoadingAlbum] = useState(false);
+  const [savingAlbum, setSavingAlbum] = useState(false);
 
   const [poolKey, setPoolKey] = useState<string>(DEFAULT_LINEUP_POOL);
   const [poolCounts, setPoolCounts] = useState<Record<string, number>>({});
@@ -125,6 +127,7 @@ export function AccountCollectionsSection() {
       }
       setActiveAlbumName(data.album.name);
       setAlbumPlayers(data.album.players);
+      setSavedPlayerIds(data.album.players.map((p) => p.id));
       initJerseyNameDisambiguation(data.album.players);
     } catch {
       toast.error("Album se nenačetlo.");
@@ -179,65 +182,73 @@ export function AccountCollectionsSection() {
 
   const usedIds = useMemo(() => new Set(albumPlayers.map((p) => p.id)), [albumPlayers]);
 
-  const poolCountsByPos = useMemo(() => {
-    let G = 0;
-    let D = 0;
-    let F = 0;
-    for (const p of poolPlayers) {
-      if (p.position === "G") G += 1;
-      else if (p.position === "D") D += 1;
-      else F += 1;
-    }
-    return { G, D, F };
-  }, [poolPlayers]);
+  const isDirty = useMemo(() => {
+    if (albumPlayers.length !== savedPlayerIds.length) return true;
+    const saved = new Set(savedPlayerIds);
+    return albumPlayers.some((p) => !saved.has(p.id));
+  }, [albumPlayers, savedPlayerIds]);
 
-  const addToAlbum = async (player: Player) => {
-    if (!activeAlbumId) return;
+  const addToAlbum = (player: Player) => {
     if (usedIds.has(player.id)) return;
     setAlbumPlayers((prev) => [...prev, { ...player, pick_rate: player.pick_rate ?? 0 }]);
-    try {
-      const r = await fetch(`/api/player-albums/${encodeURIComponent(activeAlbumId)}/players`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playerId: player.id }),
-      });
-      const data = (await r.json()) as { error?: string };
-      if (!r.ok) {
-        setAlbumPlayers((prev) => prev.filter((p) => p.id !== player.id));
-        toast.error(data.error ?? "Přidání selhalo.");
-        return;
-      }
-      setAlbums((prev) =>
-        prev.map((a) => (a.id === activeAlbumId ? { ...a, playerCount: a.playerCount + 1 } : a)),
-      );
-    } catch {
-      setAlbumPlayers((prev) => prev.filter((p) => p.id !== player.id));
-      toast.error("Přidání selhalo.");
-    }
   };
 
-  const removeFromAlbum = async (playerId: string) => {
-    if (!activeAlbumId) return;
-    const prev = albumPlayers;
+  const removeFromAlbum = (playerId: string) => {
     setAlbumPlayers((list) => list.filter((p) => p.id !== playerId));
+  };
+
+  const closeAlbumEditor = () => {
+    setActiveAlbumId(null);
+    setAlbumPlayers([]);
+    setSavedPlayerIds([]);
+    void loadAlbums();
+  };
+
+  const saveAlbum = async () => {
+    if (!activeAlbumId) return;
+    setSavingAlbum(true);
     try {
-      const r = await fetch(
-        `/api/player-albums/${encodeURIComponent(activeAlbumId)}/players/${encodeURIComponent(playerId)}`,
-        { method: "DELETE" },
-      );
-      if (!r.ok) {
-        setAlbumPlayers(prev);
-        toast.error("Odebrání selhalo.");
-        return;
+      const currentIds = new Set(albumPlayers.map((p) => p.id));
+      const previousIds = new Set(savedPlayerIds);
+      const toAdd = albumPlayers.filter((p) => !previousIds.has(p.id));
+      const toRemove = savedPlayerIds.filter((id) => !currentIds.has(id));
+
+      for (const player of toAdd) {
+        const r = await fetch(`/api/player-albums/${encodeURIComponent(activeAlbumId)}/players`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ playerId: player.id }),
+        });
+        if (!r.ok) {
+          const data = (await r.json().catch(() => ({}))) as { error?: string };
+          toast.error(data.error ?? "Uložení selhalo.");
+          return;
+        }
       }
-      setAlbums((list) =>
-        list.map((a) =>
-          a.id === activeAlbumId ? { ...a, playerCount: Math.max(0, a.playerCount - 1) } : a,
+
+      for (const playerId of toRemove) {
+        const r = await fetch(
+          `/api/player-albums/${encodeURIComponent(activeAlbumId)}/players/${encodeURIComponent(playerId)}`,
+          { method: "DELETE" },
+        );
+        if (!r.ok) {
+          toast.error("Uložení selhalo.");
+          return;
+        }
+      }
+
+      setSavedPlayerIds(albumPlayers.map((p) => p.id));
+      setAlbums((prev) =>
+        prev.map((a) =>
+          a.id === activeAlbumId ? { ...a, playerCount: albumPlayers.length } : a,
         ),
       );
+      toast.success("Album uloženo.");
+      closeAlbumEditor();
     } catch {
-      setAlbumPlayers(prev);
-      toast.error("Odebrání selhalo.");
+      toast.error("Uložení selhalo.");
+    } finally {
+      setSavingAlbum(false);
     }
   };
 
@@ -250,9 +261,8 @@ export function AccountCollectionsSection() {
               type="button"
               className="fifa-account-collections__back"
               onClick={() => {
-                setActiveAlbumId(null);
-                setAlbumPlayers([]);
-                void loadAlbums();
+                if (isDirty && !confirm("Máš neuložené změny. Odejít bez uložení?")) return;
+                closeAlbumEditor();
               }}
             >
               <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
@@ -261,6 +271,14 @@ export function AccountCollectionsSection() {
             <h2 className="fifa-account-section__title mt-2 truncate">{activeAlbumName}</h2>
             <p className="fifa-account-section__desc">{albumPlayers.length} hráčů</p>
           </div>
+          <button
+            type="button"
+            className={FIFA_BTN_PRIMARY}
+            disabled={savingAlbum || loadingAlbum}
+            onClick={() => void saveAlbum()}
+          >
+            {savingAlbum ? "Ukládám…" : "Uložit"}
+          </button>
         </div>
 
         {loadingAlbum ? (
@@ -281,11 +299,12 @@ export function AccountCollectionsSection() {
                   <PlayerPoolPanel
                     players={poolPlayers}
                     usedIds={usedIds}
-                    counts={poolCountsByPos}
-                    onAddPlayer={(p) => void addToAlbum(p)}
+                    counts={{ G: 0, D: 0, F: 0 }}
+                    onAddPlayer={addToAlbum}
                     onPreview={setPreviewPlayer}
                     enableDnd={false}
                     simplePickList
+                    ignorePositionLimits
                     uiVariant="fifa"
                     gridColumns={2}
                     hidePickRate
@@ -302,7 +321,7 @@ export function AccountCollectionsSection() {
               </div>
               {albumPlayers.length === 0 ? (
                 <p className="fifa-account-collections__album-empty">
-                  Klikni na hráče vlevo — přidá se sem.
+                  Klikni na hráče vlevo — přidá se sem. Pak dej Uložit.
                 </p>
               ) : (
                 <ul className="fifa-account-collections__album-list">
@@ -318,7 +337,7 @@ export function AccountCollectionsSection() {
                         type="button"
                         className="fifa-account-collections__album-remove"
                         aria-label={`Odebrat ${player.name}`}
-                        onClick={() => void removeFromAlbum(player.id)}
+                        onClick={() => removeFromAlbum(player.id)}
                       >
                         <X className="h-3.5 w-3.5" aria-hidden />
                       </button>
