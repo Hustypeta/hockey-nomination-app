@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -36,7 +36,7 @@ export function UserAccountHub() {
     return (
       <FifaAppPage fillMobile>
         <div className="flex h-full min-h-0 flex-1 items-center justify-center text-[var(--fifa-text-muted)]">
-          NaÄŤĂ­tĂˇmâ€¦
+          Načítám…
         </div>
       </FifaAppPage>
     );
@@ -46,40 +46,40 @@ export function UserAccountHub() {
     return (
       <FifaAppPage>
         <div className="mx-auto flex h-full min-h-0 max-w-lg flex-col items-center justify-center px-2 text-center">
-          <p className={FIFA_KICKER}>ĂšÄŤet</p>
-          <h1 className="mt-2 font-display text-3xl tracking-tight text-[var(--fifa-text)]">MĹŻj ĂşÄŤet</h1>
+          <p className={FIFA_KICKER}>Účet</p>
+          <h1 className="mt-2 font-display text-3xl tracking-tight text-[var(--fifa-text)]">Můj účet</h1>
           <p className="mt-3 text-sm text-[var(--fifa-text-secondary)]">
-            Pro pĹ™ehled sestav a ĂşÄŤasti v soutÄ›Ĺľi se pĹ™ihlas pĹ™es Google.
+            Pro přehled sestav a účasti v soutěži se přihlas přes Google.
           </p>
           <button
             type="button"
             onClick={() => signIn("google", { callbackUrl: "/ucet" })}
             className={`mt-8 ${FIFA_BTN_PRIMARY}`}
           >
-            PĹ™ihlĂˇsit se pĹ™es Google
+            Přihlásit se přes Google
           </button>
           <p className="mt-6 text-sm text-[var(--fifa-text-muted)]">
             <Link href="/editorsestavy" className={FIFA_LINK}>
               Editor sestavy
             </Link>{" "}
-            mĹŻĹľeĹˇ zkouĹˇet i bez ĂşÄŤtu â€” uloĹľenĂ­ vyĹľaduje pĹ™ihlĂˇĹˇenĂ­.
+            můžeš zkoušet i bez účtu — uložení vyžaduje přihlášení.
           </p>
         </div>
       </FifaAppPage>
     );
   }
 
-  const welcomeName = session?.user?.name ?? "HrĂˇÄŤ";
+  const welcomeName = session?.user?.name ?? "Hráč";
 
   return (
     <FifaAppPage fillMobile className="!py-2 lg-device:!py-3">
       <div className="fifa-account-page flex min-h-0 flex-1 flex-col">
         <div className="fifa-account-page__header shrink-0">
           <div className="fifa-account-page__identity min-w-0">
-            <h1 className="fifa-account-page__title">MĹŻj ĂşÄŤet</h1>
+            <h1 className="fifa-account-page__title">Můj účet</h1>
             <p className="fifa-account-page__welcome">
               <span className="fifa-account-page__welcome-line">
-                VĂ­tej zpÄ›t, <span className="fifa-account-page__welcome-name">{welcomeName}</span>
+                Vítej zpět, <span className="fifa-account-page__welcome-name">{welcomeName}</span>
               </span>
               {session?.user?.email ? (
                 <span className="fifa-account-page__email-inline">{session.user.email}</span>
@@ -93,7 +93,7 @@ export function UserAccountHub() {
               className={`${FIFA_BTN_SECONDARY} fifa-account-page__signout`}
             >
               <LogOut className="h-3.5 w-3.5" aria-hidden />
-              OdhlĂˇsit
+              Odhlásit
             </button>
           </div>
         </div>
@@ -108,4 +108,3 @@ export function UserAccountHub() {
     </FifaAppPage>
   );
 }
-

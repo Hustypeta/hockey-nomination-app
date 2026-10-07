@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -11,27 +11,27 @@ import { useContestStats } from "@/hooks/useContestStats";
 import { useSession } from "next-auth/react";
 
 const DEFAULT_INTRO =
-  "Zahraj si Fantasy na MS 2026. KaĹľdĂ˝ den si naklikej svĹŻj tĂ˝m a soutÄ›Ĺľ s ostatnĂ­mi a hraj o atraktivnĂ­ hokejovĂ© ceny.";
+  "Zahraj si Fantasy na MS 2026. Každý den si naklikej svůj tým a soutěž s ostatními a hraj o atraktivní hokejové ceny.";
 
 type AppLoadingScreenProps = {
-  /** ĹĂˇdek pod logem (napĹ™. kontext strĂˇnky). */
+  /** Řádek pod logem (např. kontext stránky). */
   tagline?: string;
-  /** Stav naÄŤĂ­tĂˇnĂ­ pod ĂşvodnĂ­m textem (napĹ™. â€žNaÄŤĂ­tĂˇm hrĂˇÄŤeâ€¦â€ś). */
+  /** Stav načítání pod úvodním textem (např. „Načítám hráče…“). */
   message?: string;
   /**
-   * ĂšvodnĂ­ text mĂ­sto vĂ˝chozĂ­ho. `null` = nezobrazovat (napĹ™. strĂˇnka sdĂ­lenĂ©ho odkazu).
+   * Úvodní text místo výchozího. `null` = nezobrazovat (např. stránka sdíleného odkazu).
    */
   intro?: string | null;
-  /** NepĹ™ihlĂˇĹˇenĂ­ â€” vĂ˝raznĂ© PĹ™ihlĂˇsit + blok vĂ˝hod (editor sestavy). */
+  /** Nepřihlášení — výrazné Přihlásit + blok výhod (editor sestavy). */
   showSignInCta?: boolean;
 };
 
 /**
- * JednotnĂˇ celostrĂˇnkovĂˇ obrazovka pĹ™i naÄŤĂ­tĂˇnĂ­ dat â€” odkazy nahoĹ™e, aby byly vidÄ›t bez rolovĂˇnĂ­.
+ * Jednotná celostránková obrazovka při načítání dat — odkazy nahoře, aby byly vidět bez rolování.
  */
 export function AppLoadingScreen({
-  tagline = "MS 2026 Â· Fantasy",
-  message = "NaÄŤĂ­tĂˇmâ€¦",
+  tagline = "MS 2026 · Fantasy",
+  message = "Načítám…",
   intro,
   showSignInCta = false,
 }: AppLoadingScreenProps) {
@@ -65,7 +65,7 @@ export function AppLoadingScreen({
               href="/"
               className="inline-flex items-center gap-1.5 font-display text-sm font-bold uppercase tracking-[0.14em] text-[#00B4FF] underline decoration-[#00B4FF]/50 underline-offset-4 transition hover:text-cyan-200 hover:decoration-cyan-200"
             >
-              â† Ăšvod
+              ← Úvod
             </Link>
           </p>
 
@@ -101,7 +101,7 @@ export function AppLoadingScreen({
           >
             <div className="absolute inset-0 rounded-full border-[8px] border-transparent border-t-[#c41e3a]/90 border-r-[#003f87]/50 animate-spin [animation-duration:1.15s] sm:border-[10px]" />
             <span className="relative z-10 font-display text-5xl tracking-[0.18em] text-[#003f87]/90 sm:text-6xl md:text-7xl">
-              ÄŚR
+              ČR
             </span>
           </div>
 
@@ -112,29 +112,29 @@ export function AppLoadingScreen({
                 onClick={handleSignIn}
                 className="w-full rounded-xl bg-gradient-to-r from-[#003087] to-[#002056] px-5 py-3.5 text-center font-display text-base font-bold uppercase tracking-[0.12em] text-white shadow-[0_8px_28px_rgba(0,48,135,0.45)] transition hover:brightness-110 active:scale-[0.99]"
               >
-                PĹ™ihlĂˇsit se
+                Přihlásit se
               </button>
 
               <div className="mt-5 rounded-xl border border-sky-500/25 bg-[#0f172a]/85 px-4 py-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
                 <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-sky-200/95">
-                  ProÄŤ se pĹ™ihlĂˇsit?
+                  Proč se přihlásit?
                 </p>
                 <ul className="mt-3 space-y-2.5 text-[13px] leading-snug text-white/82">
                   <li className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#c41e3a]" aria-hidden />
-                    <span>UklĂˇdat fantasy sestavy a nominace k ĂşÄŤtu a vracet se k nim pozdÄ›ji.</span>
+                    <span>Ukládat sestavy k účtu a vracet se k nim později.</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#003f87]" aria-hidden />
-                    <span>Pick&apos;em na MS 2026 a pĹ™ehled v ĂşÄŤtu.</span>
+                    <span>Pick&apos;em na MS 2026 a přehled v účtu.</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" aria-hidden />
-                    <span>Zapojit se do soutÄ›ĹľĂ­, kdyĹľ jsou otevĹ™enĂ© (pravidla vĹľdy u danĂ© aktivity).</span>
+                    <span>Zapojit se do soutěží, když jsou otevřené (pravidla vždy u dané aktivity).</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" aria-hidden />
-                    <span>PĹ™ehled aktivit v sekci ĂşÄŤet.</span>
+                    <span>Přehled aktivit v sekci účet.</span>
                   </li>
                 </ul>
               </div>
@@ -145,4 +145,3 @@ export function AppLoadingScreen({
     </div>
   );
 }
-

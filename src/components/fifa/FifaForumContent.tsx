@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
@@ -50,7 +50,7 @@ const FORUM_API = "/api/forum";
 type ForumMobilePane = "pinned" | "wall" | "explore";
 
 const MOBILE_SORT_LABELS: Record<CommunitySortMode, string> = {
-  new: "NovĂ©",
+  new: "Nové",
   top: "Top",
 };
 
@@ -162,7 +162,7 @@ export function FifaForumContent() {
       const res = await fetch(`${FORUM_API}/posts?${params}`, { cache: "no-store" });
       const data = (await res.json()) as { posts?: CommunityPostDto[]; error?: string };
       if (!res.ok) {
-        toast.error(data.error ?? "Feed se nenaÄŤetl.");
+        toast.error(data.error ?? "Feed se nenačetl.");
         return;
       }
       setPosts(data.posts ?? []);
@@ -218,7 +218,7 @@ export function FifaForumContent() {
       credentials: "include",
     })
       .then(async (res) => {
-        if (!res.ok) throw new Error("PĹ™Ă­spÄ›vek nenalezen.");
+        if (!res.ok) throw new Error("Příspěvek nenalezen.");
         return (await res.json()) as { post?: CommunityPostDto };
       })
       .then(({ post }) => {
@@ -232,7 +232,7 @@ export function FifaForumContent() {
       })
       .catch(() => {
         if (!cancelled) {
-          toast.error("OdkazovanĂ˝ pĹ™Ă­spÄ›vek uĹľ nenĂ­ dostupnĂ˝.");
+          toast.error("Odkazovaný příspěvek už není dostupný.");
           router.replace("/forum", { scroll: false });
         }
       });
@@ -259,7 +259,7 @@ export function FifaForumContent() {
     const text = commentTexts[slug]?.trim();
     if (!text) return;
     if (status !== "authenticated") {
-      toast.error("Pro komentĂˇĹ™ se pĹ™ihlas.");
+      toast.error("Pro komentář se přihlas.");
       return;
     }
     setCommentBusySlug(slug);
@@ -275,7 +275,7 @@ export function FifaForumContent() {
       });
       const data = (await res.json()) as { comment?: CommunityCommentDto; error?: string };
       if (!res.ok || !data.comment) {
-        toast.error(data.error ?? "KomentĂˇĹ™ se nepodaĹ™il.");
+        toast.error(data.error ?? "Komentář se nepodařil.");
         return;
       }
       setCommentsBySlug((prev) => ({
@@ -308,7 +308,7 @@ export function FifaForumContent() {
 
   const toggleLike = async (slug: string) => {
     if (status !== "authenticated") {
-      toast.error("Pro lajk se pĹ™ihlas Google ĂşÄŤtem.");
+      toast.error("Pro lajk se přihlas Google účtem.");
       return;
     }
     setLikeBusySlug(slug);
@@ -336,7 +336,7 @@ export function FifaForumContent() {
 
   const toggleCommentLike = async (slug: string, commentId: string) => {
     if (status !== "authenticated") {
-      toast.error("Pro lajk se pĹ™ihlas Google ĂşÄŤtem.");
+      toast.error("Pro lajk se přihlas Google účtem.");
       return;
     }
     setCommentLikeBusyId(commentId);
@@ -367,16 +367,16 @@ export function FifaForumContent() {
   };
 
   const deletePost = async (slug: string) => {
-    if (!confirm("Smazat tento pĹ™Ă­spÄ›vek?")) return;
+    if (!confirm("Smazat tento příspěvek?")) return;
     const res = await fetch(`${FORUM_API}/posts/${encodeURIComponent(slug)}`, {
       method: "DELETE",
       credentials: "include",
     });
     if (!res.ok) {
-      toast.error("SmazĂˇnĂ­ selhalo.");
+      toast.error("Smazání selhalo.");
       return;
     }
-    toast.success("PĹ™Ă­spÄ›vek smazĂˇn.");
+    toast.success("Příspěvek smazán.");
     setPosts((prev) => prev.filter((p) => p.slug !== slug));
     closeDetail();
   };
@@ -401,8 +401,8 @@ export function FifaForumContent() {
             type="button"
             onClick={() => void loadPosts()}
             className="fifa-forum-sidebar__refresh"
-            aria-label="Obnovit pĹ™Ă­spÄ›vky"
-            title="Obnovit pĹ™Ă­spÄ›vky"
+            aria-label="Obnovit příspěvky"
+            title="Obnovit příspěvky"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
           </button>
@@ -412,7 +412,7 @@ export function FifaForumContent() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Hledat na fĂłruâ€¦"
+            placeholder="Hledat na fóru…"
             className="fifa-forum-search__input fifa-forum-search__input--round"
             aria-label="Hledat"
           />
@@ -422,7 +422,7 @@ export function FifaForumContent() {
       <div className="fifa-forum-banner__block">
         <h2 className="fifa-forum-sidebar__heading">
           <TrendingUp className="fifa-forum-sidebar__heading-icon" aria-hidden />
-          PopulĂˇrnĂ­ pĹ™Ă­spÄ›vky
+          Populární příspěvky
         </h2>
         {popularPosts.length > 0 ? (
           <div className="fifa-forum-sidebar__popular">
@@ -458,7 +458,7 @@ export function FifaForumContent() {
             ))}
           </div>
         ) : (
-          <p className="fifa-forum-sidebar__empty">ZatĂ­m ĹľĂˇdnĂ© pĹ™Ă­spÄ›vky tento tĂ˝den</p>
+          <p className="fifa-forum-sidebar__empty">Zatím žádné příspěvky tento týden</p>
         )}
       </div>
 
@@ -470,13 +470,13 @@ export function FifaForumContent() {
           {communityUsersCount !== null ? (
             <span>
               <strong>{formatCs(communityUsersCount)}</strong>
-              v komunitÄ›
+              v komunitě
             </span>
           ) : null}
           {postsThisWeek !== null ? (
             <span>
               <strong>{formatCs(postsThisWeek)}</strong>
-              pĹ™Ă­spÄ›vkĹŻ tento tĂ˝den
+              příspěvků tento týden
             </span>
           ) : null}
         </div>
@@ -487,12 +487,12 @@ export function FifaForumContent() {
   return (
     <FifaAppPage className="!p-0" fillMobile fitViewport>
       <div className="fifa-forum-page" data-mobile-pane={mobilePane}>
-        <h1 className="sr-only">FĂłrum</h1>
+        <h1 className="sr-only">Fórum</h1>
 
         <div className="fifa-forum-layout">
           <main className="fifa-forum-feed">
             <div className="fifa-forum-mobile-chrome">
-              <div className="fifa-forum-mobile-switcher" role="tablist" aria-label="Sekce fĂłra">
+              <div className="fifa-forum-mobile-switcher" role="tablist" aria-label="Sekce fóra">
                 <button
                   type="button"
                   role="tab"
@@ -503,7 +503,7 @@ export function FifaForumContent() {
                   onClick={() => setMobilePane("pinned")}
                 >
                   <Pin className="fifa-forum-mobile-switcher__icon" aria-hidden />
-                  PĹ™ipnutĂ©
+                  Připnuté
                 </button>
                 <button
                   type="button"
@@ -515,7 +515,7 @@ export function FifaForumContent() {
                   onClick={() => setMobilePane("wall")}
                 >
                   <Newspaper className="fifa-forum-mobile-switcher__icon" aria-hidden />
-                  ZeÄŹ
+                  Zeď
                 </button>
                 <button
                   type="button"
@@ -534,7 +534,7 @@ export function FifaForumContent() {
                 type="button"
                 className="fifa-forum-mobile-compose"
                 onClick={openCompose}
-                aria-label={status === "authenticated" ? "NovĂ˝ pĹ™Ă­spÄ›vek" : "PĹ™ihlĂˇsit se a pĹ™idat pĹ™Ă­spÄ›vek"}
+                aria-label={status === "authenticated" ? "Nový příspěvek" : "Přihlásit se a přidat příspěvek"}
               >
                 <Plus className="fifa-forum-mobile-compose__icon" aria-hidden />
               </button>
@@ -542,7 +542,7 @@ export function FifaForumContent() {
 
             {mobilePane !== "explore" ? (
               <div className="fifa-forum-mobile-filters">
-                <div className="fifa-forum-mobile-filters__group" aria-label="ĹazenĂ­">
+                <div className="fifa-forum-mobile-filters__group" aria-label="Řazení">
                   {(Object.keys(COMMUNITY_SORT_LABELS) as CommunitySortMode[]).map((s) => (
                     <button
                       key={s}
@@ -565,7 +565,7 @@ export function FifaForumContent() {
                       category === "" ? " fifa-forum-mobile-filters__chip--active" : ""
                     }`}
                   >
-                    VĹˇe
+                    Vše
                   </button>
                   {COMMUNITY_CATEGORY_ORDER.map((c) => (
                     <button
@@ -631,8 +631,8 @@ export function FifaForumContent() {
                         <span className="fifa-forum-compose-frame__icon" aria-hidden>
                           <PenLine className="h-6 w-6" />
                         </span>
-                        <span className="fifa-forum-compose-frame__label">NovĂ˝ pĹ™Ă­spÄ›vek</span>
-                        <span className="fifa-forum-compose-frame__hint">SdĂ­lej sestavu, nominaci nebo diskuzi</span>
+                        <span className="fifa-forum-compose-frame__label">Nový příspěvek</span>
+                        <span className="fifa-forum-compose-frame__hint">Sdílej sestavu, nominaci nebo diskuzi</span>
                       </button>
                     </div>
                   ) : (
@@ -640,23 +640,23 @@ export function FifaForumContent() {
                       <div className="fifa-forum-empty">
                         <MessagesSquare className="h-8 w-8 text-[var(--fifa-accent-text)]" aria-hidden />
                         <p className="mt-3 font-display text-base font-semibold text-[var(--fifa-text)]">
-                          {q.trim() || category ? "Nic nenalezeno" : "ZatĂ­m ĹľĂˇdnĂ© pĹ™Ă­spÄ›vky"}
+                          {q.trim() || category ? "Nic nenalezeno" : "Zatím žádné příspěvky"}
                         </p>
                       </div>
                     </div>
                   )
                 ) : (
                   <div className="fifa-forum-feed-stage__split">
-                    <section className="fifa-forum-feed-column fifa-forum-feed-column--pinned" aria-label="PĹ™ipnutĂ© pĹ™Ă­spÄ›vky">
-                      <p className="fifa-forum-feed-column__label">PĹ™ipnuto</p>
+                    <section className="fifa-forum-feed-column fifa-forum-feed-column--pinned" aria-label="Připnuté příspěvky">
+                      <p className="fifa-forum-feed-column__label">Připnuto</p>
                       {pinnedPosts.length === 0 ? (
                         <div className="fifa-forum-feed-column__empty">
-                          <p>Ĺ˝ĂˇdnĂ© pĹ™ipnutĂ© pĹ™Ă­spÄ›vky</p>
+                          <p>Žádné připnuté příspěvky</p>
                         </div>
                       ) : (
                         <ForumFeedCarousel
                           itemCount={pinnedPosts.length}
-                          ariaLabel="PĹ™ipnutĂ© pĹ™Ă­spÄ›vky"
+                          ariaLabel="Připnuté příspěvky"
                           arrowsOnly
                         >
                           {pinnedPosts.map(renderPostCard)}
@@ -664,21 +664,21 @@ export function FifaForumContent() {
                       )}
                     </section>
 
-                    <section className="fifa-forum-feed-column fifa-forum-feed-column--feed" aria-label="PĹ™Ă­spÄ›vky">
-                      <p className="fifa-forum-feed-column__label">ZeÄŹ</p>
+                    <section className="fifa-forum-feed-column fifa-forum-feed-column--feed" aria-label="Příspěvky">
+                      <p className="fifa-forum-feed-column__label">Zeď</p>
                       {regularPosts.length === 0 ? (
                         <div className="fifa-forum-feed-column__empty">
-                          <p>VĹˇechny pĹ™Ă­spÄ›vky jsou pĹ™ipnutĂ©</p>
+                          <p>Všechny příspěvky jsou připnuté</p>
                           <button
                             type="button"
                             className="fifa-forum-mobile-empty-link"
                             onClick={() => setMobilePane("pinned")}
                           >
-                            Zobrazit pĹ™ipnutĂ©
+                            Zobrazit připnuté
                           </button>
                         </div>
                       ) : (
-                        <div className="fifa-forum-wall" role="feed" aria-label="PĹ™Ă­spÄ›vky">
+                        <div className="fifa-forum-wall" role="feed" aria-label="Příspěvky">
                           {regularPosts.map(renderPostCard)}
                         </div>
                       )}
@@ -689,12 +689,12 @@ export function FifaForumContent() {
             </div>
           </main>
 
-          <aside className="fifa-forum-banners" aria-label="NĂˇstroje fĂłra">
-            <section className="fifa-forum-banner fifa-forum-banner--compose" aria-label="ĹazenĂ­ a publikace">
+          <aside className="fifa-forum-banners" aria-label="Nástroje fóra">
+            <section className="fifa-forum-banner fifa-forum-banner--compose" aria-label="Řazení a publikace">
               <div className="fifa-forum-banner__block fifa-forum-banner__block--sort">
                 <h2 className="fifa-forum-sidebar__heading">
                   <Clock className="fifa-forum-sidebar__heading-icon" aria-hidden />
-                  ĹazenĂ­
+                  Řazení
                 </h2>
                 <div className="fifa-forum-sidebar__list">
                   {(Object.keys(COMMUNITY_SORT_LABELS) as CommunitySortMode[]).map((s) => {
@@ -725,7 +725,7 @@ export function FifaForumContent() {
                     onClick={() => setCategory("")}
                     className={`fifa-forum-sidebar__item ${category === "" ? "fifa-forum-sidebar__item--active" : ""}`}
                   >
-                    VĹˇe
+                    Vše
                   </button>
                   {COMMUNITY_CATEGORY_ORDER.map((c) => (
                     <button
@@ -752,7 +752,7 @@ export function FifaForumContent() {
                 {status === "authenticated" ? (
                   <button type="button" onClick={() => setNewOpen(true)} className="fifa-forum-new-post-btn">
                     <Plus className="fifa-forum-sidebar__cta-icon" aria-hidden />
-                    NovĂ˝ pĹ™Ă­spÄ›vek
+                    Nový příspěvek
                   </button>
                 ) : (
                   <button
@@ -760,7 +760,7 @@ export function FifaForumContent() {
                     onClick={() => void signIn("google", { callbackUrl: "/forum" })}
                     className={`${FIFA_BTN_SECONDARY} fifa-forum-sidebar__cta-login`}
                   >
-                    PĹ™ihlĂˇsit se
+                    Přihlásit se
                   </button>
                 )}
               </div>
@@ -817,4 +817,3 @@ export function FifaForumContent() {
     </FifaAppPage>
   );
 }
-
