@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { toast } from "sonner";
 import { Share2 } from "lucide-react";
 import {
@@ -11,7 +12,9 @@ import {
   resizeCanvasTo,
 } from "@/lib/captureSharePoster";
 import { ensureFreshPosterIceBackground } from "@/lib/posterRosterIceBg";
+import { warmupMatchLineupPosterAssets } from "@/lib/warmupPosterAssets";
 import { SHARE_POSTER_4X5_H, SHARE_POSTER_4X5_W, SHARE_POSTER_CAPTURE_PIXEL_RATIO } from "@/lib/sharePosterLayout";
+import { FIFA_BTN_PRIMARY } from "@/lib/fifa/fifaUiClasses";
 import type { LineupStructure, Player } from "@/types";
 import { MatchLineupJerseyExportPoster } from "@/components/match/MatchLineupJerseyExportPoster";
 import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
@@ -22,8 +25,6 @@ import type { MatchLineupPosterGroup } from "@/lib/matchLineupPosterSegments";
 import { POWER_PLAY_UI_ENABLED } from "@/lib/powerPlayLineup";
 import { MATCH_LINEUP_SHARE_TITLE_DEFAULT } from "@/lib/matchLineupShareTitle";
 import type { MatchRatingAggregateMap, MatchRatingMyMap } from "@/lib/matchRatingExportDisplay";
-
-const SEGMENTS: MatchLineupPosterGroup[] = ["line-1", "line-2", "line-3", "line-4"];
 
 export type MatchLineupImageRatingSnapshot = {
   ratings: MatchRatingAggregateMap;
@@ -105,7 +106,10 @@ export function MatchLineupImageExportButton({
   const stageRef = useRef<HTMLDivElement | null>(null);
   const previewRunRef = useRef(0);
   const posterPreviewsRef = useRef<Record<string, PosterPreview>>({});
+  const exportCacheRef = useRef<Record<string, { dataUrl: string; filename: string }>>({});
+  const exportCacheSignatureRef = useRef("");
   const previewSignatureRef = useRef("");
+  const activePreviewIndexRef = useRef(0);
   const stageCaptureCountRef = useRef(0);
   const stageRestoreRef = useRef<{
     top: string;
@@ -118,6 +122,7 @@ export function MatchLineupImageExportButton({
   const [previewsBusy, setPreviewsBusy] = useState(false);
   const [modalOpenInternal, setModalOpenInternal] = useState(false);
   const [posterPreviews, setPosterPreviews] = useState<Record<string, PosterPreview>>({});
+  const [stageSlot, setStageSlot] = useState<string | null>(null);
   const controlled = typeof modalOpenControlled === "boolean" && typeof onModalOpenChange === "function";
   const modalOpen = controlled ? modalOpenControlled : modalOpenInternal;
   const setModalOpen = controlled ? onModalOpenChange! : setModalOpenInternal;
@@ -168,8 +173,14 @@ export function MatchLineupImageExportButton({
     if (!modalOpen) {
       previewRunRef.current += 1;
       setPreviewsBusy(false);
+      setStageSlot(null);
+      activePreviewIndexRef.current = 0;
     }
   }, [modalOpen]);
+
+  const handleActivePreviewIndexChange = useCallback((index: number) => {
+    activePreviewIndexRef.current = index;
+  }, []);
 
   const choices = useMemo(() => {
     const all = [
@@ -228,10 +239,30 @@ export function MatchLineupImageExportButton({
     return all;
   }, [ratingSnapshot, ratingHint]);
 
+  const unpinStage = useCallback(() => {
+    const stage = stageRef.current;
+    if (stage && stageRestoreRef.current) {
+      stage.style.top = stageRestoreRef.current.top;
+      stage.style.left = stageRestoreRef.current.left;
+      stage.style.opacity = stageRestoreRef.current.opacity;
+      stage.style.visibility = stageRestoreRef.current.visibility;
+      stage.style.zIndex = stageRestoreRef.current.zIndex;
+      stageRestoreRef.current = null;
+    }
+    stageCaptureCountRef.current = 0;
+    flushSync(() => setStageSlot(null));
+  }, []);
+
   const capturePoster = useCallback(
-    async (slot: string, previewOnly: boolean) => {
+    async (slot: string, previewOnly: boolean, options?: { keepStage?: boolean }) => {
+      flushSync(() => setStageSlot(slot));
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      );
+
       const stage = stageRef.current;
       if (!stage) {
+        if (!options?.keepStage) unpinStage();
         throw new Error("Export stage nebyl nalezen.");
       }
 
@@ -253,10 +284,11 @@ export function MatchLineupImageExportButton({
               : `[data-export-slot="${slot}"].match-lineup-jersey-export-poster`;
       const node = stage.querySelector<HTMLElement>(selector);
       if (!node) {
+        if (!options?.keepStage) unpinStage();
         throw new Error(`Plakát ${slot} nebyl v DOM připraven.`);
       }
 
-      if (stageCaptureCountRef.current === 0) {
+      if (!stageRestoreRef.current) {
         stageRestoreRef.current = {
           top: stage.style.top,
           left: stage.style.left,
@@ -277,17 +309,6 @@ export function MatchLineupImageExportButton({
         if (slot === "cele-dresy") {
           await ensureFreshPosterIceBackground(node);
         }
-        const imgs = node.querySelectorAll("img");
-        await Promise.all(
-          [...imgs].map((img) =>
-            img.complete
-              ? Promise.resolve()
-              : new Promise<void>((resolve) => {
-                  img.addEventListener("load", () => resolve(), { once: true });
-                  img.addEventListener("error", () => resolve(), { once: true });
-                })
-          )
-        );
 
         const lineupLine4x5 = slot.startsWith("line-");
         const lineupNames4x5 = slot === "cele-jmena" && !ratingSnapshot;
@@ -317,17 +338,12 @@ export function MatchLineupImageExportButton({
         };
       } finally {
         stageCaptureCountRef.current = Math.max(0, stageCaptureCountRef.current - 1);
-        if (stageCaptureCountRef.current === 0 && stageRestoreRef.current) {
-          stage.style.top = stageRestoreRef.current.top;
-          stage.style.left = stageRestoreRef.current.left;
-          stage.style.opacity = stageRestoreRef.current.opacity;
-          stage.style.visibility = stageRestoreRef.current.visibility;
-          stage.style.zIndex = stageRestoreRef.current.zIndex;
-          stageRestoreRef.current = null;
+        if (!options?.keepStage && stageCaptureCountRef.current === 0) {
+          unpinStage();
         }
       }
     },
-    [baseSlug, ratingSnapshot]
+    [baseSlug, ratingSnapshot, unpinStage]
   );
 
   useEffect(() => {
@@ -343,47 +359,71 @@ export function MatchLineupImageExportButton({
     const runId = ++previewRunRef.current;
     previewSignatureRef.current = previewSignature;
     posterPreviewsRef.current = {};
+    if (exportCacheSignatureRef.current !== previewSignature) {
+      exportCacheSignatureRef.current = previewSignature;
+      exportCacheRef.current = {};
+    }
     setPosterPreviews({});
     setPreviewsBusy(true);
 
     void (async () => {
       try {
+        await warmupMatchLineupPosterAssets(poolKey);
+        if (previewRunRef.current !== runId) return;
+
         let failures = 0;
-        await Promise.all(
-          choices.map(async (choice) => {
-            try {
-              const preview = await capturePoster(choice.key, true);
-              if (previewRunRef.current !== runId) return;
-              const next = {
-                ...posterPreviewsRef.current,
-                [choice.key]: { dataUrl: preview.dataUrl, light: preview.light },
-              };
-              posterPreviewsRef.current = next;
-              setPosterPreviews(next);
-            } catch (error) {
-              failures += 1;
-              console.error(`poster preview ${choice.key}:`, error);
-            }
-          })
-        );
+        const remaining = choices.map((choice) => choice.key);
+        while (remaining.length > 0) {
+          if (previewRunRef.current !== runId) break;
+          const preferred = choices[activePreviewIndexRef.current]?.key;
+          const slot = preferred && remaining.includes(preferred) ? preferred : remaining[0];
+          remaining.splice(remaining.indexOf(slot), 1);
+          try {
+            const preview = await capturePoster(slot, true, { keepStage: true });
+            if (previewRunRef.current !== runId) break;
+            const next = {
+              ...posterPreviewsRef.current,
+              [slot]: { dataUrl: preview.dataUrl, light: preview.light },
+            };
+            posterPreviewsRef.current = next;
+            setPosterPreviews(next);
+          } catch (error) {
+            failures += 1;
+            console.error(`poster preview ${slot}:`, error);
+          }
+        }
         if (failures > 0 && previewRunRef.current === runId) {
           toast.error("Některé náhledy se nepodařilo připravit.");
         }
       } finally {
-        if (previewRunRef.current === runId) setPreviewsBusy(false);
+        if (previewRunRef.current === runId) {
+          setPreviewsBusy(false);
+          unpinStage();
+        }
       }
     })();
 
     return () => {
       if (previewRunRef.current === runId) previewRunRef.current += 1;
     };
-  }, [capturePoster, choices, disabled, modalOpen, previewSignature]);
+  }, [capturePoster, choices, disabled, modalOpen, poolKey, previewSignature, unpinStage]);
 
   const runExport = useCallback(
     async (slot: string) => {
       setBusyKey(slot);
       try {
-        const poster = await capturePoster(slot, false);
+        if (exportCacheSignatureRef.current !== previewSignature) {
+          exportCacheSignatureRef.current = previewSignature;
+          exportCacheRef.current = {};
+        }
+        const cached = exportCacheRef.current[slot];
+        const poster = cached ?? (await capturePoster(slot, false));
+        if (!cached) {
+          exportCacheRef.current[slot] = {
+            dataUrl: poster.dataUrl,
+            filename: poster.filename,
+          };
+        }
         downloadDataUrl(poster.dataUrl, poster.filename);
         toast.success("PNG bylo staženo.");
       } catch (e) {
@@ -395,7 +435,7 @@ export function MatchLineupImageExportButton({
         setBusyKey(null);
       }
     },
-    [capturePoster]
+    [capturePoster, previewSignature]
   );
 
   return (
@@ -405,14 +445,15 @@ export function MatchLineupImageExportButton({
           type="button"
           disabled={disabled}
           onClick={() => !disabled && setModalOpen(true)}
-          className="inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-sky-300/55 bg-gradient-to-r from-sky-500/25 via-cyan-400/20 to-sky-500/25 px-6 py-4 font-display text-lg font-black uppercase tracking-[0.08em] text-white shadow-[0_0_0_1px_rgba(125,211,252,0.22),0_18px_60px_rgba(0,180,255,0.18)] transition hover:brightness-110 hover:shadow-[0_0_0_1px_rgba(125,211,252,0.35),0_24px_80px_rgba(0,180,255,0.22)] disabled:opacity-50 sm:py-5"
+          className={`${FIFA_BTN_PRIMARY} w-full gap-3 px-6 py-4 text-lg uppercase tracking-[0.08em] disabled:opacity-50 sm:py-5`}
         >
-          <Share2 className="h-6 w-6 shrink-0 text-cyan-100" aria-hidden />
+          <Share2 className="h-6 w-6 shrink-0" aria-hidden />
           Plakáty / grafika
         </button>
       ) : null}
 
       <MatchPosterExportChoicesModal
+        key={modalOpen && !disabled ? "open" : "closed"}
         open={modalOpen && !disabled}
         onClose={() => setModalOpen(false)}
         eyebrow={ratingSnapshot ? "Hodnocení zápasu" : "Sestava na zápas"}
@@ -432,76 +473,82 @@ export function MatchLineupImageExportButton({
         onPick={async (key) => {
           await runExport(key);
         }}
+        onActiveIndexChange={handleActivePreviewIndexChange}
       />
 
-      <div
-        ref={stageRef}
-        aria-hidden
-        style={{
-          position: "fixed",
-          top: -100000,
-          left: -100000,
-          pointerEvents: "none",
-          opacity: 0,
-        }}
-      >
-        {ratingSnapshot ? (
-          <MatchRatingNamesFullPoster
-            headline={titleLine}
-            lineup={lineup}
-            players={players}
-            defenseCount={defenseCount}
-            allowExtraForward={allowExtraForward}
-            ratings={ratingSnapshot.ratings}
-            myRatings={ratingSnapshot.myRatings}
-            snapshotMode={ratingSnapshot.mode}
-            siteUrl={siteOrigin}
-            footerInstantIso={footerIso}
-            captainId={captainId}
-          />
-        ) : (
-          <MatchLineupNamesFullPoster
-            headline={titleLine}
-            lineup={lineup}
-            players={players}
-            defenseCount={defenseCount}
-            allowExtraForward={allowExtraForward}
-            siteUrl={siteOrigin}
-            footerInstantIso={footerIso}
-            poolKey={poolKey}
-            captainId={captainId}
-          />
-        )}
-        <MatchLineupFullJerseyExportPoster
-          lineupTitle={titleLine}
-          lineup={lineup}
-          players={players}
-          defenseCount={defenseCount}
-          allowExtraForward={allowExtraForward}
-          siteUrl={siteOrigin}
-          poolKey={poolKey}
-          captainId={captainId}
-          jerseyRatingExport={jerseyRatingExport}
-        />
-        {POWER_PLAY_UI_ENABLED && !ratingSnapshot ? (
-          <MatchPowerPlayExportPoster lineupTitle={titleLine} lineup={lineup} players={players} />
-        ) : null}
-        {SEGMENTS.map((g) => (
-          <MatchLineupJerseyExportPoster
-            key={g}
-            lineupTitle={titleLine}
-            group={g}
-            players={players}
-            lineup={lineup}
-            defenseCount={defenseCount}
-            allowExtraForward={allowExtraForward}
-            siteUrl={siteOrigin}
-            poolKey={poolKey}
-            captainId={captainId}
-            jerseyRatingExport={jerseyRatingExport}
-          />
-        ))}
-      </div>
+      {modalOpen && stageSlot ? (
+        <div
+          ref={stageRef}
+          aria-hidden
+          style={{
+            position: "fixed",
+            top: -100000,
+            left: -100000,
+            pointerEvents: "none",
+            opacity: 0,
+          }}
+        >
+          {stageSlot === "cele-jmena" ? (
+            ratingSnapshot ? (
+              <MatchRatingNamesFullPoster
+                headline={titleLine}
+                lineup={lineup}
+                players={players}
+                defenseCount={defenseCount}
+                allowExtraForward={allowExtraForward}
+                ratings={ratingSnapshot.ratings}
+                myRatings={ratingSnapshot.myRatings}
+                snapshotMode={ratingSnapshot.mode}
+                siteUrl={siteOrigin}
+                footerInstantIso={footerIso}
+                captainId={captainId}
+              />
+            ) : (
+              <MatchLineupNamesFullPoster
+                headline={titleLine}
+                lineup={lineup}
+                players={players}
+                defenseCount={defenseCount}
+                allowExtraForward={allowExtraForward}
+                siteUrl={siteOrigin}
+                footerInstantIso={footerIso}
+                poolKey={poolKey}
+                captainId={captainId}
+              />
+            )
+          ) : null}
+          {stageSlot === "cele-dresy" ? (
+            <MatchLineupFullJerseyExportPoster
+              lineupTitle={titleLine}
+              lineup={lineup}
+              players={players}
+              defenseCount={defenseCount}
+              allowExtraForward={allowExtraForward}
+              siteUrl={siteOrigin}
+              poolKey={poolKey}
+              captainId={captainId}
+              jerseyRatingExport={jerseyRatingExport}
+            />
+          ) : null}
+          {stageSlot === "power-play" && POWER_PLAY_UI_ENABLED && !ratingSnapshot ? (
+            <MatchPowerPlayExportPoster lineupTitle={titleLine} lineup={lineup} players={players} />
+          ) : null}
+          {stageSlot.startsWith("line-") ? (
+            <MatchLineupJerseyExportPoster
+              lineupTitle={titleLine}
+              group={stageSlot as MatchLineupPosterGroup}
+              players={players}
+              lineup={lineup}
+              defenseCount={defenseCount}
+              allowExtraForward={allowExtraForward}
+              siteUrl={siteOrigin}
+              poolKey={poolKey}
+              captainId={captainId}
+              jerseyRatingExport={jerseyRatingExport}
+            />
+          ) : null}
+        </div>
+      ) : null}
     </>
   );
 }

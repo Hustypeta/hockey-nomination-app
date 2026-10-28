@@ -9,6 +9,7 @@ import {
   MATCH_LINEUP_SHARE_TITLE_MAX_LENGTH,
   clampMatchLineupShareTitle,
 } from "@/lib/matchLineupShareTitle";
+import { FIFA_BTN_PRIMARY, FIFA_INPUT, FIFA_KICKER } from "@/lib/fifa/fifaUiClasses";
 
 export function MatchLineupSaveShareModal({
   open,
@@ -63,22 +64,20 @@ export function MatchLineupSaveShareModal({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fifa-share-modal-backdrop z-[300]"
       onClick={() => !saving && onClose()}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-label={guestMode ? "Plakát" : "Uložit a sdílet sestavu na zápas"}
-        className="h-[min(92dvh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/12 bg-[#0b1220] shadow-2xl"
+        className="fifa-share-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+        <div className="fifa-share-modal__head">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">
-              {guestMode ? "Host" : "Sdílení"}
-            </p>
-            <h2 className="mt-1 font-display text-lg font-black text-white">
+            <p className={FIFA_KICKER}>{guestMode ? "Host" : "Sdílení"}</p>
+            <h2 className="mt-1 font-display text-lg font-bold tracking-wide text-[var(--fifa-text)]">
               {guestMode ? "Plakát" : "Uložit & sdílet"}
             </h2>
           </div>
@@ -86,20 +85,18 @@ export function MatchLineupSaveShareModal({
             type="button"
             onClick={onClose}
             disabled={saving}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/80 hover:bg-white/[0.08] disabled:opacity-50"
+            className="fifa-forum-modal__close disabled:opacity-50"
             aria-label="Zavřít"
           >
             <X className="h-5 w-5" aria-hidden />
           </button>
         </div>
 
-        <div className="space-y-5 px-5 py-5">
+        <div className="fifa-share-modal__body">
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-3">
-              <label className="block text-xs font-bold uppercase tracking-[0.22em] text-white/50">
-                Název sestavy
-              </label>
-              <span className="tabular-nums text-[11px] font-semibold text-white/40">
+              <label className={`${FIFA_KICKER} block`}>Název sestavy</label>
+              <span className="tabular-nums text-[11px] font-semibold text-[var(--fifa-text-muted)]">
                 {shareTitle.length}/{MATCH_LINEUP_SHARE_TITLE_MAX_LENGTH}
               </span>
             </div>
@@ -107,26 +104,24 @@ export function MatchLineupSaveShareModal({
               value={shareTitle}
               maxLength={MATCH_LINEUP_SHARE_TITLE_MAX_LENGTH}
               onChange={(e) => onShareTitleChange(clampMatchLineupShareTitle(e.target.value))}
-              className="w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2.5 text-sm font-semibold text-white outline-none focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30"
+              className={FIFA_INPUT}
               placeholder={titleHint}
             />
           </div>
 
           {!guestMode ? (
-            <div className="grid grid-cols-1 gap-2">
-              <button
-                type="button"
-                onClick={() => void onSave()}
-                disabled={!canShare}
-                className="rounded-xl bg-gradient-to-r from-[#c8102e] to-[#003087] px-4 py-2.5 text-sm font-black text-white shadow-[0_16px_44px_rgba(0,0,0,0.22)] ring-1 ring-white/15 hover:brightness-110 disabled:opacity-50"
-              >
-                {saving ? "Ukládám…" : "Uložit"}
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => void onSave()}
+              disabled={!canShare}
+              className={`${FIFA_BTN_PRIMARY} w-full py-3 disabled:opacity-50`}
+            >
+              {saving ? "Ukládám…" : "Uložit"}
+            </button>
           ) : null}
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Plakát</p>
+          <div className="fifa-share-field">
+            <p className={FIFA_KICKER}>Plakát</p>
             <div className="mt-3">
               <MatchLineupImageExportButton
                 modalOpen={posterModalOpen}
@@ -145,7 +140,7 @@ export function MatchLineupSaveShareModal({
             </div>
           </div>
 
-          <TipsportPartnerBanner compact className="mt-6 border-t border-white/10 pt-6" />
+          <TipsportPartnerBanner compact className="fifa-design-tipsport-compact border-t border-[var(--fifa-border)] pt-4" />
         </div>
       </div>
     </div>

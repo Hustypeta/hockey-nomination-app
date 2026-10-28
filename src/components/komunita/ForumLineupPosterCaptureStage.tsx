@@ -7,6 +7,7 @@ import { MatchLineupNamesFullPoster } from "@/components/match/MatchFixtureNames
 import { MatchLineupFullJerseyExportPoster } from "@/components/match/MatchLineupFullJerseyExportPoster";
 import { captureElementToCanvas } from "@/lib/captureSharePoster";
 import { ensureFreshPosterIceBackground } from "@/lib/posterRosterIceBg";
+import { warmupForumLineupPosterAssets } from "@/lib/warmupPosterAssets";
 import { isLineupComplete, normalizeLineupStructure } from "@/lib/lineupUtils";
 import {
   FORUM_POST_FRAME_H,
@@ -71,32 +72,37 @@ export const ForumLineupPosterCaptureStage = forwardRef<
         });
         if (p.kind === "NOMINATION" && !isLineupComplete(ls)) return null;
 
+        const warmup = warmupForumLineupPosterAssets(p);
+
         flushSync(() => {
           setPayload(p);
           setVisible(true);
           setFitScale(1);
         });
 
-        await new Promise<void>((resolve) =>
-          requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
-        );
-
-        const posterNode = posterRef.current;
-        if (!posterNode) return null;
-
-        const scale = measureFitScale(posterNode.offsetHeight);
-        flushSync(() => setFitScale(scale));
-
-        await new Promise<void>((resolve) =>
-          requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
-        );
-
-        const stage = stageRef.current;
-        if (!stage) return null;
-
-        await ensureFreshPosterIceBackground(posterNode);
-
         try {
+          await new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+          );
+
+          const posterNode = posterRef.current;
+          if (!posterNode) return null;
+
+          const scale = measureFitScale(posterNode.offsetHeight);
+          flushSync(() => setFitScale(scale));
+
+          await new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+          );
+
+          const stage = stageRef.current;
+          if (!stage) return null;
+
+          await warmup;
+          if (p.kind === "MATCH_LINEUP" && p.posterVariant === "jerseys") {
+            await ensureFreshPosterIceBackground(posterNode);
+          }
+
           const canvas = await captureElementToCanvas(stage, {
             scale: 1,
             backgroundColor: FORUM_FRAME_BG,

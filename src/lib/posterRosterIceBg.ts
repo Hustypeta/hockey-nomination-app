@@ -1,3 +1,5 @@
+import { loadPosterAssetAsDataUrl } from "@/lib/posterAssetCache";
+
 export const POSTER_ROSTER_ICE_BG_PATH = "/images/reprezentace/poster-roster-ice-bg.png";
 
 /** Bump when replacing the PNG in public/images (cache bust for dev + export). */
@@ -8,28 +10,25 @@ export function posterRosterIceBgUrl(revision: string | number = POSTER_ROSTER_I
 }
 
 /** Načte PNG jako data URL — html-to-image jinak často pozadí vůbec nevykreslí. */
-export async function loadPosterIceBgAsDataUrl(revision?: string | number): Promise<string> {
-  const url = posterRosterIceBgUrl(revision ?? Date.now());
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Poster ice bg fetch failed (${res.status})`);
-  }
-  const blob = await res.blob();
-  return await new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.onerror = () => reject(reader.error ?? new Error("Poster ice bg read failed"));
-    reader.readAsDataURL(blob);
-  });
+export function loadPosterIceBgAsDataUrl(
+  revision: string | number = POSTER_ROSTER_ICE_BG_REVISION
+): Promise<string> {
+  return loadPosterAssetAsDataUrl(posterRosterIceBgUrl(revision));
 }
 
-/** Před html-to-image vždy vloží aktuální PNG inline (obejde cache i CORS problémy). */
+/** Před html-to-image vloží revizované PNG inline; data se sdílí mezi mountem i exporty. */
 export async function ensureFreshPosterIceBackground(root: HTMLElement): Promise<void> {
   const img = root.querySelector<HTMLImageElement>("[data-poster-ice-bg]");
   if (!img) return;
 
+  const currentSrc = img.getAttribute("src") ?? "";
+  if (currentSrc.startsWith("data:image/")) {
+    await img.decode().catch(() => undefined);
+    return;
+  }
+
   const dataUrl = await loadPosterIceBgAsDataUrl();
-  if (img.src !== dataUrl) {
+  if (img.getAttribute("src") !== dataUrl) {
     await new Promise<void>((resolve, reject) => {
       img.onload = () => resolve();
       img.onerror = () => reject(new Error("Poster ice bg decode failed"));

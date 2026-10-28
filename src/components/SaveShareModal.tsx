@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { signIn } from "next-auth/react";
-import { Download, Share2, ChevronLeft } from "lucide-react";
+import { Download, Share2, ChevronLeft, X } from "lucide-react";
 import { sharePngDataUrl } from "@/lib/sharePosterImage";
 import {
   captureElementToCanvas,
@@ -14,6 +14,7 @@ import {
 } from "@/lib/captureSharePoster";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
+import { FIFA_BTN_PRIMARY, FIFA_BTN_SECONDARY, FIFA_INPUT, FIFA_KICKER } from "@/lib/fifa/fifaUiClasses";
 import {
   NOMINATION_WEB_POSTER_H,
   NOMINATION_WEB_POSTER_W,
@@ -242,33 +243,39 @@ export function SaveShareModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 backdrop-blur-md sm:p-6">
-      <div className="card-glow max-h-[min(92vh,900px)] w-full max-w-2xl overflow-y-auto rounded-2xl border-2 border-[#c8102e] bg-gradient-to-b from-[#1a1f2e] via-[#12151f] to-[#0c0e14] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_32px_80px_rgba(0,0,0,0.55)]">
-        <div className="p-5 sm:p-7">
-          <div className="mb-6 flex flex-wrap items-start justify-between gap-3 border-b border-white/10 pb-5">
-            <div>
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.28em] text-[#c8102e]/90">
-                MS 2026
-              </p>
-              <h2 className="font-display text-2xl tracking-wide text-white sm:text-3xl">Sdílet sestavu</h2>
-              <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/65">
-                Zde si můžete vybrat, jakým způsobem chcete svoji sestavu sdílet. Pokud jste přihlášeni, můžete si také
-                uložit koncept sestavy na svůj účet (kliknutím na{" "}
-                <strong className="font-semibold text-white/85">Uložit sestavu</strong> dole).
-              </p>
-            </div>
+    <div className="fifa-share-modal-backdrop z-[300]">
+      <div className="fifa-share-modal fifa-share-modal--wide max-h-[min(92vh,900px)]">
+        <div className="fifa-share-modal__head">
+          <div>
+            <p className={`mb-1 ${FIFA_KICKER}`}>MS 2026</p>
+            <h2 className="font-display text-2xl tracking-wide text-[var(--fifa-text)] sm:text-3xl">Sdílet sestavu</h2>
+            <p className="mt-2 max-w-lg text-sm leading-relaxed text-[var(--fifa-text-secondary)]">
+              Zde si můžete vybrat, jakým způsobem chcete svoji sestavu sdílet. Pokud jste přihlášeni, můžete si také
+              uložit koncept sestavy na svůj účet (kliknutím na{" "}
+              <strong className="font-semibold text-[var(--fifa-text)]">Uložit sestavu</strong> dole).
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="fifa-forum-modal__close"
+            aria-label="Zavřít"
+          >
+            <X className="h-5 w-5" aria-hidden />
+          </button>
+        </div>
 
+        <div className="fifa-share-modal__body">
           {shareHint && (
-            <p className="mb-4 rounded-xl border border-amber-600/40 bg-amber-950/35 px-4 py-3 text-sm leading-relaxed text-amber-100/95">
+            <p className="rounded-[var(--fifa-radius-md)] border border-[var(--fifa-premium)]/40 bg-[var(--fifa-premium-muted)] px-4 py-3 text-sm leading-relaxed text-[var(--fifa-premium)]">
               {shareHint}
             </p>
           )}
 
-          <div className="mb-5 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="fifa-share-field">
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/45">
-                Název nominace <span className="font-normal text-white/35">(volitelné)</span>
+              <span className={`mb-1.5 block ${FIFA_KICKER}`}>
+                Název nominace <span className="font-normal normal-case tracking-normal">(volitelné)</span>
               </span>
               <input
                 type="text"
@@ -277,55 +284,41 @@ export function SaveShareModal({
                 maxLength={80}
                 placeholder="např. Varianta po čtvrtfinále"
                 disabled={!!savedId}
-                className="w-full rounded-xl border border-white/12 bg-[#0a0c10] px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-[#c8102e]/45 focus:outline-none focus:ring-1 focus:ring-[#c8102e]/30 disabled:opacity-50"
+                className={`${FIFA_INPUT} disabled:opacity-50`}
               />
             </label>
-            <p className="mt-2 text-[11px] leading-snug text-white/45">Určuje text na plakátu.</p>
+            <p className="mt-2 text-[11px] leading-snug text-[var(--fifa-text-muted)]">Určuje text na plakátu.</p>
           </div>
 
           {!previewDataUrl ? (
             <>
               {onPosterVariantChange ? (
-                <div className="mb-4 rounded-xl border border-white/10 bg-black/20 p-3">
-                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-white/45">
-                    Typ obrázku
-                  </p>
+                <div className="fifa-share-field">
+                  <p className={`mb-2 ${FIFA_KICKER}`}>Typ obrázku</p>
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                     <button
                       type="button"
                       onClick={() => onPosterVariantChange("jerseys")}
-                      className={`rounded-lg py-2.5 text-[11px] font-bold transition-colors sm:text-xs ${
-                        posterVariant === "jerseys"
-                          ? "bg-white text-slate-900 ring-2 ring-[#c8102e]/60"
-                          : "bg-white/5 text-white/55 hover:bg-white/10"
-                      }`}
+                      className={`fifa-share-seg ${posterVariant === "jerseys" ? "fifa-share-seg--active" : ""}`}
                     >
                       S dresy
                     </button>
                     <button
                       type="button"
                       onClick={() => onPosterVariantChange("names")}
-                      className={`rounded-lg py-2.5 text-[11px] font-bold transition-colors sm:text-xs ${
-                        posterVariant === "names"
-                          ? "bg-[#003087] text-white ring-2 ring-sky-400/45"
-                          : "bg-white/5 text-white/55 hover:bg-white/10"
-                      }`}
+                      className={`fifa-share-seg ${posterVariant === "names" ? "fifa-share-seg--active" : ""}`}
                     >
                       Jen jména
                     </button>
                     <button
                       type="button"
                       onClick={() => onPosterVariantChange("names-web")}
-                      className={`rounded-lg py-2.5 text-[11px] font-bold leading-snug transition-colors sm:text-xs ${
-                        posterVariant === "names-web"
-                          ? "bg-[#5c1624] text-white ring-2 ring-[#f1c40f]/55"
-                          : "bg-white/5 text-white/55 hover:bg-white/10"
-                      }`}
+                      className={`fifa-share-seg ${posterVariant === "names-web" ? "fifa-share-seg--active" : ""}`}
                     >
                       Web nominace
                     </button>
                   </div>
-                  <p className="mt-2 text-[11px] leading-snug text-white/45">
+                  <p className="mt-2 text-[11px] leading-snug text-[var(--fifa-text-muted)]">
                     {posterVariant === "names"
                       ? "Tmavá grafika se jmény — nativně 3 : 4 (1080×1440), vhodná na Instagram feed."
                       : posterVariant === "names-web"
@@ -336,30 +329,20 @@ export function SaveShareModal({
               ) : null}
 
               {onPosterThemeChange && posterVariant === "jerseys" ? (
-                <div className="mb-4 rounded-xl border border-white/10 bg-black/20 p-3">
-                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-white/45">
-                    Vzhled plakátu
-                  </p>
+                <div className="fifa-share-field">
+                  <p className={`mb-2 ${FIFA_KICKER}`}>Vzhled plakátu</p>
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => onPosterThemeChange("light")}
-                      className={`flex-1 rounded-lg py-2.5 text-xs font-bold transition-colors sm:text-sm ${
-                        posterTheme === "light"
-                          ? "bg-white text-slate-900 ring-2 ring-[#c8102e]/60"
-                          : "bg-white/5 text-white/55 hover:bg-white/10"
-                      }`}
+                      className={`fifa-share-seg flex-1 ${posterTheme === "light" ? "fifa-share-seg--active" : ""}`}
                     >
                       Světlý
                     </button>
                     <button
                       type="button"
                       onClick={() => onPosterThemeChange("dark")}
-                      className={`flex-1 rounded-lg py-2.5 text-xs font-bold transition-colors sm:text-sm ${
-                        posterTheme === "dark"
-                          ? "bg-[#0f172a] text-white ring-2 ring-sky-500/50"
-                          : "bg-white/5 text-white/55 hover:bg-white/10"
-                      }`}
+                      className={`fifa-share-seg flex-1 ${posterTheme === "dark" ? "fifa-share-seg--active" : ""}`}
                     >
                       Tmavý (sítě)
                     </button>
@@ -367,26 +350,20 @@ export function SaveShareModal({
                 </div>
               ) : null}
 
-              <div className="flex flex-col gap-3 sm:gap-4">
-                <button
-                  type="button"
-                  onClick={handleGeneratePoster}
-                  disabled={shareBusy}
-                  className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#c8102e] via-[#d41432] to-[#9e0c24] py-4 font-display text-lg font-bold tracking-wide text-white shadow-[0_12px_40px_rgba(200,16,46,0.35)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55 sm:py-5 sm:text-xl"
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    <Share2 className="h-5 w-5 opacity-95" aria-hidden />
-                    {shareBusy ? "Generuji plakát…" : "Sdílet obrázek"}
-                  </span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={handleGeneratePoster}
+                disabled={shareBusy}
+                className={`${FIFA_BTN_PRIMARY} w-full py-4 text-lg disabled:cursor-not-allowed disabled:opacity-55 sm:py-5 sm:text-xl`}
+              >
+                <Share2 className="h-5 w-5 opacity-95" aria-hidden />
+                {shareBusy ? "Generuji plakát…" : "Sdílet obrázek"}
+              </button>
             </>
           ) : (
             <div className="space-y-5">
               <div>
-                <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-                  Náhled — poměr stran
-                </p>
+                <p className={`mb-2 text-center ${FIFA_KICKER}`}>Náhled — poměr stran</p>
                 <div className="mb-3 grid grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">
                   {(
                     posterVariant === "names-web" || posterVariant === "jerseys" || posterVariant === "names"
@@ -422,39 +399,37 @@ export function SaveShareModal({
                               ? "Celý plakát na šířku — všichni hráči."
                               : "Původní poměr exportu."
                       }
-                      className={`rounded-lg py-2 text-center text-[10px] font-bold uppercase tracking-wide sm:text-[11px] ${
-                        previewFrame === id
-                          ? "bg-[#003087] text-white ring-1 ring-sky-400/50"
-                          : "bg-white/5 text-white/55 ring-1 ring-white/10 hover:bg-white/10"
+                      className={`fifa-share-seg py-2 text-center uppercase tracking-wide ${
+                        previewFrame === id ? "fifa-share-seg--active" : ""
                       }`}
                     >
                       {label}
                     </button>
                   ))}
                 </div>
-                <p className="mt-2 text-center text-[11px] leading-snug text-white/50">
+                <p className="mt-2 text-center text-[11px] leading-snug text-[var(--fifa-text-muted)]">
                   {posterVariant === "names-web" ||
                   posterVariant === "jerseys" ||
                   posterVariant === "names" ? (
                     <>
                       Plakát je nativně{" "}
-                      <strong className="font-semibold text-white/70">3 : 4</strong> (1080×1440) — výstup zaplňuje celý
-                      formát bez vnitřního obdélníku. U <strong className="font-semibold text-white/70">1 : 1</strong> či{" "}
-                      <strong className="font-semibold text-white/70">9 : 16</strong> systém doplní pruhy, aby byl celý výpis
+                      <strong className="font-semibold text-[var(--fifa-text-secondary)]">3 : 4</strong> (1080×1440) — výstup zaplňuje celý
+                      formát bez vnitřního obdélníku. U <strong className="font-semibold text-[var(--fifa-text-secondary)]">1 : 1</strong> či{" "}
+                      <strong className="font-semibold text-[var(--fifa-text-secondary)]">9 : 16</strong> systém doplní pruhy, aby byl celý výpis
                       pořád vidět.
                     </>
                   ) : (
                     <>
                       Export je celý plakát bez ořezu hráčů. U poměru{" "}
-                      <strong className="font-semibold text-white/70">1 : 1</strong> je plakát užší než čtverec — po
+                      <strong className="font-semibold text-[var(--fifa-text-secondary)]">1 : 1</strong> je plakát užší než čtverec — po
                       stranách jsou automaticky doplněné pruhy (letterbox), aby se vešla celá soupiska. Na mobil často lépe
-                      sedí <strong className="font-semibold text-white/70">9 : 16</strong>.
+                      sedí <strong className="font-semibold text-[var(--fifa-text-secondary)]">9 : 16</strong>.
                     </>
                   )}
                 </p>
               </div>
 
-              <div className="overflow-hidden rounded-lg bg-black/20 p-0 shadow-inner ring-1 ring-white/10">
+              <div className="overflow-hidden rounded-[var(--fifa-radius-md)] bg-[var(--fifa-bg-base)] p-0 shadow-inner ring-1 ring-[var(--fifa-border)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={framedPreviewUrl ?? previewDataUrl ?? undefined}
@@ -474,11 +449,7 @@ export function SaveShareModal({
                     )
                   }
                   title="Instagram feed — výplň 1080 × 1440."
-                  className={`flex items-center justify-center gap-2 rounded-xl py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors sm:col-span-2 ${
-                    posterVariant === "names-web" || posterVariant === "jerseys" || posterVariant === "names"
-                      ? "bg-gradient-to-r from-amber-500/35 to-rose-600/35 ring-amber-400/45 hover:from-amber-500/45 hover:to-rose-600/45"
-                      : "bg-white/10 hover:bg-white/[0.14]"
-                  }`}
+                  className={`${FIFA_BTN_PRIMARY} sm:col-span-2`}
                 >
                   <Download className="h-4 w-4" aria-hidden />
                   Stáhnout PNG 3 : 4 (Instagram)
@@ -487,7 +458,7 @@ export function SaveShareModal({
                   type="button"
                   onClick={() => downloadAspect(1080, 1920, "stories-9x16")}
                   title="Celá soupiska — všichni hráči; na telefonu větší než čtverec."
-                  className="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors hover:bg-white/[0.14]"
+                  className={FIFA_BTN_SECONDARY}
                 >
                   <Download className="h-4 w-4" aria-hidden />
                   Stáhnout PNG 9:16
@@ -496,7 +467,7 @@ export function SaveShareModal({
                   type="button"
                   onClick={() => downloadAspect(1080, 1080, "feed-1x1")}
                   title="1080×1080 — celá soupiska bez ořezu; boční letterbox, plakát je užší než čtverec."
-                  className="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors hover:bg-white/[0.14]"
+                  className={FIFA_BTN_SECONDARY}
                 >
                   <Download className="h-4 w-4" aria-hidden />
                   Stáhnout PNG 1:1
@@ -504,7 +475,7 @@ export function SaveShareModal({
                 <button
                   type="button"
                   onClick={() => downloadAspect(1920, 1080, "wide-16x9")}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-display text-sm font-bold tracking-wide text-white ring-1 ring-white/15 transition-colors hover:bg-white/[0.14] sm:col-span-2"
+                  className={`${FIFA_BTN_SECONDARY} sm:col-span-2`}
                 >
                   <Download className="h-4 w-4" aria-hidden />
                   Stáhnout PNG 16:9
@@ -520,7 +491,7 @@ export function SaveShareModal({
                     }
                     disabled={shareBusy}
                     title="Instagram feed — 1080 × 1440."
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-600/85 to-[#c8102e]/90 py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-black/25 disabled:cursor-not-allowed disabled:opacity-45"
+                    className={`${FIFA_BTN_PRIMARY} w-full disabled:cursor-not-allowed disabled:opacity-45`}
                   >
                     <Share2 className="h-4 w-4" aria-hidden />
                     Sdílet přes systém (3:4)
@@ -530,7 +501,7 @@ export function SaveShareModal({
                     onClick={() => webSharePng(1080, 1920, "ms2026-nominace-stories.png")}
                     disabled={shareBusy}
                     title="Stories / Reels — 1080 × 1920."
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#002266] py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-[#003087]/20 disabled:cursor-not-allowed disabled:opacity-45"
+                    className={`${FIFA_BTN_SECONDARY} w-full disabled:cursor-not-allowed disabled:opacity-45`}
                   >
                     <Share2 className="h-4 w-4" aria-hidden />
                     Sdílet přes systém (9:16)
@@ -541,7 +512,7 @@ export function SaveShareModal({
                   type="button"
                   onClick={() => webSharePng(1080, 1920, "ms2026-nominace-stories.png")}
                   disabled={shareBusy}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#003087] to-[#002266] py-3.5 font-display text-sm font-bold text-white shadow-lg shadow-[#003087]/20 disabled:cursor-not-allowed disabled:opacity-45"
+                  className={`${FIFA_BTN_PRIMARY} w-full disabled:cursor-not-allowed disabled:opacity-45`}
                 >
                   <Share2 className="h-4 w-4" aria-hidden />
                   Sdílet přes systém (9:16)
@@ -551,7 +522,7 @@ export function SaveShareModal({
               <button
                 type="button"
                 onClick={resetPreview}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/12 py-3 text-sm text-white/70 transition-colors hover:bg-white/5"
+                className={`${FIFA_BTN_SECONDARY} w-full`}
               >
                 <ChevronLeft className="h-4 w-4" aria-hidden />
                 Zpět a nový obrázek
@@ -560,15 +531,15 @@ export function SaveShareModal({
           )}
 
           {isAuthenticated && (
-            <div className="mt-6 border-t border-white/10 pt-5">
-              <p className="mb-3 text-center text-[11px] leading-snug text-white/50">
+            <div className="border-t border-[var(--fifa-border)] pt-5">
+              <p className="mb-3 text-center text-[11px] leading-snug text-[var(--fifa-text-muted)]">
                 Uložením vznikne koncept u účtu — do soutěže pošli sestavu tlačítkem{" "}
-                <strong className="text-white/75">Odeslat do soutěže</strong> v editoru. Časový bonus (aktuálně{" "}
-                <strong className="text-amber-200/90">+{contestTimeBonusPercent} %</strong>) se zapíše až při tom
+                <strong className="text-[var(--fifa-text-secondary)]">Odeslat do soutěže</strong> v editoru. Časový bonus (aktuálně{" "}
+                <strong className="text-[var(--fifa-premium)]">+{contestTimeBonusPercent} %</strong>) se zapíše až při tom
                 odeslání.
               </p>
               {!contestSubmissionOpen ? (
-                <p className="mb-3 rounded-lg border border-amber-600/35 bg-amber-950/25 px-3 py-2.5 text-center text-xs leading-relaxed text-amber-100/90">
+                <p className="mb-3 rounded-[var(--fifa-radius-md)] border border-[var(--fifa-premium)]/35 bg-[var(--fifa-premium-muted)] px-3 py-2.5 text-center text-xs leading-relaxed text-[var(--fifa-premium)]">
                   Uzávěrka odeslání do soutěže už proběhla — koncepty u účtu můžeš dál ukládat. Plakát pořád můžeš
                   generovat a stáhnout.
                 </p>
@@ -577,7 +548,7 @@ export function SaveShareModal({
                 type="button"
                 onClick={handleSaveNomination}
                 disabled={isSaving || !!savedId}
-                className="w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3.5 font-sans text-base font-semibold leading-snug tracking-normal text-white shadow-inner transition-colors hover:border-[#c8102e]/45 hover:bg-white/[0.09] disabled:cursor-not-allowed disabled:opacity-45 sm:py-4 sm:text-lg"
+                className={`${FIFA_BTN_SECONDARY} w-full py-3.5 text-base disabled:cursor-not-allowed disabled:opacity-45 sm:py-4 sm:text-lg`}
               >
                 {savedId ? "Sestava uložena u účtu" : isSaving ? "Ukládám…" : "Uložit sestavu"}
               </button>
@@ -585,14 +556,14 @@ export function SaveShareModal({
           )}
 
           {!isAuthenticated && (
-            <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6">
+            <div className="flex flex-col gap-3 border-t border-[var(--fifa-border)] pt-5">
               <button
                 type="button"
                 onClick={() => {
                   onGoogleSignIn?.();
                   if (!onGoogleSignIn) void signIn("google", { callbackUrl: window.location.href });
                 }}
-                className="w-full rounded-xl border border-white/15 py-3 font-display text-sm text-white/90 transition-colors hover:border-[#c8102e]/45"
+                className={`${FIFA_BTN_SECONDARY} w-full`}
               >
                 Přihlásit se přes Google
               </button>
@@ -602,22 +573,14 @@ export function SaveShareModal({
                   onGoogleSignIn?.();
                   if (!onGoogleSignIn) void signIn("google", { callbackUrl: window.location.href });
                 }}
-                className="w-full rounded-xl bg-gradient-to-r from-[#c8102e] to-[#8a0b22] py-3 text-center font-display text-base font-bold text-white shadow-lg shadow-[#c8102e]/15"
+                className={`${FIFA_BTN_PRIMARY} w-full py-3`}
               >
                 Zúčastnit se soutěže
               </button>
             </div>
           )}
 
-          <TipsportPartnerBanner compact className="mt-6 border-t border-white/10 pt-6" />
-
-          <button
-            type="button"
-            onClick={handleClose}
-            className="mt-6 w-full rounded-xl border border-white/12 py-2.5 text-sm text-white/65 transition-colors hover:border-white/25 hover:text-white"
-          >
-            Zavřít
-          </button>
+          <TipsportPartnerBanner compact className="fifa-design-tipsport-compact border-t border-[var(--fifa-border)] pt-5" />
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { Copy, X } from "lucide-react";
 import { TipsportPartnerBanner } from "@/components/marketing/TipsportPartnerBanner";
 import { MatchLineupImageExportButton } from "@/components/match/MatchLineupImageExportButton";
 import type { LineupStructure, Player } from "@/types";
+import { FIFA_BTN_PRIMARY, FIFA_BTN_SECONDARY, FIFA_INPUT, FIFA_KICKER } from "@/lib/fifa/fifaUiClasses";
 
 type RatingMap = Record<string, { avg: number; count: number }>;
 
@@ -78,63 +79,65 @@ export function MatchRatingSaveShareModal({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fifa-share-modal-backdrop z-[300]"
       onClick={() => !busy && onClose()}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Sdílení hodnocení zápasu"
-        className="h-[min(92dvh,760px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/12 bg-[#0b1220] shadow-2xl"
+        className="fifa-share-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+        <div className="fifa-share-modal__head">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Sdílení</p>
-            <h2 className="mt-1 font-display text-lg font-black text-white">Sdílení hodnocení</h2>
+            <p className={FIFA_KICKER}>Sdílení</p>
+            <h2 className="mt-1 font-display text-lg font-bold tracking-wide text-[var(--fifa-text)]">
+              Sdílení hodnocení
+            </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
             disabled={busy}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/80 hover:bg-white/[0.08] disabled:opacity-50"
+            className="fifa-forum-modal__close disabled:opacity-50"
             aria-label="Zavřít"
           >
             <X className="h-5 w-5" aria-hidden />
           </button>
         </div>
 
-        <div className="space-y-5 px-5 py-5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Vytvořit odkaz</p>
-            <fieldset className="mt-3 space-y-2 rounded-xl border border-white/10 bg-black/20 p-3 text-sm">
+        <div className="fifa-share-modal__body">
+          <div className="fifa-share-field">
+            <p className={FIFA_KICKER}>Vytvořit odkaz</p>
+            <fieldset className="mt-3 space-y-2 rounded-[var(--fifa-radius-md)] border border-[var(--fifa-border)] bg-[var(--fifa-bg-base)] p-3 text-sm">
               <legend className="sr-only">Co odkaz vyexportuje</legend>
-              <label className="flex cursor-pointer gap-2 text-white/82">
+              <label className="flex cursor-pointer gap-2 text-[var(--fifa-text)]">
                 <input
                   type="radio"
                   name="rating-export-mode-modal"
                   checked={snapshotMode === "personal"}
                   onChange={() => setSnapshotMode("personal")}
-                  className="mt-1"
+                  className="mt-1 accent-[var(--fifa-accent)]"
                 />
                 <span>
-                  <span className="font-bold text-emerald-200">Moje uložené známky</span>
-                  <span className="mt-1 block text-xs font-normal leading-snug text-white/55">
+                  <span className="font-bold text-[var(--fifa-live)]">Moje uložené známky</span>
+                  <span className="mt-1 block text-xs font-normal leading-snug text-[var(--fifa-text-muted)]">
                     Přesně to, co máš u zápasu potvrzené pod účtem.
                   </span>
                 </span>
               </label>
-              <label className="flex cursor-pointer gap-2 text-white/82">
+              <label className="flex cursor-pointer gap-2 text-[var(--fifa-text)]">
                 <input
                   type="radio"
                   name="rating-export-mode-modal"
                   checked={snapshotMode === "community"}
                   onChange={() => setSnapshotMode("community")}
-                  className="mt-1"
+                  className="mt-1 accent-[var(--fifa-accent)]"
                 />
                 <span>
-                  <span className="font-bold text-amber-100">Průměry komunity</span>
-                  <span className="mt-1 block text-xs font-normal leading-snug text-white/55">
+                  <span className="font-bold text-[var(--fifa-premium)]">Průměry komunity</span>
+                  <span className="mt-1 block text-xs font-normal leading-snug text-[var(--fifa-text-muted)]">
                     Agregované průměry ze všech hlasů v době vytvoření odkazu.
                   </span>
                 </span>
@@ -144,12 +147,12 @@ export function MatchRatingSaveShareModal({
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-3 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm font-semibold text-white outline-none focus:border-[#00B4FF]/45 focus:ring-1 focus:ring-[#00B4FF]/30"
+              className={`mt-3 ${FIFA_INPUT}`}
               placeholder="Název exportu (volitelné)"
             />
 
             {url ? (
-              <div className="mt-3 break-all rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-white/80">
+              <div className="mt-3 break-all rounded-[var(--fifa-radius-md)] border border-[var(--fifa-border)] bg-[var(--fifa-bg-base)] px-3 py-2 text-xs text-[var(--fifa-text-secondary)]">
                 {url}
               </div>
             ) : null}
@@ -159,7 +162,7 @@ export function MatchRatingSaveShareModal({
                 type="button"
                 disabled={busy}
                 onClick={() => void createLink()}
-                className="rounded-xl bg-gradient-to-r from-[#003087] to-[#c8102e] px-4 py-2.5 text-sm font-black text-white disabled:opacity-50"
+                className={`${FIFA_BTN_PRIMARY} disabled:opacity-50`}
               >
                 {busy ? "Vytvářím…" : "Vytvořit odkaz"}
               </button>
@@ -176,7 +179,7 @@ export function MatchRatingSaveShareModal({
                       toast.error("Nepodařilo se zkopírovat.");
                     }
                   }}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-3 py-2.5 text-sm font-black text-white/85 hover:bg-white/[0.08]"
+                  className={FIFA_BTN_SECONDARY}
                 >
                   <Copy className="h-4 w-4" aria-hidden />
                   {copied ? "Zkopírováno" : "Kopírovat"}
@@ -185,9 +188,9 @@ export function MatchRatingSaveShareModal({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">Plakát</p>
-            <p className="mt-1 text-xs leading-snug text-white/60">
+          <div className="fifa-share-field">
+            <p className={FIFA_KICKER}>Plakát</p>
+            <p className="mt-1 text-xs leading-snug text-[var(--fifa-text-muted)]">
               Dresové PNG odpovídají režimu nahoře: u každého hráče je známka (moje uložené nebo průměr komunity).
               „Jen jména“ je bez čísel. Stejné řezy jako v editoru sestavy na zápas.
             </p>
@@ -210,7 +213,7 @@ export function MatchRatingSaveShareModal({
             </div>
           </div>
 
-          <TipsportPartnerBanner compact className="mt-6 border-t border-white/10 pt-6" />
+          <TipsportPartnerBanner compact className="fifa-design-tipsport-compact border-t border-[var(--fifa-border)] pt-4" />
         </div>
       </div>
     </div>

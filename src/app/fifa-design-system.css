@@ -5,7 +5,8 @@
 
 /* ─── Design tokeny ─── */
 .fifa-app-viewport,
-.fifa-design-viewport {
+.fifa-design-viewport,
+.fifa-share-modal-backdrop {
   /* Surfaces */
   --fifa-bg-base: #0a0f1c;
   --fifa-bg-chrome: #141b2d;
@@ -3978,6 +3979,102 @@ header:has(.fifa-top-nav-root--open) {
   border-top: 1px solid var(--fifa-border);
   background: rgba(10, 15, 28, 0.55);
   padding: 0.85rem 1.25rem;
+}
+
+.fifa-share-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(10, 15, 28, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.fifa-share-modal {
+  display: flex;
+  width: 100%;
+  max-width: 32rem;
+  max-height: min(92dvh, 760px);
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--fifa-border);
+  border-radius: 1.25rem;
+  background: var(--fifa-glass-bg);
+  box-shadow: var(--fifa-shadow-card-hover);
+  animation: fifa-forum-modal-pop 0.2s ease forwards;
+}
+
+.fifa-share-modal--wide {
+  max-width: 42rem;
+}
+
+.fifa-share-modal__head {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--fifa-border);
+  padding: 1.1rem 1.25rem;
+}
+
+.fifa-share-modal__body {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.15rem;
+  overflow-y: auto;
+  padding: 1.25rem;
+}
+
+.fifa-share-modal__stage {
+  position: relative;
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at center, rgba(0, 212, 255, 0.14), transparent 70%);
+}
+
+.fifa-share-seg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  border: 1px solid var(--fifa-border);
+  border-radius: var(--fifa-radius-md);
+  background: var(--fifa-bg-surface);
+  padding: 0.65rem 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--fifa-text-muted);
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.fifa-share-seg:hover {
+  background: var(--fifa-bg-hover);
+  color: var(--fifa-text);
+}
+
+.fifa-share-seg--active {
+  border-color: var(--fifa-border-strong);
+  background: var(--fifa-accent-muted);
+  color: var(--fifa-accent-text);
+}
+
+.fifa-share-field {
+  border: 1px solid var(--fifa-border);
+  border-radius: var(--fifa-radius-lg);
+  background: rgba(10, 15, 28, 0.35);
+  padding: 1rem;
 }
 
 .fifa-forum-type-btn {

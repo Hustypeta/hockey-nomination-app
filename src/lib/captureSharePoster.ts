@@ -1,4 +1,5 @@
 import { getFontEmbedCSS, toCanvas } from "html-to-image";
+import { inlinePosterImagesAsDataUrls } from "@/lib/posterAssetCache";
 import {
   SHARE_POSTER_CAPTURE_PIXEL_RATIO,
   SHARE_POSTER_MAX_CANVAS_EDGE_PX,
@@ -6,6 +7,32 @@ import {
 
 let cachedPosterFontEmbedCSS: string | null = null;
 let posterFontEmbedCSSPromise: Promise<string> | null = null;
+let posterFontsReadyPromise: Promise<void> | null = null;
+
+export function waitForPosterFonts(): Promise<void> {
+  if (typeof document === "undefined" || !document.fonts) return Promise.resolve();
+  posterFontsReadyPromise ??= document.fonts.ready.then(
+    () => undefined,
+    () => undefined
+  );
+  return posterFontsReadyPromise;
+}
+
+/** Počká na skutečné dekódování obrázků v capture uzlu, ne jen na dokončení requestu. */
+export async function ensurePosterImagesReady(root: HTMLElement): Promise<void> {
+  const images = [...root.querySelectorAll<HTMLImageElement>("img")];
+  await Promise.all(
+    images.map(async (image) => {
+      if (!image.complete) {
+        await new Promise<void>((resolve) => {
+          image.addEventListener("load", () => resolve(), { once: true });
+          image.addEventListener("error", () => resolve(), { once: true });
+        });
+      }
+      await image.decode().catch(() => undefined);
+    })
+  );
+}
 
 /** Balíček `html-to-image` exportuje `Options` jen interně — typ bereme z `toCanvas`. */
 export type HtmlToImageOptions = NonNullable<Parameters<typeof toCanvas>[1]>;
@@ -44,7 +71,7 @@ export function safePosterCapturePixelRatio(
 
 /** Po zobrazení off-screen plakátu nechat WebKit spočítat layout před html-to-image. */
 export async function preparePosterCapture(): Promise<void> {
-  await document.fonts.ready.catch(() => undefined);
+  await waitForPosterFonts();
   await new Promise<void>((resolve) =>
     requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
   );
@@ -54,7 +81,7 @@ export async function buildHtmlToImageOptions(
   element: HTMLElement,
   partial: HtmlToImageOptions
 ): Promise<HtmlToImageOptions> {
-  await document.fonts.ready.catch(() => undefined);
+  await waitForPosterFonts();
   const base: HtmlToImageOptions = {
     cacheBust: false,
     skipFonts: false,
@@ -89,6 +116,8 @@ export async function captureElementToCanvas(
   }
 ): Promise<HTMLCanvasElement> {
   await preparePosterCapture();
+  await inlinePosterImagesAsDataUrls(element);
+  await ensurePosterImagesReady(element);
   const desired = options?.scale ?? SHARE_POSTER_CAPTURE_PIXEL_RATIO;
   const rawBg = options?.backgroundColor;
   const backgroundColor =
