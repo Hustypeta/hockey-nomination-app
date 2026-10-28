@@ -19,13 +19,17 @@ export function FifaHomeKomunitaStatsCard({
 }) {
   const { communityUsersCount: liveCount } = useContestStats();
   const [members, setMembers] = useState<CommunityMemberDto[]>(initialMembers);
+  const [forumMemberCount, setForumMemberCount] = useState<number>(initialMembers.length);
 
   useEffect(() => {
     let cancelled = false;
     fetch("/api/forum/members", { cache: "no-store" })
       .then((r) => r.json())
-      .then((data: { members?: CommunityMemberDto[] }) => {
+      .then((data: { members?: CommunityMemberDto[]; totalCount?: number }) => {
         if (!cancelled && Array.isArray(data.members)) setMembers(data.members);
+        if (!cancelled && typeof data.totalCount === "number") {
+          setForumMemberCount(data.totalCount);
+        }
       })
       .catch(() => {});
     return () => {
@@ -44,11 +48,11 @@ export function FifaHomeKomunitaStatsCard({
         <span className="fifa-komunita-stat__value">
           {communityUsersCount === null ? "—" : formatCs(communityUsersCount)}
         </span>
-        <p className="fifa-komunita-stat__label">Členů fóra</p>
+        <p className="fifa-komunita-stat__label">Členů komunity</p>
       </div>
 
       <div className="fifa-komunita-online">
-        <FifaForumMembersPanel members={members} totalCount={communityUsersCount} />
+        <FifaForumMembersPanel members={members} totalCount={forumMemberCount} />
       </div>
     </div>
   );

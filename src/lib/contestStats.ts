@@ -2,7 +2,6 @@ import {
   getTimeBonusPercentForInstant,
   isNominationSubmissionOpen,
 } from "@/lib/contestTimeBonus";
-import { countCommunityMembers } from "@/lib/community/listCommunityMembers";
 import { isPickemSubmissionOpen } from "@/lib/pickemContest";
 import { prisma } from "@/lib/prisma";
 
@@ -32,7 +31,10 @@ export async function getContestStatsSnapshot(now = new Date()): Promise<Contest
       }),
     ),
     safeCount(() =>
-      countCommunityMembers(),
+      prisma.user.count({
+        // Registrované účty (Google), ne autoři příspěvků ve fóru.
+        where: { email: { not: null } },
+      }),
     ),
     safeCount(() =>
       prisma.pickemEntry.count({

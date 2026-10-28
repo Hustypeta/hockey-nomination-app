@@ -190,7 +190,7 @@ export function LandingContent() {
                         tone: "bg-[#00B4FF]/10 ring-[#00B4FF]/20",
                         icon: "👥",
                         value: communityUsersCount,
-                        label: "Členů fóra",
+                        label: "Členů komunity",
                       },
                       {
                         tone: "bg-[#f1c40f]/10 ring-[#f1c40f]/25",
