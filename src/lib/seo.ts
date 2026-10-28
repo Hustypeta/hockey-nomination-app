@@ -212,12 +212,6 @@ export const PAGE_SEO = {
       "Komunita Lineup: sdílené sestavy, diskuze k nominaci a extralize, komentáře a reakce fanoušků.",
     path: "/forum",
   },
-  pravidla: {
-    title: "Pravidla soutěže",
-    description:
-      "Pravidla nominační soutěže Lineup: bezplatná účast, bodování, časový bonus, ceny a vyhodnocení.",
-    path: "/pravidla-souteze",
-  },
   zebricek: {
     title: "Žebříček soutěží",
     description:
@@ -229,12 +223,6 @@ export const PAGE_SEO = {
     description:
       "Bracket Pick’em mistrovství světa v hokeji. Vyplň tipy play-off a porovnej je s ostatními.",
     path: "/bracket",
-  },
-  kdoJsem: {
-    title: "Kdo jsem",
-    description:
-      "Tvůrce projektu Lineup — nezávislý fanouškovský editor hokejové sestavy, nominace a fantasy.",
-    path: "/kdo-jsem",
   },
   gdpr: {
     title: "Zásady ochrany osobních údajů",

@@ -44,11 +44,11 @@ export function FifaHomeKomunitaStatsCard({
         <span className="fifa-komunita-stat__value">
           {communityUsersCount === null ? "—" : formatCs(communityUsersCount)}
         </span>
-        <p className="fifa-komunita-stat__label">V komunitě</p>
+        <p className="fifa-komunita-stat__label">Členů fóra</p>
       </div>
 
       <div className="fifa-komunita-online">
-        <FifaForumMembersPanel members={members} />
+        <FifaForumMembersPanel members={members} totalCount={communityUsersCount} />
       </div>
     </div>
   );

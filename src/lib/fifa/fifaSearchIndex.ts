@@ -44,8 +44,6 @@ export const FIFA_SEARCH_INDEX: FifaSearchEntry[] = [
   { href: "/ucet", label: "Můj účet", hint: "Účet", icon: UserCircle, keywords: ["profil", "account", "muj ucet"] },
   { href: "/ucet/zapasove-sestavy", label: "Moje sestavy", hint: "Účet", icon: LayoutGrid, keywords: ["ulozene sestavy", "lineupy"] },
 
-  { href: "/kdo-jsem", label: "Kdo jsem", hint: "Info", icon: UserCircle, keywords: ["o projektu", "about", "autor"] },
-  { href: "/pravidla-souteze", label: "Pravidla soutěže", hint: "Info", icon: FileText, keywords: ["pravidla", "rules"] },
   { href: "/ochrana-udaju", label: "Ochrana osobních údajů", hint: "Info", icon: FileText, keywords: ["gdpr", "soukromi", "privacy"] },
 ];
 

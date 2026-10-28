@@ -9,7 +9,6 @@ import {
   ChevronRight,
   Sparkles,
   Trophy,
-  BookOpen,
   LayoutGrid,
   LogIn,
 } from "lucide-react";
@@ -191,7 +190,7 @@ export function LandingContent() {
                         tone: "bg-[#00B4FF]/10 ring-[#00B4FF]/20",
                         icon: "👥",
                         value: communityUsersCount,
-                        label: "V komunitě",
+                        label: "Členů fóra",
                       },
                       {
                         tone: "bg-[#f1c40f]/10 ring-[#f1c40f]/25",
@@ -262,11 +261,11 @@ export function LandingContent() {
                   Svoji nominaci můžeš odeslat do soutěže o zajímavé hokejové ceny.
                 </p>
                 <Link
-                  href="/pravidla-souteze"
+                  href="/souteze"
                   className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-sky-300 transition hover:text-white"
                 >
-                  <BookOpen className="h-4 w-4 shrink-0" aria-hidden />
-                  Pravidla soutěže
+                  Přehled soutěží
+                  <ChevronRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>
               <div data-reveal className="reveal group relative rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-black/35 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] transition duration-200 hover:-translate-y-1 hover:border-white/15 hover:shadow-[0_24px_80px_rgba(0,0,0,0.50),0_0_52px_rgba(0,200,255,0.08)]">
@@ -310,12 +309,6 @@ export function LandingContent() {
               className="text-center text-sm font-semibold text-slate-400 underline-offset-4 transition hover:text-sky-300 hover:underline"
             >
               Editor sestavy →
-            </Link>
-            <Link
-              href="/pravidla-souteze"
-              className="text-sm font-medium text-sky-400/90 underline-offset-4 transition hover:text-sky-300 hover:underline"
-            >
-              Kompletní pravidla soutěže
             </Link>
           </div>
         </div>

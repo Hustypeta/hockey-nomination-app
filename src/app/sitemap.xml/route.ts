@@ -21,10 +21,8 @@ const publicRoutes: SitemapEntry[] = [
   { path: "/souteze/extraliga", lastmod: "2026-09-18", changefreq: "weekly", priority: "0.8" },
   { path: "/souteze/ceska-reprezentace/a-tym", lastmod: "2026-09-01", changefreq: "monthly", priority: "0.6" },
   { path: "/forum", lastmod: "2026-09-18", changefreq: "daily", priority: "0.7" },
-  { path: "/pravidla-souteze", lastmod: "2026-05-15", changefreq: "monthly", priority: "0.5" },
   { path: "/zebricek", lastmod: "2026-06-01", changefreq: "weekly", priority: "0.6" },
-  { path: "/kdo-jsem", lastmod: "2026-05-01", changefreq: "monthly", priority: "0.4" },
-  { path: "/ochrana-udaju", lastmod: "2026-05-01", changefreq: "monthly", priority: "0.3" },
+  { path: "/ochrana-udaju", lastmod: "2026-10-24", changefreq: "monthly", priority: "0.3" },
 ];
 
 function escapeXml(s: string) {

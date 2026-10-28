@@ -1,28 +1,32 @@
-import Link from "next/link";
-import { SitePageHero } from "@/components/site/SitePageHero";
-
-const sectionClass = "sestava-premium-panel-dark rounded-2xl p-4 sm:p-5";
+const sectionClass =
+  "rounded-xl border border-[var(--fifa-border)] bg-[var(--fifa-bg-surface)] p-4 shadow-[var(--fifa-shadow-card)] sm:p-5";
 
 /** Datum poslední aktualizace — při větší změně obsahu aktualizujte. */
-const EFFECTIVE_FROM = "21. dubna 2026";
+const EFFECTIVE_FROM = "24. října 2026";
 
-const PRIVACY_CONTACT_EMAIL = "petr.hustak263@gmail.com";
+const PRIVACY_CONTACT_EMAIL = "hokejlineup@outlook.cz";
 
 export function PrivacyPolicyContent() {
   return (
-    <main className="pb-16 pt-2 sm:pb-20">
-      <SitePageHero
-        title="Zásady ochrany osobních údajů"
-        subtitle={`Poslední aktualizace: ${EFFECTIVE_FROM} · GDPR`}
-        align="center"
-      />
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <p className="mb-6 text-center text-sm leading-relaxed text-white/78">
+    <main className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+      <div className="mx-auto w-full max-w-3xl px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-8">
+        <header className="mb-7 border-b border-[var(--fifa-border)] pb-6 text-center">
+          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--fifa-accent-text)]">
+            Soukromí a GDPR
+          </p>
+          <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-[var(--fifa-text)] sm:text-4xl">
+            Ochrana osobních údajů
+          </h1>
+          <p className="mt-2 text-sm text-[var(--fifa-text-secondary)]">
+            Poslední aktualizace: {EFFECTIVE_FROM}
+          </p>
+        </header>
+        <p className="mb-6 text-center text-sm leading-relaxed text-[var(--fifa-text-secondary)]">
           Tyto zásady popisují, jakým způsobem nakládáme s vašimi osobními údaji v rámci provozu webu hokejlineup.cz a aplikace
           Lineup (dále jen „služba“). Ochrana vašeho soukromí je pro nás prioritou a při zpracování údajů postupujeme v souladu s
           nařízením GDPR.
         </p>
-        <div className="space-y-4 text-sm leading-relaxed text-white/78 sm:space-y-5">
+        <div className="space-y-4 text-sm leading-relaxed text-[var(--fifa-text-secondary)] sm:space-y-5">
           <section className={sectionClass}>
             <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">
               1. Správce osobních údajů
@@ -189,16 +193,6 @@ export function PrivacyPolicyContent() {
             </p>
           </section>
 
-          <section className={sectionClass}>
-            <h2 className="font-display text-base font-bold tracking-wide text-white sm:text-lg">11. Další odkazy</h2>
-            <ul className="mt-3 list-inside list-disc space-y-2 text-white/75">
-              <li>
-                <Link href="/pravidla-souteze" className="font-semibold text-sky-300/90 underline-offset-4 hover:underline">
-                  Pravidla soutěže
-                </Link>
-              </li>
-            </ul>
-          </section>
         </div>
       </div>
     </main>

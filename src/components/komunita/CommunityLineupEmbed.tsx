@@ -18,6 +18,7 @@ export function CommunityLineupEmbed({
 }) {
   const posterWrapRef = useRef<HTMLDivElement>(null);
   const [posterScale, setPosterScale] = useState(0.32);
+  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
 
   const syncPosterScale = useCallback(() => {
     const node = posterWrapRef.current;
@@ -44,7 +45,7 @@ export function CommunityLineupEmbed({
       ? snapshot.meta.imageUrl.trim()
       : null;
 
-  if (imageUrl) {
+  if (imageUrl && imageUrl !== failedImageUrl) {
     const imageAlt =
       typeof snapshot.meta?.imageAlt === "string" && snapshot.meta.imageAlt.trim()
         ? snapshot.meta.imageAlt.trim()
@@ -54,7 +55,12 @@ export function CommunityLineupEmbed({
       return (
         <figure className="fifa-forum-detail-attachment">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={imageUrl} alt={imageAlt} className="fifa-forum-detail-attachment__media" />
+          <img
+            src={imageUrl}
+            alt={imageAlt}
+            className="fifa-forum-detail-attachment__media"
+            onError={() => setFailedImageUrl(imageUrl)}
+          />
         </figure>
       );
     }
@@ -62,7 +68,12 @@ export function CommunityLineupEmbed({
     return (
       <div className="overflow-hidden rounded-xl border border-white/10 bg-black/20 aspect-[4/5]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageUrl} alt={imageAlt} className="h-full w-full object-cover" />
+        <img
+          src={imageUrl}
+          alt={imageAlt}
+          className="h-full w-full object-cover"
+          onError={() => setFailedImageUrl(imageUrl)}
+        />
       </div>
     );
   }

@@ -463,14 +463,14 @@ export function FifaForumContent() {
       </div>
 
       <div className="fifa-forum-banner__block">
-        <FifaForumMembersPanel members={communityMembers} />
+        <FifaForumMembersPanel members={communityMembers} totalCount={communityUsersCount} />
       </div>
       {communityUsersCount !== null || postsThisWeek !== null ? (
         <div className="fifa-forum-banner__block fifa-forum-members__stats">
           {communityUsersCount !== null ? (
             <span>
               <strong>{formatCs(communityUsersCount)}</strong>
-              v komunitě
+              členů fóra
             </span>
           ) : null}
           {postsThisWeek !== null ? (

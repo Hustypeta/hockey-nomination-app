@@ -24,26 +24,8 @@ export function SiteFooter() {
         }
         aria-label="Odkazy v patičce"
       >
-        <Link href="/souteze" className="underline-offset-4 hover:text-white/75 hover:underline">
-          Soutěže
-        </Link>
-        <span aria-hidden className="text-white/25">
-          ·
-        </span>
-        <Link href="/kdo-jsem" className="underline-offset-4 hover:text-white/75 hover:underline">
-          Kdo jsem
-        </Link>
-        <span aria-hidden className="text-white/25">
-          ·
-        </span>
         <Link href="/ochrana-udaju" className="underline-offset-4 hover:text-white/75 hover:underline">
           Ochrana osobních údajů
-        </Link>
-        <span aria-hidden className="text-white/25">
-          ·
-        </span>
-        <Link href="/pravidla-souteze" className="underline-offset-4 hover:text-white/75 hover:underline">
-          Pravidla soutěže
         </Link>
       </nav>
     </footer>

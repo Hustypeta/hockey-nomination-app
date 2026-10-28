@@ -2,6 +2,7 @@ import {
   getTimeBonusPercentForInstant,
   isNominationSubmissionOpen,
 } from "@/lib/contestTimeBonus";
+import { countCommunityMembers } from "@/lib/community/listCommunityMembers";
 import { isPickemSubmissionOpen } from "@/lib/pickemContest";
 import { prisma } from "@/lib/prisma";
 
@@ -31,9 +32,7 @@ export async function getContestStatsSnapshot(now = new Date()): Promise<Contest
       }),
     ),
     safeCount(() =>
-      prisma.user.count({
-        where: { email: { not: null } },
-      }),
+      countCommunityMembers(),
     ),
     safeCount(() =>
       prisma.pickemEntry.count({

@@ -88,6 +88,7 @@ export function CommunityPostMediaFrame({
     width: NOMINATION_WEB_POSTER_W,
     height: NOMINATION_WEB_POSTER_H,
   });
+  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
 
   const handlePosterNaturalSize = useCallback((size: { width: number; height: number }) => {
     setPosterNatural((prev) =>
@@ -108,7 +109,7 @@ export function CommunityPostMediaFrame({
     const observer = new ResizeObserver(sync);
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [failedImageUrl]);
 
   const attachment = post.attachments[0];
   const snapshot = attachment?.snapshot;
@@ -121,17 +122,23 @@ export function CommunityPostMediaFrame({
     typeof snapshot?.meta?.imageAlt === "string" && snapshot.meta.imageAlt.trim()
       ? snapshot.meta.imageAlt.trim()
       : post.title;
+
   const bodyLineCount = post.bodyMd.split(/\r\n?|\n/).length;
   const isLegacyLong =
     post.bodyMd.length > FORUM_POST_BODY_MAX ||
     bodyLineCount > FORUM_POST_BODY_MAX_LINES;
   const isDense = post.bodyMd.length > 220;
 
-  if (imageUrl) {
+  if (imageUrl && imageUrl !== failedImageUrl) {
     return (
       <div ref={frameRef} className="fifa-forum-post-card__frame fifa-forum-post-card__frame--image">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageUrl} alt={imageAlt} className="fifa-forum-post-card__frame-image" />
+        <img
+          src={imageUrl}
+          alt={imageAlt}
+          className="fifa-forum-post-card__frame-image"
+          onError={() => setFailedImageUrl(imageUrl)}
+        />
       </div>
     );
   }

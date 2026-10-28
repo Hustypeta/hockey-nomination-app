@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 const ACTIVE_WINDOW_MS = 30 * 60 * 1000;
 const ADMIN_USER_ID = "community-system-admin";
 
-export async function listCommunityMembers(limit = 16): Promise<CommunityMemberDto[]> {
+async function loadCommunityActivity(): Promise<Map<string, Date>> {
   const [postActivity, commentActivity] = await Promise.all([
     prisma.communityPost.groupBy({
       by: ["authorId"],
@@ -28,6 +28,16 @@ export async function listCommunityMembers(limit = 16): Promise<CommunityMemberD
     const current = activityByUser.get(activity.authorId);
     if (at && (!current || at > current)) activityByUser.set(activity.authorId, at);
   }
+  return activityByUser;
+}
+
+/** Počet skutečných členů fóra = unikátní autoři publikovaných příspěvků nebo komentářů. */
+export async function countCommunityMembers(): Promise<number> {
+  return (await loadCommunityActivity()).size;
+}
+
+export async function listCommunityMembers(limit = 16): Promise<CommunityMemberDto[]> {
+  const activityByUser = await loadCommunityActivity();
 
   const recent = [...activityByUser.entries()]
     .sort((a, b) => b[1].getTime() - a[1].getTime())

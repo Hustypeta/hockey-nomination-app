@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Zap } from "lucide-react";
 import type { ContestTimeBonusPercent } from "@/lib/contestTimeBonus";
 
@@ -28,12 +27,6 @@ export function ContestTimeBonusCallout({
         <span className="text-[10px] font-bold tabular-nums text-sky-200 sm:text-[11px]">
           {bonusPercent > 0 ? `+${bonusPercent} % bodů` : "0 % bonus"}
         </span>
-        <Link
-          href="/pravidla-souteze"
-          className="ml-0.5 text-[10px] font-medium text-sky-300/90 underline-offset-2 hover:text-sky-200 hover:underline"
-        >
-          pravidla
-        </Link>
         {!submissionOpen ? (
           <span className="text-[9px] font-semibold text-rose-300/90">Uzavřeno</span>
         ) : null}
