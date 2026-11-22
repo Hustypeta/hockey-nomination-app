@@ -1,0 +1,6672 @@
+{
+  "players": [
+    {
+      "id": "cand_46feee6045142a03d048b568",
+      "name": "Kristian Reichel",
+      "position": "F",
+      "role": "C",
+      "club": "Adler Mannheim",
+      "jerseyNumber": 22,
+      "poolKey": "repre_a",
+      "league": "DEL"
+    },
+    {
+      "id": "cand_468d882f826f07b406a2f669",
+      "name": "Petr Kodýtek",
+      "position": "F",
+      "role": "C",
+      "club": "Ambri-Piotta",
+      "jerseyNumber": 88,
+      "poolKey": "repre_a",
+      "league": "NL"
+    },
+    {
+      "id": "cand_975b7f3a3b23aa69d226d610",
+      "name": "Lukáš Dostál",
+      "position": "G",
+      "role": "G",
+      "club": "Anaheim Ducks",
+      "jerseyNumber": 1,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_6cb3dfb2ccf6d68166df0372",
+      "name": "Petr Mrázek",
+      "position": "G",
+      "role": "G",
+      "club": "Anaheim Ducks",
+      "jerseyNumber": 34,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_dd459449c5eb27ffa43adc30",
+      "name": "Jan Bednář",
+      "position": "G",
+      "role": "G",
+      "club": "Ässät",
+      "jerseyNumber": 33,
+      "poolKey": "repre_a",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_5a3e33e2638e14aa8a20d923",
+      "name": "Tomáš Hamara",
+      "position": "D",
+      "role": "LB",
+      "club": "Belleville Senators",
+      "jerseyNumber": 29,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_99f5158c2fa8dfa2848eeb7f",
+      "name": "Jan Jeník",
+      "position": "F",
+      "role": "C",
+      "club": "Belleville Senators",
+      "jerseyNumber": 24,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_b8171cac806614a9d4ab2f3c",
+      "name": "Jiří Klíma",
+      "position": "F",
+      "role": "LW",
+      "club": "Bemidji State Univ.",
+      "jerseyNumber": null,
+      "poolKey": "repre_a",
+      "league": "NCAA"
+    },
+    {
+      "id": "cand_676fa9ee53ea8b08ab894d80",
+      "name": "Radim Šimek",
+      "position": "D",
+      "role": "LB",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 44,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_520bb5af3da563d6b182db5a",
+      "name": "Tomáš Galvas",
+      "position": "D",
+      "role": "LB",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 79,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_eaa3c56af7d35ce1a8beb0b2",
+      "name": "Adam Najman",
+      "position": "F",
+      "role": "C",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 71,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_7e5634f2a9dbd36e1cc347ae",
+      "name": "Jakub Rychlovský",
+      "position": "F",
+      "role": "W",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 18,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_9cec4ab65a11031cea6bd304",
+      "name": "Jaromír Pytlík",
+      "position": "F",
+      "role": "RW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 20,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_49073e08309d564fcf3baadb",
+      "name": "Jaromír Pérez",
+      "position": "F",
+      "role": "LW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 13,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_a2b07f082bc1ff489e2a241f",
+      "name": "Radan Lenc",
+      "position": "F",
+      "role": "LW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 25,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_983e32a40e0edfa9d81cfe62",
+      "name": "Petr Kváča",
+      "position": "G",
+      "role": "G",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 60,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_43293e3b258b5835e1765644",
+      "name": "David Moravec",
+      "position": "D",
+      "role": "LB",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 71,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_e4c0511a31583931b9007ec5",
+      "name": "Vojtěch Hradec",
+      "position": "F",
+      "role": "C",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 9,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_662824a4089ab764554dfc79",
+      "name": "Dominik Furch",
+      "position": "G",
+      "role": "G",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 38,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_33c88180ee27c5e35d6cb204",
+      "name": "David Pastrňák",
+      "position": "F",
+      "role": "RW",
+      "club": "Boston Bruins",
+      "jerseyNumber": 88,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_648b72659f4e04c443f2ca44",
+      "name": "Pavel Zacha",
+      "position": "F",
+      "role": "C",
+      "club": "Boston Bruins",
+      "jerseyNumber": 14,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_69492e8bda3cdc4e70c2cabb",
+      "name": "Jiří Kulich",
+      "position": "F",
+      "role": "C",
+      "club": "Buffalo Sabres",
+      "jerseyNumber": 20,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_ac93c665046b70d44eb6f010",
+      "name": "Adam Klapka",
+      "position": "F",
+      "role": "RW",
+      "club": "Calgary Flames",
+      "jerseyNumber": 24,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_ab1c178a2f8ec98a7120d23f",
+      "name": "Eduard Šalé",
+      "position": "F",
+      "role": "W",
+      "club": "Coachella Valley Firebirds",
+      "jerseyNumber": 12,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_2766a26d0ea557928c0799f2",
+      "name": "Martin Nečas",
+      "position": "F",
+      "role": "RW",
+      "club": "Colorado Avalanche",
+      "jerseyNumber": 98,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_694acf4b3710c9ef890b5061",
+      "name": "Radek Faksa",
+      "position": "F",
+      "role": "C",
+      "club": "Dallas Stars",
+      "jerseyNumber": 12,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_e918bcb32e9e1b3581160c55",
+      "name": "Lukáš Klok",
+      "position": "D",
+      "role": "LB",
+      "club": "EHC Red Bull München",
+      "jerseyNumber": 15,
+      "poolKey": "repre_a",
+      "league": "DEL"
+    },
+    {
+      "id": "cand_ab8b9df059098a4649b3d74b",
+      "name": "David Sklenička",
+      "position": "D",
+      "role": "LB",
+      "club": "EV Zug",
+      "jerseyNumber": 9,
+      "poolKey": "repre_a",
+      "league": "NL"
+    },
+    {
+      "id": "cand_3b89a4a92f53513546765c19",
+      "name": "Dominik Kubalík",
+      "position": "F",
+      "role": "LW",
+      "club": "EV Zug",
+      "jerseyNumber": 18,
+      "poolKey": "repre_a",
+      "league": "NL"
+    },
+    {
+      "id": "cand_022450385134cd9f8284f40f",
+      "name": "Radim Zohorna",
+      "position": "F",
+      "role": "C",
+      "club": "Färjestad BK",
+      "jerseyNumber": 67,
+      "poolKey": "repre_a",
+      "league": "SHL"
+    },
+    {
+      "id": "cand_375f8b5ab57eed74c62cf540",
+      "name": "Marek Alscher",
+      "position": "D",
+      "role": "LB",
+      "club": "Florida Panthers",
+      "jerseyNumber": 27,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_004c98af1f78481377ad5ab3",
+      "name": "Mikuláš Hovorka",
+      "position": "D",
+      "role": "RB",
+      "club": "Florida Panthers",
+      "jerseyNumber": 96,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_41d57d94cb3cc54658cc2fab",
+      "name": "Radko Gudas",
+      "position": "D",
+      "role": "RB",
+      "club": "Florida Panthers",
+      "jerseyNumber": 3,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_28419f9429fe7dfd5ab16a34",
+      "name": "Tomáš Nosek",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 92,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_fa9f86f9877376becafef6bc",
+      "name": "Jan Rutta",
+      "position": "D",
+      "role": "RB",
+      "club": "Genève-Servette HC",
+      "jerseyNumber": 44,
+      "poolKey": "repre_a",
+      "league": "NL"
+    },
+    {
+      "id": "cand_59b6bb494406350c97a6d66d",
+      "name": "Ondřej Becher",
+      "position": "F",
+      "role": "C",
+      "club": "Grand Rapids Griffins",
+      "jerseyNumber": 25,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_6982517771d173aa3670bb9c",
+      "name": "Michal Postava",
+      "position": "G",
+      "role": "G",
+      "club": "Grand Rapids Griffins",
+      "jerseyNumber": 35,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_f8c8f6f4a58f0e2ae3391e37",
+      "name": "Filip Zadina",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Davos",
+      "jerseyNumber": 18,
+      "poolKey": "repre_a",
+      "league": "NL"
+    },
+    {
+      "id": "cand_b529fedaf621110a984447e1",
+      "name": "Daniel Gazda",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 43,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_59f7761903a4c80782c0c7ba",
+      "name": "Jan Košťálek",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 33,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_d945f06d39409a55148aea11",
+      "name": "David Tomášek",
+      "position": "F",
+      "role": "C",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 96,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_c44807c8f64a2b752c6acba7",
+      "name": "Jakub Lauko",
+      "position": "F",
+      "role": "W",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 94,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_7d45c390d0b13b1bc16fa7c6",
+      "name": "Jan Mandát",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 89,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_94e3b0ba6e805420a819a941",
+      "name": "Jiří Smejkal",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 96,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_7529d35533268bee7616e07d",
+      "name": "Jáchym Kondelík",
+      "position": "F",
+      "role": "C",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 11,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_dd5f46a467ce6964633b9f9f",
+      "name": "Lukáš Sedlák",
+      "position": "F",
+      "role": "C",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 23,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_d05ab0a012c76440f9ee3ce4",
+      "name": "Martin Kaut",
+      "position": "F",
+      "role": "C",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 81,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_7d5cca9891c3ff58534e3ea6",
+      "name": "Matěj Stránský",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 44,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_3b0397249f514cc681a8b774",
+      "name": "Roman Červenka",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 10,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_439ee7f031c4db5d5a44b369",
+      "name": "Roman Will",
+      "position": "G",
+      "role": "G",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 35,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_a962ae43e624e06ef3a91af4",
+      "name": "Matteo Kočí",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 6,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_18f7e12b011866dbfa819020",
+      "name": "David Šťastný",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 29,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_ec4808630bb1e4e522d87d5c",
+      "name": "Jan Bambula",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 86,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_0a348e14c3840767fd71cab8",
+      "name": "Jiří Černoch",
+      "position": "F",
+      "role": "C",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 12,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_82ad0a70da732cc1dabf5d86",
+      "name": "Ondřej Beránek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 8,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_afc0982ac187b32a78573005",
+      "name": "Robin Sapoušek",
+      "position": "F",
+      "role": "C",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 11,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_d76fda0bd174aab2818cf5c0",
+      "name": "Vít Jiskra",
+      "position": "F",
+      "role": "C",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 23,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_727af4e5405367137737d0b3",
+      "name": "Dominik Frodl",
+      "position": "G",
+      "role": "G",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": null,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_641bb4185b839d31cf9c7c9c",
+      "name": "Filip Král",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 82,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_6b275c98f93a4dc48b8ba32a",
+      "name": "Jan Ščotka",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 23,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_bb98671a6e3c33576f889e98",
+      "name": "Libor Zábranský",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 28,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_48fd05b013b6891a96f383f7",
+      "name": "Radek Kučeřík",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 65,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_836cd1642aee717f2dec5169",
+      "name": "Stanislav Svozil",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 5,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_afdcacbe28f0be6dd482bce2",
+      "name": "Danny Chludil",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 12,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_b1f8f46704f3e8aefffd5b7b",
+      "name": "Jakub Brabenec",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 11,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_5a0b198d450a84582514e939",
+      "name": "Jakub Flek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 19,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_ff7df492f34e4a18b0c6193b",
+      "name": "Michal Kunc",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 20,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_e150698623c0e272c3de7399",
+      "name": "Aleš Stezka",
+      "position": "G",
+      "role": "G",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 30,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_2a000e6f5498acf06ba42055",
+      "name": "Vojtěch Husinecký",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Litvínov",
+      "jerseyNumber": 4,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_8deb0d2b2c1521fc148b0094",
+      "name": "David Kaše",
+      "position": "F",
+      "role": "C",
+      "club": "HC Litvínov",
+      "jerseyNumber": 25,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_c7f6d5ba33abf47a3e9adc60",
+      "name": "David Kämpf",
+      "position": "F",
+      "role": "C",
+      "club": "HC Litvínov",
+      "jerseyNumber": 13,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_657fc47522e10fe103fb3862",
+      "name": "Matěj Maštalířský",
+      "position": "F",
+      "role": "LW/RW",
+      "club": "HC Litvínov",
+      "jerseyNumber": 74,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_0369f70d15e155e5578be0ce",
+      "name": "Ondřej Kaše",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Litvínov",
+      "jerseyNumber": 73,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_61dddac99e4ea1abd7c1ead9",
+      "name": "Adam Kubík",
+      "position": "G",
+      "role": "G",
+      "club": "HC Litvínov",
+      "jerseyNumber": 32,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_c318d404830ab92a05e0815a",
+      "name": "Tomáš Cibulka",
+      "position": "D",
+      "role": "LB",
+      "club": "Bakersfield Condors",
+      "jerseyNumber": 65,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_206400c0373e63ca8135f9a4",
+      "name": "Tomáš Kundrátek",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 84,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_94b506351305ab5f6e1dd558",
+      "name": "Samuel Drančák",
+      "position": "F",
+      "role": "C",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 23,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_cc4d07b4c13159444ac308fb",
+      "name": "Štěpán Hoch",
+      "position": "F",
+      "role": "C",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 22,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_d2cfdb1e8697dcc78195055c",
+      "name": "Matyáš Mařík",
+      "position": "G",
+      "role": "G",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 2,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_dfeef72207271c1f867469af",
+      "name": "Filip Pyrochta",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 77,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_417f587e2463dc213226e268",
+      "name": "Jakub Galvas",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 76,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_f2329c2e7a8b641390644e9b",
+      "name": "Marian Adámek",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 55,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_3a8512a96541d89b3a59cda2",
+      "name": "Andrej Nestrašil",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 94,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_674fa9e85e49d75be1820b42",
+      "name": "Daniel Kurovský",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 43,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_981b237487a6ce9d763a0b89",
+      "name": "Daniel Voženílek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 95,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_e0526247f47f4d125785e12c",
+      "name": "Matěj Kubiesa",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 9,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_dc4a4397984377226819a48b",
+      "name": "Michal Kovařčík",
+      "position": "F",
+      "role": "C",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 87,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_e64c8622a2d27ff423ab6f33",
+      "name": "Ondřej Kovařčík",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 34,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_f3d0b2bd6850ef97abe4fb3a",
+      "name": "Oscar Flynn",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 18,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_1ec30e82b5f80139d4e1bfe8",
+      "name": "Marek Mazanec",
+      "position": "G",
+      "role": "G",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 2,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_2e49fbf6788ac52810ebef16",
+      "name": "Ondřej Kacetl",
+      "position": "G",
+      "role": "G",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 90,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_e2ef114d299b44899d9c9b51",
+      "name": "Jakub Kos",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 15,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_3b9c32c9ea19284bac19128b",
+      "name": "Adam Měchura",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 22,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_046be354abdf8f3795b9178b",
+      "name": "Adam Titlbach",
+      "position": "F",
+      "role": "W",
+      "club": "HC Plzeň",
+      "jerseyNumber": 21,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_92437bd10da89c193e20d088",
+      "name": "Matyáš Filip",
+      "position": "F",
+      "role": "C",
+      "club": "HC Plzeň",
+      "jerseyNumber": 42,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_7b78c42e8a7dfa2f13b50e76",
+      "name": "Michal Teplý",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 92,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_1edbc29fbeb8242a6466c58f",
+      "name": "Ondřej Rohlík",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 17,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_7bfc89c7d7b3bfca2bd3bff8",
+      "name": "Nick Malík",
+      "position": "G",
+      "role": "G",
+      "club": "HC Plzeň",
+      "jerseyNumber": 31,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_7be3fc5849194364fec00502",
+      "name": "Dominik Mašín",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 97,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_d646d957b7351c1458dcdb77",
+      "name": "Jakub Krejčík",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 36,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_725026b300c6881521871c96",
+      "name": "Jakub Sirota",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 4,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_1333199b194ea1d34e931cca",
+      "name": "Ronald Knot",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 7,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_f421b2a7c7d5008edeb6685d",
+      "name": "Adam Raška",
+      "position": "F",
+      "role": "LW/RW",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 74,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_8737acd58b653f1cbfe78fdf",
+      "name": "Filip Chlapík",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 14,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_d9160119aa12c81c2ecc8bb0",
+      "name": "Matěj Blümel",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 28,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_340e6ba00caada26a03c0e3c",
+      "name": "Michael Špaček",
+      "position": "F",
+      "role": "C",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 34,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_210c7179b1a7a3f214729c9c",
+      "name": "Pavel Kousal",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 23,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_5580600d46c938839649b307",
+      "name": "Josef Kořenář",
+      "position": "G",
+      "role": "G",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 32,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_58e895db933b46331ddd1eff",
+      "name": "Jakub Zbořil",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 38,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_8d458d6c38cfff9f64fe6f7d",
+      "name": "Marek Kalus",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 11,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_9752e64a44576dc99313456d",
+      "name": "Matyáš Šapovaliv",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Henderson Silver Knights",
+      "jerseyNumber": 25,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_ea8a47da60ea33b02d5ab451",
+      "name": "Jan Myšák",
+      "position": "F",
+      "role": "C",
+      "club": "HV71",
+      "jerseyNumber": 11,
+      "poolKey": "repre_a",
+      "league": "SHL"
+    },
+    {
+      "id": "cand_168ec8af750e1839032ff916",
+      "name": "Lukáš Rousek",
+      "position": "F",
+      "role": "C",
+      "club": "HV71",
+      "jerseyNumber": 50,
+      "poolKey": "repre_a",
+      "league": "SHL"
+    },
+    {
+      "id": "cand_d883f2455b9abf8334a74b30",
+      "name": "Dominik Badinka",
+      "position": "D",
+      "role": "RB",
+      "club": "Chicago Wolves",
+      "jerseyNumber": 4,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_7782a664799121f204ab02ff",
+      "name": "Lukáš Jašek",
+      "position": "F",
+      "role": "C/RW",
+      "club": "Ilves",
+      "jerseyNumber": 63,
+      "poolKey": "repre_a",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_562c68ddbd04d0514c493091",
+      "name": "David Špaček",
+      "position": "D",
+      "role": "RB",
+      "club": "Iowa Wild",
+      "jerseyNumber": 7,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_f9ecc7d1c3356addc75d585e",
+      "name": "Jiří Ticháček",
+      "position": "D",
+      "role": "LB",
+      "club": "Kärpät",
+      "jerseyNumber": 26,
+      "poolKey": "repre_a",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_341ce7e59095db20b34b1e9e",
+      "name": "Matyáš Kantner",
+      "position": "F",
+      "role": "W",
+      "club": "Kärpät",
+      "jerseyNumber": 91,
+      "poolKey": "repre_a",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_652e881c5ef12fd0555d69ee",
+      "name": "Jakub Vrána",
+      "position": "F",
+      "role": "LW",
+      "club": "Linköping HC",
+      "jerseyNumber": 90,
+      "poolKey": "repre_a",
+      "league": "SHL"
+    },
+    {
+      "id": "cand_c2e39c32fbe32e8a49e74312",
+      "name": "Marek Langhamer",
+      "position": "G",
+      "role": "G",
+      "club": "Malmö Redhawks",
+      "jerseyNumber": 94,
+      "poolKey": "repre_a",
+      "league": "SHL"
+    },
+    {
+      "id": "cand_791365bccb8b9fa116c3f66a",
+      "name": "Jakub Dobeš",
+      "position": "G",
+      "role": "G",
+      "club": "Montréal Canadiens",
+      "jerseyNumber": 35,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_227102d511840abd370f006c",
+      "name": "Kevin Klíma",
+      "position": "F",
+      "role": "C",
+      "club": "Mountfield HK",
+      "jerseyNumber": 34,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_11b89f585c61e784bd80bcdf",
+      "name": "Radovan Pavlík",
+      "position": "F",
+      "role": "LW",
+      "club": "Mountfield HK",
+      "jerseyNumber": 89,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_bbec8649862f64c973e4ed31",
+      "name": "David Rittich",
+      "position": "G",
+      "role": "G",
+      "club": "New Jersey Devils",
+      "jerseyNumber": 31,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_39e13e5b868ea1d0587f257b",
+      "name": "Ondřej Palát",
+      "position": "F",
+      "role": "LW",
+      "club": "New York Islanders",
+      "jerseyNumber": 18,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_55ec92b19e09f82fd4423ec7",
+      "name": "Vítek Vaněček",
+      "position": "G",
+      "role": "G",
+      "club": "New York Islanders",
+      "jerseyNumber": 41,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_b8f8e7e7f5bfed628776930d",
+      "name": "Jaroslav Chmelař",
+      "position": "F",
+      "role": "RW",
+      "club": "New York Rangers",
+      "jerseyNumber": 49,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_1a68e01b918c993322335cde",
+      "name": "Jakub Fibigr",
+      "position": "D",
+      "role": "LB",
+      "club": "Ohio State Univ.",
+      "jerseyNumber": null,
+      "poolKey": "repre_a",
+      "league": "NCAA"
+    },
+    {
+      "id": "cand_ab2532f70688958ac1dab32b",
+      "name": "Jakub Dvořák",
+      "position": "D",
+      "role": "LB",
+      "club": "Ontario Reign",
+      "jerseyNumber": 55,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_6574ee25d198447be7c10f0a",
+      "name": "Patrik Bartošák",
+      "position": "G",
+      "role": "G",
+      "club": "Pelicans",
+      "jerseyNumber": 11,
+      "poolKey": "repre_a",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_7d86bdc51177ef05c99e938f",
+      "name": "David Jiříček",
+      "position": "D",
+      "role": "RB",
+      "club": "Philadelphia Flyers",
+      "jerseyNumber": 9,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_3363513c7791ec865e23848f",
+      "name": "Dan Vladař",
+      "position": "G",
+      "role": "G",
+      "club": "Philadelphia Flyers",
+      "jerseyNumber": 80,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_0e8124f967e0543c9a199a1e",
+      "name": "Matyáš Man",
+      "position": "D",
+      "role": "LB",
+      "club": "Prince Albert Raiders",
+      "jerseyNumber": null,
+      "poolKey": "repre_a",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_aadf8fea1ba8eb26be20fd6f",
+      "name": "Ivan Ivan",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Providence Bruins",
+      "jerseyNumber": 82,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_fcb971814216f4f8a73f8b2d",
+      "name": "Jiří Patera",
+      "position": "G",
+      "role": "G",
+      "club": "Providence Bruins",
+      "jerseyNumber": 30,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_ca4f589b9ea430360fe591b8",
+      "name": "Šimon Zajíček",
+      "position": "G",
+      "role": "G",
+      "club": "Providence Bruins",
+      "jerseyNumber": 34,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_78fd5c9b4ba6df8fc98b8fd4",
+      "name": "Luboš Horký",
+      "position": "F",
+      "role": "W",
+      "club": "Rögle BK",
+      "jerseyNumber": 97,
+      "poolKey": "repre_a",
+      "league": "SHL"
+    },
+    {
+      "id": "cand_843e8e9750331961a399726f",
+      "name": "Martin Jandus",
+      "position": "D",
+      "role": "RB",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 63,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_ecaaa06dce8a1d7f3bc00d65",
+      "name": "Michal Kempný",
+      "position": "D",
+      "role": "LB",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 6,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_0d3df2573dcc1cb95839245e",
+      "name": "Adam Bareš",
+      "position": "F",
+      "role": "W",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 10,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_cff1fb88526517c381dee1f2",
+      "name": "Filip Přikryl",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 89,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_50a1aa2918c394d7b9099eed",
+      "name": "Jakub Konečný",
+      "position": "F",
+      "role": "C",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 9,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_87ae7b701171a26175a58539",
+      "name": "Marcel Marcel",
+      "position": "F",
+      "role": "RW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 53,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_b88951cd784b5225f53f6e96",
+      "name": "Adam Brízgala",
+      "position": "G",
+      "role": "G",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 1,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_6b850ea265180cfb6c04563c",
+      "name": "Dominik Pavlát",
+      "position": "G",
+      "role": "G",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 39,
+      "poolKey": "repre_a",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_74fa4e6495c533d6c7d3a8b7",
+      "name": "Petr Fridrich",
+      "position": "F",
+      "role": "W",
+      "club": "SaiPa",
+      "jerseyNumber": 90,
+      "poolKey": "repre_a",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_1d361aff6522832b6c2b5771",
+      "name": "Libor Hájek",
+      "position": "D",
+      "role": "LB",
+      "club": "San Jose Sharks",
+      "jerseyNumber": 55,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_165081605dd2881fe945ac38",
+      "name": "Adam Jiříček",
+      "position": "D",
+      "role": "RB",
+      "club": "Springfield Thunderbirds",
+      "jerseyNumber": null,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_f371f32a95ccb8281fdbd6dc",
+      "name": "Jakub Štancl",
+      "position": "F",
+      "role": "LW",
+      "club": "Springfield Thunderbirds",
+      "jerseyNumber": 49,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_b115b52ab6670e6b7e179359",
+      "name": "Jakub Škarek",
+      "position": "G",
+      "role": "G",
+      "club": "Straubing Tigers",
+      "jerseyNumber": 36,
+      "poolKey": "repre_a",
+      "league": "DEL"
+    },
+    {
+      "id": "cand_186b2f1131e2690297d5e0ab",
+      "name": "Miroslav Holinka",
+      "position": "F",
+      "role": "C",
+      "club": "Toronto Marlies",
+      "jerseyNumber": null,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_8ca30d4834ae158ff755b16a",
+      "name": "Maxmilian Curran",
+      "position": "F",
+      "role": "C",
+      "club": "Univ. Of Massachusetts",
+      "jerseyNumber": null,
+      "poolKey": "repre_a",
+      "league": "NCAA"
+    },
+    {
+      "id": "cand_c93953938ab381b7f4d92555",
+      "name": "Karel Vejmelka",
+      "position": "G",
+      "role": "G",
+      "club": "Utah Mammoth",
+      "jerseyNumber": 50,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_b3c86532d2b4e3f4e73e9f54",
+      "name": "Matyáš Melovský",
+      "position": "F",
+      "role": "C",
+      "club": "Utica Comets",
+      "jerseyNumber": 11,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_706714418d76c46ecd724ae6",
+      "name": "Jakub Málek",
+      "position": "G",
+      "role": "G",
+      "club": "Utica Comets",
+      "jerseyNumber": 31,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_df11d83c155f7ccc36f86846",
+      "name": "Filip Hronek",
+      "position": "D",
+      "role": "RB",
+      "club": "Vancouver Canucks",
+      "jerseyNumber": 17,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_3b65f3fba8d0a6715c5827ca",
+      "name": "Filip Chytil",
+      "position": "F",
+      "role": "C",
+      "club": "Vancouver Canucks",
+      "jerseyNumber": 72,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_897e92cf5c213f8566bf07a7",
+      "name": "Tomáš Hertl",
+      "position": "F",
+      "role": "C",
+      "club": "Vegas Golden Knights",
+      "jerseyNumber": 48,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_20257eddaad8dfc14662e342",
+      "name": "Petr Sikora",
+      "position": "F",
+      "role": "C",
+      "club": "Washington Capitals",
+      "jerseyNumber": 34,
+      "poolKey": "repre_a",
+      "league": "NHL"
+    },
+    {
+      "id": "cand_a70197716758876ba7140d13",
+      "name": "Šimon Hrubec",
+      "position": "G",
+      "role": "G",
+      "club": "ZSC Lions",
+      "jerseyNumber": 30,
+      "poolKey": "repre_a",
+      "league": "NL"
+    },
+    {
+      "id": "cand_2cd4cbab71e28577eb4fd393",
+      "name": "Adam Jecho",
+      "position": "F",
+      "role": "C/RW",
+      "club": "Springfield Thunderbirds",
+      "jerseyNumber": null,
+      "poolKey": "repre_a",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_d5058a0c42b884e61e2eded1",
+      "name": "Marek Sklenička",
+      "position": "G",
+      "role": "G",
+      "club": "Seattle Thunderbirds",
+      "jerseyNumber": 35,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_7e9b30006409f74b348e72a9",
+      "name": "Ondřej Štěbeták",
+      "position": "G",
+      "role": "G",
+      "club": "Portland Winterhawks",
+      "jerseyNumber": 2,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_180472785d02590edf666c73",
+      "name": "Marek Peroutka",
+      "position": "F",
+      "role": "F",
+      "club": "Victoria Royals",
+      "jerseyNumber": 22,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_acd142850a6f59f84384b2ff",
+      "name": "Antonín Klatovský",
+      "position": "F",
+      "role": "C",
+      "club": "HC Plzeň U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_472c92f88c149e348053e8eb",
+      "name": "Barnabáš Novák",
+      "position": "F",
+      "role": "F",
+      "club": "HC Sparta Praha U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_3af48a10a03eed01e0bbbc47",
+      "name": "Tadeáš Pala",
+      "position": "D",
+      "role": "D",
+      "club": "HC Přerov",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "Chance Liga"
+    },
+    {
+      "id": "cand_611864399ad883d40d913847",
+      "name": "Michael Nazad",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_410abf48d7f8618680011597",
+      "name": "Tobiáš Vehovský",
+      "position": "F",
+      "role": "C",
+      "club": "HC Kometa Brno U20",
+      "jerseyNumber": 21,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_6365957867796a0e3a6128ec",
+      "name": "Dominik Pavlík",
+      "position": "F",
+      "role": "F",
+      "club": "Mountfield HK",
+      "jerseyNumber": 20,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_75627bebd65cc91686ce8c89",
+      "name": "Kryštof Dyk",
+      "position": "D",
+      "role": "D",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 4,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_648f84f3bbfeac6a8379e1fa",
+      "name": "Šimon Fasner",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Vítkovice U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_c00ac967a48ee2c86ef4c63c",
+      "name": "Michal Jansa",
+      "position": "D",
+      "role": "D",
+      "club": "BK Mladá Boleslav U20",
+      "jerseyNumber": 5,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_efda9dfe00fc684d7f9149bc",
+      "name": "Filip Tittl",
+      "position": "D",
+      "role": "D",
+      "club": "HC Litvínov",
+      "jerseyNumber": 18,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_ec9889750358da057e547bc2",
+      "name": "Jakub Lev",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 10,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_3d231051d40aa523e7dba406",
+      "name": "Vojtěch Kubín",
+      "position": "F",
+      "role": "C",
+      "club": "HC Kometa Brno U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_f3d4cf4a6432c223182c6e7f",
+      "name": "Oliver Šichtař",
+      "position": "F",
+      "role": "F",
+      "club": "HC Kometa Brno U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_07f7ae9ccdd9ee2c680e69cf",
+      "name": "Vojtěch Hora",
+      "position": "D",
+      "role": "D",
+      "club": "SaiPa U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_16251c70a20036ceb71fc8ff",
+      "name": "David Sedláček",
+      "position": "F",
+      "role": "F",
+      "club": "Waterloo Black Hawks",
+      "jerseyNumber": 27,
+      "poolKey": "repre_u20",
+      "league": "USHL"
+    },
+    {
+      "id": "cand_9e1933addc5b86714f23e9f9",
+      "name": "David Huk",
+      "position": "F",
+      "role": "C",
+      "club": "Tri-City Americans",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_b9077984c20b0378337357dd",
+      "name": "René Řehák",
+      "position": "F",
+      "role": "F",
+      "club": "HC Oceláři Třinec U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_29f7174b1c0cbf3e57abd996",
+      "name": "Dominik Řípa",
+      "position": "F",
+      "role": "F",
+      "club": "HC Oceláři Třinec U20",
+      "jerseyNumber": 20,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_7975a7e1e85a8c57e7027962",
+      "name": "Matěj Tománek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Plzeň",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_6f4c983a760d5ba2b773d9ed",
+      "name": "Michal Šebesta",
+      "position": "F",
+      "role": "C",
+      "club": "HC Vítkovice",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_c51ce93274772f819f68b9cc",
+      "name": "Adam Klaus",
+      "position": "F",
+      "role": "RW",
+      "club": "Cape Breton Eagles",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "QMJHL"
+    },
+    {
+      "id": "cand_144e25282debb53b849ea2df",
+      "name": "Václav Nedorost",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Motor České Budějovice U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_b722feb3e85e3c14512a8f82",
+      "name": "Vít Macek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Dynamo Pardubice U20",
+      "jerseyNumber": 14,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_c0f5a8054911193d1e01007e",
+      "name": "Jan Trefný",
+      "position": "F",
+      "role": "F",
+      "club": "Moose Jaw Warriors",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_e3c73546f1f101d68cc39b48",
+      "name": "Jan Brabenec",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Spokane Chiefs",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_b49a1c60bf01db8627368ba4",
+      "name": "Josef Holejšovský",
+      "position": "F",
+      "role": "F",
+      "club": "HC Slavia Praha U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_f52d2cad265a93bb18bee2e0",
+      "name": "Šimon Bělohorský",
+      "position": "F",
+      "role": "LW",
+      "club": "Flint Firebirds",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "OHL"
+    },
+    {
+      "id": "cand_806da44b646b6cdfc1e1c994",
+      "name": "Tobiáš Tvrzník",
+      "position": "G",
+      "role": "G",
+      "club": "Wenatchee Wild",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_5c4f419e843d63a16a7b99a7",
+      "name": "Michal Oršulák",
+      "position": "G",
+      "role": "G",
+      "club": "Prince Albert Raiders",
+      "jerseyNumber": 30,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_e53d9225c4b930be51dba93c",
+      "name": "Tobias Trejbal",
+      "position": "G",
+      "role": "G",
+      "club": "Univ. Of Massachusetts",
+      "jerseyNumber": 30,
+      "poolKey": "repre_u20",
+      "league": "NCAA"
+    },
+    {
+      "id": "cand_ea7e90544dbda62cdf36eafa",
+      "name": "Filip Novák",
+      "position": "F",
+      "role": "F",
+      "club": "Victoria Royals",
+      "jerseyNumber": 9,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_19fb0dc3be12b35107d00cb0",
+      "name": "Jiří Kamas",
+      "position": "D",
+      "role": "RB",
+      "club": "Red Deer Rebels",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_8c7de125aff2afe30b8d3325",
+      "name": "Šimon Katolický",
+      "position": "F",
+      "role": "W",
+      "club": "Sarnia Sting",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "OHL"
+    },
+    {
+      "id": "cand_c6ea359612f153ae5f30794c",
+      "name": "Vít Záhejský",
+      "position": "F",
+      "role": "W",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 8,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_65d43b9950f6a66db23d2109",
+      "name": "Tomáš Malínek",
+      "position": "D",
+      "role": "LB",
+      "club": "Lethbridge Hurricanes",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_4a85ba233066dfa7aca5e559",
+      "name": "Max Pšenička",
+      "position": "D",
+      "role": "RB",
+      "club": "Tucson Roadrunners",
+      "jerseyNumber": 3,
+      "poolKey": "repre_u20",
+      "league": "AHL"
+    },
+    {
+      "id": "cand_ca2b46ac78ead5cae0008821",
+      "name": "Tomáš Poletín",
+      "position": "F",
+      "role": "LW",
+      "club": "Kelowna Rockets",
+      "jerseyNumber": 18,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_a7a9e9789a4290d7be37def7",
+      "name": "Vashek Blanár",
+      "position": "D",
+      "role": "LB",
+      "club": "Univ. Of Massachusetts",
+      "jerseyNumber": 26,
+      "poolKey": "repre_u20",
+      "league": "NCAA"
+    },
+    {
+      "id": "cand_561cb4f233aa6393704bd0a1",
+      "name": "Vojtěch Čihař",
+      "position": "F",
+      "role": "LW",
+      "club": "Kelowna Rockets",
+      "jerseyNumber": 15,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_7e4d9c7d75147a811e405522",
+      "name": "Jakub Frolo",
+      "position": "F",
+      "role": "C/RW",
+      "club": "Ilves",
+      "jerseyNumber": 15,
+      "poolKey": "repre_u20",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_1841b6f1f6d57fd9c12c9d9e",
+      "name": "Ondřej Ruml",
+      "position": "D",
+      "role": "D",
+      "club": "Ottawa 67's",
+      "jerseyNumber": 13,
+      "poolKey": "repre_u20",
+      "league": "OHL"
+    },
+    {
+      "id": "cand_245a9bc3c3a930910af23bb3",
+      "name": "Petr Tomek",
+      "position": "F",
+      "role": "C",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 12,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_d0b1a37258a2d8d755c81026",
+      "name": "Jakub Vaneček",
+      "position": "D",
+      "role": "LB",
+      "club": "Tri-City Americans",
+      "jerseyNumber": 21,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_030224039559dd59172b664c",
+      "name": "Vladimír Dravecký",
+      "position": "D",
+      "role": "RB",
+      "club": "Guelph Storm",
+      "jerseyNumber": 9,
+      "poolKey": "repre_u20",
+      "league": "OHL"
+    },
+    {
+      "id": "cand_ceb81eb1bffa9d23593dd49f",
+      "name": "Radim Mrtka",
+      "position": "D",
+      "role": "RB",
+      "club": "Seattle Thunderbirds",
+      "jerseyNumber": 6,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_87193161d24f89a45609456d",
+      "name": "Adam Novotný",
+      "position": "F",
+      "role": "W",
+      "club": "Peterborough Petes",
+      "jerseyNumber": 24,
+      "poolKey": "repre_u20",
+      "league": "OHL"
+    },
+    {
+      "id": "cand_135916af7d831cae8b2d4495",
+      "name": "Adam Benák",
+      "position": "F",
+      "role": "C",
+      "club": "Western Michigan Univ.",
+      "jerseyNumber": 20,
+      "poolKey": "repre_u20",
+      "league": "NCAA"
+    },
+    {
+      "id": "cand_793a1a7674e481e4af18141c",
+      "name": "Matěj Pekař",
+      "position": "F",
+      "role": "W",
+      "club": "HC Ambrì-Piotta",
+      "jerseyNumber": 25,
+      "poolKey": "repre_u20",
+      "league": "NL"
+    },
+    {
+      "id": "cand_8504fd724de79d7a1a447b34",
+      "name": "Václav Nestrašil",
+      "position": "F",
+      "role": "RW",
+      "club": "Univ. Of Massachusetts",
+      "jerseyNumber": 14,
+      "poolKey": "repre_u20",
+      "league": "NCAA"
+    },
+    {
+      "id": "cand_b2bf4c6eb22df936c131fef5",
+      "name": "Martin Psohlavec",
+      "position": "G",
+      "role": "G",
+      "club": "Saskatoon Blades",
+      "jerseyNumber": 1,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_2be8979c28304a1e204aac66",
+      "name": "Jan Larys",
+      "position": "G",
+      "role": "G",
+      "club": "Drummondville Voltigeurs",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "QMJHL"
+    },
+    {
+      "id": "cand_84f05d22748db7024d739899",
+      "name": "Tadeáš Cífka",
+      "position": "D",
+      "role": "D",
+      "club": "HC Dynamo Pardubice U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_a20501caa04c7b0757747c5f",
+      "name": "František Poletín",
+      "position": "G",
+      "role": "G",
+      "club": "Pelicans",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_95b74aa26fa5721db5e5cc6e",
+      "name": "Vojtěch Kubín",
+      "position": "F",
+      "role": "C",
+      "club": "HC Kometa Brno U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_1c667543aef1c55b1c17d6f8",
+      "name": "Teodor Vápeník",
+      "position": "D",
+      "role": "D",
+      "club": "Vernon Vipers",
+      "jerseyNumber": 16,
+      "poolKey": "repre_u20",
+      "league": "BCHL"
+    },
+    {
+      "id": "cand_0b2f24b2c709fa8cab381805",
+      "name": "Štěpán Černý",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 27,
+      "poolKey": "repre_u20",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_bf07f7bb85443342b4c5b84c",
+      "name": "Matouš Kuchařčík",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Miami Univ.",
+      "jerseyNumber": 23,
+      "poolKey": "repre_u20",
+      "league": "NCAA"
+    },
+    {
+      "id": "cand_850f2a87336e1b6dc9ec4fe4",
+      "name": "David Rozsíval",
+      "position": "F",
+      "role": "RW",
+      "club": "Green Bay Gamblers",
+      "jerseyNumber": 18,
+      "poolKey": "repre_u20",
+      "league": "USHL"
+    },
+    {
+      "id": "cand_50488abaa75a5eaf80384b13",
+      "name": "Jakub Seidl",
+      "position": "D",
+      "role": "RB",
+      "club": "Calgary Hitmen",
+      "jerseyNumber": 6,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_bf5e95fe1f5cad02c1304e34",
+      "name": "Tomáš Mikel",
+      "position": "D",
+      "role": "RB",
+      "club": "Des Moines Buccaneers",
+      "jerseyNumber": 26,
+      "poolKey": "repre_u20",
+      "league": "USHL"
+    },
+    {
+      "id": "cand_cb060772433a747d6e9bb061",
+      "name": "Petr Věchet",
+      "position": "F",
+      "role": "F",
+      "club": "Lukko U20",
+      "jerseyNumber": 24,
+      "poolKey": "repre_u20",
+      "league": "SM-sarja U20"
+    },
+    {
+      "id": "cand_da9f802f4b73c04a0245c0e7",
+      "name": "Rostislav Šilhavý",
+      "position": "D",
+      "role": "D",
+      "club": "BK Mladá Boleslav U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u20",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_23f6b7c01593849155ecaa30",
+      "name": "Matěj Mikeš",
+      "position": "F",
+      "role": "C",
+      "club": "Red Deer Rebels",
+      "jerseyNumber": 17,
+      "poolKey": "repre_u20",
+      "league": "WHL"
+    },
+    {
+      "id": "cand_25c6ba5ac33ed9c4889925c3",
+      "name": "Jaroslav Martínek",
+      "position": "G",
+      "role": "G",
+      "club": "BK Mladá Boleslav U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_0da27ab861e5ae440d87c05e",
+      "name": "Kryštof Štěpánek",
+      "position": "G",
+      "role": "G",
+      "club": "SaiPa",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "Liiga"
+    },
+    {
+      "id": "cand_13719031c42ecd9385c4d268",
+      "name": "Lukáš Kachlíř",
+      "position": "D",
+      "role": "D",
+      "club": "Bílí Tygři Liberec U20",
+      "jerseyNumber": 19,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_d6f50bb24a34eee1170ee4c2",
+      "name": "Jiří Gombár",
+      "position": "F",
+      "role": null,
+      "club": "HC Energie Karlovy Vary U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "u18_192f9648796c01e63f351af5",
+      "name": "Dominick Radim Byrtus",
+      "position": "D",
+      "role": null,
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_8f1b68b815ef813c680010a6",
+      "name": "Štěpán Tomka",
+      "position": "D",
+      "role": null,
+      "club": "HC Slavia Praha U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_e4734c6542f93d2e517c4075",
+      "name": "Sean Žuffa",
+      "position": "F",
+      "role": null,
+      "club": "HC Sparta Praha U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_2214b06c3dde82d6572d0e38",
+      "name": "Matyáš Michálek",
+      "position": "D",
+      "role": null,
+      "club": "HC Sparta Praha U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_49c49a5ae79ac72099068483",
+      "name": "Michal Jordán",
+      "position": "D",
+      "role": "RB",
+      "club": "Pelicans U18",
+      "jerseyNumber": 19,
+      "poolKey": "repre_u18",
+      "league": "U18 SM-sarja"
+    },
+    {
+      "id": "cand_c123c02921aebe385ba0b0f1",
+      "name": "Oliver Andrle",
+      "position": "F",
+      "role": null,
+      "club": "Malmö Redhawks",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "SHL"
+    },
+    {
+      "id": "cand_dfbf095fbe9a7338b86e6c7d",
+      "name": "Maximilian Mareš",
+      "position": "F",
+      "role": null,
+      "club": "Bílí Tygři Liberec U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_b8a90ee0b2f69b2aa4a935ee",
+      "name": "Matyáš Čančík",
+      "position": "F",
+      "role": null,
+      "club": "Bílí Tygři Liberec U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_7a92b889e5f0cd973c969bb3",
+      "name": "Petr Hörnig",
+      "position": "F",
+      "role": null,
+      "club": "Bílí Tygři Liberec U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_05f5cc4380e44e36ef6ce4d1",
+      "name": "Adam Němec",
+      "position": "F",
+      "role": "LW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 19,
+      "poolKey": "repre_u18",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_3bd0ecf93c038472ca925a4e",
+      "name": "Matěj Kučera",
+      "position": "D",
+      "role": null,
+      "club": "Bílí Tygři Liberec U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_7c29dba970883565cd8f6ab5",
+      "name": "Jonáš Vaníček",
+      "position": "F",
+      "role": null,
+      "club": "HC Energie Karlovy Vary U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_8ac2ac9bd6b4f41103e5477e",
+      "name": "Josef Suchý",
+      "position": "F",
+      "role": null,
+      "club": "HC Energie Karlovy Vary U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_062cc6c81db8890b87703f74",
+      "name": "Jakub Polášek",
+      "position": "F",
+      "role": null,
+      "club": "HC Oceláři Třinec U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_868d4bb558ab7f99ea77392a",
+      "name": "Michal Hartl",
+      "position": "F",
+      "role": "C",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 9,
+      "poolKey": "repre_u18",
+      "league": "Tipsport Extraliga"
+    },
+    {
+      "id": "cand_4c2bf6b3c533be25bd876eb4",
+      "name": "Dario Alessandro Blengino",
+      "position": "F",
+      "role": null,
+      "club": "HC Sparta Praha U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_0f3328691e89fae270a7fca5",
+      "name": "Melichar Kovář",
+      "position": "F",
+      "role": null,
+      "club": "HC Dynamo Pardubice U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_18079d7ce72ac51619393d1e",
+      "name": "Oliver Vaňha",
+      "position": "F",
+      "role": null,
+      "club": "HC Dynamo Pardubice U20",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "ELJ"
+    },
+    {
+      "id": "cand_460422659419db25c5e60b86",
+      "name": "Denis Viedemann",
+      "position": "D",
+      "role": null,
+      "club": "Lausanne HC",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "NL"
+    },
+    {
+      "id": "cand_666263e5c746d175555e6669",
+      "name": "Šimon Šejc",
+      "position": "F",
+      "role": null,
+      "club": "Växjö Lakers HC",
+      "jerseyNumber": null,
+      "poolKey": "repre_u18",
+      "league": "SHL"
+    },
+    {
+      "id": "zen_eab38e839763e626c2adf946",
+      "name": "Julie Pejšová",
+      "position": "G",
+      "role": "G",
+      "club": "HC Milevsko 1934 U20",
+      "jerseyNumber": 32,
+      "poolKey": "repre_zeny"
+    },
+    {
+      "id": "zen_d7981da6876b88b2d8385815",
+      "name": "Michaela Hesová",
+      "position": "G",
+      "role": "G",
+      "club": "Dartmouth Univ.",
+      "jerseyNumber": 1,
+      "poolKey": "repre_zeny",
+      "league": "NCAA"
+    },
+    {
+      "id": "zen_d4b1c59b69ddca765b00666c",
+      "name": "Sára Čajanová",
+      "position": "D",
+      "role": "RB",
+      "club": "Brynäs IF",
+      "jerseyNumber": 24,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_afe67b070a6ef66bb23e3bec",
+      "name": "Aneta Tejralová",
+      "position": "D",
+      "role": "LB",
+      "club": "Seattle Torrent",
+      "jerseyNumber": 2,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_7b24c136e0cdc76821e915b1",
+      "name": "Noemi Neubauerová",
+      "position": "D",
+      "role": "RB",
+      "club": "Boston Fleet",
+      "jerseyNumber": 28,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_46e7c5d8165de620e186fab0",
+      "name": "Daniela Pejšová",
+      "position": "D",
+      "role": "LB",
+      "club": "Boston Fleet",
+      "jerseyNumber": 4,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_e0d9f8155e3f956a8630a408",
+      "name": "Dominika Lásková",
+      "position": "D",
+      "role": "RB",
+      "club": "SDE HF",
+      "jerseyNumber": 14,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_244172dd4ee2bb537ba7b6c5",
+      "name": "Klára Seroiszková",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Davos Ladies",
+      "jerseyNumber": 7,
+      "poolKey": "repre_zeny",
+      "league": "SWHL A"
+    },
+    {
+      "id": "zen_0322fe7e8c7e46e0da759823",
+      "name": "Andrea Trnková",
+      "position": "D",
+      "role": "D",
+      "club": "Clarkson Univ.",
+      "jerseyNumber": 15,
+      "poolKey": "repre_zeny",
+      "league": "NCAA"
+    },
+    {
+      "id": "zen_9bfd6481e3ca6e7b0d2fab94",
+      "name": "Natálie Mlýnková",
+      "position": "F",
+      "role": "RW",
+      "club": "Montreal Victoire",
+      "jerseyNumber": 19,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_d15ffeba557e589166660882",
+      "name": "Kateřina Mrázová",
+      "position": "F",
+      "role": "C",
+      "club": "Ottawa Charge",
+      "jerseyNumber": 16,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_4d17d3def0f886d607a86600",
+      "name": "Tereza Vanišová",
+      "position": "F",
+      "role": "LW",
+      "club": "Vancouver Goldeneyes",
+      "jerseyNumber": 21,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_71e9eeed25c36209ef13b9ec",
+      "name": "Tereza Plosová",
+      "position": "F",
+      "role": "RW",
+      "club": "Djurgårdens IF",
+      "jerseyNumber": 22,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_01f5f5f5e173eccf65e34a58",
+      "name": "Michaela Pejzlová",
+      "position": "F",
+      "role": "C",
+      "club": "HC Ambrì-Piotta Women",
+      "jerseyNumber": 18,
+      "poolKey": "repre_zeny",
+      "league": "SWHL A"
+    },
+    {
+      "id": "zen_0854544a7710144f7eba9530",
+      "name": "Denisa Křížová",
+      "position": "F",
+      "role": "LW",
+      "club": "New York Sirens",
+      "jerseyNumber": 10,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_3edc41f31b2731444cfca7f5",
+      "name": "Klára Hymlárová",
+      "position": "F",
+      "role": "RW",
+      "club": "Minnesota Frost",
+      "jerseyNumber": 12,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_26ad3468d7d5d52bb40f5b63",
+      "name": "Kristýna Kaltounková",
+      "position": "F",
+      "role": "C",
+      "club": "New York Sirens",
+      "jerseyNumber": 98,
+      "poolKey": "repre_zeny",
+      "league": "PWHL"
+    },
+    {
+      "id": "zen_59e04b1171b9d4f93cb6496b",
+      "name": "Adéla Šapovalivová",
+      "position": "F",
+      "role": "LW",
+      "club": "MoDo Hockey",
+      "jerseyNumber": 3,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_2ed9a3f5bbd13c2c9ba9cfed",
+      "name": "Barbora Juříčková",
+      "position": "F",
+      "role": "RW",
+      "club": "St. Lawrence Univ.",
+      "jerseyNumber": 20,
+      "poolKey": "repre_zeny",
+      "league": "NCAA"
+    },
+    {
+      "id": "zen_4bb127aa1098a5f6e2a504cc",
+      "name": "Tereza Pištěková",
+      "position": "F",
+      "role": "C",
+      "club": "SDE HF",
+      "jerseyNumber": 8,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_8aa7e819a8de60cb27055b21",
+      "name": "Vendula Přibylová",
+      "position": "F",
+      "role": "LW",
+      "club": "MoDo Hockey",
+      "jerseyNumber": 26,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_a5bb92395ef5db4564634d13",
+      "name": "Linda Vocetková",
+      "position": "F",
+      "role": "F",
+      "club": "Colgate Univ.",
+      "jerseyNumber": 6,
+      "poolKey": "repre_zeny",
+      "league": "NCAA"
+    },
+    {
+      "id": "zen_aa5bbe870cbab04e304a2e36",
+      "name": "Barbora Bartáková",
+      "position": "F",
+      "role": "F",
+      "club": "Djurgårdens IF",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_727e89601642b1fd511502c1",
+      "name": "Klára Jundusíková",
+      "position": "D",
+      "role": "D",
+      "club": "Djurgårdens IF",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_28a35712d627cbb91513cdf9",
+      "name": "Natálie Musilová",
+      "position": "F",
+      "role": "C",
+      "club": "Timrå IK",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_e425401f72924a67f55ee17e",
+      "name": "Anna Kalová",
+      "position": "F",
+      "role": "F",
+      "club": "Örebro HK",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_6c7830dcf20ac8590ce430a4",
+      "name": "Tereza Mašková",
+      "position": "D",
+      "role": "D",
+      "club": "Hammarby IF",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "NDHL"
+    },
+    {
+      "id": "zen_1383980500c1ea4f1dafa020",
+      "name": "Karolína Skořepová",
+      "position": "F",
+      "role": "F",
+      "club": "Wilkes Univ.",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "NCAA"
+    },
+    {
+      "id": "zen_22374cfec07292bf36b6e78f",
+      "name": "Dominika Malicka",
+      "position": "F",
+      "role": "F",
+      "club": "Södertälje SK",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "NDHL"
+    },
+    {
+      "id": "zen_c45323364e0729f50a67d968",
+      "name": "Marie Chrastinová",
+      "position": "D",
+      "role": "D",
+      "club": "KalPa",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "Auroraliiga"
+    },
+    {
+      "id": "zen_93641bfdc8b8c467d5b30b7b",
+      "name": "Magdalena Erbenová",
+      "position": "D",
+      "role": "D",
+      "club": "Leksands IF",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "SDHL"
+    },
+    {
+      "id": "zen_a9869933bb9e4a1c769711ff",
+      "name": "Barbora Prošková",
+      "position": "D",
+      "role": "D",
+      "club": "Rensselaer Poly. Inst.",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "NCAA"
+    },
+    {
+      "id": "zen_4fa391e8be77dd32f22f7f8a",
+      "name": "Adéla Fromová",
+      "position": "F",
+      "role": "F",
+      "club": "St. Cloud State Univ.",
+      "jerseyNumber": null,
+      "poolKey": "repre_zeny",
+      "league": "NCAA"
+    },
+    {
+      "id": "zen_1be8524ecf1e3f127d45f84c",
+      "name": "Julie Jebousková",
+      "position": "F",
+      "role": "F",
+      "club": "Univ. of Maine",
+      "jerseyNumber": 15,
+      "poolKey": "repre_zeny",
+      "league": "NCAA"
+    },
+    {
+      "id": "elh_37f94073244112ad9e725b7c",
+      "name": "Denis Zeman",
+      "position": "D",
+      "role": "RB",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 90,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_bf5a5f0e69af45ed3f953270",
+      "name": "Kristaps Zile",
+      "position": "D",
+      "role": "LB",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 8,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_15e6e98e3c7cb04759315db4",
+      "name": "Layton Ahac",
+      "position": "D",
+      "role": "D",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 2,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_13719031c42ecd9385c4d268",
+      "name": "Lukáš Kachlíř",
+      "position": "D",
+      "role": "D",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 19,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2371a3d0f03d26ccb1ec35d0",
+      "name": "Michal Ivan",
+      "position": "D",
+      "role": "D",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 29,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_676fa9ee53ea8b08ab894d80",
+      "name": "Radim Šimek",
+      "position": "D",
+      "role": "LB",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 44,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_520bb5af3da563d6b182db5a",
+      "name": "Tomáš Galvas",
+      "position": "D",
+      "role": "LB",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 79,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_aecbf62839029cf252a0fe74",
+      "name": "Tomáš Hanousek",
+      "position": "D",
+      "role": "RB",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 21,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_08168e88152210bcf8917eb1",
+      "name": "Vojtěch Pilíšek",
+      "position": "D",
+      "role": "D",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 5,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_469adda93484b0cd8aed1ae6",
+      "name": "Adam Musil",
+      "position": "F",
+      "role": "C",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 14,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_eaa3c56af7d35ce1a8beb0b2",
+      "name": "Adam Najman",
+      "position": "F",
+      "role": "C",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 71,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_07c238456b0c87d76a4ac7de",
+      "name": "Adam Němec",
+      "position": "F",
+      "role": "W",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 19,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_264bd469d4bedc79f0f45591",
+      "name": "Filip Jansa",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 81,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a0d37e7e098fc9ea3fff360f",
+      "name": "Filip Sandberg",
+      "position": "F",
+      "role": "C/RW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 43,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3a2f11e084d01564eca82b12",
+      "name": "Jakub Hujer",
+      "position": "F",
+      "role": "C",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 94,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7e5634f2a9dbd36e1cc347ae",
+      "name": "Jakub Rychlovský",
+      "position": "F",
+      "role": "W",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 18,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9cec4ab65a11031cea6bd304",
+      "name": "Jaromír Pytlík",
+      "position": "F",
+      "role": "RW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 20,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_49073e08309d564fcf3baadb",
+      "name": "Jaromír Pérez",
+      "position": "F",
+      "role": "LW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 13,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7546bf22f470067122ddde9b",
+      "name": "Jaroslav Vlach",
+      "position": "F",
+      "role": "W",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 53,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9cadc2ffe784b1f6518d4796",
+      "name": "Martin Faško-Rudáš",
+      "position": "F",
+      "role": "RW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 77,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a2b07f082bc1ff489e2a241f",
+      "name": "Radan Lenc",
+      "position": "F",
+      "role": "LW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 25,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_92c647f40fbcaa07d6c1c092",
+      "name": "Servác Petrovský",
+      "position": "F",
+      "role": "C/RW",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 83,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_983e32a40e0edfa9d81cfe62",
+      "name": "Petr Kváča",
+      "position": "G",
+      "role": "G",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 60,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_385120fa8f34019c82923134",
+      "name": "Petr Hamalčík",
+      "position": "G",
+      "role": "G",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 1,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0f6db866e6118b387d5f93d1",
+      "name": "Tomáš Filippi",
+      "position": "F",
+      "role": "C",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 41,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_749b8c66e2aa70a5fd4cc90d",
+      "name": "Ondřej Procházka",
+      "position": "F",
+      "role": "W",
+      "club": "Bílí Tygři Liberec",
+      "jerseyNumber": 82,
+      "poolKey": "elh:Bílí Tygři Liberec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8a68f7c448c89e601b458545",
+      "name": "Adam Jánošík",
+      "position": "D",
+      "role": "D",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 3,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_373c5e5a0607155a562b6940",
+      "name": "Adam Vlasák",
+      "position": "D",
+      "role": "LB",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 21,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_43293e3b258b5835e1765644",
+      "name": "David Moravec",
+      "position": "D",
+      "role": "LB",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 71,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_fd296c8caf7c0be8c427a0f3",
+      "name": "Filip Pavlík",
+      "position": "D",
+      "role": "RB",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 45,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_baf23ae7e25437081595192d",
+      "name": "Martin Skärberg",
+      "position": "D",
+      "role": "D",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 33,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_546fcacbbed4cbebc138fed3",
+      "name": "Petr Zámorský",
+      "position": "D",
+      "role": "D",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 20,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b42721b2172942f3a35658e2",
+      "name": "Vojtěch Budík",
+      "position": "D",
+      "role": "LB",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 85,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b9ce9703740e2e6f945a5434",
+      "name": "Vojtěch Vochvest",
+      "position": "D",
+      "role": "RB",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 8,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1e74f3194929ee858f0e2f16",
+      "name": "Šimon Kubíček",
+      "position": "D",
+      "role": "D",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 5,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8a1a2fabd1343eb08b7d29b2",
+      "name": "Aleksi Rekonen",
+      "position": "F",
+      "role": "W",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 18,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ae7577354dfe6696fafac21a",
+      "name": "Antoine Morand",
+      "position": "F",
+      "role": "W",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 89,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ac7b68a0fdc3e7c2372908b9",
+      "name": "Dávid Gríger",
+      "position": "F",
+      "role": "F",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 16,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e831f9f9eb7d0c7923e4040f",
+      "name": "Felikss Gavars",
+      "position": "F",
+      "role": "W",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 15,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_529e4a7aa0dc41eb9fdc2001",
+      "name": "Jakub Lichtag",
+      "position": "F",
+      "role": "W",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 94,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_35838134bcfa399d7d6a9eb9",
+      "name": "Jan Buchtele",
+      "position": "F",
+      "role": "LW",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 47,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_af5e706f6ae0d4326c5d278b",
+      "name": "Jan Závora",
+      "position": "F",
+      "role": "C",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 49,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7a49cc01a70450918a8de5d6",
+      "name": "Jordan Martel",
+      "position": "F",
+      "role": "RW",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 51,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9254b4ac9890aee1f1121770",
+      "name": "Patrik Král",
+      "position": "F",
+      "role": "LW",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 19,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ec78ce33309e1a099ba57438",
+      "name": "Pavol Skalický",
+      "position": "F",
+      "role": "LW",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 28,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ed3dac951c117375459e0f80",
+      "name": "Radek Koblížek",
+      "position": "F",
+      "role": "RW",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 81,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9eb1e8bd5349320f6115313d",
+      "name": "Tomáš Fořt",
+      "position": "F",
+      "role": "C",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 12,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1d4e629bcd8ce6a734ba7e99",
+      "name": "Vojtěch Malínek",
+      "position": "F",
+      "role": "F",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 10,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_662824a4089ab764554dfc79",
+      "name": "Dominik Furch",
+      "position": "G",
+      "role": "G",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 38,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_448eded2dbc0b05d87b3a581",
+      "name": "Vojtěch Mokrý",
+      "position": "G",
+      "role": "G",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 93,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8308551a05f821aff33c29a5",
+      "name": "Karel Křepelka",
+      "position": "D",
+      "role": "D",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 6,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0e5601a563c73ffe306d5a23",
+      "name": "Steven Jandric",
+      "position": "F",
+      "role": "F",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 77,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a294103e76f20c9b442a69d5",
+      "name": "Matěj Gardoň",
+      "position": "F",
+      "role": "F",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 88,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5f61673837ec3f119a1e00ec",
+      "name": "Tomáš Hyka",
+      "position": "F",
+      "role": "W",
+      "club": "BK Mladá Boleslav",
+      "jerseyNumber": 38,
+      "poolKey": "elh:BK Mladá Boleslav",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b529fedaf621110a984447e1",
+      "name": "Daniel Gazda",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 43,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_59f7761903a4c80782c0c7ba",
+      "name": "Jan Košťálek",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 33,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b55ed18a4ee615109e817aa5",
+      "name": "John Ludvig",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 15,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_67b80509a9c670924c36dd20",
+      "name": "Miguel Tourigny",
+      "position": "D",
+      "role": "D",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 79,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8ad6008109a6a430fb7f6dc9",
+      "name": "Ondřej Chabada",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_56cbd89670400391fc61946b",
+      "name": "Ondřej Mikliš",
+      "position": "D",
+      "role": "D",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 4,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_fcd0cd340593805124b8fb55",
+      "name": "Peter Čerešňák",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 41,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3c63492d846da536a91368ce",
+      "name": "Tomáš Dvořák",
+      "position": "D",
+      "role": "D",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 7,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d945f06d39409a55148aea11",
+      "name": "David Tomášek",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 98,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5c3d0e8759451c315cee5bc7",
+      "name": "František Formánek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 15,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c44807c8f64a2b752c6acba7",
+      "name": "Jakub Lauko",
+      "position": "F",
+      "role": "W",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 94,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7d45c390d0b13b1bc16fa7c6",
+      "name": "Jan Mandát",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 89,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_704ad5518d04245735663f5b",
+      "name": "Jan Stránský",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 88,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_94e3b0ba6e805420a819a941",
+      "name": "Jiří Smejkal",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 96,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7529d35533268bee7616e07d",
+      "name": "Jáchym Kondelík",
+      "position": "F",
+      "role": "C",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 11,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_dd5f46a467ce6964633b9f9f",
+      "name": "Lukáš Sedlák",
+      "position": "F",
+      "role": "C",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d05ab0a012c76440f9ee3ce4",
+      "name": "Martin Kaut",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 61,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e32cb3e9f5e95a8b7b8cda67",
+      "name": "Matúš Válek",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 12,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7d5cca9891c3ff58534e3ea6",
+      "name": "Matěj Stránský",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 93,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_156a3cba8e05b98071ab050b",
+      "name": "Miloš Kelemen",
+      "position": "F",
+      "role": "W",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 29,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_cba0d411a01b43f19b5b57d8",
+      "name": "Patrik Poulíček",
+      "position": "F",
+      "role": "C",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 44,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3b0397249f514cc681a8b774",
+      "name": "Roman Červenka",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 19,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7c196c4821708a500a37e9ed",
+      "name": "Vladimír Sobotka",
+      "position": "F",
+      "role": "C",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 71,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a2021fea2a55a5e238188aff",
+      "name": "Vít Macek",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 14,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ed950172d8559ddc946d34a2",
+      "name": "Malcolm Subban",
+      "position": "G",
+      "role": "G",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 32,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_439ee7f031c4db5d5a44b369",
+      "name": "Roman Will",
+      "position": "G",
+      "role": "G",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 35,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_4f3a532e89fdd9994cd2052f",
+      "name": "Tomáš Nosek",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 92,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_6b275c98f93a4dc48b8ba32a",
+      "name": "Jan Ščotka",
+      "position": "D",
+      "role": "D",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Dynamo Pardubice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f3e52e98f8c94d4bf0e4f307",
+      "name": "Teodor Vápeník",
+      "position": "D",
+      "role": "D",
+      "club": "HC Dynamo Pardubice",
+      "jerseyNumber": 27,
+      "poolKey": "elh:HC Dynamo Pardubice"
+    },
+    {
+      "id": "elh_2146cb2b31e0e8eb969743b9",
+      "name": "Daniel Brickley",
+      "position": "D",
+      "role": "D",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 9,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_530be7a5d25e5b70ec752659",
+      "name": "Elmeri Eronen",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 7,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_877ecb0e6e5811e126074be1",
+      "name": "Josef Myšák",
+      "position": "D",
+      "role": "D",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 24,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b64ff15b1d5ae4e35d010a11",
+      "name": "Kryštof Dyk",
+      "position": "D",
+      "role": "D",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 28,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a962ae43e624e06ef3a91af4",
+      "name": "Matteo Kočí",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 6,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b5621bcc0481f57b305ecc5e",
+      "name": "Roberts Mamčics",
+      "position": "D",
+      "role": "D",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 55,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b00394e59e1e12a537d078af",
+      "name": "Tobias Winberg",
+      "position": "D",
+      "role": "D",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 27,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2ddfcb5c405ec3e619f1ede7",
+      "name": "Adam Lukošik",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 70,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f09a9ad851df889fdbd7f67d",
+      "name": "David Šťastný",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 29,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c54e73128b475cfca9f385ea",
+      "name": "Filip Koffer",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 19,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_6649d12c9085cbb37b1ebfac",
+      "name": "Haralds Egle",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 10,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ff0fca987aa03bdd061fc913",
+      "name": "Jakub Minárik",
+      "position": "F",
+      "role": "C",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 15,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ec4808630bb1e4e522d87d5c",
+      "name": "Jan Bambula",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 86,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0a348e14c3840767fd71cab8",
+      "name": "Jiří Černoch",
+      "position": "F",
+      "role": "C",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 21,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_db921457fbea755b4b1159c1",
+      "name": "Matyáš Váňa",
+      "position": "F",
+      "role": "C",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 5,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e47ae3f6933725db456bb52d",
+      "name": "Nick Jones",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 18,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_82ad0a70da732cc1dabf5d86",
+      "name": "Ondřej Beránek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 8,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9e9f9e2315d63798e78d88bf",
+      "name": "Petr Tomek",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 12,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e356f573062bbf5ce995c086",
+      "name": "Robin Sapoušek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 11,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c51f1da07db26ebe8612773e",
+      "name": "Tomáš Redlich",
+      "position": "F",
+      "role": "W",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 17,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d76fda0bd174aab2818cf5c0",
+      "name": "Vít Jiskra",
+      "position": "F",
+      "role": "W",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_00263e82e3184fdd2f59de00",
+      "name": "Daniel Král",
+      "position": "G",
+      "role": "G",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 31,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_727af4e5405367137737d0b3",
+      "name": "Dominik Frodl",
+      "position": "G",
+      "role": "G",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": null,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ed172bc8fdd8eb576e07cc08",
+      "name": "Quinn Schmiemann",
+      "position": "D",
+      "role": "D",
+      "club": "HC Energie Karlovy Vary",
+      "jerseyNumber": 4,
+      "poolKey": "elh:HC Energie Karlovy Vary",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_4842f804418b9db9094fc2e3",
+      "name": "Dalimil Mikyska",
+      "position": "D",
+      "role": "D",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 16,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_641bb4185b839d31cf9c7c9c",
+      "name": "Filip Král",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 82,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d42c476e92c8220a9c4b2142",
+      "name": "Jakub Zubíček",
+      "position": "D",
+      "role": "D",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 25,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e1adc49152310a18be366960",
+      "name": "Tomáš Vondráček",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 55,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_bb98671a6e3c33576f889e98",
+      "name": "Libor Zábranský",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 28,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2d032a3fc485ec8f5cc6e7de",
+      "name": "Luke Witkowski",
+      "position": "D",
+      "role": "D",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 53,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b8995972d90b56603a25cf17",
+      "name": "Michal Gulaši",
+      "position": "D",
+      "role": "D",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 24,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_48fd05b013b6891a96f383f7",
+      "name": "Radek Kučeřík",
+      "position": "D",
+      "role": "D",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 21,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b5464fdcd5a29513be2f48fa",
+      "name": "Richard Nedomlel",
+      "position": "D",
+      "role": "D",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 77,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_daab0974b162295970ad5178",
+      "name": "Tadeáš Beroun",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 11,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a83172a4d32aa83952a1cb21",
+      "name": "Adam Zbořil",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 18,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a2787b41a5f8e820953c2810",
+      "name": "Andrej Kollár",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 72,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_be9e79bfcfc06d0eee326f28",
+      "name": "Arttu Ilomäki",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 75,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_afdcacbe28f0be6dd482bce2",
+      "name": "Danny Chludil",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 86,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7d6dc95f504bf6e5b6b74cf9",
+      "name": "David Moravec",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 92,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ad58256116aee32c4eb9636f",
+      "name": "Hynek Zohorna",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 20,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b1f8f46704f3e8aefffd5b7b",
+      "name": "Jakub Brabenec",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 81,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5a0b198d450a84582514e939",
+      "name": "Jakub Flek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 9,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0d15fc2cc247dfe3519790e4",
+      "name": "Jan Ekrt",
+      "position": "F",
+      "role": "C",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 10,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_022965e13a100645fdbc8097",
+      "name": "Jan Süss",
+      "position": "F",
+      "role": "C",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 8,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0b2bad0d7baa90729e4f9185",
+      "name": "Kristián Pospíšil",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 22,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_81b679a5b75718dd8def7d02",
+      "name": "Lukáš Cingeľ",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 6,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_04d407a8798b9e7a222bda16",
+      "name": "Maxim Vehovský",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 19,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_393f3a9b7dd7fde4aab07866",
+      "name": "Maxim Čajkovič",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 27,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_69cd661f7db0ae7960f36417",
+      "name": "Michal Hartl",
+      "position": "F",
+      "role": "C",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 9,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ff7df492f34e4a18b0c6193b",
+      "name": "Michal Kunc",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 71,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_195497337f12a133e240cc74",
+      "name": "Robert Leino",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 62,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c8d3132b04832440d66bad25",
+      "name": "Silvester Kusko",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 91,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d08e1da26a2b63f532203dd1",
+      "name": "Tomáš Selič",
+      "position": "F",
+      "role": "W",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 14,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_77aa41785838d43c7a3e96b2",
+      "name": "Tomáš Zohorna",
+      "position": "F",
+      "role": "C",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 80,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e150698623c0e272c3de7399",
+      "name": "Aleš Stezka",
+      "position": "G",
+      "role": "G",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 30,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ce1798444df3f8e81b634233",
+      "name": "Eugen Rabčan",
+      "position": "G",
+      "role": "G",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 33,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_733f0568155aa724115f1a83",
+      "name": "Jan Kavan",
+      "position": "G",
+      "role": "G",
+      "club": "HC Kometa Brno",
+      "jerseyNumber": 1,
+      "poolKey": "elh:HC Kometa Brno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3c46f924f839a88f28af317f",
+      "name": "Adam Polášek",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Litvínov",
+      "jerseyNumber": 3,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c27455e7f6ac3343e451631d",
+      "name": "Kevin Czuczman",
+      "position": "D",
+      "role": "D",
+      "club": "HC Litvínov",
+      "jerseyNumber": 27,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b79d60bed58f6c37f43c7b2b",
+      "name": "Michal Moravčík",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Litvínov",
+      "jerseyNumber": 11,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1841e7475cf74ee71cb0f85b",
+      "name": "Ondřej Baláž",
+      "position": "D",
+      "role": "D",
+      "club": "HC Litvínov",
+      "jerseyNumber": 21,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2a000e6f5498acf06ba42055",
+      "name": "Vojtěch Husinecký",
+      "position": "D",
+      "role": "D",
+      "club": "HC Litvínov",
+      "jerseyNumber": 4,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ad5a8e92a2a7813d710c6880",
+      "name": "Vít Beran",
+      "position": "D",
+      "role": "D",
+      "club": "HC Litvínov",
+      "jerseyNumber": 36,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8deb0d2b2c1521fc148b0094",
+      "name": "David Kaše",
+      "position": "F",
+      "role": "C",
+      "club": "HC Litvínov",
+      "jerseyNumber": 25,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c7f6d5ba33abf47a3e9adc60",
+      "name": "David Kämpf",
+      "position": "F",
+      "role": "C",
+      "club": "HC Litvínov",
+      "jerseyNumber": 13,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_788aea574422cfb722ae9919",
+      "name": "Jonáš Bednařík",
+      "position": "F",
+      "role": "W",
+      "club": "HC Litvínov",
+      "jerseyNumber": 29,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f6fa8d675694d189cea7cc20",
+      "name": "Josef Jícha",
+      "position": "F",
+      "role": "C",
+      "club": "HC Litvínov",
+      "jerseyNumber": 87,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e498faeacaa8572731651aba",
+      "name": "Matúš Sukeľ",
+      "position": "F",
+      "role": "C",
+      "club": "HC Litvínov",
+      "jerseyNumber": 91,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_4f48a1e2bd18fdad0c62d057",
+      "name": "Matěj Maštalířský",
+      "position": "F",
+      "role": "W",
+      "club": "HC Litvínov",
+      "jerseyNumber": 74,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_20a35042571355520560a1b9",
+      "name": "Michal Gut",
+      "position": "F",
+      "role": "C",
+      "club": "HC Litvínov",
+      "jerseyNumber": 62,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c8f4a9cb81680a39e156afbd",
+      "name": "Ondřej Jurčík",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Litvínov",
+      "jerseyNumber": 64,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0369f70d15e155e5578be0ce",
+      "name": "Ondřej Kaše",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Litvínov",
+      "jerseyNumber": 73,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_648434519b7b6ea5ba2f69b7",
+      "name": "Pawel Zygmunt",
+      "position": "F",
+      "role": "W",
+      "club": "HC Litvínov",
+      "jerseyNumber": 12,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_28b29c01030dc8a512551d8b",
+      "name": "Petr Koblasa",
+      "position": "F",
+      "role": "W",
+      "club": "HC Litvínov",
+      "jerseyNumber": 10,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_98c583b0f813f806e991506f",
+      "name": "Theodor Pištěk",
+      "position": "F",
+      "role": "W",
+      "club": "HC Litvínov",
+      "jerseyNumber": 34,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_61dddac99e4ea1abd7c1ead9",
+      "name": "Adam Kubík",
+      "position": "G",
+      "role": "G",
+      "club": "HC Litvínov",
+      "jerseyNumber": 32,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1d839b49689577d77bf281cc",
+      "name": "Matej Tomek",
+      "position": "G",
+      "role": "G",
+      "club": "HC Litvínov",
+      "jerseyNumber": 42,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_07d569f05e7f687d14794b6e",
+      "name": "Pavel Čajan",
+      "position": "G",
+      "role": "G",
+      "club": "HC Litvínov",
+      "jerseyNumber": 30,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_4b7c81c1695fc6d23101175c",
+      "name": "Janis Jaks",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Litvínov",
+      "jerseyNumber": 72,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f901aa05a1f281cb6b835861",
+      "name": "Dominik Volejníček",
+      "position": "F",
+      "role": "w",
+      "club": "HC Litvínov",
+      "jerseyNumber": 90,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c3e98a3adcf2fd87a872abbd",
+      "name": "Tomáš Urban",
+      "position": "F",
+      "role": "W",
+      "club": "HC Litvínov",
+      "jerseyNumber": 25,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_304ffecf628196f804ef6b8d",
+      "name": "Martin Havelka",
+      "position": "F",
+      "role": "F",
+      "club": "HC Litvínov",
+      "jerseyNumber": 75,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_efda9dfe00fc684d7f9149bc",
+      "name": "Filip Tittl",
+      "position": "D",
+      "role": "D",
+      "club": "HC Litvínov",
+      "jerseyNumber": 18,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_48e16d66f0b325c75a72be3a",
+      "name": "Petr Soušek",
+      "position": "D",
+      "role": "D",
+      "club": "HC Litvínov",
+      "jerseyNumber": 79,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_836cd1642aee717f2dec5169",
+      "name": "Stanislav Svozil",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Litvínov",
+      "jerseyNumber": 5,
+      "poolKey": "elh:HC Litvínov",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8667666e7fcd4e38f1298a5b",
+      "name": "Jan Štencel",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 7,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ebafd4e5c5618298e8af6813",
+      "name": "Lucas Nordsäter",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 8,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b68bc502d29abe748b5680bd",
+      "name": "Ondřej Kachyňa",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 98,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5720bdf6debde3a4999ce77a",
+      "name": "Ondřej Vála",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 14,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_256ded0d618097f51f6d131c",
+      "name": "Pavel Pýcha",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 12,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_558620a49a17cd19e292924a",
+      "name": "Roman Vráblík",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 69,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_206400c0373e63ca8135f9a4",
+      "name": "Tomáš Kundrátek",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 84,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c54a2c877823afb6c324ad21",
+      "name": "Filip Ahl",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 61,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_904ab0534c51f71184d3277a",
+      "name": "Jakub Pour",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 64,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_6b5781ba632a43fb3095b16c",
+      "name": "Jan Ordoš",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 45,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_337d5d733d15390022032a97",
+      "name": "Marek Zachar",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 26,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_48ee6464e0440302796b7a05",
+      "name": "Martin Beránek",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 56,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b6b39a66816e1fd88b8631b1",
+      "name": "Matyáš Humeník",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 27,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_6c483a2b4fc99d478f91471d",
+      "name": "Matěj Toman",
+      "position": "F",
+      "role": "C",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 20,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_4e0d3e3fc453700bdd481282",
+      "name": "Michal Bulíř",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 88,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b9e22d9d045e19f89f0fe068",
+      "name": "Nick Olesen",
+      "position": "F",
+      "role": "W",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 95,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8c17e0241ae721163348c16d",
+      "name": "Pavel Novák",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 11,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8c277462de09dfb12f5dbcf0",
+      "name": "Róbert Lantoši",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 16,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_94b506351305ab5f6e1dd558",
+      "name": "Samuel Drančák",
+      "position": "F",
+      "role": "W",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_6f5b50ad5afb013f51bf44b6",
+      "name": "Tomáš Chlubna",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 10,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_cc4d07b4c13159444ac308fb",
+      "name": "Štěpán Hoch",
+      "position": "F",
+      "role": "C",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 42,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8beba57cf1d12d921fd521d1",
+      "name": "Jan Strmeň",
+      "position": "G",
+      "role": "G",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 2,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d2cfdb1e8697dcc78195055c",
+      "name": "Matyáš Mařík",
+      "position": "G",
+      "role": "G",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 21,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ac8d081f38b2959d3a4ae09f",
+      "name": "Milan Klouček",
+      "position": "G",
+      "role": "G",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 35,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e6051037bac6ecbaff15354c",
+      "name": "Josef Koláček",
+      "position": "F",
+      "role": "W",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": 22,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_75c49ea2ec18bae03b7fd7b2",
+      "name": "Parker Bell",
+      "position": "F",
+      "role": "W",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": null,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a26a7e8bd21009ceeacc8028",
+      "name": "Marek Hejduk",
+      "position": "F",
+      "role": "W",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": null,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ea33f39f9e9af2821322c57e",
+      "name": "Renars Krastenbergs",
+      "position": "F",
+      "role": "W",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": null,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_144e25282debb53b849ea2df",
+      "name": "Václav Nedorost",
+      "position": "D",
+      "role": "D",
+      "club": "HC Motor České Budějovice",
+      "jerseyNumber": null,
+      "poolKey": "elh:HC Motor České Budějovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_4ef67be3a4ce437fdea418e8",
+      "name": "David Musil",
+      "position": "D",
+      "role": "D",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 6,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_dfeef72207271c1f867469af",
+      "name": "Filip Pyrochta",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 24,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_417f587e2463dc213226e268",
+      "name": "Jakub Galvas",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 76,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f2329c2e7a8b641390644e9b",
+      "name": "Marian Adámek",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 55,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ada542be17776acffd5bb647",
+      "name": "Martin Marinčin",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 52,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1f5e688ff45a2aafefda88f6",
+      "name": "Patrik Koch",
+      "position": "D",
+      "role": "D",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 64,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3a8512a96541d89b3a59cda2",
+      "name": "Andrej Nestrašil",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 94,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7ba595cf8e07041b8c1b312c",
+      "name": "Daniel Kurovský",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 43,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_981b237487a6ce9d763a0b89",
+      "name": "Daniel Voženílek",
+      "position": "F",
+      "role": "C/W",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 96,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_4af9767f5c4a3faa5be1af7d",
+      "name": "Libor Hudáček",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 79,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d8561d109be95e9c5f084e5d",
+      "name": "Marko Daňo",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 56,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0a68764a69d47eaf99244b75",
+      "name": "Martin Růžička",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 27,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e0526247f47f4d125785e12c",
+      "name": "Matěj Kubiesa",
+      "position": "F",
+      "role": "W",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 9,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_dc4a4397984377226819a48b",
+      "name": "Michal Kovařčík",
+      "position": "F",
+      "role": "C",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 87,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9ee89148f5b08f10bba1a53f",
+      "name": "Miloš Roman",
+      "position": "F",
+      "role": "C",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 40,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e64c8622a2d27ff423ab6f33",
+      "name": "Ondřej Kovařčík",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 34,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f3d0b2bd6850ef97abe4fb3a",
+      "name": "Oscar Flynn",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 18,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a2651ff19788896d87b60e3a",
+      "name": "Patrik Hrehorčák",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 19,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_74c3ba4f67fa107303f6cb96",
+      "name": "Daniel Dolejš",
+      "position": "G",
+      "role": "G",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 77,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1ec30e82b5f80139d4e1bfe8",
+      "name": "Marek Mazanec",
+      "position": "G",
+      "role": "G",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 2,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2e49fbf6788ac52810ebef16",
+      "name": "Ondřej Kacetl",
+      "position": "G",
+      "role": "G",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 90,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c0f17171e4b60e1e8cda3ee3",
+      "name": "David Aubrecht",
+      "position": "D",
+      "role": "D",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 66,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_aedb61771641351abf49f6c1",
+      "name": "Pavel Průšek",
+      "position": "D",
+      "role": "D",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 72,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_82e350136f0766246d15d622",
+      "name": "Petr Chlán",
+      "position": "F",
+      "role": "F",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 78,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7b0c3e8ad001b62185623a2c",
+      "name": "Rayen Petrovický",
+      "position": "D",
+      "role": "D",
+      "club": "HC Oceláři Třinec",
+      "jerseyNumber": 39,
+      "poolKey": "elh:HC Oceláři Třinec",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a65126f47d3910806f86adb2",
+      "name": "Adam Rutar",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Olomouc",
+      "jerseyNumber": 4,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e55f0ae92a9b5b091ea46335",
+      "name": "Dalibor Řezníček",
+      "position": "D",
+      "role": "D",
+      "club": "HC Olomouc",
+      "jerseyNumber": 14,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0e0cc0688c8d2082a4411caf",
+      "name": "Evan Stella",
+      "position": "D",
+      "role": "D",
+      "club": "HC Olomouc",
+      "jerseyNumber": 37,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_376f61814eaa417cdffca6c4",
+      "name": "Jiří Ondrušek",
+      "position": "D",
+      "role": "D",
+      "club": "HC Olomouc",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7b9664f808a5ec4c8cd4aec4",
+      "name": "Michal Hrádek",
+      "position": "D",
+      "role": "D",
+      "club": "HC Olomouc",
+      "jerseyNumber": 77,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9f9f02d112087f93c340424c",
+      "name": "Petr Gewiese",
+      "position": "D",
+      "role": "D",
+      "club": "HC Olomouc",
+      "jerseyNumber": 44,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d4c5081345d6f059ad098ed3",
+      "name": "Ralfs Freibergs",
+      "position": "D",
+      "role": "D",
+      "club": "HC Olomouc",
+      "jerseyNumber": 17,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b4c0ae1a0de22768dde3c99f",
+      "name": "Tomáš Černý",
+      "position": "D",
+      "role": "D",
+      "club": "HC Olomouc",
+      "jerseyNumber": 48,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_abeae710b7779427ddc7657d",
+      "name": "Trevor Cosgrove",
+      "position": "D",
+      "role": "D",
+      "club": "HC Olomouc",
+      "jerseyNumber": 61,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_cdcb705c3d67a7e3489cd088",
+      "name": "Carl Berglund",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 18,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2475814c6a3ec38bdd7a2915",
+      "name": "Daniel Herčík",
+      "position": "F",
+      "role": "W",
+      "club": "HC Olomouc",
+      "jerseyNumber": 97,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8e2bbfa7fa5121f2a1e8e91a",
+      "name": "Daniel Ministr",
+      "position": "F",
+      "role": "C",
+      "club": "HC Olomouc",
+      "jerseyNumber": 7,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f8647d8b680db43c7474ba30",
+      "name": "David Vitouch",
+      "position": "F",
+      "role": "C",
+      "club": "HC Olomouc",
+      "jerseyNumber": 41,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e2ef114d299b44899d9c9b51",
+      "name": "Jakub Kos",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 25,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_fd40b157f44d9827542620e6",
+      "name": "Jakub Navrátil",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 88,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ec4a2614f7cccd7f3e585669",
+      "name": "Jakub Orsava",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 32,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_41fa25534620abbbfccddfbd",
+      "name": "Karel Plášek",
+      "position": "F",
+      "role": "W",
+      "club": "HC Olomouc",
+      "jerseyNumber": 62,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c7c4b6e73ae7db48941793df",
+      "name": "Lukáš Anděl",
+      "position": "F",
+      "role": "C",
+      "club": "HC Olomouc",
+      "jerseyNumber": 24,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c57d22cd2ce1f26e336e686b",
+      "name": "Martin Štohanzl",
+      "position": "F",
+      "role": "C",
+      "club": "HC Olomouc",
+      "jerseyNumber": 86,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d42e02153cf81b0956897f5f",
+      "name": "Matúš Spodniak",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 78,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e59eb06ee1fc581f6670c828",
+      "name": "Michal Tomeček",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 85,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_701c833ab30bdf6cb990f991",
+      "name": "Michal Vitouch",
+      "position": "F",
+      "role": "W",
+      "club": "HC Olomouc",
+      "jerseyNumber": 34,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_10a4521f8c25824d4bfe0c1c",
+      "name": "Ondřej Matýs",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 81,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_af6c51da71271c8912d091da",
+      "name": "Rok Macuh",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Olomouc",
+      "jerseyNumber": 47,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b1cccfff01a96eeed65e7005",
+      "name": "Zachary Senyshyn",
+      "position": "F",
+      "role": "W",
+      "club": "HC Olomouc",
+      "jerseyNumber": 9,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5bfaa56e78b8c2db525be80d",
+      "name": "Matěj Machovský",
+      "position": "G",
+      "role": "G",
+      "club": "HC Olomouc",
+      "jerseyNumber": 1,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2973f31f5a110a63186ec747",
+      "name": "Oldřich Cichoň",
+      "position": "G",
+      "role": "G",
+      "club": "HC Olomouc",
+      "jerseyNumber": 29,
+      "poolKey": "elh:HC Olomouc",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_29ce1b51e989a25b5c85843a",
+      "name": "Aleš Čech",
+      "position": "D",
+      "role": "D",
+      "club": "HC Plzeň",
+      "jerseyNumber": 16,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f95f65391d5283aef2ae5ba2",
+      "name": "Carter Robertson",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Plzeň",
+      "jerseyNumber": 27,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ebcceb0580fe39263350f7c9",
+      "name": "Daniel Malák",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Plzeň",
+      "jerseyNumber": 8,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_917c8de1eedad3c84b5ce800",
+      "name": "Dylan MacPherson",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Plzeň",
+      "jerseyNumber": 2,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_fceeaad7add75caeb5f1b2b8",
+      "name": "Igor Merezhko",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Plzeň",
+      "jerseyNumber": 13,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3f5b23e048255bdf1ce578fa",
+      "name": "Jakub Chromiak",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Plzeň",
+      "jerseyNumber": 3,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_37237713c4e7114ae13c5dec",
+      "name": "Jakub Jeřábek",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Plzeň",
+      "jerseyNumber": 5,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c9c0f9382c4ed41d57499fbb",
+      "name": "Kristians Rubins",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Plzeň",
+      "jerseyNumber": 94,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3b9c32c9ea19284bac19128b",
+      "name": "Adam Měchura",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 22,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_046be354abdf8f3795b9178b",
+      "name": "Adam Titlbach",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 52,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0a137e0e3f05ad1add368bec",
+      "name": "Christophe Lalancette",
+      "position": "F",
+      "role": "C",
+      "club": "HC Plzeň",
+      "jerseyNumber": 12,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9174f04ff1b481df08238113",
+      "name": "Dominik Simon",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 49,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_06e2480767bf5e082533ee65",
+      "name": "Ivo Sedláček",
+      "position": "F",
+      "role": "C",
+      "club": "HC Plzeň",
+      "jerseyNumber": 14,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b8483bf6c870ec05295dc918",
+      "name": "Jakub Lev",
+      "position": "F",
+      "role": "W",
+      "club": "HC Plzeň",
+      "jerseyNumber": 30,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5bec6baaa36495e0badfdeec",
+      "name": "Jan Schleiss",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 84,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1e133f576e5686b465a848da",
+      "name": "Lukáš Strnad",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 18,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_92437bd10da89c193e20d088",
+      "name": "Matyáš Filip",
+      "position": "F",
+      "role": "C",
+      "club": "HC Plzeň",
+      "jerseyNumber": 42,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7b78c42e8a7dfa2f13b50e76",
+      "name": "Michal Teplý",
+      "position": "F",
+      "role": "W",
+      "club": "HC Plzeň",
+      "jerseyNumber": 92,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5750cb544286a0734a3494fb",
+      "name": "Mikko Petman",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 63,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_cdd65aa490e181568e1796c3",
+      "name": "Ondřej Pšenička",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 26,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1edbc29fbeb8242a6466c58f",
+      "name": "Ondřej Rohlík",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 17,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2212a478965e8c3cc598211e",
+      "name": "Ville Petman",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f384a2b422590507dcad484c",
+      "name": "Jan Růžička",
+      "position": "G",
+      "role": "G",
+      "club": "HC Plzeň",
+      "jerseyNumber": 33,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7bfc89c7d7b3bfca2bd3bff8",
+      "name": "Nick Malík",
+      "position": "G",
+      "role": "G",
+      "club": "HC Plzeň",
+      "jerseyNumber": 31,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1f3744cce7b2fffce7634a66",
+      "name": "Richard Žemlička",
+      "position": "F",
+      "role": "F",
+      "club": "HC Plzeň",
+      "jerseyNumber": 44,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9f1b5211d33f708f5faa2994",
+      "name": "Danny Katic",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Plzeň",
+      "jerseyNumber": 11,
+      "poolKey": "elh:HC Plzeň",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_cb2ae5546e25222aacfd8636",
+      "name": "Aaron Irving",
+      "position": "D",
+      "role": "D",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 24,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8c115a6bc7b41b36068d8024",
+      "name": "David Němeček",
+      "position": "D",
+      "role": "D",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 77,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7be3fc5849194364fec00502",
+      "name": "Dominik Mašín",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 97,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d646d957b7351c1458dcdb77",
+      "name": "Jakub Krejčík",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 36,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_725026b300c6881521871c96",
+      "name": "Jakub Sirota",
+      "position": "D",
+      "role": "LB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 4,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9b5f752445d3f83b65a42e18",
+      "name": "Mark Pysyk",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 10,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_74541bbce82904c228e361de",
+      "name": "Mikael Seppälä",
+      "position": "D",
+      "role": "D",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 5,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e96899e93d814ae0f2a9217b",
+      "name": "Niko Seppälä",
+      "position": "D",
+      "role": "D",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 80,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1333199b194ea1d34e931cca",
+      "name": "Ronald Knot",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 7,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5fc44342db3df5f335f69d75",
+      "name": "Adam Raška",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 74,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d9354e53cd7657c4da1d618f",
+      "name": "Devin Shore",
+      "position": "F",
+      "role": "C",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 94,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8737acd58b653f1cbfe78fdf",
+      "name": "Filip Chlapík",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 14,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_309ce9d3e452105da6557380",
+      "name": "Jiří Pospíšil",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 85,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_fd8433bca9877efb19e662b9",
+      "name": "Jiří Sekáč",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 92,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e5acd58c88d69e12727258eb",
+      "name": "Kristian Vesalainen",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 91,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_728236865c1fd7a3e493f8e5",
+      "name": "Martins Dzierkals",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 16,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d9160119aa12c81c2ecc8bb0",
+      "name": "Matěj Blümel",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 28,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_340e6ba00caada26a03c0e3c",
+      "name": "Michael Špaček",
+      "position": "F",
+      "role": "C",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 34,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_48e09eeb11a4dba12b568fd8",
+      "name": "Michal Řepík",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 26,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_be228405a7516e51803e70be",
+      "name": "Ondřej Hrabík",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 19,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0e6d6eb3822bff156fd34d88",
+      "name": "Ondřej Najman",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 46,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_210c7179b1a7a3f214729c9c",
+      "name": "Pavel Kousal",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_aebc16b4a18763cac039fbd0",
+      "name": "Roman Horák",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 51,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_01bda61002df2ad6ce1c6303",
+      "name": "Jakub Kovář",
+      "position": "G",
+      "role": "G",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 43,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5580600d46c938839649b307",
+      "name": "Josef Kořenář",
+      "position": "G",
+      "role": "G",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 32,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_758a3963eb8d786926d4b54d",
+      "name": "Tomáš Volevecký",
+      "position": "G",
+      "role": "G",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 81,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_150bfbd5a7e8c108659a88c0",
+      "name": "Marek Daníček",
+      "position": "F",
+      "role": "W",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 41,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5152992cc918666e1cdd856f",
+      "name": "Nino Tomov",
+      "position": "D",
+      "role": "D",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 28,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e4c0511a31583931b9007ec5",
+      "name": "Vojtěch Hradec",
+      "position": "F",
+      "role": "C",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 9,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a37b8962be6cc2b103387ec6",
+      "name": "Martin Procházka",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Sparta Praha",
+      "jerseyNumber": 23,
+      "poolKey": "elh:HC Sparta Praha",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_58e895db933b46331ddd1eff",
+      "name": "Jakub Zbořil",
+      "position": "D",
+      "role": "D",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 38,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_589c8f396db327f59aaeb489",
+      "name": "Joe Leahy",
+      "position": "D",
+      "role": "D",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 4,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_26f8f90f6748331ebbced5ce",
+      "name": "Patrik Brůna",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 5,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8599d4af737258d9e502f967",
+      "name": "Patrik Demel",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 8,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_acd738c8b82da17919555d53",
+      "name": "Rhett Holland",
+      "position": "D",
+      "role": "D",
+      "club": "HC Vítkovice",
+      "jerseyNumber": null,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9a621cf681f1b7bf614487f6",
+      "name": "Samuel Kňažko",
+      "position": "D",
+      "role": "D",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 12,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7041c8cbfe868a5377036f4a",
+      "name": "Tomáš Pavelka",
+      "position": "D",
+      "role": "D",
+      "club": "HC Vítkovice",
+      "jerseyNumber": null,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f04d1ad556303c432839c811",
+      "name": "Vojtěch Port",
+      "position": "D",
+      "role": "RB",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 26,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_90e10b1f86a23cd510522d2f",
+      "name": "Anthony Nellis",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 19,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b88e9510bade1075bdba7a54",
+      "name": "Chad Yetman",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 21,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_28b7d6df0b05fe81b9c19476",
+      "name": "David Cienciala",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 81,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7cfe5e5d78e187f9bedd42ac",
+      "name": "Dominik Petr",
+      "position": "F",
+      "role": "W",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 82,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_010ef2bb19a21e8d707d3a8e",
+      "name": "Jan Bernovský",
+      "position": "F",
+      "role": "RW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 28,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_958e652440b40a0946c01a42",
+      "name": "Jan Hladonik",
+      "position": "F",
+      "role": "C",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 67,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_533450a94774bab47dd2c517",
+      "name": "Jan Šír",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 89,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_12c609e030d5334d63499698",
+      "name": "Jindřich Abdul",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 24,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8026d8095ebe97c3261cea00",
+      "name": "Krzysztof Macias",
+      "position": "F",
+      "role": "C/RW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 34,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f90dfce6f82a116235eb90c4",
+      "name": "Marek Hrivík",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 27,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_8d458d6c38cfff9f64fe6f7d",
+      "name": "Marek Kalus",
+      "position": "F",
+      "role": "LW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 11,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ee1a7470bccedfede11170b0",
+      "name": "Šimon Stránský",
+      "position": "F",
+      "role": "C/LW",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 14,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c8ad8bd847bceb6411381644",
+      "name": "Dominik Hrachovina",
+      "position": "G",
+      "role": "G",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 49,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_01c5017801b1110067125455",
+      "name": "Patrik Švančara",
+      "position": "G",
+      "role": "G",
+      "club": "HC Vítkovice",
+      "jerseyNumber": 31,
+      "poolKey": "elh:HC Vítkovice",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e29686027166c3e1f76f0102",
+      "name": "Anders Koch",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 40,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_195968a23f50704b47b884f3",
+      "name": "David Sýkora",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 4,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_e215b91debd4a059fb54084a",
+      "name": "Dávid Mudrák",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 89,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_f7d045d63b9c7eaf41f520a1",
+      "name": "Graeme McCormack",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 12,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_678b109fbbd51e973625e5d8",
+      "name": "Martin Pláněk",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 9,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_04e6d2b9a0145844cbe6bebe",
+      "name": "Michael Vukojevic",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 51,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c06a9f5511e1924dbaccf458",
+      "name": "Petr Kalina",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 29,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0c55dd27a7300b0359d4cb18",
+      "name": "T.J. Melancon",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 23,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0b2f24b2c709fa8cab381805",
+      "name": "Štěpán Černý",
+      "position": "D",
+      "role": "D",
+      "club": "Mountfield HK",
+      "jerseyNumber": 24,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_10bfd56a6ef3f9307706f9d8",
+      "name": "Alex Tamáši",
+      "position": "F",
+      "role": "C",
+      "club": "Mountfield HK",
+      "jerseyNumber": 25,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_58acd4d965d8265743b6e57c",
+      "name": "Aleš Jergl",
+      "position": "F",
+      "role": "W",
+      "club": "Mountfield HK",
+      "jerseyNumber": 26,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_6365957867796a0e3a6128ec",
+      "name": "Dominik Pavlík",
+      "position": "F",
+      "role": "W",
+      "club": "Mountfield HK",
+      "jerseyNumber": 20,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_34b74e5a799123bb57a3e5b2",
+      "name": "Jan Vyvial",
+      "position": "F",
+      "role": "C",
+      "club": "Mountfield HK",
+      "jerseyNumber": 17,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5eb727a9ae8693ad13d5847e",
+      "name": "Jordann Perret",
+      "position": "F",
+      "role": "W",
+      "club": "Mountfield HK",
+      "jerseyNumber": 94,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_227102d511840abd370f006c",
+      "name": "Kevin Klíma",
+      "position": "F",
+      "role": "C",
+      "club": "Mountfield HK",
+      "jerseyNumber": 34,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_d352a12940274d0f17f812d5",
+      "name": "Lukáš Radil",
+      "position": "F",
+      "role": "W",
+      "club": "Mountfield HK",
+      "jerseyNumber": 69,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_0fd0942629d2797c015d9dc1",
+      "name": "Markus Nenonen",
+      "position": "F",
+      "role": "LW/RW",
+      "club": "Mountfield HK",
+      "jerseyNumber": 7,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c548b7a03e10cd309ec72b03",
+      "name": "Martin Kohout",
+      "position": "F",
+      "role": "LW",
+      "club": "Mountfield HK",
+      "jerseyNumber": 46,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a8e111c9a5861b000d7854d5",
+      "name": "Patrik Miškář",
+      "position": "F",
+      "role": "C",
+      "club": "Mountfield HK",
+      "jerseyNumber": 56,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1b5b91ee9a6f97bcd366dff0",
+      "name": "Patrik Zdráhal",
+      "position": "F",
+      "role": "W",
+      "club": "Mountfield HK",
+      "jerseyNumber": 96,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7b0848bb0229a9bf7ce6ea40",
+      "name": "Radek Pilař",
+      "position": "F",
+      "role": "W",
+      "club": "Mountfield HK",
+      "jerseyNumber": 62,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_11b89f585c61e784bd80bcdf",
+      "name": "Radovan Pavlík",
+      "position": "F",
+      "role": "LW",
+      "club": "Mountfield HK",
+      "jerseyNumber": 98,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1f74b5c0d33a319e5b97b95b",
+      "name": "Robert Kousal",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Mountfield HK",
+      "jerseyNumber": 90,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9a6f3fc60c3caacac8c130f9",
+      "name": "Viliam Čacho",
+      "position": "F",
+      "role": "C",
+      "club": "Mountfield HK",
+      "jerseyNumber": 48,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5841116abe9f575405b9ca33",
+      "name": "Šimon Marha",
+      "position": "F",
+      "role": "C",
+      "club": "Mountfield HK",
+      "jerseyNumber": 38,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_4ebde0cce071f8d2c0699dc6",
+      "name": "Jan Kasal",
+      "position": "G",
+      "role": "G",
+      "club": "Mountfield HK",
+      "jerseyNumber": 2,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_bb0a9de5bc6a709ce6725dfe",
+      "name": "Stanislav Škorvánek",
+      "position": "G",
+      "role": "G",
+      "club": "Mountfield HK",
+      "jerseyNumber": 31,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b42f53c2b5be82702f8b860f",
+      "name": "Tomáš Vomáčka",
+      "position": "G",
+      "role": "G",
+      "club": "Mountfield HK",
+      "jerseyNumber": 33,
+      "poolKey": "elh:Mountfield HK",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_187b043cc6f12475df58b084",
+      "name": "Adam Rulík",
+      "position": "D",
+      "role": "D",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 25,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_09dfae1490d4b6e73a904241",
+      "name": "Filip Westerlund",
+      "position": "D",
+      "role": "D",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 85,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_9581e7a0d90e11c04b7799ba",
+      "name": "Griffin Mendel",
+      "position": "D",
+      "role": "D",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 77,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_843e8e9750331961a399726f",
+      "name": "Martin Jandus",
+      "position": "D",
+      "role": "RB",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 63,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_1196e6b0b5f3d25a430c4512",
+      "name": "Martin Matějíček",
+      "position": "D",
+      "role": "D",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 15,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_350538691976edca072085ed",
+      "name": "Michal Houdek",
+      "position": "D",
+      "role": "D",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 8,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ecaaa06dce8a1d7f3bc00d65",
+      "name": "Michal Kempný",
+      "position": "D",
+      "role": "LB",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 5,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a3b1cecb92e571c21fb9a49d",
+      "name": "Phil Pietroniro",
+      "position": "D",
+      "role": "D",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 37,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3c04d3311d8e78bb1981c46d",
+      "name": "Tomáš Tomek",
+      "position": "D",
+      "role": "D",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 13,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_a898fae30863ddf260551317",
+      "name": "Tomáš Vandas",
+      "position": "D",
+      "role": "D",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 44,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_cd98e83b93d421cad65fb922",
+      "name": "Adam Bareš",
+      "position": "F",
+      "role": "RW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 10,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_2dca899daf05cbaa8da7be0e",
+      "name": "Adam Kubík",
+      "position": "F",
+      "role": "W",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 59,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ad57420576a0662d620ca3ba",
+      "name": "Daniel Audette",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 28,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_cff1fb88526517c381dee1f2",
+      "name": "Filip Přikryl",
+      "position": "F",
+      "role": "C/LW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 97,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_50a1aa2918c394d7b9099eed",
+      "name": "Jakub Konečný",
+      "position": "F",
+      "role": "C",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 9,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_5273655455f8946e809fba56",
+      "name": "Kelly Klíma",
+      "position": "F",
+      "role": "RW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 67,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_87ae7b701171a26175a58539",
+      "name": "Marcel Marcel",
+      "position": "F",
+      "role": "LW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 53,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_04adfc833d1dc12972d2c1b6",
+      "name": "Kryštof Hrabík",
+      "position": "F",
+      "role": "C/RW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 11,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_3ae6735e68130cc98ae52cd6",
+      "name": "Martin Ryšavý",
+      "position": "F",
+      "role": "LW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 19,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_19b3bb87079cacfefd74cd84",
+      "name": "Miroslav Forman",
+      "position": "F",
+      "role": "W",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 88,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7522d8013c98fb294f46fd57",
+      "name": "Nicolas Hlava",
+      "position": "F",
+      "role": "RW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 7,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_7e20ff6c697a1d3bc8cf5b62",
+      "name": "Niko Ojamäki",
+      "position": "F",
+      "role": "RW",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 20,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ac815cbe21ab3304af32fb0c",
+      "name": "Ondřej Blaha",
+      "position": "F",
+      "role": "C",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 89,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_c732c246cf359e19e764e2c5",
+      "name": "Oskar Lisler",
+      "position": "F",
+      "role": "C",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 24,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_ec1fe60d5bd9dee3aee4a926",
+      "name": "Samuel Vigneault",
+      "position": "F",
+      "role": "C",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 21,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_b88951cd784b5225f53f6e96",
+      "name": "Adam Brízgala",
+      "position": "G",
+      "role": "G",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 1,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    },
+    {
+      "id": "elh_6b850ea265180cfb6c04563c",
+      "name": "Dominik Pavlát",
+      "position": "G",
+      "role": "G",
+      "club": "Rytíři Kladno",
+      "jerseyNumber": 39,
+      "poolKey": "elh:Rytíři Kladno",
+      "league": "Extraliga"
+    }
+  ]
+}

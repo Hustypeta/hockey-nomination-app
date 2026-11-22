@@ -96,3 +96,12 @@ Data z `czech-players-2025-26.json` – všichni čeští hráči z **Extraligy,
 
 ### 3. Hotovo
 Aplikace poběží na URL typu `tvoje-app.up.railway.app`
+
+## Databáze hráčů (Excel → JSON)
+
+Excely `data/czech-national-players.xlsx` a `data/extraliga-fantasy-players.xlsx` jsou zdroj pravdy a zůstávají jen lokálně (jsou v `.gitignore`). Do repa se commituje jen vygenerovaný `data/lineup-pools-import.json`.
+
+1. Uprav Excel.
+2. `npm run export:lineup-pools-json` (vygeneruje JSON z obou Excelů).
+3. Commitni `data/lineup-pools-import.json`.
+4. Import do DB z JSONu (Excel není potřeba): `npm run import:lineup-pools:json`.

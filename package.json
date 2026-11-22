@@ -32,6 +32,7 @@
     "build:national-xlsx": "python scripts/build-czech-national-players-xlsx.py",
     "export:lineup-pools-json": "python scripts/export-lineup-pools-json.py",
     "import:lineup-pools": "python scripts/export-lineup-pools-json.py && npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/import-lineup-pools.ts",
+    "import:lineup-pools:json": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/import-lineup-pools.ts",
     "backfill:match-share-repre-a": "npx ts-node -r tsconfig-paths/register --project scripts/tsconfig.json scripts/backfill-match-share-pool-repre-a.ts",
     "merge:elh:ms-editor": "python scripts/merge-elh-czechs-into-ms-editor.py",
     "promo:capture-squad": "node scripts/capture-promo-squad.cjs",
