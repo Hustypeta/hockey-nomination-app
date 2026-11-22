@@ -23,10 +23,11 @@
 # misc
 .DS_Store
 *.pem
-# Excel lock + export backups (manual xlsx)
+# Excel player databases live only on the author's machine (source of truth).
+# Only the generated data/lineup-pools-import.json is committed.
 **/~$*.xlsx
-data/extraliga-fantasy-players.bak-*.xlsx
-data/czech-national-players.bak-*.xlsx
+data/*.xlsx
+data/safe-backups/
 
 # debug
 npm-debug.log*
